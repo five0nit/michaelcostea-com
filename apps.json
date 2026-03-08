@@ -1,0 +1,39 @@
+{
+  "owner": "Michael Costea",
+  "site": "michaelcostea.com",
+  "bio": {
+    "headline": "Versatile Licensed Electrician & Business Builder",
+    "summary": "I build practical systems, automations, and web tools that turn ideas into reliable workflows.",
+    "location": "Australia / New Zealand"
+  },
+  "projects": [
+    {
+      "name": "Weekend + Day Planner",
+      "slug": "planner",
+      "status": "live",
+      "description": "Location-aware day planner with budget, weather fallback, kids mode, and history logs.",
+      "url": "https://planner.michaelcostea.com"
+    },
+    {
+      "name": "Business Card 3D Webapp",
+      "slug": "cards",
+      "status": "beta",
+      "description": "Deterministic 3D business-card builder with visual presets and STL outputs.",
+      "url": "https://cards.michaelcostea.com"
+    },
+    {
+      "name": "OZQuotes Platform",
+      "slug": "ozquotes",
+      "status": "beta",
+      "description": "Quote and workflow platform under active development.",
+      "url": "https://quotes.michaelcostea.com"
+    },
+    {
+      "name": "Mission Control",
+      "slug": "ops",
+      "status": "private",
+      "description": "Operator dashboard for monitoring, automations, and remote controls.",
+      "url": "https://ops.michaelcostea.com"
+    }
+  ]
+}
