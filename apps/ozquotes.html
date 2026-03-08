@@ -22,6 +22,8 @@
   <p class="muted">Generate a rough project quote remotely and export it.</p>
 
   <div class="card grid">
+    <div><label>API Base</label><input id="apiBaseInput" value="https://api.michaelcostea.com/api/ozquotes" /></div>
+    <div><label>API Key</label><input id="apiKeyInput" placeholder="x-api-key" /></div>
     <div><label>Customer</label><input id="customer" placeholder="Client name"></div>
     <div><label>Project Type</label>
       <select id="type"><option>Electrical</option><option>Solar</option><option>Automation</option><option>General</option></select>
@@ -37,16 +39,23 @@
   <div class="card">
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
       <button id="calc">Calculate</button>
-      <button id="save">Save Draft</button>
+      <button id="save">Save Draft (Remote)</button>
+      <button id="loadRemote">Load Latest Remote</button>
       <button id="export">Export JSON</button>
     </div>
+    <p id="status" class="muted"></p>
     <pre id="out">No quote yet.</pre>
   </div>
 </div>
 <script>
 const k='ozquotes_draft_v1';
 const $=id=>document.getElementById(id);
+const statusEl = $('status');
 function n(id){ return Number($(id).value||0); }
+function apiBase(){ return ($('apiBaseInput').value || '').replace(/\/$/, ''); }
+function apiHeaders(){ const v=$('apiKeyInput').value.trim(); return v ? {'x-api-key': v, 'content-type':'application/json'} : {'content-type':'application/json'}; }
+function setStatus(t){ statusEl.textContent=t; }
+
 function build(){
   const labor = n('hours') * n('rate');
   const base = labor + n('materials') + n('other');
@@ -62,10 +71,61 @@ function build(){
     createdAt:new Date().toISOString()
   };
 }
+function hydrate(d){
+  if(!d) return;
+  $('customer').value=d.customer||'';
+  $('type').value=d.projectType||'General';
+  $('hours').value=d.assumptions?.hours??8;
+  $('rate').value=d.assumptions?.rate??120;
+  $('materials').value=d.breakdown?.materials??500;
+  $('other').value=d.breakdown?.other??80;
+  $('margin').value=d.assumptions?.marginPct??18;
+  $('gst').value=d.assumptions?.gstPct??10;
+}
 function render(){ const q=build(); $('out').textContent=JSON.stringify(q,null,2); return q; }
-function load(){ try{ const d=JSON.parse(localStorage.getItem(k)||'null'); if(d){ $('customer').value=d.customer||''; $('type').value=d.projectType||'General'; $('hours').value=d.assumptions?.hours??8; $('rate').value=d.assumptions?.rate??120; $('materials').value=d.breakdown?.materials??500; $('other').value=d.breakdown?.other??80; $('margin').value=d.assumptions?.marginPct??18; $('gst').value=d.assumptions?.gstPct??10; } }catch{} render(); }
+
+async function saveRemote(){
+  const quote = build();
+  localStorage.setItem(k, JSON.stringify(quote));
+  try{
+    const r = await fetch(`${apiBase()}/save`, { method:'POST', headers: apiHeaders(), body: JSON.stringify(quote) });
+    const txt = await r.text();
+    const data = JSON.parse(txt);
+    if(!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    setStatus('Saved remotely + locally.');
+    $('out').textContent=JSON.stringify(data.quote,null,2);
+  }catch(err){
+    setStatus(`Remote save failed (${err}). Saved locally only.`);
+    render();
+  }
+}
+
+async function loadRemote(){
+  try{
+    const r = await fetch(`${apiBase()}/latest`, { headers: $('apiKeyInput').value.trim()?{'x-api-key':$('apiKeyInput').value.trim()}:{} });
+    const txt = await r.text();
+    const data = JSON.parse(txt);
+    if(!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    if(data.quote){ hydrate(data.quote); localStorage.setItem(k, JSON.stringify(data.quote)); }
+    render();
+    setStatus(data.quote ? 'Loaded latest remote quote.' : 'No remote quotes yet.');
+  }catch(err){
+    setStatus(`Remote load failed (${err}); using local draft.`);
+    const local = JSON.parse(localStorage.getItem(k)||'null');
+    if(local) hydrate(local);
+    render();
+  }
+}
+
+function load(){
+  try{ const d=JSON.parse(localStorage.getItem(k)||'null'); if(d) hydrate(d); }catch{}
+  render();
+  loadRemote();
+}
+
 $('calc').onclick=render;
-$('save').onclick=()=>{ localStorage.setItem(k, JSON.stringify(build())); alert('Draft saved locally'); };
+$('save').onclick=saveRemote;
+$('loadRemote').onclick=loadRemote;
 $('export').onclick=()=>{ const q=build(); const b=new Blob([JSON.stringify(q,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='ozquote.json'; a.click(); };
 load();
 </script>
