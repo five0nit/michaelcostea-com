@@ -24,6 +24,7 @@
   <div class="card grid">
     <div><label>API Base</label><input id="apiBaseInput" value="https://api.michaelcostea.com/api/ozquotes" /></div>
     <div><label>API Key</label><input id="apiKeyInput" placeholder="x-api-key" /></div>
+    <div><label>Connection</label><input id="conn" value="checking..." readonly /></div>
     <div><label>Customer</label><input id="customer" placeholder="Client name"></div>
     <div><label>Project Type</label>
       <select id="type"><option>Electrical</option><option>Solar</option><option>Automation</option><option>General</option></select>
@@ -49,12 +50,16 @@
 </div>
 <script>
 const k='ozquotes_draft_v1';
+const pref='ozquotes_remote_prefs_v1';
 const $=id=>document.getElementById(id);
 const statusEl = $('status');
 function n(id){ return Number($(id).value||0); }
 function apiBase(){ return ($('apiBaseInput').value || '').replace(/\/$/, ''); }
 function apiHeaders(){ const v=$('apiKeyInput').value.trim(); return v ? {'x-api-key': v, 'content-type':'application/json'} : {'content-type':'application/json'}; }
 function setStatus(t){ statusEl.textContent=t; }
+function savePrefs(){ localStorage.setItem(pref, JSON.stringify({apiBase:$('apiBaseInput').value, apiKey:$('apiKeyInput').value})); }
+function loadPrefs(){ try{ const p=JSON.parse(localStorage.getItem(pref)||'null'); if(p){ if(p.apiBase) $('apiBaseInput').value=p.apiBase; if(p.apiKey) $('apiKeyInput').value=p.apiKey; }}catch{} }
+async function checkConn(){ try{ const r=await fetch(`${apiBase()}/latest`, { headers: $('apiKeyInput').value.trim()?{'x-api-key':$('apiKeyInput').value.trim()}:{} }); $('conn').value = r.ok ? 'online' : `api ${r.status}`; }catch{ $('conn').value='offline'; } }
 
 function build(){
   const labor = n('hours') * n('rate');
@@ -126,7 +131,11 @@ function load(){
 $('calc').onclick=render;
 $('save').onclick=saveRemote;
 $('loadRemote').onclick=loadRemote;
+$('apiBaseInput').onchange=()=>{savePrefs();checkConn();};
+$('apiKeyInput').onchange=()=>{savePrefs();checkConn();};
 $('export').onclick=()=>{ const q=build(); const b=new Blob([JSON.stringify(q,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='ozquote.json'; a.click(); };
+loadPrefs();
+checkConn();
 load();
 </script>
 </body>

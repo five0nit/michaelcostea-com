@@ -30,6 +30,7 @@
     <div class="grid">
       <div><label>API Base</label><input id="apiBaseInput" value="https://api.michaelcostea.com/api/planner" /></div>
       <div><label>API Key (optional)</label><input id="apiKeyInput" placeholder="x-api-key" /></div>
+      <div><label>Connection</label><input id="conn" value="checking..." readonly /></div>
       <div><label>Scope</label><select id="scope"><option value="day">day</option><option value="weekend">weekend</option></select></div>
       <div><label>Region</label><select id="region"><option value="au-nz">au-nz</option><option value="melbourne">melbourne</option><option value="all">all</option></select></div>
       <div><label>Current Location</label><input id="location" value="Queenstown" /></div>
@@ -61,10 +62,24 @@
   </div>
 </div>
 <script>
+const prefKey='planner_remote_prefs_v1';
 function apiBase(){ return (document.getElementById('apiBaseInput').value || '/api/planner').replace(/\/$/, ''); }
 function apiHeaders(){
   const k = document.getElementById('apiKeyInput').value.trim();
   return k ? {'x-api-key': k} : {};
+}
+function savePrefs(){
+  localStorage.setItem(prefKey, JSON.stringify({ apiBase: document.getElementById('apiBaseInput').value, apiKey: document.getElementById('apiKeyInput').value }));
+}
+function loadPrefs(){
+  try{ const p=JSON.parse(localStorage.getItem(prefKey)||'null'); if(p){ if(p.apiBase) document.getElementById('apiBaseInput').value=p.apiBase; if(p.apiKey) document.getElementById('apiKeyInput').value=p.apiKey; } }catch{}
+}
+async function checkConn(){
+  const el=document.getElementById('conn');
+  try{
+    const r=await fetch(`${apiBase()}/latest`, { headers: apiHeaders() });
+    el.value = r.ok ? 'online' : `api ${r.status}`;
+  }catch{ el.value='offline'; }
 }
 
 function render(events=[]) {
@@ -138,6 +153,10 @@ async function runPlan(){
 
 document.getElementById('runBtn').addEventListener('click',runPlan);
 document.getElementById('refreshBtn').addEventListener('click',loadLatest);
+document.getElementById('apiBaseInput').addEventListener('change',()=>{savePrefs();checkConn();});
+document.getElementById('apiKeyInput').addEventListener('change',()=>{savePrefs();checkConn();});
+loadPrefs();
+checkConn();
 loadLatest();
 </script>
 </body>
