@@ -27,13 +27,6 @@
       "status": "beta",
       "description": "Quote and workflow platform under active development.",
       "url": "./apps/ozquotes.html"
-    },
-    {
-      "name": "Mission Control",
-      "slug": "ops",
-      "status": "private",
-      "description": "Operator dashboard for monitoring, automations, and remote controls.",
-      "url": "./apps/ops.html"
     }
   ]
 }
