@@ -12,28 +12,28 @@
       "slug": "planner",
       "status": "live",
       "description": "Location-aware day planner with budget, weather fallback, kids mode, and history logs.",
-      "url": "https://planner.michaelcostea.com"
+      "url": "./apps/planner.html"
     },
     {
       "name": "Business Card 3D Webapp",
       "slug": "cards",
       "status": "beta",
       "description": "Deterministic 3D business-card builder with visual presets and STL outputs.",
-      "url": "https://cards.michaelcostea.com"
+      "url": "./apps/cards.html"
     },
     {
       "name": "OZQuotes Platform",
       "slug": "ozquotes",
       "status": "beta",
       "description": "Quote and workflow platform under active development.",
-      "url": "https://quotes.michaelcostea.com"
+      "url": "./apps/ozquotes.html"
     },
     {
       "name": "Mission Control",
       "slug": "ops",
       "status": "private",
       "description": "Operator dashboard for monitoring, automations, and remote controls.",
-      "url": "https://ops.michaelcostea.com"
+      "url": "./apps/ops.html"
     }
   ]
 }
