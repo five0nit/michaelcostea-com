@@ -1,6 +1,73 @@
-<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>App</title><style>body{font-family:Inter,Arial;background:#0f1730;color:#fff;padding:32px}a{color:#8db2ff}</style></head><body><h1 id='t'></h1><p id='d'></p><p><a href='../index.html'>← Back to hub</a></p></body><script>
-const map={planner:['Weekend + Day Planner','Live endpoint wiring in progress. Current stable control is via Telegram/OpenClaw workflow.'],cards:['Business Card 3D Webapp','Beta landing page. Production UI will be connected next deployment.'],ozquotes:['OZQuotes Platform','Beta environment staged. Public URL pending deploy pipeline bind.'],ops:['Mission Control','Private app. Access-gated endpoint will be enabled after auth setup.']};
-const k=location.pathname.split('/').pop().replace('.html','');
-document.getElementById('t').textContent=map[k]?.[0]||'App';
-document.getElementById('d').textContent=map[k]?.[1]||'Coming soon';
-</script></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OZQuotes - Quick Quote</title>
+  <style>
+    body{font-family:Inter,Arial,sans-serif;background:#0f1730;color:#fff;margin:0;padding:24px}
+    .wrap{max-width:980px;margin:0 auto}
+    .card{background:#141d38;border:1px solid #2d3b6b;border-radius:12px;padding:14px;margin-bottom:14px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+    input,select{width:100%;padding:8px;border-radius:8px;border:1px solid #3d4f88;background:#0e1630;color:#fff}
+    button{padding:10px 14px;border:0;border-radius:8px;background:#3c6dff;color:#fff;font-weight:700;cursor:pointer}
+    .muted{color:#9fb1df;font-size:.9rem} pre{white-space:pre-wrap;background:#0b1227;padding:10px;border-radius:8px;border:1px solid #24325a}
+    a{color:#9fc0ff}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <p><a href="../index.html">← Back to hub</a></p>
+  <h1>OZQuotes — Quick Quote Tool</h1>
+  <p class="muted">Generate a rough project quote remotely and export it.</p>
+
+  <div class="card grid">
+    <div><label>Customer</label><input id="customer" placeholder="Client name"></div>
+    <div><label>Project Type</label>
+      <select id="type"><option>Electrical</option><option>Solar</option><option>Automation</option><option>General</option></select>
+    </div>
+    <div><label>Labor Hours</label><input id="hours" type="number" value="8" min="0"></div>
+    <div><label>Hourly Rate (AUD)</label><input id="rate" type="number" value="120" min="0"></div>
+    <div><label>Materials (AUD)</label><input id="materials" type="number" value="500" min="0"></div>
+    <div><label>Travel/Other (AUD)</label><input id="other" type="number" value="80" min="0"></div>
+    <div><label>Margin %</label><input id="margin" type="number" value="18" min="0"></div>
+    <div><label>GST %</label><input id="gst" type="number" value="10" min="0"></div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <button id="calc">Calculate</button>
+      <button id="save">Save Draft</button>
+      <button id="export">Export JSON</button>
+    </div>
+    <pre id="out">No quote yet.</pre>
+  </div>
+</div>
+<script>
+const k='ozquotes_draft_v1';
+const $=id=>document.getElementById(id);
+function n(id){ return Number($(id).value||0); }
+function build(){
+  const labor = n('hours') * n('rate');
+  const base = labor + n('materials') + n('other');
+  const margin = base * (n('margin')/100);
+  const subtotal = base + margin;
+  const gst = subtotal * (n('gst')/100);
+  const total = subtotal + gst;
+  return {
+    customer:$('customer').value||'Unknown',
+    projectType:$('type').value,
+    breakdown:{labor,materials:n('materials'),other:n('other'),base,margin,subtotal,gst,total},
+    assumptions:{hours:n('hours'),rate:n('rate'),marginPct:n('margin'),gstPct:n('gst')},
+    createdAt:new Date().toISOString()
+  };
+}
+function render(){ const q=build(); $('out').textContent=JSON.stringify(q,null,2); return q; }
+function load(){ try{ const d=JSON.parse(localStorage.getItem(k)||'null'); if(d){ $('customer').value=d.customer||''; $('type').value=d.projectType||'General'; $('hours').value=d.assumptions?.hours??8; $('rate').value=d.assumptions?.rate??120; $('materials').value=d.breakdown?.materials??500; $('other').value=d.breakdown?.other??80; $('margin').value=d.assumptions?.marginPct??18; $('gst').value=d.assumptions?.gstPct??10; } }catch{} render(); }
+$('calc').onclick=render;
+$('save').onclick=()=>{ localStorage.setItem(k, JSON.stringify(build())); alert('Draft saved locally'); };
+$('export').onclick=()=>{ const q=build(); const b=new Blob([JSON.stringify(q,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='ozquote.json'; a.click(); };
+load();
+</script>
+</body>
+</html>

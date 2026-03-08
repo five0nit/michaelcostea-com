@@ -1,6 +1,94 @@
-<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>App</title><style>body{font-family:Inter,Arial;background:#0f1730;color:#fff;padding:32px}a{color:#8db2ff}</style></head><body><h1 id='t'></h1><p id='d'></p><p><a href='../index.html'>← Back to hub</a></p></body><script>
-const map={planner:['Weekend + Day Planner','Live endpoint wiring in progress. Current stable control is via Telegram/OpenClaw workflow.'],cards:['Business Card 3D Webapp','Beta landing page. Production UI will be connected next deployment.'],ozquotes:['OZQuotes Platform','Beta environment staged. Public URL pending deploy pipeline bind.'],ops:['Mission Control','Private app. Access-gated endpoint will be enabled after auth setup.']};
-const k=location.pathname.split('/').pop().replace('.html','');
-document.getElementById('t').textContent=map[k]?.[0]||'App';
-document.getElementById('d').textContent=map[k]?.[1]||'Coming soon';
-</script></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Business Card Builder</title>
+  <style>
+    body{font-family:Inter,Arial,sans-serif;background:#0f1730;color:#fff;margin:0;padding:24px}
+    .wrap{max-width:980px;margin:0 auto}
+    .card{background:#141d38;border:1px solid #2d3b6b;border-radius:12px;padding:14px;margin-bottom:14px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+    input,select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #3d4f88;background:#0e1630;color:#fff}
+    button{padding:10px 14px;border:0;border-radius:8px;background:#3c6dff;color:#fff;font-weight:700;cursor:pointer}
+    .preview{background:#fff;color:#111;border-radius:10px;padding:14px;min-height:180px;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+    .muted{color:#9fb1df;font-size:.9rem}
+    a{color:#9fc0ff}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <p><a href="../index.html">← Back to hub</a></p>
+  <h1>Business Card Builder</h1>
+  <p class="muted">Create a card profile, preview it, and export JSON for generation pipeline.</p>
+
+  <div class="card grid">
+    <div><label>Name</label><input id="name" value="Michael Costea"></div>
+    <div><label>Role</label><input id="role" value="Founder"></div>
+    <div><label>Company</label><input id="company" value="OZQuotes"></div>
+    <div><label>Phone</label><input id="phone" value="+61 ..."></div>
+    <div><label>Email</label><input id="email" value="michael@michaelcostea.com"></div>
+    <div><label>Website</label><input id="website" value="michaelcostea.com"></div>
+    <div><label>Style</label>
+      <select id="style">
+        <option>minimal</option><option>bold</option><option>playful</option><option>premium</option>
+      </select>
+    </div>
+    <div><label>Icon Theme</label>
+      <select id="icon"><option>none</option><option>lightning</option><option>gear</option><option>rocket</option><option>cube</option></select>
+    </div>
+    <div style="grid-column:1/-1"><label>Tagline</label><textarea id="tagline" rows="2">Automation, quotes, and execution.</textarea></div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <button id="previewBtn">Update Preview</button>
+      <button id="saveBtn">Save Profile</button>
+      <button id="exportBtn">Export JSON</button>
+    </div>
+    <div id="preview" class="preview"></div>
+  </div>
+</div>
+<script>
+const k='mc_card_profile_v1';
+const $=id=>document.getElementById(id);
+function data(){
+  return {
+    name: $('name').value, role:$('role').value, company:$('company').value,
+    phone:$('phone').value, email:$('email').value, website:$('website').value,
+    style:$('style').value, icon:$('icon').value, tagline:$('tagline').value,
+    updatedAt:new Date().toISOString()
+  };
+}
+function render(){
+  const d=data();
+  const icon = d.icon==='none'?'':({'lightning':'⚡','gear':'⚙️','rocket':'🚀','cube':'🧊'}[d.icon]||'');
+  $('preview').innerHTML = `
+    <div style="font-weight:700;font-size:22px">${d.name} ${icon}</div>
+    <div style="opacity:.8">${d.role} · ${d.company}</div>
+    <hr />
+    <div>${d.phone}</div>
+    <div>${d.email}</div>
+    <div>${d.website}</div>
+    <div style="margin-top:10px;font-style:italic;color:#444">${d.tagline}</div>
+    <div style="margin-top:8px;font-size:12px;color:#666">style: ${d.style}</div>
+  `;
+}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem(k)||'null');
+    if(!d) return render();
+    for(const id of ['name','role','company','phone','email','website','style','icon','tagline']) if(d[id]) $(id).value=d[id];
+  }catch{}
+  render();
+}
+$('previewBtn').onclick=render;
+$('saveBtn').onclick=()=>{ localStorage.setItem(k, JSON.stringify(data())); alert('Profile saved locally'); };
+$('exportBtn').onclick=()=>{
+  const blob=new Blob([JSON.stringify(data(),null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='business-card-profile.json'; a.click();
+};
+load();
+</script>
+</body>
+</html>
