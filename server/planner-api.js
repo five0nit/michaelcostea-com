@@ -28,7 +28,27 @@ function buildArgs(body={}){
   return a;
 }
 
+const API_KEY = process.env.PLANNER_API_KEY || '';
+const HOST = process.env.PLANNER_API_HOST || '127.0.0.1';
+const PORT = Number(process.env.PLANNER_API_PORT || 8787);
+
+const rateMap = new Map();
+function rateLimited(ip){
+  const now = Date.now();
+  const item = rateMap.get(ip) || { n: 0, t: now };
+  if (now - item.t > 60_000) { item.n = 0; item.t = now; }
+  item.n += 1;
+  rateMap.set(ip, item);
+  return item.n > 120;
+}
+
 const server = http.createServer((req,res)=>{
+  const ip = req.socket.remoteAddress || 'unknown';
+  if (rateLimited(ip)) return send(res,429,{ok:false,error:'rate limit'});
+  if (API_KEY) {
+    const got = req.headers['x-api-key'];
+    if (got !== API_KEY) return send(res,401,{ok:false,error:'unauthorized'});
+  }
   if(req.url === '/api/planner/latest' && req.method === 'GET'){
     try {
       const events = fs.existsSync(OUT_JSON) ? readJson(OUT_JSON) : [];
@@ -61,7 +81,8 @@ const server = http.createServer((req,res)=>{
   send(res,404,{ok:false,error:'not found'});
 });
 
-server.listen(8787, ()=>{
-  console.log('Planner API running on http://127.0.0.1:8787');
+server.listen(PORT, HOST, ()=>{
+  console.log(`Planner API running on http://${HOST}:${PORT}`);
   console.log('Endpoints: GET /api/planner/latest, POST /api/planner/run');
+  console.log(`API key required: ${API_KEY ? 'yes' : 'no'}`);
 });

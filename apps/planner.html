@@ -28,6 +28,8 @@
 
   <div class="card">
     <div class="grid">
+      <div><label>API Base</label><input id="apiBaseInput" value="/api/planner" /></div>
+      <div><label>API Key (optional)</label><input id="apiKeyInput" placeholder="x-api-key" /></div>
       <div><label>Scope</label><select id="scope"><option value="day">day</option><option value="weekend">weekend</option></select></div>
       <div><label>Region</label><select id="region"><option value="au-nz">au-nz</option><option value="melbourne">melbourne</option><option value="all">all</option></select></div>
       <div><label>Current Location</label><input id="location" value="Queenstown" /></div>
@@ -59,7 +61,11 @@
   </div>
 </div>
 <script>
-const apiBase = '/api/planner';
+function apiBase(){ return (document.getElementById('apiBaseInput').value || '/api/planner').replace(/\/$/, ''); }
+function apiHeaders(){
+  const k = document.getElementById('apiKeyInput').value.trim();
+  return k ? {'x-api-key': k} : {};
+}
 
 function render(events=[]) {
   const agenda = document.getElementById('agenda');
@@ -88,7 +94,7 @@ async function loadLatest(){
   const status=document.getElementById('status');
   status.textContent='Loading latest...';
   try{
-    const data=await safeJsonFetch(`${apiBase}/latest`);
+    const data=await safeJsonFetch(`${apiBase()}/latest`, { headers: apiHeaders() });
     render(data.events||[]);
     debug.textContent=JSON.stringify(data,null,2);
     status.textContent='Loaded latest plan (live API).';
@@ -120,7 +126,7 @@ async function runPlan(){
   const debug=document.getElementById('debug');
   status.textContent='Running planner...';
   try{
-    const data=await safeJsonFetch(`${apiBase}/run`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+    const data=await safeJsonFetch(`${apiBase()}/run`,{method:'POST',headers:{'content-type':'application/json', ...apiHeaders()},body:JSON.stringify(payload)});
     render(data.events||[]);
     debug.textContent=JSON.stringify(data,null,2);
     status.textContent='Plan generated (live API).';
