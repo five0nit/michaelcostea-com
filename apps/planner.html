@@ -1,6 +1,126 @@
-<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>App</title><style>body{font-family:Inter,Arial;background:#0f1730;color:#fff;padding:32px}a{color:#8db2ff}</style></head><body><h1 id='t'></h1><p id='d'></p><p><a href='../index.html'>← Back to hub</a></p></body><script>
-const map={planner:['Weekend + Day Planner','Live endpoint wiring in progress. Current stable control is via Telegram/OpenClaw workflow.'],cards:['Business Card 3D Webapp','Beta landing page. Production UI will be connected next deployment.'],ozquotes:['OZQuotes Platform','Beta environment staged. Public URL pending deploy pipeline bind.'],ops:['Mission Control','Private app. Access-gated endpoint will be enabled after auth setup.']};
-const k=location.pathname.split('/').pop().replace('.html','');
-document.getElementById('t').textContent=map[k]?.[0]||'App';
-document.getElementById('d').textContent=map[k]?.[1]||'Coming soon';
-</script></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Weekend + Day Planner</title>
+  <style>
+    body{font-family:Inter,Arial,sans-serif;background:#0f1730;color:#fff;margin:0;padding:24px}
+    .wrap{max-width:980px;margin:0 auto}
+    .card{background:#141d38;border:1px solid #2d3b6b;border-radius:12px;padding:14px;margin-bottom:14px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+    label{font-size:.86rem;color:#bdd0ff;display:block;margin-bottom:4px}
+    input,select{width:100%;padding:8px;border-radius:8px;border:1px solid #3d4f88;background:#0e1630;color:#fff}
+    button{padding:10px 14px;border:0;border-radius:8px;background:#3c6dff;color:#fff;font-weight:700;cursor:pointer}
+    button.secondary{background:#263358}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .muted{color:#9fb1df;font-size:.9rem}
+    .item{padding:8px;border-radius:8px;background:#0f1730;border:1px solid #2a3967;margin-bottom:8px}
+    a{color:#9fc0ff}
+    pre{white-space:pre-wrap;background:#0b1227;padding:10px;border-radius:8px;border:1px solid #24325a}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <p><a href="../index.html">← Back to hub</a></p>
+  <h1>Weekend + Day Planner</h1>
+  <p class="muted">Build plan runs from UI. Uses local planner API when available.</p>
+
+  <div class="card">
+    <div class="grid">
+      <div><label>Scope</label><select id="scope"><option value="day">day</option><option value="weekend">weekend</option></select></div>
+      <div><label>Region</label><select id="region"><option value="au-nz">au-nz</option><option value="melbourne">melbourne</option><option value="all">all</option></select></div>
+      <div><label>Current Location</label><input id="location" value="Queenstown" /></div>
+      <div><label>Budget (AUD)</label><input id="budget" type="number" value="150" min="0" /></div>
+      <div><label>Date (optional YYYY-MM-DD)</label><input id="date" placeholder="2026-03-09" /></div>
+      <div><label>Flags</label>
+        <div class="row">
+          <label><input type="checkbox" id="rest" checked /> rest-of-today</label>
+          <label><input type="checkbox" id="kids" /> kids-mode</label>
+          <label><input type="checkbox" id="push" /> push-google</label>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button id="runBtn">Generate Plan</button>
+      <button class="secondary" id="refreshBtn">Load Latest</button>
+    </div>
+    <p id="status" class="muted"></p>
+  </div>
+
+  <div class="card">
+    <h3>Agenda</h3>
+    <div id="agenda"></div>
+  </div>
+
+  <div class="card">
+    <h3>Debug</h3>
+    <pre id="debug">idle</pre>
+  </div>
+</div>
+<script>
+const apiBase = '/api/planner';
+
+function render(events=[]) {
+  const agenda = document.getElementById('agenda');
+  agenda.innerHTML='';
+  if(!events.length){ agenda.innerHTML='<p class="muted">No events yet.</p>'; return; }
+  for(const e of events){
+    const div=document.createElement('div');
+    div.className='item';
+    const link=e.source_url ? ` <a href="${e.source_url}" target="_blank">source</a>`:'';
+    div.innerHTML=`<b>${e.title}</b><br>${(e.start||'').replace('T',' ').slice(0,16)} → ${(e.end||'').replace('T',' ').slice(0,16)}<br><span class='muted'>${e.location||''}${link}</span>`;
+    agenda.appendChild(div);
+  }
+}
+
+async function loadLatest(){
+  const debug=document.getElementById('debug');
+  const status=document.getElementById('status');
+  status.textContent='Loading latest...';
+  try{
+    const r=await fetch(`${apiBase}/latest`);
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data=await r.json();
+    render(data.events||[]);
+    debug.textContent=JSON.stringify(data,null,2);
+    status.textContent='Loaded latest plan.';
+  }catch(err){
+    status.textContent='Planner API not reachable from this host.';
+    debug.textContent = `API offline. Run local backend:\nnode server/planner-api.js\n\nThen reload.\n\n${err}`;
+  }
+}
+
+async function runPlan(){
+  const payload={
+    scope: document.getElementById('scope').value,
+    region: document.getElementById('region').value,
+    currentLocation: document.getElementById('location').value,
+    budgetAud: Number(document.getElementById('budget').value||0),
+    date: document.getElementById('date').value || null,
+    restOfToday: document.getElementById('rest').checked,
+    kidsMode: document.getElementById('kids').checked,
+    pushGoogle: document.getElementById('push').checked
+  };
+  const status=document.getElementById('status');
+  const debug=document.getElementById('debug');
+  status.textContent='Running planner...';
+  try{
+    const r=await fetch(`${apiBase}/run`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+    const data=await r.json();
+    if(!r.ok) throw new Error(data.error||`HTTP ${r.status}`);
+    render(data.events||[]);
+    debug.textContent=JSON.stringify(data,null,2);
+    status.textContent='Plan generated.';
+  }catch(err){
+    status.textContent='Run failed / API offline.';
+    debug.textContent=`${err}\n\nTry local run:\npython3 automation/weekend-melbourne-autoplanner/scripts/weekend_planner.py --scope day --rest-of-today --region au-nz --current-location "Queenstown" --budget-aud 150`;
+  }
+}
+
+document.getElementById('runBtn').addEventListener('click',runPlan);
+document.getElementById('refreshBtn').addEventListener('click',loadLatest);
+loadLatest();
+</script>
+</body>
+</html>
