@@ -74,20 +74,34 @@ function render(events=[]) {
   }
 }
 
+async function safeJsonFetch(url, options){
+  const r = await fetch(url, options);
+  const ct = (r.headers.get('content-type')||'').toLowerCase();
+  const txt = await r.text();
+  if(!r.ok) throw new Error(`HTTP ${r.status} from ${url}`);
+  if(!ct.includes('application/json')) throw new Error(`Non-JSON response from ${url}`);
+  try { return JSON.parse(txt); } catch { throw new Error(`Invalid JSON from ${url}`); }
+}
+
 async function loadLatest(){
   const debug=document.getElementById('debug');
   const status=document.getElementById('status');
   status.textContent='Loading latest...';
   try{
-    const r=await fetch(`${apiBase}/latest`);
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data=await r.json();
+    const data=await safeJsonFetch(`${apiBase}/latest`);
     render(data.events||[]);
     debug.textContent=JSON.stringify(data,null,2);
-    status.textContent='Loaded latest plan.';
+    status.textContent='Loaded latest plan (live API).';
   }catch(err){
-    status.textContent='Planner API not reachable from this host.';
-    debug.textContent = `API offline. Run local backend:\nnode server/planner-api.js\n\nThen reload.\n\n${err}`;
+    try{
+      const fallback = await safeJsonFetch(`../data/latest_plan.json?v=${Date.now()}`);
+      render(fallback||[]);
+      debug.textContent = `API offline (${err}). Loaded static fallback from ../data/latest_plan.json\n\n` + JSON.stringify({count:(fallback||[]).length},null,2);
+      status.textContent='Loaded latest plan (static fallback).';
+    }catch(err2){
+      status.textContent='Planner API unreachable and no fallback data loaded.';
+      debug.textContent = `API offline. Run local backend for Generate Plan:\nnode server/planner-api.js\n\n${err2}`;
+    }
   }
 }
 
@@ -106,15 +120,13 @@ async function runPlan(){
   const debug=document.getElementById('debug');
   status.textContent='Running planner...';
   try{
-    const r=await fetch(`${apiBase}/run`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
-    const data=await r.json();
-    if(!r.ok) throw new Error(data.error||`HTTP ${r.status}`);
+    const data=await safeJsonFetch(`${apiBase}/run`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     render(data.events||[]);
     debug.textContent=JSON.stringify(data,null,2);
-    status.textContent='Plan generated.';
+    status.textContent='Plan generated (live API).';
   }catch(err){
-    status.textContent='Run failed / API offline.';
-    debug.textContent=`${err}\n\nTry local run:\npython3 automation/weekend-melbourne-autoplanner/scripts/weekend_planner.py --scope day --rest-of-today --region au-nz --current-location "Queenstown" --budget-aud 150`;
+    status.textContent='Run disabled on static hosting (API offline).';
+    debug.textContent=`${err}\n\nThis page is static on GitHub Pages, so Generate Plan needs your local API online.\n\nLocal command:\nnode server/planner-api.js`;
   }
 }
 
