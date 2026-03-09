@@ -434,8 +434,35 @@ function themeIconKey(btn){
   return 'readme';
 }
 
+function themedIconDataUrl(theme,key){
+  const appGlyphs = {
+    readme:'📘', settings:'🛠️', planner:'🗓️', cards:'🪪', ozquotes:'💡', paint:'🎨', text:'📝', chat:'💬', programs:'🗂️', recycle:'🗑️', ifexe:'⚙️', doom:'👹', hackerexe:'👾'
+  };
+  const themeGlyphs = { matrix:'🕶️', tmnt:'🐢', element:'🛸', hacker:'💻', catdog:'🐾', spiderman:'🕷️', mario:'🍄' };
+  const palettes = {
+    matrix:['#00160a','#00351a','#39ff14'],
+    tmnt:['#12210b','#21421b','#7fe26c'],
+    element:['#130f28','#2f235e','#f6a84e'],
+    hacker:['#070e16','#11253a','#7df2ff'],
+    catdog:['#26170d','#473225','#ffbf66'],
+    spiderman:['#150916','#2a1339','#5bb1ff'],
+    mario:['#1a1b45','#2e4db3','#ffdf5a']
+  };
+  const [c1,c2,border] = palettes[theme] || ['#1f1f1f','#3a3a3a','#cfcfcf'];
+  const app = appGlyphs[key] || '📦';
+  const badge = themeGlyphs[theme] || '✨';
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'>
+    <defs><linearGradient id='g' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='${c1}'/><stop offset='1' stop-color='${c2}'/></linearGradient></defs>
+    <rect x='6' y='6' width='52' height='52' fill='url(#g)' stroke='${border}' stroke-width='2' rx='6'/>
+    <text x='32' y='38' text-anchor='middle' font-size='24'>${app}</text>
+    <circle cx='50' cy='14' r='9' fill='rgba(0,0,0,.45)' stroke='${border}' stroke-width='1'/>
+    <text x='50' y='18' text-anchor='middle' font-size='10'>${badge}</text>
+  </svg>`;
+  return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+}
+
 function applyThemeIcons(theme){
-  const themed = ['mario','spiderman'];
+  const themed = ['matrix','tmnt','element','hacker','catdog','spiderman','mario'];
   document.querySelectorAll('.desk-icon').forEach(btn=>{
     btn.style.backgroundImage='';
     btn.style.backgroundSize='';
@@ -445,10 +472,10 @@ function applyThemeIcons(theme){
   if(!themed.includes(theme)) return;
   document.querySelectorAll('.desk-icon').forEach(btn=>{
     const key=themeIconKey(btn);
-    btn.style.backgroundImage = `url('./assets/icons/${theme}/${key}.png')`;
-    btn.style.backgroundSize = '32px 32px';
+    btn.style.backgroundImage = themedIconDataUrl(theme,key);
+    btn.style.backgroundSize = '34px 34px';
     btn.style.backgroundRepeat = 'no-repeat';
-    btn.style.backgroundPosition = 'center 8px';
+    btn.style.backgroundPosition = 'center 6px';
   });
 }
 
