@@ -2,37 +2,49 @@ let zTop = 20;
 
 async function runBootScreen(){
   const boot = document.getElementById('bootScreen');
-  const fill = document.getElementById('bootBarFill');
-  const pct = document.getElementById('bootPct');
-  const tip = document.getElementById('bootTip');
-  if(!boot || !fill || !pct) return;
+  const biosText = document.getElementById('biosText');
+  const biosHint = document.getElementById('biosHint');
+  if(!boot || !biosText) return;
 
   document.body.classList.add('booting');
 
-  const tips = ['Loading drivers...', 'Mounting desktop shell...', 'Checking startup scripts...', 'Initializing MichaelOS 1989...'];
-  let tipIndex = 0;
-  const tipTimer = setInterval(() => {
-    tipIndex = (tipIndex + 1) % tips.length;
-    if (tip) tip.textContent = tips[tipIndex];
-  }, 420);
+  const lines = [
+    'Award Modular BIOS v4.51PG, An Energy Star Ally',
+    'Copyright (C) 1984-98, Award Software, Inc.',
+    '',
+    'M I C H A E L O S   1 9 8 9',
+    '',
+    'AMD-K6(tm)-2/500 CPU Found',
+    'Memory Test : 32768K OK',
+    '',
+    'Award Plug and Play BIOS Extension v1.0A',
+    'Copyright (C) 1998, Award Software, Inc.',
+    '',
+    'Detecting IDE Primary Master ... KINGSTON SA400S37',
+    'Detecting IDE Primary Slave  ... None',
+    'Detecting IDE Secondary Master... None',
+    'Detecting IDE Secondary Slave ... None',
+    '',
+    'USB Controller ............... OK',
+    'Keyboard Controller .......... OK',
+    '',
+    'Verifying DMI Pool Data ........ Success',
+    'Boot from HDD0 ...'
+  ];
 
-  const duration = 2000;
-  const start = performance.now();
+  const totalDuration = 2200;
+  const perLine = Math.max(45, Math.floor(totalDuration / lines.length));
 
-  await new Promise(resolve => {
-    const tick = (now) => {
-      const progress = Math.min(1, (now - start) / duration);
-      const val = Math.round(progress * 100);
-      fill.style.width = `${val}%`;
-      pct.textContent = `${val}%`;
-      if (progress < 1) requestAnimationFrame(tick);
-      else resolve();
-    };
-    requestAnimationFrame(tick);
-  });
+  for (let i=0;i<lines.length;i++){
+    biosText.textContent += lines[i] + '\n';
+    if (biosText.textContent.length > 2200) {
+      biosText.textContent = biosText.textContent.slice(-2200);
+    }
+    await new Promise(r => setTimeout(r, perLine));
+  }
 
-  clearInterval(tipTimer);
-  if (tip) tip.textContent = 'Launching desktop...';
+  if (biosHint) biosHint.textContent = 'Press F1 to continue, DEL to enter SETUP';
+  await new Promise(r => setTimeout(r, 260));
 
   boot.classList.add('exiting');
   await new Promise(r => setTimeout(r, 520));

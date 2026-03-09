@@ -7,19 +7,14 @@ body.booting{overflow:hidden}
 #desktopRoot{opacity:0;transform:scale(1.02);filter:blur(3px)}
 body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 
-.boot-screen{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 40%, #1c6fb1 0%, #003d73 42%, #001a34 100%);display:grid;place-items:center;overflow:hidden;padding:12px}
-.boot-screen::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 2px 4px);opacity:.35;animation:bootScan 6s linear infinite}
-.boot-screen::after{content:"";position:absolute;width:140vmax;height:140vmax;background:radial-gradient(circle, rgba(255,255,255,.16), transparent 55%);animation:bootPulse 2s ease-in-out infinite}
+.boot-screen{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center;overflow:hidden;padding:10px}
+.boot-screen::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom, rgba(80,180,255,.07) 0 1px, transparent 2px 4px);opacity:.35;animation:bootScan 6s linear infinite}
 .boot-screen.hidden{display:none}
 .boot-screen.exiting{animation:bootOpen .55s ease forwards}
 
-.boot-box{position:relative;z-index:2;width:min(420px,100%);margin:0 auto;background:#c0c0c0;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #7f7f7f;border-bottom:2px solid #7f7f7f;box-shadow:3px 3px 0 #000;padding:16px}
-.boot-title{font-size:26px;font-weight:700;margin-bottom:6px;letter-spacing:.4px}
-.boot-sub{font-size:12px;margin-bottom:10px}
-.boot-bar{height:20px;border-top:2px solid #7f7f7f;border-left:2px solid #7f7f7f;border-right:2px solid #fff;border-bottom:2px solid #fff;background:#101010;padding:2px}
-.boot-bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#00cc66,#39ff14);transition:width .08s linear}
-.boot-pct{margin-top:8px;font-size:12px;text-align:right}
-.boot-tip{margin-top:7px;font-size:11px;opacity:.85}
+.bios-screen{position:relative;z-index:2;width:min(980px,100%);height:min(680px,92vh);background:#000;padding:12px 14px;overflow:hidden}
+.bios-text{margin:0;color:#66b9ff;font:600 20px/1.23 "Courier New",monospace;white-space:pre-wrap;text-shadow:0 0 8px rgba(102,185,255,.35)}
+.bios-hint{position:absolute;left:14px;right:14px;bottom:10px;color:#8fd0ff;font:700 18px/1.2 "Courier New",monospace;opacity:.95;animation:blink 1s steps(2,end) infinite}
 
 .container{position:relative;height:calc(100vh - 38px);padding:10px}
 .hero,.stats{display:none}
@@ -72,13 +67,14 @@ body.mobile-mode .start-menu{width:min(92vw,320px)}
 .easter-toast.show{display:block;animation:pop .18s ease}
 
 @keyframes bootScan{from{transform:translateY(0)}to{transform:translateY(4px)}}
-@keyframes bootPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-@keyframes bootOpen{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.16)}}
+@keyframes bootOpen{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.08)}}
 @keyframes desktopIn{from{opacity:0;transform:scale(1.02);filter:blur(3px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
 
 @media (max-width:720px){
-  .boot-screen{padding:10px}
-  .boot-box{width:min(380px,100%);padding:12px}
+  .boot-screen{padding:8px}
+  .bios-screen{height:min(560px,92vh);padding:8px 10px}
+  .bios-text{font-size:14px;line-height:1.2}
+  .bios-hint{font-size:13px;left:10px;right:10px;bottom:8px}
   .container{padding:8px}
   .desktop{grid-template-columns:repeat(4,82px);gap:8px}
   .desk-icon{width:82px;height:82px}
