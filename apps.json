@@ -55,6 +55,13 @@
       "status": "live",
       "description": "Pixel animated poem player with optional TTS narration.",
       "url": "./apps/if-exe.html"
+    },
+    {
+      "name": "DOOM.EXE",
+      "slug": "doom",
+      "status": "live",
+      "description": "Play classic DOOM in-browser via DOS emulation.",
+      "url": "./apps/doom.html"
     }
   ]
 }

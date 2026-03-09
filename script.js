@@ -349,6 +349,7 @@ function themeIconKey(btn){
   if(label.includes('programs')) return 'programs';
   if(label.includes('recycle')) return 'recycle';
   if(label.includes('if.exe')) return 'ifexe';
+  if(label.includes('doom')) return 'doom';
   return 'readme';
 }
 
