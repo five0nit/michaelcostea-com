@@ -344,6 +344,8 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="readerWindow"><span>📘 Read Me</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span>🗂️ Programs</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span>💾 About</span><small>open</small></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="dialupWindow"><span>📞 Dial-Up Networking</span><small>open</small></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="recycleWindow"><span>🗑️ Recycle Bin</span><small>open</small></a>
   `;
   const appItems = projects.map(p => `
     <a class="start-item" role="menuitem" href="#" data-launch-app="${p.url}" data-app-title="${p.name}">
@@ -377,6 +379,59 @@ function initStartMenu(projects){
   });
 
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeMenu(); });
+}
+
+
+function initLoreEggs(){
+  // CatDog mode
+  const catdogBtn = document.getElementById('catdogToggle');
+  if(catdogBtn){
+    catdogBtn.addEventListener('click', ()=>{
+      document.body.classList.toggle('catdog-mode');
+      showToast(document.body.classList.contains('catdog-mode') ? 'CatDog mode enabled: one body, two modes.' : 'CatDog mode disabled.');
+    });
+  }
+
+  // BBS handle generator
+  const bbsBtn = document.getElementById('bbsHandleBtn');
+  const bbsOut = document.getElementById('bbsHandleOut');
+  const words = ['NEON','OOZE','VECTOR','TURTLE','PIXEL','GLITCH','MULTI'];
+  if(bbsBtn && bbsOut){
+    bbsBtn.addEventListener('click', ()=>{
+      const handle = `${words[Math.floor(Math.random()*words.length)]}_${words[Math.floor(Math.random()*words.length)]}_${Math.floor(10+Math.random()*89)}`;
+      bbsOut.textContent = handle;
+      showToast(`Handle assigned: ${handle}`);
+    });
+  }
+
+  // Recycle bin -> sewer
+  const recycle = document.getElementById('recycleBin');
+  const recycleLabel = document.getElementById('recycleLabel');
+  if(recycle && recycleLabel){
+    recycle.addEventListener('dblclick', ()=>{
+      recycleLabel.textContent = 'SEWER BIN';
+      showToast('Access hatch open. Mind the ooze.');
+    });
+  }
+
+  // Dial-up matrix handshake (hold)
+  const dialBtn = document.getElementById('dialupConnect');
+  if(dialBtn){
+    let t;
+    const start=()=>{ t=setTimeout(()=>{ document.body.classList.add('matrix-flash'); showToast('Handshake negotiated. Welcome, operator.'); setTimeout(()=>document.body.classList.remove('matrix-flash'), 2200); },1500); };
+    const stop=()=>{ clearTimeout(t); };
+    dialBtn.addEventListener('mousedown',start); dialBtn.addEventListener('touchstart',start,{passive:true});
+    dialBtn.addEventListener('mouseup',stop); dialBtn.addEventListener('mouseleave',stop); dialBtn.addEventListener('touchend',stop);
+    dialBtn.addEventListener('click',()=>showToast('Dialing... krrrrshhhhh-beeeep-krchhh'));
+  }
+
+  // Command triggers (Multipass + Cowabunga)
+  let buf='';
+  window.addEventListener('keydown', (e)=>{
+    if(e.key.length===1) buf=(buf+e.key.toUpperCase()).slice(-24);
+    if(buf.includes('MULTIPASS')){ openWindow('elementWindow'); showToast('Credential accepted. Transit tier: MULTIPASS.'); buf=''; }
+    if(buf.includes('COWABUNGA')){ openWindow('dojoWindow'); showToast('Shell protocol loaded. Training mode on.'); buf=''; }
+  });
 }
 
 async function boot(){
@@ -421,6 +476,7 @@ async function boot(){
   initTray();
   initEasterEggs();
   initPopCultureItems();
+  initLoreEggs();
 
   applyLayoutMode();
 

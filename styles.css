@@ -42,7 +42,7 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .card{background:#d8d8d8;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);padding:10px;display:flex;flex-direction:column;gap:8px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px}.desc{margin:0;font-size:.86rem;line-height:1.35;min-height:40px}.muted{font-size:.78rem}
 .badge{font-size:.68rem;padding:3px 6px;border:1px solid #000;background:#e5e5e5}.badge.live{background:#0a9b4b;color:#fff}.badge.beta{background:#d47f00;color:#fff}.badge.private{background:#7a2cff;color:#fff}
-a.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);padding:5px 9px;font-weight:700;font-size:.8rem}
+a.btn,button.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);padding:5px 9px;font-weight:700;font-size:.8rem;cursor:pointer}
 
 .taskbar{position:fixed;left:0;right:0;bottom:0;height:38px;padding:5px 8px;background:var(--panel);border-top:2px solid var(--hi);box-shadow:0 -2px 0 #000;z-index:30;display:flex;align-items:center;gap:8px}
 .start-btn{font-weight:700;font-size:12px;background:#cfcfcf;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);padding:4px 14px;cursor:pointer}
@@ -107,3 +107,7 @@ body.mobile-mode .start-menu{width:min(92vw,320px)}
   .task-btn{max-width:130px}
   .tray-pill{min-width:56px;font-size:10px}
 }
+
+
+body.catdog-mode{background:linear-gradient(145deg,#f6b04b 0%, #f6b04b 50%, #5aa8ff 50%, #5aa8ff 100%)}
+body.matrix-flash{filter:hue-rotate(95deg) contrast(1.18)}
