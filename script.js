@@ -186,8 +186,14 @@ function toggleMaximizeWindow(id){
   win.classList.remove('minimized');
   win.classList.add('open');
   bringFront(win);
+  const isMax = win.classList.contains('maximized');
   const maxBtn = win.querySelector('.win-max');
-  if(maxBtn) maxBtn.setAttribute('aria-pressed', String(win.classList.contains('maximized')));
+  if(maxBtn){
+    maxBtn.setAttribute('aria-pressed', String(isMax));
+    maxBtn.setAttribute('title', isMax ? 'Restore' : 'Maximize');
+    maxBtn.setAttribute('aria-label', isMax ? 'Restore' : 'Maximize');
+    maxBtn.textContent = isMax ? '❐' : '□';
+  }
   refreshTaskbar();
 }
 

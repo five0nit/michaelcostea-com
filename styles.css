@@ -40,11 +40,11 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .win-window.active{z-index:16}
 .win-window.maximized{left:0 !important;top:0 !important;right:auto !important;bottom:auto !important;width:100vw !important;height:calc(100vh - 38px) !important}
 .win-title{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,var(--title1),var(--title2));color:#fff;padding:4px 6px;font-size:12px;font-weight:700;cursor:move;user-select:none}
-.win-controls{display:flex;gap:4px;align-items:center}
-.win-btn{min-width:24px;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);background:#cfcfcf;color:#000;font-weight:700;cursor:pointer;line-height:1;padding:1px 6px;font-family:"MS Sans Serif",Tahoma,sans-serif}
+.win-controls{display:flex;gap:2px;align-items:center}
+.win-btn{width:18px;height:16px;min-width:18px;border-top:1px solid var(--hi);border-left:1px solid var(--hi);border-right:1px solid var(--lo);border-bottom:1px solid var(--lo);background:#cfcfcf;color:#000;font-weight:700;cursor:pointer;line-height:1;padding:0;font-family:Tahoma,"MS Sans Serif",sans-serif;font-size:11px;display:grid;place-items:center}
 .win-btn:active{border-top:2px solid var(--lo);border-left:2px solid var(--lo);border-right:2px solid var(--hi);border-bottom:2px solid var(--hi)}
 .win-btn.win-max[aria-pressed="true"]{background:#e8e8e8}
-.win-close{border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);background:#cfcfcf;color:#000;font-weight:700;cursor:pointer;line-height:1;padding:1px 7px}
+.win-close{width:18px;height:16px;min-width:18px;border-top:1px solid var(--hi);border-left:1px solid var(--hi);border-right:1px solid var(--lo);border-bottom:1px solid var(--lo);background:#cfcfcf;color:#000;font-weight:700;cursor:pointer;line-height:1;padding:0;font-family:Tahoma,"MS Sans Serif",sans-serif;font-size:11px;display:grid;place-items:center}
 .win-body{padding:10px;max-height:70vh;overflow:auto;font-size:14px;line-height:1.4}
 .iframe-wrap{padding:0;height:calc(100% - 22px)}
 #iframeHint{padding:8px}
@@ -101,8 +101,13 @@ body.mobile-mode #aboutWindow .win-body{
 body.mobile-mode .win-body{max-height:calc(100vh - 230px)}
 body.mobile-mode #browserWindow .win-body{padding:0}
 body.mobile-mode .taskbar{height:40px;padding:5px 6px}
-body.mobile-mode .taskbar-windows{display:none}
+body.mobile-mode .taskbar-windows{display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin}
 body.mobile-mode .start-menu{width:min(92vw,320px)}
+
+body.mobile-mode .win-controls{gap:4px}
+body.mobile-mode .win-btn,
+body.mobile-mode .win-close{width:26px;height:24px;min-width:26px;font-size:14px}
+body.mobile-mode .task-btn{max-width:120px;font-size:10px;padding:4px 6px}
 
 .easter-toast{position:fixed;right:10px;bottom:48px;z-index:60;max-width:320px;background:#000;color:#39ff14;border:2px solid #39ff14;padding:8px 10px;font-size:12px;display:none;box-shadow:0 0 14px rgba(57,255,20,.35)}
 .easter-toast.show{display:block;animation:pop .18s ease}
