@@ -1,5 +1,35 @@
 let zTop = 20;
 
+function isMobileMode(){
+  return window.matchMedia('(max-width: 820px)').matches;
+}
+
+function applyLayoutMode(){
+  document.body.classList.toggle('mobile-mode', isMobileMode());
+}
+
+function clampWindowToViewport(win){
+  const taskbarH = 38;
+  const rect = win.getBoundingClientRect();
+  const maxLeft = Math.max(8, window.innerWidth - rect.width - 8);
+  const maxTop = Math.max(8, window.innerHeight - taskbarH - rect.height - 8);
+  const left = Math.min(Math.max(8, rect.left), maxLeft);
+  const top = Math.min(Math.max(8, rect.top), maxTop);
+  win.style.left = `${left}px`;
+  win.style.top = `${top}px`;
+}
+
+function centerWindow(win){
+  if(!win) return;
+  const taskbarH = 38;
+  const rect = win.getBoundingClientRect();
+  const left = Math.max(8, Math.round((window.innerWidth - rect.width) / 2));
+  const top = Math.max(8, Math.round((window.innerHeight - taskbarH - rect.height) / 2));
+  win.style.left = `${left}px`;
+  win.style.top = `${top}px`;
+  clampWindowToViewport(win);
+}
+
 function bringFront(win){
   if(!win) return;
   zTop += 1;
@@ -13,6 +43,7 @@ function openWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
   win.classList.add('open');
+  centerWindow(win);
   bringFront(win);
 }
 
@@ -49,7 +80,7 @@ function initDesktopWindows(){
   });
 
   document.querySelectorAll('.win-window').forEach(win => {
-    win.addEventListener('mousedown', () => bringFront(win));
+    win.addEventListener('pointerdown', () => bringFront(win));
   });
 
   initDrag();
@@ -60,28 +91,49 @@ function initDrag(){
     const bar = win.querySelector('.win-title');
     if(!bar) return;
     let dragging = false, ox=0, oy=0;
-    bar.addEventListener('mousedown', (e) => {
-      if(e.target.closest('.win-close')) return;
+
+    const start = (clientX, clientY) => {
       dragging = true;
       bringFront(win);
       const rect = win.getBoundingClientRect();
-      ox = e.clientX - rect.left;
-      oy = e.clientY - rect.top;
+      ox = clientX - rect.left;
+      oy = clientY - rect.top;
       document.body.style.userSelect = 'none';
-    });
-    window.addEventListener('mousemove', (e) => {
+    };
+    const move = (clientX, clientY) => {
       if(!dragging) return;
-      const maxX = window.innerWidth - 120;
-      const maxY = window.innerHeight - 60;
-      let left = Math.min(Math.max(0, e.clientX - ox), maxX);
-      let top = Math.min(Math.max(0, e.clientY - oy), maxY);
-      win.style.left = left + 'px';
-      win.style.top = top + 'px';
-    });
-    window.addEventListener('mouseup', () => {
+      const rect = win.getBoundingClientRect();
+      const maxX = Math.max(8, window.innerWidth - rect.width - 8);
+      const maxY = Math.max(8, window.innerHeight - 38 - rect.height - 8);
+      const left = Math.min(Math.max(8, clientX - ox), maxX);
+      const top = Math.min(Math.max(8, clientY - oy), maxY);
+      win.style.left = `${left}px`;
+      win.style.top = `${top}px`;
+    };
+    const stop = () => {
       dragging = false;
       document.body.style.userSelect = '';
+    };
+
+    bar.addEventListener('mousedown', (e) => {
+      if(e.target.closest('.win-close')) return;
+      start(e.clientX, e.clientY);
     });
+    window.addEventListener('mousemove', (e) => move(e.clientX, e.clientY));
+    window.addEventListener('mouseup', stop);
+
+    bar.addEventListener('touchstart', (e) => {
+      if(e.target.closest('.win-close')) return;
+      const t = e.touches[0];
+      if(!t) return;
+      start(t.clientX, t.clientY);
+    }, {passive:true});
+    window.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      if(!t) return;
+      move(t.clientX, t.clientY);
+    }, {passive:true});
+    window.addEventListener('touchend', stop);
   });
 }
 
@@ -220,7 +272,15 @@ async function boot(){
   initStartMenu(projects);
   initDesktopWindows();
   initTray();
+
+  applyLayoutMode();
+  document.querySelectorAll('.win-window.open').forEach(centerWindow);
   refreshTaskbar();
   bringFront(document.getElementById('readerWindow'));
+
+  window.addEventListener('resize', () => {
+    applyLayoutMode();
+    document.querySelectorAll('.win-window.open').forEach(clampWindowToViewport);
+  });
 }
 boot();
