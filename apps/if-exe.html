@@ -129,7 +129,7 @@ function step(){
   if(!playing||paused) return;
   if(i>=lines.length){playing=false;return;}
   drawScene(i); lineEl.textContent=lines[i];
-  speak(lines[i],()=>{i++;next(600);});
+  speak(lines[i],()=>{const delay=((i+1)%2===0)?1200:600; i++; next(delay);});
 }
 function start(){if(playing&&!paused)return;playing=true;paused=false;step();}
 function pause(){paused=!paused;if(paused){speechSynthesis.cancel();clearTimeout(timer);}else if(playing){next(600);}}
