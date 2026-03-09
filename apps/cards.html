@@ -2,110 +2,316 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Business Card Builder</title>
-  
-  
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>3D Business Card Builder · Rebuild v2</title>
   <style>
-    :root{--bg:#070b17;--bg2:#0f1730;--panel:#131d3d;--text:#eaf0ff;--muted:#9db0dd;--line:#2c3e73;--primary:#4f7dff;--primary2:#6ea1ff}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:radial-gradient(1000px 520px at 10% -10%,#203164 0%,transparent 55%),linear-gradient(180deg,var(--bg),var(--bg2));padding:22px 14px 40px}
-    .wrap{max-width:1100px;margin:0 auto}
-    h1{margin:.2rem 0 .4rem;font-size:clamp(1.5rem,3.2vw,2rem)}
-    .card{background:linear-gradient(180deg,rgba(19,29,61,.96),rgba(15,23,48,.96));border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 12px 28px rgba(5,10,24,.4)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
-    label{display:block;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;color:#bfd0f6;margin-bottom:5px}
-    input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #3b4f88;background:#0d1631;color:var(--text);outline:none}
-    input:focus,select:focus,textarea:focus{border-color:var(--primary2);box-shadow:0 0 0 3px rgba(110,161,255,.2)}
-    button{padding:10px 14px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--primary),#3f66df);color:#fff;font-weight:700;cursor:pointer}
-    button.secondary{background:linear-gradient(135deg,#3b4f7b,#2d3d61)}
-    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-    .actions button{min-height:40px}
-    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-    .muted{color:var(--muted);font-size:.92rem;line-height:1.4}
-    .item{padding:10px;border-radius:10px;background:#0f1730;border:1px solid #2a3967;margin-bottom:8px}
-    a{color:#aecaFF}
-    pre{white-space:pre-wrap;background:#0a1228;padding:10px;border-radius:10px;border:1px solid #24325a;max-height:340px;overflow:auto}
-    .preview{background:#fff;color:#111;border-radius:10px;padding:14px;min-height:180px;box-shadow:0 8px 28px rgba(0,0,0,.35)}
-    @media (max-width:680px){body{padding:14px 10px 28px}.card{padding:12px}.actions{display:grid;grid-template-columns:1fr 1fr}.actions button{width:100%}}
+    :root{--bg:#070b14;--panel:#0f1726;--panel-2:#121d31;--line:#2a3f67;--text:#e8f1ff;--muted:#95adcc;--accent:#66b7ff;--ok:#4fe09d;--warn:#ffc776}
+    *{box-sizing:border-box} html,body{margin:0}
+    body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1000px 520px at 95% -20%,#1e2f4f 0%,transparent 60%),var(--bg);color:var(--text)}
+    .app{padding:10px;display:grid;gap:10px;max-width:1400px;margin:auto}
+    .panel{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 12px 28px rgba(0,0,0,.35)}
+    .headline{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;flex-wrap:wrap}
+    h1{margin:0;font-size:1.08rem}.sub{font-size:.82rem;color:var(--muted);margin-top:4px}.badge{font-size:.68rem;background:#17315a;color:#9dcaff;padding:6px 10px;border-radius:999px}
+    .grid{display:grid;gap:8px;grid-template-columns:1fr}
+    label{font-size:.75rem;color:var(--muted);display:block}
+    input,select,button{width:100%;border-radius:12px;border:1px solid #2f466f;background:#0b1322;color:var(--text);padding:12px;font-size:16px}
+    button{font-weight:700;cursor:pointer;min-height:44px}
+    button.primary{background:linear-gradient(180deg,#7fc5ff,#52a9ff);color:#041226;border:0}
+    button.alt{background:#243c61}
+    .inline{display:grid;grid-template-columns:1fr auto;gap:6px}.inline button{width:auto;min-width:68px}
+    .controls{display:grid;gap:8px}.controls .row{background:#0b1322;border:1px solid #2f466f;border-radius:12px;padding:9px}
+    .kv{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:#bad0ec}
+    input[type=range]{padding:0;height:34px;accent-color:#72bcff}
+    .btns{display:grid;grid-template-columns:1fr;gap:8px}
+    .canvasWrap{padding:8px;background:#0b1322;border:1px solid #2f466f;border-radius:14px}
+    canvas{display:block;width:100%;height:auto;aspect-ratio:960/620;background:#f2f5fa;border:1px solid #9eb3d0;border-radius:12px}
+    .status{font-size:.78rem;white-space:pre-wrap;background:#08101d;border:1px solid #233b61;padding:8px;border-radius:10px;max-height:220px;overflow:auto}
+    .ok{color:var(--ok)} .warn{color:var(--warn)}
+    .templates{display:grid;gap:8px;max-height:220px;overflow:auto}
+    .tpl{display:grid;grid-template-columns:54px 1fr;gap:8px;background:#0b1322;border:1px solid #2f466f;border-radius:10px;padding:8px;cursor:pointer}
+    .tpl.active,.tpl:hover{border-color:#68b6ff;box-shadow:inset 0 0 0 1px rgba(104,182,255,.35)}
+    .sw{height:38px;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
+    .route{font-size:.73rem;color:#a7bedb;margin-top:4px}.route a{color:#b6dcff}
+    .split{display:grid;gap:8px;grid-template-columns:1fr}
+    .switchbox{padding:10px;border:1px solid #2f466f;border-radius:12px;background:#0b1322}
+    .tiny{font-size:.72rem;color:#9fb8d8}
+    @media (min-width:980px){
+      .app{grid-template-columns:450px 1fr;grid-template-areas:'left right';padding:12px}
+      .left{grid-area:left;display:grid;gap:10px;align-content:start}
+      .right{grid-area:right}
+      .grid.twocol,.split{grid-template-columns:1fr 1fr}
+    }
   </style>
-
-
 </head>
 <body>
-<div class="wrap">
-  <p><a href="../index.html">← Back to hub</a></p>
-  <h1>Business Card Builder</h1>
-  <p class="muted">Create a card profile, preview it, and export JSON for generation pipeline.</p>
-  <div class="card"><div class="row"><span class="muted">Status: Beta demo</span><span class="muted">Best for: fast concept-to-print workflows</span></div></div>
+<p style="position:fixed;top:8px;left:10px;z-index:50"><a href="../index.html" style="color:#b6dcff;text-decoration:none;font:12px/1.2 Tahoma,Arial,sans-serif">← Back to MichaelOS</a></p>
+<main class="app" style="padding-top:34px">
+  <section class="left">
+    <article class="panel">
+      <div class="headline">
+        <div>
+          <h1>3D Card Builder</h1>
+          <div class="sub">Consumer-ready rebuild + switching-card parity controls.</div>
+          <div class="route">Routes: <a href="/">/</a> · <a href="/v3">/v3</a> · <a href="/switching-card">/switching-card</a></div>
+        </div>
+        <span class="badge">Rebuild v2</span>
+      </div>
 
-  <div class="card grid">
-    <div><label>Name</label><input id="name" value="Michael Costea"></div>
-    <div><label>Role</label><input id="role" value="Founder"></div>
-    <div><label>Company</label><input id="company" value="OZQuotes"></div>
-    <div><label>Phone</label><input id="phone" value="+61 ..."></div>
-    <div><label>Email</label><input id="email" value="michael@michaelcostea.com"></div>
-    <div><label>Website</label><input id="website" value="michaelcostea.com"></div>
-    <div><label>Style</label>
-      <select id="style">
-        <option>minimal</option><option>bold</option><option>playful</option><option>premium</option>
-      </select>
-    </div>
-    <div><label>Icon Theme</label>
-      <select id="icon"><option>none</option><option>lightning</option><option>gear</option><option>rocket</option><option>cube</option></select>
-    </div>
-    <div style="grid-column:1/-1"><label>Tagline</label><textarea id="tagline" rows="2">Automation, quotes, and execution.</textarea></div>
-  </div>
+      <div class="grid twocol" style="margin-top:10px">
+        <label>File Name<input id="fileName" value="consumer_card_v2"></label>
+        <label>Style<select id="style"></select></label>
+        <label style="grid-column:1/-1">Line 1 (Name)<input id="name"></label>
+        <label style="grid-column:1/-1">Line 2<div class="inline"><input id="line2"><button onclick="genLine2()">Gen</button></div></label>
+        <label style="grid-column:1/-1">Line 3<div class="inline"><input id="line3"><button onclick="genLine3()">Gen</button></div></label>
+        <label style="grid-column:1/-1">Email<input id="email"></label>
+        <label style="grid-column:1/-1">Mobile<input id="mobile"></label>
+        <label style="grid-column:1/-1">Tagline<div class="inline"><input id="tagline"><button onclick="genTagline()">Gen</button></div></label>
+        <label>Left Icon<select id="leftIcon"></select></label>
+        <label>Right Icon<select id="rightIcon"></select></label>
+      </div>
 
-  <div class="card">
-    <div class="actions">
-      <button id="previewBtn">Update Preview</button>
-      <button id="saveBtn">Save Profile</button>
-      <button id="exportBtn">Export JSON</button>
-    </div>
-    <div id="preview" class="preview"></div>
-  </div>
-</div>
+      <div class="controls" style="margin-top:10px">
+        <div class="row"><div class="kv"><span>Text Scale</span><b id="textScaleVal">100%</b></div><input id="textScale" type="range" min="80" max="140" step="1" value="100" /></div>
+        <div class="row"><div class="kv"><span>Icon Scale (large default)</span><b id="iconScaleVal">130%</b></div><input id="iconScale" type="range" min="100" max="260" step="1" value="130" /></div>
+        <div class="row"><div class="kv"><span>Icon Weight</span><b id="iconWeightVal">125%</b></div><input id="iconWeight" type="range" min="80" max="170" step="1" value="125" /></div>
+        <div class="row">
+          <div class="kv"><span>Card Width (mm)</span><b id="cardWVal">86</b></div>
+          <input id="cardW" type="range" min="80" max="95" step="1" value="86" />
+          <div class="kv" style="margin-top:6px"><span>Card Height (mm)</span><b id="cardHVal">54</b></div>
+          <input id="cardH" type="range" min="48" max="60" step="1" value="54" />
+          <div class="tiny" id="sizeGuardrails">ISO-like default 86×54mm. Guardrails keep sizes printable and wallet-friendly.</div>
+        </div>
+      </div>
+
+      <div class="switchbox" style="margin-top:10px">
+        <div style="font-weight:700;font-size:.82rem">Switchable Dual-Layer Model</div>
+        <div class="tiny">Parity mode for two-image/text combine with realtime interlace or angle reveal preview.</div>
+        <div class="split" style="margin-top:8px">
+          <label>Reveal Mode<select id="revealMode"><option value="off">Off (normal card)</option><option value="interlaced">Interlaced A/B</option><option value="angle">Angle reveal phase</option></select></label>
+          <label>Orientation<select id="orientation"><option value="horizontal">Horizontal stripes</option><option value="vertical">Vertical stripes</option></select></label>
+          <label>Stripe Width (mm)<input id="stripeWidthMm" type="range" min="0.6" max="3.2" step="0.1" value="1.2"></label>
+          <label>Reveal Angle (deg)<input id="revealAngleDeg" type="range" min="0" max="70" step="1" value="20"></label>
+        </div>
+        <div class="split" style="margin-top:8px">
+          <label>Layer A Type<select id="layerAKind"><option value="text">Text</option><option value="image">Image label</option></select></label>
+          <label>Layer A Value<input id="layerAValue" value="MIKE ELECTRICAL"></label>
+          <label>Layer B Type<select id="layerBKind"><option value="text">Text</option><option value="image">Image label</option></select></label>
+          <label>Layer B Value<input id="layerBValue" value="0426 213 861"></label>
+        </div>
+      </div>
+
+      <div class="btns" style="margin-top:10px">
+        <button class="alt" onclick="applyTemplate()">Apply Template</button>
+        <button class="alt" onclick="randomizeIcons()">Shuffle Icons</button>
+        <button class="primary" onclick="build()">Build Standard STL</button>
+        <button onclick="buildSwitching()">Build Switching STL (dual-layer)</button>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div id="fitMsg" class="status">Ready.</div>
+      <div id="status" class="status" style="margin-top:8px">Ready.</div>
+    </article>
+  </section>
+
+  <section class="right panel">
+    <h2 style="margin:0;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase;color:#9ab4d8">Primary 3D Preview</h2>
+    <div class="sub" style="margin-bottom:8px">Angled camera + layered depth is default. Includes realtime switching/interlace behavior when enabled.</div>
+    <div class="canvasWrap"><canvas id="cv" width="960" height="620"></canvas></div>
+    <h2 style="margin:10px 0 6px;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase;color:#9ab4d8">Template Gallery</h2>
+    <div id="tplList" class="templates"></div>
+  </section>
+</main>
+
 <script>
-const k='mc_card_profile_v1';
-const $=id=>document.getElementById(id);
-function data(){
-  return {
-    name: $('name').value, role:$('role').value, company:$('company').value,
-    phone:$('phone').value, email:$('email').value, website:$('website').value,
-    style:$('style').value, icon:$('icon').value, tagline:$('tagline').value,
-    updatedAt:new Date().toISOString()
-  };
-}
-function render(){
-  const d=data();
-  const icon = d.icon==='none'?'':({'lightning':'⚡','gear':'⚙️','rocket':'🚀','cube':'🧊'}[d.icon]||'');
-  $('preview').innerHTML = `
-    <div style="font-weight:700;font-size:22px">${d.name} ${icon}</div>
-    <div style="opacity:.8">${d.role} · ${d.company}</div>
-    <hr />
-    <div>${d.phone}</div>
-    <div>${d.email}</div>
-    <div>${d.website}</div>
-    <div style="margin-top:10px;font-style:italic;color:#444">${d.tagline}</div>
-    <div style="margin-top:8px;font-size:12px;color:#666">style: ${d.style}</div>
-  `;
-}
-function load(){
-  try{
-    const d=JSON.parse(localStorage.getItem(k)||'null');
-    if(!d) return render();
-    for(const id of ['name','role','company','phone','email','website','style','icon','tagline']) if(d[id]) $(id).value=d[id];
-  }catch{}
-  render();
-}
-$('previewBtn').onclick=render;
-$('saveBtn').onclick=()=>{ localStorage.setItem(k, JSON.stringify(data())); alert('Profile saved locally'); };
-$('exportBtn').onclick=()=>{
-  const blob=new Blob([JSON.stringify(data(),null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='business-card-profile.json'; a.click();
+const ICON_EMOJI={bolt:'⚡',briefcase:'💼',building:'🏢',chat:'💬',chip:'🧠',cloud:'☁️',flag:'🚩',gear:'⚙️',globe:'🌐',hammer:'🔨',heart:'❤️',home:'🏠',leaf:'🍃',lifebuoy:'🛟',map_pin:'📍',palette:'🎨',phone:'📞',rocket:'🚀',shield:'🛡️',spark:'✨',star:'⭐',sun:'☀️',truck:'🚚',wrench:'🔧',camera:'📷',link:'🔗',book:'📘',gift:'🎁',trophy:'🏆',music:'🎵',check:'✅',cross:'❌'};
+const LINE2_OPTS=['AI SALES & WORKFLOWS','QUALIFIED ELECTRICIAN','CUSTOM BUILDS','FAST CALL OUT','RESIDENTIAL + COMMERCIAL','24/7 SUPPORT','RELIABLE SERVICES','SMART AUTOMATION'];
+const LINE3_OPTS=['PIPELINE AUTOMATION','MUM 0426213861','DAD 0430333268','CALL OR TEXT ANYTIME','FRIENDLY FAMILY SUPPORT','TRUSTED LOCAL OPERATOR','WE BUILD IT RIGHT','SAFETY FIRST'];
+const TAGLINES={default:['Built local. Prints reliably.','Simple, sharp, printable.','Made for the real world.','Ready to print.']};
+const THEME_BG={construction:'#e8d8bd',electric:'#1d2430',kids:'#fff6de',tech:'#e9f2ff',professional:'#eff4fb',family:'#eef8ff',default:'#f4f7fb'};
+const CAMERA={pitch:0.83,yaw:-0.36,raise:74,depthLift:20};
+let META={icons:[],styles:[],templates:[]}; let activeTemplate=0;
+
+const el={
+  cv:gid('cv'), fileName:gid('fileName'), style:gid('style'), name:gid('name'), line2:gid('line2'), line3:gid('line3'), email:gid('email'), mobile:gid('mobile'), tagline:gid('tagline'),
+  leftIcon:gid('leftIcon'), rightIcon:gid('rightIcon'), textScale:gid('textScale'), iconScale:gid('iconScale'), iconWeight:gid('iconWeight'), cardW:gid('cardW'), cardH:gid('cardH'),
+  textScaleVal:gid('textScaleVal'), iconScaleVal:gid('iconScaleVal'), iconWeightVal:gid('iconWeightVal'), cardWVal:gid('cardWVal'), cardHVal:gid('cardHVal'),
+  revealMode:gid('revealMode'), orientation:gid('orientation'), stripeWidthMm:gid('stripeWidthMm'), revealAngleDeg:gid('revealAngleDeg'),
+  layerAKind:gid('layerAKind'), layerAValue:gid('layerAValue'), layerBKind:gid('layerBKind'), layerBValue:gid('layerBValue'),
+  fitMsg:gid('fitMsg'), status:gid('status'), tplList:gid('tplList')
 };
-load();
+function gid(id){return document.getElementById(id)}
+
+const roundRect=(ctx,x,y,w,h,r,fill,stroke,lw=1)=>{ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.stroke();}};
+const fillSelect=(node,arr)=>{node.innerHTML='';arr.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;node.appendChild(o);});};
+const currentTemplate=()=>META.templates[activeTemplate]||{theme:'default',profile:{}};
+const layerPayload=()=>({
+  revealMode:el.revealMode.value, orientation:el.orientation.value, stripeWidthMm:Number(el.stripeWidthMm.value), revealAngleDeg:Number(el.revealAngleDeg.value),
+  layerA:el.layerAKind.value==='image'?{kind:'image',imageLabel:el.layerAValue.value.trim()}:{kind:'text',text:el.layerAValue.value.trim()},
+  layerB:el.layerBKind.value==='image'?{kind:'image',imageLabel:el.layerBValue.value.trim()}:{kind:'text',text:el.layerBValue.value.trim()}
+});
+const val=()=>({fileName:el.fileName.value.trim(),name:el.name.value.trim(),line2:el.line2.value.trim(),line3:el.line3.value.trim(),email:el.email.value.trim(),mobile:el.mobile.value.trim(),tagline:el.tagline.value.trim(),style:el.style.value,leftIcon:el.leftIcon.value,rightIcon:el.rightIcon.value});
+const syncScale=()=>{
+  el.textScaleVal.textContent=`${el.textScale.value}%`; el.iconScaleVal.textContent=`${el.iconScale.value}%`; el.iconWeightVal.textContent=`${el.iconWeight.value}%`;
+  el.cardWVal.textContent=el.cardW.value; el.cardHVal.textContent=el.cardH.value;
+};
+const setData=(d)=>{el.fileName.value=d.slug||d.fileName||'consumer_card_v2';el.name.value=d.name||'';el.line2.value=d.line2||'';el.line3.value=d.line3||'';el.email.value=d.email||'';el.mobile.value=d.mobile||'';el.tagline.value=d.tagline||'';if(d.style)el.style.value=d.style;if(d.leftIcon)el.leftIcon.value=d.leftIcon;if(d.rightIcon)el.rightIcon.value=d.rightIcon;draw();};
+const layerText=(layer)=>layer.kind==='image'?`[${layer.imageLabel||'IMAGE'}]`:(layer.text||'');
+
+function drawIcon(ctx,name,cx,cy,size,color,weight){
+  const emoji=ICON_EMOJI[name]; ctx.save();ctx.translate(cx,cy);
+  if(emoji){ctx.font=`${Math.round(size*1.55)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(emoji,0,1);ctx.globalAlpha=.22;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(0,size*0.45,size*.82,size*.2,0,0,Math.PI*2);ctx.fill();}
+  else{const r=size*0.62;ctx.lineWidth=Math.max(3,(weight/100)*4.5);ctx.strokeStyle=color;ctx.fillStyle='rgba(255,255,255,.45)';ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.font=`700 ${Math.round(size*.55)}px ui-monospace,monospace`;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText((name||'?').slice(0,1).toUpperCase(),0,1);}
+  ctx.restore();
+}
+
+function drawStencilCutout(ctx,x,y,w,h){
+  ctx.save();ctx.globalAlpha=.92;
+  const holes=[[x+56,y+66,160,42],[x+w-216,y+66,160,42],[x+72,y+h-120,w-144,36],[x+145,y+172,w-290,18],[x+145,y+212,w-290,18],[x+145,y+252,w-290,18]];
+  holes.forEach(([hx,hy,hw,hh])=>roundRect(ctx,hx,hy,hw,hh,8,'rgba(13,20,32,.62)','rgba(5,8,14,.45)',1));
+  const tab=(tx,ty,tw,th)=>roundRect(ctx,tx,ty,tw,th,4,'rgba(250,252,255,.70)','rgba(95,117,147,.50)',1);
+  tab(x+126,y+64,20,46); tab(x+w-146,y+64,20,46); tab(x+w/2-10,y+h-122,20,40); tab(x+230,y+168,16,26); tab(x+w-246,y+168,16,26); tab(x+230,y+248,16,26); tab(x+w-246,y+248,16,26);
+  ctx.restore();
+}
+
+function autoFitText(ctx,text,maxW,startSize,minSize){
+  let size=startSize;
+  while(size>minSize){ctx.font=`700 ${size}px Segoe UI,Arial,sans-serif`; if(ctx.measureText(text).width<=maxW) break; size-=1;}
+  return size;
+}
+
+function drawSwitchingOverlay(ctx,x,y,w,h,p){
+  if(p.revealMode==='off') return;
+  const a=layerText(p.layerA), b=layerText(p.layerB);
+  const stripePx=Math.max(6,p.stripeWidthMm*10);
+  const phase=Math.round((p.revealAngleDeg/70)*2);
+  ctx.save();
+  if(p.orientation==='horizontal'){
+    for(let yy=y+18,i=0;yy<y+h-14;yy+=stripePx,i++){
+      const pick=((i + (p.revealMode==='angle'?phase:0))%2===0);
+      ctx.fillStyle=pick?'rgba(31,51,79,.48)':'rgba(74,42,66,.46)'; ctx.fillRect(x+14,yy,w-28,Math.max(1,stripePx-0.8));
+      const txt=(pick?a:b).slice(0,30); const fs=autoFitText(ctx,txt,w-130,18,11);
+      ctx.font=`700 ${fs}px Segoe UI`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(246,250,255,.78)';ctx.fillText(txt,x+w/2,yy+Math.max(8,stripePx*0.5));
+    }
+  }else{
+    for(let xx=x+18,i=0;xx<x+w-14;xx+=stripePx,i++){
+      const pick=((i + (p.revealMode==='angle'?phase:0))%2===0);
+      ctx.fillStyle=pick?'rgba(31,51,79,.48)':'rgba(74,42,66,.46)'; ctx.fillRect(xx,y+14,Math.max(1,stripePx-0.8),h-28);
+      const src=(pick?a:b)||' '; const ch=src[i%src.length]||' ';
+      ctx.save();ctx.translate(xx+stripePx/2,y+h/2);ctx.rotate(-Math.PI/2);ctx.fillStyle='rgba(246,250,255,.78)';ctx.font='700 20px Segoe UI';ctx.textAlign='center';ctx.fillText(ch,0,0);ctx.restore();
+    }
+  }
+  ctx.restore();
+}
+
+function draw(){
+  const d=val(), p=layerPayload(), ctx=el.cv.getContext('2d'), tpl=currentTemplate();
+  const mmW=Number(el.cardW.value), mmH=Number(el.cardH.value);
+  const ratio=mmW/mmH;
+  const targetW=778;
+  const w=targetW, h=Math.max(390,Math.min(500,Math.round(targetW/ratio)));
+  const x=90, y=Math.round((620-h)/2);
+
+  const textScale=Number(el.textScale.value)/100, iconScale=Number(el.iconScale.value)/100, iconWeight=Number(el.iconWeight.value);
+  ctx.clearRect(0,0,el.cv.width,el.cv.height);
+
+  ctx.save();
+  ctx.translate(el.cv.width/2,el.cv.height/2+CAMERA.raise);
+  ctx.transform(1,0,CAMERA.yaw,CAMERA.pitch,0,0);
+  ctx.translate(-el.cv.width/2,-el.cv.height/2);
+
+  for(let i=10;i>=1;i--){const o=i*1.45; roundRect(ctx,x+o,y+o,w,h,24,`rgba(15,24,38,${0.08+0.02*i})`,'rgba(0,0,0,.14)',1);}
+  ctx.fillStyle='rgba(0,0,0,.34)';ctx.beginPath();ctx.ellipse(x+w*0.57,y+h+36,w*0.52,37,0,0,Math.PI*2);ctx.fill();
+
+  roundRect(ctx,x,y,w,h,24,'#f4f7fb','#8ea4c2',2.2);
+  ctx.fillStyle=THEME_BG[tpl.theme]||THEME_BG.default;ctx.fillRect(x+6,y+6,w-12,h-12);
+  for(let i=0;i<4;i++) roundRect(ctx,x+12+i*9,y+12+i*8,w-24-i*18,h-24-i*16,16,`rgba(255,255,255,${0.05-i*0.008})`,'rgba(46,74,109,.25)',1);
+
+  if((d.style||'').includes('stencil')) drawStencilCutout(ctx,x,y,w,h);
+
+  const raw=[d.name,d.line2,d.line3,d.email,d.mobile,d.tagline].filter(Boolean);
+  const laneStart=Math.round(h*0.23), laneStep=Math.round(h*0.13), laneMaxW=w-160;
+  const bases=[42,30,28,22,24,20];
+  raw.forEach((txt,i)=>{
+    const target=Math.round((bases[i]||20)*textScale);
+    const fs=autoFitText(ctx,txt,laneMaxW,target,13);
+    const ly=y+laneStart+i*laneStep;
+    ctx.font=`700 ${fs}px Segoe UI,Arial,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.lineWidth=Math.max(1.8,fs*.08);ctx.strokeStyle='rgba(250,252,255,.70)';ctx.strokeText(txt,x+w/2,ly+1);
+    ctx.fillStyle='rgba(17,31,48,.34)';ctx.fillText(txt,x+w/2+1.3,ly+1.8);
+    ctx.fillStyle='#16253a';ctx.fillText(txt,x+w/2,ly);
+  });
+
+  const iconBase=40, iconSize=Math.max(24,Math.round(iconBase*iconScale));
+  const iconY=y+h-74;
+  drawIcon(ctx,d.leftIcon,x+136,iconY,iconSize,'#244667',iconWeight);
+  drawIcon(ctx,d.rightIcon,x+w-136,iconY,iconSize,'#244667',iconWeight);
+
+  drawSwitchingOverlay(ctx,x,y,w,h,p);
+
+  ctx.restore();
+
+  const issues=[];
+  if(mmW<82||mmW>92||mmH<50||mmH>58) issues.push('Near guardrail edge: verify wallet fit and tooling');
+  if(iconSize>86&&raw.length>4) issues.push('Very large icons may compete with dense text');
+  if(p.revealMode!=='off' && p.stripeWidthMm<0.8) issues.push('Very thin stripes can reduce print reliability');
+  el.fitMsg.innerHTML=issues.length?`<span class='warn'>⚠ ${issues.join(' · ')}</span>`:`<span class='ok'>✓ 3D layout looks print-safe</span>`;
+}
+
+function swatch(t){const bg=(t.preview&&t.preview.bg)||'#1b2a41';const ac=(t.preview&&t.preview.accent)||'#89c4ff';return `<div class='sw' style='background:linear-gradient(135deg,${bg},#0f1a2e);position:relative'><div style='position:absolute;left:8px;right:8px;top:10px;height:6px;background:${ac};border-radius:99px'></div><div style='position:absolute;left:8px;right:18px;bottom:8px;height:6px;background:rgba(255,255,255,.36);border-radius:99px'></div></div>`}
+function applyTemplate(){if(META.templates[activeTemplate])setData(META.templates[activeTemplate].profile)}
+function randomizeIcons(){const arr=META.icons;if(!arr.length)return;el.leftIcon.value=arr[(Math.random()*arr.length)|0];el.rightIcon.value=arr[(Math.random()*arr.length)|0];draw();}
+function genLine2(){el.line2.value=LINE2_OPTS[(Math.random()*LINE2_OPTS.length)|0];draw();}
+function genLine3(){el.line3.value=LINE3_OPTS[(Math.random()*LINE3_OPTS.length)|0];draw();}
+function genTagline(){const t=((currentTemplate().theme)||'default');const pick=(TAGLINES[t]||TAGLINES.default);el.tagline.value=pick[(Math.random()*pick.length)|0];draw();}
+
+async function build(){
+  el.status.textContent='Build initiated...';
+  try{
+    const r=await fetch('/api/build',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(val())});
+    const j=await r.json(); if(!j.ok){el.status.textContent='Failed to start build\n'+JSON.stringify(j,null,2);return;}
+    let done=false; while(!done){const jr=await fetch('/api/job/'+j.jobId); const js=await jr.json(); el.status.textContent=(js.logs||[]).join('\n')||'Running...'; if(js.status==='done'){el.status.textContent += `\n\n✅ COMPLETED\nManifest: ${js.manifest||'n/a'}`;done=true;} if(js.status==='failed'){el.status.textContent += '\n\n❌ FAILED';done=true;} await new Promise(x=>setTimeout(x,1200));}
+  }catch(e){el.status.textContent='Build request failed: '+e.message;}
+}
+
+async function buildSwitching(){
+  const p=layerPayload();
+  if(p.revealMode==='off'){el.status.textContent='Enable Reveal Mode first for switching build.';return;}
+  el.status.textContent='Switching build initiated...';
+  try{
+    const req={fileName:el.fileName.value.trim(),...p};
+    const r=await fetch('/api/build_switching_card',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(req)});
+    const j=await r.json(); if(!j.ok){el.status.textContent='Failed to start switching build\n'+JSON.stringify(j,null,2);return;}
+    let done=false; while(!done){const jr=await fetch('/api/job/'+j.jobId); const js=await jr.json(); el.status.textContent=(js.logs||[]).join('\n')||'Running...'; if(js.status==='done'){el.status.textContent += `\n\n✅ SWITCHING COMPLETED\nManifest: ${js.manifest||'n/a'}`;done=true;} if(js.status==='failed'){el.status.textContent += '\n\n❌ FAILED';done=true;} await new Promise(x=>setTimeout(x,1200));}
+  }catch(e){el.status.textContent='Switching build request failed: '+e.message;}
+}
+
+async function init(){
+  try{
+    const r=await fetch('/api/meta'); META=await r.json();
+    fillSelect(el.style,META.styles); fillSelect(el.leftIcon,META.icons); fillSelect(el.rightIcon,META.icons);
+    el.tplList.innerHTML='';
+    META.templates.forEach((t,i)=>{const n=document.createElement('div');n.className='tpl'+(i===0?' active':'');n.innerHTML=`${swatch(t)}<div><div style='font-weight:700;font-size:.83rem'>${t.label}</div><div style='font-size:.72rem;color:#96afcd'>${t.description}</div></div>`;n.onclick=()=>{activeTemplate=i;document.querySelectorAll('.tpl').forEach(x=>x.classList.remove('active'));n.classList.add('active');setData(t.profile)};el.tplList.appendChild(n);});
+    if(META.templates.length)setData(META.templates[0].profile);
+    [el.fileName,el.style,el.name,el.line2,el.line3,el.email,el.mobile,el.tagline,el.leftIcon,el.rightIcon,el.textScale,el.iconScale,el.iconWeight,el.cardW,el.cardH,el.revealMode,el.orientation,el.stripeWidthMm,el.revealAngleDeg,el.layerAKind,el.layerAValue,el.layerBKind,el.layerBValue].forEach(n=>{n.addEventListener('input',()=>{syncScale();draw();});n.addEventListener('change',draw)});
+    syncScale(); draw(); el.status.textContent='Ready.';
+  }catch(e){
+    // static fallback so UI still works when backend api isn't present
+    META={
+      icons:['bolt','gear','rocket','globe','wrench','briefcase','star','shield'],
+      styles:['minimal','bold','playful','premium','stencil'],
+      templates:[{label:'Local Default',description:'Static fallback template',theme:'default',profile:{slug:'consumer_card_v2',name:'Michael Costea',line2:'AI SALES & WORKFLOWS',line3:'CALL OR TEXT ANYTIME',email:'costra.michael@gmail.com',mobile:'+61',tagline:'Built local. Prints reliably.',style:'premium',leftIcon:'bolt',rightIcon:'gear'}}]
+    };
+    fillSelect(el.style,META.styles); fillSelect(el.leftIcon,META.icons); fillSelect(el.rightIcon,META.icons);
+    el.tplList.innerHTML='';
+    META.templates.forEach((t,i)=>{const n=document.createElement('div');n.className='tpl'+(i===0?' active':'');n.innerHTML=`${swatch(t)}<div><div style='font-weight:700;font-size:.83rem'>${t.label}</div><div style='font-size:.72rem;color:#96afcd'>${t.description}</div></div>`;n.onclick=()=>{activeTemplate=i;document.querySelectorAll('.tpl').forEach(x=>x.classList.remove('active'));n.classList.add('active');setData(t.profile)};el.tplList.appendChild(n);});
+    setData(META.templates[0].profile);
+    [el.fileName,el.style,el.name,el.line2,el.line3,el.email,el.mobile,el.tagline,el.leftIcon,el.rightIcon,el.textScale,el.iconScale,el.iconWeight,el.cardW,el.cardH,el.revealMode,el.orientation,el.stripeWidthMm,el.revealAngleDeg,el.layerAKind,el.layerAValue,el.layerBKind,el.layerBValue].forEach(n=>{n.addEventListener('input',()=>{syncScale();draw();});n.addEventListener('change',draw)});
+    syncScale(); draw();
+    el.status.textContent='Backend API offline; running local preview mode.';
+  }
+}
+init();
 </script>
 </body>
 </html>

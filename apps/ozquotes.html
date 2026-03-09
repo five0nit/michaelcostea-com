@@ -1,160 +1,306 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>OZQuotes - Quick Quote</title>
-  
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OzQuotes — Compare Solar Quotes Clearly</title>
   <style>
-    :root{--bg:#070b17;--bg2:#0f1730;--panel:#131d3d;--text:#eaf0ff;--muted:#9db0dd;--line:#2c3e73;--primary:#4f7dff;--primary2:#6ea1ff}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:radial-gradient(1000px 520px at 10% -10%,#203164 0%,transparent 55%),linear-gradient(180deg,var(--bg),var(--bg2));padding:22px 14px 40px}
-    .wrap{max-width:1100px;margin:0 auto}
-    h1{margin:.2rem 0 .4rem;font-size:clamp(1.5rem,3.2vw,2rem)}
-    .card{background:linear-gradient(180deg,rgba(19,29,61,.96),rgba(15,23,48,.96));border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 12px 28px rgba(5,10,24,.4)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
-    label{display:block;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;color:#bfd0f6;margin-bottom:5px}
-    input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #3b4f88;background:#0d1631;color:var(--text);outline:none}
-    input:focus,select:focus,textarea:focus{border-color:var(--primary2);box-shadow:0 0 0 3px rgba(110,161,255,.2)}
-    button{padding:10px 14px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--primary),#3f66df);color:#fff;font-weight:700;cursor:pointer}
-    button.secondary{background:linear-gradient(135deg,#3b4f7b,#2d3d61)}
-    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-    .actions button{min-height:40px}
-    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-    .muted{color:var(--muted);font-size:.92rem;line-height:1.4}
-    .item{padding:10px;border-radius:10px;background:#0f1730;border:1px solid #2a3967;margin-bottom:8px}
-    a{color:#aecaFF}
-    pre{white-space:pre-wrap;background:#0a1228;padding:10px;border-radius:10px;border:1px solid #24325a;max-height:340px;overflow:auto}
-    .preview{background:#fff;color:#111;border-radius:10px;padding:14px;min-height:180px;box-shadow:0 8px 28px rgba(0,0,0,.35)}
-    @media (max-width:680px){body{padding:14px 10px 28px}.card{padding:12px}.actions{display:grid;grid-template-columns:1fr 1fr}.actions button{width:100%}}
-  </style>
+:root {
+  --bg: #06070b;
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --line: rgba(255, 255, 255, 0.14);
+  --text: #f5f7fb;
+  --muted: #c9d0db;
+  --primary: #0a84ff;
+  --primary-2: #5ac8fa;
+  --radius: 18px;
+}
 
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: radial-gradient(1200px 700px at 20% -10%, #1d2d46 0%, transparent 45%),
+              radial-gradient(900px 600px at 100% 0%, #17213a 0%, transparent 50%),
+              var(--bg);
+  min-height: 100vh;
+}
 
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(70px);
+  z-index: 0;
+  pointer-events: none;
+}
+.orb-1 { width: 280px; height: 280px; left: -70px; top: 120px; background: rgba(90, 200, 250, 0.28); }
+.orb-2 { width: 360px; height: 360px; right: -90px; top: 220px; background: rgba(10, 132, 255, 0.22); }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 34px;
+  backdrop-filter: saturate(180%) blur(14px);
+  background: rgba(8, 10, 15, 0.58);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand-wrap { display: flex; align-items: center; gap: 10px; }
+.brand-dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(180deg, var(--primary-2), var(--primary)); box-shadow: 0 0 18px rgba(10, 132, 255, 0.8); }
+.brand { font-weight: 600; letter-spacing: 0.2px; }
+
+.topbar nav a {
+  color: #e8edf6;
+  text-decoration: none;
+  margin-left: 18px;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 26px;
+}
+
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-radius: calc(var(--radius) + 6px);
+}
+.glass-soft {
+  background: var(--surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 22px;
+  padding: 30px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #a5b9d2;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.15rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 1.03rem;
+  line-height: 1.55;
+  max-width: 62ch;
+}
+
+.actions { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 17px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(180deg, #39a2ff 0%, #0a84ff 100%);
+  box-shadow: 0 6px 24px rgba(10, 132, 255, 0.4);
+}
+.btn-primary:hover { box-shadow: 0 10px 28px rgba(10, 132, 255, 0.55); }
+
+.btn-ghost, .btn-nav {
+  color: #eaf2ff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.micro-proof {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.micro-proof span {
+  font-size: 0.8rem;
+  color: #d3dfef;
+  padding: 7px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hero-card {
+  padding: 20px;
+  align-self: stretch;
+}
+.card-label { margin: 0; color: #b5c7dc; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.card-big { margin: 10px 0 6px; font-size: 2.35rem; font-weight: 650; letter-spacing: -0.02em; }
+.card-sub, .card-note { color: #c6d0dd; margin: 0; line-height: 1.4; }
+.card-note { margin-top: 10px; font-size: 0.87rem; opacity: 0.85; }
+.progress { margin-top: 12px; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.12); overflow: hidden; }
+.progress span { display: block; width: 72%; height: 100%; background: linear-gradient(90deg, var(--primary-2), var(--primary)); }
+
+.proof-grid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.proof-grid article { padding: 17px; }
+.proof-grid h3 { margin: 0 0 8px; font-size: 1.03rem; letter-spacing: -0.01em; }
+.proof-grid p { margin: 0; color: var(--muted); line-height: 1.45; font-size: 0.94rem; }
+
+.steps {
+  margin-top: 18px;
+  padding: 22px;
+}
+.steps h2 { margin: 0 0 12px; font-size: 1.6rem; letter-spacing: -0.01em; }
+.step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.step { padding: 16px; }
+.step span { font-size: 1.35rem; color: #9dc3eb; font-weight: 700; }
+.step h4 { margin: 8px 0 6px; font-size: 1rem; }
+.step p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.42; }
+
+.acl-note {
+  margin-top: 14px;
+  color: #bbc8da;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+}
+
+footer {
+  text-align: center;
+  padding: 26px 0 34px;
+  color: #9fb0c5;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 980px) {
+  .hero, .proof-grid, .step-grid { grid-template-columns: 1fr; }
+  .topbar { padding: 14px 18px; }
+  .topbar nav a { margin-left: 10px; font-size: 0.87rem; }
+  main { padding: 16px; }
+}
+</style>
 </head>
 <body>
-<div class="wrap">
-  <p><a href="../index.html">← Back to hub</a></p>
-  <h1>OZQuotes — Quick Quote Tool</h1>
-  <p class="muted">Generate a rough project quote remotely and export it.</p>
-  <div class="card"><div class="row"><span class="muted">Status: Beta demo</span><span class="muted">Best for: on-site quote estimation</span></div></div>
+  <p style="position:fixed;top:8px;left:10px;z-index:50"><a href="../index.html" style="color:#b6dcff;text-decoration:none;font:12px/1.2 Tahoma,Arial,sans-serif">← Back to MichaelOS</a></p>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
 
-  <div class="card grid">
-    <div><label>API Base</label><input id="apiBaseInput" value="https://api.michaelcostea.com/api/ozquotes" /></div>
-    <div><label>API Key</label><input id="apiKeyInput" placeholder="x-api-key" /></div>
-    <div><label>Connection</label><input id="conn" value="checking..." readonly /></div>
-    <div><label>Customer</label><input id="customer" placeholder="Client name"></div>
-    <div><label>Project Type</label>
-      <select id="type"><option>Electrical</option><option>Solar</option><option>Automation</option><option>General</option></select>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <span class="brand-dot"></span>
+      <span class="brand">OzQuotes</span>
     </div>
-    <div><label>Labor Hours</label><input id="hours" type="number" value="8" min="0"></div>
-    <div><label>Hourly Rate (AUD)</label><input id="rate" type="number" value="120" min="0"></div>
-    <div><label>Materials (AUD)</label><input id="materials" type="number" value="500" min="0"></div>
-    <div><label>Travel/Other (AUD)</label><input id="other" type="number" value="80" min="0"></div>
-    <div><label>Margin %</label><input id="margin" type="number" value="18" min="0"></div>
-    <div><label>GST %</label><input id="gst" type="number" value="10" min="0"></div>
-  </div>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#proof">Proof</a>
+      <a href="#cta" class="btn btn-nav">Get quotes</a>
+    </nav>
+  </header>
 
-  <div class="card">
-    <div class="actions">
-      <button id="calc">Calculate</button>
-      <button id="save">Save Draft (Remote)</button>
-      <button id="loadRemote">Load Latest Remote</button>
-      <button id="export">Export JSON</button>
-    </div>
-    <p id="status" class="muted"></p>
-    <pre id="out">No quote yet.</pre>
-  </div>
-</div>
-<script>
-const k='ozquotes_draft_v1';
-const pref='ozquotes_remote_prefs_v1';
-const $=id=>document.getElementById(id);
-const statusEl = $('status');
-function n(id){ return Number($(id).value||0); }
-function apiBase(){ return ($('apiBaseInput').value || '').replace(/\/$/, ''); }
-function apiHeaders(){ const v=$('apiKeyInput').value.trim(); return v ? {'x-api-key': v, 'content-type':'application/json'} : {'content-type':'application/json'}; }
-function setStatus(t){ statusEl.textContent=t; }
-function savePrefs(){ localStorage.setItem(pref, JSON.stringify({apiBase:$('apiBaseInput').value, apiKey:$('apiKeyInput').value})); }
-function loadPrefs(){ try{ const p=JSON.parse(localStorage.getItem(pref)||'null'); if(p){ if(p.apiBase) $('apiBaseInput').value=p.apiBase; if(p.apiKey) $('apiKeyInput').value=p.apiKey; }}catch{} }
-async function checkConn(){ try{ const r=await fetch(`${apiBase()}/latest`, { headers: $('apiKeyInput').value.trim()?{'x-api-key':$('apiKeyInput').value.trim()}:{} }); $('conn').value = r.ok ? 'online' : `api ${r.status}`; }catch{ $('conn').value='offline'; } }
+  <main>
+    <section class="hero glass" id="cta">
+      <div class="hero-copy">
+        <p class="eyebrow">AU homeowner comparison platform</p>
+        <h1>Compare quotes with confidence — without the sales chaos.</h1>
+        <p class="lead">
+          Share a few details, review quotes from participating installers, and move ahead when you’re ready.
+          If you proceed, we can send an SMS around 5 minutes before installer outreach (where available).
+        </p>
 
-function build(){
-  const labor = n('hours') * n('rate');
-  const base = labor + n('materials') + n('other');
-  const margin = base * (n('margin')/100);
-  const subtotal = base + margin;
-  const gst = subtotal * (n('gst')/100);
-  const total = subtotal + gst;
-  return {
-    customer:$('customer').value||'Unknown',
-    projectType:$('type').value,
-    breakdown:{labor,materials:n('materials'),other:n('other'),base,margin,subtotal,gst,total},
-    assumptions:{hours:n('hours'),rate:n('rate'),marginPct:n('margin'),gstPct:n('gst')},
-    createdAt:new Date().toISOString()
-  };
-}
-function hydrate(d){
-  if(!d) return;
-  $('customer').value=d.customer||'';
-  $('type').value=d.projectType||'General';
-  $('hours').value=d.assumptions?.hours??8;
-  $('rate').value=d.assumptions?.rate??120;
-  $('materials').value=d.breakdown?.materials??500;
-  $('other').value=d.breakdown?.other??80;
-  $('margin').value=d.assumptions?.marginPct??18;
-  $('gst').value=d.assumptions?.gstPct??10;
-}
-function render(){ const q=build(); $('out').textContent=JSON.stringify(q,null,2); return q; }
+        <div class="actions">
+          <button class="btn btn-primary">Start comparison</button>
+          <button class="btn btn-ghost">See sample breakdown</button>
+        </div>
 
-async function saveRemote(){
-  const quote = build();
-  localStorage.setItem(k, JSON.stringify(quote));
-  try{
-    const r = await fetch(`${apiBase()}/save`, { method:'POST', headers: apiHeaders(), body: JSON.stringify(quote) });
-    const txt = await r.text();
-    const data = JSON.parse(txt);
-    if(!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
-    setStatus('Saved remotely + locally.');
-    $('out').textContent=JSON.stringify(data.quote,null,2);
-  }catch(err){
-    setStatus(`Remote save failed (${err}). Saved locally only.`);
-    render();
-  }
-}
+        <div class="micro-proof">
+          <span>~3 minute intake</span>
+          <span>Clear side-by-side quote view</span>
+          <span>SMS heads-up before outreach</span>
+        </div>
+      </div>
 
-async function loadRemote(){
-  try{
-    const r = await fetch(`${apiBase()}/latest`, { headers: $('apiKeyInput').value.trim()?{'x-api-key':$('apiKeyInput').value.trim()}:{} });
-    const txt = await r.text();
-    const data = JSON.parse(txt);
-    if(!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
-    if(data.quote){ hydrate(data.quote); localStorage.setItem(k, JSON.stringify(data.quote)); }
-    render();
-    setStatus(data.quote ? 'Loaded latest remote quote.' : 'No remote quotes yet.');
-  }catch(err){
-    setStatus(`Remote load failed (${err}); using local draft.`);
-    const local = JSON.parse(localStorage.getItem(k)||'null');
-    if(local) hydrate(local);
-    render();
-  }
-}
+      <aside class="hero-card glass-soft">
+        <p class="card-label">Simple process</p>
+        <p class="card-big">3 Steps</p>
+        <p class="card-sub">Share details → Review quotes → Call to proceed</p>
+        <div class="progress"><span></span></div>
+        <p class="card-note">Timing and availability vary by location and installer.</p>
+      </aside>
+    </section>
 
-function load(){
-  try{ const d=JSON.parse(localStorage.getItem(k)||'null'); if(d) hydrate(d); }catch{}
-  render();
-  loadRemote();
-}
+    <section id="proof" class="proof-grid">
+      <article class="glass-soft">
+        <h3>Cleaner comparisons</h3>
+        <p>See key inclusions, pricing context and installer fit in one view.</p>
+      </article>
+      <article class="glass-soft">
+        <h3>Faster decision flow</h3>
+        <p>No more chasing multiple callbacks across different quoting styles.</p>
+      </article>
+      <article class="glass-soft">
+        <h3>Clear next step</h3>
+        <p>Find one you like, click and call — we coordinate the handoff.</p>
+      </article>
+    </section>
 
-$('calc').onclick=render;
-$('save').onclick=saveRemote;
-$('loadRemote').onclick=loadRemote;
-$('apiBaseInput').onchange=()=>{savePrefs();checkConn();};
-$('apiKeyInput').onchange=()=>{savePrefs();checkConn();};
-$('export').onclick=()=>{ const q=build(); const b=new Blob([JSON.stringify(q,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='ozquote.json'; a.click(); };
-loadPrefs();
-checkConn();
-load();
-</script>
+    <section id="how" class="steps glass">
+      <h2>How it works</h2>
+      <div class="step-grid">
+        <div class="step glass-soft">
+          <span>01</span>
+          <h4>Share details</h4>
+          <p>Suburb, usage and property basics.</p>
+        </div>
+        <div class="step glass-soft">
+          <span>02</span>
+          <h4>Review quotes</h4>
+          <p>Quotes from participating installers presented clearly.</p>
+        </div>
+        <div class="step glass-soft">
+          <span>03</span>
+          <h4>Proceed your way</h4>
+          <p>Click and call us. SMS reminder before installer contact (where available).</p>
+        </div>
+      </div>
+      <p class="acl-note">
+        Important: quote timing, installer availability and final terms vary by location and participating installer.
+        OzQuotes provides comparison and matching support only.
+      </p>
+    </section>
+  </main>
+
+  <footer>ozquotes.com</footer>
 </body>
 </html>
