@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MichaelOS Paint</title>
+<style>
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#0e172f;color:#fff}
+.wrap{max-width:1100px;margin:0 auto;padding:14px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;background:#1a274a;border:1px solid #3a4f88;padding:10px;border-radius:10px}
+label{font-size:12px;color:#c8d8ff}
+input,select,button{padding:8px;border-radius:8px;border:1px solid #3a4f88;background:#0c1531;color:#fff}
+button{cursor:pointer;background:#2a4fc6}
+canvas{margin-top:10px;border:2px solid #3a4f88;background:#fff;touch-action:none;max-width:100%;height:auto}
+.small{font-size:12px;color:#bcd}
+a{color:#9fc0ff}
+</style></head><body>
+<div class="wrap">
+<p><a href="../index.html">← Back</a></p>
+<h1>Paint</h1>
+<div class="toolbar">
+<div><label>Color</label><br><input id="color" type="color" value="#111111"></div>
+<div><label>Size</label><br><input id="size" type="range" min="1" max="40" value="4"></div>
+<div><label>Tool</label><br><select id="tool"><option value="draw">Draw</option><option value="erase">Erase</option></select></div>
+<div style="display:flex;align-items:end;gap:8px"><button id="clear">Clear</button><button id="save">Save PNG</button></div>
+</div>
+<canvas id="cv" width="1200" height="700"></canvas>
+<p class="small">Tip: works with mouse + touch.</p>
+</div>
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+let down=false,last=null;
+const color=()=>document.getElementById('tool').value==='erase'?'#fff':document.getElementById('color').value;
+const size=()=>Number(document.getElementById('size').value||4);
+function pos(e){const r=cv.getBoundingClientRect();const p=e.touches?e.touches[0]:e;return{x:(p.clientX-r.left)*(cv.width/r.width),y:(p.clientY-r.top)*(cv.height/r.height)}}
+function drawTo(p){if(!last)return;ctx.strokeStyle=color();ctx.lineWidth=size();ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;}
+cv.addEventListener('mousedown',e=>{down=true;last=pos(e)});window.addEventListener('mouseup',()=>{down=false;last=null});cv.addEventListener('mousemove',e=>{if(!down)return;drawTo(pos(e))});
+cv.addEventListener('touchstart',e=>{down=true;last=pos(e);e.preventDefault()},{passive:false});window.addEventListener('touchend',()=>{down=false;last=null});cv.addEventListener('touchmove',e=>{if(!down)return;drawTo(pos(e));e.preventDefault()},{passive:false});
+document.getElementById('clear').onclick=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height)};
+document.getElementById('save').onclick=()=>{const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='michaelos-paint.png';a.click();};
+</script></body></html>

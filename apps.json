@@ -27,6 +27,20 @@
       "status": "beta",
       "description": "Quote and workflow platform under active development.",
       "url": "./apps/ozquotes.html"
+    },
+    {
+      "name": "MichaelOS Paint",
+      "slug": "paint",
+      "status": "live",
+      "description": "Browser paint app with pen/eraser, touch support, and PNG export.",
+      "url": "./apps/paint.html"
+    },
+    {
+      "name": ".text Editor",
+      "slug": "text",
+      "status": "live",
+      "description": "Simple notepad-style text editor with local save and .txt export.",
+      "url": "./apps/text.html"
     }
   ]
 }

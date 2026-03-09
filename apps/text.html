@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MichaelOS Text</title>
+<style>
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#0e172f;color:#fff}
+.wrap{max-width:1000px;margin:0 auto;padding:14px}
+.top{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+button,select,input{padding:8px;border-radius:8px;border:1px solid #3a4f88;background:#0c1531;color:#fff}
+button{cursor:pointer;background:#2a4fc6}
+textarea{width:100%;height:68vh;border:1px solid #3a4f88;border-radius:10px;padding:12px;background:#fff;color:#111;font:16px/1.4 "Courier New",monospace}
+a{color:#9fc0ff}
+</style></head><body>
+<div class="wrap">
+<p><a href="../index.html">← Back</a></p>
+<h1>.text Editor</h1>
+<div class="top">
+<button id="new">New</button>
+<button id="saveLocal">Save Local</button>
+<button id="exportTxt">Export .txt</button>
+<input id="fname" value="note.txt" />
+</div>
+<textarea id="txt" placeholder="Write your notes..."></textarea>
+</div>
+<script>
+const key='michaelos_text_v1';
+const txt=document.getElementById('txt');
+const load=()=>{txt.value=localStorage.getItem(key)||''};
+const save=()=>{localStorage.setItem(key,txt.value)};
+load();
+window.addEventListener('beforeunload',save);
+document.getElementById('new').onclick=()=>{if(confirm('Clear current text?')) txt.value='';};
+document.getElementById('saveLocal').onclick=()=>{save();alert('Saved locally');};
+document.getElementById('exportTxt').onclick=()=>{const name=document.getElementById('fname').value||'note.txt';const b=new Blob([txt.value],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();};
+</script></body></html>
