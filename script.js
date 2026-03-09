@@ -531,6 +531,18 @@ async function boot(){
   refreshTaskbar();
   bringFront(document.getElementById('readerWindow'));
 
+  if (isMobileMode()) {
+    const rw = document.getElementById('readerWindow');
+    if (rw) {
+      rw.classList.add('open');
+      rw.style.left = '8px';
+      rw.style.right = '8px';
+      rw.style.top = '118px';
+      rw.style.width = 'auto';
+      rw.style.height = 'auto';
+    }
+  }
+
   window.addEventListener('resize', () => {
     const wasMobile = document.body.classList.contains('mobile-mode');
     applyLayoutMode();

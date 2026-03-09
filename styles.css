@@ -125,6 +125,15 @@ body.mobile-mode .start-menu{width:min(92vw,320px)}
   .desk-icon{width:82px;height:82px}
   .task-btn{max-width:130px}
   .tray-pill{min-width:56px;font-size:10px}
+
+  /* hard default placement guard for initial Reader window */
+  #readerWindow.win-window.open{
+    left:8px !important;
+    right:8px !important;
+    top:118px !important;
+    width:auto !important;
+    height:auto !important;
+  }
 }
 
 
