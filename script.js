@@ -128,8 +128,9 @@ function openWindow(id){
     });
   }
 
+  win.classList.remove('minimized');
   win.classList.add('open');
-  centerWindow(win);
+  if(!win.classList.contains('maximized')) centerWindow(win);
   bringFront(win);
 }
 
@@ -143,7 +144,50 @@ function closeWindow(id){
     setTimeout(()=>{ if(frame) frame.src = 'about:blank'; }, 20);
   }
 
-  win.classList.remove('open');
+  win.classList.remove('open','minimized','maximized','active');
+  ['left','top','width','height','right','bottom'].forEach(k=> win.style[k]='');
+  delete win.dataset.prevLeft;
+  delete win.dataset.prevTop;
+  delete win.dataset.prevWidth;
+  delete win.dataset.prevHeight;
+  delete win.dataset.prevRight;
+  delete win.dataset.prevBottom;
+  refreshTaskbar();
+}
+
+function minimizeWindow(id){
+  const win = document.getElementById(id);
+  if(!win) return;
+  win.classList.remove('open','active');
+  win.classList.add('minimized');
+  refreshTaskbar();
+}
+
+function toggleMaximizeWindow(id){
+  const win = document.getElementById(id);
+  if(!win) return;
+  if(win.classList.contains('maximized')){
+    win.classList.remove('maximized');
+    if(win.dataset.prevLeft!==undefined) win.style.left = win.dataset.prevLeft;
+    if(win.dataset.prevTop!==undefined) win.style.top = win.dataset.prevTop;
+    if(win.dataset.prevWidth!==undefined) win.style.width = win.dataset.prevWidth;
+    if(win.dataset.prevHeight!==undefined) win.style.height = win.dataset.prevHeight;
+    win.style.right = win.dataset.prevRight || '';
+    win.style.bottom = win.dataset.prevBottom || '';
+  }else{
+    win.dataset.prevLeft = win.style.left || '';
+    win.dataset.prevTop = win.style.top || '';
+    win.dataset.prevWidth = win.style.width || '';
+    win.dataset.prevHeight = win.style.height || '';
+    win.dataset.prevRight = win.style.right || '';
+    win.dataset.prevBottom = win.style.bottom || '';
+    win.classList.add('maximized');
+  }
+  win.classList.remove('minimized');
+  win.classList.add('open');
+  bringFront(win);
+  const maxBtn = win.querySelector('.win-max');
+  if(maxBtn) maxBtn.setAttribute('aria-pressed', String(win.classList.contains('maximized')));
   refreshTaskbar();
 }
 
@@ -178,10 +222,34 @@ function initDesktopWindows(){
     });
   });
 
+  document.querySelectorAll('.win-window').forEach((win)=>{
+    const titleBar = win.querySelector('.win-title');
+    const closeBtn = titleBar?.querySelector('.win-close');
+    if(!titleBar || !closeBtn || titleBar.querySelector('.win-controls')) return;
+    const controls = document.createElement('div');
+    controls.className = 'win-controls';
+    controls.innerHTML = `<button class="win-btn win-min" title="Minimize" aria-label="Minimize" data-minimize="${win.id}">_</button><button class="win-btn win-max" title="Toggle Fullscreen" aria-label="Toggle Fullscreen" data-maximize="${win.id}" aria-pressed="false">▢</button>`;
+    controls.appendChild(closeBtn);
+    titleBar.appendChild(controls);
+    titleBar.addEventListener('dblclick', (e)=>{ if(!e.target.closest('button')) toggleMaximizeWindow(win.id); });
+  });
+
   document.querySelectorAll('.win-close').forEach((btn) => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-close');
       if (id) closeWindow(id);
+    });
+  });
+  document.querySelectorAll('.win-min').forEach((btn)=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.getAttribute('data-minimize');
+      if(id) minimizeWindow(id);
+    });
+  });
+  document.querySelectorAll('.win-max').forEach((btn)=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.getAttribute('data-maximize');
+      if(id) toggleMaximizeWindow(id);
     });
   });
 
@@ -219,7 +287,7 @@ function initDrag(){
     };
 
     bar.addEventListener('pointerdown', (e) => {
-      if(e.target.closest('.win-close')) return;
+      if(e.target.closest('button')) return;
       if(e.button !== undefined && e.button !== 0) return;
       dragging=true;
       bringFront(win);
@@ -266,11 +334,12 @@ function initTray(){
 function refreshTaskbar(){
   const wrap = document.getElementById('taskButtons');
   if(!wrap) return;
-  const windows = Array.from(document.querySelectorAll('.win-window.open'));
+  const windows = Array.from(document.querySelectorAll('.win-window.open, .win-window.minimized')).filter((w,i,a)=>a.indexOf(w)===i);
   wrap.innerHTML = windows.map(w => {
     const title = w.querySelector('.win-title span')?.textContent || w.id;
-    const active = w.classList.contains('active') ? 'active' : '';
-    return `<button class="task-btn ${active}" data-focus="${w.id}">${title}</button>`;
+    const active = (w.classList.contains('active') && w.classList.contains('open')) ? 'active' : '';
+    const minimized = w.classList.contains('minimized') ? 'minimized' : '';
+    return `<button class="task-btn ${active} ${minimized}" data-focus="${w.id}">${title}</button>`;
   }).join('');
 
   wrap.querySelectorAll('.task-btn').forEach(btn => {
@@ -278,10 +347,15 @@ function refreshTaskbar(){
       const id = btn.getAttribute('data-focus');
       const win = document.getElementById(id);
       if(!win) return;
-      if(win.classList.contains('active')){
-        win.classList.remove('open');
+      if(win.classList.contains('minimized')){
+        win.classList.remove('minimized');
+        win.classList.add('open');
+        bringFront(win);
+      } else if(win.classList.contains('active') && win.classList.contains('open')){
+        minimizeWindow(id);
       } else {
         win.classList.add('open');
+        win.classList.remove('minimized');
         bringFront(win);
       }
       refreshTaskbar();

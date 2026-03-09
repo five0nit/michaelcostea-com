@@ -36,8 +36,14 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 
 .win-window{position:absolute;display:none;z-index:8;background:var(--panel);border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);box-shadow:2px 2px 0 #000}
 .win-window.open{display:block}
+.win-window.minimized{display:none}
 .win-window.active{z-index:16}
+.win-window.maximized{left:0 !important;top:0 !important;right:auto !important;bottom:auto !important;width:100vw !important;height:calc(100vh - 38px) !important}
 .win-title{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,var(--title1),var(--title2));color:#fff;padding:4px 6px;font-size:12px;font-weight:700;cursor:move;user-select:none}
+.win-controls{display:flex;gap:4px;align-items:center}
+.win-btn{min-width:24px;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);background:#cfcfcf;color:#000;font-weight:700;cursor:pointer;line-height:1;padding:1px 6px;font-family:"MS Sans Serif",Tahoma,sans-serif}
+.win-btn:active{border-top:2px solid var(--lo);border-left:2px solid var(--lo);border-right:2px solid var(--hi);border-bottom:2px solid var(--hi)}
+.win-btn.win-max[aria-pressed="true"]{background:#e8e8e8}
 .win-close{border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);background:#cfcfcf;color:#000;font-weight:700;cursor:pointer;line-height:1;padding:1px 7px}
 .win-body{padding:10px;max-height:70vh;overflow:auto;font-size:14px;line-height:1.4}
 .iframe-wrap{padding:0;height:calc(100% - 22px)}
@@ -56,6 +62,7 @@ a.btn,button.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2
 .taskbar-windows{display:flex;gap:6px;min-width:0;flex:1}
 .task-btn{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;padding:4px 8px;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);background:#d8d8d8;cursor:pointer}
 .task-btn.active{background:#efefef;border-top:2px solid var(--lo);border-left:2px solid var(--lo);border-right:2px solid var(--hi);border-bottom:2px solid var(--hi)}
+.task-btn.minimized{opacity:.8}
 .tray{display:flex;gap:6px}.tray-pill{font-size:11px;min-width:68px;text-align:center;padding:3px 6px;background:#d9d9d9;border-top:2px solid var(--lo);border-left:2px solid var(--lo);border-right:2px solid var(--hi);border-bottom:2px solid var(--hi)}
 .start-menu{position:fixed;left:8px;bottom:40px;width:300px;background:#c0c0c0;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);box-shadow:2px 2px 0 #000;z-index:35;display:none}
 .start-menu.open{display:block}.start-head{background:linear-gradient(180deg,#000080,#1084d0);color:#fff;font-weight:700;padding:7px 9px;font-size:12px}.start-items{padding:6px;max-height:52vh;overflow:auto}.start-item{display:flex;justify-content:space-between;text-decoration:none;color:#000;font-size:12px;padding:6px 7px}.start-item:hover{background:#000080;color:#fff}

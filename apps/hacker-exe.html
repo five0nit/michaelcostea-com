@@ -1,29 +1,69 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HACKER.EXE</title>
+<title>HACKER.EXE // Swordfish Protocol</title>
 <style>
-body{margin:0;background:#071107;color:#9bff9b;font-family:'Courier New',monospace}
-.wrap{max-width:900px;margin:0 auto;padding:16px}
-a{color:#9fc0ff}
-.panel{border:1px solid #2f8a2f;background:#041004;padding:12px;border-radius:8px}
-button{padding:8px 10px;border:1px solid #3aa03a;background:#0b2c0b;color:#9bff9b;border-radius:6px;cursor:pointer}
-pre{white-space:pre-wrap;background:#020a02;border:1px solid #245f24;padding:10px;border-radius:8px;min-height:220px}
+:root{--bg:#05080f;--bg2:#091423;--neon:#7dff8d;--amber:#ffb24d;--panel:#06101d;--line:#23475f}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 20% 0%,#16263d,transparent 42%),linear-gradient(140deg,var(--bg),var(--bg2));color:var(--neon);font-family:'Courier New',monospace}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+a{color:#b7d2ff}
+.panel{border:1px solid var(--line);background:rgba(6,16,29,.82);padding:12px;border-radius:8px;box-shadow:0 0 20px rgba(0,0,0,.45)}
+.header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.badge{font-size:12px;color:#ffe3b7;border:1px solid #8a5c22;background:rgba(255,178,77,.14);padding:3px 8px;border-radius:12px}
+.lead{color:#9ed6ff;margin:.35rem 0 .8rem}
+button{padding:8px 10px;border:1px solid #3aa03a;background:#0b2c0b;color:#9bff9b;border-radius:6px;cursor:pointer;font-family:inherit}
+button.alt{border-color:#8a5c22;background:#2d1a06;color:#ffd7a2}
+pre{white-space:pre-wrap;background:#020a02;border:1px solid #245f24;padding:10px;border-radius:8px;min-height:260px}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+.card{border:1px solid #1f3f56;background:rgba(3,9,16,.55);padding:10px;border-radius:8px}
+.card h3{margin:.2rem 0 .55rem;color:#ffd38e;font-size:15px}
+ul{margin:.1rem 0;padding-left:18px}
 .small{font-size:12px;color:#7cd67c}
+.logline{color:#7ca8c9;font-size:12px}
+@media (max-width:780px){.grid{grid-template-columns:1fr}}
 </style></head><body>
 <div class="wrap">
   <p><a href="../index.html">← Back</a></p>
-  <h1>HACKER.EXE</h1>
   <div class="panel">
-    <p>This tool displays your own public network fingerprint (IP + rough location).</p>
-    <p class="small">Data is approximate and sourced from public IP geolocation providers.</p>
-    <p><button id="scan">Run Network Scan</button></p>
-    <pre id="out">Ready.</pre>
+    <div class="header">
+      <div>
+        <h1>HACKER.EXE</h1>
+        <p class="lead">SWORD FISH PROTOCOL // cinematic cyber-thriller mode // operator terminal</p>
+      </div>
+      <span class="badge">BLACK CELL / ACCESS TIER: RESTRICTED</span>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Mission Console</h3>
+        <p>This sequence emulates the classic 90s/2000s "impossible breach" vibe: pressure, misdirection, and a covert-money trace.</p>
+        <p>
+          <button id="scan">Run Network Scan</button>
+          <button id="brief" class="alt">Load Lore Brief</button>
+        </p>
+        <pre id="out">Ready. Awaiting operator input...</pre>
+        <p class="small">Data is approximate and sourced from public IP geolocation providers.</p>
+      </div>
+
+      <div class="card">
+        <h3>Case File // Direct Association Hooks</h3>
+        <ul>
+          <li><b>Ex-blackhat specialist</b> pulled back into an off-book operation</li>
+          <li><b>Hydra transfer worm</b> with hidden backdoor/reversal path</li>
+          <li><b>Three-way trust conflict</b>: covert cell, federal handler, internal mole</li>
+          <li><b>Setpiece pressure</b>: timed breach under extreme distractions</li>
+          <li><b>Visual language</b>: phosphor terminal green + amber mission overlays</li>
+        </ul>
+        <p class="logline">Use this page as the baseline tone pack for hacker.exe across the whole MichaelOS environment.</p>
+      </div>
+    </div>
   </div>
 </div>
 <script>
 const out=document.getElementById('out');
 const scanBtn=document.getElementById('scan');
+const briefBtn=document.getElementById('brief');
 
 function line(k,v){ return `${String(k).padEnd(16)} : ${v ?? 'n/a'}`; }
 
@@ -58,12 +98,25 @@ async function getNetworkProfile(){
   throw new Error(lastErr||'All providers failed');
 }
 
+briefBtn.addEventListener('click', ()=>{
+  out.textContent=[
+    '== SWORD FISH PROTOCOL // BRIEF ==',
+    'Objective : Identify operator node + route through dark-fiber shell',
+    'Threat    : Misdirection campaign + compromised handlers',
+    'Payload   : HYDRA transfer lattice (contains reversible sink)',
+    'Directive : Trust no single signal. Verify twice. Execute once.',
+    '',
+    'Status    : Operator cleared for reconnaissance.'
+  ].join('\n');
+});
+
 scanBtn.addEventListener('click', async()=>{
-  out.textContent='Scanning network fingerprint...';
+  out.textContent='Initiating reconnaissance...';
   scanBtn.disabled=true;
   try{
     const d=await getNetworkProfile();
     out.textContent=[
+      '== OPERATOR NODE PROFILE ==',
       line('IP', d.ip),
       line('City', d.city),
       line('Region', d.region),
@@ -74,7 +127,9 @@ scanBtn.addEventListener('click', async()=>{
       line('Timezone', d.timezone),
       line('Org', d.org),
       line('ASN', d.asn),
-      line('Source', d.source)
+      line('Source', d.source),
+      '',
+      'Result: Fingerprint acquired. Awaiting next mission stage.'
     ].join('\n');
   }catch(e){
     out.textContent='Lookup failed.\n'+String(e)+'\n\nTip: Some networks block public geo APIs; try VPN off or another network.';
