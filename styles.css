@@ -47,7 +47,7 @@ body::before{
 
 .hero{padding:14px;margin-bottom:14px;animation:pop .35s ease}
 .hero::before{
-  content:"Michael Costea - Project Showcase";
+  content:"MichaelOS 1989 - Project Showcase";
   display:block;
   margin:-14px -14px 12px;
   padding:6px 8px;
