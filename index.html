@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Michael Costea — Projects & Webapps</title>
   <meta name="description" content="Michael Costea's live playground: projects, automations, and webapps." />
-  <link rel="stylesheet" href="styles.css?v=20260309-2115" />
+  <link rel="stylesheet" href="styles.css?v=20260309-2118" />
 </head>
 <body>
   <div id="bootScreen" class="boot-screen" aria-label="MichaelOS boot screen">
@@ -105,10 +105,14 @@
       </div>
     </section>
 
-    <section id="browserWindow" class="win-window" aria-label="App window" style="left:420px;top:120px;width:min(900px,92vw);height:min(580px,64vh);">
-      <div class="win-title"><span id="browserTitle">Program</span><button class="win-close" data-close="browserWindow">×</button></div>
+    <section id="browserWindow" class="win-window" aria-label="MikeNet browser window" style="left:420px;top:120px;width:min(980px,95vw);height:min(640px,72vh);">
+      <div class="win-title"><span id="browserTitle">MikeNet Navigator</span><button class="win-close" data-close="browserWindow">×</button></div>
       <div class="win-body iframe-wrap">
-        <iframe id="appFrame" title="App Frame" src="about:blank"></iframe>
+        <div class="mikenet-bar">
+          <div class="mikenet-logo" title="MikeNet">🌐🦊 <b>MikeNet</b></div>
+          <input id="mikenetAddr" class="mikenet-addr" value="about:blank" readonly />
+        </div>
+        <iframe id="appFrame" title="MikeNet App Frame" src="about:blank"></iframe>
       </div>
     </section>
   

@@ -156,3 +156,8 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after{animation:none !im
     background-attachment:fixed;
   }
 }
+
+
+.mikenet-bar{display:flex;gap:8px;align-items:center;padding:6px;background:#d9d9d9;border-bottom:2px solid #7f7f7f}
+.mikenet-logo{font-size:12px;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.mikenet-addr{flex:1;min-width:0;padding:5px 8px;border-top:2px solid #7f7f7f;border-left:2px solid #7f7f7f;border-right:2px solid #fff;border-bottom:2px solid #fff;background:#fff;color:#111;font:12px "Courier New",monospace}

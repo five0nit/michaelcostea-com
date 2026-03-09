@@ -116,6 +116,17 @@ function closeWindow(id){
   refreshTaskbar();
 }
 
+
+function launchInMikeNet(url, title='Program'){
+  const frame = document.getElementById('appFrame');
+  const head = document.getElementById('browserTitle');
+  const addr = document.getElementById('mikenetAddr');
+  if(frame) frame.src = url;
+  if(head) head.textContent = `MikeNet — ${title}`;
+  if(addr) addr.value = url;
+  openWindow('browserWindow');
+}
+
 function initDesktopWindows(){
   document.querySelectorAll('.desk-icon').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -124,20 +135,12 @@ function initDesktopWindows(){
       const textFile = btn.getAttribute('data-text-file');
       const appTitle = btn.getAttribute('data-title') || 'Program';
       if(textFile){
-        const frame = document.getElementById('appFrame');
-        const title = document.getElementById('browserTitle');
         const url = `./apps/text.html?file=${encodeURIComponent(textFile)}`;
-        if(frame) frame.src = url;
-        if(title) title.textContent = appTitle;
-        openWindow('browserWindow');
+        launchInMikeNet(url, appTitle);
         return;
       }
       if(appUrl){
-        const frame = document.getElementById('appFrame');
-        const title = document.getElementById('browserTitle');
-        if(frame) frame.src = appUrl;
-        if(title) title.textContent = appTitle;
-        openWindow('browserWindow');
+        launchInMikeNet(appUrl, appTitle);
         return;
       }
       if (id) openWindow(id);
@@ -353,11 +356,7 @@ function initStartMenu(projects){
     if(openId){ e.preventDefault(); openWindow(openId); if(openSettings){ const d=document.querySelector('#aboutWindow details'); if(d) d.open=true; }}
     if(launchApp){
       e.preventDefault();
-      const frame = document.getElementById('appFrame');
-      const title = document.getElementById('browserTitle');
-      if(frame) frame.src = launchApp;
-      if(title) title.textContent = link.getAttribute('data-app-title') || 'Program';
-      openWindow('browserWindow');
+      launchInMikeNet(launchApp, link.getAttribute('data-app-title') || 'Program');
     }
     closeMenu();
   });
@@ -519,11 +518,7 @@ async function boot(){
   apps.querySelectorAll('[data-launch-inline]').forEach(a => {
     a.addEventListener('click', (e)=>{
       e.preventDefault();
-      const frame = document.getElementById('appFrame');
-      const title = document.getElementById('browserTitle');
-      if(frame) frame.src = a.getAttribute('data-launch-inline');
-      if(title) title.textContent = a.getAttribute('data-app-title') || 'Program';
-      openWindow('browserWindow');
+      launchInMikeNet(a.getAttribute('data-launch-inline'), a.getAttribute('data-app-title') || 'Program');
     });
   });
 
