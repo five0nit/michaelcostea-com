@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MINESWEEPER.EXE</title>
+<style>
+body{margin:0;background:#0d5fa3;font-family:"MS Sans Serif",Tahoma,sans-serif;color:#111}
+.wrap{max-width:760px;margin:0 auto;padding:12px}
+.panel{background:#c0c0c0;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #7f7f7f;border-bottom:2px solid #7f7f7f;padding:10px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.btn{background:#cfcfcf;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #7f7f7f;border-bottom:2px solid #7f7f7f;padding:4px 8px;cursor:pointer}
+.grid{display:grid;gap:1px;background:#7f7f7f;border-top:2px solid #7f7f7f;border-left:2px solid #7f7f7f;border-right:2px solid #fff;border-bottom:2px solid #fff;width:max-content}
+.cell{width:24px;height:24px;display:grid;place-items:center;font-weight:700;background:#c0c0c0;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #7f7f7f;border-bottom:2px solid #7f7f7f;cursor:pointer;user-select:none}
+.cell.open{background:#c8c8c8;border:1px solid #9a9a9a;cursor:default}
+.cell.flag{color:#d10000}
+.n1{color:#0000d0}.n2{color:#007a00}.n3{color:#cc0000}.n4{color:#00006b}.n5{color:#7a0000}.n6{color:#008888}.n7{color:#222}.n8{color:#666}
+small{opacity:.75}
+a{color:#fff}
+</style></head><body>
+<div class="wrap">
+  <p><a href="../index.html">← Back</a></p>
+  <div class="panel">
+    <div class="top">
+      <b>MINESWEEPER.EXE</b>
+      <div><span id="status">🙂 Ready</span> • <span id="minesLeft">💣 10</span> <button class="btn" id="reset">New Game</button></div>
+    </div>
+    <div id="grid" class="grid"></div>
+    <p><small>Left click: reveal • Right click/long-press: flag</small></p>
+  </div>
+</div>
+<script>
+const W=9,H=9,M=10; let board=[],over=false,flags=0,opened=0;
+const grid=document.getElementById('grid'),statusEl=document.getElementById('status'),minesLeft=document.getElementById('minesLeft');
+function init(){board=[];over=false;flags=0;opened=0;statusEl.textContent='🙂 Ready';grid.style.gridTemplateColumns=`repeat(${W},24px)`;
+for(let y=0;y<H;y++){for(let x=0;x<W;x++) board.push({x,y,m:false,n:0,o:false,f:false});}
+for(let i=0;i<M;){const k=Math.floor(Math.random()*board.length); if(!board[k].m){board[k].m=true;i++;}}
+for(const c of board){if(c.m) continue; let n=0; for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy)continue; const nx=c.x+dx,ny=c.y+dy; const t=board.find(v=>v.x===nx&&v.y===ny); if(t?.m)n++;} c.n=n;}
+render();}
+function render(){grid.innerHTML=''; minesLeft.textContent=`💣 ${M-flags}`;
+for(const c of board){const d=document.createElement('div'); d.className='cell'+(c.o?' open':'')+(c.f?' flag':''); d.dataset.i=board.indexOf(c);
+if(c.o){ if(c.m)d.textContent='💣'; else if(c.n){d.textContent=c.n; d.classList.add('n'+c.n);} }
+else if(c.f) d.textContent='🚩';
+d.oncontextmenu=e=>{e.preventDefault();toggleFlag(c)};
+d.onclick=()=>open(c);
+grid.appendChild(d);} }
+function toggleFlag(c){if(over||c.o)return; c.f=!c.f; flags += c.f?1:-1; render();}
+function flood(c){const q=[c],seen=new Set(); while(q.length){const k=q.pop(); const id=board.indexOf(k); if(seen.has(id))continue; seen.add(id); if(k.o||k.f)continue; k.o=true; opened++; if(k.n===0){for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const t=board.find(v=>v.x===k.x+dx&&v.y===k.y+dy); if(t&&!t.m) q.push(t);}}}}
+function open(c){if(over||c.o||c.f)return; if(c.m){c.o=true;over=true;statusEl.textContent='💥 Game Over'; board.forEach(v=>v.o=true); render(); return;} flood(c); if(opened>=W*H-M){over=true;statusEl.textContent='😎 Cleared';} render();}
+document.getElementById('reset').onclick=init; init();
+</script>
+</body></html>

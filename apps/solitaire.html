@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SOLITAIRE.EXE</title>
+<style>
+body{margin:0;background:#0d5fa3;font-family:"MS Sans Serif",Tahoma,sans-serif}
+.wrap{max-width:940px;margin:0 auto;padding:12px;color:#111}
+.panel{background:#c0c0c0;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #7f7f7f;border-bottom:2px solid #7f7f7f;padding:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.pile{min-width:76px;min-height:104px;background:#0b6a3b;border:1px solid #063c22;border-radius:4px;padding:4px;display:flex;flex-direction:column;gap:4px}
+.card{width:68px;height:96px;background:#fff;border:1px solid #444;border-radius:4px;display:flex;justify-content:center;align-items:center;font-weight:700;cursor:pointer;user-select:none}
+.red{color:#b60000}
+.back{background:repeating-linear-gradient(45deg,#1e4f9b,#1e4f9b 6px,#356fc5 6px,#356fc5 12px);color:#fff}
+.btn{background:#cfcfcf;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #7f7f7f;border-bottom:2px solid #7f7f7f;padding:4px 8px;cursor:pointer}
+a{color:#fff}
+</style></head><body>
+<div class="wrap">
+  <p><a href="../index.html">← Back</a></p>
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><b>SOLITAIRE.EXE (mini-klondike)</b><button class="btn" id="new">New Game</button></div>
+    <p style="margin:8px 0 10px">Tap stock to draw. Tap selected card, then destination pile to move. (Light retro version)</p>
+    <div class="row" id="top"></div>
+    <div class="row" id="table" style="margin-top:12px"></div>
+  </div>
+</div>
+<script>
+const suits=['♠','♥','♦','♣']; const ranks=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+let stock=[],waste=[],found=[[],[],[],[]],tab=[[],[],[],[],[],[],[]],sel=null;
+const isRed=s=>s==='♥'||s==='♦';
+function cardLabel(c){return ranks[c.r]+c.s}
+function makeDeck(){const d=[];for(const s of suits)for(let r=0;r<13;r++)d.push({s,r,up:false});for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]];}return d;}
+function newGame(){stock=makeDeck();waste=[];found=[[],[],[],[]];tab=[[],[],[],[],[],[],[]];sel=null;
+for(let i=0;i<7;i++){for(let j=0;j<=i;j++){const c=stock.pop();c.up=(j===i);tab[i].push(c);}}render();}
+function canDrop(c,p){const t=tab[p][tab[p].length-1]; if(!t) return c.r===12; return isRed(c.s)!==isRed(t.s) && c.r===t.r-1;}
+function moveToTable(c,from,p){if(!canDrop(c,p))return false; tab[p].push(c); from.pop(); if(from.length && from[from.length-1] && !from[from.length-1].up) from[from.length-1].up=true; return true;}
+function draw(){if(!stock.length){stock=waste.reverse().map(c=>({...c,up:false}));waste=[];} else {const c=stock.pop(); c.up=true; waste.push(c);} render();}
+function renderCard(c,clickable=true){const d=document.createElement('div'); d.className='card'+(isRed(c.s)?' red':'')+(c.up?'':' back'); d.textContent=c.up?cardLabel(c):''; if(clickable)d.onclick=()=>pick(c); return d;}
+function pick(c){sel=c; render();}
+function render(){const top=document.getElementById('top'); const table=document.getElementById('table'); top.innerHTML=''; table.innerHTML='';
+const stockPile=document.createElement('div'); stockPile.className='pile'; stockPile.onclick=draw; stockPile.appendChild(stock.length?Object.assign(document.createElement('div'),{className:'card back'}):Object.assign(document.createElement('div'),{className:'card',textContent:'↺'})); top.appendChild(stockPile);
+const wastePile=document.createElement('div'); wastePile.className='pile'; if(waste.length){const c=waste[waste.length-1]; const d=renderCard(c,true); if(sel===c)d.style.outline='2px solid #00f'; wastePile.appendChild(d);} top.appendChild(wastePile);
+for(let i=0;i<4;i++){const p=document.createElement('div'); p.className='pile'; p.onclick=()=>{if(!sel)return; if((!found[i].length&&sel.r===0)||(found[i].length&&found[i][found[i].length-1].s===sel.s&&sel.r===found[i][found[i].length-1].r+1)){const src=findSource(sel); if(src){found[i].push(sel); src.pop(); if(src.length&&src[src.length-1]&&!src[src.length-1].up)src[src.length-1].up=true; sel=null; render();}}}; if(found[i].length) p.appendChild(renderCard(found[i][found[i].length-1],false)); top.appendChild(p);} 
+for(let i=0;i<7;i++){const p=document.createElement('div'); p.className='pile'; p.onclick=()=>{if(!sel)return; const src=findSource(sel); if(src&&moveToTable(sel,src,i)){sel=null; render();}}; for(const c of tab[i]){const d=renderCard(c,c.up); if(sel===c)d.style.outline='2px solid #00f'; p.appendChild(d);} table.appendChild(p);} }
+function findSource(c){if(waste[waste.length-1]===c) return waste; for(const p of tab) if(p[p.length-1]===c) return p; return null;}
+document.getElementById('new').onclick=newGame; newGame();
+</script>
+</body></html>

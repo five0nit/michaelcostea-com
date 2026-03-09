@@ -69,6 +69,27 @@
       "status": "live",
       "description": "Shows your public IP and rough geolocation.",
       "url": "./apps/hacker-exe.html"
+    },
+    {
+      "name": "MINESWEEPER.EXE",
+      "slug": "minesweeper",
+      "status": "live",
+      "description": "Classic Windows-style mines game with flagging and reveal flood.",
+      "url": "./apps/minesweeper.html"
+    },
+    {
+      "name": "SOLITAIRE.EXE",
+      "slug": "solitaire",
+      "status": "beta",
+      "description": "Retro mini-Klondike card game inspired by Windows Solitaire.",
+      "url": "./apps/solitaire.html"
+    },
+    {
+      "name": "SKY SLOPE.EXE",
+      "slug": "sky-slope",
+      "status": "live",
+      "description": "Downhill retro sky-slope game inspired by classic SkiFree vibes.",
+      "url": "./apps/skifree.html"
     }
   ]
 }

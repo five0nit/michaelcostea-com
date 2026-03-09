@@ -431,12 +431,15 @@ function themeIconKey(btn){
   if(label.includes('if.exe')) return 'ifexe';
   if(label.includes('doom')) return 'doom';
   if(label.includes('hacker.exe')) return 'hackerexe';
+  if(label.includes('minesweeper')) return 'minesweeper';
+  if(label.includes('solitaire')) return 'solitaire';
+  if(label.includes('sky slope') || label.includes('ski')) return 'skifree';
   return 'readme';
 }
 
 function themedIconDataUrl(theme,key){
   const appGlyphs = {
-    readme:'📘', settings:'🛠️', planner:'🗓️', cards:'🪪', ozquotes:'💡', paint:'🎨', text:'📝', chat:'💬', programs:'🗂️', recycle:'🗑️', ifexe:'⚙️', doom:'👹', hackerexe:'👾'
+    readme:'📘', settings:'🛠️', planner:'🗓️', cards:'🪪', ozquotes:'💡', paint:'🎨', text:'📝', chat:'💬', programs:'🗂️', recycle:'🗑️', ifexe:'⚙️', doom:'👹', hackerexe:'👾', minesweeper:'💣', solitaire:'🃏', skifree:'⛷️'
   };
   const themeGlyphs = { matrix:'🕶️', tmnt:'🐢', element:'🛸', hacker:'💻', catdog:'🐾', spiderman:'🕷️', mario:'🍄' };
   const palettes = {
