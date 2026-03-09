@@ -27,6 +27,39 @@ function initScene(){
   }
 }
 
+function initTray(){
+  const clockEl = document.getElementById('trayClock');
+  const dateEl = document.getElementById('trayDate');
+  const battEl = document.getElementById('trayBattery');
+
+  const updateClock = () => {
+    const now = new Date();
+    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const date = now.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
+    if (clockEl) clockEl.textContent = time;
+    if (dateEl) dateEl.textContent = date;
+  };
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  if (navigator.getBattery && battEl) {
+    navigator.getBattery().then((b) => {
+      const paint = () => {
+        const pct = Math.round((b.level || 0) * 100);
+        const charging = b.charging ? '⚡' : '🔋';
+        battEl.textContent = `${charging} ${pct}%`;
+      };
+      paint();
+      b.addEventListener('levelchange', paint);
+      b.addEventListener('chargingchange', paint);
+    }).catch(() => {
+      battEl.textContent = '🔋 N/A';
+    });
+  } else if (battEl) {
+    battEl.textContent = '🔋 N/A';
+  }
+}
+
 function initStartMenu(projects){
   const btn = document.getElementById('startBtn');
   const menu = document.getElementById('startMenu');
@@ -110,6 +143,7 @@ async function boot(){
   });
 
   initStartMenu(projects);
+  initTray();
   initScene();
 }
 boot();

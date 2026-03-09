@@ -174,23 +174,40 @@ a.btn:hover{background:#dfdfdf}
 a.btn:active{border-top:2px solid var(--panel-lo);border-left:2px solid var(--panel-lo);border-right:2px solid var(--panel-hi);border-bottom:2px solid var(--panel-hi)}
 
 /* taskbar */
-body::after{
-  content:"MichaelOS 98   |   Ready";
+.taskbar{
   position:fixed;
   left:0;right:0;bottom:0;
-  padding:6px 10px 6px 78px;
+  height:34px;
+  padding:4px 8px;
   background:var(--panel);
   border-top:2px solid var(--panel-hi);
   box-shadow:0 -2px 0 #000;
-  font-size:12px;
-  z-index:12;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.taskbar-spacer{flex:1}
+.tray{
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+.tray-pill{
+  font-size:11px;
+  min-width:68px;
+  text-align:center;
+  padding:3px 6px;
+  color:#000;
+  background:#d9d9d9;
+  border-top:2px solid var(--panel-lo);
+  border-left:2px solid var(--panel-lo);
+  border-right:2px solid var(--panel-hi);
+  border-bottom:2px solid var(--panel-hi);
 }
 
 .start-btn{
-  position:fixed;
-  left:8px;
-  bottom:6px;
-  z-index:20;
+  z-index:21;
   font-family:"MS Sans Serif",Tahoma,sans-serif;
   font-weight:700;
   font-size:12px;
@@ -203,6 +220,7 @@ body::after{
   padding:4px 14px;
   cursor:pointer;
 }
+.start-btn:hover{filter:brightness(1.04)}
 .start-btn:active,.start-btn.open{
   border-top:2px solid var(--panel-lo);
   border-left:2px solid var(--panel-lo);
@@ -212,7 +230,7 @@ body::after{
 .start-menu{
   position:fixed;
   left:8px;
-  bottom:36px;
+  bottom:38px;
   width:280px;
   background:#c0c0c0;
   border-top:2px solid var(--panel-hi);
@@ -257,4 +275,9 @@ body::after{
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important;transition:none !important}
 }
-@media (max-width:640px){.container{padding:12px 8px 66px}.grid{grid-template-columns:1fr}}
+@media (max-width:640px){
+  .container{padding:12px 8px 66px}
+  .grid{grid-template-columns:1fr}
+  .tray-pill{min-width:60px;padding:2px 4px;font-size:10px}
+  .taskbar{padding:4px 6px;gap:6px}
+}
