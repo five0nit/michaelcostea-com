@@ -250,37 +250,7 @@ function initEasterEggs(){
 
 
 function initPopCultureItems(){
-  const layer = document.getElementById('easterLayer');
-  if(!layer) return;
-
-  const eggs = [
-    { icon:'🟧', label:'Fifth Element multipass unlocked', hint:'Leeloo mode engaged.' },
-    { icon:'🐢', label:'TMNT sewer signal detected', hint:'Cowabunga protocol active.' },
-    { icon:'🕶️', label:'90s hacker trenchcoat energy found', hint:'Swordfish-era cyber vibes online.' },
-    { icon:'💾', label:'Floppy relic discovered', hint:'Save icon was a real thing.' },
-    { icon:'📟', label:'Pager chirp intercepted', hint:'Meet me at the food court.' }
-  ];
-
-  layer.innerHTML = '';
-  eggs.forEach((egg, idx) => {
-    const el = document.createElement('button');
-    el.className = 'easter-item';
-    el.type = 'button';
-    el.textContent = egg.icon;
-    el.title = 'Hidden item';
-    const x = 8 + Math.random() * 82;
-    const y = 8 + Math.random() * 78;
-    el.style.left = `${x}%`;
-    el.style.top = `${y}%`;
-    el.style.animationDelay = `${(idx*0.45).toFixed(2)}s`;
-
-    el.addEventListener('click', () => {
-      el.classList.add('revealed');
-      showToast(`${egg.label} — ${egg.hint}`, 2800);
-    });
-
-    layer.appendChild(el);
-  });
+  // deprecated floating eggs removed in favor of fixed lore dock
 }
 
 function initTray(){
@@ -382,13 +352,57 @@ function initStartMenu(projects){
 }
 
 
+
+function setLoreTheme(theme){
+  const themes = ['matrix','tmnt','element','hacker','catdog'];
+  themes.forEach(t => document.body.classList.remove(`lore-${t}`));
+  document.querySelectorAll('.egg-btn').forEach(b => b.classList.remove('active'));
+
+  const loreNote = document.getElementById('loreNote');
+  const notes = {
+    matrix: 'Neon Intrusion Layer: follow the white rabbit through dial-up static.',
+    tmnt: 'Sewer Shell Network: dojo pings active, pizza timer set to 11.',
+    element: 'Element Protocol: four keys aligned, fifth channel standing by.',
+    hacker: 'Cyber Deck: BBS alias routing through dark fiber nodes.',
+    catdog: 'Dual Mode Kernel: one body, two render engines.'
+  };
+
+  if(theme && theme !== 'default'){
+    document.body.classList.add(`lore-${theme}`);
+    const active = document.querySelector(`.egg-btn[data-theme="${theme}"]`);
+    if(active) active.classList.add('active');
+    if(loreNote) loreNote.textContent = notes[theme] || '';
+  } else {
+    if(loreNote) loreNote.textContent = '';
+  }
+}
+
+function initLoreDock(){
+  document.querySelectorAll('.egg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.getAttribute('data-theme') || 'default';
+      setLoreTheme(theme);
+      const toasts = {
+        matrix:'Matrix layer loaded. There is no spoon.',
+        tmnt:'TMNT channel online. Cowabunga secured.',
+        element:'Element Protocol unlocked. Multipass accepted.',
+        hacker:'Hacker deck enabled. Trace route obfuscated.',
+        catdog:'CatDog mode online. One body, two vibes.',
+        default:'Theme reset to MichaelOS base shell.'
+      };
+      showToast(toasts[theme] || 'Lore mode switched.');
+    });
+  });
+}
+
 function initLoreEggs(){
   // CatDog mode
   const catdogBtn = document.getElementById('catdogToggle');
   if(catdogBtn){
     catdogBtn.addEventListener('click', ()=>{
-      document.body.classList.toggle('catdog-mode');
-      showToast(document.body.classList.contains('catdog-mode') ? 'CatDog mode enabled: one body, two modes.' : 'CatDog mode disabled.');
+      const active = document.body.classList.contains('lore-catdog');
+      setLoreTheme(active ? 'default' : 'catdog');
+      showToast(active ? 'CatDog mode disabled.' : 'CatDog mode enabled: one body, two modes.');
     });
   }
 
@@ -475,7 +489,7 @@ async function boot(){
   initDesktopWindows();
   initTray();
   initEasterEggs();
-  initPopCultureItems();
+  initLoreDock();
   initLoreEggs();
 
   applyLayoutMode();

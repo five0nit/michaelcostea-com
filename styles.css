@@ -109,5 +109,30 @@ body.mobile-mode .start-menu{width:min(92vw,320px)}
 }
 
 
-body.catdog-mode{background:linear-gradient(145deg,#f6b04b 0%, #f6b04b 50%, #5aa8ff 50%, #5aa8ff 100%)}
+
 body.matrix-flash{filter:hue-rotate(95deg) contrast(1.18)}
+
+
+
+/* 90s lore dock - fixed bottom line */
+.easter-dock{position:fixed;left:10px;right:10px;bottom:46px;z-index:26;display:flex;gap:8px;justify-content:center;flex-wrap:nowrap;overflow-x:auto;padding:2px 4px}
+.egg-btn{flex:0 0 auto;background:#cfcfcf;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);padding:5px 9px;font:700 11px "MS Sans Serif",Tahoma,sans-serif;cursor:pointer;white-space:nowrap}
+.egg-btn.active,.egg-btn:active{border-top:2px solid var(--lo);border-left:2px solid var(--lo);border-right:2px solid var(--hi);border-bottom:2px solid var(--hi);background:#e8e8e8}
+
+/* Theme overhauls */
+body{transition:background .45s ease, filter .35s ease}
+body.lore-matrix{background:radial-gradient(circle at 50% 0%, #0e2f0e 0%, #001500 60%, #000 100%)}
+body.lore-matrix #desktopRoot{filter:hue-rotate(80deg) saturate(1.25)}
+body.lore-tmnt{background:radial-gradient(circle at 50% 20%, #2d6f22 0%, #174a14 55%, #102b0f 100%)}
+body.lore-tmnt .win-title{background:linear-gradient(90deg,#134d1f,#2e7d32)}
+body.lore-element{background:linear-gradient(130deg,#1d2d54 0%,#1d2d54 45%,#f08c2b 45%,#f08c2b 100%)}
+body.lore-element .win-title{background:linear-gradient(90deg,#223a7a,#f08c2b)}
+body.lore-hacker{background:radial-gradient(circle at 40% 10%, #102410 0%, #061006 55%, #020402 100%)}
+body.lore-hacker #desktopRoot{filter:contrast(1.1) saturate(0.85)}
+body.lore-hacker .win-title{background:linear-gradient(90deg,#0a0,#040)}
+body.lore-catdog{background:linear-gradient(145deg,#f6b04b 0%, #f6b04b 50%, #5aa8ff 50%, #5aa8ff 100%)}
+
+@media (max-width:720px){
+  .easter-dock{bottom:44px;justify-content:flex-start}
+  .egg-btn{font-size:10px;padding:4px 8px}
+}
