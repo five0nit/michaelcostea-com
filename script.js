@@ -6,9 +6,16 @@ async function runBootScreen(){
   const boot = document.getElementById('bootScreen');
   const biosText = document.getElementById('biosText');
   const biosHint = document.getElementById('biosHint');
+  const bsod = document.getElementById('bsodScreen');
+  const bsodCountdown = document.getElementById('bsodCountdown');
   if(!boot || !biosText) return;
 
   document.body.classList.add('booting');
+
+  let interrupted = false;
+  const onInterrupt = () => { interrupted = true; };
+  boot.addEventListener('pointerdown', onInterrupt, { once: true });
+  boot.addEventListener('touchstart', onInterrupt, { once: true, passive: true });
 
   const lines = [
     'Award Modular BIOS v4.51PG, An Energy Star Ally',
@@ -38,11 +45,28 @@ async function runBootScreen(){
   const perLine = Math.max(45, Math.floor(totalDuration / lines.length));
 
   for (let i=0;i<lines.length;i++){
+    if (interrupted) break;
     biosText.textContent += lines[i] + '\n';
     if (biosText.textContent.length > 2200) {
       biosText.textContent = biosText.textContent.slice(-2200);
     }
     await new Promise(r => setTimeout(r, perLine));
+  }
+
+  if (interrupted) {
+    const bios = document.getElementById('biosScreen');
+    if (bios) bios.style.display = 'none';
+    if (bsod) bsod.classList.add('show');
+    let sec = 5;
+    const tick = setInterval(() => {
+      sec -= 1;
+      if (bsodCountdown) bsodCountdown.textContent = `Reloading in ${sec}...`;
+      if (sec <= 0) {
+        clearInterval(tick);
+        location.reload();
+      }
+    }, 1000);
+    return;
   }
 
   if (biosHint) biosHint.textContent = 'Press F1 to continue, DEL to enter SETUP';
