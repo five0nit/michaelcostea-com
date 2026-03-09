@@ -122,7 +122,7 @@ function openWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
 
-  if (isMobileMode() && prefs.singleMobile) {
+  if (isMobileMode()) {
     document.querySelectorAll('.win-window.open').forEach(w => {
       if (w.id !== id) w.classList.remove('open');
     });
@@ -536,7 +536,7 @@ async function boot(){
     applyLayoutMode();
     const nowMobile = isMobileMode();
 
-    if (!wasMobile && nowMobile && prefs.singleMobile) {
+    if (!wasMobile && nowMobile) {
       document.querySelectorAll('.win-window').forEach(w => w.classList.remove('open'));
       document.getElementById('readerWindow')?.classList.add('open');
       centerWindow(document.getElementById('readerWindow'));
