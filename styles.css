@@ -196,8 +196,8 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after{animation:none !im
 @media (max-width:720px){
   body.lore-matrix,body.lore-tmnt,body.lore-element,body.lore-hacker,body.lore-catdog,body.lore-spiderman,body.lore-mario{
     background-attachment:scroll;
-    background-size:auto 100vh;
-    background-position:center top;
+    background-size:cover;
+    background-position:center center;
   }
 }
 @media (min-width:721px){
