@@ -248,6 +248,41 @@ function initEasterEggs(){
   setTimeout(() => showToast('MichaelOS 1989 boot complete. Have a nice day 😎', 2200), 600);
 }
 
+
+function initPopCultureItems(){
+  const layer = document.getElementById('easterLayer');
+  if(!layer) return;
+
+  const eggs = [
+    { icon:'🟧', label:'Fifth Element multipass unlocked', hint:'Leeloo mode engaged.' },
+    { icon:'🐢', label:'TMNT sewer signal detected', hint:'Cowabunga protocol active.' },
+    { icon:'🕶️', label:'90s hacker trenchcoat energy found', hint:'Swordfish-era cyber vibes online.' },
+    { icon:'💾', label:'Floppy relic discovered', hint:'Save icon was a real thing.' },
+    { icon:'📟', label:'Pager chirp intercepted', hint:'Meet me at the food court.' }
+  ];
+
+  layer.innerHTML = '';
+  eggs.forEach((egg, idx) => {
+    const el = document.createElement('button');
+    el.className = 'easter-item';
+    el.type = 'button';
+    el.textContent = egg.icon;
+    el.title = 'Hidden item';
+    const x = 8 + Math.random() * 82;
+    const y = 8 + Math.random() * 78;
+    el.style.left = `${x}%`;
+    el.style.top = `${y}%`;
+    el.style.animationDelay = `${(idx*0.45).toFixed(2)}s`;
+
+    el.addEventListener('click', () => {
+      el.classList.add('revealed');
+      showToast(`${egg.label} — ${egg.hint}`, 2800);
+    });
+
+    layer.appendChild(el);
+  });
+}
+
 function initTray(){
   const clockEl = document.getElementById('trayClock');
   const dateEl = document.getElementById('trayDate');
@@ -385,6 +420,7 @@ async function boot(){
   initDesktopWindows();
   initTray();
   initEasterEggs();
+  initPopCultureItems();
 
   applyLayoutMode();
 
