@@ -48,6 +48,13 @@
       "status": "live",
       "description": "Public real-time visitor chat lobby.",
       "url": "./apps/chat.html"
+    },
+    {
+      "name": "IF.EXE",
+      "slug": "if-exe",
+      "status": "live",
+      "description": "Pixel animated poem player with optional TTS narration.",
+      "url": "./apps/if-exe.html"
     }
   ]
 }

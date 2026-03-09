@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>IF.EXE</title>
+<style>
+body{margin:0;background:#0a1025;color:#dff1ff;font-family:'Courier New',monospace}
+.wrap{max-width:1100px;margin:0 auto;padding:14px}
+.top{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{padding:8px 10px;border:1px solid #5a78bf;background:#1b2d5a;color:#fff;border-radius:8px;cursor:pointer}
+canvas{width:100%;height:360px;border:2px solid #37508f;background:#071022;border-radius:10px;margin:10px 0;image-rendering:pixelated}
+.line{font-size:18px;line-height:1.4;padding:10px;border:1px solid #304a86;background:#0f1a3a;border-radius:10px;min-height:66px}
+.small{font-size:12px;color:#9fc0ff}
+a{color:#9fc0ff}
+</style></head><body>
+<div class="wrap">
+<p><a href="../index.html">← Back</a></p>
+<h1>IF.EXE</h1>
+<div class="top"><button id="play">▶ Play</button><button id="pause">⏸ Pause</button><button id="restart">↺ Restart</button><label class="small">TTS <input id="tts" type="checkbox" checked/></label></div>
+<canvas id="cv" width="1200" height="420"></canvas>
+<div id="line" class="line">Press Play to start.</div>
+<p class="small">Rudyard Kipling, rendered as pixel-story mode.</p>
+</div>
+<script>
+const lines = ["If you can keep your head when all about you", "Are losing theirs and blaming it on you,", "If you can trust yourself when all men doubt you,", "But make allowance for their doubting too;", "If you can wait and not be tired by waiting,", "Or being lied about, don't deal in lies,", "Or being hated, don't give way to hating,", "And yet don't look too good, nor talk too wise:", "If you can dream\u2014and not make dreams your master;", "If you can think\u2014and not make thoughts your aim;", "If you can meet with Triumph and Disaster", "And treat those two impostors just the same;", "If you can bear to hear the truth you've spoken", "Twisted by knaves to make a trap for fools,", "Or watch the things you gave your life to, broken,", "And stoop and build 'em up with worn-out tools:", "If you can make one heap of all your winnings", "And risk it on one turn of pitch-and-toss,", "And lose, and start again at your beginnings", "And never breathe a word about your loss;", "If you can force your heart and nerve and sinew", "To serve your turn long after they are gone,", "And so hold on when there is nothing in you", "Except the Will which says to them: 'Hold on!',", "If you can talk with crowds and keep your virtue,", "Or walk with Kings\u2014nor lose the common touch,", "If neither foes nor loving friends can hurt you,", "If all men count with you, but none too much;", "If you can fill the unforgiving minute", "With sixty seconds' worth of distance run,", "Yours is the Earth and everything that's in it,", "And\u2014which is more\u2014you'll be a Man, my son!"];
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const lineEl=document.getElementById('line');
+let i=0,timer=null,paused=false;
+function bg(){ctx.fillStyle='#09122b';ctx.fillRect(0,0,cv.width,cv.height);for(let y=0;y<cv.height;y+=12){ctx.fillStyle=(y%24===0)?'#0d1737':'#0a132f';ctx.fillRect(0,y,cv.width,6);}}
+function drawScene(step){
+  bg();
+  const x=120+(step*13)%900;
+  const px=8;
+  const draw=(ox,oy,c)=>{ctx.fillStyle=c;ctx.fillRect(ox,oy,px,px)};
+  for(let r=0;r<10;r++)for(let c=0;c<8;c++){if((r===0&&c>1&&c<6)||(r>0&&r<8&&c>0&&c<7)||(r===8&&c>1&&c<6))draw(x+c*px,180+r*px,'#6ed3ff');}
+  ctx.fillStyle='#f7c96e';ctx.fillRect(0,300,cv.width,16);
+  for(let s=0;s<35;s++){ctx.fillStyle=s%2?'#8fb6ff':'#d7e6ff';ctx.fillRect((s*97+step*11)%cv.width,(s*53)%170,3,3);}
+  ctx.fillStyle='#14244d';ctx.fillRect(70,24,1060,100);ctx.strokeStyle='#4e6db5';ctx.strokeRect(70,24,1060,100);
+  ctx.fillStyle='#dff1ff';ctx.font='28px Courier New';
+  const text=lines[step]||'';
+  ctx.fillText((step+1)+'. '+text.slice(0,70),90,78);
+}
+function speak(text){
+  if(!document.getElementById('tts').checked) return;
+  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=0.92;u.pitch=0.95;speechSynthesis.speak(u);}catch{}
+}
+function tick(){if(paused) return;drawScene(i);lineEl.textContent=lines[i]||'';speak(lines[i]||'');i++;if(i>=lines.length){clearInterval(timer);timer=null;}}
+function start(){if(timer) return;paused=false;tick();timer=setInterval(tick,3200);} 
+function pause(){paused=!paused;if(paused){speechSynthesis.cancel();}}
+function restart(){speechSynthesis.cancel();clearInterval(timer);timer=null;i=0;paused=false;lineEl.textContent='Restarted. Press Play.';drawScene(0);} 
+document.getElementById('play').onclick=start;document.getElementById('pause').onclick=pause;document.getElementById('restart').onclick=restart;drawScene(0);
+</script></body></html>
