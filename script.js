@@ -121,7 +121,17 @@ function initDesktopWindows(){
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-open');
       const appUrl = btn.getAttribute('data-app');
+      const textFile = btn.getAttribute('data-text-file');
       const appTitle = btn.getAttribute('data-title') || 'Program';
+      if(textFile){
+        const frame = document.getElementById('appFrame');
+        const title = document.getElementById('browserTitle');
+        const url = `./apps/text.html?file=${encodeURIComponent(textFile)}`;
+        if(frame) frame.src = url;
+        if(title) title.textContent = appTitle;
+        openWindow('browserWindow');
+        return;
+      }
       if(appUrl){
         const frame = document.getElementById('appFrame');
         const title = document.getElementById('browserTitle');
@@ -316,6 +326,7 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="readerWindow"><span>📘 Read Me</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span>🗂️ Programs</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span>💾 About</span><small>open</small></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow" data-open-settings="1"><span>⚙️ Control Panel</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="dialupWindow"><span>📞 Dial-Up Networking</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="recycleWindow"><span>🗑️ Recycle Bin</span><small>open</small></a>
   `;
@@ -338,7 +349,8 @@ function initStartMenu(projects){
     if(!link) return;
     const openId = link.getAttribute('data-open-window');
     const launchApp = link.getAttribute('data-launch-app');
-    if(openId){ e.preventDefault(); openWindow(openId); }
+    const openSettings = link.getAttribute('data-open-settings');
+    if(openId){ e.preventDefault(); openWindow(openId); if(openSettings){ const d=document.querySelector('#aboutWindow details'); if(d) d.open=true; }}
     if(launchApp){
       e.preventDefault();
       const frame = document.getElementById('appFrame');
