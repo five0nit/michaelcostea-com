@@ -4,9 +4,17 @@ async function runBootScreen(){
   const boot = document.getElementById('bootScreen');
   const fill = document.getElementById('bootBarFill');
   const pct = document.getElementById('bootPct');
+  const tip = document.getElementById('bootTip');
   if(!boot || !fill || !pct) return;
 
   document.body.classList.add('booting');
+
+  const tips = ['Loading drivers...', 'Mounting desktop shell...', 'Checking startup scripts...', 'Initializing MichaelOS 1989...'];
+  let tipIndex = 0;
+  const tipTimer = setInterval(() => {
+    tipIndex = (tipIndex + 1) % tips.length;
+    if (tip) tip.textContent = tips[tipIndex];
+  }, 420);
 
   const duration = 2000;
   const start = performance.now();
@@ -23,8 +31,14 @@ async function runBootScreen(){
     requestAnimationFrame(tick);
   });
 
+  clearInterval(tipTimer);
+  if (tip) tip.textContent = 'Launching desktop...';
+
+  boot.classList.add('exiting');
+  await new Promise(r => setTimeout(r, 520));
   boot.classList.add('hidden');
   document.body.classList.remove('booting');
+  document.body.classList.add('booted');
 }
 
 function isMobileMode(){
