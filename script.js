@@ -136,6 +136,13 @@ function openWindow(id){
 function closeWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
+
+  if(id === 'browserWindow'){
+    const frame = document.getElementById('appFrame');
+    try{ frame?.contentWindow?.postMessage({type:'mikenet-close'}, '*'); }catch{}
+    setTimeout(()=>{ if(frame) frame.src = 'about:blank'; }, 20);
+  }
+
   win.classList.remove('open');
   refreshTaskbar();
 }
@@ -189,17 +196,9 @@ function initDrag(){
   document.querySelectorAll('.win-window').forEach(win => {
     const bar = win.querySelector('.win-title');
     if(!bar) return;
-    let dragging = false, ox=0, oy=0;
+    let dragging=false, ox=0, oy=0, pid=null;
 
-    const start = (clientX, clientY) => {
-      dragging = true;
-      bringFront(win);
-      const rect = win.getBoundingClientRect();
-      ox = clientX - rect.left;
-      oy = clientY - rect.top;
-      document.body.style.userSelect = 'none';
-    };
-    const move = (clientX, clientY) => {
+    const onMove = (clientX, clientY) => {
       if(!dragging) return;
       const rect = win.getBoundingClientRect();
       const maxX = Math.max(8, window.innerWidth - rect.width - 8);
@@ -209,87 +208,34 @@ function initDrag(){
       win.style.left = `${left}px`;
       win.style.top = `${top}px`;
     };
-    const stop = () => {
-      dragging = false;
-      document.body.style.userSelect = '';
+
+    const stopDrag = () => {
+      dragging=false;
+      document.body.style.userSelect='';
+      if(pid!==null){
+        try{ bar.releasePointerCapture(pid); }catch{}
+      }
+      pid=null;
     };
 
-    bar.addEventListener('mousedown', (e) => {
+    bar.addEventListener('pointerdown', (e) => {
       if(e.target.closest('.win-close')) return;
-      start(e.clientX, e.clientY);
+      if(e.button !== undefined && e.button !== 0) return;
+      dragging=true;
+      bringFront(win);
+      const rect = win.getBoundingClientRect();
+      ox = e.clientX - rect.left;
+      oy = e.clientY - rect.top;
+      document.body.style.userSelect='none';
+      pid=e.pointerId;
+      try{ bar.setPointerCapture(pid); }catch{}
+      e.preventDefault();
     });
-    window.addEventListener('mousemove', (e) => move(e.clientX, e.clientY));
-    window.addEventListener('mouseup', stop);
 
-    bar.addEventListener('touchstart', (e) => {
-      if(e.target.closest('.win-close')) return;
-      const t = e.touches[0];
-      if(!t) return;
-      start(t.clientX, t.clientY);
-    }, {passive:true});
-    window.addEventListener('touchmove', (e) => {
-      const t = e.touches[0];
-      if(!t) return;
-      move(t.clientX, t.clientY);
-    }, {passive:true});
-    window.addEventListener('touchend', stop);
+    bar.addEventListener('pointermove', (e)=> onMove(e.clientX, e.clientY));
+    bar.addEventListener('pointerup', stopDrag);
+    bar.addEventListener('pointercancel', stopDrag);
   });
-}
-
-function showToast(msg, ms=2600){
-  const t = document.getElementById('easterToast');
-  if(!t) return;
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(showToast._timer);
-  showToast._timer = setTimeout(()=>t.classList.remove('show'), ms);
-}
-
-function initEasterEggs(){
-  const lines = [
-    'Dial-up connected at 56k. Please wait... forever.',
-    'Now loading: Totally Rad Mode™',
-    'You have entered The Matrix (1999). Follow the white rabbit.',
-    'Saved by the Bell break in progress 📟',
-    'Nokia 3310 detected. Battery lasts 9 years.'
-  ];
-
-  document.querySelectorAll('.desk-icon').forEach((icon) => {
-    let clicks = 0;
-    icon.addEventListener('click', () => {
-      clicks++;
-      if (clicks === 3) {
-        showToast(lines[Math.floor(Math.random()*lines.length)]);
-        clicks = 0;
-      }
-    });
-  });
-
-  const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-  let i = 0;
-  window.addEventListener('keydown', (e) => {
-    const key = (e.key || '').toLowerCase();
-    const want = code[i].toLowerCase();
-    if (key === want) {
-      i++;
-      if (i === code.length) {
-        document.body.style.filter = 'hue-rotate(45deg) saturate(1.15)';
-        showToast('Konami unlocked: Extreme 90s mode activated 🎮', 3400);
-        setTimeout(()=>{ document.body.style.filter=''; }, 5000);
-        i = 0;
-      }
-    } else {
-      i = 0;
-    }
-  });
-
-  // startup retro ping
-  setTimeout(() => showToast('MichaelOS 1989 boot complete. Have a nice day 😎', 2200), 600);
-}
-
-
-function initPopCultureItems(){
-  // deprecated floating eggs removed in favor of fixed lore dock
 }
 
 function initTray(){

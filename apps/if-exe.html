@@ -140,4 +140,14 @@ document.getElementById('pause').onclick=pause;
 document.getElementById('restart').onclick=restart;
 speechSynthesis.onvoiceschanged=()=>{voice=pickVoice();};
 drawScene(0);
+
+window.addEventListener('message', (ev)=>{
+  const t = ev?.data?.type;
+  if(t === 'mikenet-close'){
+    paused=true; playing=false;
+    clearTimeout(timer);
+    try{ speechSynthesis.cancel(); }catch{}
+  }
+});
+
 </script></body></html>
