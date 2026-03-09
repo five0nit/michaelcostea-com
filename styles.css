@@ -121,16 +121,16 @@ body.matrix-flash{filter:hue-rotate(95deg) contrast(1.18)}
 
 /* Theme overhauls */
 body{transition:background .45s ease, filter .35s ease}
-body.lore-matrix{background:linear-gradient(rgba(0,10,0,.56),rgba(0,10,0,.56)),url('./assets/themes/matrix-pixel.png') center/cover fixed no-repeat}
+body.lore-matrix{--theme-bg:url('./assets/themes/matrix-pixel.png');background-image:linear-gradient(rgba(0,10,0,.56),rgba(0,10,0,.56)),var(--theme-bg);background-position:center center;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
 body.lore-matrix #desktopRoot{filter:hue-rotate(80deg) saturate(1.25)}
-body.lore-tmnt{background:linear-gradient(rgba(8,22,4,.48),rgba(8,22,4,.48)),url('./assets/themes/tmnt-pixel.png') center/cover fixed no-repeat}
+body.lore-tmnt{--theme-bg:url('./assets/themes/tmnt-pixel.png');background-image:linear-gradient(rgba(8,22,4,.48),rgba(8,22,4,.48)),var(--theme-bg);background-position:center center;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
 body.lore-tmnt .win-title{background:linear-gradient(90deg,#134d1f,#2e7d32)}
-body.lore-element{background:linear-gradient(rgba(18,12,34,.45),rgba(18,12,34,.45)),url('./assets/themes/element-pixel.png') center/cover fixed no-repeat}
+body.lore-element{--theme-bg:url('./assets/themes/element-pixel.png');background-image:linear-gradient(rgba(18,12,34,.45),rgba(18,12,34,.45)),var(--theme-bg);background-position:center center;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
 body.lore-element .win-title{background:linear-gradient(90deg,#223a7a,#f08c2b)}
-body.lore-hacker{background:linear-gradient(rgba(2,8,18,.55),rgba(2,8,18,.55)),url('./assets/themes/hacker-pixel.png') center/cover fixed no-repeat}
+body.lore-hacker{--theme-bg:url('./assets/themes/hacker-pixel.png');background-image:linear-gradient(rgba(2,8,18,.55),rgba(2,8,18,.55)),var(--theme-bg);background-position:center center;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
 body.lore-hacker #desktopRoot{filter:contrast(1.1) saturate(0.85)}
 body.lore-hacker .win-title{background:linear-gradient(90deg,#0a0,#040)}
-body.lore-catdog{background:linear-gradient(rgba(22,14,2,.18),rgba(10,18,30,.18)),url('./assets/themes/catdog-pixel.png') center/cover fixed no-repeat}
+body.lore-catdog{--theme-bg:url('./assets/themes/catdog-pixel.png');background-image:linear-gradient(rgba(22,14,2,.18),rgba(10,18,30,.18)),var(--theme-bg);background-position:center center;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
 
 @media (max-width:720px){
   .easter-dock{bottom:44px;justify-content:flex-start}
@@ -139,3 +139,20 @@ body.lore-catdog{background:linear-gradient(rgba(22,14,2,.18),rgba(10,18,30,.18)
 
 
 body.no-anim *, body.no-anim *::before, body.no-anim *::after{animation:none !important; transition:none !important;}
+
+
+/* theme background adaptivity by viewport */
+@media (max-width:720px){
+  body.lore-matrix,body.lore-tmnt,body.lore-element,body.lore-hacker,body.lore-catdog{
+    background-attachment:scroll;
+    background-size:auto 100vh;
+    background-position:center top;
+  }
+}
+@media (min-width:721px){
+  body.lore-matrix,body.lore-tmnt,body.lore-element,body.lore-hacker,body.lore-catdog{
+    background-size:cover;
+    background-position:center center;
+    background-attachment:fixed;
+  }
+}
