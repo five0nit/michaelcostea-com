@@ -121,16 +121,16 @@ body.matrix-flash{filter:hue-rotate(95deg) contrast(1.18)}
 
 /* Theme overhauls */
 body{transition:background .45s ease, filter .35s ease}
-body.lore-matrix{background:radial-gradient(circle at 50% 0%, #0e2f0e 0%, #001500 60%, #000 100%)}
+body.lore-matrix{background:linear-gradient(rgba(0,10,0,.56),rgba(0,10,0,.56)),url('./assets/themes/matrix-pixel.png') center/cover fixed no-repeat}
 body.lore-matrix #desktopRoot{filter:hue-rotate(80deg) saturate(1.25)}
-body.lore-tmnt{background:radial-gradient(circle at 50% 20%, #2d6f22 0%, #174a14 55%, #102b0f 100%)}
+body.lore-tmnt{background:linear-gradient(rgba(8,22,4,.48),rgba(8,22,4,.48)),url('./assets/themes/tmnt-pixel.png') center/cover fixed no-repeat}
 body.lore-tmnt .win-title{background:linear-gradient(90deg,#134d1f,#2e7d32)}
-body.lore-element{background:linear-gradient(130deg,#1d2d54 0%,#1d2d54 45%,#f08c2b 45%,#f08c2b 100%)}
+body.lore-element{background:linear-gradient(rgba(18,12,34,.45),rgba(18,12,34,.45)),url('./assets/themes/element-pixel.png') center/cover fixed no-repeat}
 body.lore-element .win-title{background:linear-gradient(90deg,#223a7a,#f08c2b)}
-body.lore-hacker{background:radial-gradient(circle at 40% 10%, #102410 0%, #061006 55%, #020402 100%)}
+body.lore-hacker{background:linear-gradient(rgba(2,8,18,.55),rgba(2,8,18,.55)),url('./assets/themes/hacker-pixel.png') center/cover fixed no-repeat}
 body.lore-hacker #desktopRoot{filter:contrast(1.1) saturate(0.85)}
 body.lore-hacker .win-title{background:linear-gradient(90deg,#0a0,#040)}
-body.lore-catdog{background:linear-gradient(145deg,#f6b04b 0%, #f6b04b 50%, #5aa8ff 50%, #5aa8ff 100%)}
+body.lore-catdog{background:linear-gradient(rgba(22,14,2,.18),rgba(10,18,30,.18)),url('./assets/themes/catdog-pixel.png') center/cover fixed no-repeat}
 
 @media (max-width:720px){
   .easter-dock{bottom:44px;justify-content:flex-start}
