@@ -217,5 +217,5 @@ body.lore-spiderman{--theme-bg:url('./assets/themes/spiderman-pixel.png');backgr
 
 body.lore-mario{--theme-bg:url('./assets/themes/mario-pixel.png');background-image:linear-gradient(rgba(10,20,70,.30),rgba(80,30,5,.28)),var(--theme-bg);background-position:center center;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
 
-body.lore-mario .desk-icon, body.lore-spiderman .desk-icon{font-size:0;padding-top:40px}
+body.lore-mario .desk-icon, body.lore-spiderman .desk-icon{padding-top:40px}
 body.lore-mario .desk-icon span, body.lore-spiderman .desk-icon span{font-size:12px}
