@@ -64,7 +64,9 @@ body.mobile-mode .desktop{
   grid-template-columns:repeat(3,minmax(86px,1fr));
   gap:12px 10px;
   padding:6px 4px 10px;
-  overflow:visible;
+  max-height:240px;
+  overflow-y:auto;
+  overflow-x:hidden;
 }
 body.mobile-mode .desk-icon{
   width:100%;
