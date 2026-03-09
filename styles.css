@@ -41,12 +41,19 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .win-window.maximized{left:0 !important;top:0 !important;right:auto !important;bottom:auto !important;width:100vw !important;height:calc(100vh - 38px) !important}
 .win-title{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,var(--title1),var(--title2));color:#fff;padding:4px 6px;font-size:12px;font-weight:700;cursor:move;user-select:none}
 .win-controls{display:flex;gap:2px;align-items:center}
-.win-btn{width:18px;height:16px;min-width:18px;border-top:1px solid var(--hi);border-left:1px solid var(--hi);border-right:1px solid var(--lo);border-bottom:1px solid var(--lo);background:#c0c0c0;color:#000;cursor:pointer;line-height:1;padding:0;font-family:"MS Sans Serif",Tahoma,sans-serif;font-size:11px;font-weight:700;display:grid;place-items:center;text-rendering:optimizeSpeed;-webkit-font-smoothing:none}
-.win-btn:hover{background:#d7d7d7}
-.win-btn:active,.win-btn[aria-pressed="true"]{border-top:1px solid var(--lo);border-left:1px solid var(--lo);border-right:1px solid var(--hi);border-bottom:1px solid var(--hi);background:#bdbdbd;padding-top:1px;padding-left:1px}
-.win-close{width:18px;height:16px;min-width:18px;border-top:1px solid var(--hi);border-left:1px solid var(--hi);border-right:1px solid var(--lo);border-bottom:1px solid var(--lo);background:#c0c0c0;color:#000;cursor:pointer;line-height:1;padding:0;font-family:"MS Sans Serif",Tahoma,sans-serif;font-size:11px;font-weight:700;display:grid;place-items:center;text-rendering:optimizeSpeed;-webkit-font-smoothing:none}
-.win-close:hover{background:#d7d7d7}
-.win-close:active{border-top:1px solid var(--lo);border-left:1px solid var(--lo);border-right:1px solid var(--hi);border-bottom:1px solid var(--hi);background:#bdbdbd;padding-top:1px;padding-left:1px}
+.win-btn,.win-close{position:relative;width:18px;height:16px;min-width:18px;border-top:1px solid var(--hi);border-left:1px solid var(--hi);border-right:1px solid var(--lo);border-bottom:1px solid var(--lo);background:#c0c0c0;color:#000;cursor:pointer;line-height:1;padding:0;display:grid;place-items:center}
+.win-btn:hover,.win-close:hover{background:#d7d7d7}
+.win-btn:active,.win-btn[aria-pressed="true"],.win-close:active{border-top:1px solid var(--lo);border-left:1px solid var(--lo);border-right:1px solid var(--hi);border-bottom:1px solid var(--hi);background:#bdbdbd}
+.win-btn:active::before,.win-btn[aria-pressed="true"]::before,.win-close:active::before{transform:translate(1px,1px)}
+
+/* Win98 pixel-geometry glyphs */
+.win-min::before{content:"";width:8px;height:2px;background:#111;position:absolute;left:5px;top:10px}
+.win-max::before{content:"";width:8px;height:6px;position:absolute;left:5px;top:4px;border:1px solid #111;box-shadow:inset 0 1px 0 #111}
+.win-max.is-restore::before{content:"";width:7px;height:5px;position:absolute;left:7px;top:4px;border:1px solid #111;box-shadow:inset 0 1px 0 #111, -3px 3px 0 -1px #111}
+.win-max.is-restore::after{content:"";width:7px;height:5px;position:absolute;left:4px;top:7px;background:#c0c0c0;border:1px solid #111;box-shadow:inset 0 1px 0 #111}
+.win-close::before,.win-close::after{content:"";position:absolute;width:9px;height:1px;background:#111;left:4px;top:7px;transform-origin:center}
+.win-close::before{transform:rotate(45deg)}
+.win-close::after{transform:rotate(-45deg)}
 .win-body{padding:10px;max-height:70vh;overflow:auto;font-size:14px;line-height:1.4}
 .iframe-wrap{padding:0;height:calc(100% - 22px)}
 #iframeHint{padding:8px}

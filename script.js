@@ -192,7 +192,7 @@ function toggleMaximizeWindow(id){
     maxBtn.setAttribute('aria-pressed', String(isMax));
     maxBtn.setAttribute('title', isMax ? 'Restore' : 'Maximize');
     maxBtn.setAttribute('aria-label', isMax ? 'Restore' : 'Maximize');
-    maxBtn.textContent = isMax ? '❐' : '□';
+    maxBtn.classList.toggle('is-restore', isMax);
   }
   refreshTaskbar();
 }
@@ -234,7 +234,7 @@ function initDesktopWindows(){
     if(!titleBar || !closeBtn || titleBar.querySelector('.win-controls')) return;
     const controls = document.createElement('div');
     controls.className = 'win-controls';
-    controls.innerHTML = `<button class="win-btn win-min" title="Minimize" aria-label="Minimize" data-minimize="${win.id}">_</button><button class="win-btn win-max" title="Toggle Fullscreen" aria-label="Toggle Fullscreen" data-maximize="${win.id}" aria-pressed="false">▢</button>`;
+    controls.innerHTML = `<button class="win-btn win-min" title="Minimize" aria-label="Minimize" data-minimize="${win.id}"></button><button class="win-btn win-max" title="Maximize" aria-label="Maximize" data-maximize="${win.id}" aria-pressed="false"></button>`;
     controls.appendChild(closeBtn);
     titleBar.appendChild(controls);
     titleBar.addEventListener('dblclick', (e)=>{ if(!e.target.closest('button')) toggleMaximizeWindow(win.id); });
