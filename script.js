@@ -6,8 +6,12 @@ async function boot(){
   document.getElementById('headline').textContent = data.bio?.headline || '';
   document.getElementById('summary').textContent = data.bio?.summary || '';
 
+  const projects = data.projects || [];
+  const statApps = document.getElementById('statApps');
+  if (statApps) statApps.textContent = String(projects.length || 0);
+
   const apps = document.getElementById('apps');
-  (data.projects || []).forEach(p => {
+  projects.forEach(p => {
     const card = document.createElement('article');
     card.className = 'card';
     const isPrivate = p.status === 'private';
@@ -15,13 +19,18 @@ async function boot(){
       ? `<a class="btn" href="${p.url}">Request access</a>`
       : `<a class="btn" href="${p.url}">Open app</a>`;
 
+    const badgeText = p.status === 'live' ? 'Production' : (p.status === 'beta' ? 'Beta' : 'Private');
+
     card.innerHTML = `
       <div class="row">
         <h3>${p.name}</h3>
-        <span class="badge ${p.status}">${p.status}</span>
+        <span class="badge ${p.status}">${badgeText}</span>
       </div>
       <p class="desc">${p.description || ''}</p>
-      <div class="row">${cta}</div>
+      <div class="row">
+        <small class="muted">${p.slug || 'project'}</small>
+        ${cta}
+      </div>
     `;
     apps.appendChild(card);
   });
