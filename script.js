@@ -480,6 +480,10 @@ function initLoreDock(){
   // legacy no-op (themes now in settings)
 }
 
+function initEasterEggs(){
+  // legacy hook retained for compatibility
+}
+
 function initLoreEggs(){
   // CatDog mode
   const catdogBtn = document.getElementById('catdogToggle');
