@@ -1,30 +1,21 @@
-function initScene(){
-  const items = Array.from(document.querySelectorAll('.mini-window b'));
-  if(items.length){
-    const states = ['online','rendering','queued','ready','syncing','live'];
-    let t = 0;
-    setInterval(() => {
-      t++;
-      items.forEach((el, i) => {
-        if ((t + i) % 3 === 0) {
-          el.textContent = states[(Math.floor(Math.random()*states.length))];
-        }
-      });
-    }, 1800);
-  }
+function initScene(){}
 
-  const scene = document.querySelector('.retro-scene');
-  if (scene) {
-    scene.addEventListener('mousemove', (e) => {
-      const rect = scene.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
-      const y = ((e.clientY - rect.top) / rect.height - 0.5) * 8;
-      scene.style.transform = `perspective(700px) rotateX(${(-y/3).toFixed(2)}deg) rotateY(${(x/3).toFixed(2)}deg)`;
+function initDesktopWindows(){
+  document.querySelectorAll('.desk-icon').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-open');
+      const win = document.getElementById(id);
+      if (win) win.classList.add('open');
     });
-    scene.addEventListener('mouseleave', () => {
-      scene.style.transform = 'none';
+  });
+
+  document.querySelectorAll('.win-close').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-close');
+      const win = document.getElementById(id);
+      if (win) win.classList.remove('open');
     });
-  }
+  });
 }
 
 function initTray(){
@@ -66,12 +57,18 @@ function initStartMenu(projects){
   const items = document.getElementById('startItems');
   if(!btn || !menu || !items) return;
 
-  items.innerHTML = projects.map(p => `
+  const systemItems = `
+    <a class="start-item" role="menuitem" href="#" data-open-window="readerWindow"><span>📘 Read Me</span><small>open</small></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span>🗂️ Programs</span><small>open</small></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span>💾 About</span><small>open</small></a>
+  `;
+  const appItems = projects.map(p => `
     <a class="start-item" role="menuitem" href="${p.url}">
       <span>${p.name}</span>
       <small>${p.status}</small>
     </a>
   `).join('');
+  items.innerHTML = systemItems + appItems;
 
   const closeMenu = () => {
     menu.classList.remove('open');
@@ -97,7 +94,14 @@ function initStartMenu(projects){
 
   menu.addEventListener('click', (e) => {
     const link = e.target.closest('.start-item');
-    if(link) closeMenu();
+    if(!link) return;
+    const openId = link.getAttribute('data-open-window');
+    if(openId){
+      e.preventDefault();
+      const win = document.getElementById(openId);
+      if(win) win.classList.add('open');
+    }
+    closeMenu();
   });
 
   document.addEventListener('keydown', (e) => {
@@ -143,6 +147,7 @@ async function boot(){
   });
 
   initStartMenu(projects);
+  initDesktopWindows();
   initTray();
   initScene();
 }

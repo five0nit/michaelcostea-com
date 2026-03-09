@@ -22,26 +22,35 @@
       <div class="stat"><b>AU/NZ</b><span>Service Region</span></div>
     </section>
 
-    <section class="retro-scene" aria-label="animated retro scene">
-      <div class="scene-title">Live Control Deck</div>
-      <div class="skyline"></div>
-      <div class="windows" id="sceneWindows">
-        <div class="mini-window"><span>Planner Node</span><b class="pulse">online</b></div>
-        <div class="mini-window"><span>Cards Builder</span><b class="pulse">building</b></div>
-        <div class="mini-window"><span>OZQuotes API</span><b class="pulse">ready</b></div>
-        <div class="mini-window"><span>Automation Queue</span><b class="pulse">idle</b></div>
-      </div>
-      <div class="orbs" aria-hidden="true">
-        <i></i><i></i><i></i><i></i><i></i>
+    <section class="desktop" aria-label="desktop view">
+      <button class="desk-icon" data-open="readerWindow">📘<span>Read Me</span></button>
+      <button class="desk-icon" data-open="appsWindow">🗂️<span>Apps</span></button>
+      <button class="desk-icon" data-open="aboutWindow">💾<span>About</span></button>
+    </section>
+
+    <section id="readerWindow" class="win-window open" aria-label="Reader window">
+      <div class="win-title"><span>Reader — MichaelOS 1989</span><button class="win-close" data-close="readerWindow">×</button></div>
+      <div class="win-body">
+        <h3>Welcome to MichaelOS 1989</h3>
+        <p>This is the live desktop for Michael Costea’s projects. Use Start or desktop icons to open tools.</p>
+        <p><b>What this site showcases:</b> practical automations, quote workflows, and production-ready web tools for AU/NZ operations.</p>
       </div>
     </section>
 
-    <section>
-      <div class="section-head">
-        <h2>Current Projects & Webapps</h2>
-        <p class="muted">Live playground for current + future apps</p>
+    <section id="appsWindow" class="win-window open" aria-label="Apps window">
+      <div class="win-title"><span>Programs</span><button class="win-close" data-close="appsWindow">×</button></div>
+      <div class="win-body">
+        <div id="apps" class="grid"></div>
       </div>
-      <div id="apps" class="grid"></div>
+    </section>
+
+    <section id="aboutWindow" class="win-window" aria-label="About window">
+      <div class="win-title"><span>System Info</span><button class="win-close" data-close="aboutWindow">×</button></div>
+      <div class="win-body">
+        <p><b>OS:</b> MichaelOS 1989</p>
+        <p><b>Mode:</b> Demo Desktop</p>
+        <p><b>Region:</b> AU / NZ</p>
+      </div>
     </section>
   </main>
   <div class="taskbar" aria-label="Windows style taskbar">
