@@ -41,6 +41,13 @@
       "status": "live",
       "description": "Simple notepad-style text editor with local save and .txt export.",
       "url": "./apps/text.html"
+    },
+    {
+      "name": "Live Chat Room",
+      "slug": "chat",
+      "status": "live",
+      "description": "Public real-time visitor chat lobby.",
+      "url": "./apps/chat.html"
     }
   ]
 }
