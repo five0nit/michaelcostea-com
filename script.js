@@ -42,6 +42,13 @@ function bringFront(win){
 function openWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
+
+  if (isMobileMode()) {
+    document.querySelectorAll('.win-window.open').forEach(w => {
+      if (w.id !== id) w.classList.remove('open');
+    });
+  }
+
   win.classList.add('open');
   centerWindow(win);
   bringFront(win);
@@ -274,12 +281,27 @@ async function boot(){
   initTray();
 
   applyLayoutMode();
+
+  if (isMobileMode()) {
+    document.querySelectorAll('.win-window').forEach(w => w.classList.remove('open'));
+    document.getElementById('readerWindow')?.classList.add('open');
+  }
+
   document.querySelectorAll('.win-window.open').forEach(centerWindow);
   refreshTaskbar();
   bringFront(document.getElementById('readerWindow'));
 
   window.addEventListener('resize', () => {
+    const wasMobile = document.body.classList.contains('mobile-mode');
     applyLayoutMode();
+    const nowMobile = isMobileMode();
+
+    if (!wasMobile && nowMobile) {
+      document.querySelectorAll('.win-window').forEach(w => w.classList.remove('open'));
+      document.getElementById('readerWindow')?.classList.add('open');
+      centerWindow(document.getElementById('readerWindow'));
+    }
+
     document.querySelectorAll('.win-window.open').forEach(clampWindowToViewport);
   });
 }

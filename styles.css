@@ -35,10 +35,17 @@ a.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2px solid va
 .start-menu.open{display:block}.start-head{background:linear-gradient(180deg,#000080,#1084d0);color:#fff;font-weight:700;padding:7px 9px;font-size:12px}.start-items{padding:6px;max-height:52vh;overflow:auto}.start-item{display:flex;justify-content:space-between;text-decoration:none;color:#000;font-size:12px;padding:6px 7px}.start-item:hover{background:#000080;color:#fff}
 body.mobile-mode .desktop{grid-template-columns:repeat(4,minmax(74px,1fr));gap:8px}
 body.mobile-mode .desk-icon{width:100%;height:78px}
-body.mobile-mode .win-window{width:min(94vw,560px)!important;left:3vw!important;top:70px!important}
-body.mobile-mode #browserWindow{height:min(68vh,560px)!important}
-body.mobile-mode .win-body{max-height:54vh}
+body.mobile-mode .win-window{
+  width:auto !important;
+  left:8px !important;
+  right:8px !important;
+  top:126px !important;
+  height:calc(100vh - 176px) !important;
+}
+body.mobile-mode .win-body{max-height:calc(100vh - 230px)}
+body.mobile-mode #browserWindow .win-body{padding:0}
 body.mobile-mode .taskbar{height:40px;padding:5px 6px}
+body.mobile-mode .taskbar-windows{display:none}
 body.mobile-mode .start-menu{width:min(92vw,320px)}
 
 @media (max-width:720px){.container{padding:8px}.desktop{grid-template-columns:repeat(4,82px);gap:8px}.desk-icon{width:82px;height:82px}.task-btn{max-width:130px}.tray-pill{min-width:56px;font-size:10px}}
