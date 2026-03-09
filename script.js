@@ -1,3 +1,31 @@
+function initScene(){
+  const items = Array.from(document.querySelectorAll('.mini-window b'));
+  if(!items.length) return;
+  const states = ['online','rendering','queued','ready','syncing','live'];
+  let t = 0;
+  setInterval(() => {
+    t++;
+    items.forEach((el, i) => {
+      if ((t + i) % 3 === 0) {
+        el.textContent = states[(Math.floor(Math.random()*states.length))];
+      }
+    });
+  }, 1800);
+
+  const scene = document.querySelector('.retro-scene');
+  if (scene) {
+    scene.addEventListener('mousemove', (e) => {
+      const rect = scene.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * 8;
+      scene.style.transform = `perspective(700px) rotateX(${(-y/3).toFixed(2)}deg) rotateY(${(x/3).toFixed(2)}deg)`;
+    });
+    scene.addEventListener('mouseleave', () => {
+      scene.style.transform = 'none';
+    });
+  }
+}
+
 async function boot(){
   const res = await fetch('./apps.json');
   const data = await res.json();
@@ -34,5 +62,7 @@ async function boot(){
     `;
     apps.appendChild(card);
   });
+
+  initScene();
 }
 boot();
