@@ -144,6 +144,57 @@ function initDrag(){
   });
 }
 
+function showToast(msg, ms=2600){
+  const t = document.getElementById('easterToast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(()=>t.classList.remove('show'), ms);
+}
+
+function initEasterEggs(){
+  const lines = [
+    'Dial-up connected at 56k. Please wait... forever.',
+    'Now loading: Totally Rad Mode™',
+    'You have entered The Matrix (1999). Follow the white rabbit.',
+    'Saved by the Bell break in progress 📟',
+    'Nokia 3310 detected. Battery lasts 9 years.'
+  ];
+
+  document.querySelectorAll('.desk-icon').forEach((icon) => {
+    let clicks = 0;
+    icon.addEventListener('click', () => {
+      clicks++;
+      if (clicks === 3) {
+        showToast(lines[Math.floor(Math.random()*lines.length)]);
+        clicks = 0;
+      }
+    });
+  });
+
+  const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let i = 0;
+  window.addEventListener('keydown', (e) => {
+    const key = (e.key || '').toLowerCase();
+    const want = code[i].toLowerCase();
+    if (key === want) {
+      i++;
+      if (i === code.length) {
+        document.body.style.filter = 'hue-rotate(45deg) saturate(1.15)';
+        showToast('Konami unlocked: Extreme 90s mode activated 🎮', 3400);
+        setTimeout(()=>{ document.body.style.filter=''; }, 5000);
+        i = 0;
+      }
+    } else {
+      i = 0;
+    }
+  });
+
+  // startup retro ping
+  setTimeout(() => showToast('MichaelOS 1989 boot complete. Have a nice day 😎', 2200), 600);
+}
+
 function initTray(){
   const clockEl = document.getElementById('trayClock');
   const dateEl = document.getElementById('trayDate');
@@ -279,6 +330,7 @@ async function boot(){
   initStartMenu(projects);
   initDesktopWindows();
   initTray();
+  initEasterEggs();
 
   applyLayoutMode();
 
