@@ -62,6 +62,13 @@
       "status": "live",
       "description": "Play classic DOOM in-browser via DOS emulation.",
       "url": "./apps/doom.html"
+    },
+    {
+      "name": "HACKER.EXE",
+      "slug": "hacker-exe",
+      "status": "live",
+      "description": "Shows your public IP and rough geolocation.",
+      "url": "./apps/hacker-exe.html"
     }
   ]
 }

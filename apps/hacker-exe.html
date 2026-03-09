@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HACKER.EXE</title>
+<style>
+body{margin:0;background:#071107;color:#9bff9b;font-family:'Courier New',monospace}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+a{color:#9fc0ff}
+.panel{border:1px solid #2f8a2f;background:#041004;padding:12px;border-radius:8px}
+button{padding:8px 10px;border:1px solid #3aa03a;background:#0b2c0b;color:#9bff9b;border-radius:6px;cursor:pointer}
+pre{white-space:pre-wrap;background:#020a02;border:1px solid #245f24;padding:10px;border-radius:8px;min-height:220px}
+.small{font-size:12px;color:#7cd67c}
+</style></head><body>
+<div class="wrap">
+  <p><a href="../index.html">← Back</a></p>
+  <h1>HACKER.EXE</h1>
+  <div class="panel">
+    <p>This tool displays your own public network fingerprint (IP + rough location).</p>
+    <p class="small">Data is approximate and sourced from IP geolocation providers.</p>
+    <p><button id="scan">Run Network Scan</button></p>
+    <pre id="out">Ready.</pre>
+  </div>
+</div>
+<script>
+const out=document.getElementById('out');
+function line(k,v){return `${k.padEnd(16)} : ${v ?? 'n/a'}`}
+
+document.getElementById('scan').onclick=async()=>{
+  out.textContent='Scanning...';
+  try{
+    const r=await fetch('https://ipapi.co/json/');
+    const d=await r.json();
+    out.textContent=[
+      line('IP', d.ip),
+      line('City', d.city),
+      line('Region', d.region),
+      line('Country', d.country_name),
+      line('Postal', d.postal),
+      line('Latitude', d.latitude),
+      line('Longitude', d.longitude),
+      line('Timezone', d.timezone),
+      line('Org', d.org),
+      line('ASN', d.asn)
+    ].join('
+');
+  }catch(e){
+    out.textContent='Lookup failed: '+e;
+  }
+};
+</script>
+</body></html>
