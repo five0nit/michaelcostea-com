@@ -1,19 +1,86 @@
-function initScene(){}
+let zTop = 20;
+
+function bringFront(win){
+  if(!win) return;
+  zTop += 1;
+  document.querySelectorAll('.win-window').forEach(w => w.classList.remove('active'));
+  win.style.zIndex = String(zTop);
+  win.classList.add('active');
+  refreshTaskbar();
+}
+
+function openWindow(id){
+  const win = document.getElementById(id);
+  if(!win) return;
+  win.classList.add('open');
+  bringFront(win);
+}
+
+function closeWindow(id){
+  const win = document.getElementById(id);
+  if(!win) return;
+  win.classList.remove('open');
+  refreshTaskbar();
+}
 
 function initDesktopWindows(){
   document.querySelectorAll('.desk-icon').forEach((btn) => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-open');
-      const win = document.getElementById(id);
-      if (win) win.classList.add('open');
+      const appUrl = btn.getAttribute('data-app');
+      const appTitle = btn.getAttribute('data-title') || 'Program';
+      if(appUrl){
+        const frame = document.getElementById('appFrame');
+        const title = document.getElementById('browserTitle');
+        if(frame) frame.src = appUrl;
+        if(title) title.textContent = appTitle;
+        openWindow('browserWindow');
+        return;
+      }
+      if (id) openWindow(id);
     });
   });
 
   document.querySelectorAll('.win-close').forEach((btn) => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-close');
-      const win = document.getElementById(id);
-      if (win) win.classList.remove('open');
+      if (id) closeWindow(id);
+    });
+  });
+
+  document.querySelectorAll('.win-window').forEach(win => {
+    win.addEventListener('mousedown', () => bringFront(win));
+  });
+
+  initDrag();
+}
+
+function initDrag(){
+  document.querySelectorAll('.win-window').forEach(win => {
+    const bar = win.querySelector('.win-title');
+    if(!bar) return;
+    let dragging = false, ox=0, oy=0;
+    bar.addEventListener('mousedown', (e) => {
+      if(e.target.closest('.win-close')) return;
+      dragging = true;
+      bringFront(win);
+      const rect = win.getBoundingClientRect();
+      ox = e.clientX - rect.left;
+      oy = e.clientY - rect.top;
+      document.body.style.userSelect = 'none';
+    });
+    window.addEventListener('mousemove', (e) => {
+      if(!dragging) return;
+      const maxX = window.innerWidth - 120;
+      const maxY = window.innerHeight - 60;
+      let left = Math.min(Math.max(0, e.clientX - ox), maxX);
+      let top = Math.min(Math.max(0, e.clientY - oy), maxY);
+      win.style.left = left + 'px';
+      win.style.top = top + 'px';
+    });
+    window.addEventListener('mouseup', () => {
+      dragging = false;
+      document.body.style.userSelect = '';
     });
   });
 }
@@ -22,13 +89,10 @@ function initTray(){
   const clockEl = document.getElementById('trayClock');
   const dateEl = document.getElementById('trayDate');
   const battEl = document.getElementById('trayBattery');
-
   const updateClock = () => {
     const now = new Date();
-    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const date = now.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
-    if (clockEl) clockEl.textContent = time;
-    if (dateEl) dateEl.textContent = date;
+    if (clockEl) clockEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (dateEl) dateEl.textContent = now.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
   updateClock();
   setInterval(updateClock, 1000);
@@ -37,18 +101,39 @@ function initTray(){
     navigator.getBattery().then((b) => {
       const paint = () => {
         const pct = Math.round((b.level || 0) * 100);
-        const charging = b.charging ? '⚡' : '🔋';
-        battEl.textContent = `${charging} ${pct}%`;
+        battEl.textContent = `${b.charging ? '⚡' : '🔋'} ${pct}%`;
       };
       paint();
       b.addEventListener('levelchange', paint);
       b.addEventListener('chargingchange', paint);
-    }).catch(() => {
-      battEl.textContent = '🔋 N/A';
+    }).catch(() => battEl.textContent = '🔋 N/A');
+  } else if (battEl) battEl.textContent = '🔋 N/A';
+}
+
+function refreshTaskbar(){
+  const wrap = document.getElementById('taskButtons');
+  if(!wrap) return;
+  const windows = Array.from(document.querySelectorAll('.win-window.open'));
+  wrap.innerHTML = windows.map(w => {
+    const title = w.querySelector('.win-title span')?.textContent || w.id;
+    const active = w.classList.contains('active') ? 'active' : '';
+    return `<button class="task-btn ${active}" data-focus="${w.id}">${title}</button>`;
+  }).join('');
+
+  wrap.querySelectorAll('.task-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-focus');
+      const win = document.getElementById(id);
+      if(!win) return;
+      if(win.classList.contains('active')){
+        win.classList.remove('open');
+      } else {
+        win.classList.add('open');
+        bringFront(win);
+      }
+      refreshTaskbar();
     });
-  } else if (battEl) {
-    battEl.textContent = '🔋 N/A';
-  }
+  });
 }
 
 function initStartMenu(projects){
@@ -63,50 +148,37 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span>💾 About</span><small>open</small></a>
   `;
   const appItems = projects.map(p => `
-    <a class="start-item" role="menuitem" href="${p.url}">
+    <a class="start-item" role="menuitem" href="#" data-launch-app="${p.url}" data-app-title="${p.name}">
       <span>${p.name}</span>
       <small>${p.status}</small>
     </a>
   `).join('');
   items.innerHTML = systemItems + appItems;
 
-  const closeMenu = () => {
-    menu.classList.remove('open');
-    btn.classList.remove('open');
-    btn.setAttribute('aria-expanded','false');
-    menu.setAttribute('aria-hidden','true');
-  };
-  const openMenu = () => {
-    menu.classList.add('open');
-    btn.classList.add('open');
-    btn.setAttribute('aria-expanded','true');
-    menu.setAttribute('aria-hidden','false');
-  };
+  const closeMenu = () => { menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); };
+  const openMenu = () => { menu.classList.add('open'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); };
 
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if(menu.classList.contains('open')) closeMenu(); else openMenu();
-  });
-
-  document.addEventListener('click', (e) => {
-    if(!menu.contains(e.target) && e.target !== btn) closeMenu();
-  });
+  btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
+  document.addEventListener('click', (e) => { if(!menu.contains(e.target) && e.target !== btn) closeMenu(); });
 
   menu.addEventListener('click', (e) => {
     const link = e.target.closest('.start-item');
     if(!link) return;
     const openId = link.getAttribute('data-open-window');
-    if(openId){
+    const launchApp = link.getAttribute('data-launch-app');
+    if(openId){ e.preventDefault(); openWindow(openId); }
+    if(launchApp){
       e.preventDefault();
-      const win = document.getElementById(openId);
-      if(win) win.classList.add('open');
+      const frame = document.getElementById('appFrame');
+      const title = document.getElementById('browserTitle');
+      if(frame) frame.src = launchApp;
+      if(title) title.textContent = link.getAttribute('data-app-title') || 'Program';
+      openWindow('browserWindow');
     }
     closeMenu();
   });
 
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape') closeMenu();
-  });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeMenu(); });
 }
 
 async function boot(){
@@ -125,30 +197,30 @@ async function boot(){
   projects.forEach(p => {
     const card = document.createElement('article');
     card.className = 'card';
-    const isPrivate = p.status === 'private';
-    const cta = isPrivate
-      ? `<a class="btn" href="${p.url}">Request access</a>`
-      : `<a class="btn" href="${p.url}">Open app</a>`;
-
     const badgeText = p.status === 'live' ? 'Production' : (p.status === 'beta' ? 'Beta' : 'Private');
-
     card.innerHTML = `
-      <div class="row">
-        <h3>${p.name}</h3>
-        <span class="badge ${p.status}">${badgeText}</span>
-      </div>
+      <div class="row"><h3>${p.name}</h3><span class="badge ${p.status}">${badgeText}</span></div>
       <p class="desc">${p.description || ''}</p>
-      <div class="row">
-        <small class="muted">${p.slug || 'project'}</small>
-        ${cta}
-      </div>
+      <div class="row"><small class="muted">${p.slug || 'project'}</small><a class="btn" href="#" data-launch-inline="${p.url}" data-app-title="${p.name}">Open</a></div>
     `;
     apps.appendChild(card);
+  });
+
+  apps.querySelectorAll('[data-launch-inline]').forEach(a => {
+    a.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const frame = document.getElementById('appFrame');
+      const title = document.getElementById('browserTitle');
+      if(frame) frame.src = a.getAttribute('data-launch-inline');
+      if(title) title.textContent = a.getAttribute('data-app-title') || 'Program';
+      openWindow('browserWindow');
+    });
   });
 
   initStartMenu(projects);
   initDesktopWindows();
   initTray();
-  initScene();
+  refreshTaskbar();
+  bringFront(document.getElementById('readerWindow'));
 }
 boot();
