@@ -366,10 +366,43 @@ function initStartMenu(projects){
 
 
 
+function themeIconKey(btn){
+  const label=(btn.querySelector('span')?.textContent||'').toLowerCase();
+  if(label.includes('read me')) return 'readme';
+  if(label.includes('system info')) return 'settings';
+  if(label.includes('planner')) return 'planner';
+  if(label.includes('card')) return 'cards';
+  if(label.includes('ozquotes')) return 'ozquotes';
+  if(label.includes('paint')) return 'paint';
+  if(label.includes('.text')) return 'text';
+  if(label.includes('live chat')) return 'chat';
+  if(label.includes('programs')) return 'programs';
+  if(label.includes('recycle')) return 'recycle';
+  if(label.includes('if.exe')) return 'ifexe';
+  return 'readme';
+}
+
+function applyThemeIcons(theme){
+  const themed = ['mario','spiderman'];
+  document.querySelectorAll('.desk-icon').forEach(btn=>{
+    btn.style.backgroundImage='';
+    btn.style.backgroundSize='';
+    btn.style.backgroundRepeat='';
+    btn.style.backgroundPosition='';
+  });
+  if(!themed.includes(theme)) return;
+  document.querySelectorAll('.desk-icon').forEach(btn=>{
+    const key=themeIconKey(btn);
+    btn.style.backgroundImage = `url('./assets/icons/${theme}/${key}.png')`;
+    btn.style.backgroundSize = '32px 32px';
+    btn.style.backgroundRepeat = 'no-repeat';
+    btn.style.backgroundPosition = 'center 8px';
+  });
+}
+
 function setLoreTheme(theme){
-  const themes = ['matrix','tmnt','element','hacker','catdog'];
+  const themes = ['matrix','tmnt','element','hacker','catdog','spiderman','mario'];
   themes.forEach(t => document.body.classList.remove(`lore-${t}`));
-  document.querySelectorAll('.egg-btn').forEach(b => b.classList.remove('active'));
 
   const loreNote = document.getElementById('loreNote');
   const notes = {
@@ -377,35 +410,22 @@ function setLoreTheme(theme){
     tmnt: 'Sewer Shell Network: dojo pings active, pizza timer set to 11.',
     element: 'Element Protocol: four keys aligned, fifth channel standing by.',
     hacker: 'Cyber Deck: BBS alias routing through dark fiber nodes.',
-    catdog: 'Dual Mode Kernel: one body, two render engines.'
+    catdog: 'Dual Mode Kernel: one body, two render engines.',
+    spiderman: 'City Swing Protocol: web-lines, skyline leaps, responsibility checks.',
+    mario: 'Mushroom Kingdom Kernel: pipes, power-ups, and side-scrolling momentum.'
   };
 
   if(theme && theme !== 'default'){
     document.body.classList.add(`lore-${theme}`);
-    const active = document.querySelector(`.egg-btn[data-theme="${theme}"]`);
-    if(active) active.classList.add('active');
     if(loreNote) loreNote.textContent = notes[theme] || '';
   } else {
     if(loreNote) loreNote.textContent = '';
   }
+  applyThemeIcons(theme||'default');
 }
 
 function initLoreDock(){
-  document.querySelectorAll('.egg-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const theme = btn.getAttribute('data-theme') || 'default';
-      setLoreTheme(theme);
-      const toasts = {
-        matrix:'Matrix layer loaded. There is no spoon.',
-        tmnt:'TMNT channel online. Cowabunga secured.',
-        element:'Element Protocol unlocked. Multipass accepted.',
-        hacker:'Hacker deck enabled. Trace route obfuscated.',
-        catdog:'CatDog mode online. One body, two vibes.',
-        default:'Theme reset to MichaelOS base shell.'
-      };
-      showToast(toasts[theme] || 'Lore mode switched.');
-    });
-  });
+  // legacy no-op (themes now in settings)
 }
 
 function initLoreEggs(){

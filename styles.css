@@ -143,14 +143,14 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after{animation:none !im
 
 /* theme background adaptivity by viewport */
 @media (max-width:720px){
-  body.lore-matrix,body.lore-tmnt,body.lore-element,body.lore-hacker,body.lore-catdog{
+  body.lore-matrix,body.lore-tmnt,body.lore-element,body.lore-hacker,body.lore-catdog,body.lore-spiderman,body.lore-mario{
     background-attachment:scroll;
     background-size:auto 100vh;
     background-position:center top;
   }
 }
 @media (min-width:721px){
-  body.lore-matrix,body.lore-tmnt,body.lore-element,body.lore-hacker,body.lore-catdog{
+  body.lore-matrix,body.lore-tmnt,body.lore-element,body.lore-hacker,body.lore-catdog,body.lore-spiderman,body.lore-mario{
     background-size:cover;
     background-position:center center;
     background-attachment:fixed;
@@ -161,3 +161,10 @@ body.no-anim *, body.no-anim *::before, body.no-anim *::after{animation:none !im
 .mikenet-bar{display:flex;gap:8px;align-items:center;padding:6px;background:#d9d9d9;border-bottom:2px solid #7f7f7f}
 .mikenet-logo{font-size:12px;white-space:nowrap;display:flex;align-items:center;gap:4px}
 .mikenet-addr{flex:1;min-width:0;padding:5px 8px;border-top:2px solid #7f7f7f;border-left:2px solid #7f7f7f;border-right:2px solid #fff;border-bottom:2px solid #fff;background:#fff;color:#111;font:12px "Courier New",monospace}
+
+body.lore-spiderman{--theme-bg:url('./assets/themes/spiderman-pixel.png');background-image:linear-gradient(rgba(12,16,44,.40),rgba(44,6,12,.40)),var(--theme-bg);background-position:center center;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
+
+body.lore-mario{--theme-bg:url('./assets/themes/mario-pixel.png');background-image:linear-gradient(rgba(10,20,70,.30),rgba(80,30,5,.28)),var(--theme-bg);background-position:center center;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
+
+body.lore-mario .desk-icon, body.lore-spiderman .desk-icon{font-size:0;padding-top:40px}
+body.lore-mario .desk-icon span, body.lore-spiderman .desk-icon span{font-size:12px}
