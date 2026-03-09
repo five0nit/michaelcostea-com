@@ -8,7 +8,16 @@
   <link rel="stylesheet" href="styles.css?v=20260309-1841" />
 </head>
 <body>
-  <main class="container">
+  <div id="bootScreen" class="boot-screen" aria-label="MichaelOS boot screen">
+    <div class="boot-box">
+      <div class="boot-title">MichaelOS 1989</div>
+      <div class="boot-sub">Starting up retro systems...</div>
+      <div class="boot-bar"><i id="bootBarFill"></i></div>
+      <div class="boot-pct" id="bootPct">0%</div>
+    </div>
+  </div>
+
+  <main class="container" id="desktopRoot">
     <header class="hero">
       <p class="kicker">michaelcostea.com</p>
       <h1 id="name">Michael Costea</h1>

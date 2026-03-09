@@ -1,5 +1,32 @@
 let zTop = 20;
 
+async function runBootScreen(){
+  const boot = document.getElementById('bootScreen');
+  const fill = document.getElementById('bootBarFill');
+  const pct = document.getElementById('bootPct');
+  if(!boot || !fill || !pct) return;
+
+  document.body.classList.add('booting');
+
+  const duration = 2000;
+  const start = performance.now();
+
+  await new Promise(resolve => {
+    const tick = (now) => {
+      const progress = Math.min(1, (now - start) / duration);
+      const val = Math.round(progress * 100);
+      fill.style.width = `${val}%`;
+      pct.textContent = `${val}%`;
+      if (progress < 1) requestAnimationFrame(tick);
+      else resolve();
+    };
+    requestAnimationFrame(tick);
+  });
+
+  boot.classList.add('hidden');
+  document.body.classList.remove('booting');
+}
+
 function isMobileMode(){
   return window.matchMedia('(max-width: 820px)').matches;
 }
@@ -292,6 +319,7 @@ function initStartMenu(projects){
 }
 
 async function boot(){
+  await runBootScreen();
   const res = await fetch('./apps.json');
   const data = await res.json();
 
