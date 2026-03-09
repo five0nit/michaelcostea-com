@@ -16,36 +16,71 @@ pre{white-space:pre-wrap;background:#020a02;border:1px solid #245f24;padding:10p
   <h1>HACKER.EXE</h1>
   <div class="panel">
     <p>This tool displays your own public network fingerprint (IP + rough location).</p>
-    <p class="small">Data is approximate and sourced from IP geolocation providers.</p>
+    <p class="small">Data is approximate and sourced from public IP geolocation providers.</p>
     <p><button id="scan">Run Network Scan</button></p>
     <pre id="out">Ready.</pre>
   </div>
 </div>
 <script>
 const out=document.getElementById('out');
-function line(k,v){return `${k.padEnd(16)} : ${v ?? 'n/a'}`}
+const scanBtn=document.getElementById('scan');
 
-document.getElementById('scan').onclick=async()=>{
-  out.textContent='Scanning...';
+function line(k,v){ return `${String(k).padEnd(16)} : ${v ?? 'n/a'}`; }
+
+async function fetchJson(url){
+  const r=await fetch(url,{cache:'no-store'});
+  if(!r.ok) throw new Error(`${url} -> HTTP ${r.status}`);
+  return r.json();
+}
+
+async function getNetworkProfile(){
+  const providers=[
+    async()=>{
+      const d=await fetchJson('https://ipapi.co/json/');
+      return {ip:d.ip,city:d.city,region:d.region,country:d.country_name,postal:d.postal,lat:d.latitude,lon:d.longitude,timezone:d.timezone,org:d.org,asn:d.asn,source:'ipapi.co'};
+    },
+    async()=>{
+      const d=await fetchJson('https://ipwho.is/');
+      if(d.success===false) throw new Error(d.message||'ipwho.is failed');
+      return {ip:d.ip,city:d.city,region:d.region,country:d.country,postal:d.postal,lat:d.latitude,lon:d.longitude,timezone:d.timezone?.id,org:d.connection?.org,asn:d.connection?.asn,source:'ipwho.is'};
+    },
+    async()=>{
+      const d=await fetchJson('https://ipinfo.io/json');
+      const loc=(d.loc||',').split(',');
+      return {ip:d.ip,city:d.city,region:d.region,country:d.country,postal:d.postal,lat:loc[0],lon:loc[1],timezone:d.timezone,org:d.org,asn:'n/a',source:'ipinfo.io'};
+    }
+  ];
+
+  let lastErr='';
+  for(const p of providers){
+    try{return await p();}catch(e){lastErr=String(e);} 
+  }
+  throw new Error(lastErr||'All providers failed');
+}
+
+scanBtn.addEventListener('click', async()=>{
+  out.textContent='Scanning network fingerprint...';
+  scanBtn.disabled=true;
   try{
-    const r=await fetch('https://ipapi.co/json/');
-    const d=await r.json();
+    const d=await getNetworkProfile();
     out.textContent=[
       line('IP', d.ip),
       line('City', d.city),
       line('Region', d.region),
-      line('Country', d.country_name),
+      line('Country', d.country),
       line('Postal', d.postal),
-      line('Latitude', d.latitude),
-      line('Longitude', d.longitude),
+      line('Latitude', d.lat),
+      line('Longitude', d.lon),
       line('Timezone', d.timezone),
       line('Org', d.org),
-      line('ASN', d.asn)
-    ].join('
-');
+      line('ASN', d.asn),
+      line('Source', d.source)
+    ].join('\n');
   }catch(e){
-    out.textContent='Lookup failed: '+e;
+    out.textContent='Lookup failed.\n'+String(e)+'\n\nTip: Some networks block public geo APIs; try VPN off or another network.';
+  }finally{
+    scanBtn.disabled=false;
   }
-};
+});
 </script>
 </body></html>
