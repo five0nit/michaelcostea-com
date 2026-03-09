@@ -5,85 +5,31 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>OZQuotes - Quick Quote</title>
   
+  
   <style>
-    :root{
-      --bg:#070b17;
-      --bg2:#0f1730;
-      --panel:#131d3d;
-      --panel-2:#0f1730;
-      --text:#eaf0ff;
-      --muted:#9db0dd;
-      --line:#2c3e73;
-      --primary:#4f7dff;
-      --primary-2:#6ea1ff;
-      --success:#35c58b;
-      --shadow:0 14px 36px rgba(3,8,20,.45);
-    }
+    :root{--bg:#070b17;--bg2:#0f1730;--panel:#131d3d;--text:#eaf0ff;--muted:#9db0dd;--line:#2c3e73;--primary:#4f7dff;--primary2:#6ea1ff}
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
-      background:radial-gradient(1200px 600px at 10% -10%, #1f2f5f 0%, transparent 55%),linear-gradient(180deg,var(--bg),var(--bg2));
-      padding:28px 18px 48px;
-    }
+    body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:radial-gradient(1000px 520px at 10% -10%,#203164 0%,transparent 55%),linear-gradient(180deg,var(--bg),var(--bg2));padding:22px 14px 40px}
     .wrap{max-width:1100px;margin:0 auto}
-    h1{margin:.2rem 0 .4rem;font-size:clamp(1.6rem,3vw,2.1rem);letter-spacing:.2px}
-    h3{margin:.1rem 0 .7rem;font-size:1.02rem}
-    p{margin:.2rem 0 0}
-    .muted{color:var(--muted);font-size:.95rem;line-height:1.45}
-    a{color:#b4cbff;text-decoration:none}
-    a:hover{text-decoration:underline}
-
-    .card{
-      background:linear-gradient(180deg,rgba(19,29,61,.95),rgba(15,23,48,.95));
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:16px;
-      margin-bottom:14px;
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(4px);
-    }
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-
-    label{display:block;margin-bottom:6px;font-size:.83rem;color:#bfd0f6;text-transform:uppercase;letter-spacing:.05em}
-    input,select,textarea{
-      width:100%;
-      border:1px solid #3a4f88;
-      background:#0c1330;
-      color:var(--text);
-      border-radius:10px;
-      padding:10px 11px;
-      outline:none;
-      transition:.18s border-color,.18s box-shadow;
-    }
-    input:focus,select:focus,textarea:focus{
-      border-color:var(--primary-2);
-      box-shadow:0 0 0 3px rgba(110,161,255,.2);
-    }
-
-    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    button{
-      border:0;
-      border-radius:10px;
-      background:linear-gradient(135deg,var(--primary),#3d64d9);
-      color:#fff;
-      font-weight:700;
-      padding:10px 14px;
-      cursor:pointer;
-      box-shadow:0 8px 20px rgba(40,88,220,.35);
-      transition:transform .12s ease, filter .18s ease;
-    }
-    button:hover{filter:brightness(1.08)}
-    button:active{transform:translateY(1px)}
-    button.secondary{background:linear-gradient(135deg,#33466f,#293959);box-shadow:none}
-
-    .item{padding:10px;border-radius:10px;background:#0c1430;border:1px solid #2d4073;margin-bottom:8px}
-    pre{white-space:pre-wrap;background:#0a1026;padding:12px;border-radius:10px;border:1px solid #23325f;color:#d7e4ff;max-height:360px;overflow:auto}
-    .preview{background:#fff;color:#111;border-radius:12px;padding:16px;min-height:180px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-
-    @media (max-width:640px){body{padding:16px 12px 28px}.card{padding:14px;border-radius:14px}}
+    h1{margin:.2rem 0 .4rem;font-size:clamp(1.5rem,3.2vw,2rem)}
+    .card{background:linear-gradient(180deg,rgba(19,29,61,.96),rgba(15,23,48,.96));border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 12px 28px rgba(5,10,24,.4)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+    label{display:block;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;color:#bfd0f6;margin-bottom:5px}
+    input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #3b4f88;background:#0d1631;color:var(--text);outline:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--primary2);box-shadow:0 0 0 3px rgba(110,161,255,.2)}
+    button{padding:10px 14px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--primary),#3f66df);color:#fff;font-weight:700;cursor:pointer}
+    button.secondary{background:linear-gradient(135deg,#3b4f7b,#2d3d61)}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    .actions button{min-height:40px}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .muted{color:var(--muted);font-size:.92rem;line-height:1.4}
+    .item{padding:10px;border-radius:10px;background:#0f1730;border:1px solid #2a3967;margin-bottom:8px}
+    a{color:#aecaFF}
+    pre{white-space:pre-wrap;background:#0a1228;padding:10px;border-radius:10px;border:1px solid #24325a;max-height:340px;overflow:auto}
+    .preview{background:#fff;color:#111;border-radius:10px;padding:14px;min-height:180px;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+    @media (max-width:680px){body{padding:14px 10px 28px}.card{padding:12px}.actions{display:grid;grid-template-columns:1fr 1fr}.actions button{width:100%}}
   </style>
+
 
 </head>
 <body>
@@ -110,7 +56,7 @@
   </div>
 
   <div class="card">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+    <div class="actions">
       <button id="calc">Calculate</button>
       <button id="save">Save Draft (Remote)</button>
       <button id="loadRemote">Load Latest Remote</button>
