@@ -1,16 +1,17 @@
 function initScene(){
   const items = Array.from(document.querySelectorAll('.mini-window b'));
-  if(!items.length) return;
-  const states = ['online','rendering','queued','ready','syncing','live'];
-  let t = 0;
-  setInterval(() => {
-    t++;
-    items.forEach((el, i) => {
-      if ((t + i) % 3 === 0) {
-        el.textContent = states[(Math.floor(Math.random()*states.length))];
-      }
-    });
-  }, 1800);
+  if(items.length){
+    const states = ['online','rendering','queued','ready','syncing','live'];
+    let t = 0;
+    setInterval(() => {
+      t++;
+      items.forEach((el, i) => {
+        if ((t + i) % 3 === 0) {
+          el.textContent = states[(Math.floor(Math.random()*states.length))];
+        }
+      });
+    }, 1800);
+  }
 
   const scene = document.querySelector('.retro-scene');
   if (scene) {
@@ -24,6 +25,51 @@ function initScene(){
       scene.style.transform = 'none';
     });
   }
+}
+
+function initStartMenu(projects){
+  const btn = document.getElementById('startBtn');
+  const menu = document.getElementById('startMenu');
+  const items = document.getElementById('startItems');
+  if(!btn || !menu || !items) return;
+
+  items.innerHTML = projects.map(p => `
+    <a class="start-item" role="menuitem" href="${p.url}">
+      <span>${p.name}</span>
+      <small>${p.status}</small>
+    </a>
+  `).join('');
+
+  const closeMenu = () => {
+    menu.classList.remove('open');
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
+    menu.setAttribute('aria-hidden','true');
+  };
+  const openMenu = () => {
+    menu.classList.add('open');
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded','true');
+    menu.setAttribute('aria-hidden','false');
+  };
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if(menu.classList.contains('open')) closeMenu(); else openMenu();
+  });
+
+  document.addEventListener('click', (e) => {
+    if(!menu.contains(e.target) && e.target !== btn) closeMenu();
+  });
+
+  menu.addEventListener('click', (e) => {
+    const link = e.target.closest('.start-item');
+    if(link) closeMenu();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') closeMenu();
+  });
 }
 
 async function boot(){
@@ -63,6 +109,7 @@ async function boot(){
     apps.appendChild(card);
   });
 
+  initStartMenu(projects);
   initScene();
 }
 boot();

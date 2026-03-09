@@ -175,16 +175,79 @@ a.btn:active{border-top:2px solid var(--panel-lo);border-left:2px solid var(--pa
 
 /* taskbar */
 body::after{
-  content:"Start   |   MichaelOS 98   |   Ready";
+  content:"MichaelOS 98   |   Ready";
   position:fixed;
   left:0;right:0;bottom:0;
-  padding:6px 10px;
+  padding:6px 10px 6px 78px;
   background:var(--panel);
   border-top:2px solid var(--panel-hi);
   box-shadow:0 -2px 0 #000;
   font-size:12px;
   z-index:12;
 }
+
+.start-btn{
+  position:fixed;
+  left:8px;
+  bottom:6px;
+  z-index:20;
+  font-family:"MS Sans Serif",Tahoma,sans-serif;
+  font-weight:700;
+  font-size:12px;
+  color:#000;
+  background:#cfcfcf;
+  border-top:2px solid var(--panel-hi);
+  border-left:2px solid var(--panel-hi);
+  border-right:2px solid var(--panel-lo);
+  border-bottom:2px solid var(--panel-lo);
+  padding:4px 14px;
+  cursor:pointer;
+}
+.start-btn:active,.start-btn.open{
+  border-top:2px solid var(--panel-lo);
+  border-left:2px solid var(--panel-lo);
+  border-right:2px solid var(--panel-hi);
+  border-bottom:2px solid var(--panel-hi);
+}
+.start-menu{
+  position:fixed;
+  left:8px;
+  bottom:36px;
+  width:280px;
+  background:#c0c0c0;
+  border-top:2px solid var(--panel-hi);
+  border-left:2px solid var(--panel-hi);
+  border-right:2px solid var(--panel-lo);
+  border-bottom:2px solid var(--panel-lo);
+  box-shadow:2px 2px 0 #000;
+  z-index:25;
+  display:none;
+}
+.start-menu.open{display:block;animation:pop .15s ease}
+.start-head{
+  background:linear-gradient(180deg,#000080,#1084d0);
+  color:#fff;
+  font-weight:700;
+  padding:7px 9px;
+  font-size:12px;
+}
+.start-items{padding:6px}
+.start-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  text-decoration:none;
+  color:#000;
+  font-size:12px;
+  padding:6px 7px;
+  border:1px solid transparent;
+}
+.start-item:hover{
+  background:#000080;
+  color:#fff;
+}
+.start-item small{opacity:.75}
 
 @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
