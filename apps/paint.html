@@ -28,7 +28,51 @@ a{color:#9fc0ff}
 </div>
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
-ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+
+function drawStarterArt(){
+  // background
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,cv.width,cv.height);
+
+  // pixel-art block size
+  const px=10;
+  const ox=430, oy=170;
+
+  function block(x,y,w,h,c){
+    ctx.fillStyle=c;
+    ctx.fillRect(ox+x*px, oy+y*px, w*px, h*px);
+  }
+
+  // simple stylized emblem (hammer + arc), deliberately pixelated
+  const red='#cc2222', dark='#8f1111';
+
+  // arc / crescent-like shape
+  block(0,8,2,12,red); block(2,6,2,2,red); block(2,20,2,2,red);
+  block(4,4,2,2,red); block(4,22,2,2,red); block(6,3,2,2,red);
+  block(6,23,2,2,red); block(8,2,2,2,red); block(8,24,2,2,red);
+  block(10,2,2,2,red); block(10,24,2,2,red); block(12,3,2,2,red);
+  block(12,23,2,2,red); block(14,4,2,2,red); block(14,22,2,2,red);
+  block(16,6,2,2,red); block(16,20,2,2,red); block(18,8,2,12,red);
+
+  // hammer head
+  block(11,8,10,3,dark);
+  block(18,11,3,2,dark);
+  // hammer handle diagonal-ish
+  block(15,11,2,3,dark);
+  block(14,14,2,3,dark);
+  block(13,17,2,3,dark);
+  block(12,20,2,3,dark);
+  block(11,23,2,3,dark);
+
+  // caption
+  ctx.fillStyle='#111';
+  ctx.font='bold 38px "Courier New", monospace';
+  ctx.textAlign='center';
+  ctx.fillText('Only you can choose not to be offened', cv.width/2, 620);
+  ctx.textAlign='left';
+}
+
+drawStarterArt();
 let down=false,last=null;
 const color=()=>document.getElementById('tool').value==='erase'?'#fff':document.getElementById('color').value;
 const size=()=>Number(document.getElementById('size').value||4);
