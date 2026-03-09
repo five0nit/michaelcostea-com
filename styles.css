@@ -57,6 +57,17 @@ body.mobile-mode .win-window{
   top:126px !important;
   height:calc(100vh - 176px) !important;
 }
+body.mobile-mode #readerWindow,
+body.mobile-mode #aboutWindow{
+  height:auto !important;
+  max-height:calc(100vh - 176px) !important;
+}
+body.mobile-mode #readerWindow .win-body,
+body.mobile-mode #aboutWindow .win-body{
+  max-height:none !important;
+  overflow:visible;
+  padding-bottom:12px;
+}
 body.mobile-mode .win-body{max-height:calc(100vh - 230px)}
 body.mobile-mode #browserWindow .win-body{padding:0}
 body.mobile-mode .taskbar{height:40px;padding:5px 6px}

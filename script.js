@@ -32,7 +32,7 @@ async function runBootScreen(){
     'Boot from HDD0 ...'
   ];
 
-  const totalDuration = 2200;
+  const totalDuration = 3450;
   const perLine = Math.max(45, Math.floor(totalDuration / lines.length));
 
   for (let i=0;i<lines.length;i++){
