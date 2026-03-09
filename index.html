@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Michael Costea — Projects & Webapps</title>
   <meta name="description" content="Michael Costea's live playground: projects, automations, and webapps." />
-  <link rel="stylesheet" href="styles.css?v=20260309-2100" />
+  <link rel="stylesheet" href="styles.css?v=20260309-2108" />
 </head>
 <body>
   <div id="bootScreen" class="boot-screen" aria-label="MichaelOS boot screen">
@@ -31,15 +31,6 @@
       <div class="stat"><b id="statApps">3</b><span>Active Apps</span></div>
       <div class="stat"><b>24/7</b><span>Online Access</span></div>
       <div class="stat"><b>AU/NZ</b><span>Service Region</span></div>
-    </section>
-
-    <section id="easterDock" class="easter-dock" aria-label="90s lore dock">
-      <button class="egg-btn" data-theme="matrix" title="Neon Intrusion">🟩 Matrix</button>
-      <button class="egg-btn" data-theme="tmnt" title="Sewer Shell Network">🐢 TMNT</button>
-      <button class="egg-btn" data-theme="element" title="Element Protocol">🧡 Element</button>
-      <button class="egg-btn" data-theme="hacker" title="Cyber Deck">🕶 Hacker</button>
-      <button class="egg-btn" data-theme="catdog" title="Dual mode">🐱🐶 CatDog</button>
-      <button class="egg-btn" data-theme="default" title="Reset">♻ Reset</button>
     </section>
 
     <section class="desktop" aria-label="desktop view">
@@ -78,8 +69,38 @@
         <p><b>OS:</b> MichaelOS 1989</p>
         <p><b>Mode:</b> Demo Desktop</p>
         <p><b>Region:</b> AU / NZ</p>
-        <p><button id="catdogToggle" class="btn" type="button">Toggle CatDog Mode</button></p>
         <p><button id="bbsHandleBtn" class="btn" type="button">Generate BBS Handle</button> <span id="bbsHandleOut" class="muted"></span></p>
+
+        <hr />
+        <h4>Settings</h4>
+        <p class="muted">Personalize your MichaelOS desktop.</p>
+        <p>
+          <label><input id="setAnimations" type="checkbox" checked /> Enable animations</label><br>
+          <label><input id="setSingleMobile" type="checkbox" checked /> Single-window mode on mobile</label>
+        </p>
+        <details>
+          <summary>Advanced Lore Themes</summary>
+          <p style="margin-top:8px">
+            <select id="themeSelect">
+              <option value="default">Default</option>
+              <option value="matrix">Matrix</option>
+              <option value="tmnt">TMNT</option>
+              <option value="element">Element</option>
+              <option value="hacker">Hacker</option>
+              <option value="catdog">CatDog</option>
+            </select>
+            <button id="applyThemeBtn" class="btn" type="button">Apply</button>
+          </p>
+        </details>
+        <p>
+          <label>Boot speed
+            <select id="bootSpeedSelect">
+              <option value="2600">Fast</option>
+              <option value="3450" selected>Normal</option>
+              <option value="4700">Cinematic</option>
+            </select>
+          </label>
+        </p>
       </div>
     </section>
 

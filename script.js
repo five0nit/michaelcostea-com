@@ -1,4 +1,6 @@
 let zTop = 20;
+const prefsKey = "michaelos_prefs_v1";
+let prefs = { animations:true, singleMobile:true, theme:"default", bootSpeed:3450 };
 
 async function runBootScreen(){
   const boot = document.getElementById('bootScreen');
@@ -32,7 +34,7 @@ async function runBootScreen(){
     'Boot from HDD0 ...'
   ];
 
-  const totalDuration = 3450;
+  const totalDuration = Number(prefs.bootSpeed||3450);
   const perLine = Math.max(45, Math.floor(totalDuration / lines.length));
 
   for (let i=0;i<lines.length;i++){
@@ -96,7 +98,7 @@ function openWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
 
-  if (isMobileMode()) {
+  if (isMobileMode() && prefs.singleMobile) {
     document.querySelectorAll('.win-window.open').forEach(w => {
       if (w.id !== id) w.classList.remove('open');
     });
@@ -448,7 +450,35 @@ function initLoreEggs(){
   });
 }
 
+
+function loadPrefs(){
+  try{ const p = JSON.parse(localStorage.getItem(prefsKey)||'null'); if(p) prefs = {...prefs, ...p}; }catch{}
+}
+function savePrefs(){
+  localStorage.setItem(prefsKey, JSON.stringify(prefs));
+}
+function applyPrefs(){
+  document.body.classList.toggle('no-anim', !prefs.animations);
+  setLoreTheme(prefs.theme || 'default');
+}
+
+function initSettingsPanel(){
+  const anim = document.getElementById('setAnimations');
+  const single = document.getElementById('setSingleMobile');
+  const theme = document.getElementById('themeSelect');
+  const applyBtn = document.getElementById('applyThemeBtn');
+  const bootSel = document.getElementById('bootSpeedSelect');
+
+  if(anim){ anim.checked = !!prefs.animations; anim.addEventListener('change',()=>{ prefs.animations = anim.checked; savePrefs(); applyPrefs(); }); }
+  if(single){ single.checked = !!prefs.singleMobile; single.addEventListener('change',()=>{ prefs.singleMobile = single.checked; savePrefs(); }); }
+  if(theme){ theme.value = prefs.theme || 'default'; }
+  if(applyBtn && theme){ applyBtn.addEventListener('click',()=>{ prefs.theme = theme.value; savePrefs(); applyPrefs(); showToast('Theme applied: '+theme.value); }); }
+  if(bootSel){ bootSel.value = String(prefs.bootSpeed||3450); bootSel.addEventListener('change',()=>{ prefs.bootSpeed = Number(bootSel.value||3450); savePrefs(); showToast('Boot speed updated'); }); }
+}
+
 async function boot(){
+  loadPrefs();
+  applyPrefs();
   await runBootScreen();
   const res = await fetch('./apps.json');
   const data = await res.json();
@@ -489,12 +519,12 @@ async function boot(){
   initDesktopWindows();
   initTray();
   initEasterEggs();
-  initLoreDock();
   initLoreEggs();
+  initSettingsPanel();
 
   applyLayoutMode();
 
-  if (isMobileMode()) {
+  if (isMobileMode() && prefs.singleMobile) {
     document.querySelectorAll('.win-window').forEach(w => w.classList.remove('open'));
     document.getElementById('readerWindow')?.classList.add('open');
   }
@@ -508,7 +538,7 @@ async function boot(){
     applyLayoutMode();
     const nowMobile = isMobileMode();
 
-    if (!wasMobile && nowMobile) {
+    if (!wasMobile && nowMobile && prefs.singleMobile) {
       document.querySelectorAll('.win-window').forEach(w => w.classList.remove('open'));
       document.getElementById('readerWindow')?.classList.add('open');
       centerWindow(document.getElementById('readerWindow'));

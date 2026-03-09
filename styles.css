@@ -136,3 +136,6 @@ body.lore-catdog{background:linear-gradient(rgba(22,14,2,.18),rgba(10,18,30,.18)
   .easter-dock{bottom:44px;justify-content:flex-start}
   .egg-btn{font-size:10px;padding:4px 8px}
 }
+
+
+body.no-anim *, body.no-anim *::before, body.no-anim *::after{animation:none !important; transition:none !important;}
