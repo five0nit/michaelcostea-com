@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Michael Costea — Projects & Webapps</title>
   <meta name="description" content="Michael Costea's live playground: projects, automations, and webapps." />
-  <link rel="stylesheet" href="styles.css?v=20260310-1620" />
+  <link rel="stylesheet" href="styles.css?v=20260310-1630" />
 </head>
 <body>
   <div id="bootScreen" class="boot-screen" aria-label="MichaelOS boot screen">
@@ -151,6 +151,64 @@
       </div>
     </section>
 
+    <section id="favoritesWindow" class="win-window" aria-label="Favorites" style="left:330px;top:130px;width:min(440px,92vw);">
+      <div class="win-title"><span>Favorites</span><button class="win-close" data-close="favoritesWindow">×</button></div>
+      <div class="win-body">
+        <p><b>Quick Launch Picks</b></p>
+        <p><button class="btn" type="button" data-app-quick="./apps/planner.html" data-title-quick="Planner">Open Planner</button> <button class="btn" type="button" data-app-quick="./apps/hacker-exe.html" data-title-quick="HACKER.EXE">Open Hacker</button> <button class="btn" type="button" id="favoriteSurprise">Surprise Me</button></p>
+      </div>
+    </section>
+
+    <section id="documentsWindow" class="win-window" aria-label="Documents" style="left:350px;top:150px;width:min(480px,92vw);">
+      <div class="win-title"><span>Documents</span><button class="win-close" data-close="documentsWindow">×</button></div>
+      <div class="win-body">
+        <p><b>My Documents</b></p>
+        <ul>
+          <li><a href="#" data-app-quick="./apps/text.html?file=README.md" data-title-quick="Read Me">Read Me.txt</a></li>
+          <li><a href="#" data-app-quick="./apps/if-exe.html" data-title-quick="IF.EXE">if_poem.txt</a></li>
+          <li><a href="#" data-app-quick="./apps/cards.html" data-title-quick="Card Builder">business-card-drafts.3dc</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="findWindow" class="win-window" aria-label="Find" style="left:370px;top:170px;width:min(430px,92vw);">
+      <div class="win-title"><span>Find: Files or Programs</span><button class="win-close" data-close="findWindow">×</button></div>
+      <div class="win-body">
+        <p>Type a program name:</p>
+        <p><input id="findInput" class="mikenet-addr" placeholder="e.g. doom, planner, minesweeper" style="width:100%" /></p>
+        <p><button class="btn" id="findGo" type="button">Find Now</button></p>
+      </div>
+    </section>
+
+    <section id="helpWindow" class="win-window" aria-label="Help" style="left:390px;top:190px;width:min(460px,92vw);">
+      <div class="win-title"><span>MichaelOS Help</span><button class="win-close" data-close="helpWindow">×</button></div>
+      <div class="win-body">
+        <p><b>Tips</b></p>
+        <ul>
+          <li>Double-click title bar to maximize/restore.</li>
+          <li>Start → Programs for all apps and games.</li>
+          <li>Use Run... for quick command launch.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="runWindow" class="win-window" aria-label="Run" style="left:410px;top:210px;width:min(440px,92vw);">
+      <div class="win-title"><span>Run</span><button class="win-close" data-close="runWindow">×</button></div>
+      <div class="win-body">
+        <p>Type the name of a program, folder, or command.</p>
+        <p><input id="runInput" class="mikenet-addr" placeholder="planner / doom / minesweeper / sky slope" style="width:100%" /></p>
+        <p><button class="btn" id="runGo" type="button">OK</button> <button class="btn" type="button" onclick="closeWindow('runWindow')">Cancel</button></p>
+      </div>
+    </section>
+
+    <section id="logoffWindow" class="win-window" aria-label="Log off" style="left:430px;top:230px;width:min(380px,92vw);">
+      <div class="win-title"><span>Log Off Michael</span><button class="win-close" data-close="logoffWindow">×</button></div>
+      <div class="win-body">
+        <p>You can now safely go touch grass 🌱</p>
+        <p><button class="btn" type="button" onclick="closeWindow('logoffWindow')">OK</button></p>
+      </div>
+    </section>
+
     <section id="shutdownWindow" class="win-window" aria-label="Shutdown window" style="left:340px;top:180px;width:min(420px,92vw);">
       <div class="win-title"><span>Shut Down Windows</span><button class="win-close" data-close="shutdownWindow">×</button></div>
       <div class="win-body">
@@ -163,7 +221,7 @@
         <p>
           <button class="btn" type="button" onclick="closeWindow('shutdownWindow')">OK</button>
           <button class="btn" type="button" onclick="closeWindow('shutdownWindow')">Cancel</button>
-          <button class="btn" type="button" onclick="closeWindow('shutdownWindow')">Help</button>
+          <button class="btn" type="button" onclick="openWindow('helpWindow')">Help</button>
         </p>
       </div>
     </section>
@@ -186,6 +244,6 @@
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260310-1519"></script>
+  <script src="script.js?v=20260310-1630"></script>
 </body>
 </html>

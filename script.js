@@ -381,14 +381,14 @@ function initStartMenu(projects){
 
   items.innerHTML = `
     <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="programs"><span><b class="si">🗂️</b>Programs</span><small>▶</small></a>
-    <a class="start-item" role="menuitem" href="#"><span><b class="si">⭐</b>Favorites</span></a>
-    <a class="start-item" role="menuitem" href="#"><span><b class="si">📄</b>Documents</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="favoritesWindow"><span><b class="si">⭐</b>Favorites</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="documentsWindow"><span><b class="si">📄</b>Documents</span></a>
     <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="settings"><span><b class="si">⚙️</b>Settings</span><small>▶</small></a>
-    <a class="start-item" role="menuitem" href="#"><span><b class="si">🔎</b>Find</span></a>
-    <a class="start-item" role="menuitem" href="#"><span><b class="si">❓</b>Help</span></a>
-    <a class="start-item" role="menuitem" href="#"><span><b class="si">▶️</b>Run...</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="findWindow"><span><b class="si">🔎</b>Find</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="helpWindow"><span><b class="si">❓</b>Help</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="runWindow"><span><b class="si">▶️</b>Run...</span></a>
     <div class="start-sep"></div>
-    <a class="start-item" role="menuitem" href="#"><span><b class="si">👤</b>Log Off Michael...</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="logoffWindow"><span><b class="si">👤</b>Log Off Michael...</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="shutdownWindow"><span><b class="si">⏻</b>Shut Down...</span></a>
 
     <div class="start-submenu" id="startProgramsMenu" aria-hidden="true">
@@ -664,6 +664,65 @@ function initSettingsPanel(){
   if(bootSel){ bootSel.value = String(prefs.bootSpeed||3450); bootSel.addEventListener('change',()=>{ prefs.bootSpeed = Number(bootSel.value||3450); savePrefs(); showToast('Boot speed updated'); }); }
 }
 
+function initQuirkyStartActions(){
+  const launchMap = {
+    planner:'./apps/planner.html',
+    cards:'./apps/cards.html',
+    ozquotes:'./apps/ozquotes.html',
+    paint:'./apps/paint.html',
+    text:'./apps/text.html',
+    chat:'./apps/chat.html',
+    'if.exe':'./apps/if-exe.html',
+    ifexe:'./apps/if-exe.html',
+    doom:'./apps/doom.html',
+    hacker:'./apps/hacker-exe.html',
+    minesweeper:'./apps/games/minesweeper.html',
+    solitaire:'./apps/games/solitaire.html',
+    'sky slope':'./apps/games/skifree.html',
+    skifree:'./apps/games/skifree.html'
+  };
+
+  document.querySelectorAll('[data-app-quick]').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.preventDefault();
+      launchInMikeNet(el.getAttribute('data-app-quick'), el.getAttribute('data-title-quick')||'Program');
+      closeWindow('favoritesWindow');
+      closeWindow('documentsWindow');
+    });
+  });
+
+  const surprise = document.getElementById('favoriteSurprise');
+  if(surprise){
+    surprise.addEventListener('click',()=>{
+      const picks=['./apps/doom.html','./apps/hacker-exe.html','./apps/games/skifree.html','./apps/if-exe.html'];
+      const pick=picks[Math.floor(Math.random()*picks.length)];
+      launchInMikeNet(pick,'Surprise');
+      showToast('Lucky launch engaged ✨');
+      closeWindow('favoritesWindow');
+    });
+  }
+
+  const runGo = document.getElementById('runGo');
+  const runInput = document.getElementById('runInput');
+  const findGo = document.getElementById('findGo');
+  const findInput = document.getElementById('findInput');
+
+  const runCmd = (raw)=>{
+    const q=(raw||'').trim().toLowerCase();
+    if(!q) return;
+    const direct = launchMap[q] || Object.entries(launchMap).find(([k])=>q.includes(k))?.[1];
+    if(direct){ launchInMikeNet(direct, q); closeWindow('runWindow'); closeWindow('findWindow'); return; }
+    if(q.includes('help')){ openWindow('helpWindow'); closeWindow('runWindow'); closeWindow('findWindow'); return; }
+    if(q.includes('shutdown')){ openWindow('shutdownWindow'); closeWindow('runWindow'); closeWindow('findWindow'); return; }
+    showToast(`No match for: ${raw}`);
+  };
+
+  if(runGo && runInput) runGo.addEventListener('click',()=>runCmd(runInput.value));
+  if(findGo && findInput) findGo.addEventListener('click',()=>runCmd(findInput.value));
+  if(runInput) runInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') runCmd(runInput.value); });
+  if(findInput) findInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') runCmd(findInput.value); });
+}
+
 async function boot(){
   loadPrefs();
   applyPrefs();
@@ -719,6 +778,7 @@ async function boot(){
   initEasterEggs();
   initLoreEggs();
   initSettingsPanel();
+  initQuirkyStartActions();
 
   applyLayoutMode();
 
