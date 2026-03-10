@@ -1,6 +1,6 @@
 let zTop = 20;
 const prefsKey = "michaelos_prefs_v1";
-let prefs = { animations:true, singleMobile:true, theme:"default", bootSpeed:3450 };
+let prefs = { animations:true, singleMobile:true, theme:"default", bootSpeed:3450, premiumUI:true, uiSound:true };
 
 async function runBootScreen(){
   const boot = document.getElementById('bootScreen');
@@ -132,6 +132,7 @@ function openWindow(id){
   win.classList.add('open');
   if(!win.classList.contains('maximized')) centerWindow(win);
   bringFront(win);
+  uiBeep('open');
 }
 
 function closeWindow(id){
@@ -642,8 +643,36 @@ function loadPrefs(){
 function savePrefs(){
   localStorage.setItem(prefsKey, JSON.stringify(prefs));
 }
+let audioCtx;
+function uiBeep(kind='tap'){
+  if(!prefs.uiSound) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator();
+    const g=audioCtx.createGain();
+    o.type='square';
+    const f = kind==='open' ? 740 : kind==='alert' ? 260 : 520;
+    o.frequency.setValueAtTime(f,audioCtx.currentTime);
+    g.gain.setValueAtTime(0.0001,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.04,audioCtx.currentTime+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+0.07);
+    o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.08);
+  }catch{}
+}
+
+function showToast(msg){
+  const t = document.getElementById('easterToast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  uiBeep('alert');
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(()=> t.classList.remove('show'), 1800);
+}
+
 function applyPrefs(){
   document.body.classList.toggle('no-anim', !prefs.animations);
+  document.body.classList.toggle('premium-ui', !!prefs.premiumUI);
   setLoreTheme(prefs.theme || 'default');
 }
 
@@ -834,6 +863,10 @@ async function boot(){
   initLoreEggs();
   initSettingsPanel();
   initQuirkyStartActions();
+
+  document.addEventListener('click', (e)=>{
+    if(e.target.closest('.btn,.start-item,.desk-icon,.task-btn,.win-btn,.win-close')) uiBeep('tap');
+  }, {passive:true});
 
   applyLayoutMode();
 
