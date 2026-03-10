@@ -466,8 +466,22 @@ function initStartMenu(projects){
     if(name === 'games'){ openSub(subPrograms); return openSub(subGames); }
   };
 
-  const closeMenu = () => { hideSubmenus(); menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); };
-  const openMenu = () => { menu.classList.add('open'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); };
+  let scrollHint = menu.querySelector('.start-scroll-hint');
+  if(!scrollHint){
+    scrollHint = document.createElement('div');
+    scrollHint.className = 'start-scroll-hint';
+    scrollHint.textContent = '↓ More apps below';
+    menu.appendChild(scrollHint);
+  }
+  const updateScrollHint = () => {
+    const canScroll = items.scrollHeight > items.clientHeight + 8;
+    const nearBottom = (items.scrollTop + items.clientHeight) >= (items.scrollHeight - 12);
+    scrollHint.classList.toggle('show', canScroll && !nearBottom);
+  };
+  items.addEventListener('scroll', updateScrollHint, {passive:true});
+
+  const closeMenu = () => { hideSubmenus(); menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); scrollHint.classList.remove('show'); };
+  const openMenu = () => { menu.classList.add('open'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); requestAnimationFrame(updateScrollHint); };
 
   btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
   document.addEventListener('click', (e) => { if(!menu.contains(e.target) && e.target !== btn) closeMenu(); });

@@ -93,6 +93,8 @@ a.btn,button.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2
 .start-sep{height:1px;background:#7f7f7f;margin:4px 3px;border-bottom:1px solid #fff}
 .start-submenu{position:absolute;left:100%;min-width:230px;background:#c0c0c0;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);box-shadow:2px 2px 0 #000;display:none;z-index:36;padding:4px;opacity:0;transform:translateX(6px);transition:opacity .12s ease,transform .12s ease}
 .start-submenu.open{display:block;opacity:1;transform:translateX(0)}
+.start-scroll-hint{position:absolute;left:34px;right:8px;bottom:6px;padding:4px 8px;font-size:11px;color:#fff;background:linear-gradient(180deg,rgba(0,0,128,0),rgba(0,0,128,.88));pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .15s ease,transform .15s ease}
+.start-scroll-hint.show{opacity:1;transform:translateY(0)}
 #startProgramsMenu{top:2px}
 #startSettingsMenu{top:98px}
 #startWebAppsMenu,#startGamesMenu{left:calc(100% + 230px);top:2px}
