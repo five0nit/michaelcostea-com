@@ -3,189 +3,179 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>DO NOT TOUCH</title>
+  <title>DO NOT TOUCH // WHITE RABBIT PROTOCOL</title>
   <style>
-    :root{--bg:#03040a;--fg:#d9ecff;--muted:#8eb2d9;--a:#66b7ff;--b:#9d6bff}
+    :root{--bg:#03050d;--ink:#d9e7ff;--muted:#8aa5cc;--cyan:#6bd8ff;--vio:#9d78ff;--danger:#ff6f8f}
     *{box-sizing:border-box}
-    html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(1100px 520px at 80% -10%,#1c2355 0%,transparent 45%),var(--bg);color:var(--fg);font-family:Inter,Segoe UI,Arial,sans-serif}
-    #fx{position:fixed;inset:0;width:100%;height:100%;z-index:0}
-    .ui{position:fixed;inset:0;z-index:2;display:grid;place-items:center;padding:18px;text-align:center}
-    .card{max-width:700px;background:rgba(5,10,22,.44);border:1px solid rgba(148,180,255,.25);border-radius:20px;padding:20px;backdrop-filter:blur(10px)}
-    h1{margin:0 0 8px;font-size:clamp(2rem,7vw,4rem);letter-spacing:.08em}
-    p{margin:8px 0;color:var(--muted);line-height:1.5}
-    .btn{margin-top:12px;border:1px solid #4c73c5;background:linear-gradient(180deg,#7dc5ff,#4a9dff);color:#001834;padding:12px 16px;border-radius:999px;font-weight:800;cursor:pointer}
-    .hint{font-size:.82rem;opacity:.9}
-    .hud{position:fixed;bottom:12px;left:0;right:0;text-align:center;z-index:3;font-size:.86rem;color:#cbe0ff}
-    .back{position:fixed;top:10px;left:10px;z-index:4;color:#b9d6ff;text-decoration:none;font:12px/1.2 Tahoma,Arial,sans-serif}
-    .hidden{display:none}
-    .toggles{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-    .chip{padding:7px 10px;border:1px solid #35518f;background:rgba(11,22,46,.7);border-radius:999px;font-size:.75rem;color:#c4dbff}
+    html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+    .grain{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.06) 0.5px, transparent 0.5px);background-size:2px 2px;mix-blend-mode:soft-light;opacity:.18}
+    .overlay{position:fixed;inset:0;z-index:2;display:grid;place-items:center;padding:20px;text-align:center;transition:opacity .45s ease, transform .45s ease}
+    .overlay.hide{opacity:0;pointer-events:none;transform:scale(.98)}
+    .panel{width:min(860px,96vw);background:linear-gradient(180deg,rgba(10,18,36,.65),rgba(6,10,20,.68));border:1px solid rgba(126,162,226,.3);border-radius:18px;padding:24px 22px;backdrop-filter:blur(8px);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+    .eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:#9ec3f2}
+    h1{margin:10px 0 6px;font-size:clamp(1.8rem,7vw,4rem);letter-spacing:.08em}
+    p{margin:8px 0;color:var(--muted);line-height:1.55}
+    .cta{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    button{border:1px solid #5076c4;background:linear-gradient(180deg,#89ccff,#4ea8ff);color:#03162d;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer;min-width:180px}
+    button.ghost{background:rgba(14,25,50,.65);color:#d2e5ff;border-color:#476197}
+    .hud{position:fixed;left:14px;right:14px;bottom:14px;z-index:3;display:flex;justify-content:space-between;gap:10px;font-size:.82rem;color:#b9cef0}
+    .chip{padding:8px 10px;border:1px solid rgba(132,161,214,.35);background:rgba(7,13,25,.52);border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .center-msg{position:fixed;inset:0;z-index:3;display:grid;place-items:center;text-align:center;pointer-events:none}
+    .center-msg h2{margin:0;font-size:clamp(1.8rem,8vw,5rem);letter-spacing:.12em;text-transform:uppercase;text-shadow:0 0 30px rgba(107,216,255,.35)}
+    .center-msg p{margin-top:8px;color:#b0c6e8}
+    .back{position:fixed;top:12px;left:12px;z-index:4;color:#b9d6ff;text-decoration:none;font:12px/1.2 Tahoma,Arial,sans-serif;padding:6px 8px;border-radius:8px;background:rgba(8,15,30,.45);border:1px solid rgba(120,150,210,.35)}
   </style>
 </head>
 <body>
-  <canvas id="fx"></canvas>
-  <a href="#" class="back back-hub" data-hub="../index.html">← Back to MichaelOS</a>
+  <canvas id="fx"></canvas><div class="grain"></div>
+  <a href="#" class="back" id="backHub">← Return to MichaelOS</a>
 
-  <div class="ui" id="stage1">
-    <div class="card">
+  <section class="overlay" id="intro">
+    <div class="panel">
+      <div class="eyebrow">White Rabbit Protocol // Immersive Sequence</div>
       <h1>DO NOT TOUCH</h1>
-      <p>Follow the white rabbit. This is an interactive wormhole sequence.</p>
-      <button class="btn" id="begin">Touch Anyway</button>
-      <p class="hint">Then: swipe up · tap rabbit · hold to stabilize</p>
-      <div class="toggles">
-        <span class="chip" id="audioState">Audio Reactive: OFF</span>
-        <span class="chip" id="hapticState">Haptics: READY</span>
+      <p>This is not an app card. This is a controlled collapse of the desktop into signal space.</p>
+      <p>Interaction path: <b>Swipe Up</b> → <b>Tap Marker</b> → <b>Hold to Stabilize</b></p>
+      <div class="cta">
+        <button id="start">Enter Sequence</button>
+        <button class="ghost" id="enableAudio">Enable Audio Reactive Mode</button>
       </div>
     </div>
+  </section>
+
+  <section class="center-msg" id="center"><div><h2 id="title">IDLE</h2><p id="subtitle">awaiting input</p></div></section>
+
+  <div class="hud">
+    <div class="chip" id="stage">STAGE: 0</div>
+    <div class="chip" id="audio">AUDIO: OFF</div>
+    <div class="chip" id="hint">HINT: start sequence</div>
   </div>
 
-  <div class="ui hidden" id="stage2"><div class="card"><h1>SWIPE UP</h1><p>Pull reality open.</p></div></div>
-  <div class="ui hidden" id="stage3"><div class="card"><h1>TAP THE RABBIT</h1><p id="rabbit">🐇</p></div></div>
-  <div class="ui hidden" id="stage4"><div class="card"><h1>HOLD TO STABILIZE</h1><p>Press and hold for 2 seconds.</p></div></div>
-  <div class="ui hidden" id="stage5"><div class="card"><h1>WELCOME, OPERATOR</h1><p>Signal accepted. You touched it.</p></div></div>
-  <div class="hud" id="hud">Idle</div>
-
   <script>
-  // back-hub helper
-  document.querySelectorAll('a.back-hub').forEach(a=>a.addEventListener('click',e=>{
-    e.preventDefault(); const hub=a.dataset.hub||'../index.html';
-    try{ if(window.top&&window.top!==window.self) window.top.location.href=hub; else window.location.href=hub; }catch{ window.location.href=hub; }
-  }));
+  const fx=document.getElementById('fx'),ctx=fx.getContext('2d');
+  const stageEl=document.getElementById('stage'),audioEl=document.getElementById('audio'),hintEl=document.getElementById('hint');
+  const titleEl=document.getElementById('title'),subEl=document.getElementById('subtitle');
+  const intro=document.getElementById('intro');
+  let w,h,t=0,stage=0,startY=0,holding=false,holdAt=0,phase=0;
+  const stars=[...Array(420)].map(()=>({a:Math.random()*Math.PI*2,r:30+Math.random()*800,s:0.2+Math.random()*1.6,z:Math.random()}));
 
-  const cv=document.getElementById('fx'),ctx=cv.getContext('2d');
-  const hud=document.getElementById('hud');
-  const audioState=document.getElementById('audioState');
-  let w,h,t=0,stage=1,dragStart=0,holding=false,holdAt=0;
-  const particles=[];
+  let ac,analyser,data,mic=false,boost=0,loud=0,quiet=0;
+  function resize(){w=fx.width=innerWidth;h=fx.height=innerHeight} addEventListener('resize',resize); resize();
 
-  // audio reactive
-  let ac, analyser, dataArr, audioBoost=0, micOn=false;
-  let loudFrames=0, quietFrames=0;
-  async function enableMicReactive(){
+  async function enableMic(){
     try{
       ac = ac || new (window.AudioContext||window.webkitAudioContext)();
-      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-      const src = ac.createMediaStreamSource(stream);
-      analyser = ac.createAnalyser(); analyser.fftSize = 256;
-      src.connect(analyser); dataArr = new Uint8Array(analyser.frequencyBinCount);
-      micOn=true; audioState.textContent='Audio Reactive: ON';
-    }catch(e){ audioState.textContent='Audio Reactive: BLOCKED'; }
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      const src=ac.createMediaStreamSource(stream);
+      analyser=ac.createAnalyser(); analyser.fftSize=256; data=new Uint8Array(analyser.frequencyBinCount);
+      src.connect(analyser); mic=true; audioEl.textContent='AUDIO: REACTIVE';
+    }catch{ audioEl.textContent='AUDIO: BLOCKED'; }
   }
   function readAudio(){
-    if(!micOn||!analyser) return 0;
-    analyser.getByteFrequencyData(dataArr);
-    let sum=0; for(let i=0;i<dataArr.length;i++) sum+=dataArr[i];
-    audioBoost = Math.min(1,(sum/dataArr.length)/140);
-    if(stage>=2 && stage<=4){
-      if(audioBoost>0.35) loudFrames++; else quietFrames++;
-    }
-    return audioBoost;
+    if(!mic||!analyser) return 0;
+    analyser.getByteFrequencyData(data); let s=0; for(let i=0;i<data.length;i++) s+=data[i];
+    boost=Math.min(1,(s/data.length)/130);
+    if(stage>0&&stage<4){ if(boost>0.34) loud++; else quiet++; }
+    return boost;
   }
-
-  function haptic(ms=25){
-    try{ if(navigator.vibrate) navigator.vibrate(ms); }catch{}
-  }
-
-  function uiBeep(freq=500,d=0.07){
-    try{
-      ac = ac || new (window.AudioContext||window.webkitAudioContext)();
-      const o=ac.createOscillator(), g=ac.createGain();
-      o.type='sine'; o.frequency.value=freq;
-      g.gain.value=0.0001; g.gain.exponentialRampToValueAtTime(0.04, ac.currentTime+0.01); g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime+d);
+  function beep(f=500,d=0.08){
+    try{ ac=ac||new (window.AudioContext||window.webkitAudioContext)(); const o=ac.createOscillator(),g=ac.createGain();
+      o.type='triangle';o.frequency.value=f; g.gain.value=0.0001; g.gain.exponentialRampToValueAtTime(0.05,ac.currentTime+0.01); g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+d);
       o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+d);
     }catch{}
   }
+  function haptic(ms=20){ try{ navigator.vibrate&&navigator.vibrate(ms); }catch{} }
 
-  function resize(){w=cv.width=innerWidth;h=cv.height=innerHeight}
-  addEventListener('resize',resize); resize();
-
-  for(let i=0;i<280;i++) particles.push({a:Math.random()*Math.PI*2,r:40+Math.random()*Math.min(w,h)*.6,s:0.2+Math.random()*1.3,z:Math.random()});
+  function setStage(n){
+    stage=n; stageEl.textContent=`STAGE: ${n}`;
+    if(n===1){titleEl.textContent='SWIPE UP'; subEl.textContent='tear the interface open'; hintEl.textContent='HINT: swipe upward';}
+    if(n===2){titleEl.textContent='TAP MARKER'; subEl.textContent='target is now visible'; hintEl.textContent='HINT: tap center marker';}
+    if(n===3){titleEl.textContent='HOLD'; subEl.textContent='stabilize for 2 seconds'; hintEl.textContent='HINT: press and hold';}
+    if(n===4){
+      const chaos=loud>quiet;
+      titleEl.textContent=chaos?'CHAOS ROUTE':'SILENT ROUTE';
+      subEl.textContent=chaos?'you fed it noise':'you moved like a ghost';
+      hintEl.textContent='HINT: sequence complete';
+    }
+    beep(380+n*120,0.07); haptic(16+n*4);
+  }
 
   function draw(){
-    t+=0.016;
-    const beat=readAudio();
-    ctx.clearRect(0,0,w,h);
+    t+=0.016; const a=readAudio();
+    const warp=Math.min(1,stage*0.28 + a*0.8 + phase*0.25);
     const cx=w/2, cy=h/2;
-    const warp = stage>=2 ? Math.min(1,(stage-1)/4) : 0;
-    const power = Math.min(1, warp + beat*0.75);
+    ctx.clearRect(0,0,w,h);
 
-    const g=ctx.createRadialGradient(cx,cy,20,cx,cy,Math.max(w,h)*.55);
-    g.addColorStop(0,`rgba(${30+power*140},${40+power*70},${90+power*140},0.92)`);
-    g.addColorStop(1,'rgba(3,4,10,1)');
+    const g=ctx.createRadialGradient(cx,cy,20,cx,cy,Math.max(w,h)*.62);
+    g.addColorStop(0,`rgba(${25+warp*150},${35+warp*90},${80+warp*140},.93)`);
+    g.addColorStop(1,'rgba(2,4,10,1)');
     ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
 
-    for(const p of particles){
-      p.a += 0.002 + p.s*0.002*(1+power*4);
-      const rr = p.r*(0.72+0.28*Math.sin(t*1.2+p.z*8));
-      const x = cx + Math.cos(p.a+t*(0.3+power*1.6))*rr;
-      const y = cy + Math.sin(p.a+t*(0.3+power*1.6))*rr;
-      const s = 1 + p.s*(1+power*2.6);
-      ctx.fillStyle = `hsla(${200+100*Math.sin(p.a*2+t)},100%,${62+18*Math.sin(t+p.z*6)}%,${0.22+0.62*power})`;
-      ctx.beginPath(); ctx.arc(x,y,s,0,Math.PI*2); ctx.fill();
+    for(const s of stars){
+      s.a += 0.0015+s.s*0.0018*(1+warp*4);
+      const rr=s.r*(0.7+0.3*Math.sin(t*1.2+s.z*10));
+      const x=cx+Math.cos(s.a+t*(0.25+warp*1.8))*rr;
+      const y=cy+Math.sin(s.a+t*(0.25+warp*1.8))*rr;
+      const sz=0.8+s.s*(1+warp*3);
+      ctx.fillStyle=`hsla(${205+110*Math.sin(s.a*2+t)},100%,${62+20*Math.sin(t+s.z*8)}%,${0.2+0.7*warp})`;
+      ctx.beginPath(); ctx.arc(x,y,sz,0,Math.PI*2); ctx.fill();
     }
 
-    if(stage>=2){
-      for(let i=0;i<15;i++){
-        const r = (i*38 + (t*(220+beat*180))%38) * (1+power*0.45);
-        ctx.strokeStyle = `rgba(${110+i*8},${145+i*6},255,${0.05+power*0.1})`;
-        ctx.lineWidth = 1 + power*1.8;
+    if(stage>=1){
+      for(let i=0;i<20;i++){
+        const r=(i*36 + (t*(210+a*190))%36)*(1+warp*0.5);
+        ctx.strokeStyle=`rgba(${110+i*7},${145+i*5},255,${0.05+warp*0.1})`;
+        ctx.lineWidth=1+warp*2;
         ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
       }
     }
 
-    if(stage===4 && holding){
-      const held=(performance.now()-holdAt)/2000;
-      const pct=Math.min(1,held);
-      hud.textContent=`Stabilizing ${(pct*100|0)}%`;
-      if((pct*100|0)%20===0) haptic(10);
-      if(pct>=1) nextStage();
+    // center marker
+    if(stage===2||stage===3){
+      const pulse=1+Math.sin(t*6)*0.08;
+      ctx.strokeStyle='rgba(200,230,255,.9)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(cx,cy,42*pulse,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx-60,cy); ctx.lineTo(cx+60,cy); ctx.moveTo(cx,cy-60); ctx.lineTo(cx,cy+60); ctx.stroke();
+    }
+
+    if(stage===3 && holding){
+      const p=Math.min(1,(performance.now()-holdAt)/2000);
+      hintEl.textContent=`HINT: stabilizing ${(p*100|0)}%`;
+      phase=p;
+      if((p*100|0)%25===0) haptic(8);
+      if(p>=1) setStage(4);
     }
 
     requestAnimationFrame(draw);
   }
   draw();
 
-  const S=[1,2,3,4,5].map(n=>document.getElementById('stage'+n));
-  function show(n){
-    stage=n;S.forEach((el,i)=>el.classList.toggle('hidden',i!==n-1));
-    if(n===5){
-      const loud = loudFrames > quietFrames;
-      const title = document.querySelector('#stage5 h1');
-      const msg = document.querySelector('#stage5 p');
-      if(loud){
-        if(title) title.textContent='CHAOS ACCEPTED';
-        if(msg) msg.textContent='You fed the portal noise. It fed you power.';
-      }else{
-        if(title) title.textContent='SILENT KEY ACCEPTED';
-        if(msg) msg.textContent='You moved quietly. The rabbit trusts you now.';
-      }
-    }
-    hud.textContent=`Stage ${n}`;
-    uiBeep(420+n*90,0.06);
-    haptic(18+n*3);
-  }
-  function nextStage(){show(Math.min(5,stage+1))}
+  function startSequence(){ intro.classList.add('hide'); setStage(1); }
+  document.getElementById('start').onclick=startSequence;
+  document.getElementById('enableAudio').onclick=enableMic;
 
-  document.getElementById('begin').onclick=async()=>{
-    await enableMicReactive();
-    show(2);
-  };
-
-  addEventListener('touchstart',e=>{dragStart=e.touches[0].clientY;if(stage===4){holding=true;holdAt=performance.now();haptic(25);}});
-  addEventListener('touchend',()=>{holding=false; if(stage===4) hud.textContent='Hold to stabilize';});
-  addEventListener('touchmove',e=>{
-    const dy=dragStart-e.touches[0].clientY;
-    if(stage===2 && dy>90){ haptic(30); nextStage(); }
-  },{passive:true});
+  addEventListener('touchstart',e=>{startY=e.touches[0].clientY; if(stage===3){holding=true;holdAt=performance.now();}});
+  addEventListener('touchend',()=>{holding=false; if(stage===3) hintEl.textContent='HINT: press and hold';});
+  addEventListener('touchmove',e=>{ const dy=startY-e.touches[0].clientY; if(stage===1 && dy>90) setStage(2); },{passive:true});
 
   let md=false,my=0;
-  addEventListener('mousedown',e=>{md=true;my=e.clientY;if(stage===4){holding=true;holdAt=performance.now();}});
-  addEventListener('mouseup',()=>{md=false;holding=false; if(stage===4) hud.textContent='Hold to stabilize';});
-  addEventListener('mousemove',e=>{if(!md)return; const dy=my-e.clientY; if(stage===2&&dy>90){md=false;nextStage();}});
+  addEventListener('mousedown',e=>{md=true;my=e.clientY; if(stage===3){holding=true;holdAt=performance.now();}});
+  addEventListener('mouseup',()=>{md=false;holding=false; if(stage===3) hintEl.textContent='HINT: press and hold';});
+  addEventListener('mousemove',e=>{ if(!md) return; if(stage===1 && my-e.clientY>90){ md=false; setStage(2);} });
 
-  document.getElementById('rabbit').addEventListener('click',()=>{if(stage===3){haptic(35);nextStage();}});
-  document.getElementById('rabbit').style.fontSize='80px';
-  show(1);
+  addEventListener('click',e=>{
+    if(stage===2){
+      const dx=e.clientX-w/2, dy=e.clientY-h/2;
+      if(Math.hypot(dx,dy)<80) setStage(3);
+    }
+  });
+
+  document.getElementById('backHub').addEventListener('click',e=>{
+    e.preventDefault();
+    const hub='../index.html';
+    try{ if(window.top&&window.top!==window.self) window.top.location.href=hub; else window.location.href=hub; }catch{ window.location.href=hub; }
+  });
   </script>
 </body>
 </html>
