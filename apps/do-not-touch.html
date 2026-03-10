@@ -206,12 +206,13 @@ let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
 let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
 let lastAutoOpenId=null,lastAutoOpenAt=0;
-const master16=[
-  [6,10,22],[12,22,44],[18,34,66],[32,56,98],[54,85,138],[92,126,181],[145,172,214],
-  [228,238,255],[255,212,117],[255,170,74],[255,128,102],[255,108,170],[170,138,255],
-  [121,220,255],[138,255,204],[104,229,138],[71,176,104],[40,117,88],[28,78,68],[17,46,43],
-  [67,53,96],[104,80,145],[157,112,205],[209,171,247]
-];
+const paletteBanks={
+  foundations:[[8,12,26],[16,28,52],[24,42,78],[40,66,108],[66,96,148],[108,142,192],[160,188,224],[232,242,255],[121,220,255],[255,212,117],[255,170,74]],
+  telecom:[[10,10,28],[22,24,58],[36,40,86],[58,68,122],[92,108,164],[138,156,206],[208,220,246],[240,245,255],[170,138,255],[121,220,255],[255,128,102]],
+  trade:[[7,16,20],[14,34,38],[22,52,54],[38,82,76],[62,114,95],[97,153,114],[150,194,146],[217,240,197],[138,255,204],[104,229,138],[255,212,117]],
+  growth:[[14,10,26],[30,20,52],[48,34,76],[70,52,106],[102,82,145],[146,122,189],[200,172,228],[238,223,250],[209,171,247],[255,108,170],[255,212,117]]
+};
+let activePalette=paletteBanks.foundations;
 let zoneSeen=new Set(JSON.parse(localStorage.getItem('vr_zones_v1')||'[]'));
 
 const zones=[{name:'Foundations',x:0,y:0,w:860,h:1800},{name:'Telecom/Ops',x:860,y:0,w:980,h:1800},{name:'Electrical Trade',x:1840,y:0,w:820,h:1800},{name:'Growth & Innovation',x:2660,y:0,w:540,h:1800}];
@@ -249,6 +250,14 @@ function beep(freq=520,d=.06){ if(!sfx) return; try{ const ac=(beep.ac ||= new (
 function toastMsg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>toast.classList.remove('show'),1200)}
 function zoneFor(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
 function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0)}
+function setActivePalette(){
+  const z=zoneFor(player.x)?.name||'Foundations';
+  if(z==='Foundations') activePalette=paletteBanks.foundations;
+  else if(z==='Telecom/Ops') activePalette=paletteBanks.telecom;
+  else if(z==='Electrical Trade') activePalette=paletteBanks.trade;
+  else activePalette=paletteBanks.growth;
+}
+
 function quantizePost(){
   const img=pctx.getImageData(0,0,post.width,post.height);
   const d=img.data;
@@ -260,13 +269,13 @@ function quantizePost(){
     let b=Math.max(0,Math.min(255,d[i+2] + checker*3));
 
     let best=0, bestDist=1e9;
-    for(let p=0;p<master16.length;p++){
-      const pr=master16[p][0], pg=master16[p][1], pb=master16[p][2];
+    for(let p=0;p<activePalette.length;p++){
+      const pr=activePalette[p][0], pg=activePalette[p][1], pb=activePalette[p][2];
       const dr=r-pr, dg=g-pg, db=b-pb;
       const dist=dr*dr + dg*dg + db*db;
       if(dist<bestDist){ bestDist=dist; best=p; }
     }
-    d[i]=master16[best][0]; d[i+1]=master16[best][1]; d[i+2]=master16[best][2];
+    d[i]=activePalette[best][0]; d[i+1]=activePalette[best][1]; d[i+2]=activePalette[best][2];
   }
   pctx.putImageData(img,0,0);
 }
@@ -427,7 +436,8 @@ function drawPlayer(){
   drawRect(player.x-2,player.y-7+bob,4,1,'#7f5745');
   drawRect(player.x-3,player.y-6+bob,6,1,'#8c6150');
 
-  // yellow/orange chest logo hint
+  // yellow/orange chest logo hint + dark outline for readability
+  drawRect(player.x-3,player.y+2+bob,6,4,'#1a2338');
   drawRect(player.x-2,player.y+3+bob,4,2,'#ffb33a');
   drawRect(player.x-4,player.y+4+bob,2,2,'#ff9f1f');
   drawRect(player.x+2,player.y+4+bob,2,2,'#ff9f1f');
@@ -493,6 +503,7 @@ function render(){
   // Pixel-art post pass: downsample then nearest-neighbor upscale for crisp era-accurate look
   pctx.clearRect(0,0,post.width,post.height);
   pctx.drawImage(cv,0,0,post.width,post.height);
+  setActivePalette();
   quantizePost();
   ctx.save();
   ctx.setTransform(1,0,0,1,0,0);
