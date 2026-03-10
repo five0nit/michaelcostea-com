@@ -665,6 +665,10 @@ function initSettingsPanel(){
 }
 
 function initQuirkyStartActions(){
+  const loreKey = 'm89_lore_state_v1';
+  const loreState = JSON.parse(localStorage.getItem(loreKey)||'{"tokens":[],"rank":"Visitor"}');
+  const saveLore = ()=> localStorage.setItem(loreKey, JSON.stringify(loreState));
+
   const launchMap = {
     planner:'./apps/planner.html',
     cards:'./apps/cards.html',
@@ -682,6 +686,21 @@ function initQuirkyStartActions(){
     skifree:'./apps/games/skifree.html'
   };
 
+  const commandEggs = {
+    winver: ()=> openWindow('aboutWindow'),
+    matrix: ()=> { prefs.theme='matrix'; savePrefs(); applyPrefs(); showToast('Neon Intrusion Layer enabled.'); },
+    cowabunga: ()=> { prefs.theme='tmnt'; savePrefs(); applyPrefs(); openWindow('dojoWindow'); showToast('Shell protocol online.'); },
+    multipass: ()=> { prefs.theme='element'; savePrefs(); applyPrefs(); openWindow('elementWindow'); showToast('Credential accepted. MULTIPASS.'); },
+    hacktheplanet: ()=> { launchInMikeNet('./apps/hacker-exe.html','HACKER.EXE'); showToast('Global terminal uplink granted.'); },
+    thetruthisoutthere: ()=> { prefs.theme='hacker'; savePrefs(); applyPrefs(); showToast('Black Cell archive decrypted.'); },
+    m89_rank: ()=> { showToast(`Rank: ${loreState.rank} • Tokens: ${loreState.tokens.join(', ')||'none'}`); },
+    unlock_blackcell: ()=> {
+      const needed=['matrix','cowabunga','multipass'];
+      const ok=needed.every(t=>loreState.tokens.includes(t));
+      if(ok){ loreState.rank='Operator'; saveLore(); showToast('BLACK CELL UNLOCKED // Rank promoted: Operator'); }
+      else showToast('Missing tokens: '+needed.filter(t=>!loreState.tokens.includes(t)).join(', '));
+    }
+  };
   document.querySelectorAll('[data-app-quick]').forEach(el=>{
     el.addEventListener('click',(e)=>{
       e.preventDefault();
@@ -710,10 +729,22 @@ function initQuirkyStartActions(){
   const runCmd = (raw)=>{
     const q=(raw||'').trim().toLowerCase();
     if(!q) return;
+
+    if(commandEggs[q]){
+      commandEggs[q]();
+      ['matrix','cowabunga','multipass'].forEach(t=>{ if(q===t && !loreState.tokens.includes(t)) loreState.tokens.push(t); });
+      if(loreState.tokens.length>=2 && loreState.rank==='Visitor') loreState.rank='Initiate';
+      saveLore();
+      closeWindow('runWindow');
+      closeWindow('findWindow');
+      return;
+    }
+
     const direct = launchMap[q] || Object.entries(launchMap).find(([k])=>q.includes(k))?.[1];
     if(direct){ launchInMikeNet(direct, q); closeWindow('runWindow'); closeWindow('findWindow'); return; }
     if(q.includes('help')){ openWindow('helpWindow'); closeWindow('runWindow'); closeWindow('findWindow'); return; }
     if(q.includes('shutdown')){ openWindow('shutdownWindow'); closeWindow('runWindow'); closeWindow('findWindow'); return; }
+    if(q.includes('rank')||q.includes('lore')){ showToast(`Rank: ${loreState.rank} • Tokens: ${loreState.tokens.join(', ')||'none'}`); return; }
     showToast(`No match for: ${raw}`);
   };
 
