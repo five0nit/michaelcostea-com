@@ -383,12 +383,21 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="dialupWindow"><span>📞 Dial-Up Networking</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="recycleWindow"><span>🗑️ Recycle Bin</span><small>open</small></a>
   `;
-  const appItems = projects.map(p => `
-    <a class="start-item" role="menuitem" href="#" data-launch-app="${p.url}" data-app-title="${p.name}">
-      <span>${p.name}</span>
-      <small>${p.status}</small>
-    </a>
-  `).join('');
+  const buildStartGroup = (label, list) => {
+    if(!list.length) return '';
+    const head = `<div class="start-group">${label}</div>`;
+    const rows = list.map(p => `
+      <a class="start-item" role="menuitem" href="#" data-launch-app="${p.url}" data-app-title="${p.name}">
+        <span>${p.name}</span>
+        <small>${p.status}</small>
+      </a>
+    `).join('');
+    return head + rows;
+  };
+
+  const webapps = projects.filter(p => (p.category||'webapps') === 'webapps');
+  const games = projects.filter(p => p.category === 'games');
+  const appItems = buildStartGroup('Web Apps', webapps) + buildStartGroup('Games', games);
   items.innerHTML = systemItems + appItems;
 
   const closeMenu = () => { menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); };
