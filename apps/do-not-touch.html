@@ -22,6 +22,11 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 .card h1{margin:0 0 8px;letter-spacing:.09em;font-size:clamp(1.6rem,6vw,3.2rem)}
 .card p{color:var(--muted)}
 .hide{display:none!important}
+.modal{position:fixed;inset:0;z-index:9;background:rgba(2,6,14,.78);display:grid;place-items:center;padding:14px}
+.modal-card{width:min(760px,96vw);max-height:80dvh;overflow:auto;background:#0d1630;border:1px solid #4c6ea7;border-radius:14px;padding:14px}
+.modal-card h3{margin:.2rem 0 .5rem}
+.modal-card ul{margin:.2rem 0 .5rem;padding-left:18px;color:#cfe0ff}
+
 </style>
 </head>
 <body>
@@ -37,8 +42,21 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
     <p id="roleBody">Move with WASD/Arrow keys (or drag on mobile). Walk to glowing nodes to open career chapters.</p>
     <div class="row">
       <button class="btn" id="nextNode">Jump to Next Chapter</button>
+      <button class="btn" id="viewRole">View Role Card</button>
+      <button class="btn" id="showCerts">Certifications</button>
+      <button class="btn" id="downloadPdf">Download Resume PDF</button>
       <button class="btn" id="copySummary">Copy Professional Summary</button>
     </div>
+  </div>
+</div>
+
+
+<div class="modal hide" id="modal">
+  <div class="modal-card">
+    <h3 id="modalTitle">Role Card</h3>
+    <p id="modalBody"></p>
+    <ul id="modalList"></ul>
+    <div class="row"><button class="btn" id="closeModal">Close</button></div>
   </div>
 </div>
 
@@ -76,16 +94,17 @@ const zones=[
   {name:'Growth & Innovation',x:2100,y:0,w:500,h:1400}
 ];
 const nodes=[
-  {id:'N1',x:180,y:700,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — hands-on small business operations.'},
-  {id:'N2',x:820,y:980,title:'Optus Retention Consultant (2010-2013)',text:'Handled escalations, rewrote retention processes, and improved outcomes.'},
-  {id:'N3',x:980,y:760,title:'Optus Business Process Specialist (2013-2014)',text:'Owned process comms and rollout support across Sales, Service, Retail.'},
-  {id:'N4',x:1110,y:560,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge bases and change rollouts for thousands of users.'},
-  {id:'N5',x:1260,y:360,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support leadership, KPI redesign, 74% output uplift initiative.'},
-  {id:'N6',x:1620,y:760,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky — broad domestic/commercial/smart-home expertise.'},
-  {id:'N7',x:2240,y:560,title:'Sales Manager (Nov 2023-Present)',text:'VEU-focused heat pump upgrades across residential/commercial sectors.'},
-  {id:'N8',x:2400,y:360,title:'Business Development & Marketing Manager (2024-Present)',text:'Leads growth, websites/lead-gen optimization, partner pilots, manufacturer relations, process training, and CX innovation across affiliated brands.'}
+  {id:'N1',x:180,y:700,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — hands-on small business operations.',highlights:['Co-managed launch operations','Owner/operator workflow setup','Daily service process discipline']},
+  {id:'N2',x:820,y:980,title:'Optus Retention Consultant (2010-2013)',text:'Handled escalations, rewrote retention processes, and improved outcomes.',highlights:['Reduced process friction','Rewrote 200 retention processes','Improved customer save outcomes']},
+  {id:'N3',x:980,y:760,title:'Optus Business Process Specialist (2013-2014)',text:'Owned process comms and rollout support across Sales, Service, Retail.',highlights:['National process communications','Operational change training','Cross-team rollout enablement']},
+  {id:'N4',x:1110,y:560,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge bases and change rollouts for thousands of users.',highlights:['5,000+ internal users supported','500k monthly knowledge visits','Removed 250 duplicate processes']},
+  {id:'N5',x:1260,y:360,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support leadership, KPI redesign, 74% output uplift initiative.',highlights:['Central support for 352 stores','74% output uplift','3-tier credit policy + training matrix']},
+  {id:'N6',x:1620,y:760,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky — broad domestic/commercial/smart-home expertise.',highlights:['Custom builds + AV + smart-home','Fault finding + installs + maintenance','Residential + commercial + emergency support']},
+  {id:'N7',x:2240,y:560,title:'Sales Manager (Nov 2023-Present)',text:'VEU-focused heat pump upgrades across residential/commercial sectors.',highlights:['Program-aligned upgrade pathways','Retail + partner channel support','Commercial + residential project flow']},
+  {id:'N8',x:2400,y:360,title:'Business Development & Marketing Manager (2024-Present)',text:'Leads growth, websites/lead-gen optimization, partner pilots, manufacturer relations, process training, and CX innovation across affiliated brands.',highlights:['Owns growth across 3 brands','Website metrics + lead-gen optimization','Partner pilots + manufacturer strategy']}
 ];
 let viewed=new Set();
+let activeNode=null;
 
 function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0)}
 function zoneAt(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
@@ -125,6 +144,7 @@ function tick(){
   nodes.forEach(n=>{
     if(Math.hypot(player.x-n.x,player.y-n.y)<30){
       viewed.add(n.id);
+      activeNode=n;
       roleTitle.textContent=n.title;
       roleBody.textContent=n.text;
     }
@@ -140,9 +160,27 @@ cv.addEventListener('touchstart',e=>{touch=true;tx=e.touches[0].clientX;ty=e.tou
 cv.addEventListener('touchmove',e=>{if(!touch)return;const nx=e.touches[0].clientX,ny=e.touches[0].clientY;const dx=nx-tx,dy=ny-ty;player.x=Math.max(30,Math.min(world.w-30,player.x+dx*0.35));player.y=Math.max(80,Math.min(world.h-30,player.y+dy*0.35));tx=nx;ty=ny;},{passive:true});
 cv.addEventListener('touchend',()=>touch=false,{passive:true});
 
-const summary=`Michael Costea — Licensed Electrician + Business Development/Marketing leader driving digital ops, lead-gen, partner pilots, and process innovation across Want A Heat Pump, Want A Sparky, and All Electric Homes.`;
+const summary=`Michael Costea — Licensed Electrician + Business Development & Marketing Manager driving electrification growth, digital ops, lead-gen optimization, partner pilots, and CX/process innovation across Want A Heat Pump, Want A Sparky, and All Electric Homes.`;
+const certs=['Licensed Electrician (Australia)','VEU program-aligned upgrade operations','IVR + chatbot + review automation delivery','Process redesign and frontline training leadership'];
+const modal=document.getElementById('modal'),modalTitle=document.getElementById('modalTitle'),modalBody=document.getElementById('modalBody'),modalList=document.getElementById('modalList');
+function openModal(title,body,list=[]){ modalTitle.textContent=title; modalBody.textContent=body; modalList.innerHTML=(list||[]).map(x=>`<li>${x}</li>`).join(''); modal.classList.remove('hide'); }
+function closeModal(){ modal.classList.add('hide'); }
+document.getElementById('closeModal').onclick=closeModal;
+modal.addEventListener('click',e=>{ if(e.target===modal) closeModal(); });
+
 document.getElementById('copySummary').onclick=async()=>{try{await navigator.clipboard.writeText(summary); roleTitle.textContent='Summary copied'; roleBody.textContent='Paste it into LinkedIn/About/Resume.';}catch{roleTitle.textContent='Copy failed';roleBody.textContent=summary;}};
-document.getElementById('nextNode').onclick=()=>{const next=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1]; player.x=next.x-40; player.y=next.y-40;};
+document.getElementById('nextNode').onclick=()=>{const next=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1]; player.x=next.x-40; player.y=next.y-40; activeNode=next;};
+document.getElementById('viewRole').onclick=()=>{ const n=activeNode||nodes[0]; openModal(n.title,n.text,n.highlights||[]); };
+document.getElementById('showCerts').onclick=()=>openModal('Certifications & Capability Stack','Core capability and accreditation set used across delivery + operations.',certs);
+document.getElementById('downloadPdf').onclick=()=>{ 
+  const win=window.open('','_blank');
+  if(!win) return;
+  const rows=nodes.map(n=>`<h3>${n.title}</h3><p>${n.text}</p><ul>${(n.highlights||[]).map(h=>`<li>${h}</li>`).join('')}</ul>`).join('');
+  win.document.write(`<!doctype html><html><head><title>Michael Costea Resume</title><style>body{font-family:Arial;padding:24px;line-height:1.45}h1{margin:0 0 8px}h3{margin:16px 0 4px}</style></head><body><h1>Michael Costea</h1><p>${summary}</p>${rows}</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(()=>win.print(),250);
+};
 document.getElementById('enter').onclick=()=>document.getElementById('intro').classList.add('hide');
 
 updateHUD(); draw(); tick();
