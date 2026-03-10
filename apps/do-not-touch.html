@@ -136,10 +136,39 @@ function beep(freq=520,d=.06){ if(!sfx) return; try{ const ac=(beep.ac ||= new (
 function toastMsg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>toast.classList.remove('show'),1200)}
 function zoneFor(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
 function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0)}
+const zonePalette=[
+  {base:'#1a2944',tileA:'#203656',tileB:'#263d60',accent:'#8fd3ff'},
+  {base:'#1c2d4c',tileA:'#24406a',tileB:'#2b4a78',accent:'#9bb6ff'},
+  {base:'#203754',tileA:'#2b5172',tileB:'#34607f',accent:'#9dffd5'},
+  {base:'#2b3558',tileA:'#384a77',tileB:'#44598a',accent:'#ffd782'}
+];
+function pHash(x,y){ return ((x*73856093)^(y*19349663)) & 255; }
 function drawTile(x,y,c1,c2){drawRect(x,y,TILE,TILE,c1);drawRect(x+2,y+2,4,4,c2);}
-function drawTree(x,y){drawRect(x+5,y+18,6,10,'#2f421d');drawRect(x+1,y+9,14,10,'#4f6b24');drawRect(x+3,y+3,10,8,'#6f8f2b');drawRect(x+5,y+1,6,3,'#88a93a');}
-function drawHouse(x,y){drawRect(x+2,y+14,42,26,'#d8e8a8');drawRect(x+16,y+28,12,12,'#4f5f2a');drawRect(x,y+10,46,8,'#5a2f2f');drawRect(x+7,y+20,8,6,'#7c9b2f');drawRect(x+31,y+20,8,6,'#7c9b2f');drawRect(x+14,y+28,2,12,'#2a3518');drawRect(x+28,y+28,2,12,'#2a3518');}
-function drawStreetlight(x,y){drawRect(x+3,y,2,12,'#7989a8');drawRect(x,y+11,8,3,'#e6f2ff'); if(((time/20)|0)%2===0) drawRect(x+1,y+12,6,2,'#fff7a8');}
+function drawTree(x,y){
+  drawRect(x+6,y+18,6,11,'#2c3d1a');
+  drawRect(x+2,y+10,14,11,'#446425');
+  drawRect(x+1,y+7,16,5,'#5a7b2f');
+  drawRect(x+4,y+3,10,6,'#6f9340');
+  drawRect(x+7,y+1,4,3,'#88ac55');
+  drawRect(x+3,y+14,2,2,'#9bc16d');
+}
+function drawHouse(x,y){
+  drawRect(x+2,y+14,42,26,'#dcecb8');
+  drawRect(x,y+10,46,8,'#6b3434');
+  drawRect(x+3,y+12,40,2,'#8a4a4a');
+  drawRect(x+7,y+20,8,6,'#a7c96a');
+  drawRect(x+31,y+20,8,6,'#a7c96a');
+  drawRect(x+16,y+28,12,12,'#526635');
+  drawRect(x+19,y+31,6,6,'#2a3518');
+  drawRect(x+2,y+14,1,26,'#a7b77a');
+  drawRect(x+43,y+14,1,26,'#a7b77a');
+}
+function drawStreetlight(x,y){
+  drawRect(x+3,y,2,12,'#7c8ca8');
+  drawRect(x+1,y+10,6,1,'#91a6cc');
+  drawRect(x,y+11,8,3,'#e6f2ff');
+  if(((time/20)|0)%2===0) drawRect(x+1,y+12,6,2,'#fff7a8');
+}
 
 function drawParallax(){
   const skyBands=night?['#070b15','#0b1324','#121d33','#1a2744']:['#0f1b38','#12224a','#16305f','#1a3d73'];
@@ -149,31 +178,66 @@ function drawParallax(){
 
 function drawWorld(){
   drawRect(0,0,world.w,world.h,'#111a30');
-  zones.forEach((z,i)=>drawRect(z.x,0,z.w,world.h,['#1b2848','#21355f','#264366','#2a5078'][i]));
-  // tile texture
-  for(let y=0;y<world.h;y+=TILE){ for(let x=0;x<world.w;x+=TILE){ if(((x+y)/TILE)%5===0) drawTile(x,y,'rgba(255,255,255,.02)','rgba(255,255,255,.04)'); }}
 
-  drawRect(120,900,2920,8,'#d3e4ff');
+  // distinct zone bases
+  zones.forEach((z,i)=>{
+    const pal=zonePalette[i];
+    drawRect(z.x,0,z.w,world.h,pal.base);
+    for(let y=0;y<world.h;y+=TILE){
+      for(let x=z.x;x<z.x+z.w;x+=TILE){
+        const h=pHash(x>>4,y>>4);
+        drawRect(x,y,TILE,TILE,h%3===0?pal.tileA:pal.tileB);
+        if(h%13===0) drawRect(x+2,y+2,2,2,'rgba(255,255,255,.08)');
+      }
+    }
+  });
+
+  // main roads + lane markers
+  drawRect(120,900,2920,10,'#d3e4ff');
+  for(let x=140;x<3040;x+=36) drawRect(x,904,16,2,'#6f86b1');
   drawRect(0,1120,world.w,80,'#223b57');
   drawRect(0,1200,world.w,4,'rgba(255,255,255,.15)');
 
-  // authored props
-  drawHouse(200,760); drawHouse(280,860); drawHouse(1900,860); drawHouse(2860,390);
-  for(let i=0;i<36;i++) drawTree(520+i*56,260+(i%4)*18);
-  for(let i=0;i<22;i++) drawTree(1900+i*44,1260+(i%3)*14);
+  // district landmarks (more distinct silhouettes)
+  drawHouse(200,760); drawHouse(280,860);
+  drawHouse(1900,860); drawHouse(2860,390);
+  // telecom tower
+  drawRect(1260,360,18,140,'#6f7fa2'); drawRect(1248,490,42,8,'#93a8d0'); drawRect(1264,330,10,22,'#cde0ff');
+  // electrical substation
+  drawRect(2040,1220,140,70,'#4e5d72'); drawRect(2060,1240,24,24,'#9fb2d2'); drawRect(2100,1240,24,24,'#9fb2d2');
+  // growth HQ
+  drawRect(2730,240,170,120,'#596b8f'); drawRect(2746,256,138,84,'#9ab0d6');
+
+  // vegetation by district
+  for(let i=0;i<34;i++) drawTree(420+i*48,260+(i%4)*18);
+  for(let i=0;i<20;i++) drawTree(1900+i*42,1260+(i%3)*14);
+  for(let i=0;i<14;i++) drawTree(2700+i*24,520+(i%2)*14);
+
+  // street furniture
   for(let i=0;i<30;i++) drawStreetlight(260+i*96,884);
 
-  // water ribbon
+  // water ribbon with clearer edges
   drawRect(1480,1240,620,220,'#325f90');
+  drawRect(1480,1240,620,4,'#89b7e1');
   for(let y=1240;y<1460;y+=8){for(let x=1480+(y%16?8:0);x<2100;x+=20) drawRect(x,y+3,8,2,'#9cc7e8');}
 
-  nodes.forEach(n=>{const seen=viewed.has(n.id);drawRect(n.x-12,n.y-12,24,24,seen?'#8bff9e':'#79d9ff');drawRect(n.x-6,n.y-6,12,12,'#fff');drawRect(n.x-1,908,2,n.y-908,'rgba(255,255,255,.35)')});
+  // chapter nodes with unique marker art
+  nodes.forEach((n,idx)=>{
+    const seen=viewed.has(n.id), pal=zonePalette[Math.min(3,Math.floor(n.x/(world.w/4)))];
+    drawRect(n.x-13,n.y-13,26,26,seen?'#8bff9e':pal.accent);
+    drawRect(n.x-8,n.y-8,16,16,'#fff');
+    if(idx%2===0) drawRect(n.x-2,n.y-12,4,24,'rgba(0,0,0,.22)');
+    else drawRect(n.x-12,n.y-2,24,4,'rgba(0,0,0,.22)');
+    drawRect(n.x-1,908,2,n.y-908,'rgba(255,255,255,.35)');
+  });
 }
 
 function drawPlayer(){
   player.frame = (Math.abs(keys['ArrowLeft']||keys['a']?1:0)+Math.abs(keys['ArrowRight']||keys['d']?1:0)+Math.abs(keys['ArrowUp']||keys['w']?1:0)+Math.abs(keys['ArrowDown']||keys['s']?1:0)+Math.abs(joy.x)+Math.abs(joy.y))>0 ? ((time/8)|0)%2 : 0;
+  drawRect(player.x-9,player.y+10,18,3,'rgba(0,0,0,.35)');
   drawRect(player.x-8,player.y-10,16,20,'#ffd166');
-  drawRect(player.x-5,player.y-6,10,6,'#111');
+  drawRect(player.x-6,player.y-7,12,8,'#111');
+  drawRect(player.x-4,player.y-5,8,4,'#fff');
   if(player.frame) drawRect(player.x-8,player.y+10,6,2,'#111'); else drawRect(player.x+2,player.y+10,6,2,'#111');
 }
 
@@ -224,7 +288,7 @@ function loop(now){
   nodes.forEach(n=>{
     const d=Math.hypot(player.x-n.x,player.y-n.y);
     if(d<30 && !viewed.has(n.id)){
-      viewed.add(n.id); activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; battleFx=.45; beep(760,.08); toastMsg(`Unlocked: ${n.title}`); saveViewed(); shake=6;
+      viewed.add(n.id); activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; battleFx=.55; beep(760,.08); toastMsg(`Unlocked: ${n.title}`); saveViewed(); shake=8; showChapter(n.title);
     } else if(d<30){ activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; }
   });
 
