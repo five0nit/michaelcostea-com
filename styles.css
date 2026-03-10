@@ -42,7 +42,7 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .win-window.open{display:block;opacity:1;transform:translateY(0) scale(1)}
 .win-window.minimized{display:none}
 .win-window.active{z-index:16;box-shadow:4px 6px 0 rgba(0,0,0,.85)}
-.win-window.maximized{left:0 !important;top:0 !important;right:auto !important;bottom:auto !important;width:100vw !important;height:calc(100vh - 38px) !important}
+.win-window.maximized{position:fixed !important;left:0 !important;top:0 !important;right:auto !important;bottom:auto !important;width:100vw !important;height:calc(100vh - 38px) !important;margin:0 !important}
 .win-title{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,var(--title1),var(--title2));color:#fff;padding:4px 6px;font-size:12px;font-weight:700;cursor:move;user-select:none;transition:filter .12s ease}
 .win-controls{display:flex;gap:2px;align-items:center}
 .win-btn,.win-close{position:relative;width:18px;height:16px;min-width:18px;border-top:1px solid var(--hi);border-left:1px solid var(--hi);border-right:1px solid var(--lo);border-bottom:1px solid var(--lo);background:#c0c0c0;color:#000;cursor:pointer;line-height:1;padding:0;display:grid;place-items:center}
@@ -127,7 +127,9 @@ body.mobile-mode .win-window.maximized{
 body.mobile-mode.immersive-app .taskbar{display:none !important}
 body.mobile-mode.immersive-app .container{height:100vh;padding-bottom:0}
 body.mobile-mode.immersive-app #browserWindow.win-window.maximized{height:100vh !important}
+body.mobile-mode.immersive-app #browserWindow .win-title{display:none}
 body.mobile-mode.immersive-app #browserWindow .mikenet-bar{display:none}
+body.mobile-mode.immersive-app #browserWindow .iframe-wrap{height:100% !important}
 body.mobile-mode #readerWindow,
 body.mobile-mode #aboutWindow{
   height:auto !important;
