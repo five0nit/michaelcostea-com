@@ -234,73 +234,98 @@ footer {
       <div class="hero-copy">
         <p class="eyebrow">AU homeowner comparison platform</p>
         <h1>Compare quotes with confidence — without the sales chaos.</h1>
-        <p class="lead">
-          Share a few details, review quotes from participating installers, and move ahead when you’re ready.
-          If you proceed, we can send an SMS around 5 minutes before installer outreach (where available).
-        </p>
+        <p class="lead">Now includes live intake, quote scoring, shortlist, and local/API persistence.</p>
 
         <div class="actions">
-          <button class="btn btn-primary">Start comparison</button>
-          <button class="btn btn-ghost">See sample breakdown</button>
+          <button class="btn btn-primary" id="startBtn">Start comparison</button>
+          <button class="btn btn-ghost" id="sampleBtn">Load sample quote</button>
         </div>
 
         <div class="micro-proof">
           <span>~3 minute intake</span>
           <span>Clear side-by-side quote view</span>
-          <span>SMS heads-up before outreach</span>
+          <span>Save + reload quotes</span>
         </div>
       </div>
 
       <aside class="hero-card glass-soft">
-        <p class="card-label">Simple process</p>
-        <p class="card-big">3 Steps</p>
-        <p class="card-sub">Share details → Review quotes → Call to proceed</p>
-        <div class="progress"><span></span></div>
-        <p class="card-note">Timing and availability vary by location and installer.</p>
+        <p class="card-label">Live score</p>
+        <p class="card-big" id="scoreBig">--</p>
+        <p class="card-sub" id="scoreSummary">Enter details to score quote quality.</p>
+        <div class="progress"><span id="scoreBar" style="width:0%"></span></div>
+        <p class="card-note" id="saveStatus">Ready.</p>
       </aside>
     </section>
 
-    <section id="proof" class="proof-grid">
-      <article class="glass-soft">
-        <h3>Cleaner comparisons</h3>
-        <p>See key inclusions, pricing context and installer fit in one view.</p>
-      </article>
-      <article class="glass-soft">
-        <h3>Faster decision flow</h3>
-        <p>No more chasing multiple callbacks across different quoting styles.</p>
-      </article>
-      <article class="glass-soft">
-        <h3>Clear next step</h3>
-        <p>Find one you like, click and call — we coordinate the handoff.</p>
-      </article>
+    <section class="steps glass" id="how">
+      <h2>Quote intake</h2>
+      <div class="step-grid">
+        <div class="step glass-soft"><h4>Installer</h4><input id="installer" placeholder="Installer name" /></div>
+        <div class="step glass-soft"><h4>Price (AUD)</h4><input id="price" type="number" placeholder="8900" /></div>
+        <div class="step glass-soft"><h4>System Size (kW)</h4><input id="systemSize" type="number" step="0.1" placeholder="6.6" /></div>
+        <div class="step glass-soft"><h4>Warranty (years)</h4><input id="warranty" type="number" placeholder="10" /></div>
+        <div class="step glass-soft"><h4>Payback (years)</h4><input id="payback" type="number" step="0.1" placeholder="4.2" /></div>
+        <div class="step glass-soft"><h4>Notes</h4><input id="notes" placeholder="Battery-ready, local support" /></div>
+      </div>
+      <div class="actions" style="margin-top:12px">
+        <button class="btn btn-primary" id="scoreBtn">Score Quote</button>
+        <button class="btn btn-ghost" id="saveBtn">Save Quote</button>
+        <button class="btn btn-ghost" id="loadBtn">Load Saved</button>
+      </div>
+      <p class="acl-note" id="debug">No data yet.</p>
     </section>
 
-    <section id="how" class="steps glass">
-      <h2>How it works</h2>
-      <div class="step-grid">
-        <div class="step glass-soft">
-          <span>01</span>
-          <h4>Share details</h4>
-          <p>Suburb, usage and property basics.</p>
-        </div>
-        <div class="step glass-soft">
-          <span>02</span>
-          <h4>Review quotes</h4>
-          <p>Quotes from participating installers presented clearly.</p>
-        </div>
-        <div class="step glass-soft">
-          <span>03</span>
-          <h4>Proceed your way</h4>
-          <p>Click and call us. SMS reminder before installer contact (where available).</p>
-        </div>
-      </div>
-      <p class="acl-note">
-        Important: quote timing, installer availability and final terms vary by location and participating installer.
-        OzQuotes provides comparison and matching support only.
-      </p>
+    <section id="proof" class="proof-grid">
+      <article class="glass-soft"><h3>Shortlist Leader</h3><p id="leader">None yet</p></article>
+      <article class="glass-soft"><h3>Price per kW</h3><p id="ppkw">--</p></article>
+      <article class="glass-soft"><h3>Risk Flags</h3><p id="risk">--</p></article>
     </section>
   </main>
 
   <footer>ozquotes.com</footer>
+  <script>
+  const apiBase='https://api.michaelcostea.com/api/ozquotes';
+  const key='ozquotes_saved_v1';
+  const $=id=>document.getElementById(id);
+  const fields=['installer','price','systemSize','warranty','payback','notes'];
+  const getQuote=()=>Object.fromEntries(fields.map(f=>[f,$(f).value]))
+  const n=v=>Number(v||0);
+  function score(q){
+    const ppk = n(q.price) / Math.max(0.1,n(q.systemSize));
+    let s=100;
+    if(ppk>1800) s-=20; else if(ppk>1500) s-=10;
+    if(n(q.warranty)<10) s-=15;
+    if(n(q.payback)>6) s-=20; else if(n(q.payback)>5) s-=10;
+    if(!q.installer) s-=15;
+    const risk=[];
+    if(ppk>1800) risk.push('High $/kW');
+    if(n(q.warranty)<10) risk.push('Short warranty');
+    if(n(q.payback)>6) risk.push('Slow payback');
+    return {score:Math.max(0,Math.min(100,Math.round(s))),ppk, risk:risk.join(', ')||'Low'};
+  }
+  function render(q){
+    const r=score(q); $('scoreBig').textContent=r.score; $('scoreSummary').textContent=`${q.installer||'Unknown installer'} • score ${r.score}/100`;
+    $('scoreBar').style.width=r.score+'%'; $('ppkw').textContent=r.ppk?`$${r.ppk.toFixed(0)} / kW`:'--'; $('risk').textContent=r.risk;
+  }
+  async function save(){
+    const q={...getQuote(),id:'q_'+Date.now()};
+    const arr=JSON.parse(localStorage.getItem(key)||'[]'); arr.unshift(q); localStorage.setItem(key,JSON.stringify(arr.slice(0,30)));
+    try{ await fetch(apiBase+'/save',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(q)});}catch{}
+    $('saveStatus').textContent='Saved.'; $('leader').textContent=q.installer||'Unnamed';
+  }
+  async function load(){
+    let arr=JSON.parse(localStorage.getItem(key)||'[]');
+    try{ const r=await fetch(apiBase+'/list'); if(r.ok){ const j=await r.json(); if(j.quotes?.length) arr=j.quotes; }}catch{}
+    if(!arr.length){ $('debug').textContent='No saved quotes yet.'; return; }
+    const q=arr[0]; fields.forEach(f=>$(f).value=q[f]||''); render(q); $('leader').textContent=q.installer||'Unnamed'; $('saveStatus').textContent='Loaded latest.';
+    $('debug').textContent=JSON.stringify(arr.slice(0,3),null,2);
+  }
+  $('scoreBtn').onclick=()=>render(getQuote());
+  $('saveBtn').onclick=save;
+  $('loadBtn').onclick=load;
+  $('sampleBtn').onclick=()=>{ $('installer').value='Example Solar Co'; $('price').value='9200'; $('systemSize').value='6.6'; $('warranty').value='12'; $('payback').value='4.8'; $('notes').value='Battery-ready'; render(getQuote()); };
+  $('startBtn').onclick=()=>document.getElementById('how').scrollIntoView({behavior:'smooth'});
+  load();
+  </script>
 </body>
 </html>

@@ -265,13 +265,23 @@ function genLine2(){el.line2.value=LINE2_OPTS[(Math.random()*LINE2_OPTS.length)|
 function genLine3(){el.line3.value=LINE3_OPTS[(Math.random()*LINE3_OPTS.length)|0];draw();}
 function genTagline(){const t=((currentTemplate().theme)||'default');const pick=(TAGLINES[t]||TAGLINES.default);el.tagline.value=pick[(Math.random()*pick.length)|0];draw();}
 
+function downloadText(name,text,type='text/plain'){ const b=new Blob([text],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500); }
+
+function localBuild(mode='standard'){
+  const payload = { ...val(), ...layerPayload(), mode, generatedAt:new Date().toISOString() };
+  const name = (payload.fileName || 'card_build').replace(/\s+/g,'_');
+  downloadText(`${name}_${mode}_manifest.json`, JSON.stringify(payload,null,2), 'application/json');
+  downloadText(`${name}_${mode}_notes.txt`, `MichaelOS local build fallback\nMode: ${mode}\nName: ${payload.name}\nStyle: ${payload.style}\nGenerated: ${payload.generatedAt}\n`, 'text/plain');
+  el.status.textContent = `✅ LOCAL ${mode.toUpperCase()} EXPORT COMPLETE\nSaved manifest + notes download (offline-safe fallback).`;
+}
+
 async function build(){
   el.status.textContent='Build initiated...';
   try{
     const r=await fetch('/api/build',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(val())});
     const j=await r.json(); if(!j.ok){el.status.textContent='Failed to start build\n'+JSON.stringify(j,null,2);return;}
     let done=false; while(!done){const jr=await fetch('/api/job/'+j.jobId); const js=await jr.json(); el.status.textContent=(js.logs||[]).join('\n')||'Running...'; if(js.status==='done'){el.status.textContent += `\n\n✅ COMPLETED\nManifest: ${js.manifest||'n/a'}`;done=true;} if(js.status==='failed'){el.status.textContent += '\n\n❌ FAILED';done=true;} await new Promise(x=>setTimeout(x,1200));}
-  }catch(e){el.status.textContent='Build request failed: '+e.message;}
+  }catch(e){ localBuild('standard'); }
 }
 
 async function buildSwitching(){
@@ -283,7 +293,7 @@ async function buildSwitching(){
     const r=await fetch('/api/build_switching_card',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(req)});
     const j=await r.json(); if(!j.ok){el.status.textContent='Failed to start switching build\n'+JSON.stringify(j,null,2);return;}
     let done=false; while(!done){const jr=await fetch('/api/job/'+j.jobId); const js=await jr.json(); el.status.textContent=(js.logs||[]).join('\n')||'Running...'; if(js.status==='done'){el.status.textContent += `\n\n✅ SWITCHING COMPLETED\nManifest: ${js.manifest||'n/a'}`;done=true;} if(js.status==='failed'){el.status.textContent += '\n\n❌ FAILED';done=true;} await new Promise(x=>setTimeout(x,1200));}
-  }catch(e){el.status.textContent='Switching build request failed: '+e.message;}
+  }catch(e){ localBuild('switching'); }
 }
 
 async function init(){

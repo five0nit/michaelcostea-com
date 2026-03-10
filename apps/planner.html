@@ -139,6 +139,31 @@ async function loadLatest(){
   }
 }
 
+function localPlanFallback(payload){
+  const now = new Date();
+  const base = payload.date ? new Date(payload.date+'T08:00:00') : now;
+  const slots = payload.scope==='weekend' ? [9,11,13,15,17] : [10,12,14,16];
+  const kidTag = payload.kidsMode ? ' (kids-friendly)' : '';
+  const pool = [
+    `Site check${kidTag}`,
+    `Quote review${kidTag}`,
+    `Client callback block${kidTag}`,
+    `Supplier follow-up${kidTag}`,
+    `Admin + invoicing${kidTag}`,
+    `Travel + setup${kidTag}`
+  ];
+  return slots.map((h,i)=>{
+    const st = new Date(base); st.setHours(h,0,0,0);
+    const en = new Date(base); en.setHours(h+1,0,0,0);
+    return {
+      title: pool[i%pool.length],
+      start: st.toISOString(),
+      end: en.toISOString(),
+      location: payload.currentLocation || 'Local'
+    };
+  });
+}
+
 async function runPlan(){
   const payload={
     scope: document.getElementById('scope').value,
@@ -159,8 +184,10 @@ async function runPlan(){
     debug.textContent=JSON.stringify(data,null,2);
     status.textContent='Plan generated (live API).';
   }catch(err){
-    status.textContent='Run disabled on static hosting (API offline).';
-    debug.textContent=`${err}\n\nThis page is static on GitHub Pages, so Generate Plan needs your local API online.\n\nLocal command:\nnode server/planner-api.js`;
+    const events = localPlanFallback(payload);
+    render(events);
+    debug.textContent = `API offline fallback engaged\n\n${err}\n\n` + JSON.stringify({payload,events},null,2);
+    status.textContent='Plan generated (smart local fallback mode).';
   }
 }
 
