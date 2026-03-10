@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>DO NOT TOUCH // NIGHT DISTRICT</title>
+<title>DO NOT TOUCH // PALLET PROTOCOL</title>
 <style>
-:root{--bg:#05070f;--ink:#dce8ff;--muted:#8ea3c7;--line:#35507c}
+:root{--bg:#1d2a1d;--ink:#e8f8d8;--muted:#b6c9a3;--line:#5c7a4d}
 *{box-sizing:border-box}
 html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
-#game{position:fixed;inset:0;width:100%;height:100dvh;image-rendering:pixelated;image-rendering:crisp-edges;background:#090d18}
+#game{position:fixed;inset:0;width:100%;height:100dvh;image-rendering:pixelated;image-rendering:crisp-edges;background:#9bbc0f}
 .ui{position:fixed;inset:0;pointer-events:none}
 .top{position:absolute;left:10px;right:10px;top:10px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .chip{pointer-events:auto;padding:7px 10px;border:1px solid var(--line);background:rgba(7,12,24,.68);border-radius:999px;font-size:.78rem;color:#c4d5f2}
@@ -28,12 +28,12 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 <canvas id="game" width="960" height="540"></canvas>
 <div class="ui">
   <div class="top">
-    <div class="chip" id="loc">ZONE: Null Alley</div>
-    <div class="chip" id="obj">OBJECTIVE: Find three signal shards</div>
-    <div class="chip" id="shards">SHARDS: 0/3</div>
+    <div class="chip" id="loc">ZONE: Starter Town</div>
+    <div class="chip" id="obj">OBJECTIVE: Find three signal badges</div>
+    <div class="chip" id="badges">BADGES: 0/3</div>
   </div>
   <div class="panel" id="lorePanel">
-    <h3 id="loreTitle">NIGHT DISTRICT // BOOT</h3>
+    <h3 id="loreTitle">PALLET PROTOCOL // BOOT</h3>
     <p id="loreText">Move with WASD / arrow keys (or drag on mobile). Find marked nodes and unlock the final gate.</p>
     <div class="row">
       <button class="btn" id="nextLore">Next Lore</button>
@@ -45,72 +45,72 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 <div class="intro" id="intro">
   <div class="card">
     <h1>DO NOT TOUCH</h1>
-    <p><b>Custom world build:</b> this is your own map, own lore, own path — no clone.</p>
-    <p><b>Lore:</b> The city is a dead operating system. Three memory shards keep it from collapsing into static. Collect them and trigger the Black Gate.</p>
+    <p><b>Custom world build:</b> handheld-era town vibe, fully your own map and lore.</p>
+    <p><b>Lore:</b> Pallet Protocol is losing color. Recover three signal badges and awaken the town core.</p>
     <button class="btn" id="enter">Enter District</button>
   </div>
 </div>
 
 <script>
 const cv=document.getElementById('game'),ctx=cv.getContext('2d');
-const locEl=document.getElementById('loc'),objEl=document.getElementById('obj'),shardEl=document.getElementById('shards');
+const locEl=document.getElementById('loc'),objEl=document.getElementById('obj'),shardEl=document.getElementById('badges');
 const loreTitle=document.getElementById('loreTitle'),loreText=document.getElementById('loreText');
 const W=960,H=540;
 let cam={x:0,y:0};
 const world={w:2200,h:1600};
 const player={x:300,y:280,s:2.6};
 let keys={};
-let shards=0, gateOpen=false;
+let badges=0, gateOpen=false;
 const zones=[
-  {name:'Null Alley',x:0,y:0,w:700,h:500},
-  {name:'Glass Sector',x:700,y:0,w:800,h:500},
-  {name:'Rust Quarter',x:0,y:500,w:900,h:600},
-  {name:'Black Gate',x:1300,y:860,w:700,h:600}
+  {name:'Starter Town',x:0,y:0,w:700,h:500},
+  {name:'Route North',x:700,y:0,w:800,h:500},
+  {name:'Lakeside Patch',x:0,y:500,w:900,h:600},
+  {name:'Town Core',x:1300,y:860,w:700,h:600}
 ];
 const nodes=[
-  {id:'A',x:420,y:380,type:'shard',hit:false,title:'Shard A: The First Lie',text:'"Comfort is the prettiest prison."'},
-  {id:'B',x:1180,y:300,type:'shard',hit:false,title:'Shard B: The Quiet Revolt',text:'"If the script is fake, improvise."'},
-  {id:'C',x:760,y:980,type:'shard',hit:false,title:'Shard C: The Inner Wire',text:'"What you endure defines your signal."'},
-  {id:'GATE',x:1640,y:1160,type:'gate',hit:false,title:'Black Gate',text:'Collect 3 shards to open.'}
+  {id:'A',x:420,y:380,type:'shard',hit:false,title:'Badge A: First Step',text:'"Small towns make big legends."'},
+  {id:'B',x:1180,y:300,type:'shard',hit:false,title:'Badge B: Route Signal',text:'"Curiosity is the true starter."'},
+  {id:'C',x:760,y:980,type:'shard',hit:false,title:'Badge C: Lakeside Echo',text:'"Training is repetition with purpose."'},
+  {id:'GATE',x:1640,y:1160,type:'gate',hit:false,title:'Town Core',text:'Collect 3 badges to awaken core.'}
 ];
 const loreDeck=[
-  ['Transmission 01','Most people mistake noise for life.'],
-  ['Transmission 02','This city rewards masks and punishes mirrors.'],
-  ['Transmission 03','Three shards. One gate. No witnesses.'],
-  ['Transmission 04','You were not sent here to fit in.']
+  ['Transmission 01','Every journey begins in a quiet town.'],
+  ['Transmission 02','The route teaches what maps cannot.'],
+  ['Transmission 03','Three badges. One town core.'],
+  ['Transmission 04','You are here to evolve, not to fit.']
 ];
 let loreIx=0;
 
 function zoneFor(x,y){return zones.find(z=>x>=z.x&&y>=z.y&&x<z.x+z.w&&y<z.y+z.h)||zones[0]}
 function updateHUD(){
   locEl.textContent='ZONE: '+zoneFor(player.x,player.y).name;
-  shardEl.textContent=`SHARDS: ${shards}/3`;
-  objEl.textContent=gateOpen?'OBJECTIVE: Enter the Black Gate':'OBJECTIVE: Find three signal shards';
+  shardEl.textContent=`SHARDS: ${badges}/3`;
+  objEl.textContent=gateOpen?'OBJECTIVE: Enter the Town Core':'OBJECTIVE: Find three signal badges';
 }
 
 function drawPixelRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect((x|0),(y|0),(w|0),(h|0));}
 function drawWorld(){
-  drawPixelRect(0,0,world.w,world.h,'#0b1020');
+  drawPixelRect(0,0,world.w,world.h,'#8bac0f');
   for(let y=0;y<world.h;y+=80){
     for(let x=0;x<world.w;x+=80){
-      const c=(x+y)%160===0?'#101a33':'#0d162b';
+      const c=(x+y)%160===0?'#7c9b2f':'#6f8f25';
       drawPixelRect(x,y,78,78,c);
     }
   }
   // streets
-  drawPixelRect(0,520,world.w,60,'#151515');
-  drawPixelRect(980,0,70,world.h,'#171717');
+  drawPixelRect(0,520,world.w,60,'#556b2f');
+  drawPixelRect(980,0,70,world.h,'#556b2f');
   // neon blocks
-  drawPixelRect(160,120,220,160,'#1f2e58'); drawPixelRect(1440,180,300,220,'#2a1f58'); drawPixelRect(420,840,260,220,'#234c4c');
+  drawPixelRect(160,120,220,160,'#4a5f2a'); drawPixelRect(1440,180,300,220,'#4a5f2a'); drawPixelRect(420,840,260,220,'#3f5422');
   nodes.forEach(n=>{
-    const glow=n.type==='gate'?(gateOpen?'#8bff9a':'#7a3f46'):'#79d9ff';
+    const glow=n.type==='gate'?(gateOpen?'#d8f878':'#6b7f2a'):'#c7f06b';
     drawPixelRect(n.x-14,n.y-14,28,28,glow);
     drawPixelRect(n.x-8,n.y-8,16,16,'#fff');
   });
 }
 function drawPlayer(){
-  drawPixelRect(player.x-8,player.y-10,16,20,'#ffd166');
-  drawPixelRect(player.x-5,player.y-6,10,6,'#111');
+  drawPixelRect(player.x-8,player.y-10,16,20,'#f8f8f8');
+  drawPixelRect(player.x-5,player.y-6,10,6,'#2f3f1b');
 }
 function draw(){
   ctx.clearRect(0,0,W,H);
@@ -134,8 +134,8 @@ function tick(){
     const d=Math.hypot(player.x-n.x,player.y-n.y);
     if(d<28){
       if(n.type==='shard'&&!n.hit){
-        n.hit=true; shards++; loreTitle.textContent=n.title; loreText.textContent=n.text; updateHUD();
-        if(shards>=3){gateOpen=true; const g=nodes.find(x=>x.id==='GATE'); g.text='Gate unlocked. Step in.';}
+        n.hit=true; badges++; loreTitle.textContent=n.title; loreText.textContent=n.text; updateHUD();
+        if(badges>=3){gateOpen=true; const g=nodes.find(x=>x.id==='GATE'); g.text='Gate unlocked. Step in.';}
       }
       if(n.type==='gate'){
         loreTitle.textContent=n.title;
