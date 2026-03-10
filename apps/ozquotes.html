@@ -213,7 +213,6 @@ footer {
 </style>
 </head>
 <body>
-  <p style="position:fixed;top:8px;left:10px;z-index:50"><a href="#" class="back-hub" data-hub="../index.html" style="color:#b6dcff;text-decoration:none;font:12px/1.2 Tahoma,Arial,sans-serif">← Back to MichaelOS</a></p>
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
 
@@ -327,26 +326,6 @@ footer {
   $('startBtn').onclick=()=>document.getElementById('how').scrollIntoView({behavior:'smooth'});
   load();
   </script>
-
-<script>/* back-hub helper */
-(function(){
-  document.querySelectorAll('a.back-hub').forEach(function(a){
-    a.addEventListener('click', function(e){
-      e.preventDefault();
-      var hub = a.getAttribute('data-hub') || '../index.html';
-      try {
-        if (window.top && window.top !== window.self) {
-          window.top.location.href = hub;
-        } else {
-          window.location.href = hub;
-        }
-      } catch (_) {
-        window.location.href = hub;
-      }
-    });
-  });
-})();
-</script>
 
 </body>
 </html>

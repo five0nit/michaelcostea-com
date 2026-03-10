@@ -31,8 +31,6 @@
 </head>
 <body>
   <canvas id="fx"></canvas><div class="grain"></div>
-  <a href="#" class="back" id="backHub">← Return to MichaelOS</a>
-
   <section class="overlay" id="intro">
     <div class="panel">
       <div class="eyebrow">White Rabbit Protocol // Immersive Sequence</div>
@@ -212,9 +210,6 @@
       if(Math.hypot(dx,dy)<80) setStage(3);
     }
   });
-
-  document.getElementById('backHub').addEventListener('click',e=>{
-    e.preventDefault();
     const hub='../index.html';
     try{ if(window.top&&window.top!==window.self) window.top.location.href=hub; else window.location.href=hub; }catch{ window.location.href=hub; }
   });

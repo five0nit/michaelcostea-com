@@ -34,7 +34,6 @@
 </head>
 <body>
 <div class="wrap">
-  <p><a href="#" class="back-hub" data-hub="../index.html">← Back to MichaelOS</a></p>
   <h1>Weekend + Day Planner</h1>
   <p class="muted">Build plan runs from UI. Uses local planner API when available.</p>
   <div class="card"><div class="row"><span class="muted">Status: Live demo</span><span class="muted">Best for: Daily planning and client scheduling</span></div></div>
@@ -198,26 +197,6 @@ document.getElementById('apiKeyInput').addEventListener('change',()=>{savePrefs(
 loadPrefs();
 checkConn();
 loadLatest();
-</script>
-
-<script>/* back-hub helper */
-(function(){
-  document.querySelectorAll('a.back-hub').forEach(function(a){
-    a.addEventListener('click', function(e){
-      e.preventDefault();
-      var hub = a.getAttribute('data-hub') || '../index.html';
-      try {
-        if (window.top && window.top !== window.self) {
-          window.top.location.href = hub;
-        } else {
-          window.location.href = hub;
-        }
-      } catch (_) {
-        window.location.href = hub;
-      }
-    });
-  });
-})();
 </script>
 
 </body>

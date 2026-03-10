@@ -15,7 +15,6 @@ body{margin:0;background:#0d5fa3;font-family:"MS Sans Serif",Tahoma,sans-serif}
 a{color:#fff}
 </style></head><body>
 <div class="wrap">
-  <p><a href="#" class="back-hub" data-hub="../../index.html">← Back to MichaelOS</a></p>
   <div class="panel">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><b>SOLITAIRE.EXE (mini-klondike)</b><button class="btn" id="new">New Game</button></div>
     <p style="margin:8px 0 10px">Tap stock to draw. Tap selected card, then destination pile to move. (Light retro version)</p>
@@ -43,26 +42,6 @@ for(let i=0;i<4;i++){const p=document.createElement('div'); p.className='pile'; 
 for(let i=0;i<7;i++){const p=document.createElement('div'); p.className='pile'; p.onclick=()=>{if(!sel)return; const src=findSource(sel); if(src&&moveToTable(sel,src,i)){sel=null; render();}}; for(const c of tab[i]){const d=renderCard(c,c.up); if(sel===c)d.style.outline='2px solid #00f'; p.appendChild(d);} table.appendChild(p);} }
 function findSource(c){if(waste[waste.length-1]===c) return waste; for(const p of tab) if(p[p.length-1]===c) return p; return null;}
 document.getElementById('new').onclick=newGame; newGame();
-</script>
-
-<script>/* back-hub helper */
-(function(){
-  document.querySelectorAll('a.back-hub').forEach(function(a){
-    a.addEventListener('click', function(e){
-      e.preventDefault();
-      var hub = a.getAttribute('data-hub') || '../index.html';
-      try {
-        if (window.top && window.top !== window.self) {
-          window.top.location.href = hub;
-        } else {
-          window.location.href = hub;
-        }
-      } catch (_) {
-        window.location.href = hub;
-      }
-    });
-  });
-})();
 </script>
 
 </body></html>

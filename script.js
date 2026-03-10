@@ -210,6 +210,15 @@ function toggleMaximizeWindow(id){
 
 
 function launchInMikeNet(url, title='Program'){
+  // Immersive experiences should take over the full site, not run in iframe windows.
+  if((url||'').includes('do-not-touch.html')){
+    try{
+      if(window.top && window.top !== window.self){ window.top.location.href = url; }
+      else { window.location.href = url; }
+      return;
+    }catch{}
+  }
+
   const frame = document.getElementById('appFrame');
   const head = document.getElementById('browserTitle');
   const addr = document.getElementById('mikenetAddr');
