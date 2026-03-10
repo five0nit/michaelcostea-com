@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>DO NOT TOUCH // PALLET PROTOCOL</title>
+<title>Michael Costea // Visual Resume</title>
 <style>
-:root{--bg:#1d2a1d;--ink:#e8f8d8;--muted:#b6c9a3;--line:#5c7a4d}
+:root{--bg:#0b1020;--ink:#eaf1ff;--muted:#9fb3d6;--line:#36517e}
 *{box-sizing:border-box}
-html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-family:"Trebuchet MS",Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
-#game{position:fixed;inset:0;width:100%;height:100dvh;image-rendering:pixelated;image-rendering:crisp-edges;background:#9bbc0f}
+html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
+#game{position:fixed;inset:0;width:100%;height:100dvh;image-rendering:pixelated;image-rendering:crisp-edges;background:#101a33}
 .ui{position:fixed;inset:0;pointer-events:none}
-.top{position:absolute;left:10px;right:10px;top:10px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.chip{pointer-events:auto;padding:8px 12px;border:1px solid var(--line);background:rgba(7,12,24,.74);border-radius:999px;font-size:.82rem;color:#d5e4ff}
-.panel{position:absolute;right:10px;bottom:10px;width:min(420px,96vw);pointer-events:auto;background:rgba(9,15,28,.82);border:1px solid var(--line);border-radius:14px;padding:12px;backdrop-filter:blur(6px)}
-.panel h3{margin:0 0 6px;font-size:1rem;letter-spacing:.05em}
+.top{position:absolute;left:10px;right:10px;top:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.chip{pointer-events:auto;padding:7px 11px;border:1px solid var(--line);background:rgba(9,15,30,.78);border-radius:999px;font-size:.8rem;color:#cfe0ff}
+.panel{position:absolute;right:10px;bottom:10px;width:min(520px,96vw);pointer-events:auto;background:rgba(8,13,27,.88);border:1px solid var(--line);border-radius:14px;padding:12px;backdrop-filter:blur(6px)}
+.panel h3{margin:0 0 6px;font-size:1rem;letter-spacing:.04em}
 .panel p{margin:6px 0;color:var(--muted);line-height:1.45}
 .row{display:flex;gap:8px;flex-wrap:wrap}
 .btn{border:1px solid #4f71af;background:linear-gradient(180deg,#8ecfff,#5eaefe);color:#03172f;border-radius:999px;padding:9px 12px;font-weight:800;cursor:pointer}
-.intro{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 20% -20%,#1a2855 0%,transparent 45%),rgba(3,5,10,.88);z-index:5}
-.card{width:min(780px,96vw);background:rgba(8,14,28,.86);border:1px solid #35507c;border-radius:16px;padding:18px}
-.card h1{margin:0 0 8px;letter-spacing:.14em;font-size:clamp(1.8rem,7vw,3.8rem)}
+.intro{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 20% -20%,#1a2855 0%,transparent 45%),rgba(3,5,10,.9);z-index:5}
+.card{width:min(840px,96vw);background:rgba(8,14,28,.92);border:1px solid #35507c;border-radius:16px;padding:18px}
+.card h1{margin:0 0 8px;letter-spacing:.09em;font-size:clamp(1.6rem,6vw,3.2rem)}
 .card p{color:var(--muted)}
 .hide{display:none!important}
 </style>
@@ -28,266 +28,121 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 <canvas id="game" width="960" height="540"></canvas>
 <div class="ui">
   <div class="top">
-    <div class="chip" id="loc">ZONE: Starter Town</div>
-    <div class="chip" id="obj">OBJECTIVE: Walk the journey timeline</div>
-    <div class="chip" id="chapters">STORY: 0/3</div>
+    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME</div>
+    <div class="chip" id="zoneChip">TIMELINE ZONE: Foundations</div>
+    <div class="chip" id="progressChip">NODES VIEWED: 0/8</div>
   </div>
-  <div class="panel" id="lorePanel">
-    <h3 id="loreTitle">MICHAEL JOURNEY // BOOT</h3>
-    <p id="loreText">Move with WASD / arrow keys (or drag on mobile). Visit story checkpoints in order to unlock the final chapter.</p>
+  <div class="panel">
+    <h3 id="roleTitle">Welcome</h3>
+    <p id="roleBody">Move with WASD/Arrow keys (or drag on mobile). Walk to glowing nodes to open career chapters.</p>
     <div class="row">
-      <button class="btn" id="nextLore">Next Chapter</button>
-      <button class="btn" id="focusNode">Go To Next Story Point</button>
+      <button class="btn" id="nextNode">Jump to Next Chapter</button>
+      <button class="btn" id="copySummary">Copy Professional Summary</button>
     </div>
   </div>
 </div>
 
 <div class="intro" id="intro">
   <div class="card">
-    <h1>DO NOT TOUCH</h1>
-    <p><b>Custom world build:</b> handheld-era town vibe, fully your own map and lore.</p>
-    <p><b>Purpose:</b> this map walks users through your journey: from trade foundations, to automation, to product builder mode.</p>
-    <button class="btn" id="enter">Enter District</button>
+    <h1>MICHAEL COSTEA — VISUAL RESUME</h1>
+    <p>Interactive timeline showcasing experience across electrical services, operations leadership, automation, CX systems, and business growth.</p>
+    <p><b>Current:</b> Business Development & Marketing Manager @ Want A Heat Pump (plus Want A Sparky + All Electric Homes).</p>
+    <button class="btn" id="enter">Enter Resume Map</button>
   </div>
 </div>
 
 <script>
 const cv=document.getElementById('game'),ctx=cv.getContext('2d');
-const locEl=document.getElementById('loc'),objEl=document.getElementById('obj'),shardEl=document.getElementById('chapters');
-const loreTitle=document.getElementById('loreTitle'),loreText=document.getElementById('loreText');
-let cam={x:0,y:0};
+const zoneChip=document.getElementById('zoneChip'),progressChip=document.getElementById('progressChip');
+const roleTitle=document.getElementById('roleTitle'),roleBody=document.getElementById('roleBody');
 let vw=960,vh=540;
 function resizeCanvas(){
   const vv=window.visualViewport;
-  vw=Math.round(vv?.width||window.innerWidth);
-  vh=Math.round(vv?.height||window.innerHeight);
+  vw=Math.round(vv?.width||window.innerWidth); vh=Math.round(vv?.height||window.innerHeight);
   const dpr=Math.max(1,Math.min(3,window.devicePixelRatio||1));
-  cv.width=Math.round(vw*dpr);
-  cv.height=Math.round(vh*dpr);
-  cv.style.width=vw+'px';
-  cv.style.height=vh+'px';
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  ctx.imageSmoothingEnabled=false;
+  cv.width=Math.round(vw*dpr); cv.height=Math.round(vh*dpr);
+  cv.style.width=vw+'px'; cv.style.height=vh+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.imageSmoothingEnabled=false;
 }
-window.addEventListener('resize',resizeCanvas);
-if(window.visualViewport) window.visualViewport.addEventListener('resize',resizeCanvas);
-resizeCanvas();
-const world={w:2200,h:1600};
-const player={x:300,y:280,s:2.6};
-let keys={};
-let chapters=0, gateOpen=false;
-let inInterior=null, battleFx=0;
-const houses=[
-  {id:'H1',x:150,y:150,w:40,h:34,door:{x:170,y:184},name:'Lab House',text:'A faded terminal hums: STARTERS ARE STATES OF MIND.'},
-  {id:'H2',x:220,y:220,w:40,h:34,door:{x:240,y:254},name:'Trainer Home',text:'A note reads: TRAIN HARD. STAY KIND.'},
-  {id:'H3',x:1480,y:220,w:40,h:34,door:{x:1500,y:254},name:'Route Shack',text:'Map fragment: NORTH HOLDS THE OLDEST SIGNAL.'},
-  {id:'H4',x:1560,y:260,w:40,h:34,door:{x:1580,y:294},name:'Market Hut',text:'The shop is closed. The lights still watch.'},
-  {id:'H5',x:470,y:890,w:40,h:34,door:{x:490,y:924},name:'Lakeside Cabin',text:'Logbook: WATER REMEMBERS EVERY FOOTSTEP.'}
-];
-const collisionRects=[];
-function addRect(x,y,w,h){ collisionRects.push({x,y,w,h}); }
-// fences + water + house bodies as collision
-addRect(120,430,520,10); addRect(1320,760,480,10); addRect(440,1040,420,10);
-addRect(520,1120,320,180);
-houses.forEach(h=>addRect(h.x,h.y+8,h.w,h.h));
-const grassPatches=[
-  {x:1010,y:120,w:160,h:120},
-  {x:860,y:640,w:180,h:140},
-  {x:1420,y:930,w:220,h:120}
-];
+window.addEventListener('resize',resizeCanvas); if(window.visualViewport) window.visualViewport.addEventListener('resize',resizeCanvas); resizeCanvas();
+
+const world={w:2600,h:1400};
+const player={x:140,y:700,s:2.8};
+let cam={x:0,y:0},keys={};
 const zones=[
-  {name:'Starter Town',x:0,y:0,w:700,h:500},
-  {name:'Route North',x:700,y:0,w:800,h:500},
-  {name:'Lakeside Patch',x:0,y:500,w:900,h:600},
-  {name:'Town Core',x:1300,y:860,w:700,h:600}
+  {name:'Foundations',x:0,y:0,w:620,h:1400},
+  {name:'Telecom/Ops',x:620,y:0,w:780,h:1400},
+  {name:'Electrical Trade',x:1400,y:0,w:700,h:1400},
+  {name:'Growth & Innovation',x:2100,y:0,w:500,h:1400}
 ];
 const nodes=[
-  {id:'A',x:420,y:380,type:'chapter',hit:false,title:'Chapter 1: First Trade',text:'"Started on tools, discipline, and getting real work done."'},
-  {id:'B',x:1180,y:300,type:'chapter',hit:false,title:'Chapter 2: Automation Shift',text:'"Moved from doing tasks manually to building systems that repeat."'},
-  {id:'C',x:760,y:980,type:'chapter',hit:false,title:'Chapter 3: Builder Era',text:'"Now shipping products, workflows, and experiences that scale."'},
-  {id:'GATE',x:1640,y:1160,type:'gate',hit:false,title:'Town Core',text:'Finish 3 chapters to unlock the final chapter.'}
+  {id:'N1',x:180,y:700,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — hands-on small business operations.'},
+  {id:'N2',x:820,y:980,title:'Optus Retention Consultant (2010-2013)',text:'Handled escalations, rewrote retention processes, and improved outcomes.'},
+  {id:'N3',x:980,y:760,title:'Optus Business Process Specialist (2013-2014)',text:'Owned process comms and rollout support across Sales, Service, Retail.'},
+  {id:'N4',x:1110,y:560,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge bases and change rollouts for thousands of users.'},
+  {id:'N5',x:1260,y:360,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support leadership, KPI redesign, 74% output uplift initiative.'},
+  {id:'N6',x:1620,y:760,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky — broad domestic/commercial/smart-home expertise.'},
+  {id:'N7',x:2240,y:560,title:'Sales Manager (Nov 2023-Present)',text:'VEU-focused heat pump upgrades across residential/commercial sectors.'},
+  {id:'N8',x:2400,y:360,title:'Business Development & Marketing Manager (2024-Present)',text:'Leads growth, websites/lead-gen optimization, partner pilots, manufacturer relations, process training, and CX innovation across affiliated brands.'}
 ];
-const loreDeck=[
-  ['Chapter Note 01','Trade skills built the base: consistency, speed, trust.'],
-  ['Chapter Note 02','Automation became leverage: less noise, more output.'],
-  ['Chapter Note 03','Product mindset: build once, improve forever.'],
-  ['Chapter Note 04','The mission now is to design experiences people remember.']
-];
-let loreIx=0;
+let viewed=new Set();
 
-function zoneFor(x,y){return zones.find(z=>x>=z.x&&y>=z.y&&x<z.x+z.w&&y<z.y+z.h)||zones[0]}
+function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0)}
+function zoneAt(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
 function updateHUD(){
-  locEl.textContent='ZONE: '+zoneFor(player.x,player.y).name;
-  shardEl.textContent=`STORY: ${chapters}/3`;
-  objEl.textContent=gateOpen?'OBJECTIVE: Enter the Town Core':'OBJECTIVE: Walk the journey timeline';
+  zoneChip.textContent='TIMELINE ZONE: '+zoneAt(player.x).name;
+  progressChip.textContent=`NODES VIEWED: ${viewed.size}/${nodes.length}`;
 }
-
-function drawPixelRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect((x|0),(y|0),(w|0),(h|0));}
-function drawTree(x,y){
-  drawPixelRect(x+6,y+18,8,10,'#3f4f1d');
-  drawPixelRect(x,y+8,20,12,'#4f6b24');
-  drawPixelRect(x+3,y+2,14,10,'#6f8f2b');
-}
-function drawHouseObj(h){
-  const x=h.x,y=h.y;
-  drawPixelRect(x+2,y+12,36,22,'#d8e8a8');
-  drawPixelRect(x+14,y+24,10,10,'#4f5f2a');
-  drawPixelRect(x,y+8,40,8,'#5a2f2f');
-  drawPixelRect(x+6,y+18,8,6,'#7c9b2f');
-  drawPixelRect(x+26,y+18,8,6,'#7c9b2f');
-  drawPixelRect(h.door.x-2,h.door.y-1,4,5,'#2b3114');
-}
-function drawFence(x,y,w){ for(let i=0;i<w;i+=8){ drawPixelRect(x+i,y,6,3,'#d0e090'); drawPixelRect(x+i+2,y+3,2,6,'#809050'); } }
-function drawWater(x,y,w,h){
-  drawPixelRect(x,y,w,h,'#6b8bbf');
-  for(let yy=y;yy<y+h;yy+=8){ for(let xx=x+(yy%16?4:0);xx<x+w;xx+=16){ drawPixelRect(xx,yy+2,6,2,'#9fb7de'); }}
-}
-function drawNPC(x,y,tick){
-  const bob=((tick/14)|0)%2;
-  drawPixelRect(x+4,y+6+bob,8,10,'#2f3f1b');
-  drawPixelRect(x+3,y+2+bob,10,5,'#f8f8f8');
-}
-
 function drawWorld(){
-  drawPixelRect(0,0,world.w,world.h,'#8bac0f');
-  for(let y=0;y<world.h;y+=80){
-    for(let x=0;x<world.w;x+=80){
-      const c=(x+y)%160===0?'#7c9b2f':'#6f8f25';
-      drawPixelRect(x,y,78,78,c);
-    }
-  }
-
-  // route strips
-  drawPixelRect(0,520,world.w,60,'#556b2f');
-  drawPixelRect(980,0,70,world.h,'#556b2f');
-
-  // town houses
-  houses.forEach(drawHouseObj);
-
-  // trees clusters
-  for(let i=0;i<12;i++) drawTree(80+i*44,70+(i%2)*18);
-  for(let i=0;i<10;i++) drawTree(1330+i*40,520+(i%3)*16);
-  for(let i=0;i<8;i++) drawTree(520+i*42,1200+(i%2)*20);
-
-  // water patch + fences + tall grass encounters
-  drawWater(520,1120,320,180);
-  grassPatches.forEach(g=>{ for(let yy=g.y;yy<g.y+g.h;yy+=8){ for(let xx=g.x;xx<g.x+g.w;xx+=8){ drawPixelRect(xx+2,yy+3,4,4,'#5f7f2a'); } } });
-  drawFence(120,430,520); drawFence(1320,760,480); drawFence(440,1040,420);
-
-  // NPCs
-  drawNPC(280,330,performance.now());
-  drawNPC(1510,420,performance.now()+100);
-  drawNPC(640,960,performance.now()+220);
-
-  // interaction nodes
+  drawRect(0,0,world.w,world.h,'#111a30');
+  zones.forEach((z,i)=>drawRect(z.x,0,z.w,world.h,['#1b2848','#21355f','#264366','#2a5078'][i]));
+  for(let x=0;x<world.w;x+=80){drawRect(x,0,2,world.h,'rgba(255,255,255,.05)')}
+  // timeline rail
+  drawRect(120,700,2360,8,'#d3e4ff');
   nodes.forEach(n=>{
-    const glow=n.type==='gate'?(gateOpen?'#d8f878':'#6b7f2a'):'#c7f06b';
-    drawPixelRect(n.x-14,n.y-14,28,28,glow);
-    drawPixelRect(n.x-8,n.y-8,16,16,'#fff');
+    const seen=viewed.has(n.id);
+    drawRect(n.x-12,n.y-12,24,24,seen?'#9bffb6':'#79d9ff');
+    drawRect(n.x-6,n.y-6,12,12,'#fff');
+    drawRect(n.x-1,708,2,n.y-708,'rgba(255,255,255,.35)');
   });
 }
-function drawPlayer(){
-  drawPixelRect(player.x-8,player.y-10,16,20,'#f8f8f8');
-  drawPixelRect(player.x-5,player.y-6,10,6,'#2f3f1b');
-}
+function drawPlayer(){drawRect(player.x-8,player.y-10,16,20,'#ffd166');drawRect(player.x-5,player.y-6,10,6,'#111')}
 function draw(){
   ctx.clearRect(0,0,vw,vh);
-
-  if(inInterior){
-    drawPixelRect(0,0,vw,vh,'#9bbc0f');
-    drawPixelRect(180,110,600,320,'#d8e8a8');
-    drawPixelRect(200,130,560,280,'#c7d89a');
-    drawPixelRect(450,340,60,60,'#4f5f2a');
-    ctx.fillStyle='#2f3f1b';
-    ctx.font='bold 18px monospace';
-    ctx.fillText(inInterior.name,220,170);
-    ctx.font='16px monospace';
-    ctx.fillText(inInterior.text,220,210);
-    ctx.fillText('Press E to exit',220,250);
-    requestAnimationFrame(draw);
-    return;
-  }
-
   cam.x=Math.max(0,Math.min(world.w-vw,player.x-vw/2));
   cam.y=Math.max(0,Math.min(world.h-vh,player.y-vh/2));
-  ctx.save(); ctx.translate(-cam.x,-cam.y);
-  drawWorld(); drawPlayer();
-  ctx.restore();
-
-  if(battleFx>0){
-    battleFx -= 0.04;
-    ctx.fillStyle=`rgba(255,255,255,${Math.max(0,battleFx)})`;
-    ctx.fillRect(0,0,vw,vh);
-    ctx.fillStyle='rgba(0,0,0,.75)';
-    ctx.font='bold 28px monospace';
-    ctx.fillText('WILD SIGNAL ENCOUNTER', 250, 280);
-  }
-
+  ctx.save(); ctx.translate(-cam.x,-cam.y); drawWorld(); drawPlayer(); ctx.restore();
   requestAnimationFrame(draw);
 }
-
-function collides(nx,ny){
-  return collisionRects.some(r=> nx>r.x-8 && nx<r.x+r.w+8 && ny>r.y-10 && ny<r.y+r.h+10 );
-}
-
-function inGrass(){
-  return grassPatches.some(g=> player.x>=g.x && player.x<=g.x+g.w && player.y>=g.y && player.y<=g.y+g.h);
-}
-
 function tick(){
-  if(inInterior){ updateHUD(); requestAnimationFrame(tick); return; }
-
   let vx=0,vy=0;
   if(keys['ArrowLeft']||keys['a']) vx-=player.s;
   if(keys['ArrowRight']||keys['d']) vx+=player.s;
   if(keys['ArrowUp']||keys['w']) vy-=player.s;
   if(keys['ArrowDown']||keys['s']) vy+=player.s;
-
-  const nx=Math.max(10,Math.min(world.w-10,player.x+vx));
-  const ny=Math.max(10,Math.min(world.h-10,player.y+vy));
-  if(!collides(nx, player.y)) player.x=nx;
-  if(!collides(player.x, ny)) player.y=ny;
-
-  if((vx||vy) && inGrass() && Math.random()<0.01){
-    battleFx=0.85;
-    loreTitle.textContent='Random Encounter';
-    loreText.textContent='A wild signal appears from the grass.';
-  }
-
+  player.x=Math.max(30,Math.min(world.w-30,player.x+vx));
+  player.y=Math.max(80,Math.min(world.h-30,player.y+vy));
   nodes.forEach(n=>{
-    const d=Math.hypot(player.x-n.x,player.y-n.y);
-    if(d<28){
-      if(n.type==='chapter'&&!n.hit){
-        n.hit=true; chapters++; loreTitle.textContent=n.title; loreText.textContent=n.text; updateHUD();
-        if(chapters>=3){gateOpen=true; const g=nodes.find(x=>x.id==='GATE'); g.text='Gate unlocked. Step in.';}
-      }
-      if(n.type==='gate'){
-        loreTitle.textContent=n.title;
-        if(gateOpen){ loreText.textContent='Final Chapter unlocked: this is where craft turns into legacy.'; }
-        else loreText.textContent=n.text;
-      }
+    if(Math.hypot(player.x-n.x,player.y-n.y)<30){
+      viewed.add(n.id);
+      roleTitle.textContent=n.title;
+      roleBody.textContent=n.text;
     }
   });
   updateHUD();
   requestAnimationFrame(tick);
 }
 
-addEventListener('keydown',e=>{
-  keys[e.key]=true;
-  if(e.key.toLowerCase()==='e'){
-    if(inInterior){ inInterior=null; loreTitle.textContent='Exited'; loreText.textContent='Back outside.'; return; }
-    const near = houses.find(h=>Math.hypot(player.x-h.door.x, player.y-h.door.y)<26);
-    if(near){ inInterior=near; loreTitle.textContent=near.name; loreText.textContent=near.text; }
-  }
-});
+addEventListener('keydown',e=>keys[e.key]=true);
 addEventListener('keyup',e=>keys[e.key]=false);
 let touch=false,tx=0,ty=0;
 cv.addEventListener('touchstart',e=>{touch=true;tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
-cv.addEventListener('touchmove',e=>{if(!touch)return;const nx=e.touches[0].clientX,ny=e.touches[0].clientY;const dx=nx-tx,dy=ny-ty;player.x=Math.max(10,Math.min(world.w-10,player.x+dx*0.35));player.y=Math.max(10,Math.min(world.h-10,player.y+dy*0.35));tx=nx;ty=ny;},{passive:true});
+cv.addEventListener('touchmove',e=>{if(!touch)return;const nx=e.touches[0].clientX,ny=e.touches[0].clientY;const dx=nx-tx,dy=ny-ty;player.x=Math.max(30,Math.min(world.w-30,player.x+dx*0.35));player.y=Math.max(80,Math.min(world.h-30,player.y+dy*0.35));tx=nx;ty=ny;},{passive:true});
 cv.addEventListener('touchend',()=>touch=false,{passive:true});
 
-document.getElementById('nextLore').onclick=()=>{loreIx=(loreIx+1)%loreDeck.length; loreTitle.textContent=loreDeck[loreIx][0]; loreText.textContent=loreDeck[loreIx][1];};
-document.getElementById('focusNode').onclick=()=>{const nxt=nodes.find(n=>!n.hit&&n.type==='chapter')||nodes.find(n=>n.id==='GATE'); if(nxt){player.x=nxt.x-40;player.y=nxt.y-40;}};
+const summary=`Michael Costea — Licensed Electrician + Business Development/Marketing leader driving digital ops, lead-gen, partner pilots, and process innovation across Want A Heat Pump, Want A Sparky, and All Electric Homes.`;
+document.getElementById('copySummary').onclick=async()=>{try{await navigator.clipboard.writeText(summary); roleTitle.textContent='Summary copied'; roleBody.textContent='Paste it into LinkedIn/About/Resume.';}catch{roleTitle.textContent='Copy failed';roleBody.textContent=summary;}};
+document.getElementById('nextNode').onclick=()=>{const next=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1]; player.x=next.x-40; player.y=next.y-40;};
 document.getElementById('enter').onclick=()=>document.getElementById('intro').classList.add('hide');
 
 updateHUD(); draw(); tick();
