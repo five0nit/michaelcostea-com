@@ -60,6 +60,7 @@
 
   // audio reactive
   let ac, analyser, dataArr, audioBoost=0, micOn=false;
+  let loudFrames=0, quietFrames=0;
   async function enableMicReactive(){
     try{
       ac = ac || new (window.AudioContext||window.webkitAudioContext)();
@@ -75,6 +76,9 @@
     analyser.getByteFrequencyData(dataArr);
     let sum=0; for(let i=0;i<dataArr.length;i++) sum+=dataArr[i];
     audioBoost = Math.min(1,(sum/dataArr.length)/140);
+    if(stage>=2 && stage<=4){
+      if(audioBoost>0.35) loudFrames++; else quietFrames++;
+    }
     return audioBoost;
   }
 
@@ -144,6 +148,18 @@
   const S=[1,2,3,4,5].map(n=>document.getElementById('stage'+n));
   function show(n){
     stage=n;S.forEach((el,i)=>el.classList.toggle('hidden',i!==n-1));
+    if(n===5){
+      const loud = loudFrames > quietFrames;
+      const title = document.querySelector('#stage5 h1');
+      const msg = document.querySelector('#stage5 p');
+      if(loud){
+        if(title) title.textContent='CHAOS ACCEPTED';
+        if(msg) msg.textContent='You fed the portal noise. It fed you power.';
+      }else{
+        if(title) title.textContent='SILENT KEY ACCEPTED';
+        if(msg) msg.textContent='You moved quietly. The rabbit trusts you now.';
+      }
+    }
     hud.textContent=`Stage ${n}`;
     uiBeep(420+n*90,0.06);
     haptic(18+n*3);
