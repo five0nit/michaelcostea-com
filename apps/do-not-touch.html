@@ -239,6 +239,17 @@ const signposts=[
   {x:2600,y:920,text:'Innovation District → Current Leadership'}
 ];
 
+const nodeProps=[
+  {id:'N1',kind:'cafe'},
+  {id:'N2',kind:'phone'},
+  {id:'N3',kind:'flow'},
+  {id:'N4',kind:'bookstack'},
+  {id:'N5',kind:'kpi'},
+  {id:'N6',kind:'toolbox'},
+  {id:'N7',kind:'megaphone'},
+  {id:'N8',kind:'crown'}
+];
+
 const nodes=[
 {id:'N1',x:220,y:900,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — startup operations and service flow.',highlights:['Owner/operator support','Daily service ops discipline','Small business execution'],badge:'#ffce73',glyph:'cup'},
 {id:'N2',x:980,y:1240,title:'Optus Retention Consultant (2010-2013)',text:'Escalation handling and retention process redesign.',highlights:['Process simplification','200 retention processes rewritten','Customer save optimization'],badge:'#8fd0ff',glyph:'signal'},
@@ -330,9 +341,24 @@ function drawNPC(x,y,idx){
   drawRect(x+2,y+7+bob,4,2,'#1c2538');
 }
 function drawSignpost(x,y){
-  drawRect(x,y,2,14,'#7a8fb5');
-  drawRect(x+2,y+2,20,10,'#dce6f8');
-  drawRect(x+4,y+4,16,2,'#4d6a9f');
+  drawRect(x,y,3,18,'#7a8fb5');
+  drawRect(x+3,y+2,30,14,'#dce6f8');
+  drawRect(x+5,y+5,26,3,'#4d6a9f');
+  drawRect(x+7,y+10,20,2,'#6f89b8');
+}
+
+function drawNodeProp(n){
+  const px=n.x+20, py=n.y-20;
+  const p=nodeProps.find(x=>x.id===n.id);
+  if(!p) return;
+  if(p.kind==='cafe'){ drawRect(px,py,14,10,'#6f4029'); drawRect(px+2,py+2,10,6,'#d2b08e'); drawRect(px+12,py+3,3,4,'#d2b08e'); }
+  else if(p.kind==='phone'){ drawRect(px+3,py,8,12,'#26344f'); drawRect(px+4,py+2,6,8,'#8fd0ff'); }
+  else if(p.kind==='flow'){ drawRect(px,py+5,16,3,'#6de6d4'); drawRect(px+6,py,4,13,'#50b7a8'); }
+  else if(p.kind==='bookstack'){ drawRect(px,py+8,14,4,'#7a5ee0'); drawRect(px+1,py+4,12,4,'#90a7ff'); drawRect(px+2,py,10,4,'#d3dcff'); }
+  else if(p.kind==='kpi'){ drawRect(px,py+10,16,2,'#91a5c7'); drawRect(px+2,py+5,3,5,'#ffd06e'); drawRect(px+7,py+2,3,8,'#8fd0ff'); drawRect(px+12,py,3,10,'#8bff9e'); }
+  else if(p.kind==='toolbox'){ drawRect(px,py+4,16,8,'#ffce73'); drawRect(px+5,py+1,6,3,'#ffdca2'); drawRect(px+7,py+6,2,2,'#59421f'); }
+  else if(p.kind==='megaphone'){ drawRect(px,py+5,8,5,'#79d9ff'); drawRect(px+8,py+4,7,7,'#a7e6ff'); drawRect(px+3,py+10,3,3,'#2e486f'); }
+  else if(p.kind==='crown'){ drawRect(px,py+6,16,5,'#ffd475'); drawRect(px+1,py+2,3,4,'#ffd475'); drawRect(px+6,py,3,6,'#ffd475'); drawRect(px+11,py+2,3,4,'#ffd475'); }
 }
 
 function drawParallax(){
@@ -365,23 +391,25 @@ function drawWorld(){
   drawRect(0,1200,world.w,4,'rgba(255,255,255,.15)');
 
   // district landmarks (more distinct silhouettes)
-  drawHouse(200,760); drawHouse(280,860);
-  drawHouse(1900,860); drawHouse(2860,390);
-  // telecom tower
-  drawRect(1260,360,18,140,'#6f7fa2'); drawRect(1248,490,42,8,'#93a8d0'); drawRect(1264,330,10,22,'#cde0ff');
-  // electrical substation
-  drawRect(2040,1220,140,70,'#4e5d72'); drawRect(2060,1240,24,24,'#9fb2d2'); drawRect(2100,1240,24,24,'#9fb2d2');
-  // growth HQ
-  drawRect(2730,240,170,120,'#596b8f'); drawRect(2746,256,138,84,'#9ab0d6');
+  drawHouse(180,740); drawHouse(280,860);
+  drawHouse(1880,840); drawHouse(2860,370);
+  // telecom tower (larger silhouette)
+  drawRect(1254,330,30,190,'#6f7fa2'); drawRect(1236,510,66,10,'#93a8d0'); drawRect(1260,292,18,32,'#cde0ff');
+  drawRect(1250,360,38,4,'#8ea3cc'); drawRect(1250,410,38,4,'#8ea3cc');
+  // electrical substation (bigger + clearer modules)
+  drawRect(2010,1180,190,110,'#4e5d72'); drawRect(2040,1210,30,30,'#9fb2d2'); drawRect(2080,1210,30,30,'#9fb2d2'); drawRect(2120,1210,30,30,'#9fb2d2');
+  drawRect(2030,1250,140,8,'#7f95bb');
+  // growth HQ (larger)
+  drawRect(2700,210,230,160,'#596b8f'); drawRect(2722,232,186,112,'#9ab0d6'); drawRect(2760,250,30,70,'#6f86ad'); drawRect(2830,250,30,70,'#6f86ad');
 
   // vegetation by district
   const dense = quality==='high';
-  for(let i=0;i<(dense?34:18);i++) drawTree(420+i*48,260+(i%4)*18);
-  for(let i=0;i<(dense?20:10);i++) drawTree(1900+i*42,1260+(i%3)*14);
-  for(let i=0;i<(dense?14:7);i++) drawTree(2700+i*24,520+(i%2)*14);
+  for(let i=0;i<(dense?46:24);i++) drawTree(360+i*44,250+(i%5)*18);
+  for(let i=0;i<(dense?28:14);i++) drawTree(1840+i*40,1220+(i%4)*16);
+  for(let i=0;i<(dense?22:10);i++) drawTree(2650+i*22,500+(i%3)*14);
 
-  // street furniture
-  for(let i=0;i<30;i++) drawStreetlight(260+i*96,884);
+  // street furniture (denser)
+  for(let i=0;i<38;i++) drawStreetlight(220+i*78,880);
   npcs.forEach((n,i)=>drawNPC(n.x,n.y,i));
   signposts.forEach(s=>drawSignpost(s.x,s.y));
 
@@ -411,6 +439,7 @@ function drawWorld(){
     if(idx%2===0) drawRect(n.x-2,n.y-12,4,24,'rgba(0,0,0,.22)');
     else drawRect(n.x-12,n.y-2,24,4,'rgba(0,0,0,.22)');
     drawRect(n.x-1,908,2,n.y-908,'rgba(255,255,255,.35)');
+    drawNodeProp(n);
   });
 }
 
