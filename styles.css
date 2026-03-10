@@ -127,7 +127,14 @@ body.mobile-mode .win-body{max-height:calc(100vh - 230px)}
 body.mobile-mode #browserWindow .win-body{padding:0}
 body.mobile-mode .taskbar{height:40px;padding:5px 6px}
 body.mobile-mode .taskbar-windows{display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin}
-body.mobile-mode .start-menu{width:min(92vw,320px)}
+body.mobile-mode .start-menu{width:min(94vw,360px)}
+body.mobile-mode .start-items{padding-left:8px}
+body.mobile-mode .start-items::before{display:none}
+body.mobile-mode .start-submenu{position:static;left:auto;top:auto;min-width:0;box-shadow:none;margin:4px 0 4px 10px}
+body.mobile-mode #startWebAppsMenu,
+body.mobile-mode #startGamesMenu,
+body.mobile-mode #startProgramsMenu,
+body.mobile-mode #startSettingsMenu{left:auto;top:auto}
 
 body.mobile-mode .win-controls{gap:4px}
 body.mobile-mode .win-btn,

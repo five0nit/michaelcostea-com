@@ -412,11 +412,32 @@ function initStartMenu(projects){
     [subPrograms, subWebApps, subGames, subSettings].forEach(s => { if(s){ s.classList.remove('open'); s.setAttribute('aria-hidden','true'); } });
   };
   const showSubmenu = (name) => {
-    hideSubmenus();
-    if(name === 'programs' && subPrograms){ subPrograms.classList.add('open'); subPrograms.setAttribute('aria-hidden','false'); }
-    if(name === 'webapps' && subPrograms && subWebApps){ subPrograms.classList.add('open'); subPrograms.setAttribute('aria-hidden','false'); subWebApps.classList.add('open'); subWebApps.setAttribute('aria-hidden','false'); }
-    if(name === 'games' && subPrograms && subGames){ subPrograms.classList.add('open'); subPrograms.setAttribute('aria-hidden','false'); subGames.classList.add('open'); subGames.setAttribute('aria-hidden','false'); }
-    if(name === 'settings' && subSettings){ subSettings.classList.add('open'); subSettings.setAttribute('aria-hidden','false'); }
+    const mobile = isMobileMode();
+    if(!mobile) hideSubmenus();
+    if(name === 'programs' && subPrograms){
+      if(mobile) subPrograms.classList.toggle('open'); else subPrograms.classList.add('open');
+      subPrograms.setAttribute('aria-hidden', String(!subPrograms.classList.contains('open')));
+      if(mobile && !subPrograms.classList.contains('open')){ subWebApps?.classList.remove('open'); subGames?.classList.remove('open'); }
+      return;
+    }
+    if(name === 'webapps' && subPrograms && subWebApps){
+      if(mobile) subWebApps.classList.toggle('open'); else { subPrograms.classList.add('open'); subWebApps.classList.add('open'); }
+      subPrograms.setAttribute('aria-hidden','false');
+      subWebApps.setAttribute('aria-hidden', String(!subWebApps.classList.contains('open')));
+      if(mobile && subWebApps.classList.contains('open')){ subGames?.classList.remove('open'); subGames?.setAttribute('aria-hidden','true'); }
+      return;
+    }
+    if(name === 'games' && subPrograms && subGames){
+      if(mobile) subGames.classList.toggle('open'); else { subPrograms.classList.add('open'); subGames.classList.add('open'); }
+      subPrograms.setAttribute('aria-hidden','false');
+      subGames.setAttribute('aria-hidden', String(!subGames.classList.contains('open')));
+      if(mobile && subGames.classList.contains('open')){ subWebApps?.classList.remove('open'); subWebApps?.setAttribute('aria-hidden','true'); }
+      return;
+    }
+    if(name === 'settings' && subSettings){
+      if(mobile) subSettings.classList.toggle('open'); else subSettings.classList.add('open');
+      subSettings.setAttribute('aria-hidden', String(!subSettings.classList.contains('open')));
+    }
   };
 
   const closeMenu = () => { hideSubmenus(); menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); };
@@ -426,6 +447,7 @@ function initStartMenu(projects){
   document.addEventListener('click', (e) => { if(!menu.contains(e.target) && e.target !== btn) closeMenu(); });
 
   menu.addEventListener('mouseover', (e) => {
+    if(isMobileMode()) return;
     const link = e.target.closest('.start-item[data-submenu]');
     if(!link) return;
     showSubmenu(link.getAttribute('data-submenu'));
