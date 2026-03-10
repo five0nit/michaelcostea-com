@@ -375,40 +375,62 @@ function initStartMenu(projects){
   const items = document.getElementById('startItems');
   if(!btn || !menu || !items) return;
 
+  const webapps = projects.filter(p => (p.category||'webapps') === 'webapps');
+  const games = projects.filter(p => p.category === 'games');
+
+  const appRow = (p) => `<a class="start-item" role="menuitem" href="#" data-launch-app="${p.url}" data-app-title="${p.name}"><span>${p.name}</span><small>${p.status}</small></a>`;
+
   const systemItems = `
     <a class="start-item" role="menuitem" href="#" data-open-window="readerWindow"><span>📘 Read Me</span><small>open</small></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span>🗂️ Programs</span><small>open</small></a>
+    <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="programs"><span>🗂️ Programs</span><small>▶</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span>💾 About</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow" data-open-settings="1"><span>⚙️ Control Panel</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="dialupWindow"><span>📞 Dial-Up Networking</span><small>open</small></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="recycleWindow"><span>🗑️ Recycle Bin</span><small>open</small></a>
   `;
-  const buildStartGroup = (label, list) => {
-    if(!list.length) return '';
-    const head = `<div class="start-group">${label}</div>`;
-    const rows = list.map(p => `
-      <a class="start-item" role="menuitem" href="#" data-launch-app="${p.url}" data-app-title="${p.name}">
-        <span>${p.name}</span>
-        <small>${p.status}</small>
-      </a>
-    `).join('');
-    return head + rows;
+
+  const submenuHtml = `
+    <div class="start-submenu" id="startProgramsMenu" aria-hidden="true">
+      <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="webapps"><span>🌐 Web Apps</span><small>▶</small></a>
+      <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="games"><span>🎮 Games</span><small>▶</small></a>
+    </div>
+    <div class="start-submenu" id="startWebAppsMenu" aria-hidden="true">${webapps.map(appRow).join('')}</div>
+    <div class="start-submenu" id="startGamesMenu" aria-hidden="true">${games.map(appRow).join('')}</div>
+  `;
+
+  items.innerHTML = systemItems + submenuHtml;
+
+  const subPrograms = document.getElementById('startProgramsMenu');
+  const subWebApps = document.getElementById('startWebAppsMenu');
+  const subGames = document.getElementById('startGamesMenu');
+
+  const hideSubmenus = () => {
+    [subPrograms, subWebApps, subGames].forEach(s => { if(s){ s.classList.remove('open'); s.setAttribute('aria-hidden','true'); } });
+  };
+  const showSubmenu = (name) => {
+    hideSubmenus();
+    if(name === 'programs' && subPrograms){ subPrograms.classList.add('open'); subPrograms.setAttribute('aria-hidden','false'); }
+    if(name === 'webapps' && subPrograms && subWebApps){ subPrograms.classList.add('open'); subPrograms.setAttribute('aria-hidden','false'); subWebApps.classList.add('open'); subWebApps.setAttribute('aria-hidden','false'); }
+    if(name === 'games' && subPrograms && subGames){ subPrograms.classList.add('open'); subPrograms.setAttribute('aria-hidden','false'); subGames.classList.add('open'); subGames.setAttribute('aria-hidden','false'); }
   };
 
-  const webapps = projects.filter(p => (p.category||'webapps') === 'webapps');
-  const games = projects.filter(p => p.category === 'games');
-  const appItems = buildStartGroup('Web Apps', webapps) + buildStartGroup('Games', games);
-  items.innerHTML = systemItems + appItems;
-
-  const closeMenu = () => { menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); };
+  const closeMenu = () => { hideSubmenus(); menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); };
   const openMenu = () => { menu.classList.add('open'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); };
 
   btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
   document.addEventListener('click', (e) => { if(!menu.contains(e.target) && e.target !== btn) closeMenu(); });
 
+  menu.addEventListener('mouseover', (e) => {
+    const link = e.target.closest('.start-item[data-submenu]');
+    if(!link) return;
+    showSubmenu(link.getAttribute('data-submenu'));
+  });
+
   menu.addEventListener('click', (e) => {
     const link = e.target.closest('.start-item');
     if(!link) return;
+    const sub = link.getAttribute('data-submenu');
+    if(sub){ e.preventDefault(); showSubmenu(sub); return; }
     const openId = link.getAttribute('data-open-window');
     const launchApp = link.getAttribute('data-launch-app');
     const openSettings = link.getAttribute('data-open-settings');
