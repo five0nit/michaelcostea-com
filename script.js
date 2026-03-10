@@ -821,6 +821,20 @@ async function boot(){
   loadPrefs();
   applyPrefs();
   await runBootScreen();
+
+  const appFrame = document.getElementById('appFrame');
+  if(appFrame){
+    appFrame.addEventListener('load', ()=>{
+      try{
+        const u = new URL(appFrame.src, location.href);
+        const p = (u.pathname||'').toLowerCase();
+        if(p.endsWith('/index.html') || p === '/' || p === '/index'){
+          closeWindow('browserWindow');
+          showToast('Back to MichaelOS hub');
+        }
+      }catch{}
+    });
+  }
   const res = await fetch('./apps.json');
   const data = await res.json();
 
