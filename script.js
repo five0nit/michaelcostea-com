@@ -686,6 +686,22 @@ function initQuirkyStartActions(){
     skifree:'./apps/games/skifree.html'
   };
 
+  const renderBlackCell = ()=>{
+    const rankEl=document.getElementById('blackcellRank');
+    const logEl=document.getElementById('blackcellLog');
+    if(rankEl) rankEl.textContent = `// Rank: ${loreState.rank}`;
+    if(!logEl) return;
+    const logs=[
+      '[ARCHIVE] 1989-06-01 :: M89 kernel branch initialized.',
+      '[OPLOG]   1995-09-15 :: City net anomaly tagged as "Hackers-class event".',
+      '[OPLOG]   2001-06-08 :: Swordfish doctrine imported into Black Cell training stack.',
+      `[TOKEN]   matrix=${loreState.tokens.includes('matrix')?'acquired':'missing'} | cowabunga=${loreState.tokens.includes('cowabunga')?'acquired':'missing'} | multipass=${loreState.tokens.includes('multipass')?'acquired':'missing'}`,
+      '[INTEL]   Objective: maintain plausible deniability while routing all noise through honey nodes.',
+      '[INTEL]   Next step: run command unlock_blackcell if token set is complete.'
+    ];
+    logEl.textContent = logs.join('\n');
+  };
+
   const commandEggs = {
     winver: ()=> openWindow('aboutWindow'),
     matrix: ()=> { prefs.theme='matrix'; savePrefs(); applyPrefs(); showToast('Neon Intrusion Layer enabled.'); },
@@ -694,6 +710,11 @@ function initQuirkyStartActions(){
     hacktheplanet: ()=> { launchInMikeNet('./apps/hacker-exe.html','HACKER.EXE'); showToast('Global terminal uplink granted.'); },
     thetruthisoutthere: ()=> { prefs.theme='hacker'; savePrefs(); applyPrefs(); showToast('Black Cell archive decrypted.'); },
     m89_rank: ()=> { showToast(`Rank: ${loreState.rank} • Tokens: ${loreState.tokens.join(', ')||'none'}`); },
+    blackcell: ()=> {
+      if(loreState.rank!=='Operator'){ showToast('ACCESS DENIED // Operator rank required'); return; }
+      renderBlackCell();
+      openWindow('blackcellWindow');
+    },
     unlock_blackcell: ()=> {
       const needed=['matrix','cowabunga','multipass'];
       const ok=needed.every(t=>loreState.tokens.includes(t));
@@ -752,6 +773,9 @@ function initQuirkyStartActions(){
   if(findGo && findInput) findGo.addEventListener('click',()=>runCmd(findInput.value));
   if(runInput) runInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') runCmd(runInput.value); });
   if(findInput) findInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') runCmd(findInput.value); });
+
+  const bcRefresh=document.getElementById('blackcellRefresh');
+  if(bcRefresh) bcRefresh.addEventListener('click', renderBlackCell);
 }
 
 async function boot(){

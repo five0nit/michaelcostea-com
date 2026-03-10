@@ -188,7 +188,7 @@
           <li>Double-click title bar to maximize/restore.</li>
           <li>Start → Programs for all apps and games.</li>
           <li>Use Run... for quick command launch.</li>
-          <li><b>Hidden Run commands:</b> winver, matrix, cowabunga, multipass, hacktheplanet, thetruthisoutthere, m89_rank, unlock_blackcell</li>
+          <li><b>Hidden Run commands:</b> winver, matrix, cowabunga, multipass, hacktheplanet, thetruthisoutthere, m89_rank, unlock_blackcell, blackcell</li>
         </ul>
       </div>
     </section>
@@ -227,6 +227,15 @@
       </div>
     </section>
 
+    <section id="blackcellWindow" class="win-window" aria-label="Black Cell terminal" style="left:300px;top:120px;width:min(620px,94vw);">
+      <div class="win-title"><span>BLACK CELL // Operator Terminal</span><button class="win-close" data-close="blackcellWindow">×</button></div>
+      <div class="win-body">
+        <p><b>Mission Archive</b> <span id="blackcellRank" class="muted"></span></p>
+        <pre id="blackcellLog" style="background:#020a02;color:#8dff96;border:1px solid #245f24;padding:10px;border-radius:6px;min-height:180px"></pre>
+        <p><button class="btn" id="blackcellRefresh" type="button">Refresh Intel</button></p>
+      </div>
+    </section>
+
   </main>
   <div class="taskbar" aria-label="Windows style taskbar">
     <button id="startBtn" class="start-btn" aria-expanded="false" aria-controls="startMenu">Start</button>
@@ -245,6 +254,6 @@
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260310-1739"></script>
+  <script src="script.js?v=20260310-1743"></script>
 </body>
 </html>
