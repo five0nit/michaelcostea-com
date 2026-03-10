@@ -61,28 +61,35 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
     text-overflow:ellipsis;
   }
   #objectiveChip,#fpsChip,#saveChip,#timeChip,#weatherChip{display:none}
+  #exportJson,#downloadPdf,#copySummary,#snapBtn,#contrastBtn{display:none}
 
   .panel{
     left:8px;
     right:8px;
     bottom:8px;
-    top:calc(env(safe-area-inset-top, 0px) + 120px);
+    top:auto;
     width:auto;
-    max-height:none;
+    max-height:min(44dvh, 360px);
     overflow:auto;
-    padding:10px;
+    padding:9px;
     border-radius:12px;
+    background:rgba(8,13,27,.78);
   }
-  .panel h3{font-size:1rem}
-  .panel p{font-size:.98rem;line-height:1.35}
+  .panel h3{font-size:.95rem;margin:0 0 4px}
+  .panel p{font-size:.86rem;line-height:1.25;margin:4px 0}
 
-  .row{gap:8px}
+  .progress{margin-top:6px}
+  .quest{margin-top:6px;padding:6px}
+  .quest li{font-size:.78rem}
+  .legend{font-size:.7rem;gap:8px;margin-top:4px}
+
+  .row{gap:6px}
   .btn{
-    flex:1 1 calc(50% - 8px);
+    flex:1 1 calc(50% - 6px);
     min-width:0;
     text-align:center;
-    padding:10px 10px;
-    font-size:.95rem;
+    padding:8px 8px;
+    font-size:.85rem;
   }
 
   .minimap{display:none}
