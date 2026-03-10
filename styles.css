@@ -79,7 +79,7 @@ a.btn,button.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2
 .start-menu.open{display:block}
 .start-head{background:linear-gradient(180deg,#000080,#1084d0);color:#fff;font-weight:700;padding:7px 9px;font-size:12px}
 .start-items{padding:6px 6px 6px 30px;max-height:56vh;overflow:auto;position:relative}
-.start-items::before{content:"WINDOWS 98";position:absolute;left:0;top:0;bottom:0;width:22px;background:linear-gradient(180deg,#0d2f8f,#0a69c2);color:#fff;font:700 10px/1 Tahoma,sans-serif;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:1px;display:flex;align-items:center;justify-content:center;padding:6px 0}
+.start-items::before{content:"MICHAELOS 1989";position:absolute;left:0;top:0;bottom:0;width:22px;background:linear-gradient(180deg,#0d2f8f,#0a69c2);color:#fff;font:700 10px/1 Tahoma,sans-serif;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:1px;display:flex;align-items:center;justify-content:center;padding:6px 0}
 .start-item{display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:#000;font-size:12px;padding:6px 7px;gap:10px}
 .start-item span{display:flex;align-items:center;gap:6px}
 .start-item:hover{background:#000080;color:#fff}
