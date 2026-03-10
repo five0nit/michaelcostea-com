@@ -3,155 +3,213 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>DO NOT TOUCH // SIGNAL LOCK</title>
+<title>DO NOT TOUCH // RABBIT RUN</title>
 <style>
-:root{--bg:#040711;--fg:#e8f1ff;--muted:#9ab0d4;--line:#35507c;--good:#6bffbe;--bad:#ff6b8d}
-*{box-sizing:border-box} html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);color:var(--fg);font-family:Inter,Segoe UI,Arial,sans-serif}
+:root{--bg:#04050a;--fg:#e9efff;--muted:#97a8c8;--cyan:#76e4ff;--mag:#ff4db9;--lime:#88ff9e}
+*{box-sizing:border-box}
+html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--fg)}
 #fx{position:fixed;inset:0;width:100%;height:100dvh;z-index:0}
-.overlay{position:fixed;inset:0;z-index:2;display:grid;place-items:center;padding:18px;background:linear-gradient(180deg,rgba(4,8,20,.12),rgba(4,8,20,.55))}
-.card{width:min(860px,96vw);background:rgba(8,14,28,.72);border:1px solid var(--line);border-radius:18px;padding:20px;backdrop-filter:blur(8px);box-shadow:0 20px 60px rgba(0,0,0,.45)}
-h1{margin:4px 0 8px;font-size:clamp(1.8rem,6vw,3.8rem);letter-spacing:.09em}
-p{margin:7px 0;color:var(--muted);line-height:1.5}
-.btn{border:1px solid #4f73ba;background:linear-gradient(180deg,#8bc8ff,#58a8ff);color:#03172f;border-radius:999px;padding:11px 16px;font-weight:800;cursor:pointer}
-.hud{position:fixed;left:10px;right:10px;bottom:10px;z-index:3;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.18;mix-blend-mode:soft-light;background-image:radial-gradient(rgba(255,255,255,.08) .65px,transparent .65px);background-size:2px 2px}
+.scan{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
+.ui{position:fixed;inset:0;z-index:3;display:grid;place-items:center;padding:18px;text-align:center;transition:opacity .45s ease,transform .45s ease}
+.ui.hide{opacity:0;pointer-events:none;transform:scale(.98)}
+.panel{width:min(920px,96vw);background:linear-gradient(180deg,rgba(8,12,22,.72),rgba(5,8,15,.78));border:1px solid #324b75;border-radius:18px;padding:22px;box-shadow:0 30px 90px rgba(0,0,0,.5);backdrop-filter:blur(10px)}
+.eyebrow{font-size:.72rem;letter-spacing:.23em;text-transform:uppercase;color:#b7cced}
+h1{margin:.45rem 0 .4rem;font-size:clamp(2rem,7vw,4.4rem);letter-spacing:.12em}
+p{margin:8px 0;color:var(--muted);line-height:1.55}
+.btn{border:1px solid #4f71af;background:linear-gradient(180deg,#8ecfff,#5eaefe);color:#02172f;border-radius:999px;padding:12px 16px;font-weight:800;cursor:pointer;min-width:170px}
+.cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.center{position:fixed;inset:0;z-index:4;display:grid;place-items:center;text-align:center;pointer-events:none;padding:18px}
+.center h2{margin:0;font-size:clamp(1.6rem,7vw,5.2rem);letter-spacing:.16em;text-transform:uppercase;text-shadow:0 0 40px rgba(118,228,255,.35)}
+.center p{margin:7px 0 0;color:#b7c8e5;max-width:min(78vw,700px)}
+.hud{position:fixed;left:10px;right:10px;bottom:10px;z-index:5;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
 .chip{padding:7px 10px;border:1px solid #35507c;background:rgba(7,12,24,.62);border-radius:999px;font-size:.78rem;color:#c4d5f2}
-.center{position:fixed;inset:0;z-index:3;display:grid;place-items:center;pointer-events:none;text-align:center;opacity:0;transition:opacity .35s ease}
-.center.show{opacity:1}
-.center h2{margin:0;font-size:clamp(1.6rem,7vw,4.6rem);letter-spacing:.15em;text-transform:uppercase}
-.center p{margin:8px 0 0;color:#b8c9e6;max-width:min(80vw,700px)}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(80px,1fr));gap:10px;margin-top:14px}
-.node{border:1px solid #47639a;background:#0a1632;color:#d9e9ff;border-radius:12px;padding:12px;font-weight:700;cursor:pointer;text-align:center}
-.node.ok{border-color:var(--good);box-shadow:0 0 20px rgba(107,255,190,.25)}
-.node.bad{border-color:var(--bad);animation:shake .25s linear 1}
-@keyframes shake{25%{transform:translateX(-2px)}50%{transform:translateX(2px)}75%{transform:translateX(-1px)}}
-.hide{display:none}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(90px,1fr));gap:10px;margin-top:14px}
+.node{border:1px solid #46639a;background:#0b1734;color:#dce9ff;border-radius:12px;padding:12px;font-weight:700;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+.node:hover{transform:translateY(-1px)}
+.node.flash{box-shadow:0 0 26px rgba(118,228,255,.45);border-color:#78dfff}
+.node.bad{box-shadow:0 0 20px rgba(255,77,185,.35);border-color:#ff7cca}
+.hide{display:none !important}
 </style>
 </head>
 <body>
 <canvas id="fx"></canvas>
-<div class="overlay" id="intro">
-  <div class="card">
-    <h1>DO NOT TOUCH</h1>
-    <p><b>Ritual:</b> dissolve the signal lock. This is not a game loop — it is a mirror.</p>
-    <p>Stage 1: rupture habit. Stage 2: decode pattern. Stage 3: hold the fracture until it answers back.</p>
-    <button class="btn" id="start">Begin Mission</button>
-  </div>
-</div>
+<div class="noise"></div><div class="scan"></div>
 
-<div class="overlay hide" id="puzzle">
-  <div class="card">
-    <h1 style="font-size:1.4rem">NODE SEQUENCE // REMEMBER + REPEAT</h1>
-    <p id="puzzleText">Watch the pattern, then repeat it.</p>
+<section class="ui" id="intro">
+  <div class="panel">
+    <div class="eyebrow">RABBIT RUN // STREET SIGNAL PROTOCOL</div>
+    <h1>DO NOT TOUCH</h1>
+    <p>This is a dark interaction ritual. Not random visuals — a directed challenge.</p>
+    <p>Swipe the veil. Decode memory under pressure. Trigger the hidden payload.</p>
+    <div class="cta"><button class="btn" id="begin">Enter Run</button><button class="btn" id="audioBtn">Audio Reactive</button></div>
+  </div>
+</section>
+
+<section class="ui hide" id="puzzle">
+  <div class="panel">
+    <h1 style="font-size:1.3rem;letter-spacing:.08em">STAGE II // GLYPH LOCK</h1>
+    <p id="puzzleText">Watch the glyph sequence, then reproduce it.</p>
     <div class="grid" id="grid"></div>
   </div>
-</div>
+</section>
 
-<div class="center" id="center"><div><h2 id="title">THE GATE WAITS</h2><p id="subtitle">Touch nothing, and you stay inside the story they wrote for you.</p></div></div>
+<section class="center" id="center"><div><h2 id="title">THE VEIL</h2><p id="sub">The world is loud because silence is dangerous.</p></div></section>
 <div class="hud">
-  <div class="chip" id="stage">STAGE 0/3</div>
-  <div class="chip" id="hint">HINT: start mission</div>
-  <div class="chip" id="status">STATUS: STANDBY</div>
+  <div class="chip" id="stage">STAGE 0/4</div>
+  <div class="chip" id="hint">HINT: enter run</div>
+  <div class="chip" id="mode">MODE: PRELUDE</div>
+  <div class="chip" id="audio">AUDIO: OFF</div>
+  <div class="chip" id="perf">FPS --</div>
 </div>
 
 <script>
 const fx=document.getElementById('fx'),ctx=fx.getContext('2d');
-const titleEl=document.getElementById('title'),subEl=document.getElementById('subtitle');
-const stageEl=document.getElementById('stage'),hintEl=document.getElementById('hint'),statusEl=document.getElementById('status');
-const intro=document.getElementById('intro'),puzzle=document.getElementById('puzzle'),grid=document.getElementById('grid'),center=document.getElementById('center');
-let w=0,h=0,cx=0,cy=0,t=0,stage=0,swipeY=0,orbit=0,holding=false,holdAt=0;
-let raf;
+const $=id=>document.getElementById(id);
+const stageEl=$('stage'),hintEl=$('hint'),modeEl=$('mode'),audioEl=$('audio'),perfEl=$('perf');
+const titleEl=$('title'),subEl=$('sub');
+const intro=$('intro'),puzzle=$('puzzle'),grid=$('grid');
+
+let w=0,h=0,cx=0,cy=0,t=0,stage=0,startY=0,hold=false,holdAt=0,dragX=0;
+let last=performance.now(),fps=60,chaos=0;
+let ac,an,data,mic=false,boost=0,loud=0,quiet=0;
+const P=[...Array(900)].map(()=>({a:Math.random()*Math.PI*2,r:20+Math.random()*1300,s:.2+Math.random()*2.5,z:Math.random()}));
+
+const lines={
+  pre:['THE VEIL','The world is loud because silence is dangerous.'],
+  s1:['RUPTURE','Every map is propaganda. Swipe upward to tear one open.'],
+  s2:['DECODE','Memory is a weapon when stress chooses the order.'],
+  s3:['INVOCATION','Hold still. Let the mask confess first.'],
+  end:['REVELATION EVENT','You were not searching for the gate. You were the gate.']
+};
+
 function resize(){const vv=window.visualViewport;w=fx.width=Math.round(vv?.width||innerWidth);h=fx.height=Math.round(vv?.height||innerHeight);cx=w/2;cy=h/2}
 addEventListener('resize',resize); if(window.visualViewport) window.visualViewport.addEventListener('resize',resize); resize();
 
-const stars=[...Array(340)].map(()=>({a:Math.random()*Math.PI*2,r:80+Math.random()*900,s:.2+Math.random()*1.2,z:Math.random()}));
-function draw(){
-  t+=0.016;
-  const intensity = stage===0?0.2:stage===1?0.45:stage===2?0.62:0.95;
-  ctx.fillStyle='rgba(4,7,17,0.16)'; ctx.fillRect(0,0,w,h);
-  const g=ctx.createRadialGradient(cx,cy,30,cx,cy,Math.max(w,h)*0.6);
-  g.addColorStop(0,`rgba(${25+intensity*120},${35+intensity*85},${85+intensity*120},0.18)`);
-  g.addColorStop(1,'rgba(3,5,11,0.15)');
-  ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-
-  for(const s of stars){
-    s.a += 0.001 + s.s*0.0015*(1+intensity*3);
-    const rr=s.r*(0.78+0.22*Math.sin(t*1.1+s.z*8));
-    const x=cx+Math.cos(s.a+t*(0.22+intensity*1.1)+orbit*0.6)*rr;
-    const y=cy+Math.sin(s.a+t*(0.22+intensity*1.1)+orbit*0.6)*rr;
-    const sz=0.8+s.s*(1+intensity*1.8);
-    ctx.fillStyle=`hsla(${205+60*Math.sin(s.a*2+t)},100%,${60+15*Math.sin(t+s.z*9)}%,${0.16+0.45*intensity})`;
-    ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fill();
-  }
-
-  if(stage>=1){
-    for(let i=0;i<15;i++){
-      const r=(i*42+(t*180)%42)*(1+intensity*0.3);
-      ctx.strokeStyle=`rgba(${120+i*8},${150+i*6},255,${0.03+intensity*0.07})`;
-      ctx.lineWidth=1+intensity*1.2;
-      ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
-    }
-  }
-  raf=requestAnimationFrame(draw);
+async function enableAudio(){
+  try{
+    ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+    const s=await navigator.mediaDevices.getUserMedia({audio:true});
+    const src=ac.createMediaStreamSource(s); an=ac.createAnalyser(); an.fftSize=256; data=new Uint8Array(an.frequencyBinCount); src.connect(an);
+    mic=true; audioEl.textContent='AUDIO: REACTIVE';
+  }catch{ audioEl.textContent='AUDIO: BLOCKED'; }
 }
-raf=requestAnimationFrame(draw);
-
-const stoic = {
-  1: 'The map is not the prison; your certainty is.',
-  2: 'Memory is a borrowed room in a burning house.',
-  3: 'Hold still long enough and the mask confesses.',
-  end: 'You were not finding the gate. You were the gate.'
-};
+function readAudio(){
+  if(!mic||!an) return 0;
+  an.getByteFrequencyData(data);
+  let sum=0; for(let i=0;i<data.length;i++) sum+=data[i];
+  boost=Math.min(1,(sum/data.length)/132);
+  if(stage>=1&&stage<=3){ if(boost>0.35) loud++; else quiet++; }
+  return boost;
+}
+function pulse(freq=520,d=.07){
+  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)(); const o=ac.createOscillator(),g=ac.createGain(); o.type='triangle'; o.frequency.value=freq;
+    g.gain.value=.0001; g.gain.exponentialRampToValueAtTime(.05,ac.currentTime+.01); g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);
+    o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+d);
+  }catch{}
+}
+const vibe=ms=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch{}};
 
 function setStage(n){
-  stage=n; stageEl.textContent=`STAGE ${n}/3`;
-  if(n===1){titleEl.textContent='RUPTURE';subEl.textContent=stoic[1];hintEl.textContent='HINT: break the surface (swipe up)';statusEl.textContent='STATUS: UNBINDING';}
-  if(n===2){titleEl.textContent='DECODE';subEl.textContent=stoic[2];hintEl.textContent='HINT: witness pattern, then become it';statusEl.textContent='STATUS: INTERPRETING';}
-  if(n===3){titleEl.textContent='INVOCATION';subEl.textContent=stoic[3];hintEl.textContent='HINT: hold until language collapses';statusEl.textContent='STATUS: THRESHOLD';}
+  stage=n; stageEl.textContent=`STAGE ${n}/4`;
+  const map={0:['PRELUDE','pre'],1:['RUPTURE','s1'],2:['DECODE','s2'],3:['INVOCATION','s3'],4:['REVELATION','end']};
+  const k=map[n][1]; titleEl.textContent=lines[k][0]; subEl.textContent=lines[k][1];
+  hintEl.textContent=n===1?'HINT: swipe up':n===2?'HINT: observe then repeat':n===3?'HINT: hold 2 seconds':'HINT: run complete';
+  modeEl.textContent=n===0?'MODE: PRELUDE':n===1?'MODE: RUPTURE':n===2?'MODE: GLYPH LOCK':n===3?'MODE: INVOCATION':'MODE: REVELATION';
+  pulse(360+n*120,.08); vibe(14+n*4);
 }
 
-document.getElementById('start').onclick=()=>{intro.classList.add('hide');center.classList.add('show');setStage(1)};
-addEventListener('touchstart',e=>{swipeY=e.touches[0].clientY; if(stage===3){holding=true;holdAt=performance.now();}});
-addEventListener('touchmove',e=>{const dy=swipeY-e.touches[0].clientY; if(stage===1&&dy>90){orbit=1; setStage(2); startPuzzle();}}, {passive:true});
-addEventListener('touchend',()=>{holding=false; if(stage===3) hintEl.textContent='HINT: hold 2 seconds';});
-let md=false,my=0;
-addEventListener('mousedown',e=>{md=true;my=e.clientY; if(stage===3){holding=true;holdAt=performance.now();}});
-addEventListener('mousemove',e=>{if(!md)return; if(stage===1&&my-e.clientY>90){orbit=1;setStage(2);startPuzzle();}});
-addEventListener('mouseup',()=>{md=false;holding=false; if(stage===3) hintEl.textContent='HINT: hold 2 seconds';});
+function draw(now){
+  const dt=Math.min(.05,(now-last)/1000); last=now; fps=.92*fps+.08*(1/dt); perfEl.textContent=`FPS ${Math.round(fps)}`;
+  t+=dt*60;
+  const a=readAudio();
+  const target=Math.min(1, stage*0.18 + a*0.75 + (hold?0.3:0) + Math.abs(dragX)*0.3 + 0.08*Math.sin(t*0.9));
+  chaos += (target-chaos)*0.08;
 
-const seq=[]; let user=[]; let locked=false;
-for(let i=1;i<=9;i++){const b=document.createElement('button'); b.className='node'; b.textContent=i; b.dataset.id=String(i); b.onclick=()=>press(i,b); grid.appendChild(b);}
-function flash(id){const b=[...grid.children].find(x=>Number(x.dataset.id)===id); if(!b) return; b.classList.add('ok'); setTimeout(()=>b.classList.remove('ok'),260);}
-function startPuzzle(){
-  puzzle.classList.remove('hide'); user=[]; seq.length=0; locked=true;
-  for(let i=0;i<4;i++) seq.push(1+Math.floor(Math.random()*9));
-  let k=0; const tm=setInterval(()=>{flash(seq[k]);k++; if(k>=seq.length){clearInterval(tm);locked=false;document.getElementById('puzzleText').textContent='Repeat now.';}},520);
-}
-function fail(btn){btn.classList.add('bad'); setTimeout(()=>btn.classList.remove('bad'),260); user=[]; startPuzzle();}
-function press(n,btn){
-  if(stage!==2||locked) return;
-  user.push(n); flash(n);
-  const idx=user.length-1;
-  if(user[idx]!==seq[idx]) return fail(btn);
-  if(user.length===seq.length){
-    puzzle.classList.add('hide');
-    setStage(3);
+  ctx.fillStyle='rgba(3,5,12,.20)'; ctx.fillRect(0,0,w,h);
+
+  const g=ctx.createRadialGradient(cx,cy,20,cx,cy,Math.max(w,h)*.66);
+  g.addColorStop(0,`rgba(${22+chaos*170},${32+chaos*95},${80+chaos*165},0.24)`);
+  g.addColorStop(1,'rgba(2,4,10,0.10)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+
+  for(const p of P){
+    p.a += 0.0018 + p.s*0.002*(1+chaos*4);
+    const rr=p.r*(0.62+0.38*Math.sin(t*(1.05+p.z*.4)+p.z*10));
+    const tw=t*(0.24+chaos*1.9)+dragX*0.7;
+    const x=cx+Math.cos(p.a+tw)*rr;
+    const y=cy+Math.sin(p.a+tw)*rr;
+    const sz=.6+p.s*(1+chaos*3.2);
+    const hue=(190+170*Math.sin(p.a*2+t*1.1+dragX*2))%360;
+    ctx.fillStyle=`hsla(${hue},100%,${56+24*Math.sin(t+p.z*8)}%,${0.10+0.75*chaos})`;
+    ctx.beginPath(); ctx.arc(x,y,sz,0,Math.PI*2); ctx.fill();
   }
-}
 
-setInterval(()=>{
-  if(stage===3&&holding){
+  for(let i=0;i<30;i++){
+    const r=(i*26 + (t*(230+a*210))%26)*(1+chaos*0.62);
+    const hue=(205+i*7+t*18+dragX*45)%360;
+    ctx.strokeStyle=`hsla(${hue},100%,66%,${0.02+chaos*0.11})`;
+    ctx.lineWidth=.8+chaos*2.1;
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+  }
+
+  if(stage===2||stage===3){
+    const p=1+Math.sin(t*8)*0.12;
+    ctx.strokeStyle='rgba(220,238,255,.95)'; ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(cx,cy,44*p,0,Math.PI*2);ctx.stroke();
+  }
+
+  if(Math.random() < 0.01+chaos*0.03){
+    ctx.fillStyle=`hsla(${(t*260)%360},100%,70%,0.12)`;
+    ctx.fillRect(0,Math.random()*h,w,2+Math.random()*10);
+  }
+
+  if(stage===3&&hold){
     const p=Math.min(1,(performance.now()-holdAt)/2000);
-    hintEl.textContent=`HINT: triggering ${(p*100|0)}%`;
-    if(p>=1){
-      setStage(0);
-      titleEl.textContent='REVELATION EVENT';
-      subEl.textContent=stoic.end;
-      hintEl.textContent='HINT: mission complete';
-      statusEl.textContent='STATUS: COMPLETE';
-      holding=false;
-    }
+    hintEl.textContent=`HINT: invoking ${(p*100|0)}%`;
+    if((p*100|0)%25===0) vibe(7);
+    if(p>=1){ setStage(4); hold=false; }
   }
-},80);
+
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+
+document.getElementById('begin').onclick=()=>{intro.classList.add('hide');setStage(1)};
+document.getElementById('audioBtn').onclick=enableAudio;
+
+addEventListener('touchstart',e=>{startY=e.touches[0].clientY; if(stage===3){hold=true;holdAt=performance.now();}});
+addEventListener('touchmove',e=>{
+  const dy=startY-e.touches[0].clientY;
+  dragX=((e.touches[0].clientX/w)-0.5)*2;
+  if(stage===1&&dy>90){setStage(2);startPuzzle();}
+},{passive:true});
+addEventListener('touchend',()=>{hold=false;dragX=0;if(stage===3) hintEl.textContent='HINT: hold 2 seconds';});
+
+let md=false,my=0;
+addEventListener('mousedown',e=>{md=true;my=e.clientY; if(stage===3){hold=true;holdAt=performance.now();}});
+addEventListener('mousemove',e=>{if(!md)return; dragX=((e.clientX/w)-0.5)*2; if(stage===1&&my-e.clientY>90){setStage(2);startPuzzle();}});
+addEventListener('mouseup',()=>{md=false;hold=false;dragX=0;if(stage===3) hintEl.textContent='HINT: hold 2 seconds';});
+
+// puzzle
+const seq=[]; let user=[], lock=true;
+for(let i=1;i<=9;i++){const b=document.createElement('button'); b.className='node'; b.dataset.n=i; b.textContent=i; b.onclick=()=>press(i,b); grid.appendChild(b);}
+function flash(i,bad=false){const b=[...grid.children].find(x=>Number(x.dataset.n)===i); if(!b) return; b.classList.add(bad?'bad':'flash'); setTimeout(()=>b.classList.remove('flash','bad'),250);}
+function startPuzzle(){
+  puzzle.classList.remove('hide'); seq.length=0; user=[]; lock=true;
+  for(let i=0;i<5;i++) seq.push(1+Math.floor(Math.random()*9));
+  $('puzzleText').textContent='Observe carefully...';
+  let k=0; const tm=setInterval(()=>{flash(seq[k]); pulse(520+k*30,.05); k++; if(k>=seq.length){clearInterval(tm); lock=false; $('puzzleText').textContent='Repeat the sequence.';}},430);
+}
+function press(n,btn){
+  if(stage!==2||lock) return;
+  user.push(n); flash(n); pulse(640,.04);
+  const idx=user.length-1;
+  if(user[idx]!==seq[idx]){ flash(n,true); user=[]; $('puzzleText').textContent='Wrong. Pattern reset.'; return startPuzzle(); }
+  if(user.length===seq.length){ puzzle.classList.add('hide'); setStage(3); }
+}
+
+setStage(0);
 </script>
 </body>
 </html>
