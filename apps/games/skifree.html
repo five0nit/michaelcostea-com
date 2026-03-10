@@ -10,21 +10,67 @@ canvas{display:block;width:100%;max-width:820px;height:520px;background:linear-g
 .btn{background:#cfcfcf;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #7f7f7f;border-bottom:2px solid #7f7f7f;padding:4px 8px;cursor:pointer}
 a{color:#fff}
 </style></head><body>
-<div class="wrap"><p><a href="../index.html">← Back</a></p><div class="panel"><div style="display:flex;justify-content:space-between;align-items:center"><b>SKY SLOPE.EXE (SkiFree vibe)</b><button id="reset" class="btn">Restart</button></div><p>Arrow keys / A-D to steer. Avoid trees and rocks.</p><canvas id="c" width="820" height="520"></canvas><p id="hud">Distance: 0m</p></div></div>
+<div class="wrap"><p><a href="../../index.html">← Back</a></p><div class="panel"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>SKY SLOPE.EXE (SkiFree vibe)</b><div><button id="motionBtn" class="btn">Enable Tilt Control</button> <button id="reset" class="btn">Restart</button></div></div><p>Arrow keys / A-D or phone tilt to steer. Avoid trees and rocks.</p><canvas id="c" width="820" height="520"></canvas><p id="hud">Distance: 0m</p></div></div>
 <script>
 const c=document.getElementById('c'),x=c.getContext('2d');
-let p,obs,d,alive;
+const motionBtn=document.getElementById('motionBtn');
+let p,obs,d,alive,tilt=0,motionOn=false;
+
 function init(){p={x:410,y:120,vx:0};obs=[];d=0;alive=true;for(let i=0;i<28;i++) spawn(true);} 
 function spawn(top=false){const type=Math.random()<.65?'tree':'rock';obs.push({x:40+Math.random()*740,y:(top?-Math.random()*520:520+Math.random()*260),type});}
 function drawSkier(){x.fillStyle='#0b4';x.fillRect(p.x-6,p.y-10,12,16);x.fillStyle='#111';x.fillRect(p.x-10,p.y+8,20,2);}
 let keys={}; addEventListener('keydown',e=>keys[e.key]=1); addEventListener('keyup',e=>keys[e.key]=0);
-function tick(){x.clearRect(0,0,820,520); d+=alive?2:0; if(alive){if(keys['ArrowLeft']||keys['a']) p.vx-=.22; if(keys['ArrowRight']||keys['d']) p.vx+=.22; p.vx*=.93; p.x=Math.max(16,Math.min(804,p.x+p.vx));}
-for(const o of obs){o.y-=alive?2.6:0; if(o.type==='tree'){x.fillStyle='#0b6';x.beginPath();x.moveTo(o.x,o.y-16);x.lineTo(o.x-12,o.y+8);x.lineTo(o.x+12,o.y+8);x.fill();x.fillStyle='#764';x.fillRect(o.x-2,o.y+8,4,6);} else {x.fillStyle='#777';x.beginPath();x.arc(o.x,o.y,8,0,Math.PI*2);x.fill();}
-if(alive && Math.abs(o.x-p.x)<14 && Math.abs(o.y-p.y)<14) alive=false;}
-obs=obs.filter(o=>o.y>-40); while(obs.length<30) spawn();
-drawSkier();
-if(!alive){x.fillStyle='#b00';x.font='bold 28px Tahoma';x.fillText('CRASHED!',350,260);} document.getElementById('hud').textContent=`Distance: ${Math.floor(d)}m${alive?'':' • Press Restart'}`;
-requestAnimationFrame(tick);
+
+function handleOrientation(e){
+  // gamma = left/right tilt in degrees (~ -45..45)
+  const g = Number(e.gamma||0);
+  tilt = Math.max(-1, Math.min(1, g/28));
 }
+
+async function enableMotion(){
+  try{
+    if(typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function'){
+      const res = await DeviceOrientationEvent.requestPermission();
+      if(res !== 'granted') throw new Error('Permission denied');
+    }
+    addEventListener('deviceorientation', handleOrientation, {passive:true});
+    motionOn = true;
+    motionBtn.textContent = 'Tilt Control On';
+  }catch(err){
+    motionBtn.textContent = 'Tilt Unavailable';
+  }
+}
+
+motionBtn.addEventListener('click', enableMotion);
+
+function tick(){
+  x.clearRect(0,0,820,520);
+  d+=alive?2:0;
+  if(alive){
+    if(keys['ArrowLeft']||keys['a']) p.vx-=.22;
+    if(keys['ArrowRight']||keys['d']) p.vx+=.22;
+    if(motionOn) p.vx += tilt*0.28;
+    p.vx*=.93;
+    p.x=Math.max(16,Math.min(804,p.x+p.vx));
+  }
+
+  for(const o of obs){
+    o.y-=alive?2.6:0;
+    if(o.type==='tree'){
+      x.fillStyle='#0b6';x.beginPath();x.moveTo(o.x,o.y-16);x.lineTo(o.x-12,o.y+8);x.lineTo(o.x+12,o.y+8);x.fill();
+      x.fillStyle='#764';x.fillRect(o.x-2,o.y+8,4,6);
+    } else {
+      x.fillStyle='#777';x.beginPath();x.arc(o.x,o.y,8,0,Math.PI*2);x.fill();
+    }
+    if(alive && Math.abs(o.x-p.x)<14 && Math.abs(o.y-p.y)<14) alive=false;
+  }
+
+  obs=obs.filter(o=>o.y>-40); while(obs.length<30) spawn();
+  drawSkier();
+  if(!alive){x.fillStyle='#b00';x.font='bold 28px Tahoma';x.fillText('CRASHED!',350,260);} 
+  document.getElementById('hud').textContent=`Distance: ${Math.floor(d)}m${alive?'':' • Press Restart'}${motionOn?' • Tilt ON':''}`;
+  requestAnimationFrame(tick);
+}
+
 document.getElementById('reset').onclick=init; init(); tick();
 </script></body></html>

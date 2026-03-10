@@ -416,7 +416,20 @@ function initStartMenu(projects){
     const mobile = isMobileMode();
 
     if(mobile){
-      // Mobile: always close previous branch first, then open only requested branch.
+      const currentlyOpen = (
+        (name === 'programs' && subPrograms?.classList.contains('open')) ||
+        (name === 'settings' && subSettings?.classList.contains('open')) ||
+        (name === 'webapps' && subWebApps?.classList.contains('open')) ||
+        (name === 'games' && subGames?.classList.contains('open'))
+      );
+
+      // Re-tap same submenu: close the whole branch.
+      if(currentlyOpen){
+        hideSubmenus();
+        return;
+      }
+
+      // Mobile: close previous branch first, then open requested branch.
       hideSubmenus();
       if(name === 'programs') return openSub(subPrograms);
       if(name === 'settings') return openSub(subSettings);
