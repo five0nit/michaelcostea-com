@@ -113,6 +113,13 @@ body.mobile-mode .win-window{
   top:118px !important;
   height:calc(100vh - 168px) !important;
 }
+body.mobile-mode .win-window.maximized{
+  left:0 !important;
+  top:0 !important;
+  right:auto !important;
+  width:100vw !important;
+  height:calc(100vh - 40px) !important;
+}
 body.mobile-mode #readerWindow,
 body.mobile-mode #aboutWindow{
   height:auto !important;
