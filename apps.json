@@ -114,6 +114,15 @@
       "url": "./apps/games/skifree.html",
       "category": "games",
       "primary": false
+    },
+    {
+      "name": "DO NOT TOUCH",
+      "slug": "do-not-touch",
+      "status": "beta",
+      "category": "webapps",
+      "primary": false,
+      "description": "Interactive white-rabbit wormhole experience with swipe/tap/hold progression. [Fun/experimental side app]",
+      "url": "./apps/do-not-touch.html"
     }
   ]
 }
