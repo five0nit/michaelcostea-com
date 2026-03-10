@@ -3,187 +3,194 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Michael Costea // Visual Resume</title>
+<title>Michael Costea // Visual Resume v20</title>
 <style>
-:root{--bg:#0b1020;--ink:#eaf1ff;--muted:#9fb3d6;--line:#36517e}
+:root{--bg:#0b1020;--ink:#eaf1ff;--muted:#9fb3d6;--line:#36517e;--ok:#8bff9e;--warn:#ffd166}
 *{box-sizing:border-box}
 html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
 #game{position:fixed;inset:0;width:100%;height:100dvh;image-rendering:pixelated;image-rendering:crisp-edges;background:#101a33}
 .ui{position:fixed;inset:0;pointer-events:none}
 .top{position:absolute;left:10px;right:10px;top:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
 .chip{pointer-events:auto;padding:7px 11px;border:1px solid var(--line);background:rgba(9,15,30,.78);border-radius:999px;font-size:.8rem;color:#cfe0ff}
-.panel{position:absolute;right:10px;bottom:10px;width:min(520px,96vw);pointer-events:auto;background:rgba(8,13,27,.88);border:1px solid var(--line);border-radius:14px;padding:12px;backdrop-filter:blur(6px)}
+.panel{position:absolute;right:10px;bottom:10px;width:min(540px,96vw);pointer-events:auto;background:rgba(8,13,27,.9);border:1px solid var(--line);border-radius:14px;padding:12px;backdrop-filter:blur(6px)}
 .panel h3{margin:0 0 6px;font-size:1rem;letter-spacing:.04em}
 .panel p{margin:6px 0;color:var(--muted);line-height:1.45}
 .row{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:1px solid #4f71af;background:linear-gradient(180deg,#8ecfff,#5eaefe);color:#03172f;border-radius:999px;padding:9px 12px;font-weight:800;cursor:pointer}
-.intro{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 20% -20%,#1a2855 0%,transparent 45%),rgba(3,5,10,.9);z-index:5}
-.card{width:min(840px,96vw);background:rgba(8,14,28,.92);border:1px solid #35507c;border-radius:16px;padding:18px}
+.btn{border:1px solid #4f71af;background:linear-gradient(180deg,#8ecfff,#5eaefe);color:#03172f;border-radius:999px;padding:9px 12px;font-weight:800;cursor:pointer;transition:transform .12s ease,filter .12s ease}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+.intro{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 20% -20%,#1a2855 0%,transparent 45%),rgba(3,5,10,.9);z-index:9}
+.card{width:min(860px,96vw);background:rgba(8,14,28,.92);border:1px solid #35507c;border-radius:16px;padding:18px}
 .card h1{margin:0 0 8px;letter-spacing:.09em;font-size:clamp(1.6rem,6vw,3.2rem)}
 .card p{color:var(--muted)}
 .hide{display:none!important}
-.modal{position:fixed;inset:0;z-index:9;background:rgba(2,6,14,.78);display:grid;place-items:center;padding:14px}
+.quest{margin-top:8px;padding:8px;border:1px solid #3a5789;border-radius:10px;background:rgba(10,18,36,.55)}
+.quest li{font-size:.85rem;color:#cfe0ff;margin:.2rem 0}
+.quest .done{color:var(--ok);text-decoration:line-through}
+.minimap{position:absolute;left:10px;bottom:10px;pointer-events:auto;border:1px solid var(--line);background:rgba(6,10,20,.75);border-radius:8px;padding:6px}
+#mini{display:block;width:180px;height:100px;image-rendering:pixelated}
+.toast{position:fixed;top:58px;left:50%;transform:translateX(-50%);padding:8px 12px;border:1px solid #4c6ea7;background:rgba(8,16,30,.92);border-radius:999px;font-size:.8rem;z-index:10;opacity:0;transition:opacity .2s ease}
+.toast.show{opacity:1}
+.progress{height:8px;border:1px solid #4a6798;border-radius:999px;overflow:hidden;background:#0f1a33;margin-top:8px}
+.progress > span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#6bbdff,#8bff9e)}
+.modal{position:fixed;inset:0;z-index:11;background:rgba(2,6,14,.78);display:grid;place-items:center;padding:14px}
 .modal-card{width:min(760px,96vw);max-height:80dvh;overflow:auto;background:#0d1630;border:1px solid #4c6ea7;border-radius:14px;padding:14px}
-.modal-card h3{margin:.2rem 0 .5rem}
-.modal-card ul{margin:.2rem 0 .5rem;padding-left:18px;color:#cfe0ff}
-
+.modal-card h3{margin:.2rem 0 .5rem}.modal-card ul{margin:.2rem 0 .5rem;padding-left:18px;color:#cfe0ff}
+@media (prefers-reduced-motion: reduce){.btn,.toast{transition:none}}
 </style>
 </head>
 <body>
-<canvas id="game" width="960" height="540"></canvas>
+<canvas id="game"></canvas>
 <div class="ui">
   <div class="top">
-    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME</div>
+    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v20</div>
     <div class="chip" id="zoneChip">TIMELINE ZONE: Foundations</div>
     <div class="chip" id="progressChip">NODES VIEWED: 0/8</div>
+    <div class="chip" id="fpsChip">FPS --</div>
+    <div class="chip" id="soundChip">SFX ON</div>
   </div>
+
   <div class="panel">
     <h3 id="roleTitle">Welcome</h3>
-    <p id="roleBody">Move with WASD/Arrow keys (or drag on mobile). Walk to glowing nodes to open career chapters.</p>
+    <p id="roleBody">Move with WASD/Arrow keys (mobile: virtual joystick). Walk to nodes to unlock chapters of your career story.</p>
+    <div class="progress"><span id="bar"></span></div>
+    <ul class="quest" id="questList">
+      <li data-q="N2">Visit Telecom/Ops chapter</li>
+      <li data-q="N6">Visit Electrical Trade chapter</li>
+      <li data-q="N8">Visit Growth & Innovation chapter</li>
+    </ul>
     <div class="row">
       <button class="btn" id="nextNode">Jump to Next Chapter</button>
       <button class="btn" id="viewRole">View Role Card</button>
       <button class="btn" id="showCerts">Certifications</button>
+      <button class="btn" id="exportJson">Export JSON</button>
       <button class="btn" id="downloadPdf">Download Resume PDF</button>
-      <button class="btn" id="copySummary">Copy Professional Summary</button>
+      <button class="btn" id="copySummary">Copy Summary</button>
     </div>
   </div>
-</div>
 
-
-<div class="modal hide" id="modal">
-  <div class="modal-card">
-    <h3 id="modalTitle">Role Card</h3>
-    <p id="modalBody"></p>
-    <ul id="modalList"></ul>
-    <div class="row"><button class="btn" id="closeModal">Close</button></div>
-  </div>
+  <div class="minimap"><canvas id="mini" width="180" height="100"></canvas></div>
 </div>
 
 <div class="intro" id="intro">
   <div class="card">
-    <h1>MICHAEL COSTEA — VISUAL RESUME</h1>
-    <p>Interactive timeline showcasing experience across electrical services, operations leadership, automation, CX systems, and business growth.</p>
-    <p><b>Current:</b> Business Development & Marketing Manager @ Want A Heat Pump (plus Want A Sparky + All Electric Homes).</p>
-    <button class="btn" id="enter">Enter Resume Map</button>
+    <h1>MICHAEL COSTEA — INTERACTIVE VISUAL RESUME</h1>
+    <p>Edition loop completed: this build focuses on clarity, polish, narrative, and professional utility.</p>
+    <p><b>Current focus:</b> Business Development & Marketing Manager @ Want A Heat Pump group, blending field and digital execution.</p>
+    <button class="btn" id="enter">Enter Experience</button>
   </div>
 </div>
 
+<div class="toast" id="toast">Achievement unlocked</div>
+<div class="modal hide" id="modal"><div class="modal-card"><h3 id="modalTitle">Role Card</h3><p id="modalBody"></p><ul id="modalList"></ul><div class="row"><button class="btn" id="closeModal">Close</button></div></div></div>
+
 <script>
 const cv=document.getElementById('game'),ctx=cv.getContext('2d');
-const zoneChip=document.getElementById('zoneChip'),progressChip=document.getElementById('progressChip');
-const roleTitle=document.getElementById('roleTitle'),roleBody=document.getElementById('roleBody');
-let vw=960,vh=540;
-function resizeCanvas(){
-  const vv=window.visualViewport;
-  vw=Math.round(vv?.width||window.innerWidth); vh=Math.round(vv?.height||window.innerHeight);
-  const dpr=Math.max(1,Math.min(3,window.devicePixelRatio||1));
-  cv.width=Math.round(vw*dpr); cv.height=Math.round(vh*dpr);
-  cv.style.width=vw+'px'; cv.style.height=vh+'px';
-  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.imageSmoothingEnabled=false;
-}
-window.addEventListener('resize',resizeCanvas); if(window.visualViewport) window.visualViewport.addEventListener('resize',resizeCanvas); resizeCanvas();
+const mini=document.getElementById('mini'),mctx=mini.getContext('2d');
+const zoneChip=document.getElementById('zoneChip'),progressChip=document.getElementById('progressChip'),fpsChip=document.getElementById('fpsChip'),soundChip=document.getElementById('soundChip');
+const roleTitle=document.getElementById('roleTitle'),roleBody=document.getElementById('roleBody'),bar=document.getElementById('bar');
+const toast=document.getElementById('toast');
+let vw=960,vh=540,dpr=1;
+function resizeCanvas(){const vv=window.visualViewport;vw=Math.round(vv?.width||innerWidth);vh=Math.round(vv?.height||innerHeight);dpr=Math.max(1,Math.min(3,devicePixelRatio||1));cv.width=Math.round(vw*dpr);cv.height=Math.round(vh*dpr);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.imageSmoothingEnabled=false;}
+addEventListener('resize',resizeCanvas); if(window.visualViewport) window.visualViewport.addEventListener('resize',resizeCanvas); resizeCanvas();
 
-const world={w:2600,h:1400};
-const player={x:140,y:700,s:2.8};
-let cam={x:0,y:0},keys={};
-const zones=[
-  {name:'Foundations',x:0,y:0,w:620,h:1400},
-  {name:'Telecom/Ops',x:620,y:0,w:780,h:1400},
-  {name:'Electrical Trade',x:1400,y:0,w:700,h:1400},
-  {name:'Growth & Innovation',x:2100,y:0,w:500,h:1400}
-];
+const world={w:2800,h:1600};
+const player={x:140,y:760,s:2.8};
+let cam={x:0,y:0,tx:0,ty:0},keys={},touch=false,joy={x:0,y:0,active:false};
+let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
+let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60;
+
+const zones=[{name:'Foundations',x:0,y:0,w:700,h:1600},{name:'Telecom/Ops',x:700,y:0,w:900,h:1600},{name:'Electrical Trade',x:1600,y:0,w:700,h:1600},{name:'Growth & Innovation',x:2300,y:0,w:500,h:1600}];
 const nodes=[
-  {id:'N1',x:180,y:700,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — hands-on small business operations.',highlights:['Co-managed launch operations','Owner/operator workflow setup','Daily service process discipline']},
-  {id:'N2',x:820,y:980,title:'Optus Retention Consultant (2010-2013)',text:'Handled escalations, rewrote retention processes, and improved outcomes.',highlights:['Reduced process friction','Rewrote 200 retention processes','Improved customer save outcomes']},
-  {id:'N3',x:980,y:760,title:'Optus Business Process Specialist (2013-2014)',text:'Owned process comms and rollout support across Sales, Service, Retail.',highlights:['National process communications','Operational change training','Cross-team rollout enablement']},
-  {id:'N4',x:1110,y:560,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge bases and change rollouts for thousands of users.',highlights:['5,000+ internal users supported','500k monthly knowledge visits','Removed 250 duplicate processes']},
-  {id:'N5',x:1260,y:360,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support leadership, KPI redesign, 74% output uplift initiative.',highlights:['Central support for 352 stores','74% output uplift','3-tier credit policy + training matrix']},
-  {id:'N6',x:1620,y:760,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky — broad domestic/commercial/smart-home expertise.',highlights:['Custom builds + AV + smart-home','Fault finding + installs + maintenance','Residential + commercial + emergency support']},
-  {id:'N7',x:2240,y:560,title:'Sales Manager (Nov 2023-Present)',text:'VEU-focused heat pump upgrades across residential/commercial sectors.',highlights:['Program-aligned upgrade pathways','Retail + partner channel support','Commercial + residential project flow']},
-  {id:'N8',x:2400,y:360,title:'Business Development & Marketing Manager (2024-Present)',text:'Leads growth, websites/lead-gen optimization, partner pilots, manufacturer relations, process training, and CX innovation across affiliated brands.',highlights:['Owns growth across 3 brands','Website metrics + lead-gen optimization','Partner pilots + manufacturer strategy']}
+{id:'N1',x:180,y:760,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — startup operations and service flow.',highlights:['Owner/operator support','Daily service ops discipline','Small business execution']},
+{id:'N2',x:880,y:1080,title:'Optus Retention Consultant (2010-2013)',text:'Escalation handling and retention process redesign.',highlights:['Process simplification','200 retention processes rewritten','Customer save optimization']},
+{id:'N3',x:1060,y:860,title:'Optus Business Process Specialist (2013-2014)',text:'Process comms and rollout support.',highlights:['Cross-team communications','Change support materials','Operational alignment']},
+{id:'N4',x:1220,y:640,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge systems and rollout training.',highlights:['5000+ internal users','500k monthly visits','250 duplicate processes removed']},
+{id:'N5',x:1380,y:440,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support performance and KPI redesign.',highlights:['352 store support scope','74% output uplift','Credit policy + training matrix']},
+{id:'N6',x:1820,y:860,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky.',highlights:['Residential/commercial works','Smart-home and AV integrations','Fault finding + installations']},
+{id:'N7',x:2380,y:620,title:'Sales Manager (Nov 2023-Present)',text:'VEU heat pump upgrade pathways and sales delivery.',highlights:['Program-driven upgrade ops','Residential + commercial sectors','Channel support']},
+{id:'N8',x:2540,y:420,title:'Business Development & Marketing Manager (2024-Present)',text:'Growth, lead-gen optimization, partner pilots, manufacturer strategy, training.',highlights:['Growth across 3 brands','Website metrics + lead-gen','Partner pilots + CX innovation']}
 ];
-let viewed=new Set();
-let activeNode=null;
 
+const certs=['Licensed Electrician (Australia)','VEU program-aligned upgrade operations','IVR/chatbot/review automation delivery','Process redesign + frontline training leadership'];
+const summary=`Michael Costea — Licensed Electrician + Business Development & Marketing Manager driving electrification growth, digital ops, lead-gen optimization, partner pilots, and CX/process innovation across Want A Heat Pump, Want A Sparky, and All Electric Homes.`;
+
+function beep(freq=520,d=.06){ if(!sfx) return; try{ const ac=(beep.ac ||= new (window.AudioContext||window.webkitAudioContext)()); const o=ac.createOscillator(),g=ac.createGain(); o.type='square'; o.frequency.value=freq; g.gain.value=.0001; g.gain.exponentialRampToValueAtTime(.04,ac.currentTime+.01); g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d); o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+d);}catch{} }
+function toastMsg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>toast.classList.remove('show'),1200)}
+function zoneFor(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
 function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0)}
-function zoneAt(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
-function updateHUD(){
-  zoneChip.textContent='TIMELINE ZONE: '+zoneAt(player.x).name;
-  progressChip.textContent=`NODES VIEWED: ${viewed.size}/${nodes.length}`;
-}
+function drawTree(x,y){drawRect(x+6,y+18,8,10,'#30471d');drawRect(x,y+8,20,12,'#4f6b24');drawRect(x+3,y+2,14,10,'#6f8f2b')}
+function drawHouse(x,y){drawRect(x+2,y+12,36,22,'#d8e8a8');drawRect(x+14,y+24,10,10,'#4f5f2a');drawRect(x,y+8,40,8,'#5a2f2f')}
+
 function drawWorld(){
   drawRect(0,0,world.w,world.h,'#111a30');
   zones.forEach((z,i)=>drawRect(z.x,0,z.w,world.h,['#1b2848','#21355f','#264366','#2a5078'][i]));
-  for(let x=0;x<world.w;x+=80){drawRect(x,0,2,world.h,'rgba(255,255,255,.05)')}
-  // timeline rail
-  drawRect(120,700,2360,8,'#d3e4ff');
-  nodes.forEach(n=>{
-    const seen=viewed.has(n.id);
-    drawRect(n.x-12,n.y-12,24,24,seen?'#9bffb6':'#79d9ff');
-    drawRect(n.x-6,n.y-6,12,12,'#fff');
-    drawRect(n.x-1,708,2,n.y-708,'rgba(255,255,255,.35)');
-  });
+  for(let x=0;x<world.w;x+=64) drawRect(x,0,2,world.h,'rgba(255,255,255,.05)');
+  drawRect(120,760,2520,8,'#d3e4ff');
+  drawHouse(180,640);drawHouse(250,720);drawHouse(1760,710);drawHouse(2440,340);
+  for(let i=0;i<28;i++) drawTree(420+i*50,220+(i%3)*20);
+  for(let i=0;i<16;i++) drawTree(1800+i*42,1040+(i%2)*14);
+  nodes.forEach(n=>{const seen=viewed.has(n.id);drawRect(n.x-12,n.y-12,24,24,seen?'#8bff9e':'#79d9ff');drawRect(n.x-6,n.y-6,12,12,'#fff');drawRect(n.x-1,768,2,n.y-768,'rgba(255,255,255,.35)')});
 }
 function drawPlayer(){drawRect(player.x-8,player.y-10,16,20,'#ffd166');drawRect(player.x-5,player.y-6,10,6,'#111')}
-function draw(){
+function drawMini(){mctx.fillStyle='#0e162d';mctx.fillRect(0,0,180,100); zones.forEach((z,i)=>{mctx.fillStyle=['#2d3f6f','#36528a','#3a6a93','#4c7599'][i];mctx.fillRect(z.x/world.w*180,0,z.w/world.w*180,100)}); nodes.forEach(n=>{mctx.fillStyle=viewed.has(n.id)?'#8bff9e':'#79d9ff';mctx.fillRect(n.x/world.w*180-1,n.y/world.h*100-1,3,3)}); mctx.fillStyle='#ffd166';mctx.fillRect(player.x/world.w*180-2,player.y/world.h*100-2,4,4)}
+
+function render(){
   ctx.clearRect(0,0,vw,vh);
-  cam.x=Math.max(0,Math.min(world.w-vw,player.x-vw/2));
-  cam.y=Math.max(0,Math.min(world.h-vh,player.y-vh/2));
+  cam.tx=Math.max(0,Math.min(world.w-vw,player.x-vw/2));
+  cam.ty=Math.max(0,Math.min(world.h-vh,player.y-vh/2));
+  cam.x += (cam.tx-cam.x)*0.14; cam.y += (cam.ty-cam.y)*0.14;
   ctx.save(); ctx.translate(-cam.x,-cam.y); drawWorld(); drawPlayer(); ctx.restore();
-  requestAnimationFrame(draw);
+  if(battleFx>0){battleFx-=.05; ctx.fillStyle=`rgba(255,255,255,${Math.max(0,battleFx)})`; ctx.fillRect(0,0,vw,vh)}
+  drawMini();
+  requestAnimationFrame(render);
 }
-function tick(){
+
+function loop(now){
+  const dt=Math.min(.05,(now-last)/1000); last=now; fps=.92*fps+.08*(1/dt); fpsChip.textContent=`FPS ${Math.round(fps)}`;
   let vx=0,vy=0;
-  if(keys['ArrowLeft']||keys['a']) vx-=player.s;
-  if(keys['ArrowRight']||keys['d']) vx+=player.s;
-  if(keys['ArrowUp']||keys['w']) vy-=player.s;
-  if(keys['ArrowDown']||keys['s']) vy+=player.s;
-  player.x=Math.max(30,Math.min(world.w-30,player.x+vx));
-  player.y=Math.max(80,Math.min(world.h-30,player.y+vy));
+  if(keys['ArrowLeft']||keys['a']) vx-=player.s; if(keys['ArrowRight']||keys['d']) vx+=player.s;
+  if(keys['ArrowUp']||keys['w']) vy-=player.s; if(keys['ArrowDown']||keys['s']) vy+=player.s;
+  if(joy.active){vx+=joy.x*player.s; vy+=joy.y*player.s}
+  if(keys['Shift']){vx*=1.6; vy*=1.6}
+  player.x=Math.max(30,Math.min(world.w-30,player.x+vx)); player.y=Math.max(80,Math.min(world.h-30,player.y+vy));
+
   nodes.forEach(n=>{
-    if(Math.hypot(player.x-n.x,player.y-n.y)<30){
-      viewed.add(n.id);
-      activeNode=n;
-      roleTitle.textContent=n.title;
-      roleBody.textContent=n.text;
-    }
+    if(Math.hypot(player.x-n.x,player.y-n.y)<30 && !viewed.has(n.id)){
+      viewed.add(n.id); activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; battleFx=.45; beep(760,.08); toastMsg(`Unlocked: ${n.title}`);
+      localStorage.setItem('vr_viewed_v1', JSON.stringify([...viewed]));
+    } else if(Math.hypot(player.x-n.x,player.y-n.y)<30){ activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; }
   });
-  updateHUD();
-  requestAnimationFrame(tick);
+
+  // quest + hud
+  zoneChip.textContent='TIMELINE ZONE: '+zoneFor(player.x).name;
+  progressChip.textContent=`NODES VIEWED: ${viewed.size}/${nodes.length}`;
+  bar.style.width=(viewed.size/nodes.length*100).toFixed(1)+'%';
+  ['N2','N6','N8'].forEach(id=>{const li=document.querySelector(`[data-q="${id}"]`); if(li) li.classList.toggle('done', viewed.has(id));});
+
+  requestAnimationFrame(loop);
 }
 
-addEventListener('keydown',e=>keys[e.key]=true);
+// controls
+addEventListener('keydown',e=>{keys[e.key]=true; if(e.key==='m'||e.key==='M'){sfx=!sfx; soundChip.textContent=sfx?'SFX ON':'SFX OFF';}});
 addEventListener('keyup',e=>keys[e.key]=false);
-let touch=false,tx=0,ty=0;
-cv.addEventListener('touchstart',e=>{touch=true;tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
-cv.addEventListener('touchmove',e=>{if(!touch)return;const nx=e.touches[0].clientX,ny=e.touches[0].clientY;const dx=nx-tx,dy=ny-ty;player.x=Math.max(30,Math.min(world.w-30,player.x+dx*0.35));player.y=Math.max(80,Math.min(world.h-30,player.y+dy*0.35));tx=nx;ty=ny;},{passive:true});
-cv.addEventListener('touchend',()=>touch=false,{passive:true});
+cv.addEventListener('touchstart',e=>{joy.active=true;joy.sx=e.touches[0].clientX;joy.sy=e.touches[0].clientY;},{passive:true});
+cv.addEventListener('touchmove',e=>{if(!joy.active)return;const dx=(e.touches[0].clientX-joy.sx)/70,dy=(e.touches[0].clientY-joy.sy)/70;joy.x=Math.max(-1,Math.min(1,dx));joy.y=Math.max(-1,Math.min(1,dy));},{passive:true});
+cv.addEventListener('touchend',()=>{joy.active=false;joy.x=0;joy.y=0;},{passive:true});
 
-const summary=`Michael Costea — Licensed Electrician + Business Development & Marketing Manager driving electrification growth, digital ops, lead-gen optimization, partner pilots, and CX/process innovation across Want A Heat Pump, Want A Sparky, and All Electric Homes.`;
-const certs=['Licensed Electrician (Australia)','VEU program-aligned upgrade operations','IVR + chatbot + review automation delivery','Process redesign and frontline training leadership'];
+// modal & actions
 const modal=document.getElementById('modal'),modalTitle=document.getElementById('modalTitle'),modalBody=document.getElementById('modalBody'),modalList=document.getElementById('modalList');
-function openModal(title,body,list=[]){ modalTitle.textContent=title; modalBody.textContent=body; modalList.innerHTML=(list||[]).map(x=>`<li>${x}</li>`).join(''); modal.classList.remove('hide'); }
-function closeModal(){ modal.classList.add('hide'); }
-document.getElementById('closeModal').onclick=closeModal;
-modal.addEventListener('click',e=>{ if(e.target===modal) closeModal(); });
+function openModal(t,b,l=[]){modalTitle.textContent=t;modalBody.textContent=b;modalList.innerHTML=l.map(x=>`<li>${x}</li>`).join('');modal.classList.remove('hide')}
+function closeModal(){modal.classList.add('hide')} document.getElementById('closeModal').onclick=closeModal; modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 
-document.getElementById('copySummary').onclick=async()=>{try{await navigator.clipboard.writeText(summary); roleTitle.textContent='Summary copied'; roleBody.textContent='Paste it into LinkedIn/About/Resume.';}catch{roleTitle.textContent='Copy failed';roleBody.textContent=summary;}};
-document.getElementById('nextNode').onclick=()=>{const next=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1]; player.x=next.x-40; player.y=next.y-40; activeNode=next;};
-document.getElementById('viewRole').onclick=()=>{ const n=activeNode||nodes[0]; openModal(n.title,n.text,n.highlights||[]); };
+document.getElementById('nextNode').onclick=()=>{const n=nodes.find(x=>!viewed.has(x.id))||nodes[nodes.length-1];player.x=n.x-40;player.y=n.y-40;activeNode=n;};
+document.getElementById('viewRole').onclick=()=>{const n=activeNode||nodes[0];openModal(n.title,n.text,n.highlights||[])};
 document.getElementById('showCerts').onclick=()=>openModal('Certifications & Capability Stack','Core capability and accreditation set used across delivery + operations.',certs);
-document.getElementById('downloadPdf').onclick=()=>{ 
-  const win=window.open('','_blank');
-  if(!win) return;
-  const rows=nodes.map(n=>`<h3>${n.title}</h3><p>${n.text}</p><ul>${(n.highlights||[]).map(h=>`<li>${h}</li>`).join('')}</ul>`).join('');
-  win.document.write(`<!doctype html><html><head><title>Michael Costea Resume</title><style>body{font-family:Arial;padding:24px;line-height:1.45}h1{margin:0 0 8px}h3{margin:16px 0 4px}</style></head><body><h1>Michael Costea</h1><p>${summary}</p>${rows}</body></html>`);
-  win.document.close();
-  win.focus();
-  setTimeout(()=>win.print(),250);
-};
-document.getElementById('enter').onclick=()=>document.getElementById('intro').classList.add('hide');
+document.getElementById('exportJson').onclick=()=>{const payload={name:'Michael Costea',summary,nodes:viewed.size,timeline:nodes};const b=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='michael-costea-visual-resume.json';a.click();};
+document.getElementById('copySummary').onclick=async()=>{try{await navigator.clipboard.writeText(summary);toastMsg('Summary copied');}catch{roleBody.textContent=summary;}};
+document.getElementById('downloadPdf').onclick=()=>{const win=window.open('','_blank'); if(!win) return; const rows=nodes.map(n=>`<h3>${n.title}</h3><p>${n.text}</p><ul>${(n.highlights||[]).map(h=>`<li>${h}</li>`).join('')}</ul>`).join(''); win.document.write(`<!doctype html><html><head><title>Michael Costea Resume</title><style>body{font-family:Arial;padding:24px;line-height:1.45}h1{margin:0 0 8px}h3{margin:16px 0 4px}</style></head><body><h1>Michael Costea</h1><p>${summary}</p>${rows}</body></html>`); win.document.close(); setTimeout(()=>win.print(),250);};
+document.getElementById('enter').onclick=()=>{document.getElementById('intro').classList.add('hide');toastMsg('Experience started');};
 
-updateHUD(); draw(); tick();
+render(); loop(performance.now());
 </script>
 </body>
 </html>
