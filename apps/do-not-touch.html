@@ -61,6 +61,25 @@ const world={w:2200,h:1600};
 const player={x:300,y:280,s:2.6};
 let keys={};
 let badges=0, gateOpen=false;
+let inInterior=null, battleFx=0;
+const houses=[
+  {id:'H1',x:150,y:150,w:40,h:34,door:{x:170,y:184},name:'Lab House',text:'A faded terminal hums: STARTERS ARE STATES OF MIND.'},
+  {id:'H2',x:220,y:220,w:40,h:34,door:{x:240,y:254},name:'Trainer Home',text:'A note reads: TRAIN HARD. STAY KIND.'},
+  {id:'H3',x:1480,y:220,w:40,h:34,door:{x:1500,y:254},name:'Route Shack',text:'Map fragment: NORTH HOLDS THE OLDEST SIGNAL.'},
+  {id:'H4',x:1560,y:260,w:40,h:34,door:{x:1580,y:294},name:'Market Hut',text:'The shop is closed. The lights still watch.'},
+  {id:'H5',x:470,y:890,w:40,h:34,door:{x:490,y:924},name:'Lakeside Cabin',text:'Logbook: WATER REMEMBERS EVERY FOOTSTEP.'}
+];
+const collisionRects=[];
+function addRect(x,y,w,h){ collisionRects.push({x,y,w,h}); }
+// fences + water + house bodies as collision
+addRect(120,430,520,10); addRect(1320,760,480,10); addRect(440,1040,420,10);
+addRect(520,1120,320,180);
+houses.forEach(h=>addRect(h.x,h.y+8,h.w,h.h));
+const grassPatches=[
+  {x:1010,y:120,w:160,h:120},
+  {x:860,y:640,w:180,h:140},
+  {x:1420,y:930,w:220,h:120}
+];
 const zones=[
   {name:'Starter Town',x:0,y:0,w:700,h:500},
   {name:'Route North',x:700,y:0,w:800,h:500},
@@ -94,12 +113,14 @@ function drawTree(x,y){
   drawPixelRect(x,y+8,20,12,'#4f6b24');
   drawPixelRect(x+3,y+2,14,10,'#6f8f2b');
 }
-function drawHouse(x,y){
+function drawHouseObj(h){
+  const x=h.x,y=h.y;
   drawPixelRect(x+2,y+12,36,22,'#d8e8a8');
   drawPixelRect(x+14,y+24,10,10,'#4f5f2a');
   drawPixelRect(x,y+8,40,8,'#5a2f2f');
   drawPixelRect(x+6,y+18,8,6,'#7c9b2f');
   drawPixelRect(x+26,y+18,8,6,'#7c9b2f');
+  drawPixelRect(h.door.x-2,h.door.y-1,4,5,'#2b3114');
 }
 function drawFence(x,y,w){ for(let i=0;i<w;i+=8){ drawPixelRect(x+i,y,6,3,'#d0e090'); drawPixelRect(x+i+2,y+3,2,6,'#809050'); } }
 function drawWater(x,y,w,h){
@@ -126,15 +147,16 @@ function drawWorld(){
   drawPixelRect(980,0,70,world.h,'#556b2f');
 
   // town houses
-  drawHouse(150,150); drawHouse(220,220); drawHouse(1480,220); drawHouse(1560,260); drawHouse(470,890);
+  houses.forEach(drawHouseObj);
 
   // trees clusters
   for(let i=0;i<12;i++) drawTree(80+i*44,70+(i%2)*18);
   for(let i=0;i<10;i++) drawTree(1330+i*40,520+(i%3)*16);
   for(let i=0;i<8;i++) drawTree(520+i*42,1200+(i%2)*20);
 
-  // water patch + fences
+  // water patch + fences + tall grass encounters
   drawWater(520,1120,320,180);
+  grassPatches.forEach(g=>{ for(let yy=g.y;yy<g.y+g.h;yy+=8){ for(let xx=g.x;xx<g.x+g.w;xx+=8){ drawPixelRect(xx+2,yy+3,4,4,'#5f7f2a'); } } });
   drawFence(120,430,520); drawFence(1320,760,480); drawFence(440,1040,420);
 
   // NPCs
@@ -155,22 +177,68 @@ function drawPlayer(){
 }
 function draw(){
   ctx.clearRect(0,0,W,H);
+
+  if(inInterior){
+    drawPixelRect(0,0,W,H,'#9bbc0f');
+    drawPixelRect(180,110,600,320,'#d8e8a8');
+    drawPixelRect(200,130,560,280,'#c7d89a');
+    drawPixelRect(450,340,60,60,'#4f5f2a');
+    ctx.fillStyle='#2f3f1b';
+    ctx.font='bold 18px monospace';
+    ctx.fillText(inInterior.name,220,170);
+    ctx.font='16px monospace';
+    ctx.fillText(inInterior.text,220,210);
+    ctx.fillText('Press E to exit',220,250);
+    requestAnimationFrame(draw);
+    return;
+  }
+
   cam.x=Math.max(0,Math.min(world.w-W,player.x-W/2));
   cam.y=Math.max(0,Math.min(world.h-H,player.y-H/2));
   ctx.save(); ctx.translate(-cam.x,-cam.y);
   drawWorld(); drawPlayer();
   ctx.restore();
+
+  if(battleFx>0){
+    battleFx -= 0.04;
+    ctx.fillStyle=`rgba(255,255,255,${Math.max(0,battleFx)})`;
+    ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(0,0,0,.75)';
+    ctx.font='bold 28px monospace';
+    ctx.fillText('WILD SIGNAL ENCOUNTER', 250, 280);
+  }
+
   requestAnimationFrame(draw);
 }
 
+function collides(nx,ny){
+  return collisionRects.some(r=> nx>r.x-8 && nx<r.x+r.w+8 && ny>r.y-10 && ny<r.y+r.h+10 );
+}
+
+function inGrass(){
+  return grassPatches.some(g=> player.x>=g.x && player.x<=g.x+g.w && player.y>=g.y && player.y<=g.y+g.h);
+}
+
 function tick(){
+  if(inInterior){ updateHUD(); requestAnimationFrame(tick); return; }
+
   let vx=0,vy=0;
   if(keys['ArrowLeft']||keys['a']) vx-=player.s;
   if(keys['ArrowRight']||keys['d']) vx+=player.s;
   if(keys['ArrowUp']||keys['w']) vy-=player.s;
   if(keys['ArrowDown']||keys['s']) vy+=player.s;
-  player.x=Math.max(10,Math.min(world.w-10,player.x+vx));
-  player.y=Math.max(10,Math.min(world.h-10,player.y+vy));
+
+  const nx=Math.max(10,Math.min(world.w-10,player.x+vx));
+  const ny=Math.max(10,Math.min(world.h-10,player.y+vy));
+  if(!collides(nx, player.y)) player.x=nx;
+  if(!collides(player.x, ny)) player.y=ny;
+
+  if((vx||vy) && inGrass() && Math.random()<0.01){
+    battleFx=0.85;
+    loreTitle.textContent='Random Encounter';
+    loreText.textContent='A wild signal appears from the grass.';
+  }
+
   nodes.forEach(n=>{
     const d=Math.hypot(player.x-n.x,player.y-n.y);
     if(d<28){
@@ -180,7 +248,7 @@ function tick(){
       }
       if(n.type==='gate'){
         loreTitle.textContent=n.title;
-        if(gateOpen){ loreText.textContent='Gate sync complete. You are now the author, not the audience.'; }
+        if(gateOpen){ loreText.textContent='Core sync complete. You are now the author, not the audience.'; }
         else loreText.textContent=n.text;
       }
     }
@@ -189,7 +257,14 @@ function tick(){
   requestAnimationFrame(tick);
 }
 
-addEventListener('keydown',e=>keys[e.key]=true);
+addEventListener('keydown',e=>{
+  keys[e.key]=true;
+  if(e.key.toLowerCase()==='e'){
+    if(inInterior){ inInterior=null; loreTitle.textContent='Exited'; loreText.textContent='Back outside.'; return; }
+    const near = houses.find(h=>Math.hypot(player.x-h.door.x, player.y-h.door.y)<26);
+    if(near){ inInterior=near; loreTitle.textContent=near.name; loreText.textContent=near.text; }
+  }
+});
 addEventListener('keyup',e=>keys[e.key]=false);
 let touch=false,tx=0,ty=0;
 cv.addEventListener('touchstart',e=>{touch=true;tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
