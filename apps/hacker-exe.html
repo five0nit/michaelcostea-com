@@ -24,7 +24,7 @@ ul{margin:.1rem 0;padding-left:18px}
 @media (max-width:780px){.grid{grid-template-columns:1fr}}
 </style></head><body>
 <div class="wrap">
-  <p><a href="../index.html">← Back</a></p>
+  <p><a href="#" class="back-hub" data-hub="../index.html">← Back to MichaelOS</a></p>
   <div class="panel">
     <div class="header">
       <div>
@@ -138,4 +138,25 @@ scanBtn.addEventListener('click', async()=>{
   }
 });
 </script>
+
+<script>/* back-hub helper */
+(function(){
+  document.querySelectorAll('a.back-hub').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var hub = a.getAttribute('data-hub') || '../index.html';
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = hub;
+        } else {
+          window.location.href = hub;
+        }
+      } catch (_) {
+        window.location.href = hub;
+      }
+    });
+  });
+})();
+</script>
+
 </body></html>

@@ -15,7 +15,7 @@ canvas{margin-top:10px;border:2px solid #3a4f88;background:#fff;touch-action:non
 a{color:#9fc0ff}
 </style></head><body>
 <div class="wrap">
-<p><a href="../index.html">← Back</a></p>
+<p><a href="#" class="back-hub" data-hub="../index.html">← Back to MichaelOS</a></p>
 <h1>Paint</h1>
 <div class="toolbar">
 <div><label>Color</label><br><input id="color" type="color" value="#111111"></div>
@@ -82,4 +82,25 @@ cv.addEventListener('mousedown',e=>{down=true;last=pos(e)});window.addEventListe
 cv.addEventListener('touchstart',e=>{down=true;last=pos(e);e.preventDefault()},{passive:false});window.addEventListener('touchend',()=>{down=false;last=null});cv.addEventListener('touchmove',e=>{if(!down)return;drawTo(pos(e));e.preventDefault()},{passive:false});
 document.getElementById('clear').onclick=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height)};
 document.getElementById('save').onclick=()=>{const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='michaelos-paint.png';a.click();};
-</script></body></html>
+</script>
+<script>/* back-hub helper */
+(function(){
+  document.querySelectorAll('a.back-hub').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var hub = a.getAttribute('data-hub') || '../index.html';
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = hub;
+        } else {
+          window.location.href = hub;
+        }
+      } catch (_) {
+        window.location.href = hub;
+      }
+    });
+  });
+})();
+</script>
+
+</body></html>

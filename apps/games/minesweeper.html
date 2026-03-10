@@ -17,7 +17,7 @@ small{opacity:.75}
 a{color:#fff}
 </style></head><body>
 <div class="wrap">
-  <p><a href="../index.html">← Back</a></p>
+  <p><a href="#" class="back-hub" data-hub="../../index.html">← Back to MichaelOS</a></p>
   <div class="panel">
     <div class="top">
       <b>MINESWEEPER.EXE</b>
@@ -47,4 +47,25 @@ function flood(c){const q=[c],seen=new Set(); while(q.length){const k=q.pop(); c
 function open(c){if(over||c.o||c.f)return; if(c.m){c.o=true;over=true;statusEl.textContent='💥 Game Over'; board.forEach(v=>v.o=true); render(); return;} flood(c); if(opened>=W*H-M){over=true;statusEl.textContent='😎 Cleared';} render();}
 document.getElementById('reset').onclick=init; init();
 </script>
+
+<script>/* back-hub helper */
+(function(){
+  document.querySelectorAll('a.back-hub').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var hub = a.getAttribute('data-hub') || '../index.html';
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = hub;
+        } else {
+          window.location.href = hub;
+        }
+      } catch (_) {
+        window.location.href = hub;
+      }
+    });
+  });
+})();
+</script>
+
 </body></html>

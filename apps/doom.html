@@ -9,9 +9,30 @@ a{color:#9fc0ff}.small{font-size:12px;color:#b8c9f0}
 iframe{width:100%;height:80vh;border:2px solid #3a4f88;border-radius:10px;background:#000}
 </style></head><body>
 <div class="wrap">
-  <p><a href="../index.html">← Back</a></p>
+  <p><a href="#" class="back-hub" data-hub="../index.html">← Back to MichaelOS</a></p>
   <h1>DOOM.EXE</h1>
   <p class="small">Playable browser DOS session. For best experience use landscape/fullscreen and keyboard.</p>
   <iframe src="https://js-dos.com/games/doom.exe.html" title="DOOM via JS-DOS" allowfullscreen></iframe>
 </div>
+
+<script>/* back-hub helper */
+(function(){
+  document.querySelectorAll('a.back-hub').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var hub = a.getAttribute('data-hub') || '../index.html';
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = hub;
+        } else {
+          window.location.href = hub;
+        }
+      } catch (_) {
+        window.location.href = hub;
+      }
+    });
+  });
+})();
+</script>
+
 </body></html>

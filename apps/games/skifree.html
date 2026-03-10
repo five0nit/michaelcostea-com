@@ -10,7 +10,7 @@ canvas{display:block;width:100%;max-width:820px;height:520px;background:linear-g
 .btn{background:#cfcfcf;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #7f7f7f;border-bottom:2px solid #7f7f7f;padding:4px 8px;cursor:pointer}
 a{color:#fff}
 </style></head><body>
-<div class="wrap"><p><a href="../../index.html">← Back</a></p><div class="panel"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>SKY SLOPE.EXE (SkiFree vibe)</b><div><button id="motionBtn" class="btn">Enable Tilt Control</button> <button id="reset" class="btn">Restart</button></div></div><p>Arrow keys / A-D or phone tilt to steer. Avoid trees and rocks.</p><canvas id="c" width="820" height="520"></canvas><p id="hud">Distance: 0m</p></div></div>
+<div class="wrap"><p><a href="#" class="back-hub" data-hub="../../index.html">← Back to MichaelOS</a></p><div class="panel"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>SKY SLOPE.EXE (SkiFree vibe)</b><div><button id="motionBtn" class="btn">Enable Tilt Control</button> <button id="reset" class="btn">Restart</button></div></div><p>Arrow keys / A-D or phone tilt to steer. Avoid trees and rocks.</p><canvas id="c" width="820" height="520"></canvas><p id="hud">Distance: 0m</p></div></div>
 <script>
 const c=document.getElementById('c'),x=c.getContext('2d');
 const motionBtn=document.getElementById('motionBtn');
@@ -73,4 +73,25 @@ function tick(){
 }
 
 document.getElementById('reset').onclick=init; init(); tick();
-</script></body></html>
+</script>
+<script>/* back-hub helper */
+(function(){
+  document.querySelectorAll('a.back-hub').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var hub = a.getAttribute('data-hub') || '../index.html';
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = hub;
+        } else {
+          window.location.href = hub;
+        }
+      } catch (_) {
+        window.location.href = hub;
+      }
+    });
+  });
+})();
+</script>
+
+</body></html>
