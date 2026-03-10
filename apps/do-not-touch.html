@@ -84,11 +84,34 @@ let loreIx=0;
 function zoneFor(x,y){return zones.find(z=>x>=z.x&&y>=z.y&&x<z.x+z.w&&y<z.y+z.h)||zones[0]}
 function updateHUD(){
   locEl.textContent='ZONE: '+zoneFor(player.x,player.y).name;
-  shardEl.textContent=`SHARDS: ${badges}/3`;
+  shardEl.textContent=`BADGES: ${badges}/3`;
   objEl.textContent=gateOpen?'OBJECTIVE: Enter the Town Core':'OBJECTIVE: Find three signal badges';
 }
 
 function drawPixelRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect((x|0),(y|0),(w|0),(h|0));}
+function drawTree(x,y){
+  drawPixelRect(x+6,y+18,8,10,'#3f4f1d');
+  drawPixelRect(x,y+8,20,12,'#4f6b24');
+  drawPixelRect(x+3,y+2,14,10,'#6f8f2b');
+}
+function drawHouse(x,y){
+  drawPixelRect(x+2,y+12,36,22,'#d8e8a8');
+  drawPixelRect(x+14,y+24,10,10,'#4f5f2a');
+  drawPixelRect(x,y+8,40,8,'#5a2f2f');
+  drawPixelRect(x+6,y+18,8,6,'#7c9b2f');
+  drawPixelRect(x+26,y+18,8,6,'#7c9b2f');
+}
+function drawFence(x,y,w){ for(let i=0;i<w;i+=8){ drawPixelRect(x+i,y,6,3,'#d0e090'); drawPixelRect(x+i+2,y+3,2,6,'#809050'); } }
+function drawWater(x,y,w,h){
+  drawPixelRect(x,y,w,h,'#6b8bbf');
+  for(let yy=y;yy<y+h;yy+=8){ for(let xx=x+(yy%16?4:0);xx<x+w;xx+=16){ drawPixelRect(xx,yy+2,6,2,'#9fb7de'); }}
+}
+function drawNPC(x,y,tick){
+  const bob=((tick/14)|0)%2;
+  drawPixelRect(x+4,y+6+bob,8,10,'#2f3f1b');
+  drawPixelRect(x+3,y+2+bob,10,5,'#f8f8f8');
+}
+
 function drawWorld(){
   drawPixelRect(0,0,world.w,world.h,'#8bac0f');
   for(let y=0;y<world.h;y+=80){
@@ -97,11 +120,29 @@ function drawWorld(){
       drawPixelRect(x,y,78,78,c);
     }
   }
-  // streets
+
+  // route strips
   drawPixelRect(0,520,world.w,60,'#556b2f');
   drawPixelRect(980,0,70,world.h,'#556b2f');
-  // neon blocks
-  drawPixelRect(160,120,220,160,'#4a5f2a'); drawPixelRect(1440,180,300,220,'#4a5f2a'); drawPixelRect(420,840,260,220,'#3f5422');
+
+  // town houses
+  drawHouse(150,150); drawHouse(220,220); drawHouse(1480,220); drawHouse(1560,260); drawHouse(470,890);
+
+  // trees clusters
+  for(let i=0;i<12;i++) drawTree(80+i*44,70+(i%2)*18);
+  for(let i=0;i<10;i++) drawTree(1330+i*40,520+(i%3)*16);
+  for(let i=0;i<8;i++) drawTree(520+i*42,1200+(i%2)*20);
+
+  // water patch + fences
+  drawWater(520,1120,320,180);
+  drawFence(120,430,520); drawFence(1320,760,480); drawFence(440,1040,420);
+
+  // NPCs
+  drawNPC(280,330,performance.now());
+  drawNPC(1510,420,performance.now()+100);
+  drawNPC(640,960,performance.now()+220);
+
+  // interaction nodes
   nodes.forEach(n=>{
     const glow=n.type==='gate'?(gateOpen?'#d8f878':'#6b7f2a'):'#c7f06b';
     drawPixelRect(n.x-14,n.y-14,28,28,glow);
