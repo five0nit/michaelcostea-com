@@ -128,11 +128,11 @@ body.mobile-mode .win-window.maximized{
 body.mobile-mode.immersive-app .taskbar{display:none !important}
 body.mobile-mode.immersive-app .container{height:100dvh;padding-bottom:0}
 body.mobile-mode.immersive-app #browserWindow.win-window.maximized{height:100dvh !important}
-body.mobile-mode.immersive-app #browserWindow .win-title{display:none}
+body.mobile-mode.immersive-app #browserWindow .win-title{display:flex !important;position:sticky;top:0;z-index:25}
 body.mobile-mode.immersive-app #browserWindow .mikenet-bar{display:none}
 body.mobile-mode.immersive-app #browserWindow .win-body{padding:0 !important;height:100dvh !important}
-body.mobile-mode.immersive-app #browserWindow .iframe-wrap{height:100dvh !important;min-height:100dvh !important}
-body.mobile-mode.immersive-app #browserWindow #appFrame{height:100dvh !important;min-height:100dvh !important}
+body.mobile-mode.immersive-app #browserWindow .iframe-wrap{height:calc(100dvh - 24px) !important;min-height:calc(100dvh - 24px) !important}
+body.mobile-mode.immersive-app #browserWindow #appFrame{height:100% !important;min-height:100% !important}
 body.mobile-mode #readerWindow,
 body.mobile-mode #aboutWindow{
   height:auto !important;
