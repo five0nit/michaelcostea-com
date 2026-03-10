@@ -377,41 +377,46 @@ function initStartMenu(projects){
 
   const webapps = projects.filter(p => (p.category||'webapps') === 'webapps');
   const games = projects.filter(p => p.category === 'games');
+  const appRow = (icon, p) => `<a class="start-item" role="menuitem" href="#" data-launch-app="${p.url}" data-app-title="${p.name}"><span><b class="si">${icon}</b>${p.name}</span><small>${p.status}</small></a>`;
 
-  const appRow = (p) => `<a class="start-item" role="menuitem" href="#" data-launch-app="${p.url}" data-app-title="${p.name}"><span>${p.name}</span><small>${p.status}</small></a>`;
+  items.innerHTML = `
+    <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="programs"><span><b class="si">🗂️</b>Programs</span><small>▶</small></a>
+    <a class="start-item" role="menuitem" href="#"><span><b class="si">⭐</b>Favorites</span></a>
+    <a class="start-item" role="menuitem" href="#"><span><b class="si">📄</b>Documents</span></a>
+    <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="settings"><span><b class="si">⚙️</b>Settings</span><small>▶</small></a>
+    <a class="start-item" role="menuitem" href="#"><span><b class="si">🔎</b>Find</span></a>
+    <a class="start-item" role="menuitem" href="#"><span><b class="si">❓</b>Help</span></a>
+    <a class="start-item" role="menuitem" href="#"><span><b class="si">▶️</b>Run...</span></a>
+    <div class="start-sep"></div>
+    <a class="start-item" role="menuitem" href="#"><span><b class="si">👤</b>Log Off Michael...</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="shutdownWindow"><span><b class="si">⏻</b>Shut Down...</span></a>
 
-  const systemItems = `
-    <a class="start-item" role="menuitem" href="#" data-open-window="readerWindow"><span>📘 Read Me</span><small>open</small></a>
-    <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="programs"><span>🗂️ Programs</span><small>▶</small></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span>💾 About</span><small>open</small></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow" data-open-settings="1"><span>⚙️ Control Panel</span><small>open</small></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="dialupWindow"><span>📞 Dial-Up Networking</span><small>open</small></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="recycleWindow"><span>🗑️ Recycle Bin</span><small>open</small></a>
-  `;
-
-  const submenuHtml = `
     <div class="start-submenu" id="startProgramsMenu" aria-hidden="true">
-      <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="webapps"><span>🌐 Web Apps</span><small>▶</small></a>
-      <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="games"><span>🎮 Games</span><small>▶</small></a>
+      <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="webapps"><span><b class="si">🌐</b>Web Apps</span><small>▶</small></a>
+      <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="games"><span><b class="si">🎮</b>Games</span><small>▶</small></a>
     </div>
-    <div class="start-submenu" id="startWebAppsMenu" aria-hidden="true">${webapps.map(appRow).join('')}</div>
-    <div class="start-submenu" id="startGamesMenu" aria-hidden="true">${games.map(appRow).join('')}</div>
+    <div class="start-submenu" id="startWebAppsMenu" aria-hidden="true">${webapps.map(p=>appRow('🧩',p)).join('')}</div>
+    <div class="start-submenu" id="startGamesMenu" aria-hidden="true">${games.map(p=>appRow('🕹️',p)).join('')}</div>
+    <div class="start-submenu" id="startSettingsMenu" aria-hidden="true">
+      <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow" data-open-settings="1"><span><b class="si">⚙️</b>Control Panel</span></a>
+      <a class="start-item" role="menuitem" href="#" data-open-window="dialupWindow"><span><b class="si">📞</b>Dial-Up Networking</span></a>
+    </div>
   `;
-
-  items.innerHTML = systemItems + submenuHtml;
 
   const subPrograms = document.getElementById('startProgramsMenu');
   const subWebApps = document.getElementById('startWebAppsMenu');
   const subGames = document.getElementById('startGamesMenu');
+  const subSettings = document.getElementById('startSettingsMenu');
 
   const hideSubmenus = () => {
-    [subPrograms, subWebApps, subGames].forEach(s => { if(s){ s.classList.remove('open'); s.setAttribute('aria-hidden','true'); } });
+    [subPrograms, subWebApps, subGames, subSettings].forEach(s => { if(s){ s.classList.remove('open'); s.setAttribute('aria-hidden','true'); } });
   };
   const showSubmenu = (name) => {
     hideSubmenus();
     if(name === 'programs' && subPrograms){ subPrograms.classList.add('open'); subPrograms.setAttribute('aria-hidden','false'); }
     if(name === 'webapps' && subPrograms && subWebApps){ subPrograms.classList.add('open'); subPrograms.setAttribute('aria-hidden','false'); subWebApps.classList.add('open'); subWebApps.setAttribute('aria-hidden','false'); }
     if(name === 'games' && subPrograms && subGames){ subPrograms.classList.add('open'); subPrograms.setAttribute('aria-hidden','false'); subGames.classList.add('open'); subGames.setAttribute('aria-hidden','false'); }
+    if(name === 'settings' && subSettings){ subSettings.classList.add('open'); subSettings.setAttribute('aria-hidden','false'); }
   };
 
   const closeMenu = () => { hideSubmenus(); menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); };
@@ -439,7 +444,7 @@ function initStartMenu(projects){
       e.preventDefault();
       launchInMikeNet(launchApp, link.getAttribute('data-app-title') || 'Program');
     }
-    closeMenu();
+    if(openId || launchApp) closeMenu();
   });
 
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeMenu(); });

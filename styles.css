@@ -74,14 +74,23 @@ a.btn,button.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2
 .task-btn.active{background:#efefef;border-top:2px solid var(--lo);border-left:2px solid var(--lo);border-right:2px solid var(--hi);border-bottom:2px solid var(--hi)}
 .task-btn.minimized{opacity:.8}
 .tray{display:flex;gap:6px}.tray-pill{font-size:11px;min-width:68px;text-align:center;padding:3px 6px;background:#d9d9d9;border-top:2px solid var(--lo);border-left:2px solid var(--lo);border-right:2px solid var(--hi);border-bottom:2px solid var(--hi)}
-.start-menu{position:fixed;left:8px;bottom:40px;width:300px;background:#c0c0c0;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);box-shadow:2px 2px 0 #000;z-index:35;display:none}
-.start-menu.open{display:block}.start-head{background:linear-gradient(180deg,#000080,#1084d0);color:#fff;font-weight:700;padding:7px 9px;font-size:12px}.start-items{padding:6px;max-height:52vh;overflow:auto;position:relative}.start-group{font-size:11px;font-weight:700;color:#333;padding:8px 7px 4px;text-transform:uppercase;letter-spacing:.4px}.start-item{display:flex;justify-content:space-between;text-decoration:none;color:#000;font-size:12px;padding:6px 7px}.start-item:hover{background:#000080;color:#fff}
+.start-menu{position:fixed;left:8px;bottom:40px;width:310px;background:#c0c0c0;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);box-shadow:2px 2px 0 #000;z-index:35;display:none}
+.start-menu.open{display:block}
+.start-head{background:linear-gradient(180deg,#000080,#1084d0);color:#fff;font-weight:700;padding:7px 9px;font-size:12px}
+.start-items{padding:6px 6px 6px 30px;max-height:56vh;overflow:auto;position:relative}
+.start-items::before{content:"WINDOWS 98";position:absolute;left:0;top:0;bottom:0;width:22px;background:linear-gradient(180deg,#0d2f8f,#0a69c2);color:#fff;font:700 10px/1 Tahoma,sans-serif;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:1px;display:flex;align-items:center;justify-content:center;padding:6px 0}
+.start-item{display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:#000;font-size:12px;padding:6px 7px;gap:10px}
+.start-item span{display:flex;align-items:center;gap:6px}
+.start-item:hover{background:#000080;color:#fff}
 .start-item.has-arrow small{font-size:11px}
-.start-submenu{position:absolute;left:100%;top:0;min-width:220px;background:#c0c0c0;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);box-shadow:2px 2px 0 #000;display:none;z-index:36}
+.si{display:inline-grid;place-items:center;width:14px;height:14px;font-weight:400}
+.start-sep{height:1px;background:#7f7f7f;margin:4px 3px;border-bottom:1px solid #fff}
+.start-submenu{position:absolute;left:100%;min-width:230px;background:#c0c0c0;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);box-shadow:2px 2px 0 #000;display:none;z-index:36;padding:4px}
 .start-submenu.open{display:block}
-#startProgramsMenu{top:34px}
-#startWebAppsMenu,#startGamesMenu{left:calc(100% + 220px);top:34px}
-#startGamesMenu{top:66px}
+#startProgramsMenu{top:6px}
+#startSettingsMenu{top:106px}
+#startWebAppsMenu,#startGamesMenu{left:calc(100% + 230px);top:6px}
+#startGamesMenu{top:36px}
 body.mobile-mode .desktop{
   display:grid;
   grid-template-columns:repeat(3,minmax(86px,1fr));

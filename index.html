@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Michael Costea — Projects & Webapps</title>
   <meta name="description" content="Michael Costea's live playground: projects, automations, and webapps." />
-  <link rel="stylesheet" href="styles.css?v=20260310-1256" />
+  <link rel="stylesheet" href="styles.css?v=20260310-1306" />
 </head>
 <body>
   <div id="bootScreen" class="boot-screen" aria-label="MichaelOS boot screen">
@@ -151,6 +151,23 @@
       </div>
     </section>
 
+    <section id="shutdownWindow" class="win-window" aria-label="Shutdown window" style="left:340px;top:180px;width:min(420px,92vw);">
+      <div class="win-title"><span>Shut Down Windows</span><button class="win-close" data-close="shutdownWindow">×</button></div>
+      <div class="win-body">
+        <p style="display:flex;gap:8px;align-items:center"><span style="font-size:22px">⏻</span>What do you want the computer to do?</p>
+        <p>
+          <label style="display:block;margin:6px 0"><input type="radio" name="shutdownAction" checked /> Shut down</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="shutdownAction" /> Restart</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="shutdownAction" /> Restart in MS-DOS mode</label>
+        </p>
+        <p>
+          <button class="btn" type="button" onclick="closeWindow('shutdownWindow')">OK</button>
+          <button class="btn" type="button" onclick="closeWindow('shutdownWindow')">Cancel</button>
+          <button class="btn" type="button" onclick="closeWindow('shutdownWindow')">Help</button>
+        </p>
+      </div>
+    </section>
+
   </main>
   <div class="taskbar" aria-label="Windows style taskbar">
     <button id="startBtn" class="start-btn" aria-expanded="false" aria-controls="startMenu">Start</button>
@@ -169,6 +186,6 @@
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260310-1256"></script>
+  <script src="script.js?v=20260310-1306"></script>
 </body>
 </html>
