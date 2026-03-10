@@ -206,7 +206,12 @@ let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
 let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
 let lastAutoOpenId=null,lastAutoOpenAt=0;
-const colorGrade = { r: 31, g: 63, b: 31 }; // RGB565-ish
+const master16=[
+  [6,10,22],[12,22,44],[18,34,66],[32,56,98],[54,85,138],[92,126,181],[145,172,214],
+  [228,238,255],[255,212,117],[255,170,74],[255,128,102],[255,108,170],[170,138,255],
+  [121,220,255],[138,255,204],[104,229,138],[71,176,104],[40,117,88],[28,78,68],[17,46,43],
+  [67,53,96],[104,80,145],[157,112,205],[209,171,247]
+];
 let zoneSeen=new Set(JSON.parse(localStorage.getItem('vr_zones_v1')||'[]'));
 
 const zones=[{name:'Foundations',x:0,y:0,w:860,h:1800},{name:'Telecom/Ops',x:860,y:0,w:980,h:1800},{name:'Electrical Trade',x:1840,y:0,w:820,h:1800},{name:'Growth & Innovation',x:2660,y:0,w:540,h:1800}];
@@ -250,13 +255,18 @@ function quantizePost(){
   for(let i=0;i<d.length;i+=4){
     const px=(i/4)%post.width, py=((i/4)/post.width)|0;
     const checker=((px+py)&1)?1:-1;
-    const dr=checker*3,dg=checker*2,db=checker*3;
-    let r=Math.max(0,Math.min(255,d[i]+dr));
-    let g=Math.max(0,Math.min(255,d[i+1]+dg));
-    let b=Math.max(0,Math.min(255,d[i+2]+db));
-    d[i]   = Math.round((r/255)*colorGrade.r)*(255/colorGrade.r);
-    d[i+1] = Math.round((g/255)*colorGrade.g)*(255/colorGrade.g);
-    d[i+2] = Math.round((b/255)*colorGrade.b)*(255/colorGrade.b);
+    let r=Math.max(0,Math.min(255,d[i]   + checker*3));
+    let g=Math.max(0,Math.min(255,d[i+1] + checker*2));
+    let b=Math.max(0,Math.min(255,d[i+2] + checker*3));
+
+    let best=0, bestDist=1e9;
+    for(let p=0;p<master16.length;p++){
+      const pr=master16[p][0], pg=master16[p][1], pb=master16[p][2];
+      const dr=r-pr, dg=g-pg, db=b-pb;
+      const dist=dr*dr + dg*dg + db*db;
+      if(dist<bestDist){ bestDist=dist; best=p; }
+    }
+    d[i]=master16[best][0]; d[i+1]=master16[best][1]; d[i+2]=master16[best][2];
   }
   pctx.putImageData(img,0,0);
 }
@@ -365,6 +375,8 @@ function drawWorld(){
   nodes.forEach((n,idx)=>{
     const seen=viewed.has(n.id), pal=zonePalette[Math.min(3,Math.floor(n.x/(world.w/4)))];
     const badge = n.badge || pal.accent;
+    const pulse=((time+idx*8)%30)<15 ? 1 : 0;
+    drawRect(n.x-16-pulse,n.y-16-pulse,32+pulse*2,32+pulse*2,seen?'rgba(139,255,158,.35)':'rgba(130,200,255,.25)');
     drawRect(n.x-14,n.y-14,28,28,seen?'#8bff9e':badge);
     drawRect(n.x-10,n.y-10,20,20,'#0f1830');
     drawRect(n.x-8,n.y-8,16,16,seen?'#d9ffe0':'#f2f6ff');
@@ -461,6 +473,13 @@ function render(){
   const nearestNode = nodes.slice().sort((a,b)=>Math.hypot(player.x-a.x,player.y-a.y)-Math.hypot(player.x-b.x,player.y-b.y))[0];
   if(nearestNode){ const pr=18+Math.sin(time*0.15)*4; ctx.strokeStyle='rgba(140,220,255,.55)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(nearestNode.x,nearestNode.y,pr,0,Math.PI*2); ctx.stroke(); }
   drawPlayer(); ctx.restore();
+
+  // depth haze for richer 16-bit scene layering
+  const haze=ctx.createLinearGradient(0,vh*0.45,0,vh);
+  haze.addColorStop(0,'rgba(34,54,92,0)');
+  haze.addColorStop(1,'rgba(12,18,36,0.22)');
+  ctx.fillStyle=haze;
+  ctx.fillRect(0,0,vw,vh);
 
   // lighting vignette
   const g=ctx.createRadialGradient(vw/2,vh/2,80,vw/2,vh/2,Math.max(vw,vh)*0.8);
