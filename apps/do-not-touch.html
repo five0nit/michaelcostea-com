@@ -55,8 +55,23 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 const cv=document.getElementById('game'),ctx=cv.getContext('2d');
 const locEl=document.getElementById('loc'),objEl=document.getElementById('obj'),shardEl=document.getElementById('badges');
 const loreTitle=document.getElementById('loreTitle'),loreText=document.getElementById('loreText');
-const W=960,H=540;
 let cam={x:0,y:0};
+let vw=960,vh=540;
+function resizeCanvas(){
+  const vv=window.visualViewport;
+  vw=Math.round(vv?.width||window.innerWidth);
+  vh=Math.round(vv?.height||window.innerHeight);
+  const dpr=Math.max(1,Math.min(3,window.devicePixelRatio||1));
+  cv.width=Math.round(vw*dpr);
+  cv.height=Math.round(vh*dpr);
+  cv.style.width=vw+'px';
+  cv.style.height=vh+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.imageSmoothingEnabled=false;
+}
+window.addEventListener('resize',resizeCanvas);
+if(window.visualViewport) window.visualViewport.addEventListener('resize',resizeCanvas);
+resizeCanvas();
 const world={w:2200,h:1600};
 const player={x:300,y:280,s:2.6};
 let keys={};
@@ -176,10 +191,10 @@ function drawPlayer(){
   drawPixelRect(player.x-5,player.y-6,10,6,'#2f3f1b');
 }
 function draw(){
-  ctx.clearRect(0,0,W,H);
+  ctx.clearRect(0,0,vw,vh);
 
   if(inInterior){
-    drawPixelRect(0,0,W,H,'#9bbc0f');
+    drawPixelRect(0,0,vw,vh,'#9bbc0f');
     drawPixelRect(180,110,600,320,'#d8e8a8');
     drawPixelRect(200,130,560,280,'#c7d89a');
     drawPixelRect(450,340,60,60,'#4f5f2a');
@@ -193,8 +208,8 @@ function draw(){
     return;
   }
 
-  cam.x=Math.max(0,Math.min(world.w-W,player.x-W/2));
-  cam.y=Math.max(0,Math.min(world.h-H,player.y-H/2));
+  cam.x=Math.max(0,Math.min(world.w-vw,player.x-vw/2));
+  cam.y=Math.max(0,Math.min(world.h-vh,player.y-vh/2));
   ctx.save(); ctx.translate(-cam.x,-cam.y);
   drawWorld(); drawPlayer();
   ctx.restore();
@@ -202,7 +217,7 @@ function draw(){
   if(battleFx>0){
     battleFx -= 0.04;
     ctx.fillStyle=`rgba(255,255,255,${Math.max(0,battleFx)})`;
-    ctx.fillRect(0,0,W,H);
+    ctx.fillRect(0,0,vw,vh);
     ctx.fillStyle='rgba(0,0,0,.75)';
     ctx.font='bold 28px monospace';
     ctx.fillText('WILD SIGNAL ENCOUNTER', 250, 280);
