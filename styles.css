@@ -70,6 +70,7 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px}.desc{margin:0;font-size:.86rem;line-height:1.35;min-height:40px}.muted{font-size:.78rem}
 .badge{font-size:.68rem;padding:3px 6px;border:1px solid #000;background:#e5e5e5}.badge.live{background:#0a9b4b;color:#fff}.badge.beta{background:#d47f00;color:#fff}.badge.private{background:#7a2cff;color:#fff}
 a.btn,button.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);padding:5px 9px;font-weight:700;font-size:.8rem;cursor:pointer}
+.dos-box{background:#000;color:#2dff2d;border:2px inset #7f7f7f;padding:8px;border-radius:0;font:700 12px/1.45 "Courier New",monospace;white-space:pre-wrap}
 
 .taskbar{position:fixed;left:0;right:0;bottom:0;height:38px;padding:5px 8px;background:var(--panel);border-top:2px solid var(--hi);box-shadow:0 -2px 0 #000;z-index:30;display:flex;align-items:center;gap:8px}
 .start-btn{font-weight:700;font-size:12px;color:#fff;background:linear-gradient(180deg,var(--m89-start),var(--m89-start2));border-top:2px solid #7bd58a;border-left:2px solid #7bd58a;border-right:2px solid #0a4515;border-bottom:2px solid #0a4515;padding:4px 14px;cursor:pointer;text-shadow:1px 1px 0 #07340f}
@@ -129,7 +130,9 @@ body.mobile-mode.immersive-app .container{height:100dvh;padding-bottom:0}
 body.mobile-mode.immersive-app #browserWindow.win-window.maximized{height:100dvh !important}
 body.mobile-mode.immersive-app #browserWindow .win-title{display:none}
 body.mobile-mode.immersive-app #browserWindow .mikenet-bar{display:none}
-body.mobile-mode.immersive-app #browserWindow .iframe-wrap{height:100% !important}
+body.mobile-mode.immersive-app #browserWindow .win-body{padding:0 !important;height:100dvh !important}
+body.mobile-mode.immersive-app #browserWindow .iframe-wrap{height:100dvh !important;min-height:100dvh !important}
+body.mobile-mode.immersive-app #browserWindow #appFrame{height:100dvh !important;min-height:100dvh !important}
 body.mobile-mode #readerWindow,
 body.mobile-mode #aboutWindow{
   height:auto !important;
