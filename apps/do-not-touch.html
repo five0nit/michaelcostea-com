@@ -41,6 +41,10 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 .chapter-card{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:12;padding:10px 14px;border:1px solid #5c80bd;background:rgba(7,14,30,.92);border-radius:12px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .25s ease}
 .chapter-card.show{opacity:1}
 body.hc{filter:contrast(1.22) saturate(1.1)}
+.dpad{position:fixed;right:10px;bottom:120px;z-index:8;display:none;grid-template-columns:48px 48px 48px;grid-template-rows:48px 48px 48px;gap:6px;pointer-events:auto}
+.dbtn{border:2px solid #5b78ad;background:#142445;color:#d9e7ff;border-radius:8px;font-weight:900;font-size:1.2rem;display:grid;place-items:center;user-select:none;touch-action:none;box-shadow:inset 0 1px 0 #9fbdf6}
+.dbtn:active{transform:translateY(1px);filter:brightness(1.1)}
+.dbtn.up{grid-column:2;grid-row:1}.dbtn.left{grid-column:1;grid-row:2}.dbtn.right{grid-column:3;grid-row:2}.dbtn.down{grid-column:2;grid-row:3}
 
 @media (max-width: 820px){
   .top{
@@ -60,8 +64,8 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
     overflow:hidden;
     text-overflow:ellipsis;
   }
-  #objectiveChip,#fpsChip,#saveChip,#timeChip,#weatherChip{display:none}
-  #exportJson,#downloadPdf,#copySummary,#snapBtn,#contrastBtn{display:none}
+  #titleChip,#chapterChip,#soundChip,#stateChip,#objectiveChip,#fpsChip,#saveChip,#timeChip,#weatherChip{display:none}
+  #exportJson,#downloadPdf,#copySummary,#snapBtn,#contrastBtn,#showCerts,#viewRole,#resetProgress,#toggleFull{display:none}
 
   .panel{
     left:8px;
@@ -69,19 +73,17 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
     bottom:8px;
     top:auto;
     width:auto;
-    max-height:min(44dvh, 360px);
+    max-height:min(30dvh, 220px);
     overflow:auto;
-    padding:9px;
+    padding:8px;
     border-radius:12px;
-    background:rgba(8,13,27,.78);
+    background:rgba(8,13,27,.72);
   }
   .panel h3{font-size:.95rem;margin:0 0 4px}
   .panel p{font-size:.86rem;line-height:1.25;margin:4px 0}
 
   .progress{margin-top:6px}
-  .quest{margin-top:6px;padding:6px}
-  .quest li{font-size:.78rem}
-  .legend{font-size:.7rem;gap:8px;margin-top:4px}
+  .quest,.legend{display:none}
 
   .row{gap:6px}
   .btn{
@@ -93,6 +95,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
   }
 
   .minimap{display:none}
+  .dpad{display:grid}
 
   .intro{
     align-items:start;
@@ -157,6 +160,13 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
   <div class="minimap"><canvas id="mini" width="220" height="120"></canvas></div>
 </div>
 
+<div class="dpad" id="dpad" aria-label="movement controls">
+  <button class="dbtn up" data-key="ArrowUp">▲</button>
+  <button class="dbtn left" data-key="ArrowLeft">◀</button>
+  <button class="dbtn right" data-key="ArrowRight">▶</button>
+  <button class="dbtn down" data-key="ArrowDown">▼</button>
+</div>
+
 <div class="intro" id="intro">
   <div class="card">
     <h1>MICHAEL COSTEA — INTERACTIVE VISUAL RESUME</h1>
@@ -186,7 +196,7 @@ function resizeCanvas(){
   vw=Math.round(vv?.width||innerWidth);
   vh=Math.round(vv?.height||innerHeight);
   dpr=Math.max(1,Math.min(3,devicePixelRatio||1));
-  pixelScale = vw <= 820 ? 2 : 2;
+  pixelScale = vw <= 820 ? 1 : 2;
   cv.width=Math.round(vw*dpr);
   cv.height=Math.round(vh*dpr);
   cv.style.width=vw+'px';
@@ -576,6 +586,19 @@ cv.addEventListener('touchstart',e=>{joy.active=true;joy.sx=e.touches[0].clientX
 cv.addEventListener('touchmove',e=>{if(!joy.active)return;const dx=(e.touches[0].clientX-joy.sx)/70,dy=(e.touches[0].clientY-joy.sy)/70;joy.x=Math.max(-1,Math.min(1,dx));joy.y=Math.max(-1,Math.min(1,dy));},{passive:true});
 cv.addEventListener('touchend',()=>{joy.active=false;joy.x=0;joy.y=0;},{passive:true});
 mini.addEventListener('click',e=>{const r=mini.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width; const y=(e.clientY-r.top)/r.height; player.x=Math.max(30,Math.min(world.w-30,x*world.w)); player.y=Math.max(80,Math.min(world.h-30,y*world.h));});
+
+// mobile d-pad controls
+document.querySelectorAll('.dbtn').forEach(btn=>{
+  const key=btn.dataset.key;
+  const on=()=>{keys[key]=true;};
+  const off=()=>{keys[key]=false;};
+  btn.addEventListener('touchstart',e=>{e.preventDefault();on();},{passive:false});
+  btn.addEventListener('touchend',e=>{e.preventDefault();off();},{passive:false});
+  btn.addEventListener('touchcancel',off,{passive:true});
+  btn.addEventListener('mousedown',on);
+  btn.addEventListener('mouseup',off);
+  btn.addEventListener('mouseleave',off);
+});
 
 const modal=document.getElementById('modal'),modalTitle=document.getElementById('modalTitle'),modalBody=document.getElementById('modalBody'),modalList=document.getElementById('modalList');
 function openModal(t,b,l=[]){modalTitle.textContent=t;modalBody.textContent=b;modalList.innerHTML=l.map(x=>`<li>${x}</li>`).join('');modal.classList.remove('hide')}
