@@ -171,7 +171,25 @@ const roleTitle=document.getElementById('roleTitle'),roleBody=document.getElemen
 const toast=document.getElementById('toast');
 const chapterCard=document.getElementById('chapterCard');
 let vw=960,vh=540,dpr=1;
-function resizeCanvas(){const vv=window.visualViewport;vw=Math.round(vv?.width||innerWidth);vh=Math.round(vv?.height||innerHeight);dpr=Math.max(1,Math.min(3,devicePixelRatio||1));cv.width=Math.round(vw*dpr);cv.height=Math.round(vh*dpr);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.imageSmoothingEnabled=false;}
+const post=document.createElement('canvas');
+const pctx=post.getContext('2d');
+let pixelScale=2;
+function resizeCanvas(){
+  const vv=window.visualViewport;
+  vw=Math.round(vv?.width||innerWidth);
+  vh=Math.round(vv?.height||innerHeight);
+  dpr=Math.max(1,Math.min(3,devicePixelRatio||1));
+  pixelScale = vw <= 820 ? 3 : 2;
+  cv.width=Math.round(vw*dpr);
+  cv.height=Math.round(vh*dpr);
+  cv.style.width=vw+'px';
+  cv.style.height=vh+'px';
+  post.width=Math.max(1,Math.floor(vw/pixelScale));
+  post.height=Math.max(1,Math.floor(vh/pixelScale));
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.imageSmoothingEnabled=false;
+  pctx.imageSmoothingEnabled=false;
+}
 addEventListener('resize',resizeCanvas); if(window.visualViewport) window.visualViewport.addEventListener('resize',resizeCanvas); resizeCanvas();
 
 const TILE=16;
@@ -218,10 +236,10 @@ function toastMsg(t){toast.textContent=t;toast.classList.add('show');clearTimeou
 function zoneFor(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
 function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0)}
 const zonePalette=[
-  {base:'#1a2944',tileA:'#203656',tileB:'#263d60',accent:'#8fd3ff'},
-  {base:'#1c2d4c',tileA:'#24406a',tileB:'#2b4a78',accent:'#9bb6ff'},
-  {base:'#203754',tileA:'#2b5172',tileB:'#34607f',accent:'#9dffd5'},
-  {base:'#2b3558',tileA:'#384a77',tileB:'#44598a',accent:'#ffd782'}
+  {base:'#162238',tileA:'#1c2f4a',tileB:'#254061',accent:'#7fd7ff'},
+  {base:'#1a2940',tileA:'#213a57',tileB:'#2a4b6b',accent:'#a8bbff'},
+  {base:'#1c3140',tileA:'#24495c',tileB:'#2f5b6b',accent:'#95ffd0'},
+  {base:'#2a3046',tileA:'#3a4464',tileB:'#4a5579',accent:'#ffd06e'}
 ];
 function pHash(x,y){ return ((x*73856093)^(y*19349663)) & 255; }
 function drawTile(x,y,c1,c2){drawRect(x,y,TILE,TILE,c1);drawRect(x+2,y+2,4,4,c2);}
@@ -379,6 +397,20 @@ function render(){
   if(rain){ctx.strokeStyle='rgba(170,210,255,.22)'; for(let i=0;i<120;i++){const rx=(i*73 + time*9)% (vw+40)-20; const ry=(i*41 + time*17)% (vh+40)-20; ctx.beginPath(); ctx.moveTo(rx,ry); ctx.lineTo(rx-3,ry+10); ctx.stroke();}}
 
   if(battleFx>0){battleFx-=.05; ctx.fillStyle=`rgba(255,255,255,${Math.max(0,battleFx)})`; ctx.fillRect(0,0,vw,vh)}
+
+  // Pixel-art post pass: downsample then nearest-neighbor upscale for crisp era-accurate look
+  pctx.clearRect(0,0,post.width,post.height);
+  pctx.drawImage(cv,0,0,post.width,post.height);
+  ctx.save();
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.imageSmoothingEnabled=false;
+  ctx.clearRect(0,0,vw,vh);
+  ctx.drawImage(post,0,0,post.width,post.height,0,0,vw,vh);
+  // subtle grading to emulate tightly curated pixel palette
+  ctx.fillStyle='rgba(14,18,32,0.08)';
+  ctx.fillRect(0,0,vw,vh);
+  ctx.restore();
+
   drawMini();
   requestAnimationFrame(render);
 }
