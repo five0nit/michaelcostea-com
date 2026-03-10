@@ -117,7 +117,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 <canvas id="game"></canvas>
 <div class="ui">
   <div class="top">
-    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v60</div>
+    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v61 16-BIT</div>
     <div class="chip" id="zoneChip">TIMELINE ZONE: Foundations</div>
     <div class="chip" id="objectiveChip">OBJECTIVE: Explore chapter nodes</div>
     <div class="chip" id="chapterChip">CHAPTER: --</div>
@@ -186,7 +186,7 @@ function resizeCanvas(){
   vw=Math.round(vv?.width||innerWidth);
   vh=Math.round(vv?.height||innerHeight);
   dpr=Math.max(1,Math.min(3,devicePixelRatio||1));
-  pixelScale = vw <= 820 ? 3 : 2;
+  pixelScale = vw <= 820 ? 2 : 2;
   cv.width=Math.round(vw*dpr);
   cv.height=Math.round(vh*dpr);
   cv.style.width=vw+'px';
@@ -205,6 +205,7 @@ const player={x:180,y:900,s:3.0,frame:0,face:'down'};
 let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
 let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
+let lastAutoOpenId=null,lastAutoOpenAt=0;
 let zoneSeen=new Set(JSON.parse(localStorage.getItem('vr_zones_v1')||'[]'));
 
 const zones=[{name:'Foundations',x:0,y:0,w:860,h:1800},{name:'Telecom/Ops',x:860,y:0,w:980,h:1800},{name:'Electrical Trade',x:1840,y:0,w:820,h:1800},{name:'Growth & Innovation',x:2660,y:0,w:540,h:1800}];
@@ -222,14 +223,14 @@ const signposts=[
 ];
 
 const nodes=[
-{id:'N1',x:220,y:900,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — startup operations and service flow.',highlights:['Owner/operator support','Daily service ops discipline','Small business execution']},
-{id:'N2',x:980,y:1240,title:'Optus Retention Consultant (2010-2013)',text:'Escalation handling and retention process redesign.',highlights:['Process simplification','200 retention processes rewritten','Customer save optimization']},
-{id:'N3',x:1160,y:980,title:'Optus Business Process Specialist (2013-2014)',text:'Process comms and rollout support.',highlights:['Cross-team communications','Change support materials','Operational alignment']},
-{id:'N4',x:1330,y:740,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge systems and rollout training.',highlights:['5000+ internal users','500k monthly visits','250 duplicate processes removed']},
-{id:'N5',x:1510,y:500,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support performance and KPI redesign.',highlights:['352 store support scope','74% output uplift','Credit policy + training matrix']},
-{id:'N6',x:2050,y:980,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky.',highlights:['Residential/commercial works','Smart-home and AV integrations','Fault finding + installations']},
-{id:'N7',x:2740,y:700,title:'Sales Manager (Nov 2023-Present)',text:'VEU heat pump upgrade pathways and sales delivery.',highlights:['Program-driven upgrade ops','Residential + commercial sectors','Channel support']},
-{id:'N8',x:2940,y:460,title:'Business Development & Marketing Manager (2024-Present)',text:'Growth, lead-gen optimization, partner pilots, manufacturer strategy, training.',highlights:['Growth across 3 brands','Website metrics + lead-gen','Partner pilots + CX innovation']}
+{id:'N1',x:220,y:900,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — startup operations and service flow.',highlights:['Owner/operator support','Daily service ops discipline','Small business execution'],badge:'#ffce73',glyph:'cup'},
+{id:'N2',x:980,y:1240,title:'Optus Retention Consultant (2010-2013)',text:'Escalation handling and retention process redesign.',highlights:['Process simplification','200 retention processes rewritten','Customer save optimization'],badge:'#8fd0ff',glyph:'signal'},
+{id:'N3',x:1160,y:980,title:'Optus Business Process Specialist (2013-2014)',text:'Process comms and rollout support.',highlights:['Cross-team communications','Change support materials','Operational alignment'],badge:'#8cffcf',glyph:'flow'},
+{id:'N4',x:1330,y:740,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge systems and rollout training.',highlights:['5000+ internal users','500k monthly visits','250 duplicate processes removed'],badge:'#c5b3ff',glyph:'book'},
+{id:'N5',x:1510,y:500,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support performance and KPI redesign.',highlights:['352 store support scope','74% output uplift','Credit policy + training matrix'],badge:'#ffd199',glyph:'chart'},
+{id:'N6',x:2050,y:980,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky.',highlights:['Residential/commercial works','Smart-home and AV integrations','Fault finding + installations'],badge:'#9eff7b',glyph:'bolt'},
+{id:'N7',x:2740,y:700,title:'Sales Manager (Nov 2023-Present)',text:'VEU heat pump upgrade pathways and sales delivery.',highlights:['Program-driven upgrade ops','Residential + commercial sectors','Channel support'],badge:'#79d9ff',glyph:'target'},
+{id:'N8',x:2940,y:460,title:'Business Development & Marketing Manager (2024-Present)',text:'Growth, lead-gen optimization, partner pilots, manufacturer strategy, training.',highlights:['Growth across 3 brands','Website metrics + lead-gen','Partner pilots + CX innovation'],badge:'#ff89c4',glyph:'crown'}
 ];
 
 const certs=['Licensed Electrician (Australia)','VEU program-aligned upgrade operations','IVR/chatbot/review automation delivery','Process redesign + frontline training leadership'];
@@ -243,10 +244,10 @@ function toastMsg(t){toast.textContent=t;toast.classList.add('show');clearTimeou
 function zoneFor(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
 function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0)}
 const zonePalette=[
-  {base:'#162238',tileA:'#1c2f4a',tileB:'#254061',accent:'#7fd7ff'},
-  {base:'#1a2940',tileA:'#213a57',tileB:'#2a4b6b',accent:'#a8bbff'},
-  {base:'#1c3140',tileA:'#24495c',tileB:'#2f5b6b',accent:'#95ffd0'},
-  {base:'#2a3046',tileA:'#3a4464',tileB:'#4a5579',accent:'#ffd06e'}
+  {base:'#1b2348',tileA:'#2a3d7a',tileB:'#304d8f',accent:'#79dcff'},
+  {base:'#23295a',tileA:'#33468b',tileB:'#3d56a3',accent:'#b6b8ff'},
+  {base:'#1d3d52',tileA:'#2a5d7e',tileB:'#347396',accent:'#9fffd0'},
+  {base:'#3a2f5e',tileA:'#58448e',tileB:'#6a54a7',accent:'#ffd475'}
 ];
 function pHash(x,y){ return ((x*73856093)^(y*19349663)) & 255; }
 function drawTile(x,y,c1,c2){drawRect(x,y,TILE,TILE,c1);drawRect(x+2,y+2,4,4,c2);}
@@ -346,8 +347,19 @@ function drawWorld(){
   // chapter nodes with unique marker art
   nodes.forEach((n,idx)=>{
     const seen=viewed.has(n.id), pal=zonePalette[Math.min(3,Math.floor(n.x/(world.w/4)))];
-    drawRect(n.x-13,n.y-13,26,26,seen?'#8bff9e':pal.accent);
-    drawRect(n.x-8,n.y-8,16,16,'#fff');
+    const badge = n.badge || pal.accent;
+    drawRect(n.x-14,n.y-14,28,28,seen?'#8bff9e':badge);
+    drawRect(n.x-10,n.y-10,20,20,'#0f1830');
+    drawRect(n.x-8,n.y-8,16,16,seen?'#d9ffe0':'#f2f6ff');
+    // tiny 16-bit glyph per chapter for visual uniqueness
+    if(n.glyph==='bolt'){ drawRect(n.x-1,n.y-7,4,6,'#183048'); drawRect(n.x-4,n.y-1,4,6,'#183048'); }
+    else if(n.glyph==='cup'){ drawRect(n.x-5,n.y-4,10,6,'#253b60'); drawRect(n.x+4,n.y-3,2,3,'#253b60'); }
+    else if(n.glyph==='signal'){ drawRect(n.x-5,n.y+3,10,2,'#253b60'); drawRect(n.x-4,n.y,2,3,'#253b60'); drawRect(n.x-1,n.y-2,2,5,'#253b60'); drawRect(n.x+2,n.y-5,2,8,'#253b60'); }
+    else if(n.glyph==='flow'){ drawRect(n.x-5,n.y-1,10,2,'#253b60'); drawRect(n.x-1,n.y-5,2,10,'#253b60'); }
+    else if(n.glyph==='book'){ drawRect(n.x-6,n.y-5,5,10,'#253b60'); drawRect(n.x+1,n.y-5,5,10,'#253b60'); drawRect(n.x-1,n.y-5,2,10,'#a2b6d8'); }
+    else if(n.glyph==='chart'){ drawRect(n.x-5,n.y+2,10,2,'#253b60'); drawRect(n.x-4,n.y-2,2,4,'#253b60'); drawRect(n.x-1,n.y-4,2,6,'#253b60'); drawRect(n.x+2,n.y-6,2,8,'#253b60'); }
+    else if(n.glyph==='target'){ drawRect(n.x-5,n.y-1,10,2,'#253b60'); drawRect(n.x-1,n.y-5,2,10,'#253b60'); drawRect(n.x-2,n.y-2,4,4,'#7fd7ff'); }
+    else if(n.glyph==='crown'){ drawRect(n.x-5,n.y+1,10,3,'#253b60'); drawRect(n.x-5,n.y-3,2,4,'#253b60'); drawRect(n.x-1,n.y-5,2,6,'#253b60'); drawRect(n.x+3,n.y-3,2,4,'#253b60'); }
     if(idx%2===0) drawRect(n.x-2,n.y-12,4,24,'rgba(0,0,0,.22)');
     else drawRect(n.x-12,n.y-2,24,4,'rgba(0,0,0,.22)');
     drawRect(n.x-1,908,2,n.y-908,'rgba(255,255,255,.35)');
@@ -445,7 +457,15 @@ function loop(now){
     const d=Math.hypot(player.x-n.x,player.y-n.y); if(d<nearest.d){nearest={d,n};}
     if(d<30 && !viewed.has(n.id)){
       viewed.add(n.id); activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; battleFx=.55; beep(760,.08); toastMsg(`Unlocked: ${n.title}`); saveViewed(); shake=8; showChapter(n.title);
-    } else if(d<30){ activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; }
+      openModal(n.title,n.text,n.highlights||[]);
+      lastAutoOpenId=n.id; lastAutoOpenAt=performance.now();
+    } else if(d<30){
+      activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text;
+      if((lastAutoOpenId!==n.id || performance.now()-lastAutoOpenAt>4000) && modal.classList.contains('hide')){
+        openModal(n.title,n.text,n.highlights||[]);
+        lastAutoOpenId=n.id; lastAutoOpenAt=performance.now();
+      }
+    }
   });
 
   const z=zoneFor(player.x);
