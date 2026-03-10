@@ -840,8 +840,9 @@ async function boot(){
       const card = document.createElement('article');
       card.className = 'card';
       const badgeText = p.status === 'live' ? 'Production' : (p.status === 'beta' ? 'Beta' : 'Private');
+      const primaryTag = p.primary ? '<span class="badge beta" style="margin-left:6px">Primary</span>' : '';
       card.innerHTML = `
-        <div class="row"><h3>${p.name}</h3><span class="badge ${p.status}">${badgeText}</span></div>
+        <div class="row"><h3>${p.name}</h3><span><span class="badge ${p.status}">${badgeText}</span>${primaryTag}</span></div>
         <p class="desc">${p.description || ''}</p>
         <div class="row"><small class="muted">${p.slug || 'project'}</small><a class="btn" href="#" data-launch-inline="${p.url}" data-app-title="${p.name}">Open</a></div>
       `;
