@@ -411,33 +411,26 @@ function initStartMenu(projects){
   const hideSubmenus = () => {
     [subPrograms, subWebApps, subGames, subSettings].forEach(s => { if(s){ s.classList.remove('open'); s.setAttribute('aria-hidden','true'); } });
   };
+  const openSub = (el) => { if(el){ el.classList.add('open'); el.setAttribute('aria-hidden','false'); } };
   const showSubmenu = (name) => {
     const mobile = isMobileMode();
-    if(!mobile) hideSubmenus();
-    if(name === 'programs' && subPrograms){
-      if(mobile) subPrograms.classList.toggle('open'); else subPrograms.classList.add('open');
-      subPrograms.setAttribute('aria-hidden', String(!subPrograms.classList.contains('open')));
-      if(mobile && !subPrograms.classList.contains('open')){ subWebApps?.classList.remove('open'); subGames?.classList.remove('open'); }
+
+    if(mobile){
+      // Mobile: always close previous branch first, then open only requested branch.
+      hideSubmenus();
+      if(name === 'programs') return openSub(subPrograms);
+      if(name === 'settings') return openSub(subSettings);
+      if(name === 'webapps'){ openSub(subPrograms); return openSub(subWebApps); }
+      if(name === 'games'){ openSub(subPrograms); return openSub(subGames); }
       return;
     }
-    if(name === 'webapps' && subPrograms && subWebApps){
-      if(mobile) subWebApps.classList.toggle('open'); else { subPrograms.classList.add('open'); subWebApps.classList.add('open'); }
-      subPrograms.setAttribute('aria-hidden','false');
-      subWebApps.setAttribute('aria-hidden', String(!subWebApps.classList.contains('open')));
-      if(mobile && subWebApps.classList.contains('open')){ subGames?.classList.remove('open'); subGames?.setAttribute('aria-hidden','true'); }
-      return;
-    }
-    if(name === 'games' && subPrograms && subGames){
-      if(mobile) subGames.classList.toggle('open'); else { subPrograms.classList.add('open'); subGames.classList.add('open'); }
-      subPrograms.setAttribute('aria-hidden','false');
-      subGames.setAttribute('aria-hidden', String(!subGames.classList.contains('open')));
-      if(mobile && subGames.classList.contains('open')){ subWebApps?.classList.remove('open'); subWebApps?.setAttribute('aria-hidden','true'); }
-      return;
-    }
-    if(name === 'settings' && subSettings){
-      if(mobile) subSettings.classList.toggle('open'); else subSettings.classList.add('open');
-      subSettings.setAttribute('aria-hidden', String(!subSettings.classList.contains('open')));
-    }
+
+    // Desktop cascade behavior
+    hideSubmenus();
+    if(name === 'programs') return openSub(subPrograms);
+    if(name === 'settings') return openSub(subSettings);
+    if(name === 'webapps'){ openSub(subPrograms); return openSub(subWebApps); }
+    if(name === 'games'){ openSub(subPrograms); return openSub(subGames); }
   };
 
   const closeMenu = () => { hideSubmenus(); menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); };
@@ -458,6 +451,10 @@ function initStartMenu(projects){
     if(!link) return;
     const sub = link.getAttribute('data-submenu');
     if(sub){ e.preventDefault(); showSubmenu(sub); return; }
+
+    // Any non-submenu click should collapse previous submenu branch.
+    hideSubmenus();
+
     const openId = link.getAttribute('data-open-window');
     const launchApp = link.getAttribute('data-launch-app');
     const openSettings = link.getAttribute('data-open-settings');
