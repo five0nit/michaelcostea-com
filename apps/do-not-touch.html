@@ -1,227 +1,149 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>DO NOT TOUCH // WHITE RABBIT PROTOCOL</title>
-  <style>
-    :root{--bg:#02030a;--fg:#e7efff;--muted:#96acd2;--cyan:#7ce8ff;--vio:#a07bff;--pink:#ff7fd6}
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-    canvas{position:fixed;inset:0;width:100%;height:100dvh;z-index:0}
-    .vignette{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(circle at center,transparent 45%,rgba(0,0,0,.55) 100%)}
-    .grain{position:fixed;inset:0;z-index:2;pointer-events:none;mix-blend-mode:soft-light;opacity:.22;background-image:radial-gradient(rgba(255,255,255,.08) .6px, transparent .6px);background-size:2px 2px}
-    .ui{position:fixed;inset:0;z-index:3;display:grid;place-items:center;padding:20px;text-align:center;transition:opacity .55s cubic-bezier(.2,.75,.2,1),transform .55s cubic-bezier(.2,.75,.2,1)}
-    .ui.hide{opacity:0;pointer-events:none;transform:scale(.97) translateY(8px)}
-    .panel{width:min(900px,96vw);background:linear-gradient(180deg,rgba(8,13,28,.62),rgba(4,8,18,.68));border:1px solid rgba(145,176,234,.35);border-radius:20px;padding:26px 24px;backdrop-filter:blur(10px);box-shadow:0 40px 100px rgba(0,0,0,.5)}
-    h1{margin:8px 0 8px;font-size:clamp(2rem,7vw,4.2rem);letter-spacing:.12em}
-    p{margin:8px 0;color:var(--muted);line-height:1.6}
-    .eyebrow{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:#b5d1ff}
-    .cta{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-    button{border:1px solid #547ac8;background:linear-gradient(180deg,#8bd1ff,#56acff);color:#02162f;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer;min-width:180px}
-    button.ghost{background:rgba(12,22,48,.7);color:#d7e8ff;border-color:#4f6699}
-    .hud{position:fixed;left:12px;right:12px;bottom:12px;z-index:4;display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
-    .chip{padding:7px 10px;border:1px solid rgba(133,162,215,.35);background:rgba(7,13,25,.56);border-radius:999px;font-size:.78rem;color:#c6d7f2}
-    .center{position:fixed;inset:0;z-index:4;display:grid;place-items:center;pointer-events:none;text-align:center;padding:18px}
-    .center h2{margin:0;font-size:clamp(1.8rem,8vw,5.2rem);letter-spacing:.16em;text-transform:uppercase;text-shadow:0 0 40px rgba(124,232,255,.35)}
-    .center p{margin:8px 0 0}
-    .hintDot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 16px var(--cyan);margin-right:6px}
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>DO NOT TOUCH // SIGNAL LOCK</title>
+<style>
+:root{--bg:#040711;--fg:#e8f1ff;--muted:#9ab0d4;--line:#35507c;--good:#6bffbe;--bad:#ff6b8d}
+*{box-sizing:border-box} html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);color:var(--fg);font-family:Inter,Segoe UI,Arial,sans-serif}
+#fx{position:fixed;inset:0;width:100%;height:100dvh;z-index:0}
+.overlay{position:fixed;inset:0;z-index:2;display:grid;place-items:center;padding:18px;background:linear-gradient(180deg,rgba(4,8,20,.12),rgba(4,8,20,.55))}
+.card{width:min(860px,96vw);background:rgba(8,14,28,.72);border:1px solid var(--line);border-radius:18px;padding:20px;backdrop-filter:blur(8px);box-shadow:0 20px 60px rgba(0,0,0,.45)}
+h1{margin:4px 0 8px;font-size:clamp(1.8rem,6vw,3.8rem);letter-spacing:.09em}
+p{margin:7px 0;color:var(--muted);line-height:1.5}
+.btn{border:1px solid #4f73ba;background:linear-gradient(180deg,#8bc8ff,#58a8ff);color:#03172f;border-radius:999px;padding:11px 16px;font-weight:800;cursor:pointer}
+.hud{position:fixed;left:10px;right:10px;bottom:10px;z-index:3;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.chip{padding:7px 10px;border:1px solid #35507c;background:rgba(7,12,24,.62);border-radius:999px;font-size:.78rem;color:#c4d5f2}
+.center{position:fixed;inset:0;z-index:3;display:grid;place-items:center;pointer-events:none;text-align:center}
+.center h2{margin:0;font-size:clamp(1.6rem,7vw,4.6rem);letter-spacing:.15em;text-transform:uppercase}
+.center p{margin:8px 0 0;color:#b8c9e6}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(80px,1fr));gap:10px;margin-top:14px}
+.node{border:1px solid #47639a;background:#0a1632;color:#d9e9ff;border-radius:12px;padding:12px;font-weight:700;cursor:pointer;text-align:center}
+.node.ok{border-color:var(--good);box-shadow:0 0 20px rgba(107,255,190,.25)}
+.node.bad{border-color:var(--bad);animation:shake .25s linear 1}
+@keyframes shake{25%{transform:translateX(-2px)}50%{transform:translateX(2px)}75%{transform:translateX(-1px)}}
+.hide{display:none}
+</style>
 </head>
 <body>
-  <canvas id="fx"></canvas>
-  <div class="vignette"></div>
-  <div class="grain"></div>
-
-  <section class="ui" id="intro">
-    <div class="panel">
-      <div class="eyebrow">WHITE RABBIT PROTOCOL // IMMERSIVE RUN</div>
-      <h1>DO NOT TOUCH</h1>
-      <p>A high-intensity visual sequence. No windows. No safe edges.</p>
-      <p><span class="hintDot"></span> path: swipe → tap → hold → drag → release</p>
-      <div class="cta">
-        <button id="start">Begin Descent</button>
-        <button class="ghost" id="audioBtn">Enable Audio Reactivity</button>
-      </div>
-    </div>
-  </section>
-
-  <section class="center"><div><h2 id="title">IDLE</h2><p id="subtitle">awaiting trigger</p></div></section>
-  <div class="hud">
-    <div class="chip" id="stage">STAGE 0/8</div>
-    <div class="chip" id="audio">AUDIO OFF</div>
-    <div class="chip" id="mode">MODE LOOP</div>
-    <div class="chip" id="hint">HINT: begin</div>
-    <div class="chip" id="perf">FPS --</div>
+<canvas id="fx"></canvas>
+<div class="overlay" id="intro">
+  <div class="card">
+    <h1>DO NOT TOUCH</h1>
+    <p><b>Mission:</b> solve the signal lock. This sequence has direction, not chaos.</p>
+    <p>Stage 1: stabilize orbit (swipe). Stage 2: solve node sequence. Stage 3: hold to trigger payload.</p>
+    <button class="btn" id="start">Begin Mission</button>
   </div>
+</div>
+
+<div class="overlay hide" id="puzzle">
+  <div class="card">
+    <h1 style="font-size:1.4rem">NODE SEQUENCE // REMEMBER + REPEAT</h1>
+    <p id="puzzleText">Watch the pattern, then repeat it.</p>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<div class="center"><div><h2 id="title">IDLE</h2><p id="subtitle">awaiting mission start</p></div></div>
+<div class="hud">
+  <div class="chip" id="stage">STAGE 0/3</div>
+  <div class="chip" id="hint">HINT: start mission</div>
+  <div class="chip" id="status">STATUS: STANDBY</div>
+</div>
 
 <script>
 const fx=document.getElementById('fx'),ctx=fx.getContext('2d');
-const $=id=>document.getElementById(id);
-const stageEl=$('stage'),audioEl=$('audio'),modeEl=$('mode'),hintEl=$('hint'),titleEl=$('title'),subEl=$('subtitle'),perfEl=$('perf');
-let w=0,h=0,cx=0,cy=0,t=0,stage=0,hold=false,holdAt=0,startY=0,drag=0;
-let raf,last=performance.now(),fps=60,loud=0,quiet=0;
-let ac,an,data,mic=false,boost=0;
-let pulse=0,chaos=0;
-const particles=[...Array(850)].map(()=>({a:Math.random()*Math.PI*2,r:20+Math.random()*1200,s:.2+Math.random()*2.2,z:Math.random()}));
-
-function resize(){
-  const vv=window.visualViewport;
-  w=fx.width=Math.round(vv?.width||innerWidth);
-  h=fx.height=Math.round(vv?.height||innerHeight);
-  cx=w/2; cy=h/2;
-}
+const titleEl=document.getElementById('title'),subEl=document.getElementById('subtitle');
+const stageEl=document.getElementById('stage'),hintEl=document.getElementById('hint'),statusEl=document.getElementById('status');
+const intro=document.getElementById('intro'),puzzle=document.getElementById('puzzle'),grid=document.getElementById('grid');
+let w=0,h=0,cx=0,cy=0,t=0,stage=0,swipeY=0,orbit=0,holding=false,holdAt=0;
+let raf;
+function resize(){const vv=window.visualViewport;w=fx.width=Math.round(vv?.width||innerWidth);h=fx.height=Math.round(vv?.height||innerHeight);cx=w/2;cy=h/2}
 addEventListener('resize',resize); if(window.visualViewport) window.visualViewport.addEventListener('resize',resize); resize();
 
-async function micOn(){
-  try{
-    ac=ac||new (window.AudioContext||window.webkitAudioContext)();
-    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    const src=ac.createMediaStreamSource(stream);
-    an=ac.createAnalyser(); an.fftSize=256; data=new Uint8Array(an.frequencyBinCount);
-    src.connect(an); mic=true; audioEl.textContent='AUDIO REACTIVE';
-  }catch{ audioEl.textContent='AUDIO BLOCKED'; }
-}
-function readAudio(){
-  if(!mic||!an) return 0;
-  an.getByteFrequencyData(data);
-  let s=0; for(let i=0;i<data.length;i++) s+=data[i];
-  boost=Math.min(1,(s/data.length)/128);
-  if(stage>0&&stage<7){ if(boost>.35) loud++; else quiet++; }
-  return boost;
-}
-function beep(f=520,d=.08){
-  try{ ac=ac||new (window.AudioContext||window.webkitAudioContext)(); const o=ac.createOscillator(),g=ac.createGain();
-    o.type='sawtooth';o.frequency.value=f; g.gain.value=.0001; g.gain.exponentialRampToValueAtTime(.05,ac.currentTime+.01); g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);
-    o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+d);
-  }catch{}
-}
-const vibe=ms=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch{}};
+const stars=[...Array(340)].map(()=>({a:Math.random()*Math.PI*2,r:80+Math.random()*900,s:.2+Math.random()*1.2,z:Math.random()}));
+function draw(){
+  t+=0.016;
+  const intensity = stage===0?0.2:stage===1?0.45:stage===2?0.62:0.95;
+  ctx.fillStyle='rgba(4,7,17,0.16)'; ctx.fillRect(0,0,w,h);
+  const g=ctx.createRadialGradient(cx,cy,30,cx,cy,Math.max(w,h)*0.6);
+  g.addColorStop(0,`rgba(${25+intensity*120},${35+intensity*85},${85+intensity*120},0.18)`);
+  g.addColorStop(1,'rgba(3,5,11,0.15)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
 
-function setStage(n){
-  stage=Math.max(0,Math.min(8,n));
-  stageEl.textContent=`STAGE ${stage}/8`;
-  const map={
-    0:['IDLE','awaiting trigger','HINT: begin','MODE LOOP'],
-    1:['SWIPE','tear the seam open','HINT: swipe up','MODE TEAR'],
-    2:['TAP','acquire marker','HINT: tap center','MODE LOCK'],
-    3:['HOLD','stabilize tunnel','HINT: hold 2s','MODE STABILIZE'],
-    4:['DRAG','bend trajectory','HINT: drag left/right','MODE DISTORT'],
-    5:['RELEASE','drop into phase','HINT: release input','MODE PHASE'],
-    6:['SPLIT','choose signal path','HINT: loud vs silent','MODE BRANCH'],
-    7:['ABSORB','system ingest','HINT: stay still','MODE INGEST'],
-    8:[loud>quiet?'CHAOS ROUTE':'SILENT ROUTE',loud>quiet?'you weaponized noise':'you vanished in silence','HINT: sequence complete','MODE COMPLETE']
-  };
-  const m=map[stage]; titleEl.textContent=m[0]; subEl.textContent=m[1]; hintEl.textContent=m[2]; modeEl.textContent=m[3];
-  beep(360+stage*95,.07); vibe(15+stage*3);
-}
-
-function draw(now){
-  const dt=Math.min(0.05,(now-last)/1000); last=now;
-  fps=0.92*fps + 0.08*(1/dt); perfEl.textContent=`FPS ${Math.round(fps)}`;
-  t += dt*60;
-  const a=readAudio();
-  pulse=.5+.5*Math.sin(t*.85);
-  const targetChaos=Math.min(1,stage*.13 + a*.9 + (hold?0.25:0) + Math.abs(drag)*.35);
-  chaos += (targetChaos-chaos)*0.08;
-
-  // trail feedback
-  ctx.fillStyle='rgba(2,3,10,0.22)'; ctx.fillRect(0,0,w,h);
-
-  // volumetric core
-  const core=ctx.createRadialGradient(cx,cy,20,cx,cy,Math.max(w,h)*.65);
-  core.addColorStop(0,`rgba(${28+chaos*190},${34+chaos*110},${86+chaos*170},0.22)`);
-  core.addColorStop(1,'rgba(2,3,10,0.10)');
-  ctx.fillStyle=core; ctx.fillRect(0,0,w,h);
-
-  // particles
-  for(const p of particles){
-    p.a += 0.0018 + p.s*0.0019*(1+chaos*5);
-    const rr = p.r*(0.60+0.40*Math.sin(t*(1.1+p.z*.4)+p.z*10));
-    const tw = t*(0.28+chaos*2.4) + drag*0.9;
-    const x = cx + Math.cos(p.a+tw)*rr;
-    const y = cy + Math.sin(p.a+tw)*rr;
-    const sz = 0.6 + p.s*(1+chaos*3.8);
-    ctx.fillStyle = `hsla(${(190 + 180*Math.sin(p.a*2 + t*1.2 + drag*2))%360},100%,${55+30*Math.sin(t+p.z*8)}%,${0.12+0.76*chaos})`;
-    ctx.beginPath(); ctx.arc(x,y,sz,0,Math.PI*2); ctx.fill();
+  for(const s of stars){
+    s.a += 0.001 + s.s*0.0015*(1+intensity*3);
+    const rr=s.r*(0.78+0.22*Math.sin(t*1.1+s.z*8));
+    const x=cx+Math.cos(s.a+t*(0.22+intensity*1.1)+orbit*0.6)*rr;
+    const y=cy+Math.sin(s.a+t*(0.22+intensity*1.1)+orbit*0.6)*rr;
+    const sz=0.8+s.s*(1+intensity*1.8);
+    ctx.fillStyle=`hsla(${205+60*Math.sin(s.a*2+t)},100%,${60+15*Math.sin(t+s.z*9)}%,${0.16+0.45*intensity})`;
+    ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fill();
   }
 
-  // ring lattice
-  for(let i=0;i<34;i++){
-    const r=(i*24 + (t*(240+a*220))%24)*(1+chaos*0.75);
-    const hue=(200+i*7+t*22+drag*40)%360;
-    ctx.strokeStyle=`hsla(${hue},100%,68%,${0.02+chaos*0.12})`;
-    ctx.lineWidth=.8+chaos*2.4;
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+  if(stage>=1){
+    for(let i=0;i<15;i++){
+      const r=(i*42+(t*180)%42)*(1+intensity*0.3);
+      ctx.strokeStyle=`rgba(${120+i*8},${150+i*6},255,${0.03+intensity*0.07})`;
+      ctx.lineWidth=1+intensity*1.2;
+      ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+    }
   }
-
-  // kaleido spokes
-  for(let i=0;i<30;i++){
-    const ang=(Math.PI*2/30)*i + t*0.30 + drag*0.3;
-    const len=100 + Math.sin(t*2+i)*90 + chaos*180;
-    ctx.strokeStyle=`hsla(${(i*12+t*120)%360},100%,62%,${0.02+chaos*0.09})`;
-    ctx.lineWidth=1.1;
-    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(ang)*len, cy+Math.sin(ang)*len); ctx.stroke();
-  }
-
-  // marker for stage 2/3
-  if(stage===2||stage===3){
-    const p=1+Math.sin(t*8)*0.13;
-    ctx.strokeStyle='rgba(220,236,255,.95)'; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.arc(cx,cy,46*p,0,Math.PI*2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx-70,cy); ctx.lineTo(cx+70,cy); ctx.moveTo(cx,cy-70); ctx.lineTo(cx,cy+70); ctx.stroke();
-  }
-
-  // glitch strips
-  const glitchChance=0.012+chaos*0.035;
-  if(Math.random()<glitchChance){
-    ctx.fillStyle=`hsla(${(t*260)%360},100%,70%,0.14)`;
-    ctx.fillRect(0,Math.random()*h,w,2+Math.random()*10);
-  }
-
-  // hold progress
-  if(stage===3&&hold){
-    const p=Math.min(1,(performance.now()-holdAt)/2000);
-    hintEl.textContent=`HINT: stabilizing ${(p*100|0)}%`;
-    if((p*100|0)%25===0) vibe(8);
-    if(p>=1) setStage(4);
-  }
-
   raf=requestAnimationFrame(draw);
 }
 raf=requestAnimationFrame(draw);
 
-function begin(){ $('intro').classList.add('hide'); setStage(1); }
-$('start').onclick=begin;
-$('audioBtn').onclick=async()=>{ await micOn(); beep(760,.12); modeEl.textContent='MODE REACTIVE'; };
+function setStage(n){
+  stage=n; stageEl.textContent=`STAGE ${n}/3`;
+  if(n===1){titleEl.textContent='STABILIZE';subEl.textContent='swipe up to lock orbit';hintEl.textContent='HINT: swipe upward';statusEl.textContent='STATUS: ALIGNING';}
+  if(n===2){titleEl.textContent='SOLVE';subEl.textContent='repeat the node sequence';hintEl.textContent='HINT: watch then repeat';statusEl.textContent='STATUS: CHALLENGE';}
+  if(n===3){titleEl.textContent='TRIGGER';subEl.textContent='hold for payload';hintEl.textContent='HINT: hold 2 seconds';statusEl.textContent='STATUS: ARMED';}
+}
 
-addEventListener('touchstart',e=>{startY=e.touches[0].clientY; if(stage===3){hold=true;holdAt=performance.now();}});
-addEventListener('touchend',()=>{hold=false; if(stage===3) hintEl.textContent='HINT: hold 2s'; if(stage===5) setStage(6);});
-addEventListener('touchmove',e=>{
-  const dy=startY-e.touches[0].clientY;
-  drag = ((e.touches[0].clientX/w)-0.5)*2;
-  if(stage===1&&dy>90) setStage(2);
-  if(stage===4 && Math.abs(drag)>0.35) setStage(5);
-},{passive:true});
-
+document.getElementById('start').onclick=()=>{intro.classList.add('hide');setStage(1)};
+addEventListener('touchstart',e=>{swipeY=e.touches[0].clientY; if(stage===3){holding=true;holdAt=performance.now();}});
+addEventListener('touchmove',e=>{const dy=swipeY-e.touches[0].clientY; if(stage===1&&dy>90){orbit=1; setStage(2); startPuzzle();}}, {passive:true});
+addEventListener('touchend',()=>{holding=false; if(stage===3) hintEl.textContent='HINT: hold 2 seconds';});
 let md=false,my=0;
-addEventListener('mousedown',e=>{md=true;my=e.clientY; if(stage===3){hold=true;holdAt=performance.now();}});
-addEventListener('mouseup',()=>{md=false;hold=false;drag=0; if(stage===3) hintEl.textContent='HINT: hold 2s'; if(stage===5) setStage(6);});
-addEventListener('mousemove',e=>{
-  if(!md) return;
-  drag=((e.clientX/w)-0.5)*2;
-  if(stage===1 && my-e.clientY>90) setStage(2);
-  if(stage===4 && Math.abs(drag)>0.35) setStage(5);
-});
-addEventListener('click',e=>{
-  if(stage===2){ const d=Math.hypot(e.clientX-cx,e.clientY-cy); if(d<86) setStage(3); }
-});
+addEventListener('mousedown',e=>{md=true;my=e.clientY; if(stage===3){holding=true;holdAt=performance.now();}});
+addEventListener('mousemove',e=>{if(!md)return; if(stage===1&&my-e.clientY>90){orbit=1;setStage(2);startPuzzle();}});
+addEventListener('mouseup',()=>{md=false;holding=false; if(stage===3) hintEl.textContent='HINT: hold 2 seconds';});
 
-// auto-advance late stages for flow
+const seq=[]; let user=[]; let locked=false;
+for(let i=1;i<=9;i++){const b=document.createElement('button'); b.className='node'; b.textContent=i; b.dataset.id=String(i); b.onclick=()=>press(i,b); grid.appendChild(b);}
+function flash(id){const b=[...grid.children].find(x=>Number(x.dataset.id)===id); if(!b) return; b.classList.add('ok'); setTimeout(()=>b.classList.remove('ok'),260);}
+function startPuzzle(){
+  puzzle.classList.remove('hide'); user=[]; seq.length=0; locked=true;
+  for(let i=0;i<4;i++) seq.push(1+Math.floor(Math.random()*9));
+  let k=0; const tm=setInterval(()=>{flash(seq[k]);k++; if(k>=seq.length){clearInterval(tm);locked=false;document.getElementById('puzzleText').textContent='Repeat now.';}},520);
+}
+function fail(btn){btn.classList.add('bad'); setTimeout(()=>btn.classList.remove('bad'),260); user=[]; startPuzzle();}
+function press(n,btn){
+  if(stage!==2||locked) return;
+  user.push(n); flash(n);
+  const idx=user.length-1;
+  if(user[idx]!==seq[idx]) return fail(btn);
+  if(user.length===seq.length){
+    puzzle.classList.add('hide');
+    setStage(3);
+  }
+}
+
 setInterval(()=>{
-  if(stage===6) setStage(7);
-  else if(stage===7) setStage(8);
-}, 2200);
+  if(stage===3&&holding){
+    const p=Math.min(1,(performance.now()-holdAt)/2000);
+    hintEl.textContent=`HINT: triggering ${(p*100|0)}%`;
+    if(p>=1){
+      setStage(0);
+      titleEl.textContent='PAYLOAD ACCEPTED';
+      subEl.textContent='we triggered something cool.';
+      hintEl.textContent='HINT: mission complete';
+      statusEl.textContent='STATUS: COMPLETE';
+      holding=false;
+    }
+  }
+},80);
 </script>
 </body>
 </html>
