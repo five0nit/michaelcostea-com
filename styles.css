@@ -42,6 +42,7 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .win-title{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,var(--title1),var(--title2));color:#fff;padding:4px 6px;font-size:12px;font-weight:700;cursor:move;user-select:none}
 .win-controls{display:flex;gap:2px;align-items:center}
 .win-btn,.win-close{position:relative;width:18px;height:16px;min-width:18px;border-top:1px solid var(--hi);border-left:1px solid var(--hi);border-right:1px solid var(--lo);border-bottom:1px solid var(--lo);background:#c0c0c0;color:#000;cursor:pointer;line-height:1;padding:0;display:grid;place-items:center}
+.win-close{font-size:0;color:transparent;text-shadow:none}
 .win-btn:hover,.win-close:hover{background:#d7d7d7}
 .win-btn:active,.win-btn[aria-pressed="true"],.win-close:active{border-top:1px solid var(--lo);border-left:1px solid var(--lo);border-right:1px solid var(--hi);border-bottom:1px solid var(--hi);background:#bdbdbd}
 .win-btn:active::before,.win-btn[aria-pressed="true"]::before,.win-close:active::before{transform:translate(1px,1px)}
