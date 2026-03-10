@@ -15,9 +15,10 @@ p{margin:7px 0;color:var(--muted);line-height:1.5}
 .btn{border:1px solid #4f73ba;background:linear-gradient(180deg,#8bc8ff,#58a8ff);color:#03172f;border-radius:999px;padding:11px 16px;font-weight:800;cursor:pointer}
 .hud{position:fixed;left:10px;right:10px;bottom:10px;z-index:3;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
 .chip{padding:7px 10px;border:1px solid #35507c;background:rgba(7,12,24,.62);border-radius:999px;font-size:.78rem;color:#c4d5f2}
-.center{position:fixed;inset:0;z-index:3;display:grid;place-items:center;pointer-events:none;text-align:center}
+.center{position:fixed;inset:0;z-index:3;display:grid;place-items:center;pointer-events:none;text-align:center;opacity:0;transition:opacity .35s ease}
+.center.show{opacity:1}
 .center h2{margin:0;font-size:clamp(1.6rem,7vw,4.6rem);letter-spacing:.15em;text-transform:uppercase}
-.center p{margin:8px 0 0;color:#b8c9e6}
+.center p{margin:8px 0 0;color:#b8c9e6;max-width:min(80vw,700px)}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(80px,1fr));gap:10px;margin-top:14px}
 .node{border:1px solid #47639a;background:#0a1632;color:#d9e9ff;border-radius:12px;padding:12px;font-weight:700;cursor:pointer;text-align:center}
 .node.ok{border-color:var(--good);box-shadow:0 0 20px rgba(107,255,190,.25)}
@@ -45,7 +46,7 @@ p{margin:7px 0;color:var(--muted);line-height:1.5}
   </div>
 </div>
 
-<div class="center"><div><h2 id="title">IDLE</h2><p id="subtitle">awaiting mission start</p></div></div>
+<div class="center" id="center"><div><h2 id="title">THE GATE WAITS</h2><p id="subtitle">Touch nothing, and nothing changes.</p></div></div>
 <div class="hud">
   <div class="chip" id="stage">STAGE 0/3</div>
   <div class="chip" id="hint">HINT: start mission</div>
@@ -56,7 +57,7 @@ p{margin:7px 0;color:var(--muted);line-height:1.5}
 const fx=document.getElementById('fx'),ctx=fx.getContext('2d');
 const titleEl=document.getElementById('title'),subEl=document.getElementById('subtitle');
 const stageEl=document.getElementById('stage'),hintEl=document.getElementById('hint'),statusEl=document.getElementById('status');
-const intro=document.getElementById('intro'),puzzle=document.getElementById('puzzle'),grid=document.getElementById('grid');
+const intro=document.getElementById('intro'),puzzle=document.getElementById('puzzle'),grid=document.getElementById('grid'),center=document.getElementById('center');
 let w=0,h=0,cx=0,cy=0,t=0,stage=0,swipeY=0,orbit=0,holding=false,holdAt=0;
 let raf;
 function resize(){const vv=window.visualViewport;w=fx.width=Math.round(vv?.width||innerWidth);h=fx.height=Math.round(vv?.height||innerHeight);cx=w/2;cy=h/2}
@@ -94,14 +95,21 @@ function draw(){
 }
 raf=requestAnimationFrame(draw);
 
+const stoic = {
+  1: 'He who masters impulse, masters fate.',
+  2: 'Order is memory under pressure.',
+  3: 'What you can hold, you can command.',
+  end: 'The obstacle was the gate.'
+};
+
 function setStage(n){
   stage=n; stageEl.textContent=`STAGE ${n}/3`;
-  if(n===1){titleEl.textContent='STABILIZE';subEl.textContent='swipe up to lock orbit';hintEl.textContent='HINT: swipe upward';statusEl.textContent='STATUS: ALIGNING';}
-  if(n===2){titleEl.textContent='SOLVE';subEl.textContent='repeat the node sequence';hintEl.textContent='HINT: watch then repeat';statusEl.textContent='STATUS: CHALLENGE';}
-  if(n===3){titleEl.textContent='TRIGGER';subEl.textContent='hold for payload';hintEl.textContent='HINT: hold 2 seconds';statusEl.textContent='STATUS: ARMED';}
+  if(n===1){titleEl.textContent='STABILIZE';subEl.textContent=stoic[1];hintEl.textContent='HINT: swipe upward';statusEl.textContent='STATUS: ALIGNING';}
+  if(n===2){titleEl.textContent='SOLVE';subEl.textContent=stoic[2];hintEl.textContent='HINT: watch then repeat';statusEl.textContent='STATUS: CHALLENGE';}
+  if(n===3){titleEl.textContent='TRIGGER';subEl.textContent=stoic[3];hintEl.textContent='HINT: hold 2 seconds';statusEl.textContent='STATUS: ARMED';}
 }
 
-document.getElementById('start').onclick=()=>{intro.classList.add('hide');setStage(1)};
+document.getElementById('start').onclick=()=>{intro.classList.add('hide');center.classList.add('show');setStage(1)};
 addEventListener('touchstart',e=>{swipeY=e.touches[0].clientY; if(stage===3){holding=true;holdAt=performance.now();}});
 addEventListener('touchmove',e=>{const dy=swipeY-e.touches[0].clientY; if(stage===1&&dy>90){orbit=1; setStage(2); startPuzzle();}}, {passive:true});
 addEventListener('touchend',()=>{holding=false; if(stage===3) hintEl.textContent='HINT: hold 2 seconds';});
@@ -137,7 +145,7 @@ setInterval(()=>{
     if(p>=1){
       setStage(0);
       titleEl.textContent='PAYLOAD ACCEPTED';
-      subEl.textContent='we triggered something cool.';
+      subEl.textContent=stoic.end;
       hintEl.textContent='HINT: mission complete';
       statusEl.textContent='STATUS: COMPLETE';
       holding=false;
