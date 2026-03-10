@@ -118,6 +118,12 @@ function bringFront(win){
   refreshTaskbar();
 }
 
+function syncImmersiveMode(){
+  const bw = document.getElementById('browserWindow');
+  const immersive = !!(isMobileMode() && bw && bw.classList.contains('open') && bw.classList.contains('maximized') && !bw.classList.contains('minimized'));
+  document.body.classList.toggle('immersive-app', immersive);
+}
+
 function openWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
@@ -132,6 +138,7 @@ function openWindow(id){
   win.classList.add('open');
   if(!win.classList.contains('maximized')) centerWindow(win);
   bringFront(win);
+  syncImmersiveMode();
   uiBeep('open');
 }
 
@@ -153,6 +160,7 @@ function closeWindow(id){
   delete win.dataset.prevHeight;
   delete win.dataset.prevRight;
   delete win.dataset.prevBottom;
+  syncImmersiveMode();
   refreshTaskbar();
 }
 
@@ -161,6 +169,7 @@ function minimizeWindow(id){
   if(!win) return;
   win.classList.remove('open','active');
   win.classList.add('minimized');
+  syncImmersiveMode();
   refreshTaskbar();
 }
 
@@ -188,6 +197,7 @@ function toggleMaximizeWindow(id){
   win.classList.add('open');
   bringFront(win);
   const isMax = win.classList.contains('maximized');
+  syncImmersiveMode();
   const maxBtn = win.querySelector('.win-max');
   if(maxBtn){
     maxBtn.setAttribute('aria-pressed', String(isMax));
@@ -904,6 +914,7 @@ async function boot(){
     }
 
     document.querySelectorAll('.win-window.open').forEach(clampWindowToViewport);
+    syncImmersiveMode();
   });
 }
 boot();

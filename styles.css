@@ -60,9 +60,9 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .win-close::before{transform:rotate(45deg)}
 .win-close::after{transform:rotate(-45deg)}
 .win-body{padding:10px;max-height:70vh;overflow:auto;font-size:14px;line-height:1.4}
-.iframe-wrap{padding:0;height:calc(100% - 22px)}
+.iframe-wrap{padding:0;height:calc(100% - 22px);display:flex;flex-direction:column;min-height:0}
 #iframeHint{padding:8px}
-#appFrame{width:100%;height:100%;border:0;background:#fff;display:block;min-height:360px}
+#appFrame{width:100%;flex:1 1 auto;height:auto;border:0;background:#fff;display:block;min-height:0}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
 .programs-group-title{grid-column:1/-1;margin:4px 0 0;font-size:14px;color:#0d3069}
@@ -124,6 +124,10 @@ body.mobile-mode .win-window.maximized{
   width:100vw !important;
   height:calc(100vh - 40px) !important;
 }
+body.mobile-mode.immersive-app .taskbar{display:none !important}
+body.mobile-mode.immersive-app .container{height:100vh;padding-bottom:0}
+body.mobile-mode.immersive-app #browserWindow.win-window.maximized{height:100vh !important}
+body.mobile-mode.immersive-app #browserWindow .mikenet-bar{display:none}
 body.mobile-mode #readerWindow,
 body.mobile-mode #aboutWindow{
   height:auto !important;
