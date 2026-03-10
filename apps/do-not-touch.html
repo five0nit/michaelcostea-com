@@ -50,6 +50,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
   <div class="top">
     <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v60</div>
     <div class="chip" id="zoneChip">TIMELINE ZONE: Foundations</div>
+    <div class="chip" id="objectiveChip">OBJECTIVE: Explore chapter nodes</div>
     <div class="chip" id="progressChip">NODES VIEWED: 0/8</div>
     <div class="chip" id="fpsChip">FPS --</div>
     <div class="chip" id="soundChip">SFX ON</div>
@@ -102,7 +103,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 <script>
 const cv=document.getElementById('game'),ctx=cv.getContext('2d');
 const mini=document.getElementById('mini'),mctx=mini.getContext('2d');
-const zoneChip=document.getElementById('zoneChip'),progressChip=document.getElementById('progressChip'),fpsChip=document.getElementById('fpsChip'),soundChip=document.getElementById('soundChip'),stateChip=document.getElementById('stateChip'),saveChip=document.getElementById('saveChip'),timeChip=document.getElementById('timeChip'),weatherChip=document.getElementById('weatherChip');
+const zoneChip=document.getElementById('zoneChip'),objectiveChip=document.getElementById('objectiveChip'),progressChip=document.getElementById('progressChip'),fpsChip=document.getElementById('fpsChip'),soundChip=document.getElementById('soundChip'),stateChip=document.getElementById('stateChip'),saveChip=document.getElementById('saveChip'),timeChip=document.getElementById('timeChip'),weatherChip=document.getElementById('weatherChip');
 const roleTitle=document.getElementById('roleTitle'),roleBody=document.getElementById('roleBody'),bar=document.getElementById('bar');
 const toast=document.getElementById('toast');
 const chapterCard=document.getElementById('chapterCard');
@@ -115,7 +116,7 @@ const world={w:3200,h:1800};
 const player={x:180,y:900,s:3.0,frame:0,face:'down'};
 let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
-let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false;
+let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
 let zoneSeen=new Set(JSON.parse(localStorage.getItem('vr_zones_v1')||'[]'));
 
 const zones=[{name:'Foundations',x:0,y:0,w:860,h:1800},{name:'Telecom/Ops',x:860,y:0,w:980,h:1800},{name:'Electrical Trade',x:1840,y:0,w:820,h:1800},{name:'Growth & Innovation',x:2660,y:0,w:540,h:1800}];
@@ -125,6 +126,11 @@ const npcs=[
   {x:1220,y:980,name:'Mentor: Ops',quote:'Measure, then optimize.'},
   {x:2080,y:1080,name:'Mentor: Trade',quote:'Craft is consistency under pressure.'},
   {x:2860,y:520,name:'Mentor: Growth',quote:'Partnerships compound execution.'}
+];
+const signposts=[
+  {x:520,y:920,text:'Chapter Path → Foundations to Ops'},
+  {x:1680,y:920,text:'Tradecraft District → Electrical Era'},
+  {x:2600,y:920,text:'Innovation District → Current Leadership'}
 ];
 
 const nodes=[
@@ -188,6 +194,11 @@ function drawNPC(x,y,idx){
   drawRect(x-6,y+7+bob,4,2,'#1c2538');
   drawRect(x+2,y+7+bob,4,2,'#1c2538');
 }
+function drawSignpost(x,y){
+  drawRect(x,y,2,14,'#7a8fb5');
+  drawRect(x+2,y+2,20,10,'#dce6f8');
+  drawRect(x+4,y+4,16,2,'#4d6a9f');
+}
 
 function drawParallax(){
   const skyBands=night?['#070b15','#0b1324','#121d33','#1a2744']:['#0f1b38','#12224a','#16305f','#1a3d73'];
@@ -228,13 +239,15 @@ function drawWorld(){
   drawRect(2730,240,170,120,'#596b8f'); drawRect(2746,256,138,84,'#9ab0d6');
 
   // vegetation by district
-  for(let i=0;i<34;i++) drawTree(420+i*48,260+(i%4)*18);
-  for(let i=0;i<20;i++) drawTree(1900+i*42,1260+(i%3)*14);
-  for(let i=0;i<14;i++) drawTree(2700+i*24,520+(i%2)*14);
+  const dense = quality==='high';
+  for(let i=0;i<(dense?34:18);i++) drawTree(420+i*48,260+(i%4)*18);
+  for(let i=0;i<(dense?20:10);i++) drawTree(1900+i*42,1260+(i%3)*14);
+  for(let i=0;i<(dense?14:7);i++) drawTree(2700+i*24,520+(i%2)*14);
 
   // street furniture
   for(let i=0;i<30;i++) drawStreetlight(260+i*96,884);
   npcs.forEach((n,i)=>drawNPC(n.x,n.y,i));
+  signposts.forEach(s=>drawSignpost(s.x,s.y));
 
   // water ribbon with clearer edges
   drawRect(1480,1240,620,220,'#325f90');
@@ -268,6 +281,9 @@ function drawMini(){
   zones.forEach((z,i)=>{mctx.fillStyle=['#2d3f6f','#36528a','#3a6a93','#4c7599'][i];mctx.fillRect(z.x/world.w*220,0,z.w/world.w*220,120)});
   npcs.forEach(n=>{
     if(Math.hypot(player.x-n.x,player.y-n.y)<24){ roleTitle.textContent=n.name; roleBody.textContent=n.quote; }
+  });
+  signposts.forEach(sp=>{
+    if(Math.hypot(player.x-sp.x,player.y-sp.y)<26){ roleTitle.textContent='Signpost'; roleBody.textContent=sp.text; }
   });
 
   nodes.forEach(n=>{mctx.fillStyle=viewed.has(n.id)?'#8bff9e':'#79d9ff';mctx.fillRect(n.x/world.w*220-1,n.y/world.h*120-1,3,3)});
@@ -314,6 +330,9 @@ function loop(now){
   npcs.forEach(n=>{
     if(Math.hypot(player.x-n.x,player.y-n.y)<24){ roleTitle.textContent=n.name; roleBody.textContent=n.quote; }
   });
+  signposts.forEach(sp=>{
+    if(Math.hypot(player.x-sp.x,player.y-sp.y)<26){ roleTitle.textContent='Signpost'; roleBody.textContent=sp.text; }
+  });
 
   nodes.forEach(n=>{
     const d=Math.hypot(player.x-n.x,player.y-n.y);
@@ -324,11 +343,13 @@ function loop(now){
 
   const z=zoneFor(player.x);
   zoneChip.textContent='TIMELINE ZONE: '+z.name;
+  objectiveChip.textContent = viewed.size<nodes.length ? 'OBJECTIVE: Unlock all chapter nodes' : 'OBJECTIVE: Review role cards / export resume';
   if(!zoneSeen.has(z.name)){ zoneSeen.add(z.name); showChapter('Entered '+z.name); saveViewed(); }
   progressChip.textContent=`NODES VIEWED: ${viewed.size}/${nodes.length}`;
   bar.style.width=(viewed.size/nodes.length*100).toFixed(1)+'%';
   timeChip.textContent=night?'TIME NIGHT':'TIME DAY';
   weatherChip.textContent=rain?'WEATHER RAIN':'WEATHER CLEAR';
+  quality = fps<42 ? 'low' : 'high';
   ['N2','N6','N8'].forEach(id=>{const li=document.querySelector(`[data-q="${id}"]`); if(li) li.classList.toggle('done', viewed.has(id));});
 
   requestAnimationFrame(loop);
