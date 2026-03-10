@@ -12,84 +12,96 @@
       "slug": "planner",
       "status": "live",
       "description": "Location-aware day planner with budget, weather fallback, kids mode, and history logs.",
-      "url": "./apps/planner.html"
+      "url": "./apps/planner.html",
+      "category": "webapps"
     },
     {
       "name": "Business Card 3D Webapp",
       "slug": "cards",
       "status": "beta",
       "description": "Deterministic 3D business-card builder with visual presets and STL outputs.",
-      "url": "./apps/cards.html"
+      "url": "./apps/cards.html",
+      "category": "webapps"
     },
     {
       "name": "OZQuotes Platform",
       "slug": "ozquotes",
       "status": "beta",
       "description": "Quote and workflow platform under active development.",
-      "url": "./apps/ozquotes.html"
+      "url": "./apps/ozquotes.html",
+      "category": "webapps"
     },
     {
       "name": "MichaelOS Paint",
       "slug": "paint",
       "status": "live",
       "description": "Browser paint app with pen/eraser, touch support, and PNG export.",
-      "url": "./apps/paint.html"
+      "url": "./apps/paint.html",
+      "category": "webapps"
     },
     {
       "name": ".text Editor",
       "slug": "text",
       "status": "live",
       "description": "Simple notepad-style text editor with local save and .txt export.",
-      "url": "./apps/text.html"
+      "url": "./apps/text.html",
+      "category": "webapps"
     },
     {
       "name": "Live Chat Room",
       "slug": "chat",
       "status": "live",
       "description": "Public real-time visitor chat lobby.",
-      "url": "./apps/chat.html"
+      "url": "./apps/chat.html",
+      "category": "webapps"
     },
     {
       "name": "IF.EXE",
       "slug": "if-exe",
       "status": "live",
       "description": "Pixel animated poem player with optional TTS narration.",
-      "url": "./apps/if-exe.html"
+      "url": "./apps/if-exe.html",
+      "category": "webapps"
     },
     {
       "name": "DOOM.EXE",
       "slug": "doom",
       "status": "live",
       "description": "Play classic DOOM in-browser via DOS emulation.",
-      "url": "./apps/doom.html"
+      "url": "./apps/doom.html",
+      "category": "webapps"
     },
     {
       "name": "HACKER.EXE",
       "slug": "hacker-exe",
       "status": "live",
       "description": "Shows your public IP and rough geolocation.",
-      "url": "./apps/hacker-exe.html"
+      "url": "./apps/hacker-exe.html",
+      "category": "webapps"
     },
     {
       "name": "MINESWEEPER.EXE",
       "slug": "minesweeper",
       "status": "live",
       "description": "Classic Windows-style mines game with flagging and reveal flood.",
-      "url": "./apps/minesweeper.html"
+      "url": "./apps/games/minesweeper.html",
+      "category": "games"
     },
     {
       "name": "SOLITAIRE.EXE",
       "slug": "solitaire",
       "status": "beta",
       "description": "Retro mini-Klondike card game inspired by Windows Solitaire.",
-      "url": "./apps/solitaire.html"
+      "url": "./apps/games/solitaire.html",
+      "category": "games"
     },
     {
       "name": "SKY SLOPE.EXE",
       "slug": "sky-slope",
       "status": "live",
       "description": "Downhill retro sky-slope game inspired by classic SkiFree vibes.",
-      "url": "./apps/skifree.html"
+      "url": "./apps/games/skifree.html",
+      "category": "games"
     }
   ]
 }

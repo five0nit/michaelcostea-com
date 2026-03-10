@@ -612,16 +612,30 @@ async function boot(){
   if (statApps) statApps.textContent = String(projects.length || 0);
 
   const apps = document.getElementById('apps');
-  projects.forEach(p => {
-    const card = document.createElement('article');
-    card.className = 'card';
-    const badgeText = p.status === 'live' ? 'Production' : (p.status === 'beta' ? 'Beta' : 'Private');
-    card.innerHTML = `
-      <div class="row"><h3>${p.name}</h3><span class="badge ${p.status}">${badgeText}</span></div>
-      <p class="desc">${p.description || ''}</p>
-      <div class="row"><small class="muted">${p.slug || 'project'}</small><a class="btn" href="#" data-launch-inline="${p.url}" data-app-title="${p.name}">Open</a></div>
-    `;
-    apps.appendChild(card);
+  const grouped = {
+    webapps: projects.filter(p => (p.category||'webapps') === 'webapps'),
+    games: projects.filter(p => p.category === 'games')
+  };
+  const categoryTitle = { webapps: 'Web Apps', games: 'Games' };
+
+  Object.entries(grouped).forEach(([cat,list]) => {
+    if(!list.length) return;
+    const head = document.createElement('h3');
+    head.className = 'programs-group-title';
+    head.textContent = categoryTitle[cat] || cat;
+    apps.appendChild(head);
+
+    list.forEach(p => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      const badgeText = p.status === 'live' ? 'Production' : (p.status === 'beta' ? 'Beta' : 'Private');
+      card.innerHTML = `
+        <div class="row"><h3>${p.name}</h3><span class="badge ${p.status}">${badgeText}</span></div>
+        <p class="desc">${p.description || ''}</p>
+        <div class="row"><small class="muted">${p.slug || 'project'}</small><a class="btn" href="#" data-launch-inline="${p.url}" data-app-title="${p.name}">Open</a></div>
+      `;
+      apps.appendChild(card);
+    });
   });
 
   apps.querySelectorAll('[data-launch-inline]').forEach(a => {
