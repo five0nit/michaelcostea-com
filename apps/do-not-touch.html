@@ -11,12 +11,12 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 #game{position:fixed;inset:0;width:100%;height:100dvh;image-rendering:pixelated;image-rendering:crisp-edges;background:#101a33}
 .ui{position:fixed;inset:0;pointer-events:none}
 .top{position:absolute;left:10px;right:10px;top:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
-.chip{pointer-events:auto;padding:7px 11px;border:1px solid var(--line);background:rgba(9,15,30,.78);border-radius:999px;font-size:.8rem;color:#cfe0ff}
-.panel{position:absolute;right:10px;bottom:10px;width:min(560px,96vw);pointer-events:auto;background:rgba(8,13,27,.9);border:1px solid var(--line);border-radius:14px;padding:12px;backdrop-filter:blur(6px)}
-.panel h3{margin:0 0 6px;font-size:1rem;letter-spacing:.04em}
+.chip{pointer-events:auto;padding:7px 11px;border:2px solid #607eb6;background:#121f3d;border-radius:6px;font-size:.78rem;color:#cfe0ff;box-shadow:inset 0 1px 0 #94b7ff,inset -1px -1px 0 #0b1429;text-shadow:1px 1px 0 #0a1021}
+.panel{position:absolute;right:10px;bottom:10px;width:min(560px,96vw);pointer-events:auto;background:#0d1732;border:2px solid #5f7eb7;border-radius:10px;padding:12px;box-shadow:0 0 0 2px #0a1225,inset 0 1px 0 #8ba9de}
+.panel h3{margin:0 0 6px;font-size:1rem;letter-spacing:.04em;text-shadow:1px 1px 0 #091127}
 .panel p{margin:6px 0;color:var(--muted);line-height:1.45}
 .row{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:1px solid #4f71af;background:linear-gradient(180deg,#8ecfff,#5eaefe);color:#03172f;border-radius:999px;padding:9px 12px;font-weight:800;cursor:pointer;transition:transform .12s ease,filter .12s ease}
+.btn{border:2px solid #4f71af;background:linear-gradient(180deg,#94d4ff,#5eaefe);color:#03172f;border-radius:6px;padding:9px 12px;font-weight:800;cursor:pointer;transition:transform .12s ease,filter .12s ease;box-shadow:inset 0 1px 0 #dcf4ff,inset -1px -1px 0 #2f5d9c}
 .btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
 .intro{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 20% -20%,#1a2855 0%,transparent 45%),rgba(3,5,10,.9);z-index:9}
 .card{width:min(860px,96vw);background:rgba(8,14,28,.92);border:1px solid #35507c;border-radius:16px;padding:18px}
@@ -206,6 +206,7 @@ let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
 let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
 let lastAutoOpenId=null,lastAutoOpenAt=0;
+const colorGrade = { r: 31, g: 63, b: 31 }; // RGB565-ish
 let zoneSeen=new Set(JSON.parse(localStorage.getItem('vr_zones_v1')||'[]'));
 
 const zones=[{name:'Foundations',x:0,y:0,w:860,h:1800},{name:'Telecom/Ops',x:860,y:0,w:980,h:1800},{name:'Electrical Trade',x:1840,y:0,w:820,h:1800},{name:'Growth & Innovation',x:2660,y:0,w:540,h:1800}];
@@ -243,6 +244,22 @@ function beep(freq=520,d=.06){ if(!sfx) return; try{ const ac=(beep.ac ||= new (
 function toastMsg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>toast.classList.remove('show'),1200)}
 function zoneFor(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
 function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0)}
+function quantizePost(){
+  const img=pctx.getImageData(0,0,post.width,post.height);
+  const d=img.data;
+  for(let i=0;i<d.length;i+=4){
+    const px=(i/4)%post.width, py=((i/4)/post.width)|0;
+    const checker=((px+py)&1)?1:-1;
+    const dr=checker*3,dg=checker*2,db=checker*3;
+    let r=Math.max(0,Math.min(255,d[i]+dr));
+    let g=Math.max(0,Math.min(255,d[i+1]+dg));
+    let b=Math.max(0,Math.min(255,d[i+2]+db));
+    d[i]   = Math.round((r/255)*colorGrade.r)*(255/colorGrade.r);
+    d[i+1] = Math.round((g/255)*colorGrade.g)*(255/colorGrade.g);
+    d[i+2] = Math.round((b/255)*colorGrade.b)*(255/colorGrade.b);
+  }
+  pctx.putImageData(img,0,0);
+}
 const zonePalette=[
   {base:'#1b2348',tileA:'#2a3d7a',tileB:'#304d8f',accent:'#79dcff'},
   {base:'#23295a',tileA:'#33468b',tileB:'#3d56a3',accent:'#b6b8ff'},
@@ -457,12 +474,15 @@ function render(){
   // Pixel-art post pass: downsample then nearest-neighbor upscale for crisp era-accurate look
   pctx.clearRect(0,0,post.width,post.height);
   pctx.drawImage(cv,0,0,post.width,post.height);
+  quantizePost();
   ctx.save();
   ctx.setTransform(1,0,0,1,0,0);
   ctx.imageSmoothingEnabled=false;
   ctx.clearRect(0,0,vw,vh);
   ctx.drawImage(post,0,0,post.width,post.height,0,0,vw,vh);
-  // subtle grading to emulate tightly curated pixel palette
+  // subtle scanline + grading for 16-bit display character
+  ctx.fillStyle='rgba(8,12,24,0.08)';
+  for(let y=0;y<vh;y+=2){ ctx.fillRect(0,y,vw,1); }
   ctx.fillStyle='rgba(14,18,32,0.08)';
   ctx.fillRect(0,0,vw,vh);
   ctx.restore();
