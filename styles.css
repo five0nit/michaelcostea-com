@@ -148,10 +148,10 @@ body.mobile-mode .win-body{max-height:calc(100dvh - 230px)}
 body.mobile-mode #browserWindow .win-body{padding:0}
 body.mobile-mode .taskbar{height:40px;padding:5px 6px}
 body.mobile-mode .taskbar-windows{display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin}
-body.mobile-mode .start-menu{width:min(96vw,380px)}
-body.mobile-mode .start-items{padding-left:8px;position:relative;overflow:visible;max-height:none}
+body.mobile-mode .start-menu{width:min(96vw,380px);max-height:calc(100dvh - 52px);overflow:auto}
+body.mobile-mode .start-items{padding-left:8px;position:relative;overflow:visible;max-height:none;padding-bottom:10px}
 body.mobile-mode .start-items::before{display:none}
-body.mobile-mode .start-submenu{position:absolute;left:6px;right:6px;min-width:0;box-shadow:2px 2px 0 #000;margin:0;z-index:70}
+body.mobile-mode .start-submenu{position:absolute;left:6px;right:6px;min-width:0;box-shadow:2px 2px 0 #000;margin:0;z-index:70;max-height:calc(100dvh - 120px);overflow:auto}
 body.mobile-mode #startProgramsMenu{top:6px}
 body.mobile-mode #startSettingsMenu{top:74px}
 body.mobile-mode #startWebAppsMenu,
