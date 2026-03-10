@@ -32,6 +32,9 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 .toast.show{opacity:1}
 .progress{height:8px;border:1px solid #4a6798;border-radius:999px;overflow:hidden;background:#0f1a33;margin-top:8px}
 .progress > span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#6bbdff,#8bff9e)}
+.legend{font-size:.74rem;color:#b7cceb;margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.dot.node{background:#79d9ff}.dot.done{background:#8bff9e}.dot.npc{background:#ffd166}
 .modal{position:fixed;inset:0;z-index:11;background:rgba(2,6,14,.78);display:grid;place-items:center;padding:14px}
 .modal-card{width:min(760px,96vw);max-height:80dvh;overflow:auto;background:#0d1630;border:1px solid #4c6ea7;border-radius:14px;padding:14px}
 .modal-card h3{margin:.2rem 0 .5rem}.modal-card ul{margin:.2rem 0 .5rem;padding-left:18px;color:#cfe0ff}
@@ -65,6 +68,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
       <li data-q="N6">Visit Electrical Trade chapter</li>
       <li data-q="N8">Visit Growth & Innovation chapter</li>
     </ul>
+    <div class="legend"><span><i class="dot node"></i>chapter node</span><span><i class="dot done"></i>completed</span><span><i class="dot npc"></i>mentor NPC</span></div>
     <div class="row">
       <button class="btn" id="nextNode">Jump to Next Chapter</button>
       <button class="btn" id="viewRole">View Role Card</button>
@@ -108,13 +112,21 @@ addEventListener('resize',resizeCanvas); if(window.visualViewport) window.visual
 
 const TILE=16;
 const world={w:3200,h:1800};
-const player={x:180,y:900,s:3.0,frame:0};
+const player={x:180,y:900,s:3.0,frame:0,face:'down'};
 let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
 let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false;
 let zoneSeen=new Set(JSON.parse(localStorage.getItem('vr_zones_v1')||'[]'));
 
 const zones=[{name:'Foundations',x:0,y:0,w:860,h:1800},{name:'Telecom/Ops',x:860,y:0,w:980,h:1800},{name:'Electrical Trade',x:1840,y:0,w:820,h:1800},{name:'Growth & Innovation',x:2660,y:0,w:540,h:1800}];
+
+const npcs=[
+  {x:360,y:840,name:'Mentor: Process',quote:'Systems beat motivation.'},
+  {x:1220,y:980,name:'Mentor: Ops',quote:'Measure, then optimize.'},
+  {x:2080,y:1080,name:'Mentor: Trade',quote:'Craft is consistency under pressure.'},
+  {x:2860,y:520,name:'Mentor: Growth',quote:'Partnerships compound execution.'}
+];
+
 const nodes=[
 {id:'N1',x:220,y:900,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — startup operations and service flow.',highlights:['Owner/operator support','Daily service ops discipline','Small business execution']},
 {id:'N2',x:980,y:1240,title:'Optus Retention Consultant (2010-2013)',text:'Escalation handling and retention process redesign.',highlights:['Process simplification','200 retention processes rewritten','Customer save optimization']},
@@ -169,6 +181,13 @@ function drawStreetlight(x,y){
   drawRect(x,y+11,8,3,'#e6f2ff');
   if(((time/20)|0)%2===0) drawRect(x+1,y+12,6,2,'#fff7a8');
 }
+function drawNPC(x,y,idx){
+  const bob=((time/10+idx*4)|0)%2;
+  drawRect(x-7,y-11+bob,14,18,'#ffd166');
+  drawRect(x-5,y-8+bob,10,6,'#1c2538');
+  drawRect(x-6,y+7+bob,4,2,'#1c2538');
+  drawRect(x+2,y+7+bob,4,2,'#1c2538');
+}
 
 function drawParallax(){
   const skyBands=night?['#070b15','#0b1324','#121d33','#1a2744']:['#0f1b38','#12224a','#16305f','#1a3d73'];
@@ -215,6 +234,7 @@ function drawWorld(){
 
   // street furniture
   for(let i=0;i<30;i++) drawStreetlight(260+i*96,884);
+  npcs.forEach((n,i)=>drawNPC(n.x,n.y,i));
 
   // water ribbon with clearer edges
   drawRect(1480,1240,620,220,'#325f90');
@@ -237,13 +257,19 @@ function drawPlayer(){
   drawRect(player.x-9,player.y+10,18,3,'rgba(0,0,0,.35)');
   drawRect(player.x-8,player.y-10,16,20,'#ffd166');
   drawRect(player.x-6,player.y-7,12,8,'#111');
-  drawRect(player.x-4,player.y-5,8,4,'#fff');
+  if(player.face==='left') drawRect(player.x-6,player.y-5,4,4,'#fff');
+  else if(player.face==='right') drawRect(player.x+2,player.y-5,4,4,'#fff');
+  else drawRect(player.x-3,player.y-5,6,4,'#fff');
   if(player.frame) drawRect(player.x-8,player.y+10,6,2,'#111'); else drawRect(player.x+2,player.y+10,6,2,'#111');
 }
 
 function drawMini(){
   mctx.fillStyle='#0e162d';mctx.fillRect(0,0,220,120);
   zones.forEach((z,i)=>{mctx.fillStyle=['#2d3f6f','#36528a','#3a6a93','#4c7599'][i];mctx.fillRect(z.x/world.w*220,0,z.w/world.w*220,120)});
+  npcs.forEach(n=>{
+    if(Math.hypot(player.x-n.x,player.y-n.y)<24){ roleTitle.textContent=n.name; roleBody.textContent=n.quote; }
+  });
+
   nodes.forEach(n=>{mctx.fillStyle=viewed.has(n.id)?'#8bff9e':'#79d9ff';mctx.fillRect(n.x/world.w*220-1,n.y/world.h*120-1,3,3)});
   mctx.fillStyle='#ffd166';mctx.fillRect(player.x/world.w*220-2,player.y/world.h*120-2,4,4);
 }
@@ -279,11 +305,15 @@ function loop(now){
   if(paused){ requestAnimationFrame(loop); return; }
 
   let vx=0,vy=0;
-  if(keys['ArrowLeft']||keys['a']) vx-=player.s; if(keys['ArrowRight']||keys['d']) vx+=player.s;
-  if(keys['ArrowUp']||keys['w']) vy-=player.s; if(keys['ArrowDown']||keys['s']) vy+=player.s;
+  if(keys['ArrowLeft']||keys['a']) {vx-=player.s; player.face='left';} if(keys['ArrowRight']||keys['d']) {vx+=player.s; player.face='right';}
+  if(keys['ArrowUp']||keys['w']) {vy-=player.s; player.face='up';} if(keys['ArrowDown']||keys['s']) {vy+=player.s; player.face='down';}
   if(joy.active){vx+=joy.x*player.s; vy+=joy.y*player.s}
   if(keys['Shift']){vx*=1.6; vy*=1.6}
   player.x=Math.max(30,Math.min(world.w-30,player.x+vx)); player.y=Math.max(80,Math.min(world.h-30,player.y+vy));
+
+  npcs.forEach(n=>{
+    if(Math.hypot(player.x-n.x,player.y-n.y)<24){ roleTitle.textContent=n.name; roleBody.textContent=n.quote; }
+  });
 
   nodes.forEach(n=>{
     const d=Math.hypot(player.x-n.x,player.y-n.y);
@@ -325,7 +355,7 @@ document.getElementById('toggleFull').onclick=async()=>{try{if(!document.fullscr
 document.getElementById('resetProgress').onclick=()=>{viewed=new Set();zoneSeen=new Set();saveViewed();toastMsg('Progress reset');};
 document.getElementById('snapBtn').onclick=()=>{const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='visual-resume-screenshot.png';a.click();};
 document.getElementById('contrastBtn').onclick=()=>{hc=!hc;document.body.classList.toggle('hc',hc);};
-document.getElementById('enter').onclick=()=>{document.getElementById('intro').classList.add('hide');toastMsg('Experience started');};
+document.getElementById('enter').onclick=()=>{document.getElementById('intro').classList.add('hide');toastMsg('Experience started • M sound • P pause • F fullscreen • N night • R rain');};
 
 const qp=new URL(location.href).searchParams.get('node'); if(qp){const n=nodes.find(n=>n.id.toLowerCase()===qp.toLowerCase()); if(n){player.x=n.x-40;player.y=n.y-40;activeNode=n;}}
 saveViewed();
