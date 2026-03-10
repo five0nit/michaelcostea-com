@@ -368,13 +368,46 @@ function drawWorld(){
 
 function drawPlayer(){
   player.frame = (Math.abs(keys['ArrowLeft']||keys['a']?1:0)+Math.abs(keys['ArrowRight']||keys['d']?1:0)+Math.abs(keys['ArrowUp']||keys['w']?1:0)+Math.abs(keys['ArrowDown']||keys['s']?1:0)+Math.abs(joy.x)+Math.abs(joy.y))>0 ? ((time/8)|0)%2 : 0;
-  drawRect(player.x-9,player.y+10,18,3,'rgba(0,0,0,.35)');
-  drawRect(player.x-8,player.y-10,16,20,'#ffd166');
-  drawRect(player.x-6,player.y-7,12,8,'#111');
-  if(player.face==='left') drawRect(player.x-6,player.y-5,4,4,'#fff');
-  else if(player.face==='right') drawRect(player.x+2,player.y-5,4,4,'#fff');
-  else drawRect(player.x-3,player.y-5,6,4,'#fff');
-  if(player.frame) drawRect(player.x-8,player.y+10,6,2,'#111'); else drawRect(player.x+2,player.y+10,6,2,'#111');
+
+  // shadow
+  drawRect(player.x-10,player.y+11,20,3,'rgba(0,0,0,.35)');
+
+  // shirt + body (white tee look)
+  drawRect(player.x-8,player.y-1,16,12,'#f4f8ff');
+  drawRect(player.x-8,player.y+11,16,2,'#2d3752');
+
+  // shoulder strap (like reference photo)
+  drawRect(player.x+2,player.y-1,2,12,'#3a414f');
+  drawRect(player.x+3,player.y+1,2,10,'#59657c');
+
+  // neck + head
+  drawRect(player.x-2,player.y-5,4,4,'#d79b73');
+  drawRect(player.x-6,player.y-13,12,9,'#dba57d');
+
+  // blue cap
+  drawRect(player.x-7,player.y-15,14,4,'#2d58b8');
+  drawRect(player.x-5,player.y-11,10,2,'#3f73de');
+  drawRect(player.x-3,player.y-10,6,1,'#8cb0ff');
+
+  // facial features / slight stubble line
+  drawRect(player.x-4,player.y-9,2,1,'#2f2a29');
+  drawRect(player.x+2,player.y-9,2,1,'#2f2a29');
+  drawRect(player.x-2,player.y-7,4,1,'#7f5745');
+  drawRect(player.x-3,player.y-6,6,1,'#8c6150');
+
+  // yellow/orange chest logo hint
+  drawRect(player.x-2,player.y+3,4,2,'#ffb33a');
+  drawRect(player.x-4,player.y+4,2,2,'#ff9f1f');
+  drawRect(player.x+2,player.y+4,2,2,'#ff9f1f');
+
+  // motion legs
+  if(player.frame){
+    drawRect(player.x-8,player.y+11,6,2,'#182033');
+    drawRect(player.x+2,player.y+12,6,2,'#182033');
+  }else{
+    drawRect(player.x-8,player.y+12,6,2,'#182033');
+    drawRect(player.x+2,player.y+11,6,2,'#182033');
+  }
 }
 
 function drawMini(){
