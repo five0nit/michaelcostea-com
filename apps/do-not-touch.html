@@ -117,7 +117,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 <canvas id="game"></canvas>
 <div class="ui">
   <div class="top">
-    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v62 16-BIT</div>
+    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v64 AAA SNES</div>
     <div class="chip" id="zoneChip">TIMELINE ZONE: Foundations</div>
     <div class="chip" id="objectiveChip">OBJECTIVE: Explore chapter nodes</div>
     <div class="chip" id="chapterChip">CHAPTER: --</div>
@@ -309,10 +309,10 @@ function quantizePost(){
   pctx.putImageData(img,0,0);
 }
 const zonePalette=[
-  {base:'#1b2348',tileA:'#2a3d7a',tileB:'#304d8f',accent:'#79dcff'},
-  {base:'#23295a',tileA:'#33468b',tileB:'#3d56a3',accent:'#b6b8ff'},
-  {base:'#1d3d52',tileA:'#2a5d7e',tileB:'#347396',accent:'#9fffd0'},
-  {base:'#3a2f5e',tileA:'#58448e',tileB:'#6a54a7',accent:'#ffd475'}
+  {base:'#1a2142',tileA:'#27386d',tileB:'#2f4684',accent:'#79dcff'},
+  {base:'#212654',tileA:'#314280',tileB:'#3a5198',accent:'#b6b8ff'},
+  {base:'#1a374a',tileA:'#255770',tileB:'#2f6c87',accent:'#9fffd0'},
+  {base:'#342a55',tileA:'#4f3f84',tileB:'#624ea0',accent:'#ffd475'}
 ];
 function pHash(x,y){ return ((x*73856093)^(y*19349663)) & 255; }
 function drawTile(x,y,c1,c2){drawRect(x,y,TILE,TILE,c1);drawRect(x+2,y+2,4,4,c2);}
@@ -345,17 +345,20 @@ function drawNPC(x,y,idx){
   const bob=((time/10+idx*4)|0)%2;
   const style=idx%6;
   const body=['#ffd166','#7fd7ff','#9eff7b','#ff89c4','#ffd475','#b6b8ff'][style];
-  drawRect(x-7,y-11+bob,14,18,body);
+  // outline
+  drawRect(x-8,y-13+bob,16,22,'#111827');
+  drawRect(x-7,y-12+bob,14,20,body);
   // hair/hat variants for fun cameos
-  if(style===0){ drawRect(x-6,y-12+bob,12,3,'#111'); }
-  else if(style===1){ drawRect(x-6,y-12+bob,12,3,'#2d58b8'); }
-  else if(style===2){ drawRect(x-6,y-12+bob,12,3,'#7b2e2e'); }
-  else if(style===3){ drawRect(x-6,y-12+bob,12,3,'#2a2a2a'); }
-  else if(style===4){ drawRect(x-6,y-12+bob,12,3,'#dba55e'); }
-  else { drawRect(x-6,y-12+bob,12,3,'#4c3b7e'); }
+  if(style===0){ drawRect(x-6,y-13+bob,12,3,'#111'); }
+  else if(style===1){ drawRect(x-6,y-13+bob,12,3,'#2d58b8'); }
+  else if(style===2){ drawRect(x-6,y-13+bob,12,3,'#7b2e2e'); }
+  else if(style===3){ drawRect(x-6,y-13+bob,12,3,'#2a2a2a'); }
+  else if(style===4){ drawRect(x-6,y-13+bob,12,3,'#dba55e'); }
+  else { drawRect(x-6,y-13+bob,12,3,'#4c3b7e'); }
   drawRect(x-5,y-8+bob,10,6,'#1c2538');
-  drawRect(x-6,y+7+bob,4,2,'#1c2538');
-  drawRect(x+2,y+7+bob,4,2,'#1c2538');
+  drawRect(x-6,y+8+bob,4,2,'#1c2538');
+  drawRect(x+2,y+8+bob,4,2,'#1c2538');
+  drawRect(x-6,y-1+bob,12,1,'rgba(255,255,255,.18)');
 }
 function drawSignpost(x,y){
   drawRect(x,y,3,18,'#7a8fb5');
@@ -387,6 +390,12 @@ function drawNodeProp(n){
 function drawParallax(){
   const skyBands=night?['#070b15','#0b1324','#121d33','#1a2744']:['#0f1b38','#12224a','#16305f','#1a3d73'];
   skyBands.forEach((c,i)=>drawRect(0,0+i*90,vw,90,c));
+  // mountain layers (SNES depth)
+  for(let i=0;i<7;i++){
+    const mx=((i*240 - time*0.35)%(vw+260))-130;
+    drawRect(mx,170,120,34,'rgba(42,66,108,.45)');
+    drawRect(mx+12,154,96,18,'rgba(62,90,136,.35)');
+  }
   for(let i=0;i<60;i++){ const x=((i*137 + time*0.25*(1+i%3))% (vw+200))-100; const y=20+(i%5)*25; drawRect(x,y,2,2,'rgba(255,255,255,.65)'); }
   for(let i=0;i<8;i++){ const x=((i*260 + time*0.7*(i%2?1:-1))%(vw+260))-130; const y=60+i*18; drawRect(x,y,46,10,'rgba(255,255,255,.08)'); drawRect(x+8,y+10,30,4,'rgba(255,255,255,.06)'); }
   // birds
@@ -413,6 +422,8 @@ function drawWorld(){
         if(h%13===0) drawRect(x+2,y+2,2,2,'rgba(255,255,255,.08)');
         if(h%7===0) drawRect(x+12,y+12,2,2,'rgba(0,0,0,.12)');
         if(h%11===0) drawRect(x+1,y+13,3,1,'rgba(255,255,255,.06)');
+        if(h%9===0) drawRect(x+6,y+5,1,1,'rgba(255,255,255,.18)');
+        if(h%5===0) drawRect(x+9,y+10,1,1,'rgba(0,0,0,.18)');
       }
     }
   });
@@ -623,9 +634,9 @@ function render(){
   ctx.clearRect(0,0,vw,vh);
   ctx.drawImage(post,0,0,post.width,post.height,0,0,vw,vh);
   // subtle scanline + grading for 16-bit display character
-  ctx.fillStyle='rgba(8,12,24,0.08)';
+  ctx.fillStyle='rgba(8,12,24,0.05)';
   for(let y=0;y<vh;y+=2){ ctx.fillRect(0,y,vw,1); }
-  ctx.fillStyle='rgba(14,18,32,0.08)';
+  ctx.fillStyle='rgba(14,18,32,0.06)';
   ctx.fillRect(0,0,vw,vh);
   ctx.restore();
 
