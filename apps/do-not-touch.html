@@ -226,7 +226,8 @@ const coinRows=[
 ];
 let coins=[];
 coinRows.forEach(r=>{for(let i=0;i<r.n;i++) coins.push({x:r.x+i*r.dx,y:r.y,taken:false});});
-const qBlocks=[{x:720,y:900,used:false},{x:1260,y:860,used:false},{x:1700,y:820,used:false},{x:2140,y:780,used:false},{x:2620,y:740,used:false}];
+const qBlocks=[{x:720,y:900,used:false,bump:0},{x:1260,y:860,used:false,bump:0},{x:1700,y:820,used:false,bump:0},{x:2140,y:780,used:false,bump:0},{x:2620,y:740,used:false,bump:0}];
+const respawnPoint={x:120,y:1000};
 let enemies=[
   {x:560,y:1004,vx:-1.1,alive:true},{x:1160,y:964,vx:-1.1,alive:true},{x:1600,y:924,vx:-1.2,alive:true},{x:2060,y:884,vx:-1.2,alive:true},{x:2540,y:844,vx:-1.3,alive:true}
 ];
@@ -535,8 +536,16 @@ function drawWorld(){
   });
   // coins
   coins.forEach(c=>{ if(c.taken) return; const bob=((time/6)|0)%2; drawRect(c.x-4,c.y-8+bob,8,8,'#ffd24f'); drawRect(c.x-2,c.y-6+bob,4,4,'#fff2a3');});
-  // question blocks
-  qBlocks.forEach(b=>{ drawRect(b.x-8,b.y-8,16,16,b.used?'#8b7e63':'#ffbf47'); drawRect(b.x-6,b.y-6,12,2,'#ffe6a8'); drawRect(b.x-2,b.y-2,4,4,'#7d5522'); });
+  // question blocks (with bump animation)
+  qBlocks.forEach(b=>{
+    const by=b.y-(b.bump||0);
+    if(b.bump>0) b.bump=Math.max(0,b.bump-1);
+    const base=b.used?'#8b7e63':'#ffbf47';
+    drawRect(b.x-8,by-8,16,16,base);
+    drawRect(b.x-6,by-6,12,2,'#ffe6a8');
+    const qColor=b.used?'#4f473a':((((time/8)|0)%2===0?'#7d5522':'#fff3b8'));
+    drawRect(b.x-2,by-2,4,4,qColor);
+  });
   // enemies
   enemies.forEach(e=>{ if(!e.alive) return; drawRect(e.x-8,e.y-10,16,10,'#b06a38'); drawRect(e.x-6,e.y-12,12,3,'#d38952'); drawRect(e.x-6,e.y-2,4,2,'#1c2538'); drawRect(e.x+2,e.y-2,4,2,'#1c2538');});
 
@@ -735,7 +744,11 @@ function loop(now){
   qBlocks.forEach(b=>{
     const withinX = Math.abs(player.x-b.x)<12;
     const hitFromBelow = withinX && player.vy<0 && (player.y-16)<=b.y+8 && (player.y-16)>=b.y-4;
-    if(hitFromBelow && !b.used){ b.used=true; score+=50; beep(700,.08); }
+    if(hitFromBelow){
+      b.bump=6;
+      if(!b.used){ b.used=true; score+=50; beep(700,.08); }
+      else { beep(420,.03); }
+    }
   });
 
   // enemy patrol + stomp/contact
@@ -751,7 +764,16 @@ function loop(now){
       if(player.vy>1.2 && dy<0){
         e.alive=false; player.vy = -6.2; score+=100; beep(560,.07);
       }else{
-        lives=Math.max(0,lives-1); player.x=Math.max(60,player.x-80); player.y-=12; player.vx=-2.5; shake=9; beep(220,.12);
+        lives=Math.max(0,lives-1);
+        player.x=respawnPoint.x; player.y=respawnPoint.y; player.vx=0; player.vy=0;
+        shake=9; beep(220,.12);
+        if(lives===0){
+          toastMsg('Game Over • Resetting lives');
+          lives=3; score=Math.max(0,score-150);
+          coins.forEach(c=>c.taken=false);
+          enemies.forEach(en=>en.alive=true);
+          qBlocks.forEach(q=>{q.used=false;q.bump=0;});
+        }
       }
     }
   });
@@ -827,7 +849,7 @@ document.getElementById('exportJson').onclick=()=>{const payload={name:'Michael 
 document.getElementById('copySummary').onclick=async()=>{try{await navigator.clipboard.writeText(summary);toastMsg('Summary copied');}catch{roleBody.textContent=summary;}};
 document.getElementById('downloadPdf').onclick=()=>{const win=window.open('','_blank'); if(!win) return; const rows=nodes.map(n=>`<h3>${n.title}</h3><p>${n.text}</p><ul>${(n.highlights||[]).map(h=>`<li>${h}</li>`).join('')}</ul>`).join(''); win.document.write(`<!doctype html><html><head><title>Michael Costea Resume</title><style>body{font-family:Arial;padding:24px;line-height:1.45}h1{margin:0 0 8px}h3{margin:16px 0 4px}</style></head><body><h1>Michael Costea</h1><p>${summary}</p>${rows}</body></html>`); win.document.close(); setTimeout(()=>win.print(),250);};
 document.getElementById('toggleFull').onclick=async()=>{try{if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen();}catch{}};
-document.getElementById('resetProgress').onclick=()=>{viewed=new Set();zoneSeen=new Set();score=0;lives=3;coins.forEach(c=>c.taken=false);qBlocks.forEach(b=>b.used=false);enemies.forEach(e=>e.alive=true);saveViewed();toastMsg('Progress reset');};
+document.getElementById('resetProgress').onclick=()=>{viewed=new Set();zoneSeen=new Set();score=0;lives=3;player.x=respawnPoint.x;player.y=respawnPoint.y;player.vx=0;player.vy=0;coins.forEach(c=>c.taken=false);qBlocks.forEach(b=>{b.used=false;b.bump=0;});enemies.forEach(e=>e.alive=true);saveViewed();toastMsg('Progress reset');};
 document.getElementById('snapBtn').onclick=()=>{const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='visual-resume-screenshot.png';a.click();};
 document.getElementById('contrastBtn').onclick=()=>{hc=!hc;document.body.classList.toggle('hc',hc);};
 document.getElementById('enter').onclick=()=>{document.getElementById('intro').classList.add('hide');toastMsg('Experience started • M sound • P pause • F fullscreen • N night • R rain');};
