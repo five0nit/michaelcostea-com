@@ -144,6 +144,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
     <div class="legend"><span><i class="dot node"></i>chapter node</span><span><i class="dot done"></i>completed</span><span><i class="dot npc"></i>mentor NPC</span></div>
     <div class="row">
       <button class="btn" id="nextNode">Jump to Next Chapter</button>
+      <button class="btn" id="returnSite">Back to MichaelOS</button>
       <button class="btn" id="viewRole">View Role Card</button>
       <button class="btn" id="showCerts">Certifications</button>
       <button class="btn" id="exportJson">Export JSON</button>
@@ -169,6 +170,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
   <div class="card">
     <h1>MICHAEL COSTEA — INTERACTIVE VISUAL RESUME</h1>
     <p>High-fidelity pixel-art presentation focused on credibility, clarity, and memorable storytelling.</p>
+    <p><b>This experience is about:</b> turning career milestones into a playable journey where each chapter node proves real execution, growth, and technical depth.</p>
     <p><b>Current focus:</b> Business Development & Marketing Manager @ Want A Heat Pump group, blending field execution with digital systems innovation.</p>
     <button class="btn" id="enter">Enter Experience</button>
   </div>
@@ -580,6 +582,12 @@ function drawWorld(){
     if(idx%2===0) drawRect(n.x-2,n.y-12,4,24,'rgba(0,0,0,.22)');
     else drawRect(n.x-12,n.y-2,24,4,'rgba(0,0,0,.22)');
     drawRect(n.x-1,908,2,n.y-908,'rgba(255,255,255,.35)');
+
+    // progress flags: dim when locked, bright when unlocked
+    drawRect(n.x+16,n.y-18,2,14,'#273a59');
+    drawRect(n.x+18,n.y-18,10,7,seen?'#8bff9e':'#7f8da8');
+    drawRect(n.x+19,n.y-17,8,1,seen?'#d9ffe0':'#c5cddd');
+
     drawNodeProp(n);
   });
 }
@@ -852,6 +860,7 @@ function openModal(t,b,l=[]){modalTitle.textContent=t;modalBody.textContent=b;mo
 function closeModal(){modal.classList.add('hide')} document.getElementById('closeModal').onclick=closeModal; modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 
 document.getElementById('nextNode').onclick=()=>{const n=nodes.find(x=>!viewed.has(x.id))||nodes[nodes.length-1];player.x=n.x-40;player.y=n.y-40;activeNode=n;};
+document.getElementById('returnSite').onclick=()=>{location.href='../index.html';};
 document.getElementById('viewRole').onclick=()=>{const n=activeNode||nodes[0];openModal(n.title,n.text,n.highlights||[])};
 document.getElementById('showCerts').onclick=()=>openModal('Certifications & Capability Stack','Core capability and accreditation set used across delivery + operations.',certs);
 document.getElementById('exportJson').onclick=()=>{const payload={name:'Michael Costea',summary,viewed:[...viewed],timeline:nodes};const b=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='michael-costea-visual-resume.json';a.click();};
