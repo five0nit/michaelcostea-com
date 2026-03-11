@@ -117,7 +117,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 <canvas id="game"></canvas>
 <div class="ui">
   <div class="top">
-    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v64 AAA SNES</div>
+    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v65 SMW/SMB3</div>
     <div class="chip" id="zoneChip">TIMELINE ZONE: Foundations</div>
     <div class="chip" id="objectiveChip">OBJECTIVE: Explore chapter nodes</div>
     <div class="chip" id="chapterChip">CHAPTER: --</div>
@@ -208,14 +208,18 @@ addEventListener('resize',resizeCanvas); if(window.visualViewport) window.visual
 const TILE=16;
 const world={w:3200,h:1800};
 const player={x:180,y:900,s:3.9,frame:0,face:'right',vx:0,vy:0,onGround:false};
-const physics={gravity:0.42,jump:-8.8,friction:0.82,maxRun:5.8,accel:0.55};
+const physics={gravity:0.42,jump:-8.8,friction:0.82,maxRun:5.8,accel:0.55,coyote:7,jumpBuffer:7};
+let coyoteFrames=0,jumpBufferFrames=0;
 const platforms=[
-  {x:80,y:980,w:780,h:26},
-  {x:980,y:940,w:360,h:22},
-  {x:1410,y:900,w:320,h:22},
-  {x:1810,y:960,w:520,h:24},
-  {x:2420,y:920,w:360,h:22},
-  {x:2860,y:880,w:260,h:22}
+  // SMB3-style readable step-up lane
+  {x:40,y:1020,w:900,h:28},
+  {x:980,y:980,w:380,h:24},
+  {x:1420,y:940,w:360,h:24},
+  {x:1840,y:900,w:420,h:24},
+  {x:2320,y:860,w:420,h:24},
+  {x:2800,y:820,w:360,h:24},
+  // recovery / anti-softlock floor
+  {x:0,y:1120,w:3200,h:36}
 ];
 let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
@@ -268,14 +272,14 @@ const nodeProps=[
 ];
 
 const nodes=[
-{id:'N1',x:220,y:900,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — startup operations and service flow.',highlights:['Owner/operator support','Daily service ops discipline','Small business execution'],badge:'#ffce73',glyph:'cup'},
-{id:'N2',x:980,y:1240,title:'Optus Retention Consultant (2010-2013)',text:'Escalation handling and retention process redesign.',highlights:['Process simplification','200 retention processes rewritten','Customer save optimization'],badge:'#8fd0ff',glyph:'signal'},
-{id:'N3',x:1160,y:980,title:'Optus Business Process Specialist (2013-2014)',text:'Process comms and rollout support.',highlights:['Cross-team communications','Change support materials','Operational alignment'],badge:'#8cffcf',glyph:'flow'},
-{id:'N4',x:1330,y:740,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge systems and rollout training.',highlights:['5000+ internal users','500k monthly visits','250 duplicate processes removed'],badge:'#c5b3ff',glyph:'book'},
-{id:'N5',x:1510,y:500,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support performance and KPI redesign.',highlights:['352 store support scope','74% output uplift','Credit policy + training matrix'],badge:'#ffd199',glyph:'chart'},
-{id:'N6',x:2050,y:980,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky.',highlights:['Residential/commercial works','Smart-home and AV integrations','Fault finding + installations'],badge:'#9eff7b',glyph:'bolt'},
-{id:'N7',x:2740,y:700,title:'Sales Manager (Nov 2023-Present)',text:'VEU heat pump upgrade pathways and sales delivery.',highlights:['Program-driven upgrade ops','Residential + commercial sectors','Channel support'],badge:'#79d9ff',glyph:'target'},
-{id:'N8',x:2940,y:460,title:'Business Development & Marketing Manager (2024-Present)',text:'Growth, lead-gen optimization, partner pilots, manufacturer strategy, training.',highlights:['Growth across 3 brands','Website metrics + lead-gen','Partner pilots + CX innovation'],badge:'#ff89c4',glyph:'crown'}
+{id:'N1',x:260,y:988,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — startup operations and service flow.',highlights:['Owner/operator support','Daily service ops discipline','Small business execution'],badge:'#ffce73',glyph:'cup'},
+{id:'N2',x:640,y:988,title:'Optus Retention Consultant (2010-2013)',text:'Escalation handling and retention process redesign.',highlights:['Process simplification','200 retention processes rewritten','Customer save optimization'],badge:'#8fd0ff',glyph:'signal'},
+{id:'N3',x:1080,y:948,title:'Optus Business Process Specialist (2013-2014)',text:'Process comms and rollout support.',highlights:['Cross-team communications','Change support materials','Operational alignment'],badge:'#8cffcf',glyph:'flow'},
+{id:'N4',x:1520,y:908,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge systems and rollout training.',highlights:['5000+ internal users','500k monthly visits','250 duplicate processes removed'],badge:'#c5b3ff',glyph:'book'},
+{id:'N5',x:1960,y:868,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support performance and KPI redesign.',highlights:['352 store support scope','74% output uplift','Credit policy + training matrix'],badge:'#ffd199',glyph:'chart'},
+{id:'N6',x:2360,y:828,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky.',highlights:['Residential/commercial works','Smart-home and AV integrations','Fault finding + installations'],badge:'#9eff7b',glyph:'bolt'},
+{id:'N7',x:2760,y:788,title:'Sales Manager (Nov 2023-Present)',text:'VEU heat pump upgrade pathways and sales delivery.',highlights:['Program-driven upgrade ops','Residential + commercial sectors','Channel support'],badge:'#79d9ff',glyph:'target'},
+{id:'N8',x:3060,y:788,title:'Business Development & Marketing Manager (2024-Present)',text:'Growth, lead-gen optimization, partner pilots, manufacturer strategy, training.',highlights:['Growth across 3 brands','Website metrics + lead-gen','Partner pilots + CX innovation'],badge:'#ff89c4',glyph:'crown'}
 ];
 
 const certs=['Licensed Electrician (Australia)','VEU program-aligned upgrade operations','IVR/chatbot/review automation delivery','Process redesign + frontline training leadership'];
@@ -674,11 +678,20 @@ function loop(now){
   player.vx *= (inputX===0 ? physics.friction : 0.93);
   player.vx = Math.max(-physics.maxRun*runMul, Math.min(physics.maxRun*runMul, player.vx));
 
-  // jump
-  if((keys['ArrowUp']||keys['w']||keys[' ']) && player.onGround){
+  // jump buffer + coyote time
+  if(keys['ArrowUp']||keys['w']||keys[' ']) jumpBufferFrames = physics.jumpBuffer;
+  else jumpBufferFrames = Math.max(0,jumpBufferFrames-1);
+  coyoteFrames = player.onGround ? physics.coyote : Math.max(0,coyoteFrames-1);
+
+  if(jumpBufferFrames>0 && coyoteFrames>0){
     player.vy = physics.jump;
     player.onGround = false;
+    jumpBufferFrames = 0;
+    coyoteFrames = 0;
   }
+
+  // variable jump height (tap vs hold)
+  if(player.vy<0 && !(keys['ArrowUp']||keys['w']||keys[' '])) player.vy += 0.32;
 
   player.vy += physics.gravity;
   player.x += player.vx;
