@@ -392,7 +392,10 @@ function drawWorld(){
       for(let x=z.x;x<z.x+z.w;x+=TILE){
         const h=pHash(x>>4,y>>4);
         drawRect(x,y,TILE,TILE,h%3===0?pal.tileA:pal.tileB);
+        // richer environmental tile detail
         if(h%13===0) drawRect(x+2,y+2,2,2,'rgba(255,255,255,.08)');
+        if(h%7===0) drawRect(x+12,y+12,2,2,'rgba(0,0,0,.12)');
+        if(h%11===0) drawRect(x+1,y+13,3,1,'rgba(255,255,255,.06)');
       }
     }
   });
@@ -452,7 +455,9 @@ function drawWorld(){
   // water ribbon with clearer edges
   drawRect(1480,1240,620,220,'#325f90');
   drawRect(1480,1240,620,4,'#89b7e1');
+  drawRect(1480,1458,620,2,'#223f64');
   for(let y=1240;y<1460;y+=8){for(let x=1480+(y%16?8:0);x<2100;x+=20) drawRect(x,y+3,8,2,'#9cc7e8');}
+  for(let y=1246;y<1458;y+=14){for(let x=1492;x<2090;x+=32) drawRect(x,y,6,1,'rgba(255,255,255,.14)');}
 
   // chapter nodes with unique marker art
   nodes.forEach((n,idx)=>{
@@ -484,48 +489,53 @@ function drawPlayer(){
   const walkFrame = moving ? ((time/5)|0)%4 : 0;
   const bob = moving ? (walkFrame===1||walkFrame===3?1:0) : 0;
 
-  // shadow (slight squash on contact frames)
-  const shW = (walkFrame===0||walkFrame===2) ? 20 : 18;
-  drawRect(player.x-(shW/2),player.y+11,shW,3,'rgba(0,0,0,.35)');
+  // higher-def sprite (larger canvas + layered shading)
+  const sx=player.x, sy=player.y+bob;
+  const shW = (walkFrame===0||walkFrame===2) ? 24 : 21;
+  drawRect(sx-(shW/2),sy+15,shW,3,'rgba(0,0,0,.36)');
 
-  // shirt + body (white tee look)
-  drawRect(player.x-8,player.y-1+bob,16,12,'#f4f8ff');
-  drawRect(player.x-8,player.y+11+bob,16,2,'#2d3752');
+  // torso/shirt
+  drawRect(sx-10,sy-1,20,14,'#f4f8ff');
+  drawRect(sx-10,sy-1,2,14,'#d5deef');
+  drawRect(sx+8,sy-1,2,14,'#c2d0e8');
+  drawRect(sx-10,sy+12,20,2,'#28344e');
 
-  // shoulder strap (like reference photo)
-  drawRect(player.x+2,player.y-1+bob,2,12,'#3a414f');
-  drawRect(player.x+3,player.y+1+bob,2,10,'#59657c');
+  // strap
+  drawRect(sx+3,sy-1,3,14,'#384457');
+  drawRect(sx+4,sy+1,2,10,'#60708a');
 
-  // neck + head
-  drawRect(player.x-2,player.y-5+bob,4,4,'#d79b73');
-  drawRect(player.x-6,player.y-13+bob,12,9,'#dba57d');
+  // neck/head
+  drawRect(sx-3,sy-6,6,4,'#d79b73');
+  drawRect(sx-8,sy-16,16,11,'#dba57d');
+  drawRect(sx-8,sy-16,16,2,'#c8926c');
 
-  // blue cap
-  drawRect(player.x-7,player.y-15+bob,14,4,'#2d58b8');
-  drawRect(player.x-5,player.y-11+bob,10,2,'#3f73de');
-  drawRect(player.x-3,player.y-10+bob,6,1,'#8cb0ff');
+  // blue cap with brim
+  drawRect(sx-9,sy-18,18,4,'#2d58b8');
+  drawRect(sx-7,sy-14,14,2,'#3f73de');
+  drawRect(sx-5,sy-13,10,1,'#9ec0ff');
+  drawRect(sx-2,sy-12,8,1,'#20458f');
 
-  // facial features / slight stubble line
-  drawRect(player.x-4,player.y-9+bob,2,1,'#2f2a29');
-  drawRect(player.x+2,player.y-9+bob,2,1,'#2f2a29');
-  drawRect(player.x-2,player.y-7+bob,4,1,'#7f5745');
-  drawRect(player.x-3,player.y-6+bob,6,1,'#8c6150');
+  // face details
+  drawRect(sx-5,sy-11,2,1,'#2f2a29');
+  drawRect(sx+3,sy-11,2,1,'#2f2a29');
+  drawRect(sx-2,sy-9,4,1,'#7f5745');
+  drawRect(sx-3,sy-8,6,1,'#8c6150');
 
-  // yellow/orange chest logo hint + dark outline for readability
-  drawRect(player.x-3,player.y+2+bob,6,4,'#1a2338');
-  drawRect(player.x-2,player.y+3+bob,4,2,'#ffb33a');
-  drawRect(player.x-4,player.y+4+bob,2,2,'#ff9f1f');
-  drawRect(player.x+2,player.y+4+bob,2,2,'#ff9f1f');
+  // chest logo
+  drawRect(sx-4,sy+2,8,5,'#1a2338');
+  drawRect(sx-2,sy+3,4,2,'#ffb33a');
+  drawRect(sx-4,sy+4,2,2,'#ff9f1f');
+  drawRect(sx+2,sy+4,2,2,'#ff9f1f');
 
-  // arm swing (4-frame crisp cycle)
+  // arms
   const armL=[-1,0,1,0][walkFrame], armR=[1,0,-1,0][walkFrame];
-  drawRect(player.x-10,player.y+1+bob+armL,2,7,'#d79b73');
-  drawRect(player.x+8,player.y+1+bob+armR,2,7,'#d79b73');
+  drawRect(sx-12,sy+1+armL,2,9,'#d79b73');
+  drawRect(sx+10,sy+1+armR,2,9,'#d79b73');
 
-  // leg swing (4-frame crisp cycle)
+  // legs
   const legL=[0,1,0,-1][walkFrame], legR=[0,-1,0,1][walkFrame];
-  drawRect(player.x-8,player.y+11+legL,6,2,'#182033');
-  drawRect(player.x+2,player.y+11+legR,6,2,'#182033');
+  drawRect(sx-9,sy+13+legL,7,2,'#182033');
+  drawRect(sx+2,sy+13+legR,7,2,'#182033');
 }
 
 function drawMini(){
