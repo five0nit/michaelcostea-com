@@ -211,7 +211,7 @@ addEventListener('resize',resizeCanvas); if(window.visualViewport) window.visual
 
 const TILE=16;
 const world={w:3200,h:1800};
-const player={x:180,y:900,s:3.0,frame:0,face:'down'};
+const player={x:180,y:900,s:3.9,frame:0,face:'down'};
 let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
 let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
@@ -231,7 +231,11 @@ const npcs=[
   {x:360,y:840,name:'Mentor: Process',quote:'Systems beat motivation.'},
   {x:1220,y:980,name:'Mentor: Ops',quote:'Measure, then optimize.'},
   {x:2080,y:1080,name:'Mentor: Trade',quote:'Craft is consistency under pressure.'},
-  {x:2860,y:520,name:'Mentor: Growth',quote:'Partnerships compound execution.'}
+  {x:2860,y:520,name:'Mentor: Growth',quote:'Partnerships compound execution.'},
+  {x:700,y:860,name:'Neo',quote:'There is no spoon. Only process.'},
+  {x:1710,y:860,name:'Agent K',quote:'Protect the timeline. Keep it classy.'},
+  {x:2320,y:870,name:'Lara',quote:'Adventure favors preparation.'},
+  {x:3000,y:620,name:'Mario',quote:'Let’s-a optimize!'}
 ];
 const signposts=[
   {x:520,y:920,text:'Chapter Path → Foundations to Ops'},
@@ -335,7 +339,16 @@ function drawStreetlight(x,y){
 }
 function drawNPC(x,y,idx){
   const bob=((time/10+idx*4)|0)%2;
-  drawRect(x-7,y-11+bob,14,18,'#ffd166');
+  const style=idx%6;
+  const body=['#ffd166','#7fd7ff','#9eff7b','#ff89c4','#ffd475','#b6b8ff'][style];
+  drawRect(x-7,y-11+bob,14,18,body);
+  // hair/hat variants for fun cameos
+  if(style===0){ drawRect(x-6,y-12+bob,12,3,'#111'); }
+  else if(style===1){ drawRect(x-6,y-12+bob,12,3,'#2d58b8'); }
+  else if(style===2){ drawRect(x-6,y-12+bob,12,3,'#7b2e2e'); }
+  else if(style===3){ drawRect(x-6,y-12+bob,12,3,'#2a2a2a'); }
+  else if(style===4){ drawRect(x-6,y-12+bob,12,3,'#dba55e'); }
+  else { drawRect(x-6,y-12+bob,12,3,'#4c3b7e'); }
   drawRect(x-5,y-8+bob,10,6,'#1c2538');
   drawRect(x-6,y+7+bob,4,2,'#1c2538');
   drawRect(x+2,y+7+bob,4,2,'#1c2538');
@@ -384,11 +397,22 @@ function drawWorld(){
     }
   });
 
-  // main roads + lane markers
-  drawRect(120,900,2920,10,'#d3e4ff');
-  for(let x=140;x<3040;x+=36) drawRect(x,904,16,2,'#6f86b1');
-  drawRect(0,1120,world.w,80,'#223b57');
-  drawRect(0,1200,world.w,4,'rgba(255,255,255,.15)');
+  // main roads + lane markers (higher quality)
+  drawRect(100,880,2960,52,'#27374f');
+  drawRect(100,880,2960,2,'#5d7398');
+  drawRect(100,930,2960,2,'#1a273d');
+  for(let x=120;x<3040;x+=40){
+    drawRect(x,904,20,4,'#d7e4ff');
+    drawRect(x,909,20,1,'#93a9cd');
+  }
+  for(let x=120;x<3040;x+=32){
+    drawRect(x,882,2,48,'rgba(255,255,255,.05)');
+  }
+  // secondary road
+  drawRect(0,1110,world.w,96,'#2b4461');
+  drawRect(0,1110,world.w,2,'#6f89b8');
+  drawRect(0,1204,world.w,2,'#18283f');
+  for(let x=8;x<world.w;x+=44){ drawRect(x,1156,18,3,'#b8c9e8'); }
 
   // district landmarks (more distinct silhouettes)
   drawHouse(180,740); drawHouse(280,860);
@@ -410,6 +434,18 @@ function drawWorld(){
 
   // street furniture (denser)
   for(let i=0;i<38;i++) drawStreetlight(220+i*78,880);
+  // extra 90s map flavor props
+  for(let i=0;i<10;i++){
+    const bx=320+i*280, by=845 + (i%2)*20;
+    drawRect(bx,by,20,12,'#5c2f1f'); // bench
+    drawRect(bx+2,by+2,16,2,'#8a5034');
+  }
+  for(let i=0;i<8;i++){
+    const sx=460+i*330, sy=840 - (i%3)*8;
+    drawRect(sx,sy,10,24,'#394f78'); // arcade/poster kiosk
+    drawRect(sx+1,sy+3,8,8,['#ff89c4','#79d9ff','#ffd475'][i%3]);
+    drawRect(sx+2,sy+14,6,6,'#dce6f8');
+  }
   npcs.forEach((n,i)=>drawNPC(n.x,n.y,i));
   signposts.forEach(s=>drawSignpost(s.x,s.y));
 
