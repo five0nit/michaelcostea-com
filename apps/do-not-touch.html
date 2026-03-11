@@ -132,7 +132,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 
   <div class="panel">
     <h3 id="roleTitle">Welcome</h3>
-    <p id="roleBody">Move with WASD/Arrow keys (mobile: joystick drag). Walk timeline nodes to unlock chapters of your career journey.</p>
+    <p id="roleBody">Run with A/D or ←/→, jump with W/↑/Space (mobile: right D-pad). Reach timeline nodes to unlock chapters.</p>
     <div class="progress"><span id="bar"></span></div>
     <ul class="quest" id="questList">
       <li data-q="N2">Visit Telecom/Ops chapter</li>
@@ -207,7 +207,16 @@ addEventListener('resize',resizeCanvas); if(window.visualViewport) window.visual
 
 const TILE=16;
 const world={w:3200,h:1800};
-const player={x:180,y:900,s:3.9,frame:0,face:'down'};
+const player={x:180,y:900,s:3.9,frame:0,face:'right',vx:0,vy:0,onGround:false};
+const physics={gravity:0.42,jump:-8.8,friction:0.82,maxRun:5.8,accel:0.55};
+const platforms=[
+  {x:80,y:980,w:780,h:26},
+  {x:980,y:940,w:360,h:22},
+  {x:1410,y:900,w:320,h:22},
+  {x:1810,y:960,w:520,h:24},
+  {x:2420,y:920,w:360,h:22},
+  {x:2860,y:880,w:260,h:22}
+];
 let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
 let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
@@ -503,6 +512,14 @@ function drawWorld(){
   npcs.forEach((n,i)=>{ const p=npcPos(n,i); drawNPC(p.x,p.y,i); });
   signposts.forEach(s=>drawSignpost(s.x,s.y));
 
+  // platformer ledges (SMW-style)
+  platforms.forEach((p,i)=>{
+    drawRect(p.x,p.y,p.w,p.h,'#6a86b8');
+    drawRect(p.x,p.y,p.w,3,'#dce8ff');
+    for(let x=p.x+4;x<p.x+p.w-4;x+=20) drawRect(x,p.y+6,10,2,'#4f6a9a');
+    if(i%2===0){ drawRect(p.x+8,p.y-8,8,8,'#ffd475'); }
+  });
+
   // water ribbon with clearer edges
   drawRect(1480,1240,620,220,'#325f90');
   drawRect(1480,1240,620,4,'#89b7e1');
@@ -595,8 +612,8 @@ function render(){
   ctx.clearRect(0,0,vw,vh);
   drawParallax();
 
-  cam.tx=Math.max(0,Math.min(world.w-vw,player.x-vw/2));
-  cam.ty=Math.max(0,Math.min(world.h-vh,player.y-vh/2));
+  cam.tx=Math.max(0,Math.min(world.w-vw,player.x-vw*0.42));
+  cam.ty=Math.max(0,Math.min(world.h-vh,player.y-vh*0.68));
   cam.x += (cam.tx-cam.x)*0.12; cam.y += (cam.ty-cam.y)*0.12;
 
   const sx=shake?((Math.random()-.5)*shake):0, sy=shake?((Math.random()-.5)*shake):0;
@@ -647,12 +664,40 @@ function loop(now){
   const dt=Math.min(.05,(now-last)/1000); last=now; fps=.92*fps+.08*(1/dt); fpsChip.textContent=`FPS ${Math.round(fps)}`;
   if(paused){ requestAnimationFrame(loop); return; }
 
-  let vx=0,vy=0;
-  if(keys['ArrowLeft']||keys['a']) {vx-=player.s; player.face='left';} if(keys['ArrowRight']||keys['d']) {vx+=player.s; player.face='right';}
-  if(keys['ArrowUp']||keys['w']) {vy-=player.s; player.face='up';} if(keys['ArrowDown']||keys['s']) {vy+=player.s; player.face='down';}
-  if(joy.active){vx+=joy.x*player.s; vy+=joy.y*player.s}
-  if(keys['Shift']){vx*=1.6; vy*=1.6}
-  player.x=Math.max(30,Math.min(world.w-30,player.x+vx)); player.y=Math.max(80,Math.min(world.h-30,player.y+vy));
+  let inputX=0;
+  if(keys['ArrowLeft']||keys['a']) {inputX=-1; player.face='left';}
+  if(keys['ArrowRight']||keys['d']) {inputX=1; player.face='right';}
+  if(joy.active) inputX = Math.abs(joy.x)>0.25 ? Math.sign(joy.x) : inputX;
+
+  const runMul = keys['Shift'] ? 1.18 : 1;
+  player.vx += inputX * physics.accel * runMul;
+  player.vx *= (inputX===0 ? physics.friction : 0.93);
+  player.vx = Math.max(-physics.maxRun*runMul, Math.min(physics.maxRun*runMul, player.vx));
+
+  // jump
+  if((keys['ArrowUp']||keys['w']||keys[' ']) && player.onGround){
+    player.vy = physics.jump;
+    player.onGround = false;
+  }
+
+  player.vy += physics.gravity;
+  player.x += player.vx;
+  player.y += player.vy;
+
+  player.onGround=false;
+  for(const p of platforms){
+    const withinX = player.x+8>p.x && player.x-8<p.x+p.w;
+    const wasAbove = (player.y-player.vy) <= p.y;
+    const nowBelowTop = player.y >= p.y;
+    if(withinX && wasAbove && nowBelowTop && player.vy>=0){
+      player.y = p.y;
+      player.vy = 0;
+      player.onGround = true;
+    }
+  }
+
+  if(player.y>world.h-20){ player.y=world.h-20; player.vy=0; player.onGround=true; }
+  player.x=Math.max(30,Math.min(world.w-30,player.x));
 
   npcs.forEach((n,i)=>{
     const p=npcPos(n,i);
@@ -693,8 +738,8 @@ function loop(now){
   requestAnimationFrame(loop);
 }
 
-addEventListener('keydown',e=>{keys[e.key]=true; if(e.key==='m'||e.key==='M'){sfx=!sfx; soundChip.textContent=sfx?'SFX ON':'SFX OFF';} if(e.key==='p'||e.key==='P'){paused=!paused; stateChip.textContent=paused?'STATE PAUSED':'STATE RUNNING';} if(e.key==='f'||e.key==='F'){document.getElementById('toggleFull').click();} if(e.key==='n'||e.key==='N'){night=!night;} if(e.key==='r'||e.key==='R'){rain=!rain;} if(e.key===']'){document.getElementById('nextNode').click();} if(e.key==='['){const seen=[...viewed]; const prev=nodes.filter(n=>seen.includes(n.id)).slice(-1)[0]; if(prev){player.x=prev.x-40;player.y=prev.y-40;activeNode=prev;}} });
-addEventListener('keyup',e=>keys[e.key]=false);
+addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault(); keys[e.key]=true; if(e.key==='m'||e.key==='M'){sfx=!sfx; soundChip.textContent=sfx?'SFX ON':'SFX OFF';} if(e.key==='p'||e.key==='P'){paused=!paused; stateChip.textContent=paused?'STATE PAUSED':'STATE RUNNING';} if(e.key==='f'||e.key==='F'){document.getElementById('toggleFull').click();} if(e.key==='n'||e.key==='N'){night=!night;} if(e.key==='r'||e.key==='R'){rain=!rain;} if(e.key===']'){document.getElementById('nextNode').click();} if(e.key==='['){const seen=[...viewed]; const prev=nodes.filter(n=>seen.includes(n.id)).slice(-1)[0]; if(prev){player.x=prev.x-40;player.y=prev.y-40;activeNode=prev;}} });
+addEventListener('keyup',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault(); keys[e.key]=false;});
 cv.addEventListener('touchstart',e=>{joy.active=true;joy.sx=e.touches[0].clientX;joy.sy=e.touches[0].clientY;},{passive:true});
 cv.addEventListener('touchmove',e=>{if(!joy.active)return;const dx=(e.touches[0].clientX-joy.sx)/70,dy=(e.touches[0].clientY-joy.sy)/70;joy.x=Math.max(-1,Math.min(1,dx));joy.y=Math.max(-1,Math.min(1,dy));},{passive:true});
 cv.addEventListener('touchend',()=>{joy.active=false;joy.x=0;joy.y=0;},{passive:true});
