@@ -117,7 +117,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 <canvas id="game"></canvas>
 <div class="ui">
   <div class="top">
-    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v61 16-BIT</div>
+    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v62 16-BIT</div>
     <div class="chip" id="zoneChip">TIMELINE ZONE: Foundations</div>
     <div class="chip" id="objectiveChip">OBJECTIVE: Explore chapter nodes</div>
     <div class="chip" id="chapterChip">CHAPTER: --</div>
@@ -364,6 +364,12 @@ function drawSignpost(x,y){
   drawRect(x+7,y+10,20,2,'#6f89b8');
 }
 
+function npcPos(n,idx){
+  const ox=Math.sin((time+idx*23)/38)*8;
+  const oy=Math.cos((time+idx*19)/44)*4;
+  return {x:n.x+ox,y:n.y+oy};
+}
+
 function drawNodeProp(n){
   const px=n.x+20, py=n.y-20;
   const p=nodeProps.find(x=>x.id===n.id);
@@ -383,6 +389,13 @@ function drawParallax(){
   skyBands.forEach((c,i)=>drawRect(0,0+i*90,vw,90,c));
   for(let i=0;i<60;i++){ const x=((i*137 + time*0.25*(1+i%3))% (vw+200))-100; const y=20+(i%5)*25; drawRect(x,y,2,2,'rgba(255,255,255,.65)'); }
   for(let i=0;i<8;i++){ const x=((i*260 + time*0.7*(i%2?1:-1))%(vw+260))-130; const y=60+i*18; drawRect(x,y,46,10,'rgba(255,255,255,.08)'); drawRect(x+8,y+10,30,4,'rgba(255,255,255,.06)'); }
+  // birds
+  for(let i=0;i<14;i++){
+    const bx=((i*170 + time*1.8)%(vw+120))-60;
+    const by=70 + (i%5)*22;
+    drawRect(bx,by,3,1,'rgba(240,245,255,.7)');
+    drawRect(bx+4,by+1,3,1,'rgba(240,245,255,.7)');
+  }
 }
 
 function drawWorld(){
@@ -415,6 +428,11 @@ function drawWorld(){
   for(let x=120;x<3040;x+=32){
     drawRect(x,882,2,48,'rgba(255,255,255,.05)');
   }
+  // lane arrows + side curb details
+  for(let x=180;x<3000;x+=220){
+    drawRect(x,898,10,2,'#cfe0ff'); drawRect(x+8,896,3,2,'#cfe0ff'); drawRect(x+8,902,3,2,'#cfe0ff');
+  }
+  for(let x=110;x<3040;x+=26){ drawRect(x,878,6,1,'#3f4f6a'); drawRect(x,932,6,1,'#1b2639'); }
   // guided chapter trail (single-road UX)
   for(let x=0;x<world.w;x+=24){
     drawRect(x,1118 + ((x/24)%2?2:0),12,2,'rgba(130,230,190,.28)');
@@ -463,7 +481,15 @@ function drawWorld(){
     drawRect(px+3,py+2,12,8,'#d8e5ff');
     drawRect(px+5,py+4,8,2,'#4b6b9f');
   }
-  npcs.forEach((n,i)=>drawNPC(n.x,n.y,i));
+  // moving street cars
+  for(let i=0;i<9;i++){
+    const cx=(220 + ((time*(1.2 + (i%3)*0.15) + i*340) % 2800));
+    const cy=888 + (i%2)*20;
+    const body=['#ff6f7f','#79d9ff','#ffd475','#9eff7b','#b6b8ff'][i%5];
+    drawRect(cx,cy,28,10,body); drawRect(cx+4,cy+2,8,4,'#dff2ff'); drawRect(cx+16,cy+2,8,4,'#dff2ff');
+    drawRect(cx+2,cy+10,6,2,'#182030'); drawRect(cx+20,cy+10,6,2,'#182030');
+  }
+  npcs.forEach((n,i)=>{ const p=npcPos(n,i); drawNPC(p.x,p.y,i); });
   signposts.forEach(s=>drawSignpost(s.x,s.y));
 
   // water ribbon with clearer edges
@@ -617,8 +643,9 @@ function loop(now){
   if(keys['Shift']){vx*=1.6; vy*=1.6}
   player.x=Math.max(30,Math.min(world.w-30,player.x+vx)); player.y=Math.max(80,Math.min(world.h-30,player.y+vy));
 
-  npcs.forEach(n=>{
-    if(Math.hypot(player.x-n.x,player.y-n.y)<24){ roleTitle.textContent=n.name; roleBody.textContent=n.quote; }
+  npcs.forEach((n,i)=>{
+    const p=npcPos(n,i);
+    if(Math.hypot(player.x-p.x,player.y-p.y)<28){ roleTitle.textContent=n.name; roleBody.textContent=n.quote; }
   });
   signposts.forEach(sp=>{
     if(Math.hypot(player.x-sp.x,player.y-sp.y)<26){ roleTitle.textContent='Signpost'; roleBody.textContent=sp.text; }
