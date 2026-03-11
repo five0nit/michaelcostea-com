@@ -39,6 +39,7 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 .chapter-card{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:12;padding:10px 14px;border:1px solid #5c80bd;background:rgba(7,14,30,.92);border-radius:12px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .25s ease}
 .chapter-card.show{opacity:1}
 body.hc{filter:contrast(1.22) saturate(1.1)}
+.smbhud{position:fixed;top:8px;left:8px;right:8px;z-index:9;display:flex;justify-content:space-between;gap:8px;padding:6px 10px;background:#111a31;border:2px solid #5f7eb7;border-radius:6px;pointer-events:none;font-weight:900;font-size:.78rem;color:#e8f1ff;text-shadow:1px 1px 0 #000}
 .dpad{position:fixed;right:10px;bottom:120px;z-index:8;display:none;grid-template-columns:48px 48px 48px;grid-template-rows:48px 48px 48px;gap:6px;pointer-events:auto}
 .dbtn{border:2px solid #5b78ad;background:#142445;color:#d9e7ff;border-radius:8px;font-weight:900;font-size:1.2rem;display:grid;place-items:center;user-select:none;touch-action:none;box-shadow:inset 0 1px 0 #9fbdf6}
 .dbtn:active{transform:translateY(1px);filter:brightness(1.1)}
@@ -48,7 +49,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
   .top{
     left:8px;
     right:8px;
-    top:calc(env(safe-area-inset-top, 0px) + 6px);
+    top:calc(env(safe-area-inset-top, 0px) + 44px);
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:6px;
@@ -115,6 +116,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 </head>
 <body>
 <canvas id="game"></canvas>
+<div class="smbhud" id="smbhud"><span id="hudScore">MARIO 000000</span><span id="hudWorld">WORLD 1-1</span><span id="hudLives">x03</span></div>
 <div class="ui">
   <div class="top">
     <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v65 SMW/SMB3</div>
@@ -180,6 +182,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 const cv=document.getElementById('game'),ctx=cv.getContext('2d');
 
 const zoneChip=document.getElementById('zoneChip'),objectiveChip=document.getElementById('objectiveChip'),chapterChip=document.getElementById('chapterChip'),progressChip=document.getElementById('progressChip'),fpsChip=document.getElementById('fpsChip'),soundChip=document.getElementById('soundChip'),stateChip=document.getElementById('stateChip'),saveChip=document.getElementById('saveChip'),timeChip=document.getElementById('timeChip'),weatherChip=document.getElementById('weatherChip');
+const hudScore=document.getElementById('hudScore'),hudWorld=document.getElementById('hudWorld'),hudLives=document.getElementById('hudLives');
 const roleTitle=document.getElementById('roleTitle'),roleBody=document.getElementById('roleBody'),bar=document.getElementById('bar');
 const toast=document.getElementById('toast');
 const chapterCard=document.getElementById('chapterCard');
@@ -234,7 +237,7 @@ let enemies=[
 let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
 let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
-let score=0,lives=3;
+let score=0,lives=3,hurtTimer=0;
 let lastAutoOpenId=null,lastAutoOpenAt=0;
 const paletteBanks={
   foundations:[[8,12,26],[16,28,52],[24,42,78],[40,66,108],[66,96,148],[108,142,192],[160,188,224],[232,242,255],[121,220,255],[255,212,117],[255,170,74]],
@@ -582,6 +585,7 @@ function drawWorld(){
 }
 
 function drawPlayer(){
+  if(hurtTimer>0 && ((time/3)|0)%2===0) return;
   const moving=(Math.abs(keys['ArrowLeft']||keys['a']?1:0)+Math.abs(keys['ArrowRight']||keys['d']?1:0)+Math.abs(keys['ArrowUp']||keys['w']?1:0)+Math.abs(keys['ArrowDown']||keys['s']?1:0)+Math.abs(joy.x)+Math.abs(joy.y))>0;
   const walkFrame = moving ? ((time/5)|0)%4 : 0;
   const bob = moving ? (walkFrame===1||walkFrame===3?1:0) : 0;
@@ -692,6 +696,7 @@ function render(){
 function loop(now){
   const dt=Math.min(.05,(now-last)/1000); last=now; fps=.92*fps+.08*(1/dt); fpsChip.textContent=`FPS ${Math.round(fps)}`;
   if(paused){ requestAnimationFrame(loop); return; }
+  hurtTimer=Math.max(0,hurtTimer-1);
 
   let inputX=0;
   if(keys['ArrowLeft']||keys['a']) {inputX=-1; player.face='left';}
@@ -763,9 +768,10 @@ function loop(now){
     if(dx<14 && Math.abs(dy)<16){
       if(player.vy>1.2 && dy<0){
         e.alive=false; player.vy = -6.2; score+=100; beep(560,.07);
-      }else{
+      }else if(hurtTimer===0){
         lives=Math.max(0,lives-1);
         player.x=respawnPoint.x; player.y=respawnPoint.y; player.vx=0; player.vy=0;
+        hurtTimer=50;
         shake=9; beep(220,.12);
         if(lives===0){
           toastMsg('Game Over • Resetting lives');
@@ -808,6 +814,9 @@ function loop(now){
   const z=zoneFor(player.x);
   zoneChip.textContent='TIMELINE ZONE: '+z.name;
   objectiveChip.textContent = viewed.size<nodes.length ? `OBJECTIVE: Unlock all chapter nodes • SCORE ${score} • LIVES ${lives}` : `OBJECTIVE: Cleared • SCORE ${score} • LIVES ${lives}`;
+  hudScore.textContent = `MARIO ${String(Math.max(0,score)).padStart(6,'0')}`;
+  hudWorld.textContent = `WORLD ${Math.min(8,Math.max(1,Math.floor(player.x/420)+1))}-1`;
+  hudLives.textContent = `x${String(Math.max(0,lives)).padStart(2,'0')}`;
   chapterChip.textContent = nearest.n ? `CHAPTER: ${nearest.n.id}` : 'CHAPTER: --';
   if(!zoneSeen.has(z.name)){ zoneSeen.add(z.name); showChapter('Entered '+z.name); saveViewed(); }
   progressChip.textContent=`NODES VIEWED: ${viewed.size}/${nodes.length}`;
