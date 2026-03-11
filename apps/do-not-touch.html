@@ -415,11 +415,10 @@ function drawWorld(){
   for(let x=120;x<3040;x+=32){
     drawRect(x,882,2,48,'rgba(255,255,255,.05)');
   }
-  // secondary road
-  drawRect(0,1110,world.w,96,'#2b4461');
-  drawRect(0,1110,world.w,2,'#6f89b8');
-  drawRect(0,1204,world.w,2,'#18283f');
-  for(let x=8;x<world.w;x+=44){ drawRect(x,1156,18,3,'#b8c9e8'); }
+  // guided chapter trail (single-road UX)
+  for(let x=0;x<world.w;x+=24){
+    drawRect(x,1118 + ((x/24)%2?2:0),12,2,'rgba(130,230,190,.28)');
+  }
 
   // district landmarks (more distinct silhouettes)
   drawHouse(180,740); drawHouse(280,860);
