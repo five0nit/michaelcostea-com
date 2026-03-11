@@ -39,9 +39,9 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 .chapter-card{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:12;padding:10px 14px;border:1px solid #5c80bd;background:rgba(7,14,30,.92);border-radius:12px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .25s ease}
 .chapter-card.show{opacity:1}
 body.hc{filter:contrast(1.22) saturate(1.1)}
-.dpad{position:fixed;right:14px;bottom:92px;z-index:8;display:none;grid-template-columns:58px 58px 58px;grid-template-rows:58px 58px 58px;gap:6px;pointer-events:auto;background:radial-gradient(circle,#222 0%,#0d0f14 60%,#000 100%);border-radius:50%;padding:12px;box-shadow:0 0 0 3px #1e2433,inset 0 0 0 2px #4a5268}
-.dbtn{border:2px solid #3d455c;background:linear-gradient(180deg,#3b4358,#161b28);color:#f2f6ff;border-radius:50%;font-weight:900;font-size:1.15rem;display:grid;place-items:center;user-select:none;touch-action:none;box-shadow:inset 0 1px 0 #8e97b1}
-.dbtn:active{transform:translateY(1px) scale(.98);filter:brightness(1.1)}
+.dpad{position:fixed;right:10px;bottom:120px;z-index:8;display:none;grid-template-columns:48px 48px 48px;grid-template-rows:48px 48px 48px;gap:6px;pointer-events:auto}
+.dbtn{border:2px solid #5b78ad;background:#142445;color:#d9e7ff;border-radius:8px;font-weight:900;font-size:1.2rem;display:grid;place-items:center;user-select:none;touch-action:none;box-shadow:inset 0 1px 0 #9fbdf6}
+.dbtn:active{transform:translateY(1px);filter:brightness(1.1)}
 .dbtn.up{grid-column:2;grid-row:1}.dbtn.left{grid-column:1;grid-row:2}.dbtn.right{grid-column:3;grid-row:2}.dbtn.down{grid-column:2;grid-row:3}
 
 @media (max-width: 820px){
@@ -384,31 +384,6 @@ function drawNodeProp(n){
   else if(p.kind==='crown'){ drawRect(px,py+6,16,5,'#ffd475'); drawRect(px+1,py+2,3,4,'#ffd475'); drawRect(px+6,py,3,6,'#ffd475'); drawRect(px+11,py+2,3,4,'#ffd475'); }
 }
 
-function drawPaver(x,y,w,h){
-  drawRect(x,y,w,h,'#d4d2cc');
-  for(let yy=y;yy<y+h;yy+=8){
-    for(let xx=x;xx<x+w;xx+=8){
-      const off=((yy/8)&1)?4:0;
-      drawRect(xx+off,yy,4,1,'#b4b0a7');
-      drawRect(xx+off+1,yy+1,3,1,'#ece9e2');
-      drawRect(xx+off+4,yy,1,8,'#a9a59b');
-    }
-  }
-}
-function drawHedge(x,y,w,h){
-  drawRect(x,y,w,h,'#3ea55d');
-  for(let i=0;i<w;i+=6) drawRect(x+i,y+(i%12?2:0),4,3,'#56c772');
-  drawRect(x,y+h-2,w,2,'#2a7c43');
-}
-function drawFountain(x,y){
-  drawRect(x-22,y-10,44,22,'#a8b5ca');
-  drawRect(x-18,y-6,36,14,'#53b8dd');
-  drawRect(x-8,y-16,16,8,'#cbd6e8');
-  drawRect(x-2,y-26,4,10,'#dbe6f7');
-  drawRect(x-1,y-34,2,8,'#b9e9ff');
-  drawRect(x-6,y-30,12,2,'#d8f4ff');
-}
-
 function drawParallax(){
   const skyBands=night?['#070b15','#0b1324','#121d33','#1a2744']:['#0f1b38','#12224a','#16305f','#1a3d73'];
   skyBands.forEach((c,i)=>drawRect(0,0+i*90,vw,90,c));
@@ -442,27 +417,26 @@ function drawWorld(){
     }
   });
 
-  // city promenade + road composition (reference-style)
-  drawPaver(80,760,1160,260);
-  drawPaver(1240,760,740,260);
-  drawPaver(1980,760,1140,260);
-  drawRect(1220,740,2,300,'#7c7a73');
-  drawRect(1978,740,2,300,'#7c7a73');
-
-  drawRect(100,1040,2960,180,'#2f3441');
-  drawRect(100,1040,2960,3,'#585f71');
-  drawRect(100,1217,2960,3,'#1a1e29');
-  for(let y=1060;y<1210;y+=26) drawRect(1570,y,10,14,'#e7ebf4');
-  for(let x=1260;x<1880;x+=28) drawRect(x,1118,12,6,'#f2f5fb');
-
-  // lane arrows + curb blocks
-  for(let x=240;x<2960;x+=300){
-    drawRect(x,1086,14,3,'#d7e4ff'); drawRect(x+10,1083,4,3,'#d7e4ff'); drawRect(x+10,1089,4,3,'#d7e4ff');
+  // main roads + lane markers (higher quality)
+  drawRect(100,880,2960,52,'#27374f');
+  drawRect(100,880,2960,2,'#5d7398');
+  drawRect(100,930,2960,2,'#1a273d');
+  for(let x=120;x<3040;x+=40){
+    drawRect(x,904,20,4,'#d7e4ff');
+    drawRect(x,909,20,1,'#93a9cd');
   }
-  for(let x=104;x<3040;x+=24){ drawRect(x,1038,7,2,'#4a5161'); drawRect(x,1220,7,2,'#202633'); }
-
-  // guided chapter trail
-  for(let x=0;x<world.w;x+=24){ drawRect(x,1244 + ((x/24)%2?2:0),12,2,'rgba(130,230,190,.28)'); }
+  for(let x=120;x<3040;x+=32){
+    drawRect(x,882,2,48,'rgba(255,255,255,.05)');
+  }
+  // lane arrows + side curb details
+  for(let x=180;x<3000;x+=220){
+    drawRect(x,898,10,2,'#cfe0ff'); drawRect(x+8,896,3,2,'#cfe0ff'); drawRect(x+8,902,3,2,'#cfe0ff');
+  }
+  for(let x=110;x<3040;x+=26){ drawRect(x,878,6,1,'#3f4f6a'); drawRect(x,932,6,1,'#1b2639'); }
+  // guided chapter trail (single-road UX)
+  for(let x=0;x<world.w;x+=24){
+    drawRect(x,1118 + ((x/24)%2?2:0),12,2,'rgba(130,230,190,.28)');
+  }
 
   // district landmarks (more distinct silhouettes)
   drawHouse(180,740); drawHouse(280,860);
@@ -490,9 +464,6 @@ function drawWorld(){
     drawRect(bx,by,20,12,'#5c2f1f'); // bench
     drawRect(bx+2,by+2,16,2,'#8a5034');
   }
-  drawFountain(620,900);
-  drawFountain(2360,900);
-  drawHedge(180,780,160,24); drawHedge(980,780,140,24); drawHedge(2080,780,180,24); drawHedge(2860,780,170,24);
   for(let i=0;i<8;i++){
     const sx=460+i*330, sy=840 - (i%3)*8;
     drawRect(sx,sy,10,24,'#394f78'); // arcade/poster kiosk
@@ -513,10 +484,10 @@ function drawWorld(){
   // moving street cars
   for(let i=0;i<9;i++){
     const cx=(220 + ((time*(1.2 + (i%3)*0.15) + i*340) % 2800));
-    const cy=1068 + (i%2)*46;
+    const cy=888 + (i%2)*20;
     const body=['#ff6f7f','#79d9ff','#ffd475','#9eff7b','#b6b8ff'][i%5];
-    drawRect(cx,cy,34,12,body); drawRect(cx+5,cy+2,10,5,'#dff2ff'); drawRect(cx+19,cy+2,10,5,'#dff2ff');
-    drawRect(cx+2,cy+12,7,2,'#182030'); drawRect(cx+25,cy+12,7,2,'#182030');
+    drawRect(cx,cy,28,10,body); drawRect(cx+4,cy+2,8,4,'#dff2ff'); drawRect(cx+16,cy+2,8,4,'#dff2ff');
+    drawRect(cx+2,cy+10,6,2,'#182030'); drawRect(cx+20,cy+10,6,2,'#182030');
   }
   npcs.forEach((n,i)=>{ const p=npcPos(n,i); drawNPC(p.x,p.y,i); });
   signposts.forEach(s=>drawSignpost(s.x,s.y));
