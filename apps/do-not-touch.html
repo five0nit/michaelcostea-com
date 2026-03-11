@@ -119,7 +119,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 <div class="smbhud" id="smbhud"><span id="hudScore">MARIO 000000</span><span id="hudWorld">WORLD 1-1</span><span id="hudLives">x03</span></div>
 <div class="ui">
   <div class="top">
-    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v65 SMW/SMB3</div>
+    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v66 64-BIT PIXEL REMASTER</div>
     <div class="chip" id="zoneChip">TIMELINE ZONE: Foundations</div>
     <div class="chip" id="objectiveChip">OBJECTIVE: Explore chapter nodes</div>
     <div class="chip" id="chapterChip">CHAPTER: --</div>
@@ -169,7 +169,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 <div class="intro" id="intro">
   <div class="card">
     <h1>MICHAEL COSTEA — INTERACTIVE VISUAL RESUME</h1>
-    <p>High-fidelity pixel-art presentation focused on credibility, clarity, and memorable storytelling.</p>
+    <p>High-fidelity <b>64-bit pixel-art remaster</b> focused on credibility, clarity, and memorable storytelling.</p>
     <p><b>This experience is about:</b> turning career milestones into a playable journey where each chapter node proves real execution, growth, and technical depth.</p>
     <p><b>Current focus:</b> Business Development & Marketing Manager @ Want A Heat Pump group, blending field execution with digital systems innovation.</p>
     <button class="btn" id="enter">Enter Experience</button>
@@ -191,13 +191,14 @@ const chapterCard=document.getElementById('chapterCard');
 let vw=960,vh=540,dpr=1;
 const post=document.createElement('canvas');
 const pctx=post.getContext('2d');
-let pixelScale=2;
+const GRAPHICS_MODE='64BIT';
+let pixelScale=1;
 function resizeCanvas(){
   const vv=window.visualViewport;
   vw=Math.round(vv?.width||innerWidth);
   vh=Math.round(vv?.height||innerHeight);
   dpr=Math.max(1,Math.min(3,devicePixelRatio||1));
-  pixelScale = vw <= 820 ? 1 : 2;
+  pixelScale = GRAPHICS_MODE==='64BIT' ? 1 : (vw <= 820 ? 1 : 2);
   cv.width=Math.round(vw*dpr);
   cv.height=Math.round(vh*dpr);
   cv.style.width=vw+'px';
@@ -681,21 +682,48 @@ function render(){
 
   if(battleFx>0){battleFx-=.05; ctx.fillStyle=`rgba(255,255,255,${Math.max(0,battleFx)})`; ctx.fillRect(0,0,vw,vh)}
 
-  // Pixel-art post pass: downsample then nearest-neighbor upscale for crisp era-accurate look
+  // Pixel-art post pass: 64-bit remaster look (full-res pixel detail + glow grade)
   pctx.clearRect(0,0,post.width,post.height);
   pctx.drawImage(cv,0,0,post.width,post.height);
-  setActivePalette();
-  quantizePost();
+  if(GRAPHICS_MODE!=='64BIT'){
+    setActivePalette();
+    quantizePost();
+  }
   ctx.save();
   ctx.setTransform(1,0,0,1,0,0);
   ctx.imageSmoothingEnabled=false;
   ctx.clearRect(0,0,vw,vh);
   ctx.drawImage(post,0,0,post.width,post.height,0,0,vw,vh);
-  // subtle scanline + grading for 16-bit display character
-  ctx.fillStyle='rgba(8,12,24,0.05)';
-  for(let y=0;y<vh;y+=2){ ctx.fillRect(0,y,vw,1); }
-  ctx.fillStyle='rgba(14,18,32,0.06)';
-  ctx.fillRect(0,0,vw,vh);
+
+  if(GRAPHICS_MODE==='64BIT'){
+    // light bloom on bright pixels for premium retro remaster vibe
+    ctx.globalCompositeOperation='screen';
+    ctx.globalAlpha=0.15;
+    ctx.drawImage(post,0,0,post.width,post.height,1,0,vw,vh);
+    ctx.drawImage(post,0,0,post.width,post.height,-1,0,vw,vh);
+    ctx.drawImage(post,0,0,post.width,post.height,0,1,vw,vh);
+    ctx.drawImage(post,0,0,post.width,post.height,0,-1,vw,vh);
+    ctx.globalAlpha=1;
+    ctx.globalCompositeOperation='source-over';
+
+    // modern 64-bit grade while preserving pixel edges
+    const grade=ctx.createLinearGradient(0,0,0,vh);
+    grade.addColorStop(0,'rgba(130,170,255,0.08)');
+    grade.addColorStop(0.55,'rgba(30,45,90,0.05)');
+    grade.addColorStop(1,'rgba(8,12,24,0.16)');
+    ctx.fillStyle=grade;
+    ctx.fillRect(0,0,vw,vh);
+
+    // ultra-subtle scanline texture
+    ctx.fillStyle='rgba(8,12,24,0.02)';
+    for(let y=0;y<vh;y+=3){ ctx.fillRect(0,y,vw,1); }
+  }else{
+    // legacy 16-bit display character
+    ctx.fillStyle='rgba(8,12,24,0.05)';
+    for(let y=0;y<vh;y+=2){ ctx.fillRect(0,y,vw,1); }
+    ctx.fillStyle='rgba(14,18,32,0.06)';
+    ctx.fillRect(0,0,vw,vh);
+  }
   ctx.restore();
 
   requestAnimationFrame(render);
