@@ -47,6 +47,10 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 .dbtn.left{grid-column:1;grid-row:1}.dbtn.right{grid-column:2;grid-row:1}
 .dbtn.jump{width:74px;height:74px;border-radius:999px;background:rgba(42,88,170,.8);font-size:1.05rem}
 
+.stat-row{display:grid;grid-template-columns:170px 1fr 44px;gap:8px;align-items:center;font-size:.85rem}
+.stat-meter{height:10px;border:1px solid #5678ae;border-radius:999px;overflow:hidden;background:#122140}
+.stat-meter > span{display:block;height:100%;background:linear-gradient(90deg,#79d9ff,#8bff9e)}
+
 @media (max-width: 820px){
   .top{
     left:8px;
@@ -148,6 +152,7 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
     <div class="legend"><span><i class="dot node"></i>chapter node</span><span><i class="dot done"></i>completed</span><span><i class="dot npc"></i>mentor NPC</span></div>
     <div class="row">
       <button class="btn" id="nextNode">Jump to Next Chapter</button>
+      <button class="btn" id="charStatsBtn">Character Stats</button>
       <button class="btn" id="returnSite">Back to MichaelOS</button>
       <button class="btn" id="viewRole">View Role Card</button>
       <button class="btn" id="showCerts">Certifications</button>
@@ -184,6 +189,16 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 <div class="toast" id="toast">Achievement unlocked</div>
 <div class="chapter-card" id="chapterCard">Chapter</div>
 <div class="modal hide" id="modal"><div class="modal-card"><h3 id="modalTitle">Role Card</h3><p id="modalBody"></p><ul id="modalList"></ul><div class="row"><button class="btn" id="closeModal">Close</button></div></div></div>
+
+<div class="modal hide" id="statsModal">
+  <div class="modal-card">
+    <h3>CHARACTER SHEET // MICHAEL COSTEA</h3>
+    <p style="margin:.2rem 0 .6rem;color:#bcd0f5">Class: Field Systems Strategist · Spec: Growth + Ops + Electrical Trade</p>
+    <div id="statsBars" style="display:grid;gap:8px"></div>
+    <ul id="skillTree" style="margin:.8rem 0 .5rem;padding-left:18px;color:#d8e6ff"></ul>
+    <div class="row"><button class="btn" id="closeStatsModal">Close</button></div>
+  </div>
+</div>
 
 <script>
 const cv=document.getElementById('game'),ctx=cv.getContext('2d');
@@ -902,7 +917,38 @@ const modal=document.getElementById('modal'),modalTitle=document.getElementById(
 function openModal(t,b,l=[]){modalTitle.textContent=t;modalBody.textContent=b;modalList.innerHTML=l.map(x=>`<li>${x}</li>`).join('');modal.classList.remove('hide')}
 function closeModal(){modal.classList.add('hide')} document.getElementById('closeModal').onclick=closeModal; modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 
+const statsModal=document.getElementById('statsModal');
+const statsBars=document.getElementById('statsBars');
+const skillTree=document.getElementById('skillTree');
+const rpgStats=[
+  ['Leadership',95],
+  ['Electrical Tradecraft',92],
+  ['Sales Strategy',94],
+  ['Process Engineering',96],
+  ['Automation Systems',90],
+  ['Customer Experience',93],
+  ['Partnership Development',91],
+  ['Execution Speed',97]
+];
+const rpgSkills=[
+  'VEU program-aligned upgrade operations',
+  'Lead-gen optimization + conversion tuning',
+  'Cross-brand growth orchestration (3 brands)',
+  'Field-to-digital systems translation',
+  'Training + knowledge rollout for frontline teams',
+  'Smart-home/electrical delivery experience'
+];
+function renderStatsWindow(){
+  statsBars.innerHTML=rpgStats.map(([k,v])=>`<div class="stat-row"><span>${k}</span><div class="stat-meter"><span style="width:${v}%"></span></div><b>${v}</b></div>`).join('');
+  skillTree.innerHTML=rpgSkills.map(s=>`<li>${s}</li>`).join('');
+}
+function openStatsModal(){ renderStatsWindow(); statsModal.classList.remove('hide'); }
+function closeStatsModal(){ statsModal.classList.add('hide'); }
+document.getElementById('closeStatsModal').onclick=closeStatsModal;
+statsModal.addEventListener('click',e=>{ if(e.target===statsModal) closeStatsModal(); });
+
 document.getElementById('nextNode').onclick=()=>{const n=nodes.find(x=>!viewed.has(x.id))||nodes[nodes.length-1];player.x=n.x-40;player.y=n.y-40;activeNode=n;};
+document.getElementById('charStatsBtn').onclick=()=>openStatsModal();
 document.getElementById('returnSite').onclick=()=>{location.href='../index.html';};
 document.getElementById('viewRole').onclick=()=>{const n=activeNode||nodes[0];openModal(n.title,n.text,n.highlights||[])};
 document.getElementById('showCerts').onclick=()=>openModal('Certifications & Capability Stack','Core capability and accreditation set used across delivery + operations.',certs);
