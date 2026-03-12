@@ -108,10 +108,23 @@ const nodes=[
   {id:'N8',x:900,y:2100,title:'BD & Marketing Manager',desc:'Growth, partnerships, CX innovation.'}
 ];
 const npcs=[
-  {x:430,y:620,c:'#ffcf99'},{x:480,y:640,c:'#ffd7a8'},{x:1360,y:640,c:'#ffc6a1'},{x:1420,y:760,c:'#ffdab8'},{x:1500,y:920,c:'#f6c6a3'},
-  {x:360,y:1540,c:'#ffd4ad'},{x:1330,y:1680,c:'#f1c5a3'}
+  {x:430,y:620,c:'#ffcf99',name:'Mia',role:'planner',vx:0.45,vy:0,minX:250,maxX:520,minY:590,maxY:720,phrase:'Checking route'},
+  {x:480,y:640,c:'#ffd7a8',name:'Noah',role:'driver',vx:-0.4,vy:0,minX:250,maxX:520,minY:590,maxY:720,phrase:'On my way'},
+  {x:1360,y:640,c:'#ffc6a1',name:'Ari',role:'ops',vx:0,vy:0.35,minX:1290,maxX:1560,minY:620,maxY:900,phrase:'Ops synced'},
+  {x:1420,y:760,c:'#ffdab8',name:'Liv',role:'sales',vx:0,vy:-0.4,minX:1290,maxX:1560,minY:620,maxY:900,phrase:'Lead warm'},
+  {x:1500,y:920,c:'#f6c6a3',name:'Kai',role:'field',vx:0.35,vy:0,minX:1280,maxX:1660,minY:880,maxY:1120,phrase:'Site ready'},
+  {x:360,y:1540,c:'#ffd4ad',name:'Jules',role:'support',vx:0.42,vy:0,minX:230,maxX:520,minY:1480,maxY:1780,phrase:'Tickets clear'},
+  {x:1330,y:1680,c:'#f1c5a3',name:'Rin',role:'partner',vx:-0.38,vy:0,minX:1210,maxX:1600,minY:1580,maxY:1880,phrase:'Pilot live'}
+];
+const traffic=[
+  {x:ROAD_X+110,y:860,c:'#2f6ec7',speed:0.42,lane:'down'},
+  {x:ROAD_X+300,y:1060,c:'#d48d3a',speed:0.5,lane:'down'},
+  {x:ROAD_X+120,y:1520,c:'#d6bf2d',speed:0.44,lane:'down'},
+  {x:ROAD_X+304,y:520,c:'#aeb7c3',speed:0.52,lane:'up'},
+  {x:ROAD_X+112,y:1760,c:'#9b7cff',speed:0.46,lane:'up'}
 ];
 const viewed=new Set(JSON.parse(localStorage.getItem('dnt_v68_viewed')||'[]'));
+let npcChatPairs=[];
 
 function save(){localStorage.setItem('dnt_v68_viewed',JSON.stringify([...viewed]));}
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1200);}
@@ -207,11 +220,8 @@ function drawWorld(){
   ctx.fillStyle='#4f6278'; ctx.fillRect(100,1850,1600,24); ctx.fillRect(100,1930,1600,24);
   for(let x=110;x<1690;x+=30){ctx.fillStyle='#94a7bf';ctx.fillRect(x,1850,4,24);ctx.fillRect(x,1930,4,24);} 
 
-  // cars parked/moving look
-  const cars=[
-    {x:ROAD_X+110,y:860,c:'#2f6ec7'},{x:ROAD_X+300,y:1060,c:'#d48d3a'},{x:ROAD_X+120,y:1520,c:'#d6bf2d'},{x:ROAD_X+304,y:520,c:'#aeb7c3'},{x:ROAD_X+112,y:1760,c:'#9b7cff'}
-  ];
-  cars.forEach(c=>{
+  // moving traffic
+  traffic.forEach(c=>{
     ctx.fillStyle='#1f2736';ctx.fillRect(c.x-2,c.y-2,96,152);
     ctx.fillStyle=c.c;ctx.fillRect(c.x,c.y,92,148);
     ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(c.x+10,c.y+10,72,20);
@@ -226,15 +236,25 @@ function drawWorld(){
     ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,9);
   });
 
-  // NPC crowd (same detail class as player)
+  // NPC crowd (same detail class as player) + active interactions
   npcs.forEach((p,i)=>{
     const shirt=['#2f6ec7','#ffb347','#9b7cff','#f76c6c','#3abf8f'][i%5];
     drawNPCGuy(p.x,p.y,shirt,p.c);
   });
+
+  // talk bubbles between close NPCs
+  npcChatPairs.forEach(({a,b,msg})=>{
+    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2-34;
+    ctx.fillStyle='#f8fbff'; ctx.fillRect(mx-34,my-16,68,16);
+    ctx.strokeStyle='#1c2f47'; ctx.lineWidth=1; ctx.strokeRect(mx-34,my-16,68,16);
+    ctx.fillStyle='#0f1b2d'; ctx.font='bold 8px monospace';
+    ctx.fillText(msg,mx-30,my-5);
+  });
+
   // extra dense pedestrians for depth
-  for(let i=0;i<18;i++){
-    const px = (i%2===0? 300 : 1460) + ((i*37)%120);
-    const py = 820 + i*74;
+  for(let i=0;i<20;i++){
+    const px = (i%2===0? 300 : 1460) + ((i*37 + time*0.35)%120);
+    const py = 820 + i*72 + Math.sin((time+i*7)*0.04)*3;
     const shirt=['#5ea0ff','#ffc167','#a18aff','#f78a8a','#6fd9a4'][i%5];
     const skin=['#f1c5a3','#ffd7b4','#eab89c','#f4cfb0'][i%4];
     drawNPCGuy(px,py,shirt,skin);
@@ -243,6 +263,34 @@ function drawWorld(){
 
 function update(){
   time += 1;
+
+  // animate city traffic
+  traffic.forEach(c=>{
+    if(c.lane==='down') c.y += c.speed;
+    else c.y -= c.speed;
+    if(c.y>world.h-80) c.y = 170;
+    if(c.y<140) c.y = world.h-110;
+  });
+
+  // wandering NPCs in local districts
+  npcs.forEach((n,i)=>{
+    n.x += n.vx; n.y += n.vy;
+    if(n.x<n.minX || n.x>n.maxX) n.vx *= -1;
+    if(n.y<n.minY || n.y>n.maxY) n.vy *= -1;
+    if(i%2===0){ n.x += Math.sin((time+i*13)*0.03)*0.12; }
+  });
+
+  // detect NPC interactions
+  npcChatPairs=[];
+  for(let i=0;i<npcs.length;i++){
+    for(let j=i+1;j<npcs.length;j++){
+      const a=npcs[i], b=npcs[j];
+      if(Math.hypot(a.x-b.x,a.y-b.y)<54){
+        npcChatPairs.push({a,b,msg:(time%120<60? a.phrase : b.phrase)});
+      }
+    }
+  }
+
   let ix=(keys['ArrowRight']||keys['d']?1:0)-(keys['ArrowLeft']||keys['a']?1:0);
   let iy=(keys['ArrowDown']||keys['s']?1:0)-(keys['ArrowUp']||keys['w']?1:0);
   if(Math.abs(joyState.x)>0.06||Math.abs(joyState.y)>0.06){ix=joyState.x;iy=joyState.y;}
