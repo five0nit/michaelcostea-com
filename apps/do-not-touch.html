@@ -200,7 +200,7 @@ const IS_MOBILE = window.matchMedia && window.matchMedia('(max-width: 900px), (p
 let quality=IS_MOBILE?'medium':'high';
 let qp=QUALITY_PRESETS[quality];
 
-const perf={samples:[],slowFor:0,fastFor:0,lastMini:0,dropStreak:0,lastDowngradeAt:0,lastUpgradeAt:0};
+const perf={samples:[],slowFor:0,fastFor:0,lastMini:0,dropStreak:0,lastDowngradeAt:0,lastUpgradeAt:0,pressure:0,effectsBudget:1,hotspotBudget:1};
 let guardClock=0;
 
 function setQuality(next,reason='auto'){
@@ -219,24 +219,34 @@ function autoQuality(frameMs, nowMs){
   const sinceDown=nowMs-perf.lastDowngradeAt;
   const sinceUp=nowMs-perf.lastUpgradeAt;
 
-  if(frameMs>40) perf.dropStreak=Math.min(18,perf.dropStreak+1); else perf.dropStreak=Math.max(0,perf.dropStreak-0.5);
+  const loadMs=Math.max(frameMs,avg);
+  const overBudget=Math.max(0,loadMs-16.7);
+  if(overBudget>6) perf.pressure=Math.min(1,perf.pressure+0.12);
+  else if(overBudget>2.5) perf.pressure=Math.min(1,perf.pressure+0.05);
+  else perf.pressure=Math.max(0,perf.pressure-0.04);
+  perf.effectsBudget=Math.max(0.3,1-perf.pressure*0.75);
+  perf.hotspotBudget=Math.max(0.25,1-perf.pressure*0.9);
+
+  if(frameMs>34) perf.dropStreak=Math.min(18,perf.dropStreak+1); else perf.dropStreak=Math.max(0,perf.dropStreak-0.7);
 
   // Fast panic path to prevent visible stutter cascades.
-  if(perf.dropStreak>=4 && sinceDown>2600){
+  if(perf.dropStreak>=3 && sinceDown>2200){
     if(quality==='high') setQuality('medium');
     else if(quality==='medium') setQuality('low');
     perf.lastDowngradeAt=nowMs;
     perf.dropStreak=0;
+    perf.pressure=Math.min(1,perf.pressure+0.18);
     return;
   }
 
   // Hysteresis tuning for smoother adaptive behavior.
-  if(avg>20 && perf.slowFor>1400 && sinceDown>2800){
+  if(avg>18 && perf.slowFor>900 && sinceDown>2400){
     if(quality==='high') setQuality('medium');
     else if(quality==='medium') setQuality('low');
     perf.slowFor=0;
     perf.lastDowngradeAt=nowMs;
-  }else if(avg<13 && perf.fastFor>3800 && sinceUp>5200 && !REDUCED_MOTION){
+    perf.pressure=Math.min(1,perf.pressure+0.1);
+  }else if(avg<12.5 && perf.fastFor>5200 && sinceUp>6400 && !REDUCED_MOTION && perf.pressure<0.25){
     if(quality==='low') setQuality('medium');
     else if(quality==='medium' && !IS_MOBILE) setQuality('high');
     perf.fastFor=0;
@@ -289,6 +299,13 @@ const MATERIALS={
   skin:{base:'#eab89c',shade:'#ce9a80',highlight:'#f5cfb7'},
   fabric:{base:'#1a2233',shade:'#111826',highlight:'#2a3550'}
 };
+const ART_PASS={
+  facade:['#445f80','#516d8f','#5d7a9c','#6b88a8'],
+  neutral:['#2a3a52','#364a66','#3f5675','#4a6384'],
+  warmAccent:['#d89d4f','#e3b86c','#f0c982'],
+  coolAccent:['#7db6d9','#91c5e5','#b0d7ee'],
+  foliage:['#5c8754','#6a9561','#78a26f','#89b684']
+};
 const DEPTH_BANDS=[{y:620,a:0.04},{y:1150,a:0.07},{y:1650,a:0.1},{y:2050,a:0.14}];
 const nodes=[
   {id:'N1',x:260,y:680,title:'Bloom Coffee Bar',desc:'Startup operations and service flow.'},
@@ -318,10 +335,11 @@ const traffic=[
 ];
 
 const COLLISION={
-  playerRadius:13,
-  trafficEnvelope:11,
+  playerRadius:11,
+  trafficEnvelope:{x:7,y:5},
   triggerPad:16,
-  resolveEpsilon:0.05,
+  resolveEpsilon:0.02,
+  maxResolvePasses:3,
   edgePadding:{left:42,right:42,top:124,bottom:42},
   staticProps:[
     {id:'block-nw',x:100,y:620,w:460,h:300},
@@ -334,6 +352,9 @@ const COLLISION={
     {id:'road-buffer-right',x:ROAD_X+ROAD_W,y:120,w:10,h:world.h-120}
   ]
 };
+
+const collisionDebug={enabled:false};
+let lastCollisionDebugData=[];
 
 const nodeTriggerBounds = new Map(nodes.map(n=>[n.id,{x:n.x-28,y:n.y-28,w:56,h:56}]));
 const STORAGE_KEYS={
@@ -406,6 +427,15 @@ const narrativeState={
   lastScheduleBand:''
 };
 
+const systemicState={
+  chainCooldown:0,
+  chainQueue:[],
+  recentTags:new Map(),
+  districtFocus:'north',
+  routinePulse:0,
+  socialEnergy:0.52
+};
+
 const progressionPhases=[
   {id:'bootstrap',min:0,max:1,trafficMult:0.94,lightMult:0.88,roleToast:'The city is waking up — teams are still syncing.'},
   {id:'growing',min:2,max:3,trafficMult:1.0,lightMult:1.0,roleToast:'Momentum is rising. Intersections start to feel intentional.'},
@@ -471,7 +501,58 @@ function getScanlineLayer(){
 }
 
 function save(){safeStorageSet(STORAGE_KEYS.viewed,JSON.stringify([...viewed]));}
-function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1200);}
+const toastState={
+  queue:[],
+  lastText:'',
+  lastAt:0,
+  visibleUntil:0,
+  defaultHold:1300,
+  minGap:2400,
+  dedupeMs:14000,
+  maxQueue:5
+};
+function flushToastQueue(force=false){
+  const now=performance.now();
+  if(!force && (now<toastState.visibleUntil || now-toastState.lastAt<toastState.minGap)) return;
+  const next=toastState.queue.shift();
+  if(!next) return;
+  const el=document.getElementById('toast');
+  if(!el) return;
+  el.textContent=next.text;
+  el.classList.add('show');
+  clearTimeout(flushToastQueue.t);
+  const hold=next.hold||toastState.defaultHold;
+  toastState.lastText=next.text;
+  toastState.lastAt=now;
+  toastState.visibleUntil=now+hold;
+  flushToastQueue.t=setTimeout(()=>{
+    el.classList.remove('show');
+    setTimeout(()=>flushToastQueue(true),Math.max(120,toastState.minGap*0.22));
+  },hold);
+}
+function toast(text,opt={}){
+  if(!text) return;
+  const msg=String(text).trim();
+  if(!msg) return;
+  const now=performance.now();
+  const dedupeMs=opt.dedupeMs ?? toastState.dedupeMs;
+  if(msg===toastState.lastText && now-toastState.lastAt<dedupeMs) return;
+
+  const queued=toastState.queue.some(item=>item.text===msg);
+  if(queued) return;
+
+  const entry={text:msg,hold:opt.hold||toastState.defaultHold};
+  if(opt.priority){
+    toastState.queue.unshift(entry);
+  }else{
+    toastState.queue.push(entry);
+  }
+
+  if(toastState.queue.length>toastState.maxQueue){
+    toastState.queue.splice(0,toastState.queue.length-toastState.maxQueue);
+  }
+  flushToastQueue(true);
+}
 function snapMotion(){motionState.vx=0;motionState.vy=0;}
 
 const joy=document.getElementById('joy'),stick=document.getElementById('stick');
@@ -493,30 +574,15 @@ function circleRectOverlap(cx,cy,rad,r){
   return dx*dx+dy*dy < rad*rad;
 }
 function buildTrafficSafetyEnvelopes(){
-  const p=COLLISION.trafficEnvelope;
-  return traffic.map((c,i)=>({id:'traffic-'+i,x:c.x-p,y:c.y-p,w:STYLE_BIBLE.ref.carW+p*2,h:STYLE_BIBLE.ref.carL+p*2}));
+  const padX=COLLISION.trafficEnvelope.x;
+  const padY=COLLISION.trafficEnvelope.y;
+  return traffic.map((c,i)=>({id:'traffic-'+i,x:c.x-padX,y:c.y-padY,w:STYLE_BIBLE.ref.carW+padX*2,h:STYLE_BIBLE.ref.carL+padY*2}));
 }
 function expandRectForRadius(r,rad){
-  return {x:r.x-rad,y:r.y-rad,w:r.w+rad*2,h:r.h+rad*2};
+  return {x:r.x-rad,y:r.y-rad,w:r.w+rad*2,h:r.h+rad*2,id:r.id};
 }
 function pointInExpandedRect(px,py,r){
   return px>r.x && px<r.x+r.w && py>r.y && py<r.y+r.h;
-}
-function resolveAxisBlock(prevPrimary,nextPrimary,otherAxis,expanded,isX){
-  const minPrimary=isX?expanded.x:expanded.y;
-  const maxPrimary=minPrimary+(isX?expanded.w:expanded.h);
-  const minOther=isX?expanded.y:expanded.x;
-  const maxOther=minOther+(isX?expanded.h:expanded.w);
-  const eps=COLLISION.resolveEpsilon;
-  if(otherAxis<=minOther || otherAxis>=maxOther) return nextPrimary;
-  if(nextPrimary<=minPrimary || nextPrimary>=maxPrimary) return nextPrimary;
-
-  if(prevPrimary<=minPrimary && nextPrimary>minPrimary) return minPrimary-eps;
-  if(prevPrimary>=maxPrimary && nextPrimary<maxPrimary) return maxPrimary+eps;
-
-  const toMin=Math.abs(nextPrimary-minPrimary);
-  const toMax=Math.abs(maxPrimary-nextPrimary);
-  return toMin<toMax?(minPrimary-eps):(maxPrimary+eps);
 }
 function clampPlayerToWorld(px,py){
   const edge=COLLISION.edgePadding;
@@ -527,36 +593,81 @@ function clampPlayerToWorld(px,py){
 }
 function resolvePlayerCollision(nextX,nextY){
   const rad=COLLISION.playerRadius;
+  const eps=COLLISION.resolveEpsilon;
   const blockers=[...COLLISION.staticProps,...buildTrafficSafetyEnvelopes()];
   const expanded=blockers.map(r=>expandRectForRadius(r,rad));
 
   const start=clampPlayerToWorld(player.x,player.y);
   const target=clampPlayerToWorld(nextX,nextY);
-  let rx=target.x, ry=target.y;
+  let rx=start.x, ry=start.y;
+  let hitX=false, hitY=false;
 
-  // Axis-separated resolution prevents sticky corners while preserving natural slide.
-  for(const r of expanded){
-    rx=resolveAxisBlock(start.x,rx,target.y,r,true);
-  }
-  for(const r of expanded){
-    ry=resolveAxisBlock(start.y,ry,rx,r,false);
+  const sx=target.x-start.x;
+  const sy=target.y-start.y;
+
+  // Resolve in dominant-axis order so corners slide instead of snapping back.
+  const resolveXFirst=Math.abs(sx)>=Math.abs(sy);
+  const axisOrder=resolveXFirst?['x','y']:['y','x'];
+
+  for(const axis of axisOrder){
+    if(axis==='x'){
+      const desired=target.x;
+      let nx=desired;
+      for(const r of expanded){
+        if(ry<=r.y || ry>=r.y+r.h) continue;
+        const movingRight=nx>rx;
+        const movingLeft=nx<rx;
+        if(movingRight && rx<=r.x && nx>r.x) { nx=r.x-eps; hitX=true; }
+        else if(movingLeft && rx>=r.x+r.w && nx<r.x+r.w) { nx=r.x+r.w+eps; hitX=true; }
+        if(nx>r.x && nx<r.x+r.w){
+          if(Math.abs(nx-r.x)<Math.abs(nx-(r.x+r.w))) nx=r.x-eps;
+          else nx=r.x+r.w+eps;
+          hitX=true;
+        }
+      }
+      rx=nx;
+    }else{
+      const desired=target.y;
+      let ny=desired;
+      for(const r of expanded){
+        if(rx<=r.x || rx>=r.x+r.w) continue;
+        const movingDown=ny>ry;
+        const movingUp=ny<ry;
+        if(movingDown && ry<=r.y && ny>r.y) { ny=r.y-eps; hitY=true; }
+        else if(movingUp && ry>=r.y+r.h && ny<r.y+r.h) { ny=r.y+r.h+eps; hitY=true; }
+        if(ny>r.y && ny<r.y+r.h){
+          if(Math.abs(ny-r.y)<Math.abs(ny-(r.y+r.h))) ny=r.y-eps;
+          else ny=r.y+r.h+eps;
+          hitY=true;
+        }
+      }
+      ry=ny;
+    }
   }
 
-  // Corner fallback: if still inside after axis pass, push to nearest safe side.
-  for(const r of expanded){
-    if(!pointInExpandedRect(rx,ry,r)) continue;
-    const pushLeft=Math.abs(rx-r.x);
-    const pushRight=Math.abs((r.x+r.w)-rx);
-    const pushTop=Math.abs(ry-r.y);
-    const pushBottom=Math.abs((r.y+r.h)-ry);
-    const minPush=Math.min(pushLeft,pushRight,pushTop,pushBottom);
-    if(minPush===pushLeft) rx=r.x-COLLISION.resolveEpsilon;
-    else if(minPush===pushRight) rx=r.x+r.w+COLLISION.resolveEpsilon;
-    else if(minPush===pushTop) ry=r.y-COLLISION.resolveEpsilon;
-    else ry=r.y+r.h+COLLISION.resolveEpsilon;
+  // Minimal depenetration pass to remove residual corner jitter without strong pushback.
+  for(let pass=0; pass<COLLISION.maxResolvePasses; pass++){
+    let corrected=false;
+    for(const r of expanded){
+      if(!pointInExpandedRect(rx,ry,r)) continue;
+      const leftPen=Math.abs(rx-r.x);
+      const rightPen=Math.abs((r.x+r.w)-rx);
+      const topPen=Math.abs(ry-r.y);
+      const botPen=Math.abs((r.y+r.h)-ry);
+      const minPen=Math.min(leftPen,rightPen,topPen,botPen);
+      if(minPen===leftPen){ rx=r.x-eps; hitX=true; }
+      else if(minPen===rightPen){ rx=r.x+r.w+eps; hitX=true; }
+      else if(minPen===topPen){ ry=r.y-eps; hitY=true; }
+      else { ry=r.y+r.h+eps; hitY=true; }
+      corrected=true;
+    }
+    if(!corrected) break;
   }
 
-  return clampPlayerToWorld(rx,ry);
+  const clamped=clampPlayerToWorld(rx,ry);
+  if(clamped.x!==rx) hitX=true;
+  if(clamped.y!==ry) hitY=true;
+  return {x:clamped.x,y:clamped.y,hitX,hitY,expanded};
 }
 
 function drawCharacter(x,y,opt={}){
@@ -639,8 +750,52 @@ function drawPremiumHeroDistrictTo(c2d,x,y){
 }
 
 function drawStreetPropsTo(c2d){
-  for(let i=0;i<10;i++){const kx=170 + i*150; const ky=980 + (i%2)*360; c2d.fillStyle='#2f3f5d'; c2d.fillRect(kx,ky,18,26); c2d.fillStyle=['#ff8aa5','#8fe2ff','#ffd66d'][i%3]; c2d.fillRect(kx+3,ky+4,12,9); c2d.fillStyle='#dce8ff'; c2d.fillRect(kx+4,ky+16,10,6);} 
-  for(let i=0;i<14;i++){const sx=120 + i*120; const sy=600 + (i%3)*520; c2d.fillStyle='#4d607f'; c2d.fillRect(sx,sy,4,36); c2d.fillStyle='#eaf3ff'; c2d.fillRect(sx-3,sy+4,10,10);} 
+  const kioskAccent=['#f4b26a','#8fc7ef','#f29ba9','#9fd48a','#c9b8ff'];
+  for(let i=0;i<10;i++){
+    const kx=170 + i*150 + Math.floor(hash2(i,1,2)*10)-5;
+    const ky=980 + (i%2)*360 + Math.floor(hash2(i,2,3)*8)-4;
+    c2d.fillStyle='#2f3f5d'; c2d.fillRect(kx,ky,18,26);
+    c2d.fillStyle=kioskAccent[i%kioskAccent.length]; c2d.fillRect(kx+3,ky+4,12,9);
+    c2d.fillStyle='rgba(255,255,255,.34)'; c2d.fillRect(kx+4,ky+5,5,2);
+    c2d.fillStyle='#dce8ff'; c2d.fillRect(kx+4,ky+16,10,6);
+    c2d.fillStyle='rgba(15,23,38,.3)'; c2d.fillRect(kx+2,ky+24,14,2);
+  }
+  for(let i=0;i<14;i++){
+    const sx=120 + i*120 + Math.floor(hash2(i,3,4)*12)-6;
+    const sy=600 + (i%3)*520;
+    c2d.fillStyle='#4d607f'; c2d.fillRect(sx,sy,4,36);
+    c2d.fillStyle='#eaf3ff'; c2d.fillRect(sx-3,sy+4,10,10);
+    c2d.fillStyle='rgba(255,232,167,.45)'; c2d.fillRect(sx-1,sy+6,6,4);
+  }
+
+  // Premium pass: non-repetitive urban furniture pockets, baked into static layer.
+  const furnitureBands=[
+    {x:112,y:654,w:430,h:116},
+    {x:1226,y:660,w:450,h:120},
+    {x:118,y:1168,w:430,h:122},
+    {x:1222,y:1162,w:460,h:126},
+    {x:144,y:1604,w:420,h:124},
+    {x:1228,y:1608,w:452,h:126}
+  ];
+  furnitureBands.forEach((band,bIdx)=>{
+    c2d.fillStyle='rgba(24,38,58,.08)'; c2d.fillRect(band.x,band.y,band.w,band.h);
+    const pieces=10 + bIdx;
+    for(let i=0;i<pieces;i++){
+      const r1=hash2(bIdx,i,21), r2=hash2(bIdx,i,22), r3=hash2(bIdx,i,23);
+      const px=band.x+8+Math.floor(r1*(band.w-24));
+      const py=band.y+10+Math.floor(r2*(band.h-26));
+      if(r3<0.34){
+        c2d.fillStyle='#7f6044'; c2d.fillRect(px,py,14,6);
+        c2d.fillStyle='#a27d57'; c2d.fillRect(px+1,py+1,8,2);
+      }else if(r3<0.66){
+        c2d.fillStyle='#3a5476'; c2d.fillRect(px,py,6,16);
+        c2d.fillStyle='#d6e7ff'; c2d.fillRect(px-2,py+2,10,6);
+      }else{
+        c2d.fillStyle=ART_PASS.foliage[(i+bIdx)%ART_PASS.foliage.length]; c2d.fillRect(px,py,12,8);
+        c2d.fillStyle='rgba(209,243,193,.3)'; c2d.fillRect(px+2,py+2,5,2);
+      }
+    }
+  });
 }
 
 function hash2(x,y,s=1){
@@ -704,9 +859,27 @@ function drawDistrictMicroScenesTo(c2d){
   }
 }
 
+function drawPremiumSilhouettePassTo(c2d){
+  // Cleaner skyline silhouette rhythm with deterministic variety (static-baked).
+  for(let lane=0;lane<3;lane++){
+    const laneY=126 + lane*54;
+    const color=lane===0?'rgba(48,72,104,.24)':lane===1?'rgba(42,64,92,.2)':'rgba(36,54,80,.16)';
+    for(let i=0;i<20;i++){
+      const sx=40+i*92+Math.floor(hash2(lane,i,51)*18);
+      const sw=44+Math.floor(hash2(lane,i,52)*26);
+      const sh=26+Math.floor(hash2(lane,i,53)*42);
+      c2d.fillStyle=color; c2d.fillRect(sx,laneY-sh,sw,sh);
+      if(i%4===0){
+        c2d.fillStyle='rgba(235,244,255,.14)'; c2d.fillRect(sx+6,laneY-sh+7,10,2);
+      }
+    }
+  }
+}
+
 function buildStaticBase(c2d){
   const sky=c2d.createLinearGradient(0,0,0,620); sky.addColorStop(0,'#9ec3f5'); sky.addColorStop(1,'#d9f0ff'); c2d.fillStyle=sky; c2d.fillRect(0,0,world.w,620);
   c2d.fillStyle=MATERIALS.foliage.base; c2d.fillRect(0,0,world.w,560);
+  drawPremiumSilhouettePassTo(c2d);
   for(let y=0;y<560;y+=16){
     for(let x=0;x<world.w;x+=20){
       const n=hash2(x,y,11);
@@ -752,8 +925,37 @@ function rebuildStaticLayers(){
   buildStaticBase(bctx); buildStaticDetail(dctx);
 }
 
-function drawParallaxBack(){const drift=cam.x*0.18, baseY=150; for(let i=0;i<16;i++){const x=((i*180-drift)% (world.w+260)) - 130; const h=110+(i%4)*28; ctx.fillStyle=i%2===0?'#7ca0c9':'#6f93bc'; ctx.fillRect(x,baseY+80-h,130,h); ctx.fillStyle='rgba(255,255,255,.14)'; ctx.fillRect(x+10,baseY+94-h,24,3);}}
-function drawParallaxFront(){const drift=cam.x*0.32; for(let i=0;i<22;i++){const x=((i*120-drift)% (world.w+200)) - 100; const y=560 + (i%3)*6; ctx.fillStyle='rgba(18,56,31,.34)'; ctx.fillRect(x,y,52,18); ctx.fillStyle='rgba(210,250,190,.16)'; ctx.fillRect(x+8,y+4,12,3);}}
+function drawParallaxBack(){
+  const drift=cam.x*0.18, baseY=158;
+  for(let i=0;i<16;i++){
+    const seed=hash2(i,7,31);
+    const x=((i*178-drift)% (world.w+300)) - 150;
+    const w=108+Math.floor(seed*42);
+    const h=94+Math.floor(hash2(i,11,32)*66);
+    const y=baseY+84-h;
+    ctx.fillStyle=ART_PASS.facade[i%ART_PASS.facade.length]; ctx.fillRect(x,y,w,h);
+    ctx.fillStyle='rgba(255,255,255,.12)'; ctx.fillRect(x+8,y+10,Math.max(14,Math.floor(w*0.18)),3);
+    ctx.fillStyle='rgba(23,36,56,.2)'; ctx.fillRect(x,y+h-6,w,6);
+    if(i%3===0){
+      ctx.fillStyle=ART_PASS.neutral[(i+1)%ART_PASS.neutral.length]; ctx.fillRect(x+Math.floor(w*0.64),y-18,12,18);
+      ctx.fillStyle='rgba(255,216,145,.2)'; ctx.fillRect(x+Math.floor(w*0.64)+2,y-15,8,4);
+    }
+  }
+}
+function drawParallaxFront(){
+  const drift=cam.x*0.32;
+  for(let i=0;i<22;i++){
+    const x=((i*118-drift)% (world.w+220)) - 110;
+    const y=558 + (i%3)*6 + Math.floor(hash2(i,9,41)*4);
+    const w=44+Math.floor(hash2(i,10,42)*18);
+    const h=14+Math.floor(hash2(i,11,43)*8);
+    ctx.fillStyle='rgba(28,66,42,.33)'; ctx.fillRect(x,y,w,h);
+    ctx.fillStyle='rgba(210,250,190,.15)'; ctx.fillRect(x+6,y+3,Math.max(10,Math.floor(w*0.24)),3);
+    if(i%5===0){
+      ctx.fillStyle='rgba(72,96,128,.28)'; ctx.fillRect(x+Math.floor(w*0.56),y-6,8,6);
+    }
+  }
+}
 
 function drawReactiveProp(p){
   if(!inView(p.x-8,p.y-12,p.w+16,p.h+20,70)) return;
@@ -786,22 +988,30 @@ const LENS_ACCENTS={
 
 function drawCinematicAtmosphere(){
   const depthRatio=Math.min(1,Math.max(0,cam.y/(world.h-vh||1)));
+  const fx=perf.effectsBudget;
 
   // Subtle aerial perspective to separate near/far planes and improve readability.
-  const fog=ctx.createLinearGradient(0,0,0,vh);
-  fog.addColorStop(0,'rgba(188,220,255,'+(0.02 + depthRatio*0.02).toFixed(3)+')');
-  fog.addColorStop(0.55,'rgba(120,145,176,'+(0.03 + depthRatio*0.04).toFixed(3)+')');
-  fog.addColorStop(1,'rgba(30,38,52,'+(0.08 + depthRatio*LENS_ACCENTS.depthFogMax).toFixed(3)+')');
-  ctx.fillStyle=fog;
-  ctx.fillRect(0,0,vw,vh);
+  if(fx<0.52){
+    ctx.fillStyle='rgba(30,38,52,'+(0.05 + depthRatio*0.12).toFixed(3)+')';
+    ctx.fillRect(0,0,vw,vh);
+  }else{
+    const fog=ctx.createLinearGradient(0,0,0,vh);
+    fog.addColorStop(0,'rgba(188,220,255,'+(0.02 + depthRatio*0.02).toFixed(3)+')');
+    fog.addColorStop(0.55,'rgba(120,145,176,'+(0.03 + depthRatio*0.04).toFixed(3)+')');
+    fog.addColorStop(1,'rgba(30,38,52,'+(0.08 + depthRatio*LENS_ACCENTS.depthFogMax).toFixed(3)+')');
+    ctx.fillStyle=fog;
+    ctx.fillRect(0,0,vw,vh);
+  }
 
   // Vertical story composition guide: center corridor stays legible without explicit UI lines.
-  const corridorX=ROAD_X-cam.x+ROAD_W*0.5;
-  const corridor=ctx.createRadialGradient(corridorX,vh*0.48,24,corridorX,vh*0.55,Math.max(180,vw*0.35));
-  corridor.addColorStop(0,'rgba(255,230,170,'+(0.055+LENS_ACCENTS.avenueGlow).toFixed(3)+')');
-  corridor.addColorStop(1,'rgba(255,230,170,0)');
-  ctx.fillStyle=corridor;
-  ctx.fillRect(corridorX-vw*0.38,0,vw*0.76,vh);
+  if(fx>0.45){
+    const corridorX=ROAD_X-cam.x+ROAD_W*0.5;
+    const corridor=ctx.createRadialGradient(corridorX,vh*0.48,24,corridorX,vh*0.55,Math.max(180,vw*0.35));
+    corridor.addColorStop(0,'rgba(255,230,170,'+((0.055+LENS_ACCENTS.avenueGlow)*fx).toFixed(3)+')');
+    corridor.addColorStop(1,'rgba(255,230,170,0)');
+    ctx.fillStyle=corridor;
+    ctx.fillRect(corridorX-vw*0.38,0,vw*0.76,vh);
+  }
 }
 
 function getProgressionPhase(){
@@ -838,6 +1048,38 @@ function getPairScript(a,b,bandId){
   return script[(idx+script.length)%script.length];
 }
 
+function queueSystemicChain(tag,msg,minGapSec=18,priority=0){
+  const now=time/60;
+  const last=systemicState.recentTags.get(tag)??-999;
+  if(now-last<minGapSec) return;
+  systemicState.recentTags.set(tag,now);
+  systemicState.chainQueue.push({tag,msg,priority});
+  if(systemicState.chainQueue.length>4) systemicState.chainQueue.shift();
+}
+
+function runInteractionChains(dt,phase,band,cadence){
+  systemicState.chainCooldown=Math.max(0,systemicState.chainCooldown-dt);
+  systemicState.routinePulse=Math.max(0,systemicState.routinePulse-dt);
+  if(systemicState.chainCooldown>0 || systemicState.chainQueue.length===0) return;
+
+  const focusMsg={
+    north:'Dispatch focus: north blocks stabilize with shorter handoff loops.',
+    center:'Dispatch focus: avenue corridor balancing delivery and callback traffic.',
+    south:'Dispatch focus: south districts absorb field + support demand cleanly.'
+  };
+
+  const picked=systemicState.chainQueue.sort((a,b)=>b.priority-a.priority).shift();
+  if(!picked) return;
+  toast(picked.msg,{priority:picked.priority>0?1:0,hold:1450});
+
+  if(systemicState.routinePulse<=0 && Math.random()<(0.28*cadence.social)){
+    toast(focusMsg[systemicState.districtFocus]||focusMsg.center,{dedupeMs:22000});
+    systemicState.routinePulse=18;
+  }
+
+  systemicState.chainCooldown=Math.max(7.5,12.5/cadence.social);
+}
+
 function applyProgressionReactions(force=false){
   const phase=getProgressionPhase();
   if(force || phase.id!==narrativeState.phase){
@@ -871,6 +1113,7 @@ function runRoleLoops(dt){
   const actor=npcs.find(n=>n.role===role);
   if(actor && Math.hypot(player.x-actor.x,player.y-actor.y)<220 && shouldAnnounce('role-'+role,11/cadence.social)){
     toast('Role Loop ['+band.label+']: '+actor.name+' ('+role+') → '+(actor.dynamicPhrase||actor.phrase));
+    queueSystemicChain('role-loop-'+role,actor.name+' relays to adjacent teams; lane timing adjusts for the next cycle.',20,0);
     narrativeState.lastRoleLoop=role;
     narrativeState.roleLoopCooldown=Math.max(8,13/cadence.social);
   }else{
@@ -890,6 +1133,8 @@ function runNpcProximityInteractions(dt){
   const key='npc-near-'+nearby.name+'-'+band.id;
   if(!shouldAnnounce(key,14/cadence.social)){ narrativeState.npcTalkCooldown=4; return; }
   toast(nearby.name+': '+(nearby.dynamicPhrase||nearby.phrase)+' '+phaseTag);
+  queueSystemicChain('npc-prox-'+nearby.role,nearby.name+' syncs a quick handoff and the district cadence tightens.',16,0);
+  systemicState.socialEnergy=Math.min(0.9,systemicState.socialEnergy+0.03);
   narrativeState.npcTalkCooldown=Math.max(6,11/cadence.social);
 }
 
@@ -900,6 +1145,9 @@ function runZoneMicroEvents(dt){
   const hit=zoneMicroEvents.find(e=>e.phase.includes(phase) && e.when());
   if(!hit) return;
   toast(hit.msg);
+  const focusByZone={Z1:'north',Z2:'north',Z3:'south',Z4:'center'};
+  systemicState.districtFocus=focusByZone[hit.id]||systemicState.districtFocus;
+  queueSystemicChain('zone-'+hit.id,'Chain reaction: nearby teams mirror this adjustment within one block.',22,1);
   narrativeState.zonePulseCooldown=hit.cooldown;
 }
 function runSchedulePulse(dt,phase){
@@ -918,6 +1166,7 @@ function drawArtDirectedLighting(){
   const nextNode=nodes.find(n=>!viewed.has(n.id));
   const isLow=quality==='low' || REDUCED_MOTION;
   const isMedium=quality==='medium';
+  const fx=perf.effectsBudget;
 
   const vignette=ctx.createRadialGradient(vw*0.5,vh*0.42,Math.min(vw,vh)*0.16,vw*0.5,vh*0.54,Math.max(vw,vh)*0.88);
   vignette.addColorStop(0,'rgba(0,0,0,0)');
@@ -926,16 +1175,17 @@ function drawArtDirectedLighting(){
   ctx.fillStyle=vignette;
   ctx.fillRect(0,0,vw,vh);
 
-  if(!isLow){
+  if(!isLow && fx>0.58){
     const diag=ctx.createLinearGradient(0,0,vw,vh);
-    diag.addColorStop(0,'rgba(116,164,255,.12)');
-    diag.addColorStop(0.5,'rgba(18,28,44,.04)');
-    diag.addColorStop(1,'rgba(255,172,122,.12)');
+    diag.addColorStop(0,'rgba(116,164,255,'+(0.12*fx).toFixed(3)+')');
+    diag.addColorStop(0.5,'rgba(18,28,44,'+(0.04*fx).toFixed(3)+')');
+    diag.addColorStop(1,'rgba(255,172,122,'+(0.12*fx).toFixed(3)+')');
     ctx.fillStyle=diag;
     ctx.fillRect(0,0,vw,vh);
   }
 
-  const maxZones=isLow?2:(isMedium?4:LIGHT_ZONES.length);
+  const zoneCap=isLow?2:(isMedium?4:LIGHT_ZONES.length);
+  const maxZones=Math.max(1,Math.floor(zoneCap*Math.max(0.45,perf.hotspotBudget)));
   for(let i=0;i<LIGHT_ZONES.length && i<maxZones;i++){
     const z=LIGHT_ZONES[i];
     const sx=z.x-cam.x, sy=z.y-cam.y;
@@ -950,12 +1200,12 @@ function drawArtDirectedLighting(){
     ctx.fillRect(sx-z.r,sy-z.r,z.r*2,z.r*2);
   }
 
-  if(!isLow){
+  if(!isLow && fx>0.5){
     const roadLeft=ROAD_X-cam.x+18, roadWidth=ROAD_W-36;
     const roadGuide=ctx.createLinearGradient(0,0,0,vh);
-    roadGuide.addColorStop(0,'rgba(255,255,255,.045)');
-    roadGuide.addColorStop(0.45,'rgba(250,218,140,.06)');
-    roadGuide.addColorStop(1,'rgba(25,18,16,.16)');
+    roadGuide.addColorStop(0,'rgba(255,255,255,'+(0.045*fx).toFixed(3)+')');
+    roadGuide.addColorStop(0.45,'rgba(250,218,140,'+(0.06*fx).toFixed(3)+')');
+    roadGuide.addColorStop(1,'rgba(25,18,16,'+(0.16*fx).toFixed(3)+')');
     ctx.fillStyle=roadGuide;
     ctx.fillRect(roadLeft,0,roadWidth,vh);
   }
@@ -971,7 +1221,7 @@ function drawArtDirectedLighting(){
     ctx.fillStyle=cue;
     ctx.fillRect(ox-or,oy-or,or*2,or*2);
 
-    if(nextNode && !isLow){
+    if(nextNode && !isLow && fx>0.62){
       const pulse=0.65+Math.sin(time*0.02)*LENS_ACCENTS.beaconPulse;
       const beacon=ctx.createLinearGradient(ox,0,ox,oy);
       beacon.addColorStop(0,'rgba(255,234,174,0)');
@@ -1061,8 +1311,9 @@ function update(dt){
   const desiredX=player.x+motionState.vx*dt;
   const desiredY=player.y+motionState.vy*dt;
   const resolved=resolvePlayerCollision(desiredX,desiredY);
-  if(resolved.x!==desiredX) motionState.vx=0;
-  if(resolved.y!==desiredY) motionState.vy=0;
+  if(collisionDebug.enabled) lastCollisionDebugData=resolved.expanded;
+  if(resolved.hitX) motionState.vx*=0.12;
+  if(resolved.hitY) motionState.vy*=0.12;
   player.x=resolved.x; player.y=resolved.y;
 
   const planarSpeed=Math.hypot(motionState.vx,motionState.vy);
@@ -1089,6 +1340,7 @@ function update(dt){
   runNpcProximityInteractions(dt);
   runZoneMicroEvents(dt);
   runSchedulePulse(dt,phase);
+  runInteractionChains(dt,phase,scheduleBand,cadence);
 
   reactiveProps.forEach(p=>{
     p.cooldown=Math.max(0,p.cooldown-dt);
@@ -1097,7 +1349,11 @@ function update(dt){
     const near=trigger?pointInRect(player.x,player.y,trigger):Math.hypot(player.x-(p.x+p.w*0.5),player.y-(p.y+p.h*0.5))<58;
     if(near){
       p.lit=Math.min(1,p.lit+dt*3);
-      if(p.cooldown<=0){ toast(p.nearMsg); p.cooldown=13; }
+      if(p.cooldown<=0){
+        toast(p.nearMsg);
+        queueSystemicChain('prop-'+p.id,p.label+' interaction ripples into the next team checkpoint.',19,0);
+        p.cooldown=13;
+      }
     }
   });
 
@@ -1106,6 +1362,7 @@ function update(dt){
     const beat=cityBeats.find(b=>pointInRect(player.x,player.y,{x:b.zone.x1-COLLISION.triggerPad,y:b.zone.y1-COLLISION.triggerPad,w:(b.zone.x2-b.zone.x1)+COLLISION.triggerPad*2,h:(b.zone.y2-b.zone.y1)+COLLISION.triggerPad*2}));
     if(beat && beat.id!==microStory.lastBeatId){
       toast(beat.title+': '+beat.line);
+      queueSystemicChain('beat-'+beat.id,'Follow-up: supervisors convert this beat into a measurable KPI checkpoint.',24,1);
       microStory.lastBeatId=beat.id;
       microStory.beatCooldown=18;
     }
@@ -1124,6 +1381,25 @@ function update(dt){
 
   cam.x=Math.max(0,Math.min(world.w-vw,cam.x));
   cam.y=Math.max(0,Math.min(world.h-vh,cam.y));
+}
+
+function drawCollisionDebugOverlay(){
+  if(!collisionDebug.enabled) return;
+  ctx.save();
+  ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(255,80,80,.55)';
+  ctx.fillStyle='rgba(255,80,80,.09)';
+  const blocks=lastCollisionDebugData.length?lastCollisionDebugData:COLLISION.staticProps.map(r=>expandRectForRadius(r,COLLISION.playerRadius));
+  blocks.forEach(r=>{
+    if(!inView(r.x,r.y,r.w,r.h,40)) return;
+    ctx.fillRect(r.x,r.y,r.w,r.h);
+    ctx.strokeRect(r.x,r.y,r.w,r.h);
+  });
+  ctx.strokeStyle='rgba(99,235,168,.95)';
+  ctx.beginPath();
+  ctx.arc(player.x,player.y,COLLISION.playerRadius,0,Math.PI*2);
+  ctx.stroke();
+  ctx.restore();
 }
 
 function drawMini(nowMs){
@@ -1156,7 +1432,9 @@ function render(nowMs){
   npcChatPairs.forEach(({a,b,msg})=>{const mx=(a.x+b.x)/2, my=(a.y+b.y)/2-34; if(!inView(mx-40,my-20,80,24,50)) return; ctx.fillStyle='#f8fbff'; ctx.fillRect(mx-34,my-16,68,16); ctx.strokeStyle='#1c2f47'; ctx.lineWidth=1; ctx.strokeRect(mx-34,my-16,68,16); ctx.fillStyle='#0f1b2d'; ctx.font='bold 8px monospace'; ctx.fillText(msg,mx-30,my-5);});
   npcs.forEach((n,i)=>{if(!inView(n.x-8,n.y-30,16,14,50)) return; const icon=(i%3===0)?'…':(i%3===1?'!':'$'); ctx.fillStyle='rgba(8,14,24,.7)'; ctx.fillRect(n.x-4,n.y-26,8,8); ctx.fillStyle='#eaf2ff'; ctx.font='bold 8px monospace'; ctx.fillText(icon,n.x-3,n.y-19);});
 
-  const crowdCap=REDUCED_MOTION?Math.min(2,qp.crowd):qp.crowd;
+  const hotspotBudget=perf.hotspotBudget;
+  const crowdBase=REDUCED_MOTION?Math.min(2,qp.crowd):qp.crowd;
+  const crowdCap=Math.max(1,Math.floor(crowdBase*Math.max(0.35,hotspotBudget)));
   const crowdAnchors=[
     {x:286,y:804,w:196,h:210},{x:1320,y:786,w:242,h:258},{x:258,y:1488,w:228,h:236},{x:1260,y:1544,w:280,h:260},{x:802,y:2010,w:220,h:170}
   ];
@@ -1172,16 +1450,34 @@ function render(nowMs){
     drawNPCGuy(px,py,shirt,skin,{dir,moving:!REDUCED_MOTION,phase:(time*0.1+i)});
   }
 
-  if(qp.shadowPass){ctx.fillStyle='rgba(10,35,14,.08)'; for(let i=0;i<24;i++){const sx=(i*91 + time*0.45)%world.w, sy=620 + (i*67)%1500; if(!inView(sx,sy,56,12,0)) continue; ctx.fillRect(sx,sy,56,12);}}
+  if(qp.shadowPass && hotspotBudget>0.4){
+    const shadowCount=Math.max(8,Math.floor(24*hotspotBudget));
+    ctx.fillStyle='rgba(10,35,14,.08)';
+    for(let i=0;i<shadowCount;i++){
+      const sx=(i*91 + time*0.45)%world.w, sy=620 + (i*67)%1500;
+      if(!inView(sx,sy,56,12,0)) continue;
+      ctx.fillRect(sx,sy,56,12);
+    }
+  }
   drawPixelGuy(player.x,player.y);
   drawParallaxFront();
+  drawCollisionDebugOverlay();
   ctx.restore();
 
   drawCinematicAtmosphere();
   drawArtDirectedLighting();
-  if(!REDUCED_MOTION){
+  if(!REDUCED_MOTION && perf.effectsBudget>0.36){
+    ctx.globalAlpha=Math.min(1,perf.effectsBudget*1.1);
     ctx.drawImage(getScanlineLayer(),0,0);
-    if(qp.bloom){ctx.globalCompositeOperation='screen'; ctx.globalAlpha=0.06; ctx.drawImage(cv,1,0,vw-1,vh,0,0,vw,vh); ctx.drawImage(cv,0,1,vw,vh-1,0,0,vw,vh); ctx.globalAlpha=1; ctx.globalCompositeOperation='source-over';}
+    ctx.globalAlpha=1;
+    if(qp.bloom && perf.effectsBudget>0.68){
+      ctx.globalCompositeOperation='screen';
+      ctx.globalAlpha=0.06*Math.min(1,perf.effectsBudget*1.2);
+      ctx.drawImage(cv,1,0,vw-1,vh,0,0,vw,vh);
+      ctx.drawImage(cv,0,1,vw,vh-1,0,0,vw,vh);
+      ctx.globalAlpha=1;
+      ctx.globalCompositeOperation='source-over';
+    }
   }
   drawMini(nowMs);
 }
@@ -1501,6 +1797,11 @@ addEventListener('keydown',e=>{
     else startGuidedTour();
   }
   if((e.key==='n' || e.key==='N') && guidedTourActive) nextGuidedTour();
+  if(e.key==='c' || e.key==='C'){
+    collisionDebug.enabled=!collisionDebug.enabled;
+    if(!collisionDebug.enabled) lastCollisionDebugData=[];
+    toast('Collision debug '+(collisionDebug.enabled?'ON':'OFF'),{dedupeMs:250});
+  }
 });
 
 refreshHud();
