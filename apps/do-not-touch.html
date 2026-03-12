@@ -219,17 +219,27 @@ function drawWorld(){
   // left block (red building)
   ctx.fillStyle='#a2644d'; ctx.fillRect(100,620,460,300);
   ctx.fillStyle='#d3b08c'; ctx.fillRect(120,640,420,90);
+  ctx.fillStyle='rgba(0,0,0,.12)'; ctx.fillRect(100,920,460,10);
   for(let y=748;y<900;y+=24){for(let x=116;x<540;x+=34){ctx.fillStyle='#8f5342';ctx.fillRect(x,y,22,2);}}
+  // rooftop units
+  for(let i=0;i<7;i++){const rx=130+i*58;ctx.fillStyle='#6a3b30';ctx.fillRect(rx,598,36,14);ctx.fillStyle='#caa38b';ctx.fillRect(rx+4,602,28,4);} 
 
   // right block (blue building)
   ctx.fillStyle='#5f7797'; ctx.fillRect(1240,620,470,300);
   ctx.fillStyle='#a0b8d8'; ctx.fillRect(1260,640,430,90);
+  ctx.fillStyle='rgba(0,0,0,.14)'; ctx.fillRect(1240,920,470,10);
   for(let x=1270;x<1680;x+=46){ctx.fillStyle='#3d516f';ctx.fillRect(x,760,26,44);ctx.fillStyle='#9ab9df';ctx.fillRect(x+4,764,18,18);} 
-
+  // balcony strips / facade depth
+  for(let y=812;y<904;y+=18){ctx.fillStyle='rgba(22,34,50,.22)';ctx.fillRect(1260,y,430,2);}
   // benches + flower beds
   for(let i=0;i<8;i++){ctx.fillStyle='#7f552f';ctx.fillRect(150,700+i*120,28,56);ctx.fillStyle='#cda679';ctx.fillRect(154,706+i*120,20,40);} 
   for(let i=0;i<26;i++){const fx=1210+(i*29)%520, fy=980+((i*67)%540);ctx.fillStyle=['#ffd66d','#ffffff','#ff8aa5','#a6e874'][i%4];ctx.fillRect(fx,fy,3,3);} 
-
+  // sidewalk decals / urban detail
+  for(let i=0;i<40;i++){
+    const dx=80+((i*83)%1640), dy=620+((i*61)%1660);
+    ctx.fillStyle=i%3===0?'rgba(0,0,0,.10)':'rgba(255,255,255,.08)';
+    ctx.fillRect(dx,dy,6,2);
+  }
   // rail tracks bottom zone
   ctx.fillStyle='#4f6278'; ctx.fillRect(100,1850,1600,24); ctx.fillRect(100,1930,1600,24);
   for(let x=110;x<1690;x+=30){ctx.fillStyle='#94a7bf';ctx.fillRect(x,1850,4,24);ctx.fillRect(x,1930,4,24);} 
@@ -342,6 +352,13 @@ function render(){
   // foreground canopy band for layered depth
   ctx.fillStyle='rgba(18,56,31,.18)';
   for(let i=0;i<80;i++){const x=(i*43+time*0.15)%world.w;ctx.fillRect(x,540,28,14);} 
+  // moving soft tree-shadows across city floor
+  ctx.fillStyle='rgba(10,35,14,.08)';
+  for(let i=0;i<24;i++){
+    const sx=(i*91 + time*0.45)%world.w;
+    const sy=620 + (i*67)%1500;
+    ctx.fillRect(sx,sy,56,12);
+  }
   ctx.restore();
 
   // cinematic vignette + color depth
