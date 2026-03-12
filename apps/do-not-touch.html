@@ -1016,6 +1016,8 @@ const menuModal=document.getElementById('menuModal'),mapModal=document.getElemen
 const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint');
 const demoIndicator=document.getElementById('demoIndicator');
 const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
+let demoRouteTimer=null, demoRouteIndex=0;
+let guidedTourActive=false,guidedTourIndex=0;
 const reducedMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 function applyReducedMotion(enabled){
   REDUCED_MOTION=!!enabled;
@@ -1039,8 +1041,6 @@ document.addEventListener('visibilitychange',()=>{
   else resumeLoop();
 });
 
-let demoRouteTimer=null, demoRouteIndex=0;
-let guidedTourActive=false,guidedTourIndex=0;
 const demoRoute=['N1','N2','N4','N5','N6','N8'];
 const guidedTourSteps=[
   {k:'WELCOME',t:'City overview',c:'This map is a story-first showcase of Michael\'s career chapters. We will move through the strongest proof points.',node:'N1'},
