@@ -179,6 +179,7 @@ function drawHeroBlock(x,y,theme='warm'){
   const trim = theme==='warm' ? '#d3b08c' : '#a0b8d8';
   const dark = theme==='warm' ? '#8f5342' : '#3d516f';
   const glass = theme==='warm' ? '#d9c0a6' : '#9ab9df';
+  const neon = theme==='warm' ? '#ffd66d' : '#8fe2ff';
 
   ctx.fillStyle=wall; ctx.fillRect(x,y,460,300);
   ctx.fillStyle=trim; ctx.fillRect(x+20,y+20,420,90);
@@ -210,6 +211,28 @@ function drawHeroBlock(x,y,theme='warm'){
   // balcony strips / trims
   for(let yy=y+192;yy<y+290;yy+=18){
     ctx.fillStyle='rgba(22,34,50,.22)'; ctx.fillRect(x+20,yy,420,2);
+  }
+
+  // neon header strip (animated)
+  ctx.fillStyle=neon;
+  if(((time/20)|0)%2===0) ctx.fillRect(x+34,y+24,120,4);
+}
+
+function drawStreetProps(){
+  // kiosks, signs, and lamp posts for city life density
+  for(let i=0;i<10;i++){
+    const kx=170 + i*150;
+    const ky=980 + (i%2)*360;
+    ctx.fillStyle='#2f3f5d'; ctx.fillRect(kx,ky,18,26);
+    ctx.fillStyle=['#ff8aa5','#8fe2ff','#ffd66d'][i%3]; ctx.fillRect(kx+3,ky+4,12,9);
+    ctx.fillStyle='#dce8ff'; ctx.fillRect(kx+4,ky+16,10,6);
+  }
+  for(let i=0;i<14;i++){
+    const sx=120 + i*120;
+    const sy=600 + (i%3)*520;
+    ctx.fillStyle='#4d607f'; ctx.fillRect(sx,sy,4,36);
+    ctx.fillStyle='#eaf3ff'; ctx.fillRect(sx-3,sy+4,10,10);
+    if(((time/18+i)|0)%2===0){ ctx.fillStyle='rgba(255,238,170,.35)'; ctx.fillRect(sx-10,sy+14,24,10); }
   }
 }
 
@@ -262,6 +285,9 @@ function drawWorld(){
   // lower district blocks for added depth and continuity
   drawHeroBlock(100,1120,'warm');
   drawHeroBlock(1240,1120,'cool');
+
+  // dense street props pass
+  drawStreetProps();
   // benches + flower beds
   for(let i=0;i<8;i++){ctx.fillStyle='#7f552f';ctx.fillRect(150,700+i*120,28,56);ctx.fillStyle='#cda679';ctx.fillRect(154,706+i*120,20,40);} 
   for(let i=0;i<26;i++){const fx=1210+(i*29)%520, fy=980+((i*67)%540);ctx.fillStyle=['#ffd66d','#ffffff','#ff8aa5','#a6e874'][i%4];ctx.fillRect(fx,fy,3,3);} 
@@ -305,6 +331,13 @@ function drawWorld(){
     ctx.strokeStyle='#1c2f47'; ctx.lineWidth=1; ctx.strokeRect(mx-34,my-16,68,16);
     ctx.fillStyle='#0f1b2d'; ctx.font='bold 8px monospace';
     ctx.fillText(msg,mx-30,my-5);
+  });
+
+  // activity markers above active NPCs
+  npcs.forEach((n,i)=>{
+    const icon = (i%3===0)?'…':(i%3===1?'!':'$');
+    ctx.fillStyle='rgba(8,14,24,.7)'; ctx.fillRect(n.x-4,n.y-26,8,8);
+    ctx.fillStyle='#eaf2ff'; ctx.font='bold 8px monospace'; ctx.fillText(icon,n.x-3,n.y-19);
   });
 
   // extra dense pedestrians for depth
