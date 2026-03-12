@@ -11,9 +11,9 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 #game{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;background:#9ecf86}
 .ui{position:fixed;inset:0;pointer-events:none}
 .topbar{position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px)+8px);display:flex;justify-content:space-between;align-items:flex-start;gap:8px;z-index:8;pointer-events:none}
-.brand{background:rgba(10,18,34,.55);color:#fff;border:2px solid #d9e4ff;border-radius:8px;padding:8px 10px;font-weight:900;letter-spacing:.03em;text-shadow:1px 1px 0 #000;line-height:1.05}
+.brand{background:transparent;color:#fff;padding:2px 2px;font-weight:900;letter-spacing:.03em;text-shadow:2px 2px 0 #000, -1px -1px 0 rgba(0,0,0,.35);line-height:.9;font-size:1.9rem}
 .top-actions{display:flex;gap:8px;pointer-events:auto}
-.btn{border:2px solid #1e2e48;background:#f7faff;color:#111;padding:8px 14px;border-radius:6px;font-weight:900;font-size:.92rem;box-shadow:inset 0 1px 0 #fff}
+.btn{border:3px solid #1e2e48;background:#f7faff;color:#111;padding:8px 16px;border-radius:0;font-weight:900;font-size:1.05rem;box-shadow:4px 4px 0 rgba(30,46,72,.55),inset 0 1px 0 #fff;font-family:monospace}
 .btn:active{transform:translateY(1px)}
 .corner-status{position:fixed;left:10px;bottom:calc(env(safe-area-inset-bottom,0px)+10px);z-index:8;pointer-events:none;background:rgba(8,16,30,.62);color:#eaf2ff;border:2px solid #6e8fbe;border-radius:8px;padding:6px 8px;font-size:.74rem}
 .joystick{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px)+16px);width:132px;height:132px;border-radius:999px;background:rgba(16,26,48,.48);border:3px solid #344a72;z-index:8;pointer-events:auto;touch-action:none}
@@ -42,11 +42,10 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 <canvas id="game"></canvas>
 <div class="ui">
   <div class="topbar">
-    <div class="brand">MICHAEL<br/>COSTEA</div>
+    <div class="brand">MICHAEL<br/>COSTEA <small style="display:block;font-size:.54rem;letter-spacing:.08em">PORTFOLIO</small></div>
     <div class="top-actions">
       <button class="btn" id="mapBtn">MAP</button>
       <button class="btn" id="menuBtn">MENU</button>
-      <button class="btn" id="statsBtn">STATS</button>
     </div>
   </div>
   <div class="corner-status" id="status">Explore the city and unlock timeline chapters.</div>
@@ -61,6 +60,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
     <p>Presentation-safe build: top-down movement, no forced interrupts, no death/fall states.</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn" id="jumpNext">Jump to Next Chapter</button>
+      <button class="btn" id="openStatsFromMenu">Character Stats</button>
       <button class="btn" id="backSite">Back to MichaelOS</button>
       <button class="btn" id="closeMenu">Close</button>
     </div>
@@ -95,14 +95,14 @@ const world={w:2200,h:1600};
 const player={x:220,y:540,s:2.35};
 const cam={x:0,y:0};
 const nodes=[
-  {id:'N1',x:260,y:530,title:'Bloom Coffee Bar',desc:'Startup operations and service flow.'},
-  {id:'N2',x:540,y:520,title:'Optus Retention',desc:'Retention process redesign.'},
-  {id:'N3',x:820,y:510,title:'Process Specialist',desc:'Cross-team communications and rollout.'},
-  {id:'N4',x:1100,y:500,title:'Content Manager',desc:'Knowledge system leadership.'},
-  {id:'N5',x:1380,y:495,title:'Sales Ops Manager',desc:'KPI and support redesign.'},
-  {id:'N6',x:1660,y:490,title:'Electrician Roles',desc:'Field execution and smart-home delivery.'},
-  {id:'N7',x:1900,y:485,title:'Sales Manager',desc:'Program-driven upgrade operations.'},
-  {id:'N8',x:2080,y:480,title:'BD & Marketing Manager',desc:'Growth, partnerships, CX innovation.'}
+  {id:'N1',x:300,y:580,title:'Bloom Coffee Bar',desc:'Startup operations and service flow.'},
+  {id:'N2',x:540,y:680,title:'Optus Retention',desc:'Retention process redesign.'},
+  {id:'N3',x:690,y:820,title:'Process Specialist',desc:'Cross-team communications and rollout.'},
+  {id:'N4',x:1480,y:680,title:'Content Manager',desc:'Knowledge system leadership.'},
+  {id:'N5',x:1610,y:840,title:'Sales Ops Manager',desc:'KPI and support redesign.'},
+  {id:'N6',x:520,y:1060,title:'Electrician Roles',desc:'Field execution and smart-home delivery.'},
+  {id:'N7',x:1520,y:1080,title:'Sales Manager',desc:'Program-driven upgrade operations.'},
+  {id:'N8',x:980,y:1360,title:'BD & Marketing Manager',desc:'Growth, partnerships, CX innovation.'}
 ];
 const npcs=[
   {x:420,y:430,c:'#ffcf99'},{x:470,y:430,c:'#ffd7a8'},{x:1250,y:440,c:'#ffc6a1'},{x:1320,y:560,c:'#ffdab8'},{x:1780,y:530,c:'#f6c6a3'}
@@ -140,25 +140,45 @@ function drawPixelGuy(x,y){
 }
 
 function drawWorld(){
-  // grass
-  ctx.fillStyle='#74bc63'; ctx.fillRect(0,0,world.w,world.h);
-  // promenade / path
-  ctx.fillStyle='#d5c9ad'; ctx.fillRect(80,350,2060,260);
-  for(let y=350;y<610;y+=14){for(let x=80+(y%28?8:0);x<2140;x+=28){ctx.fillStyle='#b8ab90';ctx.fillRect(x,y,16,2);}}
-  // rails
-  ctx.fillStyle='#495b74'; ctx.fillRect(80,640,2060,20); ctx.fillRect(80,700,2060,20);
-  for(let x=90;x<2130;x+=30){ctx.fillStyle='#94a7bf';ctx.fillRect(x,640,4,20);ctx.fillRect(x,700,4,20);} 
-  // buildings + trees
-  ctx.fillStyle='#9a5d46'; ctx.fillRect(120,210,390,180); ctx.fillStyle='#d6c39f'; ctx.fillRect(130,220,370,70);
-  ctx.fillStyle='#6f8aa6'; ctx.fillRect(1660,240,410,150);
-  for(let i=0;i<7;i++){const tx=260+i*260;ctx.fillStyle='#3c7f38';ctx.fillRect(tx,290,28,28);ctx.fillStyle='#6f4b2a';ctx.fillRect(tx+11,315,6,10);} 
+  // forest canopy background
+  ctx.fillStyle='#2f7d44'; ctx.fillRect(0,0,world.w,430);
+  for(let i=0;i<220;i++){const x=(i*97)%world.w,y=(i*53)%420;ctx.fillStyle=['#2f7d44','#3a9352','#2a6f3d','#46a25f'][i%4];ctx.fillRect(x,y,22,18);} 
 
-  // chapter nodes
+  // sidewalks and city blocks
+  ctx.fillStyle='#d9d5cb'; ctx.fillRect(0,430,world.w,world.h-430);
+  for(let y=430;y<world.h;y+=20){for(let x=0;x<world.w;x+=20){ctx.fillStyle=((x+y)%40===0)?'#cec8bb':'#d9d5cb';ctx.fillRect(x,y,18,18);}}
+
+  // main road (vertical, reference style)
+  const roadX=840, roadW=520;
+  ctx.fillStyle='#353843'; ctx.fillRect(roadX,120,roadW,world.h-120);
+  ctx.fillStyle='#2a2d36'; ctx.fillRect(roadX+10,120,roadW-20,world.h-120);
+  for(let y=160;y<world.h-40;y+=86){ctx.fillStyle='#f2f2f2';ctx.fillRect(roadX+roadW/2-5,y,10,42);} 
+
+  // crosswalks
+  for(let i=0;i<12;i++){ctx.fillStyle='#f5f5f5';ctx.fillRect(roadX+70+i*32,520,18,78);ctx.fillRect(roadX+70+i*32,980,18,78);} 
+
+  // rails near bottom like reference
+  ctx.fillStyle='#4f6278'; ctx.fillRect(140,1220,1920,22); ctx.fillRect(140,1280,1920,22);
+  for(let x=150;x<2040;x+=28){ctx.fillStyle='#94a7bf';ctx.fillRect(x,1220,4,22);ctx.fillRect(x,1280,4,22);} 
+
+  // buildings/props left and right
+  ctx.fillStyle='#9a5d46'; ctx.fillRect(120,470,520,260); ctx.fillStyle='#caa883'; ctx.fillRect(140,490,480,70);
+  ctx.fillStyle='#5a708f'; ctx.fillRect(1500,470,560,240); ctx.fillStyle='#9ab0cf'; ctx.fillRect(1520,490,520,70);
+  for(let i=0;i<6;i++){ctx.fillStyle='#7f552f';ctx.fillRect(190,520+i*84,26,56);ctx.fillStyle='#cda679';ctx.fillRect(194,526+i*84,18,40);} // benches
+
+  // cars (readable obstacles style)
+  const cars=[
+    {x:roadX+110,y:650,c:'#2f6ec7'},{x:roadX+302,y:860,c:'#d48d3a'},{x:roadX+120,y:1110,c:'#d6bf2d'},{x:roadX+304,y:430,c:'#aeb7c3'}
+  ];
+  cars.forEach(c=>{ctx.fillStyle=c.c;ctx.fillRect(c.x,c.y,92,146);ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(c.x+10,c.y+10,72,20);ctx.fillStyle='#1d2431';ctx.fillRect(c.x+18,c.y+126,56,12);});
+
+  // chapter nodes (on safe sidewalk lane)
   nodes.forEach(n=>{
     const seen=viewed.has(n.id);
     ctx.fillStyle=seen?'#8bff9e':'#ffdf6f'; ctx.fillRect(n.x-7,n.y-20,14,14);
     ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,8);
   });
+
   // npcs
   npcs.forEach(p=>{ctx.fillStyle=p.c;ctx.fillRect(p.x-5,p.y-10,10,10);ctx.fillStyle='#2b2f3f';ctx.fillRect(p.x-6,p.y,12,10);});
 }
@@ -192,11 +212,23 @@ function drawMini(){
   mctx.fillStyle='#d93030';mctx.fillRect(player.x*sx-2,player.y*sy-2,4,4);
 }
 
+function drawSpeechBubble(){
+  const bx=player.x-120, by=player.y-110;
+  ctx.fillStyle='#f8fbff'; ctx.fillRect(bx,by,240,70);
+  ctx.strokeStyle='#1c2f47'; ctx.lineWidth=2; ctx.strokeRect(bx,by,240,70);
+  ctx.fillStyle='#f8fbff'; ctx.fillRect(player.x-8,by+70,16,12);
+  ctx.strokeRect(player.x-8,by+70,16,12);
+  ctx.fillStyle='#0f1b2d'; ctx.font='bold 14px monospace';
+  ctx.fillText('Move around and explore projects.',bx+14,by+28);
+  ctx.fillText('Tap nodes to unlock chapters.',bx+14,by+48);
+}
+
 function render(){
   ctx.clearRect(0,0,vw,vh);
   ctx.save(); ctx.translate(-cam.x,-cam.y);
   drawWorld();
   drawPixelGuy(player.x,player.y);
+  drawSpeechBubble();
   ctx.restore();
   drawMini();
   requestAnimationFrame(loop);
@@ -207,7 +239,7 @@ loop();
 const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal');
 document.getElementById('menuBtn').onclick=()=>menuModal.classList.add('open');
 document.getElementById('mapBtn').onclick=()=>{const list=document.getElementById('mapList');list.innerHTML=nodes.map(n=>`<li>${viewed.has(n.id)?'✅':'⬜'} <b>${n.id}</b> — ${n.title}</li>`).join('');mapModal.classList.add('open');};
-document.getElementById('statsBtn').onclick=()=>statsModal.classList.add('open');
+document.getElementById('openStatsFromMenu').onclick=()=>{menuModal.classList.remove('open');statsModal.classList.add('open');};
 document.getElementById('closeMenu').onclick=()=>menuModal.classList.remove('open');
 document.getElementById('closeMap').onclick=()=>mapModal.classList.remove('open');
 document.getElementById('closeStats').onclick=()=>statsModal.classList.remove('open');
