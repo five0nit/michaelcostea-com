@@ -89,6 +89,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 <script>
 const cv=document.getElementById('game'),ctx=cv.getContext('2d');
 const mini=document.getElementById('mini'),mctx=mini.getContext('2d');
+const FX_QUALITY='ultra';
 let vw=0,vh=0,dpr=1;
 function resize(){dpr=Math.max(1,Math.min(3,devicePixelRatio||1));vw=innerWidth;vh=innerHeight;cv.width=Math.round(vw*dpr);cv.height=Math.round(vh*dpr);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.imageSmoothingEnabled=false;} addEventListener('resize',resize); resize();
 
@@ -174,6 +175,12 @@ function drawNPCGuy(x,y,shirt='#2f6ec7',skin='#f1c5a3'){
 }
 
 function drawWorld(){
+  // sky haze for cinematic depth
+  const sky=ctx.createLinearGradient(0,0,0,620);
+  sky.addColorStop(0,'#9ec3f5');
+  sky.addColorStop(1,'#d9f0ff');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,world.w,620);
+
   // lush top trees
   ctx.fillStyle='#3b8e4f'; ctx.fillRect(0,0,world.w,560);
   for(let i=0;i<380;i++){
@@ -185,7 +192,11 @@ function drawWorld(){
 
   // tiled city floor
   ctx.fillStyle='#ddd8cd'; ctx.fillRect(0,560,world.w,world.h-560);
-  for(let y=560;y<world.h;y+=18){for(let x=0;x<world.w;x+=18){ctx.fillStyle=((x+y)%36===0)?'#d1cbbd':'#ddd8cd';ctx.fillRect(x,y,16,16);}}
+  for(let y=560;y<world.h;y+=18){for(let x=0;x<world.w;x+=18){ctx.fillStyle=((x+y)%36===0)?'#d1cbbd':'#ddd8cd';ctx.fillRect(x,y,16,16); if(((x*y)%97)===0){ctx.fillStyle='rgba(0,0,0,.06)';ctx.fillRect(x+6,y+6,3,2);} }}
+  // subtle grime gradient on lower city
+  const grime=ctx.createLinearGradient(0,1200,0,world.h);
+  grime.addColorStop(0,'rgba(0,0,0,0)'); grime.addColorStop(1,'rgba(0,0,0,.12)');
+  ctx.fillStyle=grime; ctx.fillRect(0,1200,world.w,world.h-1200);
 
   // central road 1:1 style
   ctx.fillStyle='#343840'; ctx.fillRect(ROAD_X,120,ROAD_W,world.h-120);
@@ -195,11 +206,14 @@ function drawWorld(){
   ctx.fillStyle='rgba(255,255,255,.08)'; ctx.fillRect(ROAD_X+14,120,4,world.h-120); ctx.fillRect(ROAD_X+ROAD_W-18,120,4,world.h-120);
   for(let y=180;y<world.h-60;y+=92){ctx.fillStyle='#f5f5f5';ctx.fillRect(ROAD_X+ROAD_W/2-6,y,12,46);} 
 
-  // two zebra crossings
+  // two zebra crossings + contact shadows
   for(let i=0;i<12;i++){
     ctx.fillStyle='#f8f8f8';
     ctx.fillRect(ROAD_X+70+i*32,720,18,90);
     ctx.fillRect(ROAD_X+70+i*32,1360,18,90);
+    ctx.fillStyle='rgba(0,0,0,.08)';
+    ctx.fillRect(ROAD_X+70+i*32,810,18,3);
+    ctx.fillRect(ROAD_X+70+i*32,1450,18,3);
   }
 
   // left block (red building)
@@ -219,6 +233,7 @@ function drawWorld(){
   // rail tracks bottom zone
   ctx.fillStyle='#4f6278'; ctx.fillRect(100,1850,1600,24); ctx.fillRect(100,1930,1600,24);
   for(let x=110;x<1690;x+=30){ctx.fillStyle='#94a7bf';ctx.fillRect(x,1850,4,24);ctx.fillRect(x,1930,4,24);} 
+  ctx.fillStyle='rgba(0,0,0,.16)'; ctx.fillRect(100,1874,1600,8); ctx.fillRect(100,1954,1600,8);
 
   // moving traffic
   traffic.forEach(c=>{
@@ -331,11 +346,23 @@ function render(){
 
   // cinematic vignette + color depth
   const g=ctx.createRadialGradient(vw/2,vh/2,80,vw/2,vh/2,Math.max(vw,vh)*0.95);
-  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,.22)');
+  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,.24)');
   ctx.fillStyle=g; ctx.fillRect(0,0,vw,vh);
   const grade=ctx.createLinearGradient(0,0,0,vh);
-  grade.addColorStop(0,'rgba(140,175,255,.08)'); grade.addColorStop(1,'rgba(12,18,30,.10)');
+  grade.addColorStop(0,'rgba(140,175,255,.10)'); grade.addColorStop(1,'rgba(12,18,30,.12)');
   ctx.fillStyle=grade; ctx.fillRect(0,0,vw,vh);
+
+  if(FX_QUALITY==='ultra'){
+    // subtle scanline + bloom-like pass
+    ctx.fillStyle='rgba(8,12,20,.04)';
+    for(let y=0;y<vh;y+=3) ctx.fillRect(0,y,vw,1);
+    ctx.globalCompositeOperation='screen';
+    ctx.globalAlpha=0.06;
+    ctx.drawImage(cv,1,0,vw-1,vh,0,0,vw,vh);
+    ctx.drawImage(cv,0,1,vw,vh-1,0,0,vw,vh);
+    ctx.globalAlpha=1;
+    ctx.globalCompositeOperation='source-over';
+  }
 
   drawMini();
   requestAnimationFrame(loop);
