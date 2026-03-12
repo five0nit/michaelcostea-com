@@ -238,15 +238,14 @@ const physics={gravity:0.42,jump:-8.8,friction:0.82,maxRun:5.8,accel:0.55,coyote
 let coyoteFrames=0,jumpBufferFrames=0;
 const ACCESSIBLE_PLAY = true;
 const platforms=[
-  // SMB3-style readable step-up lane
-  {x:40,y:1020,w:900,h:28},
-  {x:980,y:980,w:380,h:24},
-  {x:1420,y:940,w:360,h:24},
-  {x:1840,y:900,w:420,h:24},
-  {x:2320,y:860,w:420,h:24},
-  {x:2800,y:820,w:360,h:24},
-  // recovery / anti-softlock floor
-  {x:0,y:1120,w:3200,h:36}
+  // reconnected single-lane progression (no dead gaps)
+  {x:40,y:1020,w:1160,h:28},
+  {x:1160,y:996,w:620,h:24},
+  {x:1760,y:972,w:620,h:24},
+  {x:2360,y:948,w:620,h:24},
+  {x:2940,y:924,w:240,h:24},
+  // safety floor to prevent hard falls
+  {x:0,y:1088,w:3200,h:40}
 ];
 const coinRows=[
   {x:200,y:960,n:6,dx:42},{x:1040,y:930,n:5,dx:48},{x:1480,y:892,n:5,dx:48},{x:1940,y:852,n:6,dx:46},{x:2380,y:812,n:6,dx:46}
@@ -262,7 +261,7 @@ let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
 let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
 let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
 let score=0,lives=3,hurtTimer=0;
-let lastAutoOpenId=null,lastAutoOpenAt=0;
+let lastSafe={x:120,y:1000};
 const paletteBanks={
   foundations:[[8,12,26],[16,28,52],[24,42,78],[40,66,108],[66,96,148],[108,142,192],[160,188,224],[232,242,255],[121,220,255],[255,212,117],[255,170,74]],
   telecom:[[10,10,28],[22,24,58],[36,40,86],[58,68,122],[92,108,164],[138,156,206],[208,220,246],[240,245,255],[170,138,255],[121,220,255],[255,128,102]],
@@ -312,12 +311,12 @@ const nodeProps=[
 const nodes=[
 {id:'N1',x:260,y:988,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — startup operations and service flow.',highlights:['Owner/operator support','Daily service ops discipline','Small business execution'],badge:'#ffce73',glyph:'cup'},
 {id:'N2',x:640,y:988,title:'Optus Retention Consultant (2010-2013)',text:'Escalation handling and retention process redesign.',highlights:['Process simplification','200 retention processes rewritten','Customer save optimization'],badge:'#8fd0ff',glyph:'signal'},
-{id:'N3',x:1080,y:948,title:'Optus Business Process Specialist (2013-2014)',text:'Process comms and rollout support.',highlights:['Cross-team communications','Change support materials','Operational alignment'],badge:'#8cffcf',glyph:'flow'},
-{id:'N4',x:1520,y:908,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge systems and rollout training.',highlights:['5000+ internal users','500k monthly visits','250 duplicate processes removed'],badge:'#c5b3ff',glyph:'book'},
-{id:'N5',x:1960,y:868,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support performance and KPI redesign.',highlights:['352 store support scope','74% output uplift','Credit policy + training matrix'],badge:'#ffd199',glyph:'chart'},
-{id:'N6',x:2360,y:828,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky.',highlights:['Residential/commercial works','Smart-home and AV integrations','Fault finding + installations'],badge:'#9eff7b',glyph:'bolt'},
-{id:'N7',x:2760,y:788,title:'Sales Manager (Nov 2023-Present)',text:'VEU heat pump upgrade pathways and sales delivery.',highlights:['Program-driven upgrade ops','Residential + commercial sectors','Channel support'],badge:'#79d9ff',glyph:'target'},
-{id:'N8',x:3060,y:788,title:'Business Development & Marketing Manager (2024-Present)',text:'Growth, lead-gen optimization, partner pilots, manufacturer strategy, training.',highlights:['Growth across 3 brands','Website metrics + lead-gen','Partner pilots + CX innovation'],badge:'#ff89c4',glyph:'crown'}
+{id:'N3',x:1080,y:964,title:'Optus Business Process Specialist (2013-2014)',text:'Process comms and rollout support.',highlights:['Cross-team communications','Change support materials','Operational alignment'],badge:'#8cffcf',glyph:'flow'},
+{id:'N4',x:1520,y:964,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge systems and rollout training.',highlights:['5000+ internal users','500k monthly visits','250 duplicate processes removed'],badge:'#c5b3ff',glyph:'book'},
+{id:'N5',x:1960,y:940,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support performance and KPI redesign.',highlights:['352 store support scope','74% output uplift','Credit policy + training matrix'],badge:'#ffd199',glyph:'chart'},
+{id:'N6',x:2360,y:940,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky.',highlights:['Residential/commercial works','Smart-home and AV integrations','Fault finding + installations'],badge:'#9eff7b',glyph:'bolt'},
+{id:'N7',x:2760,y:916,title:'Sales Manager (Nov 2023-Present)',text:'VEU heat pump upgrade pathways and sales delivery.',highlights:['Program-driven upgrade ops','Residential + commercial sectors','Channel support'],badge:'#79d9ff',glyph:'target'},
+{id:'N8',x:3060,y:916,title:'Business Development & Marketing Manager (2024-Present)',text:'Growth, lead-gen optimization, partner pilots, manufacturer strategy, training.',highlights:['Growth across 3 brands','Website metrics + lead-gen','Partner pilots + CX innovation'],badge:'#ff89c4',glyph:'crown'}
 ];
 
 const certs=['Licensed Electrician (Australia)','VEU program-aligned upgrade operations','IVR/chatbot/review automation delivery','Process redesign + frontline training leadership'];
@@ -850,7 +849,12 @@ function loop(now){
     }
   });
 
-  if(player.y>world.h-20){ player.y=world.h-20; player.vy=0; player.onGround=true; }
+  if(player.onGround){ lastSafe.x=player.x; lastSafe.y=Math.min(player.y,1040); }
+  if(player.y>1125){
+    // hard fail-safe: recover quickly from falls
+    player.x=lastSafe.x; player.y=lastSafe.y; player.vx=0; player.vy=0;
+    shake=2; toastMsg('Recovered to safe lane');
+  }
   player.x=Math.max(30,Math.min(world.w-30,player.x));
 
   npcs.forEach((n,i)=>{
@@ -864,16 +868,11 @@ function loop(now){
   let nearest={d:1e9,n:null};
   nodes.forEach(n=>{
     const d=Math.hypot(player.x-n.x,player.y-n.y); if(d<nearest.d){nearest={d,n};}
-    if(d<30 && !viewed.has(n.id)){
-      viewed.add(n.id); activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; battleFx=.55; beep(760,.08); toastMsg(`Unlocked: ${n.title}`); saveViewed(); shake=8; showChapter(n.title);
-      openModal(n.title,n.text,n.highlights||[]);
-      lastAutoOpenId=n.id; lastAutoOpenAt=performance.now();
-    } else if(d<30){
+    const inNodeLane = Math.abs(player.x-n.x)<34 && Math.abs(player.y-n.y)<92;
+    if(inNodeLane && !viewed.has(n.id)){
+      viewed.add(n.id); activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; battleFx=.42; beep(760,.08); toastMsg(`Unlocked: ${n.title}`); saveViewed(); shake=5; showChapter(n.title);
+    } else if(inNodeLane){
       activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text;
-      if((lastAutoOpenId!==n.id || performance.now()-lastAutoOpenAt>4000) && modal.classList.contains('hide')){
-        openModal(n.title,n.text,n.highlights||[]);
-        lastAutoOpenId=n.id; lastAutoOpenAt=performance.now();
-      }
     }
   });
 
