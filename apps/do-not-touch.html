@@ -125,24 +125,29 @@ addEventListener('keydown',e=>{keys[e.key]=true;}); addEventListener('keyup',e=>
 
 function drawPixelGuy(x,y){
   // shadow
-  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fillRect(x-8,y+17,16,3);
-  // legs
-  ctx.fillStyle='#17459b'; ctx.fillRect(x-7,y+9,5,8); ctx.fillRect(x+2,y+9,5,8);
-  ctx.fillStyle='#0f2556'; ctx.fillRect(x-7,y+16,5,2); ctx.fillRect(x+2,y+16,5,2);
-  // torso + jacket
-  ctx.fillStyle='#121827'; ctx.fillRect(x-9,y-2,18,13);
-  ctx.fillStyle='#eff3fa'; ctx.fillRect(x-3,y,6,10);
+  ctx.fillStyle='rgba(0,0,0,.28)'; ctx.fillRect(x-9,y+18,18,3);
+  // shoes + legs (chunkier sprite silhouette)
+  ctx.fillStyle='#0e224f'; ctx.fillRect(x-8,y+16,6,3); ctx.fillRect(x+2,y+16,6,3);
+  ctx.fillStyle='#2f5fb8'; ctx.fillRect(x-8,y+8,6,9); ctx.fillRect(x+2,y+8,6,9);
+  // torso + jacket + shirt stripe
+  ctx.fillStyle='#131a2a'; ctx.fillRect(x-10,y-3,20,13);
+  ctx.fillStyle='#f0f4fb'; ctx.fillRect(x-3,y-1,6,10);
+  ctx.fillStyle='#ffad39'; ctx.fillRect(x-2,y+2,4,2);
+  // arms
+  ctx.fillStyle='#131a2a'; ctx.fillRect(x-12,y-2,2,10); ctx.fillRect(x+10,y-2,2,10);
   // head
-  ctx.fillStyle='#eec7a4'; ctx.fillRect(x-6,y-12,12,10);
-  ctx.fillStyle='#c27f43'; ctx.fillRect(x-5,y-13,10,2);
+  ctx.fillStyle='#f0c9a7'; ctx.fillRect(x-6,y-13,12,10);
+  // cap + brim (matching ref vibe)
+  ctx.fillStyle='#2460d0'; ctx.fillRect(x-7,y-15,14,3);
+  ctx.fillStyle='#193f8f'; ctx.fillRect(x-3,y-12,8,1);
   // face dots
-  ctx.fillStyle='#1b2f57'; ctx.fillRect(x-3,y-8,2,1); ctx.fillRect(x+1,y-8,2,1);
+  ctx.fillStyle='#1b2f57'; ctx.fillRect(x-3,y-9,2,1); ctx.fillRect(x+1,y-9,2,1);
 }
 
 function drawWorld(){
   // forest canopy background
   ctx.fillStyle='#2f7d44'; ctx.fillRect(0,0,world.w,430);
-  for(let i=0;i<220;i++){const x=(i*97)%world.w,y=(i*53)%420;ctx.fillStyle=['#2f7d44','#3a9352','#2a6f3d','#46a25f'][i%4];ctx.fillRect(x,y,22,18);} 
+  for(let i=0;i<220;i++){const x=(i*97)%world.w,y=(i*53)%420;ctx.fillStyle=['#2f7d44','#3a9352','#2a6f3d','#46a25f'][i%4];ctx.fillRect(x,y,22,18);if(i%3===0){ctx.fillStyle='rgba(190,240,170,.22)';ctx.fillRect(x+4,y+3,6,3);}} 
 
   // sidewalks and city blocks
   ctx.fillStyle='#d9d5cb'; ctx.fillRect(0,430,world.w,world.h-430);
@@ -170,7 +175,13 @@ function drawWorld(){
   const cars=[
     {x:roadX+110,y:650,c:'#2f6ec7'},{x:roadX+302,y:860,c:'#d48d3a'},{x:roadX+120,y:1110,c:'#d6bf2d'},{x:roadX+304,y:430,c:'#aeb7c3'}
   ];
-  cars.forEach(c=>{ctx.fillStyle=c.c;ctx.fillRect(c.x,c.y,92,146);ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(c.x+10,c.y+10,72,20);ctx.fillStyle='#1d2431';ctx.fillRect(c.x+18,c.y+126,56,12);});
+  cars.forEach(c=>{
+    ctx.fillStyle='#1f2736';ctx.fillRect(c.x-2,c.y-2,96,150);
+    ctx.fillStyle=c.c;ctx.fillRect(c.x,c.y,92,146);
+    ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(c.x+10,c.y+10,72,20);
+    ctx.fillStyle='#1d2431';ctx.fillRect(c.x+18,c.y+126,56,12);
+    ctx.fillStyle='#0d1119';ctx.fillRect(c.x+8,c.y+138,16,6);ctx.fillRect(c.x+68,c.y+138,16,6);
+  });
 
   // chapter nodes (on safe sidewalk lane)
   nodes.forEach(n=>{
