@@ -96,6 +96,7 @@ const world={w:1800,h:2400};
 const ROAD_X=640, ROAD_W=520;
 const player={x:420,y:760,s:2.55};
 const cam={x:0,y:0};
+let time=0;
 const nodes=[
   {id:'N1',x:260,y:680,title:'Bloom Coffee Bar',desc:'Startup operations and service flow.'},
   {id:'N2',x:340,y:980,title:'Optus Retention',desc:'Retention process redesign.'},
@@ -147,6 +148,18 @@ function drawPixelGuy(x,y){
   ctx.fillStyle='#1b2f57'; ctx.fillRect(x-4,y-13,2,1); ctx.fillRect(x+2,y-13,2,1);
 }
 
+function drawNPCGuy(x,y,shirt='#2f6ec7',skin='#f1c5a3'){
+  // same detail class as player, slightly smaller
+  ctx.fillStyle='rgba(0,0,0,.24)'; ctx.fillRect(x-10,y+18,20,3);
+  ctx.fillStyle='#263041'; ctx.fillRect(x-8,y+6,7,11); ctx.fillRect(x+1,y+6,7,11);
+  ctx.fillStyle='#1b2435'; ctx.fillRect(x-9,y-5,18,16);
+  ctx.fillStyle=shirt; ctx.fillRect(x-4,y-2,8,9);
+  ctx.fillStyle=skin; ctx.fillRect(x-6,y-15,12,10);
+  ctx.fillStyle='#2d3545'; ctx.fillRect(x-10,y-2,2,9); ctx.fillRect(x+8,y-2,2,9);
+  ctx.fillStyle='#151b28'; ctx.fillRect(x-8,y+16,7,2); ctx.fillRect(x+1,y+16,7,2);
+  ctx.fillStyle='#111c33'; ctx.fillRect(x-3,y-11,2,1); ctx.fillRect(x+1,y-11,2,1);
+}
+
 function drawWorld(){
   // lush top trees
   ctx.fillStyle='#3b8e4f'; ctx.fillRect(0,0,world.w,560);
@@ -164,6 +177,9 @@ function drawWorld(){
   // central road 1:1 style
   ctx.fillStyle='#343840'; ctx.fillRect(ROAD_X,120,ROAD_W,world.h-120);
   ctx.fillStyle='#292d34'; ctx.fillRect(ROAD_X+10,120,ROAD_W-20,world.h-120);
+  // edge AO + depth
+  ctx.fillStyle='rgba(0,0,0,.22)'; ctx.fillRect(ROAD_X,120,10,world.h-120); ctx.fillRect(ROAD_X+ROAD_W-10,120,10,world.h-120);
+  ctx.fillStyle='rgba(255,255,255,.08)'; ctx.fillRect(ROAD_X+14,120,4,world.h-120); ctx.fillRect(ROAD_X+ROAD_W-18,120,4,world.h-120);
   for(let y=180;y<world.h-60;y+=92){ctx.fillStyle='#f5f5f5';ctx.fillRect(ROAD_X+ROAD_W/2-6,y,12,46);} 
 
   // two zebra crossings
@@ -210,18 +226,23 @@ function drawWorld(){
     ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,9);
   });
 
-  // NPC crowd
+  // NPC crowd (same detail class as player)
   npcs.forEach((p,i)=>{
     const shirt=['#2f6ec7','#ffb347','#9b7cff','#f76c6c','#3abf8f'][i%5];
-    ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(p.x-7,p.y+13,14,3);
-    ctx.fillStyle=p.c;ctx.fillRect(p.x-6,p.y-12,12,10);
-    ctx.fillStyle='#2b2f3f';ctx.fillRect(p.x-7,p.y-2,14,14);
-    ctx.fillStyle=shirt;ctx.fillRect(p.x-5,p.y,10,8);
-    ctx.fillStyle='#123';ctx.fillRect(p.x-6,p.y+10,5,3);ctx.fillRect(p.x+1,p.y+10,5,3);
+    drawNPCGuy(p.x,p.y,shirt,p.c);
   });
+  // extra dense pedestrians for depth
+  for(let i=0;i<18;i++){
+    const px = (i%2===0? 300 : 1460) + ((i*37)%120);
+    const py = 820 + i*74;
+    const shirt=['#5ea0ff','#ffc167','#a18aff','#f78a8a','#6fd9a4'][i%5];
+    const skin=['#f1c5a3','#ffd7b4','#eab89c','#f4cfb0'][i%4];
+    drawNPCGuy(px,py,shirt,skin);
+  }
 }
 
 function update(){
+  time += 1;
   let ix=(keys['ArrowRight']||keys['d']?1:0)-(keys['ArrowLeft']||keys['a']?1:0);
   let iy=(keys['ArrowDown']||keys['s']?1:0)-(keys['ArrowUp']||keys['w']?1:0);
   if(Math.abs(joyState.x)>0.06||Math.abs(joyState.y)>0.06){ix=joyState.x;iy=joyState.y;}
@@ -255,7 +276,19 @@ function render(){
   ctx.save(); ctx.translate(-cam.x,-cam.y);
   drawWorld();
   drawPixelGuy(player.x,player.y);
+  // foreground canopy band for layered depth
+  ctx.fillStyle='rgba(18,56,31,.18)';
+  for(let i=0;i<80;i++){const x=(i*43+time*0.15)%world.w;ctx.fillRect(x,540,28,14);} 
   ctx.restore();
+
+  // cinematic vignette + color depth
+  const g=ctx.createRadialGradient(vw/2,vh/2,80,vw/2,vh/2,Math.max(vw,vh)*0.95);
+  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,.22)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,vw,vh);
+  const grade=ctx.createLinearGradient(0,0,0,vh);
+  grade.addColorStop(0,'rgba(140,175,255,.08)'); grade.addColorStop(1,'rgba(12,18,30,.10)');
+  ctx.fillStyle=grade; ctx.fillRect(0,0,vw,vh);
+
   drawMini();
   requestAnimationFrame(loop);
 }
