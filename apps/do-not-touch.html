@@ -40,10 +40,12 @@ html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-famil
 .chapter-card.show{opacity:1}
 body.hc{filter:contrast(1.22) saturate(1.1)}
 .smbhud{position:fixed;top:8px;left:8px;right:8px;z-index:9;display:flex;justify-content:space-between;gap:8px;padding:6px 10px;background:#111a31;border:2px solid #5f7eb7;border-radius:6px;pointer-events:none;font-weight:900;font-size:.78rem;color:#e8f1ff;text-shadow:1px 1px 0 #000}
-.dpad{position:fixed;right:10px;bottom:120px;z-index:8;display:none;grid-template-columns:48px 48px 48px;grid-template-rows:48px 48px 48px;gap:6px;pointer-events:auto}
-.dbtn{border:2px solid #5b78ad;background:#142445;color:#d9e7ff;border-radius:8px;font-weight:900;font-size:1.2rem;display:grid;place-items:center;user-select:none;touch-action:none;box-shadow:inset 0 1px 0 #9fbdf6}
+.dpad{position:fixed;right:10px;bottom:72px;z-index:8;display:none;grid-template-columns:56px 56px;grid-template-rows:56px;gap:8px;pointer-events:auto}
+.jump-pad{position:fixed;left:10px;bottom:72px;z-index:8;display:none;pointer-events:auto}
+.dbtn{border:2px solid #5b78ad;background:rgba(20,36,69,.72);color:#d9e7ff;border-radius:10px;font-weight:900;font-size:1.2rem;display:grid;place-items:center;user-select:none;touch-action:none;box-shadow:inset 0 1px 0 #9fbdf6}
 .dbtn:active{transform:translateY(1px);filter:brightness(1.1)}
-.dbtn.up{grid-column:2;grid-row:1}.dbtn.left{grid-column:1;grid-row:2}.dbtn.right{grid-column:3;grid-row:2}.dbtn.down{grid-column:2;grid-row:3}
+.dbtn.left{grid-column:1;grid-row:1}.dbtn.right{grid-column:2;grid-row:1}
+.dbtn.jump{width:74px;height:74px;border-radius:999px;background:rgba(42,88,170,.8);font-size:1.05rem}
 
 @media (max-width: 820px){
   .top{
@@ -72,11 +74,11 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
     bottom:8px;
     top:auto;
     width:auto;
-    max-height:min(30dvh, 220px);
+    max-height:min(20dvh, 130px);
     overflow:auto;
     padding:8px;
     border-radius:12px;
-    background:rgba(8,13,27,.72);
+    background:rgba(8,13,27,.58);
   }
   .panel h3{font-size:.95rem;margin:0 0 4px}
   .panel p{font-size:.86rem;line-height:1.25;margin:4px 0}
@@ -93,7 +95,9 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
     font-size:.85rem;
   }
 
+  .smbhud{display:none}
   .dpad{display:grid}
+  .jump-pad{display:block}
 
   .intro{
     align-items:start;
@@ -160,10 +164,11 @@ body.hc{filter:contrast(1.22) saturate(1.1)}
 </div>
 
 <div class="dpad" id="dpad" aria-label="movement controls">
-  <button class="dbtn up" data-key="ArrowUp">▲</button>
   <button class="dbtn left" data-key="ArrowLeft">◀</button>
   <button class="dbtn right" data-key="ArrowRight">▶</button>
-  <button class="dbtn down" data-key="ArrowDown">▼</button>
+</div>
+<div class="jump-pad" aria-label="jump control">
+  <button class="dbtn jump" data-key=" ">JUMP</button>
 </div>
 
 <div class="intro" id="intro">
@@ -216,6 +221,7 @@ const world={w:3200,h:1800};
 const player={x:180,y:900,s:3.9,frame:0,face:'right',vx:0,vy:0,onGround:false};
 const physics={gravity:0.42,jump:-8.8,friction:0.82,maxRun:5.8,accel:0.55,coyote:7,jumpBuffer:7};
 let coyoteFrames=0,jumpBufferFrames=0;
+const ACCESSIBLE_PLAY = true;
 const platforms=[
   // SMB3-style readable step-up lane
   {x:40,y:1020,w:900,h:28},
@@ -553,7 +559,7 @@ function drawWorld(){
     drawRect(b.x-2,by-2,4,4,qColor);
   });
   // enemies
-  enemies.forEach(e=>{ if(!e.alive) return; drawRect(e.x-8,e.y-10,16,10,'#b06a38'); drawRect(e.x-6,e.y-12,12,3,'#d38952'); drawRect(e.x-6,e.y-2,4,2,'#1c2538'); drawRect(e.x+2,e.y-2,4,2,'#1c2538');});
+  enemies.forEach(e=>{ if(!e.alive) return; drawRect(e.x-8,e.y-10,16,10,'#d94343'); drawRect(e.x-6,e.y-12,12,3,'#ff8c8c'); drawRect(e.x-6,e.y-2,4,2,'#1c2538'); drawRect(e.x+2,e.y-2,4,2,'#1c2538'); drawRect(e.x-1,e.y-18,2,5,'#ffd166'); drawRect(e.x-2,e.y-12,4,2,'#ffd166');});
 
   // water ribbon with clearer edges
   drawRect(1480,1240,620,220,'#325f90');
@@ -805,16 +811,25 @@ function loop(now){
       if(player.vy>1.2 && dy<0){
         e.alive=false; player.vy = -6.2; score+=100; beep(560,.07);
       }else if(hurtTimer===0){
-        lives=Math.max(0,lives-1);
-        player.x=respawnPoint.x; player.y=respawnPoint.y; player.vx=0; player.vy=0;
-        hurtTimer=50;
-        shake=9; beep(220,.12);
-        if(lives===0){
-          toastMsg('Game Over • Resetting lives');
-          lives=3; score=Math.max(0,score-150);
-          coins.forEach(c=>c.taken=false);
-          enemies.forEach(en=>en.alive=true);
-          qBlocks.forEach(q=>{q.used=false;q.bump=0;});
+        if(ACCESSIBLE_PLAY){
+          // keep flow playable: knockback instead of punishing death loop
+          player.vx = (player.x<e.x ? -2.2 : 2.2);
+          player.vy = -3.8;
+          hurtTimer=28;
+          shake=4;
+          beep(260,.05);
+        }else{
+          lives=Math.max(0,lives-1);
+          player.x=respawnPoint.x; player.y=respawnPoint.y; player.vx=0; player.vy=0;
+          hurtTimer=50;
+          shake=9; beep(220,.12);
+          if(lives===0){
+            toastMsg('Game Over • Resetting lives');
+            lives=3; score=Math.max(0,score-150);
+            coins.forEach(c=>c.taken=false);
+            enemies.forEach(en=>en.alive=true);
+            qBlocks.forEach(q=>{q.used=false;q.bump=0;});
+          }
         }
       }
     }
@@ -898,7 +913,7 @@ document.getElementById('toggleFull').onclick=async()=>{try{if(!document.fullscr
 document.getElementById('resetProgress').onclick=()=>{viewed=new Set();zoneSeen=new Set();score=0;lives=3;player.x=respawnPoint.x;player.y=respawnPoint.y;player.vx=0;player.vy=0;coins.forEach(c=>c.taken=false);qBlocks.forEach(b=>{b.used=false;b.bump=0;});enemies.forEach(e=>e.alive=true);saveViewed();toastMsg('Progress reset');};
 document.getElementById('snapBtn').onclick=()=>{const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='visual-resume-screenshot.png';a.click();};
 document.getElementById('contrastBtn').onclick=()=>{hc=!hc;document.body.classList.toggle('hc',hc);};
-document.getElementById('enter').onclick=()=>{document.getElementById('intro').classList.add('hide');toastMsg('Experience started • M sound • P pause • F fullscreen • N night • R rain');};
+document.getElementById('enter').onclick=()=>{document.getElementById('intro').classList.add('hide');toastMsg('Experience started • mobile: right pad move, left button jump');};
 
 const qp=new URL(location.href).searchParams.get('node'); if(qp){const n=nodes.find(n=>n.id.toLowerCase()===qp.toLowerCase()); if(n){player.x=n.x-40;player.y=n.y-40;activeNode=n;}}
 saveViewed();
