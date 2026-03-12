@@ -174,6 +174,45 @@ function drawNPCGuy(x,y,shirt='#2f6ec7',skin='#f1c5a3'){
   ctx.fillStyle='#111c33'; ctx.fillRect(x-3,y-11,2,1); ctx.fillRect(x+1,y-11,2,1);
 }
 
+function drawHeroBlock(x,y,theme='warm'){
+  const wall = theme==='warm' ? '#a2644d' : '#5f7797';
+  const trim = theme==='warm' ? '#d3b08c' : '#a0b8d8';
+  const dark = theme==='warm' ? '#8f5342' : '#3d516f';
+  const glass = theme==='warm' ? '#d9c0a6' : '#9ab9df';
+
+  ctx.fillStyle=wall; ctx.fillRect(x,y,460,300);
+  ctx.fillStyle=trim; ctx.fillRect(x+20,y+20,420,90);
+  ctx.fillStyle='rgba(0,0,0,.16)'; ctx.fillRect(x,y+300,460,10);
+
+  // roof machines / vents
+  for(let i=0;i<7;i++){
+    const rx=x+30+i*58;
+    ctx.fillStyle=dark; ctx.fillRect(rx,y-22,36,14);
+    ctx.fillStyle=trim; ctx.fillRect(rx+4,y-18,28,4);
+  }
+
+  // facade rhythm
+  for(let yy=y+128;yy<y+286;yy+=24){
+    for(let xx=x+16;xx<x+440;xx+=34){
+      ctx.fillStyle=dark; ctx.fillRect(xx,yy,22,2);
+    }
+  }
+
+  // windows
+  for(let yy=y+136;yy<y+276;yy+=42){
+    for(let xx=x+32;xx<x+428;xx+=54){
+      ctx.fillStyle=dark; ctx.fillRect(xx,yy,26,44);
+      ctx.fillStyle=glass; ctx.fillRect(xx+4,yy+4,18,18);
+      ctx.fillStyle='rgba(255,255,255,.18)'; ctx.fillRect(xx+4,yy+4,8,2);
+    }
+  }
+
+  // balcony strips / trims
+  for(let yy=y+192;yy<y+290;yy+=18){
+    ctx.fillStyle='rgba(22,34,50,.22)'; ctx.fillRect(x+20,yy,420,2);
+  }
+}
+
 function drawWorld(){
   // sky haze for cinematic depth
   const sky=ctx.createLinearGradient(0,0,0,620);
@@ -216,21 +255,13 @@ function drawWorld(){
     ctx.fillRect(ROAD_X+70+i*32,1450,18,3);
   }
 
-  // left block (red building)
-  ctx.fillStyle='#a2644d'; ctx.fillRect(100,620,460,300);
-  ctx.fillStyle='#d3b08c'; ctx.fillRect(120,640,420,90);
-  ctx.fillStyle='rgba(0,0,0,.12)'; ctx.fillRect(100,920,460,10);
-  for(let y=748;y<900;y+=24){for(let x=116;x<540;x+=34){ctx.fillStyle='#8f5342';ctx.fillRect(x,y,22,2);}}
-  // rooftop units
-  for(let i=0;i<7;i++){const rx=130+i*58;ctx.fillStyle='#6a3b30';ctx.fillRect(rx,598,36,14);ctx.fillStyle='#caa38b';ctx.fillRect(rx+4,602,28,4);} 
+  // hero art blocks (1:1 quality template)
+  drawHeroBlock(100,620,'warm');
+  drawHeroBlock(1240,620,'cool');
 
-  // right block (blue building)
-  ctx.fillStyle='#5f7797'; ctx.fillRect(1240,620,470,300);
-  ctx.fillStyle='#a0b8d8'; ctx.fillRect(1260,640,430,90);
-  ctx.fillStyle='rgba(0,0,0,.14)'; ctx.fillRect(1240,920,470,10);
-  for(let x=1270;x<1680;x+=46){ctx.fillStyle='#3d516f';ctx.fillRect(x,760,26,44);ctx.fillStyle='#9ab9df';ctx.fillRect(x+4,764,18,18);} 
-  // balcony strips / facade depth
-  for(let y=812;y<904;y+=18){ctx.fillStyle='rgba(22,34,50,.22)';ctx.fillRect(1260,y,430,2);}
+  // lower district blocks for added depth and continuity
+  drawHeroBlock(100,1120,'warm');
+  drawHeroBlock(1240,1120,'cool');
   // benches + flower beds
   for(let i=0;i<8;i++){ctx.fillStyle='#7f552f';ctx.fillRect(150,700+i*120,28,56);ctx.fillStyle='#cda679';ctx.fillRect(154,706+i*120,20,40);} 
   for(let i=0;i<26;i++){const fx=1210+(i*29)%520, fy=980+((i*67)%540);ctx.fillStyle=['#ffd66d','#ffffff','#ff8aa5','#a6e874'][i%4];ctx.fillRect(fx,fy,3,3);} 
