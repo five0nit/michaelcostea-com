@@ -338,8 +338,8 @@ const COLLISION={
   playerRadius:11,
   trafficEnvelope:{x:7,y:5},
   triggerPad:16,
-  resolveEpsilon:0.02,
-  maxResolvePasses:3,
+  resolveEpsilon:0.08,
+  maxResolvePasses:2,
   edgePadding:{left:42,right:42,top:124,bottom:42},
   staticProps:[
     {id:'block-nw',x:100,y:620,w:460,h:300},
@@ -347,9 +347,7 @@ const COLLISION={
     {id:'block-ne',x:1240,y:620,w:460,h:300},
     {id:'block-se',x:1230,y:1108,w:482,h:304},
     {id:'guardrail-1',x:100,y:1850,w:1600,h:24},
-    {id:'guardrail-2',x:100,y:1930,w:1600,h:24},
-    {id:'road-buffer-left',x:ROAD_X-10,y:120,w:10,h:world.h-120},
-    {id:'road-buffer-right',x:ROAD_X+ROAD_W,y:120,w:10,h:world.h-120}
+    {id:'guardrail-2',x:100,y:1930,w:1600,h:24}
   ]
 };
 
@@ -614,7 +612,7 @@ function resolvePlayerCollision(nextX,nextY){
       const desired=target.x;
       let nx=desired;
       for(const r of expanded){
-        if(ry<=r.y || ry>=r.y+r.h) continue;
+        if(ry<r.y || ry>r.y+r.h) continue;
         const movingRight=nx>rx;
         const movingLeft=nx<rx;
         if(movingRight && rx<=r.x && nx>r.x) { nx=r.x-eps; hitX=true; }
@@ -630,7 +628,7 @@ function resolvePlayerCollision(nextX,nextY){
       const desired=target.y;
       let ny=desired;
       for(const r of expanded){
-        if(rx<=r.x || rx>=r.x+r.w) continue;
+        if(rx<r.x || rx>r.x+r.w) continue;
         const movingDown=ny>ry;
         const movingUp=ny<ry;
         if(movingDown && ry<=r.y && ny>r.y) { ny=r.y-eps; hitY=true; }
@@ -876,8 +874,64 @@ function drawPremiumSilhouettePassTo(c2d){
   }
 }
 
+function drawSkyCloudBandsTo(c2d){
+  // Self-crit fix: horizon still felt flat in motion; add deterministic cloud bands for depth separation.
+  for(let lane=0;lane<4;lane++){
+    const y=66+lane*42;
+    const alpha=0.04+lane*0.012;
+    for(let i=0;i<12;i++){
+      const cx=70+i*154+Math.floor(hash2(lane,i,61)*26)-13;
+      const w=86+Math.floor(hash2(lane,i,62)*54);
+      const h=12+Math.floor(hash2(lane,i,63)*10);
+      c2d.fillStyle='rgba(255,255,255,'+alpha.toFixed(3)+')';
+      c2d.fillRect(cx,y,w,h);
+      c2d.fillStyle='rgba(123,157,196,'+(alpha*0.65).toFixed(3)+')';
+      c2d.fillRect(cx+6,y+h-3,w-12,3);
+    }
+  }
+}
+
+function drawRoadSurfaceBreakupTo(c2d){
+  // Self-crit fix: road read was too uniform. Add deterministic wear, seams, and curb contact shadows.
+  for(let i=0;i<84;i++){
+    const y=150+i*26;
+    const left=ROAD_X+20+Math.floor(hash2(i,1,71)*46);
+    const width=10+Math.floor(hash2(i,1,72)*32);
+    const tone=hash2(i,1,73);
+    c2d.fillStyle=tone<0.5?'rgba(255,255,255,.035)':'rgba(0,0,0,.045)';
+    c2d.fillRect(left,y,width,2);
+    if(i%3===0){
+      const right=ROAD_X+ROAD_W-26-Math.floor(hash2(i,2,74)*42);
+      c2d.fillRect(right,y,8+Math.floor(hash2(i,2,75)*22),2);
+    }
+  }
+  for(let y=210;y<world.h-70;y+=124){
+    const seamJitter=Math.floor(hash2(y,4,76)*12)-6;
+    c2d.fillStyle='rgba(18,24,34,.14)';
+    c2d.fillRect(ROAD_X+ROAD_W*0.25+seamJitter,y,2,42);
+    c2d.fillRect(ROAD_X+ROAD_W*0.75-seamJitter,y+16,2,44);
+  }
+  c2d.fillStyle='rgba(0,0,0,.08)';
+  c2d.fillRect(ROAD_X+12,120,6,world.h-120);
+  c2d.fillRect(ROAD_X+ROAD_W-18,120,6,world.h-120);
+}
+
+function drawChapterLandmarkPadsTo(c2d){
+  // Self-crit fix: chapter locations needed stronger scene anchoring before interaction.
+  nodes.forEach((n,idx)=>{
+    const r=22 + (idx%3)*4;
+    c2d.fillStyle='rgba(28,40,58,.2)';
+    c2d.fillRect(n.x-r,n.y+r-2,r*2,4);
+    c2d.fillStyle='rgba(255,243,196,.18)';
+    c2d.fillRect(n.x-r+4,n.y-r+6,r*2-8,2);
+    c2d.fillStyle='rgba(255,210,122,.13)';
+    c2d.fillRect(n.x-r+8,n.y-r+10,r*2-16,2);
+  });
+}
+
 function buildStaticBase(c2d){
   const sky=c2d.createLinearGradient(0,0,0,620); sky.addColorStop(0,'#9ec3f5'); sky.addColorStop(1,'#d9f0ff'); c2d.fillStyle=sky; c2d.fillRect(0,0,world.w,620);
+  drawSkyCloudBandsTo(c2d);
   c2d.fillStyle=MATERIALS.foliage.base; c2d.fillRect(0,0,world.w,560);
   drawPremiumSilhouettePassTo(c2d);
   for(let y=0;y<560;y+=16){
@@ -904,10 +958,12 @@ function buildStaticBase(c2d){
   c2d.fillStyle='rgba(255,255,255,.08)'; c2d.fillRect(ROAD_X+14,120,4,world.h-120); c2d.fillRect(ROAD_X+ROAD_W-18,120,4,world.h-120);
   c2d.fillStyle='rgba(255,255,255,.04)'; c2d.fillRect(ROAD_X+ROAD_W/2-2,120,4,world.h-120);
   for(let y=180;y<world.h-60;y+=92){c2d.fillStyle='#f5f5f5';c2d.fillRect(ROAD_X+ROAD_W/2-6,y,12,46);} 
+  drawRoadSurfaceBreakupTo(c2d);
   for(let i=0;i<12;i++){c2d.fillStyle='#f8f8f8'; c2d.fillRect(ROAD_X+70+i*32,720,18,90); c2d.fillRect(ROAD_X+70+i*32,1360,18,90); c2d.fillStyle='rgba(0,0,0,.08)'; c2d.fillRect(ROAD_X+70+i*32,810,18,3); c2d.fillRect(ROAD_X+70+i*32,1450,18,3);} 
   drawHeroBlockTo(c2d,100,620,'warm'); drawHeroBlockTo(c2d,1240,620,'cool'); drawHeroBlockTo(c2d,100,1120,'warm'); drawPremiumHeroDistrictTo(c2d,1230,1108);
   drawStreetPropsTo(c2d);
   drawDistrictMicroScenesTo(c2d);
+  drawChapterLandmarkPadsTo(c2d);
   for(let i=0;i<8;i++){c2d.fillStyle='#7f552f';c2d.fillRect(150,700+i*120,28,56);c2d.fillStyle='#cda679';c2d.fillRect(154,706+i*120,20,40);} 
   for(let i=0;i<26;i++){const fx=1210+(i*29)%520, fy=980+((i*67)%540);c2d.fillStyle=['#ffd66d','#ffffff','#ff8aa5','#a6e874'][i%4];c2d.fillRect(fx,fy,3,3);} 
   for(let i=0;i<40;i++){const dx=80+((i*83)%1640), dy=620+((i*61)%1660); c2d.fillStyle=i%3===0?'rgba(0,0,0,.10)':'rgba(255,255,255,.08)'; c2d.fillRect(dx,dy,6,2);} 
@@ -1308,13 +1364,35 @@ function update(dt){
   motionState.vx += (targetVx-motionState.vx)*blend;
   motionState.vy += (targetVy-motionState.vy)*blend;
 
-  const desiredX=player.x+motionState.vx*dt;
-  const desiredY=player.y+motionState.vy*dt;
-  const resolved=resolvePlayerCollision(desiredX,desiredY);
-  if(collisionDebug.enabled) lastCollisionDebugData=resolved.expanded;
-  if(resolved.hitX) motionState.vx*=0.12;
-  if(resolved.hitY) motionState.vy*=0.12;
-  player.x=resolved.x; player.y=resolved.y;
+  const moveX=motionState.vx*dt;
+  const moveY=motionState.vy*dt;
+  const maxTravel=Math.max(Math.abs(moveX),Math.abs(moveY));
+  const stepCount=Math.max(1,Math.min(4,Math.ceil(maxTravel/6)));
+  let nextX=player.x;
+  let nextY=player.y;
+  let hitX=false, hitY=false;
+  let debugExpanded=[];
+
+  for(let s=0;s<stepCount;s++){
+    const desiredX=nextX + moveX/stepCount;
+    const desiredY=nextY + moveY/stepCount;
+    const fromX=nextX;
+    const fromY=nextY;
+    player.x=fromX;
+    player.y=fromY;
+    const resolved=resolvePlayerCollision(desiredX,desiredY);
+    nextX=resolved.x;
+    nextY=resolved.y;
+    hitX=hitX||resolved.hitX;
+    hitY=hitY||resolved.hitY;
+    if(collisionDebug.enabled) debugExpanded=resolved.expanded;
+  }
+
+  player.x=nextX;
+  player.y=nextY;
+  if(collisionDebug.enabled) lastCollisionDebugData=debugExpanded;
+  if(hitX && Math.abs(moveX)>0.0001) motionState.vx=0;
+  if(hitY && Math.abs(moveY)>0.0001) motionState.vy=0;
 
   const planarSpeed=Math.hypot(motionState.vx,motionState.vy);
   const animSpeedNorm=Math.min(1,planarSpeed/(maxSpeed||1));
