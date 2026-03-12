@@ -3,966 +3,224 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Michael Costea // Visual Resume v40+ Art Pass</title>
+<title>DO NOT TOUCH — v67 Top-Down Pixel City</title>
 <style>
-:root{--bg:#0a1122;--ink:#ecf3ff;--muted:#a9bbda;--line:#3f5e93;--ok:#8bff9e}
+:root{--bg:#d8efe7;--ink:#0f1b2d;--line:#1c2f47;--panel:#eef5ff}
 *{box-sizing:border-box}
-html,body{margin:0;height:100dvh;overflow:hidden;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
-#game{position:fixed;inset:0;width:100%;height:100dvh;image-rendering:pixelated;image-rendering:crisp-edges;background:#101a33}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif}
+#game{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;background:#9ecf86}
 .ui{position:fixed;inset:0;pointer-events:none}
-.top{position:absolute;left:10px;right:10px;top:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
-.chip{pointer-events:auto;padding:7px 11px;border:2px solid #607eb6;background:#121f3d;border-radius:6px;font-size:.78rem;color:#cfe0ff;box-shadow:inset 0 1px 0 #94b7ff,inset -1px -1px 0 #0b1429;text-shadow:1px 1px 0 #0a1021}
-.panel{position:absolute;right:10px;bottom:10px;width:min(560px,96vw);pointer-events:auto;background:#0d1732;border:2px solid #5f7eb7;border-radius:10px;padding:12px;box-shadow:0 0 0 2px #0a1225,inset 0 1px 0 #8ba9de}
-.panel h3{margin:0 0 6px;font-size:1rem;letter-spacing:.04em;text-shadow:1px 1px 0 #091127}
-.panel p{margin:6px 0;color:var(--muted);line-height:1.45}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:2px solid #4f71af;background:linear-gradient(180deg,#94d4ff,#5eaefe);color:#03172f;border-radius:6px;padding:9px 12px;font-weight:800;cursor:pointer;transition:transform .12s ease,filter .12s ease;box-shadow:inset 0 1px 0 #dcf4ff,inset -1px -1px 0 #2f5d9c}
-.btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
-.intro{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 20% -20%,#1a2855 0%,transparent 45%),rgba(3,5,10,.9);z-index:9}
-.card{width:min(860px,96vw);background:rgba(8,14,28,.92);border:1px solid #35507c;border-radius:16px;padding:18px}
-.card h1{margin:0 0 8px;letter-spacing:.09em;font-size:clamp(1.6rem,6vw,3.2rem)}
-.card p{color:var(--muted)}
-.hide{display:none!important}
-.quest{margin-top:8px;padding:8px;border:1px solid #3a5789;border-radius:10px;background:rgba(10,18,36,.55)}
-.quest li{font-size:.85rem;color:#cfe0ff;margin:.2rem 0}
-.quest .done{color:var(--ok);text-decoration:line-through}
-.toast{position:fixed;top:58px;left:50%;transform:translateX(-50%);padding:8px 12px;border:1px solid #4c6ea7;background:rgba(8,16,30,.92);border-radius:999px;font-size:.8rem;z-index:10;opacity:0;transition:opacity .2s ease}
+.topbar{position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px)+8px);display:flex;justify-content:space-between;align-items:flex-start;gap:8px;z-index:8;pointer-events:none}
+.brand{background:rgba(10,18,34,.55);color:#fff;border:2px solid #d9e4ff;border-radius:8px;padding:8px 10px;font-weight:900;letter-spacing:.03em;text-shadow:1px 1px 0 #000;line-height:1.05}
+.top-actions{display:flex;gap:8px;pointer-events:auto}
+.btn{border:2px solid #1e2e48;background:#f7faff;color:#111;padding:8px 14px;border-radius:6px;font-weight:900;font-size:.92rem;box-shadow:inset 0 1px 0 #fff}
+.btn:active{transform:translateY(1px)}
+.corner-status{position:fixed;left:10px;bottom:calc(env(safe-area-inset-bottom,0px)+10px);z-index:8;pointer-events:none;background:rgba(8,16,30,.62);color:#eaf2ff;border:2px solid #6e8fbe;border-radius:8px;padding:6px 8px;font-size:.74rem}
+.joystick{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px)+16px);width:132px;height:132px;border-radius:999px;background:rgba(16,26,48,.48);border:3px solid #344a72;z-index:8;pointer-events:auto;touch-action:none}
+.stick{position:absolute;left:50%;top:50%;width:56px;height:56px;margin-left:-28px;margin-top:-28px;border-radius:999px;background:#c62f2f;border:3px solid #3c0f0f;box-shadow:0 0 0 2px rgba(255,255,255,.25) inset}
+.minimap{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px)+16px);width:110px;height:110px;border-radius:10px;background:#d8e1ef;border:3px solid #273b5e;z-index:8;overflow:hidden;pointer-events:none}
+.minimap canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+.modal{position:fixed;inset:0;display:none;place-items:center;padding:14px;background:rgba(2,8,20,.7);z-index:20}
+.modal.open{display:grid}
+.card{width:min(760px,96vw);max-height:82vh;overflow:auto;background:#0f1b34;color:#e7f0ff;border:2px solid #5a79ac;border-radius:12px;padding:14px}
+.card h3{margin:.2rem 0 .4rem}
+.card ul{margin:.2rem 0 .6rem;padding-left:18px}
+.stat-row{display:grid;grid-template-columns:150px 1fr 44px;gap:8px;align-items:center;margin:6px 0;font-size:.86rem}
+.stat-meter{height:10px;border:1px solid #6587be;border-radius:999px;overflow:hidden;background:#132544}
+.stat-meter>span{display:block;height:100%;background:linear-gradient(90deg,#71d8ff,#94ffaf)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px)+62px);z-index:30;background:rgba(8,14,28,.92);color:#e5eeff;border:1px solid #5a78ad;border-radius:999px;padding:8px 12px;font-size:.8rem;opacity:0;transition:opacity .2s}
 .toast.show{opacity:1}
-.progress{height:8px;border:1px solid #4a6798;border-radius:999px;overflow:hidden;background:#0f1a33;margin-top:8px}
-.progress > span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#6bbdff,#8bff9e)}
-.legend{font-size:.74rem;color:#b7cceb;margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
-.dot.node{background:#79d9ff}.dot.done{background:#8bff9e}.dot.npc{background:#ffd166}
-.modal{position:fixed;inset:0;z-index:11;background:rgba(2,6,14,.78);display:grid;place-items:center;padding:14px}
-.modal-card{width:min(760px,96vw);max-height:80dvh;overflow:auto;background:#0d1630;border:1px solid #4c6ea7;border-radius:14px;padding:14px}
-.modal-card h3{margin:.2rem 0 .5rem}.modal-card ul{margin:.2rem 0 .5rem;padding-left:18px;color:#cfe0ff}
-.chapter-card{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:12;padding:10px 14px;border:1px solid #5c80bd;background:rgba(7,14,30,.92);border-radius:12px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .25s ease}
-.chapter-card.show{opacity:1}
-body.hc{filter:contrast(1.22) saturate(1.1)}
-.smbhud{position:fixed;top:8px;left:8px;right:8px;z-index:9;display:flex;justify-content:space-between;gap:8px;padding:6px 10px;background:#111a31;border:2px solid #5f7eb7;border-radius:6px;pointer-events:none;font-weight:900;font-size:.78rem;color:#e8f1ff;text-shadow:1px 1px 0 #000}
-.dpad{position:fixed;right:10px;bottom:72px;z-index:8;display:none;grid-template-columns:56px 56px;grid-template-rows:56px;gap:8px;pointer-events:auto}
-.jump-pad{position:fixed;left:10px;bottom:72px;z-index:8;display:none;pointer-events:auto}
-.dbtn{border:2px solid #5b78ad;background:rgba(20,36,69,.72);color:#d9e7ff;border-radius:10px;font-weight:900;font-size:1.2rem;display:grid;place-items:center;user-select:none;touch-action:none;box-shadow:inset 0 1px 0 #9fbdf6}
-.dbtn:active{transform:translateY(1px);filter:brightness(1.1)}
-.dbtn.left{grid-column:1;grid-row:1}.dbtn.right{grid-column:2;grid-row:1}
-.dbtn.jump{width:74px;height:74px;border-radius:999px;background:rgba(42,88,170,.8);font-size:1.05rem}
-
-.stat-row{display:grid;grid-template-columns:170px 1fr 44px;gap:8px;align-items:center;font-size:.85rem}
-.stat-meter{height:10px;border:1px solid #5678ae;border-radius:999px;overflow:hidden;background:#122140}
-.stat-meter > span{display:block;height:100%;background:linear-gradient(90deg,#79d9ff,#8bff9e)}
-
-@media (max-width: 820px){
-  .top{
-    left:8px;
-    right:8px;
-    top:calc(env(safe-area-inset-top, 0px) + 44px);
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:6px;
-    justify-content:stretch;
-  }
-  .chip{
-    width:100%;
-    padding:8px 10px;
-    font-size:.74rem;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  #titleChip,#chapterChip,#soundChip,#stateChip,#objectiveChip,#fpsChip,#saveChip,#timeChip,#weatherChip{display:none}
-  #exportJson,#downloadPdf,#copySummary,#snapBtn,#contrastBtn,#showCerts,#viewRole,#resetProgress,#toggleFull{display:none}
-
-  .panel{
-    left:8px;
-    right:8px;
-    bottom:8px;
-    top:auto;
-    width:auto;
-    max-height:min(20dvh, 130px);
-    overflow:auto;
-    padding:8px;
-    border-radius:12px;
-    background:rgba(8,13,27,.58);
-  }
-  .panel h3{font-size:.95rem;margin:0 0 4px}
-  .panel p{font-size:.86rem;line-height:1.25;margin:4px 0}
-
-  .progress{margin-top:6px}
-  .quest,.legend{display:none}
-
-  .row{gap:6px}
-  .btn{
-    flex:1 1 calc(50% - 6px);
-    min-width:0;
-    text-align:center;
-    padding:8px 8px;
-    font-size:.85rem;
-  }
-
-  .smbhud{display:none}
-  .dpad{display:grid}
-  .jump-pad{display:block}
-
-  .intro{
-    align-items:start;
-    padding:calc(env(safe-area-inset-top, 0px) + 18px) 12px 16px;
-    background:rgba(3,5,10,.94);
-  }
-  .card{
-    width:100%;
-    max-height:calc(100dvh - env(safe-area-inset-top, 0px) - 28px);
-    overflow:auto;
-    padding:16px;
-    border-radius:14px;
-  }
-  .card h1{font-size:clamp(1.45rem, 8.5vw, 2rem);line-height:1.08}
-  .toast{top:calc(env(safe-area-inset-top, 0px) + 10px)}
+@media (max-width:820px){
+  .brand{font-size:.8rem;padding:6px 8px}
+  .btn{padding:7px 12px;font-size:.86rem}
+  .joystick{width:120px;height:120px}
+  .stick{width:52px;height:52px;margin-left:-26px;margin-top:-26px}
 }
-
-@media (prefers-reduced-motion: reduce){.btn,.toast,.chapter-card{transition:none}}
 </style>
 </head>
 <body>
 <canvas id="game"></canvas>
-<div class="smbhud" id="smbhud"><span id="hudScore">MARIO 000000</span><span id="hudWorld">WORLD 1-1</span><span id="hudLives">x03</span></div>
 <div class="ui">
-  <div class="top">
-    <div class="chip" id="titleChip">MICHAEL COSTEA // VISUAL RESUME v66 64-BIT PIXEL REMASTER</div>
-    <div class="chip" id="zoneChip">TIMELINE ZONE: Foundations</div>
-    <div class="chip" id="objectiveChip">OBJECTIVE: Explore chapter nodes</div>
-    <div class="chip" id="chapterChip">CHAPTER: --</div>
-    <div class="chip" id="progressChip">NODES VIEWED: 0/8</div>
-    <div class="chip" id="fpsChip">FPS --</div>
-    <div class="chip" id="soundChip">SFX ON</div>
-    <div class="chip" id="stateChip">STATE RUNNING</div>
-    <div class="chip" id="saveChip">LAST SAVE --:--</div>
-    <div class="chip" id="timeChip">TIME DAY</div>
-    <div class="chip" id="weatherChip">WEATHER CLEAR</div>
-  </div>
-
-  <div class="panel">
-    <h3 id="roleTitle">Welcome</h3>
-    <p id="roleBody">Run with A/D or ←/→, jump with W/↑/Space (mobile: right D-pad). Reach timeline nodes to unlock chapters.</p>
-    <div class="progress"><span id="bar"></span></div>
-    <ul class="quest" id="questList">
-      <li data-q="N2">Visit Telecom/Ops chapter</li>
-      <li data-q="N6">Visit Electrical Trade chapter</li>
-      <li data-q="N8">Visit Growth & Innovation chapter</li>
-    </ul>
-    <div class="legend"><span><i class="dot node"></i>chapter node</span><span><i class="dot done"></i>completed</span><span><i class="dot npc"></i>mentor NPC</span></div>
-    <div class="row">
-      <button class="btn" id="nextNode">Jump to Next Chapter</button>
-      <button class="btn" id="charStatsBtn">Character Stats</button>
-      <button class="btn" id="returnSite">Back to MichaelOS</button>
-      <button class="btn" id="viewRole">View Role Card</button>
-      <button class="btn" id="showCerts">Certifications</button>
-      <button class="btn" id="exportJson">Export JSON</button>
-      <button class="btn" id="downloadPdf">Download Resume PDF</button>
-      <button class="btn" id="copySummary">Copy Summary</button>
-      <button class="btn" id="toggleFull">Fullscreen</button>
-      <button class="btn" id="resetProgress">Reset Progress</button>
-      <button class="btn" id="snapBtn">Screenshot</button>
-      <button class="btn" id="contrastBtn">High Contrast</button>
+  <div class="topbar">
+    <div class="brand">MICHAEL<br/>COSTEA</div>
+    <div class="top-actions">
+      <button class="btn" id="mapBtn">MAP</button>
+      <button class="btn" id="menuBtn">MENU</button>
+      <button class="btn" id="statsBtn">STATS</button>
     </div>
   </div>
-
+  <div class="corner-status" id="status">Explore the city and unlock timeline chapters.</div>
+  <div class="minimap"><canvas id="mini" width="110" height="110"></canvas></div>
+  <div class="joystick" id="joy"><div class="stick" id="stick"></div></div>
+  <div class="toast" id="toast"></div>
 </div>
 
-<div class="dpad" id="dpad" aria-label="movement controls">
-  <button class="dbtn left" data-key="ArrowLeft">◀</button>
-  <button class="dbtn right" data-key="ArrowRight">▶</button>
-</div>
-<div class="jump-pad" aria-label="jump control">
-  <button class="dbtn jump" data-key=" ">JUMP</button>
-</div>
-
-<div class="intro" id="intro">
+<div class="modal" id="menuModal">
   <div class="card">
-    <h1>MICHAEL COSTEA — INTERACTIVE VISUAL RESUME</h1>
-    <p>High-fidelity <b>64-bit pixel-art remaster</b> focused on credibility, clarity, and memorable storytelling.</p>
-    <p><b>This experience is about:</b> turning career milestones into a playable journey where each chapter node proves real execution, growth, and technical depth.</p>
-    <p><b>Current focus:</b> Business Development & Marketing Manager @ Want A Heat Pump group, blending field execution with digital systems innovation.</p>
-    <button class="btn" id="enter">Enter Experience</button>
+    <h3>DO NOT TOUCH // MENU</h3>
+    <p>Presentation-safe build: top-down movement, no forced interrupts, no death/fall states.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" id="jumpNext">Jump to Next Chapter</button>
+      <button class="btn" id="backSite">Back to MichaelOS</button>
+      <button class="btn" id="closeMenu">Close</button>
+    </div>
   </div>
 </div>
 
-<div class="toast" id="toast">Achievement unlocked</div>
-<div class="chapter-card" id="chapterCard">Chapter</div>
-<div class="modal hide" id="modal"><div class="modal-card"><h3 id="modalTitle">Role Card</h3><p id="modalBody"></p><ul id="modalList"></ul><div class="row"><button class="btn" id="closeModal">Close</button></div></div></div>
+<div class="modal" id="mapModal">
+  <div class="card">
+    <h3>City Map / Chapter Progress</h3>
+    <ul id="mapList"></ul>
+    <button class="btn" id="closeMap">Close</button>
+  </div>
+</div>
 
-<div class="modal hide" id="statsModal">
-  <div class="modal-card">
+<div class="modal" id="statsModal">
+  <div class="card">
     <h3>CHARACTER SHEET // MICHAEL COSTEA</h3>
-    <p style="margin:.2rem 0 .6rem;color:#bcd0f5">Class: Field Systems Strategist · Spec: Growth + Ops + Electrical Trade</p>
-    <div id="statsBars" style="display:grid;gap:8px"></div>
-    <ul id="skillTree" style="margin:.8rem 0 .5rem;padding-left:18px;color:#d8e6ff"></ul>
-    <div class="row"><button class="btn" id="closeStatsModal">Close</button></div>
+    <p>Class: Field Systems Strategist · Spec: Growth + Ops + Electrical Trade</p>
+    <div id="statsBars"></div>
+    <ul id="skillList"></ul>
+    <button class="btn" id="closeStats">Close</button>
   </div>
 </div>
 
 <script>
 const cv=document.getElementById('game'),ctx=cv.getContext('2d');
+const mini=document.getElementById('mini'),mctx=mini.getContext('2d');
+let vw=0,vh=0,dpr=1;
+function resize(){dpr=Math.max(1,Math.min(3,devicePixelRatio||1));vw=innerWidth;vh=innerHeight;cv.width=Math.round(vw*dpr);cv.height=Math.round(vh*dpr);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.imageSmoothingEnabled=false;} addEventListener('resize',resize); resize();
 
-const zoneChip=document.getElementById('zoneChip'),objectiveChip=document.getElementById('objectiveChip'),chapterChip=document.getElementById('chapterChip'),progressChip=document.getElementById('progressChip'),fpsChip=document.getElementById('fpsChip'),soundChip=document.getElementById('soundChip'),stateChip=document.getElementById('stateChip'),saveChip=document.getElementById('saveChip'),timeChip=document.getElementById('timeChip'),weatherChip=document.getElementById('weatherChip');
-const hudScore=document.getElementById('hudScore'),hudWorld=document.getElementById('hudWorld'),hudLives=document.getElementById('hudLives');
-const roleTitle=document.getElementById('roleTitle'),roleBody=document.getElementById('roleBody'),bar=document.getElementById('bar');
-const toast=document.getElementById('toast');
-const chapterCard=document.getElementById('chapterCard');
-let vw=960,vh=540,dpr=1;
-const post=document.createElement('canvas');
-const pctx=post.getContext('2d');
-const GRAPHICS_MODE='64BIT';
-let pixelScale=1;
-function resizeCanvas(){
-  const vv=window.visualViewport;
-  vw=Math.round(vv?.width||innerWidth);
-  vh=Math.round(vv?.height||innerHeight);
-  dpr=Math.max(1,Math.min(3,devicePixelRatio||1));
-  pixelScale = GRAPHICS_MODE==='64BIT' ? 1 : (vw <= 820 ? 1 : 2);
-  cv.width=Math.round(vw*dpr);
-  cv.height=Math.round(vh*dpr);
-  cv.style.width=vw+'px';
-  cv.style.height=vh+'px';
-  post.width=Math.max(1,Math.floor(vw/pixelScale));
-  post.height=Math.max(1,Math.floor(vh/pixelScale));
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  ctx.imageSmoothingEnabled=false;
-  pctx.imageSmoothingEnabled=false;
-}
-addEventListener('resize',resizeCanvas); if(window.visualViewport) window.visualViewport.addEventListener('resize',resizeCanvas); resizeCanvas();
-
-const TILE=16;
-const world={w:3200,h:1800};
-const player={x:180,y:900,s:3.9,frame:0,face:'right',vx:0,vy:0,onGround:false};
-const physics={gravity:0.42,jump:-8.8,friction:0.82,maxRun:5.8,accel:0.55,coyote:7,jumpBuffer:7};
-let coyoteFrames=0,jumpBufferFrames=0;
-const ACCESSIBLE_PLAY = true;
-const platforms=[
-  // reconnected single-lane progression (no dead gaps)
-  {x:40,y:1020,w:1160,h:28},
-  {x:1160,y:996,w:620,h:24},
-  {x:1760,y:972,w:620,h:24},
-  {x:2360,y:948,w:620,h:24},
-  {x:2940,y:924,w:240,h:24},
-  // safety floor to prevent hard falls
-  {x:0,y:1088,w:3200,h:40}
-];
-const coinRows=[
-  {x:200,y:960,n:6,dx:42},{x:1040,y:930,n:5,dx:48},{x:1480,y:892,n:5,dx:48},{x:1940,y:852,n:6,dx:46},{x:2380,y:812,n:6,dx:46}
-];
-let coins=[];
-coinRows.forEach(r=>{for(let i=0;i<r.n;i++) coins.push({x:r.x+i*r.dx,y:r.y,taken:false});});
-const qBlocks=[{x:720,y:900,used:false,bump:0},{x:1260,y:860,used:false,bump:0},{x:1700,y:820,used:false,bump:0},{x:2140,y:780,used:false,bump:0},{x:2620,y:740,used:false,bump:0}];
-const respawnPoint={x:120,y:1000};
-let enemies=[
-  {x:560,y:1004,vx:-1.1,alive:true},{x:1160,y:964,vx:-1.1,alive:true},{x:1600,y:924,vx:-1.2,alive:true},{x:2060,y:884,vx:-1.2,alive:true},{x:2540,y:844,vx:-1.3,alive:true}
-];
-let cam={x:0,y:0,tx:0,ty:0},keys={},joy={x:0,y:0,active:false};
-let viewed=new Set(JSON.parse(localStorage.getItem('vr_viewed_v1')||'[]'));
-let activeNode=null,battleFx=0,sfx=true,last=performance.now(),fps=60,paused=false,shake=0,time=0,night=false,rain=false,hc=false,quality='high';
-let score=0,lives=3,hurtTimer=0;
-let lastSafe={x:120,y:1000};
-const paletteBanks={
-  foundations:[[8,12,26],[16,28,52],[24,42,78],[40,66,108],[66,96,148],[108,142,192],[160,188,224],[232,242,255],[121,220,255],[255,212,117],[255,170,74]],
-  telecom:[[10,10,28],[22,24,58],[36,40,86],[58,68,122],[92,108,164],[138,156,206],[208,220,246],[240,245,255],[170,138,255],[121,220,255],[255,128,102]],
-  trade:[[7,16,20],[14,34,38],[22,52,54],[38,82,76],[62,114,95],[97,153,114],[150,194,146],[217,240,197],[138,255,204],[104,229,138],[255,212,117]],
-  growth:[[14,10,26],[30,20,52],[48,34,76],[70,52,106],[102,82,145],[146,122,189],[200,172,228],[238,223,250],[209,171,247],[255,108,170],[255,212,117]]
-};
-let activePalette=paletteBanks.foundations;
-let zoneSeen=new Set(JSON.parse(localStorage.getItem('vr_zones_v1')||'[]'));
-
-const zones=[{name:'Foundations',x:0,y:0,w:860,h:1800},{name:'Telecom/Ops',x:860,y:0,w:980,h:1800},{name:'Electrical Trade',x:1840,y:0,w:820,h:1800},{name:'Growth & Innovation',x:2660,y:0,w:540,h:1800}];
-
-const npcs=[
-  {x:360,y:840,name:'Mentor: Process',quote:'Systems beat motivation.'},
-  {x:1220,y:980,name:'Mentor: Ops',quote:'Measure, then optimize.'},
-  {x:2080,y:1080,name:'Mentor: Trade',quote:'Craft is consistency under pressure.'},
-  {x:2860,y:520,name:'Mentor: Growth',quote:'Partnerships compound execution.'},
-  {x:700,y:860,name:'Neo',quote:'There is no spoon. Only process.'},
-  {x:1710,y:860,name:'Agent K',quote:'Protect the timeline. Keep it classy.'},
-  {x:2320,y:870,name:'Lara',quote:'Adventure favors preparation.'},
-  {x:3000,y:620,name:'Mario',quote:'Let’s-a optimize!'},
-  {x:520,y:980,name:'Skater',quote:'Speed + style = flow.'},
-  {x:890,y:860,name:'Hacker Kid',quote:'CTRL+ALT+WIN.'},
-  {x:1420,y:860,name:'Arcade Fan',quote:'One more run.'},
-  {x:1860,y:920,name:'Sparky',quote:'Safety first, then send it.'},
-  {x:2180,y:840,name:'Builder',quote:'Measure twice, install once.'},
-  {x:2480,y:900,name:'Operator',quote:'Ship it clean.'},
-  {x:2780,y:820,name:'Pilot',quote:'Eyes on the horizon.'},
-  {x:3090,y:880,name:'Coach',quote:'Momentum beats perfection.'}
-];
-const signposts=[
-  {x:520,y:920,text:'Chapter Path → Foundations to Ops'},
-  {x:1680,y:920,text:'Tradecraft District → Electrical Era'},
-  {x:2600,y:920,text:'Innovation District → Current Leadership'}
-];
-
-const nodeProps=[
-  {id:'N1',kind:'cafe'},
-  {id:'N2',kind:'phone'},
-  {id:'N3',kind:'flow'},
-  {id:'N4',kind:'bookstack'},
-  {id:'N5',kind:'kpi'},
-  {id:'N6',kind:'toolbox'},
-  {id:'N7',kind:'megaphone'},
-  {id:'N8',kind:'crown'}
-];
-
+const world={w:2200,h:1600};
+const player={x:220,y:540,s:2.35};
+const cam={x:0,y:0};
 const nodes=[
-{id:'N1',x:260,y:988,title:'Bloom Coffee Bar (2017-2018)',text:'Operations Manager/Owner support — startup operations and service flow.',highlights:['Owner/operator support','Daily service ops discipline','Small business execution'],badge:'#ffce73',glyph:'cup'},
-{id:'N2',x:640,y:988,title:'Optus Retention Consultant (2010-2013)',text:'Escalation handling and retention process redesign.',highlights:['Process simplification','200 retention processes rewritten','Customer save optimization'],badge:'#8fd0ff',glyph:'signal'},
-{id:'N3',x:1080,y:964,title:'Optus Business Process Specialist (2013-2014)',text:'Process comms and rollout support.',highlights:['Cross-team communications','Change support materials','Operational alignment'],badge:'#8cffcf',glyph:'flow'},
-{id:'N4',x:1520,y:964,title:'Optus Process & Content Manager (2014-2015)',text:'Managed large knowledge systems and rollout training.',highlights:['5000+ internal users','500k monthly visits','250 duplicate processes removed'],badge:'#c5b3ff',glyph:'book'},
-{id:'N5',x:1960,y:940,title:'Optus Sales Ops Support Manager (2016-2017)',text:'National support performance and KPI redesign.',highlights:['352 store support scope','74% output uplift','Credit policy + training matrix'],badge:'#ffd199',glyph:'chart'},
-{id:'N6',x:2360,y:940,title:'Electrician Roles (2018-2024)',text:'Ezzy R, Wired By MJD, Want A Sparky.',highlights:['Residential/commercial works','Smart-home and AV integrations','Fault finding + installations'],badge:'#9eff7b',glyph:'bolt'},
-{id:'N7',x:2760,y:916,title:'Sales Manager (Nov 2023-Present)',text:'VEU heat pump upgrade pathways and sales delivery.',highlights:['Program-driven upgrade ops','Residential + commercial sectors','Channel support'],badge:'#79d9ff',glyph:'target'},
-{id:'N8',x:3060,y:916,title:'Business Development & Marketing Manager (2024-Present)',text:'Growth, lead-gen optimization, partner pilots, manufacturer strategy, training.',highlights:['Growth across 3 brands','Website metrics + lead-gen','Partner pilots + CX innovation'],badge:'#ff89c4',glyph:'crown'}
+  {id:'N1',x:260,y:530,title:'Bloom Coffee Bar',desc:'Startup operations and service flow.'},
+  {id:'N2',x:540,y:520,title:'Optus Retention',desc:'Retention process redesign.'},
+  {id:'N3',x:820,y:510,title:'Process Specialist',desc:'Cross-team communications and rollout.'},
+  {id:'N4',x:1100,y:500,title:'Content Manager',desc:'Knowledge system leadership.'},
+  {id:'N5',x:1380,y:495,title:'Sales Ops Manager',desc:'KPI and support redesign.'},
+  {id:'N6',x:1660,y:490,title:'Electrician Roles',desc:'Field execution and smart-home delivery.'},
+  {id:'N7',x:1900,y:485,title:'Sales Manager',desc:'Program-driven upgrade operations.'},
+  {id:'N8',x:2080,y:480,title:'BD & Marketing Manager',desc:'Growth, partnerships, CX innovation.'}
 ];
-
-const certs=['Licensed Electrician (Australia)','VEU program-aligned upgrade operations','IVR/chatbot/review automation delivery','Process redesign + frontline training leadership'];
-const summary=`Michael Costea — Licensed Electrician + Business Development & Marketing Manager driving electrification growth, digital ops, lead-gen optimization, partner pilots, and CX/process innovation across Want A Heat Pump, Want A Sparky, and All Electric Homes.`;
-
-function saveViewed(){localStorage.setItem('vr_viewed_v1', JSON.stringify([...viewed])); localStorage.setItem('vr_zones_v1', JSON.stringify([...zoneSeen])); const d=new Date(); saveChip.textContent=`LAST SAVE ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
-function showChapter(t){chapterCard.textContent=t;chapterCard.classList.add('show');clearTimeout(showChapter._t);showChapter._t=setTimeout(()=>chapterCard.classList.remove('show'),1300);}
-
-function beep(freq=520,d=.06){ if(!sfx) return; try{ const ac=(beep.ac ||= new (window.AudioContext||window.webkitAudioContext)()); const o=ac.createOscillator(),g=ac.createGain(); o.type='square'; o.frequency.value=freq; g.gain.value=.0001; g.gain.exponentialRampToValueAtTime(.04,ac.currentTime+.01); g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d); o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+d);}catch{} }
-function toastMsg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>toast.classList.remove('show'),1200)}
-function zoneFor(x){return zones.find(z=>x>=z.x&&x<z.x+z.w)||zones[0]}
-function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0)}
-function setActivePalette(){
-  const z=zoneFor(player.x)?.name||'Foundations';
-  if(z==='Foundations') activePalette=paletteBanks.foundations;
-  else if(z==='Telecom/Ops') activePalette=paletteBanks.telecom;
-  else if(z==='Electrical Trade') activePalette=paletteBanks.trade;
-  else activePalette=paletteBanks.growth;
-}
-
-function quantizePost(){
-  const img=pctx.getImageData(0,0,post.width,post.height);
-  const d=img.data;
-  for(let i=0;i<d.length;i+=4){
-    const px=(i/4)%post.width, py=((i/4)/post.width)|0;
-    const checker=((px+py)&1)?1:-1;
-    let r=Math.max(0,Math.min(255,d[i]   + checker*3));
-    let g=Math.max(0,Math.min(255,d[i+1] + checker*2));
-    let b=Math.max(0,Math.min(255,d[i+2] + checker*3));
-
-    let best=0, bestDist=1e9;
-    for(let p=0;p<activePalette.length;p++){
-      const pr=activePalette[p][0], pg=activePalette[p][1], pb=activePalette[p][2];
-      const dr=r-pr, dg=g-pg, db=b-pb;
-      const dist=dr*dr + dg*dg + db*db;
-      if(dist<bestDist){ bestDist=dist; best=p; }
-    }
-    d[i]=activePalette[best][0]; d[i+1]=activePalette[best][1]; d[i+2]=activePalette[best][2];
-  }
-  pctx.putImageData(img,0,0);
-}
-const zonePalette=[
-  {base:'#1a2142',tileA:'#27386d',tileB:'#2f4684',accent:'#79dcff'},
-  {base:'#212654',tileA:'#314280',tileB:'#3a5198',accent:'#b6b8ff'},
-  {base:'#1a374a',tileA:'#255770',tileB:'#2f6c87',accent:'#9fffd0'},
-  {base:'#342a55',tileA:'#4f3f84',tileB:'#624ea0',accent:'#ffd475'}
+const npcs=[
+  {x:420,y:430,c:'#ffcf99'},{x:470,y:430,c:'#ffd7a8'},{x:1250,y:440,c:'#ffc6a1'},{x:1320,y:560,c:'#ffdab8'},{x:1780,y:530,c:'#f6c6a3'}
 ];
-function pHash(x,y){ return ((x*73856093)^(y*19349663)) & 255; }
-function drawTile(x,y,c1,c2){drawRect(x,y,TILE,TILE,c1);drawRect(x+2,y+2,4,4,c2);}
-function drawTree(x,y){
-  drawRect(x+6,y+18,6,11,'#2c3d1a');
-  drawRect(x+2,y+10,14,11,'#446425');
-  drawRect(x+1,y+7,16,5,'#5a7b2f');
-  drawRect(x+4,y+3,10,6,'#6f9340');
-  drawRect(x+7,y+1,4,3,'#88ac55');
-  drawRect(x+3,y+14,2,2,'#9bc16d');
-}
-function drawHouse(x,y){
-  drawRect(x+2,y+14,42,26,'#dcecb8');
-  drawRect(x,y+10,46,8,'#6b3434');
-  drawRect(x+3,y+12,40,2,'#8a4a4a');
-  drawRect(x+7,y+20,8,6,'#a7c96a');
-  drawRect(x+31,y+20,8,6,'#a7c96a');
-  drawRect(x+16,y+28,12,12,'#526635');
-  drawRect(x+19,y+31,6,6,'#2a3518');
-  drawRect(x+2,y+14,1,26,'#a7b77a');
-  drawRect(x+43,y+14,1,26,'#a7b77a');
-}
-function drawStreetlight(x,y){
-  drawRect(x+3,y,2,12,'#7c8ca8');
-  drawRect(x+1,y+10,6,1,'#91a6cc');
-  drawRect(x,y+11,8,3,'#e6f2ff');
-  if(((time/20)|0)%2===0) drawRect(x+1,y+12,6,2,'#fff7a8');
-}
-function drawNPC(x,y,idx){
-  const bob=((time/10+idx*4)|0)%2;
-  const style=idx%6;
-  const body=['#ffd166','#7fd7ff','#9eff7b','#ff89c4','#ffd475','#b6b8ff'][style];
-  // outline
-  drawRect(x-8,y-13+bob,16,22,'#111827');
-  drawRect(x-7,y-12+bob,14,20,body);
-  // hair/hat variants for fun cameos
-  if(style===0){ drawRect(x-6,y-13+bob,12,3,'#111'); }
-  else if(style===1){ drawRect(x-6,y-13+bob,12,3,'#2d58b8'); }
-  else if(style===2){ drawRect(x-6,y-13+bob,12,3,'#7b2e2e'); }
-  else if(style===3){ drawRect(x-6,y-13+bob,12,3,'#2a2a2a'); }
-  else if(style===4){ drawRect(x-6,y-13+bob,12,3,'#dba55e'); }
-  else { drawRect(x-6,y-13+bob,12,3,'#4c3b7e'); }
-  drawRect(x-5,y-8+bob,10,6,'#1c2538');
-  drawRect(x-6,y+8+bob,4,2,'#1c2538');
-  drawRect(x+2,y+8+bob,4,2,'#1c2538');
-  drawRect(x-6,y-1+bob,12,1,'rgba(255,255,255,.18)');
-}
-function drawSignpost(x,y){
-  drawRect(x,y,3,18,'#7a8fb5');
-  drawRect(x+3,y+2,30,14,'#dce6f8');
-  drawRect(x+5,y+5,26,3,'#4d6a9f');
-  drawRect(x+7,y+10,20,2,'#6f89b8');
-}
+const viewed=new Set(JSON.parse(localStorage.getItem('dnt_v67_viewed')||'[]'));
 
-function npcPos(n,idx){
-  const ox=Math.sin((time+idx*23)/38)*8;
-  const oy=Math.cos((time+idx*19)/44)*4;
-  return {x:n.x+ox,y:n.y+oy};
-}
+function save(){localStorage.setItem('dnt_v67_viewed',JSON.stringify([...viewed]));}
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1200);}
 
-function drawNodeProp(n){
-  const px=n.x+20, py=n.y-20;
-  const p=nodeProps.find(x=>x.id===n.id);
-  if(!p) return;
-  if(p.kind==='cafe'){ drawRect(px,py,14,10,'#6f4029'); drawRect(px+2,py+2,10,6,'#d2b08e'); drawRect(px+12,py+3,3,4,'#d2b08e'); }
-  else if(p.kind==='phone'){ drawRect(px+3,py,8,12,'#26344f'); drawRect(px+4,py+2,6,8,'#8fd0ff'); }
-  else if(p.kind==='flow'){ drawRect(px,py+5,16,3,'#6de6d4'); drawRect(px+6,py,4,13,'#50b7a8'); }
-  else if(p.kind==='bookstack'){ drawRect(px,py+8,14,4,'#7a5ee0'); drawRect(px+1,py+4,12,4,'#90a7ff'); drawRect(px+2,py,10,4,'#d3dcff'); }
-  else if(p.kind==='kpi'){ drawRect(px,py+10,16,2,'#91a5c7'); drawRect(px+2,py+5,3,5,'#ffd06e'); drawRect(px+7,py+2,3,8,'#8fd0ff'); drawRect(px+12,py,3,10,'#8bff9e'); }
-  else if(p.kind==='toolbox'){ drawRect(px,py+4,16,8,'#ffce73'); drawRect(px+5,py+1,6,3,'#ffdca2'); drawRect(px+7,py+6,2,2,'#59421f'); }
-  else if(p.kind==='megaphone'){ drawRect(px,py+5,8,5,'#79d9ff'); drawRect(px+8,py+4,7,7,'#a7e6ff'); drawRect(px+3,py+10,3,3,'#2e486f'); }
-  else if(p.kind==='crown'){ drawRect(px,py+6,16,5,'#ffd475'); drawRect(px+1,py+2,3,4,'#ffd475'); drawRect(px+6,py,3,6,'#ffd475'); drawRect(px+11,py+2,3,4,'#ffd475'); }
-}
+const joy=document.getElementById('joy'),stick=document.getElementById('stick');
+let joyState={active:false,x:0,y:0,sx:0,sy:0};
+function setStick(){const r=38;stick.style.left=(50+joyState.x*r)+'%';stick.style.top=(50+joyState.y*r)+'%';}
+joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);joyState.active=true;joyState.sx=e.clientX;joyState.sy=e.clientY;});
+joy.addEventListener('pointermove',e=>{if(!joyState.active) return;const dx=(e.clientX-joyState.sx)/46,dy=(e.clientY-joyState.sy)/46;const m=Math.hypot(dx,dy)||1;joyState.x=Math.max(-1,Math.min(1,dx/(m>1?m:1)));joyState.y=Math.max(-1,Math.min(1,dy/(m>1?m:1)));setStick();});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>joy.addEventListener(ev,()=>{joyState.active=false;joyState.x=0;joyState.y=0;setStick();}));
+setStick();
 
-function drawParallax(){
-  const skyBands=night?['#070b15','#0b1324','#121d33','#1a2744']:['#0f1b38','#12224a','#16305f','#1a3d73'];
-  skyBands.forEach((c,i)=>drawRect(0,0+i*90,vw,90,c));
-  // mountain layers (SNES depth)
-  for(let i=0;i<7;i++){
-    const mx=((i*240 - time*0.35)%(vw+260))-130;
-    drawRect(mx,170,120,34,'rgba(42,66,108,.45)');
-    drawRect(mx+12,154,96,18,'rgba(62,90,136,.35)');
-  }
-  for(let i=0;i<60;i++){ const x=((i*137 + time*0.25*(1+i%3))% (vw+200))-100; const y=20+(i%5)*25; drawRect(x,y,2,2,'rgba(255,255,255,.65)'); }
-  for(let i=0;i<8;i++){ const x=((i*260 + time*0.7*(i%2?1:-1))%(vw+260))-130; const y=60+i*18; drawRect(x,y,46,10,'rgba(255,255,255,.08)'); drawRect(x+8,y+10,30,4,'rgba(255,255,255,.06)'); }
-  // birds
-  for(let i=0;i<14;i++){
-    const bx=((i*170 + time*1.8)%(vw+120))-60;
-    const by=70 + (i%5)*22;
-    drawRect(bx,by,3,1,'rgba(240,245,255,.7)');
-    drawRect(bx+4,by+1,3,1,'rgba(240,245,255,.7)');
-  }
+const keys={};
+addEventListener('keydown',e=>{keys[e.key]=true;}); addEventListener('keyup',e=>{keys[e.key]=false;});
+
+function drawPixelGuy(x,y){
+  // shadow
+  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fillRect(x-8,y+17,16,3);
+  // legs
+  ctx.fillStyle='#17459b'; ctx.fillRect(x-7,y+9,5,8); ctx.fillRect(x+2,y+9,5,8);
+  ctx.fillStyle='#0f2556'; ctx.fillRect(x-7,y+16,5,2); ctx.fillRect(x+2,y+16,5,2);
+  // torso + jacket
+  ctx.fillStyle='#121827'; ctx.fillRect(x-9,y-2,18,13);
+  ctx.fillStyle='#eff3fa'; ctx.fillRect(x-3,y,6,10);
+  // head
+  ctx.fillStyle='#eec7a4'; ctx.fillRect(x-6,y-12,12,10);
+  ctx.fillStyle='#c27f43'; ctx.fillRect(x-5,y-13,10,2);
+  // face dots
+  ctx.fillStyle='#1b2f57'; ctx.fillRect(x-3,y-8,2,1); ctx.fillRect(x+1,y-8,2,1);
 }
 
 function drawWorld(){
-  drawRect(0,0,world.w,world.h,'#111a30');
+  // grass
+  ctx.fillStyle='#74bc63'; ctx.fillRect(0,0,world.w,world.h);
+  // promenade / path
+  ctx.fillStyle='#d5c9ad'; ctx.fillRect(80,350,2060,260);
+  for(let y=350;y<610;y+=14){for(let x=80+(y%28?8:0);x<2140;x+=28){ctx.fillStyle='#b8ab90';ctx.fillRect(x,y,16,2);}}
+  // rails
+  ctx.fillStyle='#495b74'; ctx.fillRect(80,640,2060,20); ctx.fillRect(80,700,2060,20);
+  for(let x=90;x<2130;x+=30){ctx.fillStyle='#94a7bf';ctx.fillRect(x,640,4,20);ctx.fillRect(x,700,4,20);} 
+  // buildings + trees
+  ctx.fillStyle='#9a5d46'; ctx.fillRect(120,210,390,180); ctx.fillStyle='#d6c39f'; ctx.fillRect(130,220,370,70);
+  ctx.fillStyle='#6f8aa6'; ctx.fillRect(1660,240,410,150);
+  for(let i=0;i<7;i++){const tx=260+i*260;ctx.fillStyle='#3c7f38';ctx.fillRect(tx,290,28,28);ctx.fillStyle='#6f4b2a';ctx.fillRect(tx+11,315,6,10);} 
 
-  // distinct zone bases
-  zones.forEach((z,i)=>{
-    const pal=zonePalette[i];
-    drawRect(z.x,0,z.w,world.h,pal.base);
-    for(let y=0;y<world.h;y+=TILE){
-      for(let x=z.x;x<z.x+z.w;x+=TILE){
-        const h=pHash(x>>4,y>>4);
-        drawRect(x,y,TILE,TILE,h%3===0?pal.tileA:pal.tileB);
-        // richer environmental tile detail
-        if(h%13===0) drawRect(x+2,y+2,2,2,'rgba(255,255,255,.08)');
-        if(h%7===0) drawRect(x+12,y+12,2,2,'rgba(0,0,0,.12)');
-        if(h%11===0) drawRect(x+1,y+13,3,1,'rgba(255,255,255,.06)');
-        if(h%9===0) drawRect(x+6,y+5,1,1,'rgba(255,255,255,.18)');
-        if(h%5===0) drawRect(x+9,y+10,1,1,'rgba(0,0,0,.18)');
-      }
+  // chapter nodes
+  nodes.forEach(n=>{
+    const seen=viewed.has(n.id);
+    ctx.fillStyle=seen?'#8bff9e':'#ffdf6f'; ctx.fillRect(n.x-7,n.y-20,14,14);
+    ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,8);
+  });
+  // npcs
+  npcs.forEach(p=>{ctx.fillStyle=p.c;ctx.fillRect(p.x-5,p.y-10,10,10);ctx.fillStyle='#2b2f3f';ctx.fillRect(p.x-6,p.y,12,10);});
+}
+
+function update(){
+  let ix=(keys['ArrowRight']||keys['d']?1:0)-(keys['ArrowLeft']||keys['a']?1:0);
+  let iy=(keys['ArrowDown']||keys['s']?1:0)-(keys['ArrowUp']||keys['w']?1:0);
+  if(Math.abs(joyState.x)>0.06||Math.abs(joyState.y)>0.06){ix=joyState.x;iy=joyState.y;}
+  const m=Math.hypot(ix,iy)||1; ix/=m; iy/=m;
+  player.x=Math.max(40,Math.min(world.w-40,player.x+ix*player.s));
+  player.y=Math.max(120,Math.min(world.h-40,player.y+iy*player.s));
+
+  nodes.forEach(n=>{
+    if(Math.hypot(player.x-n.x,player.y-n.y)<34){
+      if(!viewed.has(n.id)){viewed.add(n.id);save();toast('Unlocked: '+n.title);} 
+      document.getElementById('status').textContent=n.title+' — '+n.desc;
     }
   });
 
-  // main roads + lane markers (higher quality)
-  drawRect(100,880,2960,52,'#27374f');
-  drawRect(100,880,2960,2,'#5d7398');
-  drawRect(100,930,2960,2,'#1a273d');
-  for(let x=120;x<3040;x+=40){
-    drawRect(x,904,20,4,'#d7e4ff');
-    drawRect(x,909,20,1,'#93a9cd');
-  }
-  for(let x=120;x<3040;x+=32){
-    drawRect(x,882,2,48,'rgba(255,255,255,.05)');
-  }
-  // lane arrows + side curb details
-  for(let x=180;x<3000;x+=220){
-    drawRect(x,898,10,2,'#cfe0ff'); drawRect(x+8,896,3,2,'#cfe0ff'); drawRect(x+8,902,3,2,'#cfe0ff');
-  }
-  for(let x=110;x<3040;x+=26){ drawRect(x,878,6,1,'#3f4f6a'); drawRect(x,932,6,1,'#1b2639'); }
-  // guided chapter trail (single-road UX)
-  for(let x=0;x<world.w;x+=24){
-    drawRect(x,1118 + ((x/24)%2?2:0),12,2,'rgba(130,230,190,.28)');
-  }
-
-  // district landmarks (more distinct silhouettes)
-  drawHouse(180,740); drawHouse(280,860);
-  drawHouse(1880,840); drawHouse(2860,370);
-  // telecom tower (larger silhouette)
-  drawRect(1254,330,30,190,'#6f7fa2'); drawRect(1236,510,66,10,'#93a8d0'); drawRect(1260,292,18,32,'#cde0ff');
-  drawRect(1250,360,38,4,'#8ea3cc'); drawRect(1250,410,38,4,'#8ea3cc');
-  // electrical substation (bigger + clearer modules)
-  drawRect(2010,1180,190,110,'#4e5d72'); drawRect(2040,1210,30,30,'#9fb2d2'); drawRect(2080,1210,30,30,'#9fb2d2'); drawRect(2120,1210,30,30,'#9fb2d2');
-  drawRect(2030,1250,140,8,'#7f95bb');
-  // growth HQ (larger)
-  drawRect(2700,210,230,160,'#596b8f'); drawRect(2722,232,186,112,'#9ab0d6'); drawRect(2760,250,30,70,'#6f86ad'); drawRect(2830,250,30,70,'#6f86ad');
-
-  // vegetation by district
-  const dense = quality==='high';
-  for(let i=0;i<(dense?66:34);i++) drawTree(260+i*32,230+(i%6)*20);
-  for(let i=0;i<(dense?44:22);i++) drawTree(1760+i*30,1180+(i%5)*18);
-  for(let i=0;i<(dense?36:16);i++) drawTree(2580+i*18,470+(i%4)*16);
-
-  // street furniture (denser)
-  for(let i=0;i<38;i++) drawStreetlight(220+i*78,880);
-  // extra 90s map flavor props
-  for(let i=0;i<10;i++){
-    const bx=320+i*280, by=845 + (i%2)*20;
-    drawRect(bx,by,20,12,'#5c2f1f'); // bench
-    drawRect(bx+2,by+2,16,2,'#8a5034');
-  }
-  for(let i=0;i<8;i++){
-    const sx=460+i*330, sy=840 - (i%3)*8;
-    drawRect(sx,sy,10,24,'#394f78'); // arcade/poster kiosk
-    drawRect(sx+1,sy+3,8,8,['#ff89c4','#79d9ff','#ffd475'][i%3]);
-    drawRect(sx+2,sy+14,6,6,'#dce6f8');
-  }
-  for(let i=0;i<20;i++){
-    const tx=170+i*145, ty=950 + (i%2)*220;
-    drawRect(tx,ty,8,10,'#2f3f5f'); // trash bins
-    drawRect(tx+1,ty+1,6,2,'#7f95bb');
-  }
-  for(let i=0;i<16;i++){
-    const px=260+i*180, py=1010 + (i%3)*120;
-    drawRect(px,py,3,18,'#6e86ad'); // poles
-    drawRect(px+3,py+2,12,8,'#d8e5ff');
-    drawRect(px+5,py+4,8,2,'#4b6b9f');
-  }
-  // moving street cars
-  for(let i=0;i<9;i++){
-    const cx=(220 + ((time*(1.2 + (i%3)*0.15) + i*340) % 2800));
-    const cy=888 + (i%2)*20;
-    const body=['#ff6f7f','#79d9ff','#ffd475','#9eff7b','#b6b8ff'][i%5];
-    drawRect(cx,cy,28,10,body); drawRect(cx+4,cy+2,8,4,'#dff2ff'); drawRect(cx+16,cy+2,8,4,'#dff2ff');
-    drawRect(cx+2,cy+10,6,2,'#182030'); drawRect(cx+20,cy+10,6,2,'#182030');
-  }
-  npcs.forEach((n,i)=>{ const p=npcPos(n,i); drawNPC(p.x,p.y,i); });
-  signposts.forEach(s=>drawSignpost(s.x,s.y));
-
-  // platformer ledges (SMW-style)
-  platforms.forEach((p,i)=>{
-    drawRect(p.x,p.y,p.w,p.h,'#6a86b8');
-    drawRect(p.x,p.y,p.w,3,'#dce8ff');
-    for(let x=p.x+4;x<p.x+p.w-4;x+=20) drawRect(x,p.y+6,10,2,'#4f6a9a');
-    if(i%2===0){ drawRect(p.x+8,p.y-8,8,8,'#ffd475'); }
-  });
-  // coins
-  coins.forEach(c=>{ if(c.taken) return; const bob=((time/6)|0)%2; drawRect(c.x-4,c.y-8+bob,8,8,'#ffd24f'); drawRect(c.x-2,c.y-6+bob,4,4,'#fff2a3');});
-  // question blocks (with bump animation)
-  qBlocks.forEach(b=>{
-    const by=b.y-(b.bump||0);
-    if(b.bump>0) b.bump=Math.max(0,b.bump-1);
-    const base=b.used?'#8b7e63':'#ffbf47';
-    drawRect(b.x-8,by-8,16,16,base);
-    drawRect(b.x-6,by-6,12,2,'#ffe6a8');
-    const qColor=b.used?'#4f473a':((((time/8)|0)%2===0?'#7d5522':'#fff3b8'));
-    drawRect(b.x-2,by-2,4,4,qColor);
-  });
-  // enemies
-  enemies.forEach(e=>{ if(!e.alive) return; drawRect(e.x-8,e.y-10,16,10,'#d94343'); drawRect(e.x-6,e.y-12,12,3,'#ff8c8c'); drawRect(e.x-6,e.y-2,4,2,'#1c2538'); drawRect(e.x+2,e.y-2,4,2,'#1c2538'); drawRect(e.x-1,e.y-18,2,5,'#ffd166'); drawRect(e.x-2,e.y-12,4,2,'#ffd166');});
-
-  // water ribbon with clearer edges
-  drawRect(1480,1240,620,220,'#325f90');
-  drawRect(1480,1240,620,4,'#89b7e1');
-  drawRect(1480,1458,620,2,'#223f64');
-  for(let y=1240;y<1460;y+=8){for(let x=1480+(y%16?8:0);x<2100;x+=20) drawRect(x,y+3,8,2,'#9cc7e8');}
-  for(let y=1246;y<1458;y+=14){for(let x=1492;x<2090;x+=32) drawRect(x,y,6,1,'rgba(255,255,255,.14)');}
-
-  // chapter nodes with unique marker art
-  nodes.forEach((n,idx)=>{
-    const seen=viewed.has(n.id), pal=zonePalette[Math.min(3,Math.floor(n.x/(world.w/4)))];
-    const badge = n.badge || pal.accent;
-    const pulse=((time+idx*8)%30)<15 ? 1 : 0;
-    drawRect(n.x-16-pulse,n.y-16-pulse,32+pulse*2,32+pulse*2,seen?'rgba(139,255,158,.35)':'rgba(130,200,255,.25)');
-    drawRect(n.x-14,n.y-14,28,28,seen?'#8bff9e':badge);
-    drawRect(n.x-10,n.y-10,20,20,'#0f1830');
-    drawRect(n.x-8,n.y-8,16,16,seen?'#d9ffe0':'#f2f6ff');
-    // tiny 16-bit glyph per chapter for visual uniqueness
-    if(n.glyph==='bolt'){ drawRect(n.x-1,n.y-7,4,6,'#183048'); drawRect(n.x-4,n.y-1,4,6,'#183048'); }
-    else if(n.glyph==='cup'){ drawRect(n.x-5,n.y-4,10,6,'#253b60'); drawRect(n.x+4,n.y-3,2,3,'#253b60'); }
-    else if(n.glyph==='signal'){ drawRect(n.x-5,n.y+3,10,2,'#253b60'); drawRect(n.x-4,n.y,2,3,'#253b60'); drawRect(n.x-1,n.y-2,2,5,'#253b60'); drawRect(n.x+2,n.y-5,2,8,'#253b60'); }
-    else if(n.glyph==='flow'){ drawRect(n.x-5,n.y-1,10,2,'#253b60'); drawRect(n.x-1,n.y-5,2,10,'#253b60'); }
-    else if(n.glyph==='book'){ drawRect(n.x-6,n.y-5,5,10,'#253b60'); drawRect(n.x+1,n.y-5,5,10,'#253b60'); drawRect(n.x-1,n.y-5,2,10,'#a2b6d8'); }
-    else if(n.glyph==='chart'){ drawRect(n.x-5,n.y+2,10,2,'#253b60'); drawRect(n.x-4,n.y-2,2,4,'#253b60'); drawRect(n.x-1,n.y-4,2,6,'#253b60'); drawRect(n.x+2,n.y-6,2,8,'#253b60'); }
-    else if(n.glyph==='target'){ drawRect(n.x-5,n.y-1,10,2,'#253b60'); drawRect(n.x-1,n.y-5,2,10,'#253b60'); drawRect(n.x-2,n.y-2,4,4,'#7fd7ff'); }
-    else if(n.glyph==='crown'){ drawRect(n.x-5,n.y+1,10,3,'#253b60'); drawRect(n.x-5,n.y-3,2,4,'#253b60'); drawRect(n.x-1,n.y-5,2,6,'#253b60'); drawRect(n.x+3,n.y-3,2,4,'#253b60'); }
-    if(idx%2===0) drawRect(n.x-2,n.y-12,4,24,'rgba(0,0,0,.22)');
-    else drawRect(n.x-12,n.y-2,24,4,'rgba(0,0,0,.22)');
-    drawRect(n.x-1,908,2,n.y-908,'rgba(255,255,255,.35)');
-
-    // progress flags: dim when locked, bright when unlocked
-    drawRect(n.x+16,n.y-18,2,14,'#273a59');
-    drawRect(n.x+18,n.y-18,10,7,seen?'#8bff9e':'#7f8da8');
-    drawRect(n.x+19,n.y-17,8,1,seen?'#d9ffe0':'#c5cddd');
-
-    drawNodeProp(n);
-  });
+  cam.x=Math.max(0,Math.min(world.w-vw,player.x-vw*0.5));
+  cam.y=Math.max(0,Math.min(world.h-vh,player.y-vh*0.56));
 }
 
-function drawPlayer(){
-  if(hurtTimer>0 && ((time/3)|0)%2===0) return;
-  const moving=(Math.abs(keys['ArrowLeft']||keys['a']?1:0)+Math.abs(keys['ArrowRight']||keys['d']?1:0)+Math.abs(keys['ArrowUp']||keys['w']?1:0)+Math.abs(keys['ArrowDown']||keys['s']?1:0)+Math.abs(joy.x)+Math.abs(joy.y))>0;
-  const walkFrame = moving ? ((time/5)|0)%4 : 0;
-  const bob = moving ? (walkFrame===1||walkFrame===3?1:0) : 0;
-
-  // higher-def sprite (larger canvas + layered shading)
-  const sx=player.x, sy=player.y+bob;
-  const shW = (walkFrame===0||walkFrame===2) ? 24 : 21;
-  drawRect(sx-(shW/2),sy+15,shW,3,'rgba(0,0,0,.36)');
-
-  // torso/shirt
-  drawRect(sx-10,sy-1,20,14,'#f4f8ff');
-  drawRect(sx-10,sy-1,2,14,'#d5deef');
-  drawRect(sx+8,sy-1,2,14,'#c2d0e8');
-  drawRect(sx-10,sy+12,20,2,'#28344e');
-
-  // strap
-  drawRect(sx+3,sy-1,3,14,'#384457');
-  drawRect(sx+4,sy+1,2,10,'#60708a');
-
-  // neck/head
-  drawRect(sx-3,sy-6,6,4,'#d79b73');
-  drawRect(sx-8,sy-16,16,11,'#dba57d');
-  drawRect(sx-8,sy-16,16,2,'#c8926c');
-
-  // blue cap with brim
-  drawRect(sx-9,sy-18,18,4,'#2d58b8');
-  drawRect(sx-7,sy-14,14,2,'#3f73de');
-  drawRect(sx-5,sy-13,10,1,'#9ec0ff');
-  drawRect(sx-2,sy-12,8,1,'#20458f');
-
-  // face details
-  drawRect(sx-5,sy-11,2,1,'#2f2a29');
-  drawRect(sx+3,sy-11,2,1,'#2f2a29');
-  drawRect(sx-2,sy-9,4,1,'#7f5745');
-  drawRect(sx-3,sy-8,6,1,'#8c6150');
-
-  // chest logo
-  drawRect(sx-4,sy+2,8,5,'#1a2338');
-  drawRect(sx-2,sy+3,4,2,'#ffb33a');
-  drawRect(sx-4,sy+4,2,2,'#ff9f1f');
-  drawRect(sx+2,sy+4,2,2,'#ff9f1f');
-
-  // arms
-  const armL=[-1,0,1,0][walkFrame], armR=[1,0,-1,0][walkFrame];
-  drawRect(sx-12,sy+1+armL,2,9,'#d79b73');
-  drawRect(sx+10,sy+1+armR,2,9,'#d79b73');
-
-  // legs
-  const legL=[0,1,0,-1][walkFrame], legR=[0,-1,0,1][walkFrame];
-  drawRect(sx-9,sy+13+legL,7,2,'#182033');
-  drawRect(sx+2,sy+13+legR,7,2,'#182033');
+function drawMini(){
+  mctx.clearRect(0,0,110,110);
+  mctx.fillStyle='#b7d0b1';mctx.fillRect(0,0,110,110);
+  const sx=110/world.w, sy=110/world.h;
+  mctx.fillStyle='#d5c9ad';mctx.fillRect(80*sx,350*sy,2060*sx,260*sy);
+  mctx.fillStyle='#495b74';mctx.fillRect(80*sx,640*sy,2060*sx,20*sy);mctx.fillRect(80*sx,700*sy,2060*sx,20*sy);
+  nodes.forEach(n=>{mctx.fillStyle=viewed.has(n.id)?'#62d979':'#ffb84a';mctx.fillRect(n.x*sx-1,n.y*sy-1,3,3);});
+  mctx.fillStyle='#d93030';mctx.fillRect(player.x*sx-2,player.y*sy-2,4,4);
 }
-
 
 function render(){
-  time += 1;
   ctx.clearRect(0,0,vw,vh);
-  drawParallax();
-
-  cam.tx=Math.max(0,Math.min(world.w-vw,player.x-vw*0.42));
-  cam.ty=Math.max(0,Math.min(world.h-vh,player.y-vh*0.68));
-  cam.x += (cam.tx-cam.x)*0.12; cam.y += (cam.ty-cam.y)*0.12;
-
-  const sx=shake?((Math.random()-.5)*shake):0, sy=shake?((Math.random()-.5)*shake):0;
-  if(shake>0) shake=Math.max(0,shake-0.2);
-
-  ctx.save(); ctx.translate(-cam.x+sx,-cam.y+sy); drawWorld();
-  const nearestNode = nodes.slice().sort((a,b)=>Math.hypot(player.x-a.x,player.y-a.y)-Math.hypot(player.x-b.x,player.y-b.y))[0];
-  if(nearestNode){ const pr=18+Math.sin(time*0.15)*4; ctx.strokeStyle='rgba(140,220,255,.55)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(nearestNode.x,nearestNode.y,pr,0,Math.PI*2); ctx.stroke(); }
-  drawPlayer(); ctx.restore();
-
-  // depth haze for richer 16-bit scene layering
-  const haze=ctx.createLinearGradient(0,vh*0.45,0,vh);
-  haze.addColorStop(0,'rgba(34,54,92,0)');
-  haze.addColorStop(1,'rgba(12,18,36,0.22)');
-  ctx.fillStyle=haze;
-  ctx.fillRect(0,0,vw,vh);
-
-  // lighting vignette
-  const g=ctx.createRadialGradient(vw/2,vh/2,80,vw/2,vh/2,Math.max(vw,vh)*0.8);
-  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,.32)');
-  ctx.fillStyle=g; ctx.fillRect(0,0,vw,vh);
-
-  if(rain){ctx.strokeStyle='rgba(170,210,255,.22)'; for(let i=0;i<120;i++){const rx=(i*73 + time*9)% (vw+40)-20; const ry=(i*41 + time*17)% (vh+40)-20; ctx.beginPath(); ctx.moveTo(rx,ry); ctx.lineTo(rx-3,ry+10); ctx.stroke();}}
-
-  if(battleFx>0){battleFx-=.05; ctx.fillStyle=`rgba(255,255,255,${Math.max(0,battleFx)})`; ctx.fillRect(0,0,vw,vh)}
-
-  // Pixel-art post pass: 64-bit remaster look (full-res pixel detail + glow grade)
-  pctx.clearRect(0,0,post.width,post.height);
-  pctx.drawImage(cv,0,0,post.width,post.height);
-  if(GRAPHICS_MODE!=='64BIT'){
-    setActivePalette();
-    quantizePost();
-  }
-  ctx.save();
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.imageSmoothingEnabled=false;
-  ctx.clearRect(0,0,vw,vh);
-  ctx.drawImage(post,0,0,post.width,post.height,0,0,vw,vh);
-
-  if(GRAPHICS_MODE==='64BIT'){
-    // light bloom on bright pixels for premium retro remaster vibe
-    ctx.globalCompositeOperation='screen';
-    ctx.globalAlpha=0.15;
-    ctx.drawImage(post,0,0,post.width,post.height,1,0,vw,vh);
-    ctx.drawImage(post,0,0,post.width,post.height,-1,0,vw,vh);
-    ctx.drawImage(post,0,0,post.width,post.height,0,1,vw,vh);
-    ctx.drawImage(post,0,0,post.width,post.height,0,-1,vw,vh);
-    ctx.globalAlpha=1;
-    ctx.globalCompositeOperation='source-over';
-
-    // modern 64-bit grade while preserving pixel edges
-    const grade=ctx.createLinearGradient(0,0,0,vh);
-    grade.addColorStop(0,'rgba(130,170,255,0.08)');
-    grade.addColorStop(0.55,'rgba(30,45,90,0.05)');
-    grade.addColorStop(1,'rgba(8,12,24,0.16)');
-    ctx.fillStyle=grade;
-    ctx.fillRect(0,0,vw,vh);
-
-    // ultra-subtle scanline texture
-    ctx.fillStyle='rgba(8,12,24,0.02)';
-    for(let y=0;y<vh;y+=3){ ctx.fillRect(0,y,vw,1); }
-  }else{
-    // legacy 16-bit display character
-    ctx.fillStyle='rgba(8,12,24,0.05)';
-    for(let y=0;y<vh;y+=2){ ctx.fillRect(0,y,vw,1); }
-    ctx.fillStyle='rgba(14,18,32,0.06)';
-    ctx.fillRect(0,0,vw,vh);
-  }
+  ctx.save(); ctx.translate(-cam.x,-cam.y);
+  drawWorld();
+  drawPixelGuy(player.x,player.y);
   ctx.restore();
-
-  requestAnimationFrame(render);
-}
-
-function loop(now){
-  const dt=Math.min(.05,(now-last)/1000); last=now; fps=.92*fps+.08*(1/dt); fpsChip.textContent=`FPS ${Math.round(fps)}`;
-  if(paused){ requestAnimationFrame(loop); return; }
-  hurtTimer=Math.max(0,hurtTimer-1);
-
-  let inputX=0;
-  if(keys['ArrowLeft']||keys['a']) {inputX=-1; player.face='left';}
-  if(keys['ArrowRight']||keys['d']) {inputX=1; player.face='right';}
-  if(joy.active) inputX = Math.abs(joy.x)>0.25 ? Math.sign(joy.x) : inputX;
-
-  const runMul = keys['Shift'] ? 1.18 : 1;
-  player.vx += inputX * physics.accel * runMul;
-  player.vx *= (inputX===0 ? physics.friction : 0.93);
-  player.vx = Math.max(-physics.maxRun*runMul, Math.min(physics.maxRun*runMul, player.vx));
-
-  // jump buffer + coyote time
-  if(keys['ArrowUp']||keys['w']||keys[' ']) jumpBufferFrames = physics.jumpBuffer;
-  else jumpBufferFrames = Math.max(0,jumpBufferFrames-1);
-  coyoteFrames = player.onGround ? physics.coyote : Math.max(0,coyoteFrames-1);
-
-  if(jumpBufferFrames>0 && coyoteFrames>0){
-    player.vy = physics.jump;
-    player.onGround = false;
-    jumpBufferFrames = 0;
-    coyoteFrames = 0;
-  }
-
-  // variable jump height (tap vs hold)
-  if(player.vy<0 && !(keys['ArrowUp']||keys['w']||keys[' '])) player.vy += 0.32;
-
-  player.vy += physics.gravity;
-  player.x += player.vx;
-  player.y += player.vy;
-
-  player.onGround=false;
-  for(const p of platforms){
-    const withinX = player.x+8>p.x && player.x-8<p.x+p.w;
-    const wasAbove = (player.y-player.vy) <= p.y;
-    const nowBelowTop = player.y >= p.y;
-    if(withinX && wasAbove && nowBelowTop && player.vy>=0){
-      player.y = p.y;
-      player.vy = 0;
-      player.onGround = true;
-    }
-    // hit underside of platform/block
-    const hitHead = withinX && (player.y-14)<=p.y+p.h && (player.y-14)>=p.y && player.vy<0;
-    if(hitHead){ player.vy = 0.2; }
-  }
-
-  // coins collection
-  coins.forEach(c=>{ if(!c.taken && Math.abs(player.x-c.x)<12 && Math.abs((player.y-8)-c.y)<14){ c.taken=true; score+=10; beep(980,.05);} });
-
-  // question block hit from below
-  qBlocks.forEach(b=>{
-    const withinX = Math.abs(player.x-b.x)<12;
-    const hitFromBelow = withinX && player.vy<0 && (player.y-16)<=b.y+8 && (player.y-16)>=b.y-4;
-    if(hitFromBelow){
-      b.bump=6;
-      if(!b.used){ b.used=true; score+=50; beep(700,.08); }
-      else { beep(420,.03); }
-    }
-  });
-
-  // enemy patrol + stomp/contact
-  enemies.forEach(e=>{
-    if(!e.alive) return;
-    e.x += e.vx;
-    const floor = platforms.find(p=>e.x>p.x && e.x<p.x+p.w && Math.abs(e.y-p.y)<30) || platforms[platforms.length-1];
-    e.y = floor.y;
-    if(e.x<floor.x+10 || e.x>floor.x+floor.w-10) e.vx *= -1;
-
-    const dx=Math.abs(player.x-e.x), dy=player.y-e.y;
-    if(dx<14 && Math.abs(dy)<16){
-      if(player.vy>1.2 && dy<0){
-        e.alive=false; player.vy = -6.2; score+=100; beep(560,.07);
-      }else if(hurtTimer===0){
-        if(ACCESSIBLE_PLAY){
-          // keep flow playable: knockback instead of punishing death loop
-          player.vx = (player.x<e.x ? -2.2 : 2.2);
-          player.vy = -3.8;
-          hurtTimer=28;
-          shake=4;
-          beep(260,.05);
-        }else{
-          lives=Math.max(0,lives-1);
-          player.x=respawnPoint.x; player.y=respawnPoint.y; player.vx=0; player.vy=0;
-          hurtTimer=50;
-          shake=9; beep(220,.12);
-          if(lives===0){
-            toastMsg('Game Over • Resetting lives');
-            lives=3; score=Math.max(0,score-150);
-            coins.forEach(c=>c.taken=false);
-            enemies.forEach(en=>en.alive=true);
-            qBlocks.forEach(q=>{q.used=false;q.bump=0;});
-          }
-        }
-      }
-    }
-  });
-
-  if(player.onGround){ lastSafe.x=player.x; lastSafe.y=Math.min(player.y,1040); }
-  if(player.y>1125){
-    // hard fail-safe: recover quickly from falls
-    player.x=lastSafe.x; player.y=lastSafe.y; player.vx=0; player.vy=0;
-    shake=2; toastMsg('Recovered to safe lane');
-  }
-  player.x=Math.max(30,Math.min(world.w-30,player.x));
-
-  npcs.forEach((n,i)=>{
-    const p=npcPos(n,i);
-    if(Math.hypot(player.x-p.x,player.y-p.y)<28){ roleTitle.textContent=n.name; roleBody.textContent=n.quote; }
-  });
-  signposts.forEach(sp=>{
-    if(Math.hypot(player.x-sp.x,player.y-sp.y)<26){ roleTitle.textContent='Signpost'; roleBody.textContent=sp.text; }
-  });
-
-  let nearest={d:1e9,n:null};
-  nodes.forEach(n=>{
-    const d=Math.hypot(player.x-n.x,player.y-n.y); if(d<nearest.d){nearest={d,n};}
-    const inNodeLane = Math.abs(player.x-n.x)<34 && Math.abs(player.y-n.y)<92;
-    if(inNodeLane && !viewed.has(n.id)){
-      viewed.add(n.id); activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text; battleFx=.42; beep(760,.08); toastMsg(`Unlocked: ${n.title}`); saveViewed(); shake=5; showChapter(n.title);
-    } else if(inNodeLane){
-      activeNode=n; roleTitle.textContent=n.title; roleBody.textContent=n.text;
-    }
-  });
-
-  const z=zoneFor(player.x);
-  zoneChip.textContent='TIMELINE ZONE: '+z.name;
-  objectiveChip.textContent = viewed.size<nodes.length ? `OBJECTIVE: Unlock all chapter nodes • SCORE ${score} • LIVES ${lives}` : `OBJECTIVE: Cleared • SCORE ${score} • LIVES ${lives}`;
-  hudScore.textContent = `MARIO ${String(Math.max(0,score)).padStart(6,'0')}`;
-  hudWorld.textContent = `WORLD ${Math.min(8,Math.max(1,Math.floor(player.x/420)+1))}-1`;
-  hudLives.textContent = `x${String(Math.max(0,lives)).padStart(2,'0')}`;
-  chapterChip.textContent = nearest.n ? `CHAPTER: ${nearest.n.id}` : 'CHAPTER: --';
-  if(!zoneSeen.has(z.name)){ zoneSeen.add(z.name); showChapter('Entered '+z.name); saveViewed(); }
-  progressChip.textContent=`NODES VIEWED: ${viewed.size}/${nodes.length}`;
-  bar.style.width=(viewed.size/nodes.length*100).toFixed(1)+'%';
-  timeChip.textContent=night?'TIME NIGHT':'TIME DAY';
-  weatherChip.textContent=rain?'WEATHER RAIN':'WEATHER CLEAR';
-  quality = fps<42 ? 'low' : 'high';
-  ['N2','N6','N8'].forEach(id=>{const li=document.querySelector(`[data-q="${id}"]`); if(li) li.classList.toggle('done', viewed.has(id));});
-
+  drawMini();
   requestAnimationFrame(loop);
 }
+function loop(){update();render();}
+loop();
 
-addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault(); keys[e.key]=true; if(e.key==='m'||e.key==='M'){sfx=!sfx; soundChip.textContent=sfx?'SFX ON':'SFX OFF';} if(e.key==='p'||e.key==='P'){paused=!paused; stateChip.textContent=paused?'STATE PAUSED':'STATE RUNNING';} if(e.key==='f'||e.key==='F'){document.getElementById('toggleFull').click();} if(e.key==='n'||e.key==='N'){night=!night;} if(e.key==='r'||e.key==='R'){rain=!rain;} if(e.key===']'){document.getElementById('nextNode').click();} if(e.key==='['){const seen=[...viewed]; const prev=nodes.filter(n=>seen.includes(n.id)).slice(-1)[0]; if(prev){player.x=prev.x-40;player.y=prev.y-40;activeNode=prev;}} });
-addEventListener('keyup',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault(); keys[e.key]=false;});
-cv.addEventListener('touchstart',e=>{joy.active=true;joy.sx=e.touches[0].clientX;joy.sy=e.touches[0].clientY;},{passive:true});
-cv.addEventListener('touchmove',e=>{if(!joy.active)return;const dx=(e.touches[0].clientX-joy.sx)/70,dy=(e.touches[0].clientY-joy.sy)/70;joy.x=Math.max(-1,Math.min(1,dx));joy.y=Math.max(-1,Math.min(1,dy));},{passive:true});
-cv.addEventListener('touchend',()=>{joy.active=false;joy.x=0;joy.y=0;},{passive:true});
-// mobile d-pad controls
-document.querySelectorAll('.dbtn').forEach(btn=>{
-  const key=btn.dataset.key;
-  const on=()=>{keys[key]=true;};
-  const off=()=>{keys[key]=false;};
-  btn.addEventListener('touchstart',e=>{e.preventDefault();on();},{passive:false});
-  btn.addEventListener('touchend',e=>{e.preventDefault();off();},{passive:false});
-  btn.addEventListener('touchcancel',off,{passive:true});
-  btn.addEventListener('mousedown',on);
-  btn.addEventListener('mouseup',off);
-  btn.addEventListener('mouseleave',off);
-});
+const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal');
+document.getElementById('menuBtn').onclick=()=>menuModal.classList.add('open');
+document.getElementById('mapBtn').onclick=()=>{const list=document.getElementById('mapList');list.innerHTML=nodes.map(n=>`<li>${viewed.has(n.id)?'✅':'⬜'} <b>${n.id}</b> — ${n.title}</li>`).join('');mapModal.classList.add('open');};
+document.getElementById('statsBtn').onclick=()=>statsModal.classList.add('open');
+document.getElementById('closeMenu').onclick=()=>menuModal.classList.remove('open');
+document.getElementById('closeMap').onclick=()=>mapModal.classList.remove('open');
+document.getElementById('closeStats').onclick=()=>statsModal.classList.remove('open');
+menuModal.onclick=e=>{if(e.target===menuModal)menuModal.classList.remove('open')};
+mapModal.onclick=e=>{if(e.target===mapModal)mapModal.classList.remove('open')};
+statsModal.onclick=e=>{if(e.target===statsModal)statsModal.classList.remove('open')};
+document.getElementById('backSite').onclick=()=>location.href='../index.html';
+document.getElementById('jumpNext').onclick=()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;menuModal.classList.remove('open');};
 
-const modal=document.getElementById('modal'),modalTitle=document.getElementById('modalTitle'),modalBody=document.getElementById('modalBody'),modalList=document.getElementById('modalList');
-function openModal(t,b,l=[]){modalTitle.textContent=t;modalBody.textContent=b;modalList.innerHTML=l.map(x=>`<li>${x}</li>`).join('');modal.classList.remove('hide')}
-function closeModal(){modal.classList.add('hide')} document.getElementById('closeModal').onclick=closeModal; modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
-
-const statsModal=document.getElementById('statsModal');
-const statsBars=document.getElementById('statsBars');
-const skillTree=document.getElementById('skillTree');
-const rpgStats=[
-  ['Leadership',95],
-  ['Electrical Tradecraft',92],
-  ['Sales Strategy',94],
-  ['Process Engineering',96],
-  ['Automation Systems',90],
-  ['Customer Experience',93],
-  ['Partnership Development',91],
-  ['Execution Speed',97]
-];
-const rpgSkills=[
-  'VEU program-aligned upgrade operations',
-  'Lead-gen optimization + conversion tuning',
-  'Cross-brand growth orchestration (3 brands)',
-  'Field-to-digital systems translation',
-  'Training + knowledge rollout for frontline teams',
-  'Smart-home/electrical delivery experience'
-];
-function renderStatsWindow(){
-  statsBars.innerHTML=rpgStats.map(([k,v])=>`<div class="stat-row"><span>${k}</span><div class="stat-meter"><span style="width:${v}%"></span></div><b>${v}</b></div>`).join('');
-  skillTree.innerHTML=rpgSkills.map(s=>`<li>${s}</li>`).join('');
-}
-function openStatsModal(){ renderStatsWindow(); statsModal.classList.remove('hide'); }
-function closeStatsModal(){ statsModal.classList.add('hide'); }
-document.getElementById('closeStatsModal').onclick=closeStatsModal;
-statsModal.addEventListener('click',e=>{ if(e.target===statsModal) closeStatsModal(); });
-
-document.getElementById('nextNode').onclick=()=>{const n=nodes.find(x=>!viewed.has(x.id))||nodes[nodes.length-1];player.x=n.x-40;player.y=n.y-40;activeNode=n;};
-document.getElementById('charStatsBtn').onclick=()=>openStatsModal();
-document.getElementById('returnSite').onclick=()=>{location.href='../index.html';};
-document.getElementById('viewRole').onclick=()=>{const n=activeNode||nodes[0];openModal(n.title,n.text,n.highlights||[])};
-document.getElementById('showCerts').onclick=()=>openModal('Certifications & Capability Stack','Core capability and accreditation set used across delivery + operations.',certs);
-document.getElementById('exportJson').onclick=()=>{const payload={name:'Michael Costea',summary,viewed:[...viewed],timeline:nodes};const b=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='michael-costea-visual-resume.json';a.click();};
-document.getElementById('copySummary').onclick=async()=>{try{await navigator.clipboard.writeText(summary);toastMsg('Summary copied');}catch{roleBody.textContent=summary;}};
-document.getElementById('downloadPdf').onclick=()=>{const win=window.open('','_blank'); if(!win) return; const rows=nodes.map(n=>`<h3>${n.title}</h3><p>${n.text}</p><ul>${(n.highlights||[]).map(h=>`<li>${h}</li>`).join('')}</ul>`).join(''); win.document.write(`<!doctype html><html><head><title>Michael Costea Resume</title><style>body{font-family:Arial;padding:24px;line-height:1.45}h1{margin:0 0 8px}h3{margin:16px 0 4px}</style></head><body><h1>Michael Costea</h1><p>${summary}</p>${rows}</body></html>`); win.document.close(); setTimeout(()=>win.print(),250);};
-document.getElementById('toggleFull').onclick=async()=>{try{if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen();}catch{}};
-document.getElementById('resetProgress').onclick=()=>{viewed=new Set();zoneSeen=new Set();score=0;lives=3;player.x=respawnPoint.x;player.y=respawnPoint.y;player.vx=0;player.vy=0;coins.forEach(c=>c.taken=false);qBlocks.forEach(b=>{b.used=false;b.bump=0;});enemies.forEach(e=>e.alive=true);saveViewed();toastMsg('Progress reset');};
-document.getElementById('snapBtn').onclick=()=>{const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='visual-resume-screenshot.png';a.click();};
-document.getElementById('contrastBtn').onclick=()=>{hc=!hc;document.body.classList.toggle('hc',hc);};
-document.getElementById('enter').onclick=()=>{document.getElementById('intro').classList.add('hide');toastMsg('Experience started • mobile: right pad move, left button jump');};
-
-const qp=new URL(location.href).searchParams.get('node'); if(qp){const n=nodes.find(n=>n.id.toLowerCase()===qp.toLowerCase()); if(n){player.x=n.x-40;player.y=n.y-40;activeNode=n;}}
-saveViewed();
-render(); loop(performance.now());
+const stats=[['Leadership',95],['Electrical Tradecraft',92],['Sales Strategy',94],['Process Engineering',96],['Automation Systems',90],['Customer Experience',93],['Partnership Development',91],['Execution Speed',97]];
+const skills=['VEU upgrade operations','Lead-gen optimization','Cross-brand growth orchestration','Field-to-digital systems translation','Training + process rollout','Electrical/smart-home delivery'];
+document.getElementById('statsBars').innerHTML=stats.map(([k,v])=>`<div class='stat-row'><span>${k}</span><div class='stat-meter'><span style='width:${v}%'></span></div><b>${v}</b></div>`).join('');
+document.getElementById('skillList').innerHTML=skills.map(s=>`<li>${s}</li>`).join('');
 </script>
 </body>
 </html>
