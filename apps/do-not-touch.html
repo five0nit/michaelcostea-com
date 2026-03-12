@@ -399,7 +399,11 @@ const narrativeState={
   phase:'bootstrap',
   phaseAnnounced:new Set(),
   zonePulseCooldown:0,
-  lastRoleLoop:''
+  lastRoleLoop:'',
+  talkLedger:new Map(),
+  pairLedger:new Map(),
+  scheduleToastCooldown:0,
+  lastScheduleBand:''
 };
 
 const progressionPhases=[
@@ -422,6 +426,27 @@ const zoneMicroEvents=[
   {id:'Z3',phase:['coordinated','citywide'],cooldown:20,when:()=>player.x>1180&&player.y>1360&&player.y<1920,msg:'Micro-event: Install crews complete two homes back-to-back before sunset.'},
   {id:'Z4',phase:['citywide'],cooldown:22,when:()=>player.x>760&&player.x<1060&&player.y>1960,msg:'Micro-event: Partnership scouts convert feedback into the next campaign brief.'}
 ];
+
+const scheduleBands=[
+  {id:'open',start:300,end:540,label:'Opening shift',traffic:0.92,npc:0.9,social:0.38},
+  {id:'rush',start:540,end:720,label:'Morning rush',traffic:1.18,npc:1.06,social:0.46},
+  {id:'flow',start:720,end:1020,label:'Core flow',traffic:1.02,npc:1.0,social:0.54},
+  {id:'handoff',start:1020,end:1200,label:'Handoff window',traffic:1.12,npc:0.94,social:0.62},
+  {id:'close',start:1200,end:1380,label:'Closeout',traffic:0.86,npc:0.82,social:0.42},
+  {id:'night',start:1380,end:300,label:'Night prep',traffic:0.68,npc:0.72,social:0.3}
+];
+const phaseCadence={
+  bootstrap:{traffic:0.94,npc:0.92,social:0.84},
+  growing:{traffic:1.0,npc:1.0,social:1.0},
+  coordinated:{traffic:1.08,npc:1.04,social:1.12},
+  citywide:{traffic:1.14,npc:1.08,social:1.2}
+};
+const pairScripts={
+  planner_driver:['Route board updated.','Loading bay handoff in 6 min.','Courier lane clear.'],
+  ops_sales:['Queue dipped below SLA.','Campaign spike absorbed.','Follow-up window reopened.'],
+  field_support:['Ticket matched to install slot.','Remote check cleared first try.','Callback converted to referral.'],
+  partner_sales:['Partner feedback tagged + shipped.','Co-promo brief signed off.','Next market pilot penciled in.']
+};
 
 let staticBase=null, staticDetail=null;
 let scanlineLayer=null, scanlineMeta={w:0,h:0,step:0};
@@ -618,12 +643,88 @@ function drawStreetPropsTo(c2d){
   for(let i=0;i<14;i++){const sx=120 + i*120; const sy=600 + (i%3)*520; c2d.fillStyle='#4d607f'; c2d.fillRect(sx,sy,4,36); c2d.fillStyle='#eaf3ff'; c2d.fillRect(sx-3,sy+4,10,10);} 
 }
 
+function hash2(x,y,s=1){
+  const v=Math.sin((x*127.1 + y*311.7 + s*17.37))*43758.5453;
+  return v-Math.floor(v);
+}
+
+function drawDistrictMicroScenesTo(c2d){
+  // Handcrafted-feel districts: deterministic variation without per-frame runtime cost.
+  const pockets=[
+    {x:140,y:930,w:390,h:140,t:'market'},
+    {x:1240,y:940,w:410,h:160,t:'ops-yard'},
+    {x:140,y:1450,w:400,h:180,t:'support'},
+    {x:1230,y:1510,w:420,h:190,t:'field'},
+    {x:760,y:2020,w:300,h:170,t:'growth'}
+  ];
+
+  pockets.forEach((p,idx)=>{
+    c2d.fillStyle='rgba(22,36,55,.08)';
+    c2d.fillRect(p.x-8,p.y-8,p.w+16,p.h+16);
+    c2d.fillStyle='rgba(255,255,255,.08)';
+    c2d.fillRect(p.x,p.y,p.w,p.h);
+
+    const clusters=18 + idx*2;
+    for(let i=0;i<clusters;i++){
+      const r1=hash2(i,idx,1), r2=hash2(i,idx,2), r3=hash2(i,idx,3);
+      const sx=p.x+10+Math.floor(r1*(p.w-20));
+      const sy=p.y+10+Math.floor(r2*(p.h-20));
+      const sw=6+Math.floor(r3*10);
+      const sh=3+Math.floor(hash2(i,idx,5)*5);
+      c2d.fillStyle=i%4===0?'rgba(18,28,44,.18)':i%3===0?'rgba(255,255,255,.11)':'rgba(62,84,112,.16)';
+      c2d.fillRect(sx,sy,sw,sh);
+    }
+
+    const fixtureCount=5 + idx;
+    for(let i=0;i<fixtureCount;i++){
+      const rx=p.x+24+i*Math.floor((p.w-58)/fixtureCount);
+      const ry=p.y+p.h-28-Math.floor(hash2(i,idx,7)*44);
+      c2d.fillStyle='#2a3a55'; c2d.fillRect(rx,ry,16,20);
+      c2d.fillStyle=['#8fd8ff','#ffd87a','#ffa5b6','#9de487','#c0b7ff'][(i+idx)%5]; c2d.fillRect(rx+3,ry+3,10,8);
+      c2d.fillStyle='rgba(255,255,255,.26)'; c2d.fillRect(rx+4,ry+4,5,2);
+    }
+  });
+
+  // Sidewalk furniture strips reduce grid repetition and strengthen world density.
+  for(let strip=0;strip<2;strip++){
+    const baseX=strip===0?560:1124;
+    for(let i=0;i<44;i++){
+      const y=630+i*38;
+      const v=hash2(strip,i,9);
+      if(v<0.34){
+        c2d.fillStyle='#6f845a'; c2d.fillRect(baseX,y,18,10);
+        c2d.fillStyle='#8fb575'; c2d.fillRect(baseX+2,y+2,10,3);
+      }else if(v<0.68){
+        c2d.fillStyle='#7c5d41'; c2d.fillRect(baseX,y,16,8);
+      }else{
+        c2d.fillStyle='#3d5778'; c2d.fillRect(baseX+4,y,8,14);
+        c2d.fillStyle='#dce8ff'; c2d.fillRect(baseX+3,y+2,10,6);
+      }
+    }
+  }
+}
+
 function buildStaticBase(c2d){
   const sky=c2d.createLinearGradient(0,0,0,620); sky.addColorStop(0,'#9ec3f5'); sky.addColorStop(1,'#d9f0ff'); c2d.fillStyle=sky; c2d.fillRect(0,0,world.w,620);
   c2d.fillStyle=MATERIALS.foliage.base; c2d.fillRect(0,0,world.w,560);
-  for(let i=0;i<380;i++){const x=(i*73)%world.w,y=(i*41)%560; c2d.fillStyle=[MATERIALS.foliage.shade,'#41985a',MATERIALS.foliage.shade,MATERIALS.foliage.highlight][i%4]; c2d.fillRect(x,y,20,16); if(i%2===0){c2d.fillStyle='rgba(210,250,190,.2)';c2d.fillRect(x+3,y+3,6,2);}}
+  for(let y=0;y<560;y+=16){
+    for(let x=0;x<world.w;x+=20){
+      const n=hash2(x,y,11);
+      c2d.fillStyle=n<0.22?MATERIALS.foliage.shade:n<0.44?'#41985a':n<0.7?MATERIALS.foliage.base:MATERIALS.foliage.highlight;
+      c2d.fillRect(x,y,18+Math.floor(hash2(x,y,12)*4),12+Math.floor(hash2(x,y,13)*5));
+      if(n>0.72){c2d.fillStyle='rgba(210,250,190,.2)';c2d.fillRect(x+2,y+2,5+Math.floor(hash2(x,y,14)*4),2);}
+    }
+  }
   c2d.fillStyle=MATERIALS.concrete.base; c2d.fillRect(0,560,world.w,world.h-560);
-  for(let y=560;y<world.h;y+=18){for(let x=0;x<world.w;x+=18){c2d.fillStyle=((x+y)%36===0)?MATERIALS.concrete.shade:MATERIALS.concrete.base;c2d.fillRect(x,y,16,16); if(((x*y)%97)===0){c2d.fillStyle='rgba(0,0,0,.06)';c2d.fillRect(x+6,y+6,3,2);} if(((x+y)%54)===0){c2d.fillStyle='rgba(255,255,255,.08)';c2d.fillRect(x+2,y+2,4,1);}}}
+  for(let y=560;y<world.h;y+=18){
+    for(let x=0;x<world.w;x+=18){
+      const n=hash2(x,y,21);
+      c2d.fillStyle=n<0.28?MATERIALS.concrete.shade:n<0.9?MATERIALS.concrete.base:MATERIALS.concrete.highlight;
+      c2d.fillRect(x,y,15+Math.floor(hash2(x,y,22)*2),15+Math.floor(hash2(x,y,23)*2));
+      if(n>0.8){c2d.fillStyle='rgba(0,0,0,.06)';c2d.fillRect(x+5,y+6,2+Math.floor(hash2(x,y,24)*3),2);}
+      if(n<0.11){c2d.fillStyle='rgba(255,255,255,.09)';c2d.fillRect(x+2,y+2,4,1);}
+    }
+  }
   const grime=c2d.createLinearGradient(0,1200,0,world.h); grime.addColorStop(0,'rgba(0,0,0,0)'); grime.addColorStop(1,'rgba(0,0,0,.12)'); c2d.fillStyle=grime; c2d.fillRect(0,1200,world.w,world.h-1200);
   c2d.fillStyle=MATERIALS.asphalt.base; c2d.fillRect(ROAD_X,120,ROAD_W,world.h-120); c2d.fillStyle=MATERIALS.asphalt.shade; c2d.fillRect(ROAD_X+10,120,ROAD_W-20,world.h-120);
   c2d.fillStyle='rgba(0,0,0,.22)'; c2d.fillRect(ROAD_X,120,10,world.h-120); c2d.fillRect(ROAD_X+ROAD_W-10,120,10,world.h-120);
@@ -633,6 +734,7 @@ function buildStaticBase(c2d){
   for(let i=0;i<12;i++){c2d.fillStyle='#f8f8f8'; c2d.fillRect(ROAD_X+70+i*32,720,18,90); c2d.fillRect(ROAD_X+70+i*32,1360,18,90); c2d.fillStyle='rgba(0,0,0,.08)'; c2d.fillRect(ROAD_X+70+i*32,810,18,3); c2d.fillRect(ROAD_X+70+i*32,1450,18,3);} 
   drawHeroBlockTo(c2d,100,620,'warm'); drawHeroBlockTo(c2d,1240,620,'cool'); drawHeroBlockTo(c2d,100,1120,'warm'); drawPremiumHeroDistrictTo(c2d,1230,1108);
   drawStreetPropsTo(c2d);
+  drawDistrictMicroScenesTo(c2d);
   for(let i=0;i<8;i++){c2d.fillStyle='#7f552f';c2d.fillRect(150,700+i*120,28,56);c2d.fillStyle='#cda679';c2d.fillRect(154,706+i*120,20,40);} 
   for(let i=0;i<26;i++){const fx=1210+(i*29)%520, fy=980+((i*67)%540);c2d.fillStyle=['#ffd66d','#ffffff','#ff8aa5','#a6e874'][i%4];c2d.fillRect(fx,fy,3,3);} 
   for(let i=0;i<40;i++){const dx=80+((i*83)%1640), dy=620+((i*61)%1660); c2d.fillStyle=i%3===0?'rgba(0,0,0,.10)':'rgba(255,255,255,.08)'; c2d.fillRect(dx,dy,6,2);} 
@@ -706,6 +808,35 @@ function getProgressionPhase(){
   const unlocked=viewed.size;
   return progressionPhases.find(p=>unlocked>=p.min && unlocked<=p.max) || progressionPhases[progressionPhases.length-1];
 }
+function getCityMinute(){
+  return Math.floor((time*0.2)%1440);
+}
+function getScheduleBand(minute=getCityMinute()){
+  return scheduleBands.find(b=>b.start<=b.end ? (minute>=b.start && minute<b.end) : (minute>=b.start || minute<b.end)) || scheduleBands[2];
+}
+function getCadenceProfile(phaseId,bandId){
+  const phase=phaseCadence[phaseId]||phaseCadence.bootstrap;
+  const band=scheduleBands.find(b=>b.id===bandId)||scheduleBands[2];
+  return {
+    traffic:phase.traffic*band.traffic,
+    npc:phase.npc*band.npc,
+    social:Math.max(0.18,Math.min(0.9,phase.social*band.social))
+  };
+}
+function shouldAnnounce(key,minGapSec){
+  const now=time/60;
+  const last=narrativeState.talkLedger.get(key) ?? -999;
+  if(now-last<minGapSec) return false;
+  narrativeState.talkLedger.set(key,now);
+  return true;
+}
+function getPairScript(a,b,bandId){
+  const key=[a.role,b.role].sort().join('_');
+  const script=pairScripts[key] || ['Quick sync complete.','Loop adjusted, continuing.'];
+  const phaseOffset=bandId==='rush'?1:bandId==='handoff'?2:0;
+  const idx=Math.floor((time*0.017 + a.x*0.001 + b.y*0.001)+phaseOffset)%script.length;
+  return script[(idx+script.length)%script.length];
+}
 
 function applyProgressionReactions(force=false){
   const phase=getProgressionPhase();
@@ -726,6 +857,8 @@ function runRoleLoops(dt){
   narrativeState.roleLoopCooldown=Math.max(0,narrativeState.roleLoopCooldown-dt);
   if(narrativeState.roleLoopCooldown>0) return;
   const phase=narrativeState.phase;
+  const band=getScheduleBand();
+  const cadence=getCadenceProfile(phase,band.id);
   const rolesByPhase={
     bootstrap:['planner','driver','support'],
     growing:['planner','driver','ops','sales'],
@@ -736,10 +869,10 @@ function runRoleLoops(dt){
   const role=choices[Math.floor((time*0.09)%choices.length)];
   if(role===narrativeState.lastRoleLoop){ narrativeState.roleLoopCooldown=5; return; }
   const actor=npcs.find(n=>n.role===role);
-  if(actor && Math.hypot(player.x-actor.x,player.y-actor.y)<220){
-    toast('Role Loop: '+actor.name+' ('+role+') → '+(actor.dynamicPhrase||actor.phrase));
+  if(actor && Math.hypot(player.x-actor.x,player.y-actor.y)<220 && shouldAnnounce('role-'+role,11/cadence.social)){
+    toast('Role Loop ['+band.label+']: '+actor.name+' ('+role+') → '+(actor.dynamicPhrase||actor.phrase));
     narrativeState.lastRoleLoop=role;
-    narrativeState.roleLoopCooldown=12;
+    narrativeState.roleLoopCooldown=Math.max(8,13/cadence.social);
   }else{
     narrativeState.roleLoopCooldown=6;
   }
@@ -748,11 +881,16 @@ function runRoleLoops(dt){
 function runNpcProximityInteractions(dt){
   narrativeState.npcTalkCooldown=Math.max(0,narrativeState.npcTalkCooldown-dt);
   if(narrativeState.npcTalkCooldown>0) return;
+  const band=getScheduleBand();
+  const cadence=getCadenceProfile(narrativeState.phase,band.id);
   const nearby=npcs.find(n=>Math.hypot(player.x-n.x,player.y-n.y)<46);
   if(!nearby) return;
+  if(Math.random()>cadence.social) { narrativeState.npcTalkCooldown=3; return; }
   const phaseTag=narrativeState.phase==='citywide'?'[citywide sync]':narrativeState.phase==='coordinated'?'[coord loop]':'[local loop]';
+  const key='npc-near-'+nearby.name+'-'+band.id;
+  if(!shouldAnnounce(key,14/cadence.social)){ narrativeState.npcTalkCooldown=4; return; }
   toast(nearby.name+': '+(nearby.dynamicPhrase||nearby.phrase)+' '+phaseTag);
-  narrativeState.npcTalkCooldown=8;
+  narrativeState.npcTalkCooldown=Math.max(6,11/cadence.social);
 }
 
 function runZoneMicroEvents(dt){
@@ -763,6 +901,16 @@ function runZoneMicroEvents(dt){
   if(!hit) return;
   toast(hit.msg);
   narrativeState.zonePulseCooldown=hit.cooldown;
+}
+function runSchedulePulse(dt,phase){
+  narrativeState.scheduleToastCooldown=Math.max(0,narrativeState.scheduleToastCooldown-dt);
+  const band=getScheduleBand();
+  if(band.id!==narrativeState.lastScheduleBand && narrativeState.scheduleToastCooldown<=0){
+    const profile=getCadenceProfile(phase.id,band.id);
+    toast('City Schedule: '+band.label+' — cadence x'+profile.traffic.toFixed(2)+' traffic / x'+profile.npc.toFixed(2)+' teams');
+    narrativeState.lastScheduleBand=band.id;
+    narrativeState.scheduleToastCooldown=22;
+  }
 }
 
 function drawArtDirectedLighting(){
@@ -854,28 +1002,49 @@ function update(dt){
   }
   time += dt*60;
   const phase=getProgressionPhase();
-  traffic.forEach(c=>{c.y += (c.lane==='down'?1:-1)*c.speed*phase.trafficMult*dt; if(c.y>world.h-80) c.y=170; if(c.y<140) c.y=world.h-110;});
+  const scheduleBand=getScheduleBand();
+  const cadence=getCadenceProfile(phase.id,scheduleBand.id);
+  traffic.forEach((c,i)=>{
+    c.signal=(Math.sin(time*0.015+i*0.8)+1)*0.5;
+    const stopGo=0.68 + c.signal*0.52;
+    c.y += (c.lane==='down'?1:-1)*c.speed*phase.trafficMult*cadence.traffic*stopGo*dt;
+    if(c.y>world.h-80) c.y=170;
+    if(c.y<140) c.y=world.h-110;
+  });
   npcs.forEach((n,i)=>{
-    n.x += n.vx*dt; n.y += n.vy*dt;
+    n.pause=Math.max(0,(n.pause||0)-dt);
+    if(n.pause<=0 && Math.random()<0.012*cadence.social){
+      n.pause=0.8+Math.random()*1.8;
+    }
+    const drift=n.pause>0?0.18:1;
+    n.x += n.vx*dt*cadence.npc*drift;
+    n.y += n.vy*dt*cadence.npc*drift;
     if(n.x<n.minX || n.x>n.maxX) n.vx*=-1;
     if(n.y<n.minY || n.y>n.maxY) n.vy*=-1;
     if(i%2===0) n.x += Math.sin((time+i*13)*0.03)*0.12;
-    const speed=Math.hypot(n.vx,n.vy);
+    const speed=Math.hypot(n.vx*drift,n.vy*drift)*cadence.npc;
     n.moving=speed>4;
     n.dir=Math.abs(n.vx)>Math.abs(n.vy)?(n.vx>=0?'right':'left'):(n.vy>=0?'down':'up');
     n.phase=(n.phase||0)+(dt*8 + speed*dt*0.03);
     const script=roleScripts[n.role]||[n.phrase];
-    const slot=Math.floor((time*0.02 + i*0.7)%script.length);
+    const slot=Math.floor((time*0.02 + i*0.7 + (scheduleBand.id==='handoff'?1:0))%script.length);
     n.dynamicPhrase=script[slot];
   });
   npcChatPairs=[];
   for(let i=0;i<npcs.length;i++){
     for(let j=i+1;j<npcs.length;j++){
       const a=npcs[i], b=npcs[j];
-      if(Math.hypot(a.x-b.x,a.y-b.y)<54 && inView((a.x+b.x)/2,(a.y+b.y)/2,30,30,150)){
-        npcChatPairs.push({a,b,msg:(time%120<60?(a.dynamicPhrase||a.phrase):(b.dynamicPhrase||b.phrase))});
+      const pairKey=[a.name,b.name].sort().join('|');
+      const last=narrativeState.pairLedger.get(pairKey)||0;
+      const now=time/60;
+      if(now-last<8.5) continue;
+      if(Math.hypot(a.x-b.x,a.y-b.y)<56 && inView((a.x+b.x)/2,(a.y+b.y)/2,30,30,150) && Math.random()<(0.42*cadence.social)){
+        npcChatPairs.push({a,b,msg:getPairScript(a,b,scheduleBand.id)});
+        narrativeState.pairLedger.set(pairKey,now);
+        if(npcChatPairs.length>=2) break;
       }
     }
+    if(npcChatPairs.length>=2) break;
   }
   let ix=(keys['ArrowRight']||keys['d']?1:0)-(keys['ArrowLeft']||keys['a']?1:0), iy=(keys['ArrowDown']||keys['s']?1:0)-(keys['ArrowUp']||keys['w']?1:0);
   if(Math.abs(joyState.x)>0.06||Math.abs(joyState.y)>0.06){ix=joyState.x;iy=joyState.y;}
@@ -919,6 +1088,7 @@ function update(dt){
   runRoleLoops(dt);
   runNpcProximityInteractions(dt);
   runZoneMicroEvents(dt);
+  runSchedulePulse(dt,phase);
 
   reactiveProps.forEach(p=>{
     p.cooldown=Math.max(0,p.cooldown-dt);
@@ -987,11 +1157,19 @@ function render(nowMs){
   npcs.forEach((n,i)=>{if(!inView(n.x-8,n.y-30,16,14,50)) return; const icon=(i%3===0)?'…':(i%3===1?'!':'$'); ctx.fillStyle='rgba(8,14,24,.7)'; ctx.fillRect(n.x-4,n.y-26,8,8); ctx.fillStyle='#eaf2ff'; ctx.font='bold 8px monospace'; ctx.fillText(icon,n.x-3,n.y-19);});
 
   const crowdCap=REDUCED_MOTION?Math.min(2,qp.crowd):qp.crowd;
+  const crowdAnchors=[
+    {x:286,y:804,w:196,h:210},{x:1320,y:786,w:242,h:258},{x:258,y:1488,w:228,h:236},{x:1260,y:1544,w:280,h:260},{x:802,y:2010,w:220,h:170}
+  ];
   for(let i=0;i<crowdCap;i++){
-    const px=(i%2===0?300:1460)+((i*37 + time*0.35)%120), py=820 + i*72 + Math.sin((time+i*7)*0.04)*(REDUCED_MOTION?0:3);
+    const zone=crowdAnchors[i%crowdAnchors.length];
+    const seed=i*1.17;
+    const px=zone.x+((Math.sin(time*0.006+seed)*0.5+0.5)*zone.w);
+    const py=zone.y+((Math.cos(time*0.004+seed*1.3)*0.5+0.5)*zone.h)+Math.sin((time+i*9)*0.03)*(REDUCED_MOTION?0:2);
     if(!inView(px-16,py-24,32,48,80)) continue;
     const shirt=['#577ca4','#8a7b52','#736496','#9a6e63','#4e8a6f'][i%5], skin=['#f1c5a3','#e9bd9f','#d7a88a','#f2c9ad'][i%4];
-    drawNPCGuy(px,py,shirt,skin,{dir:(i%2===0)?'right':'left',moving:!REDUCED_MOTION,phase:(time*0.12+i)});
+    const driftX=Math.sin(time*0.01+seed), driftY=Math.cos(time*0.012+seed);
+    const dir=Math.abs(driftX)>Math.abs(driftY)?(driftX>=0?'right':'left'):(driftY>=0?'down':'up');
+    drawNPCGuy(px,py,shirt,skin,{dir,moving:!REDUCED_MOTION,phase:(time*0.1+i)});
   }
 
   if(qp.shadowPass){ctx.fillStyle='rgba(10,35,14,.08)'; for(let i=0;i<24;i++){const sx=(i*91 + time*0.45)%world.w, sy=620 + (i*67)%1500; if(!inView(sx,sy,56,12,0)) continue; ctx.fillRect(sx,sy,56,12);}}
@@ -1314,6 +1492,10 @@ addEventListener('keydown',e=>{
     if(menuModal.classList.contains('open')) return closeTopModal(menuModal);
     if(onboardModal.classList.contains('open')) return closeTopModal(onboardModal);
   }
+
+  // Guard against modal/tour state conflicts from global shortcuts during overlays.
+  if(anyModalOpen()) return;
+
   if(e.key==='t' || e.key==='T'){
     if(guidedTourActive) stopGuidedTour(true);
     else startGuidedTour();
