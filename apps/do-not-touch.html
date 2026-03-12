@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>DO NOT TOUCH — v67 Top-Down Pixel City</title>
+<title>DO NOT TOUCH — v68 Pixel City Story Mode</title>
 <style>
 :root{--bg:#d8efe7;--ink:#0f1b2d;--line:#1c2f47;--panel:#eef5ff}
 *{box-sizing:border-box}
@@ -15,10 +15,10 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .top-actions{display:flex;gap:8px;pointer-events:auto}
 .btn{border:3px solid #1e2e48;background:#f7faff;color:#111;padding:8px 16px;border-radius:0;font-weight:900;font-size:1.05rem;box-shadow:4px 4px 0 rgba(30,46,72,.55),inset 0 1px 0 #fff;font-family:monospace}
 .btn:active{transform:translateY(1px)}
-.corner-status{position:fixed;left:10px;bottom:calc(env(safe-area-inset-bottom,0px)+10px);z-index:8;pointer-events:none;background:rgba(8,16,30,.62);color:#eaf2ff;border:2px solid #6e8fbe;border-radius:8px;padding:6px 8px;font-size:.74rem}
-.joystick{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px)+16px);width:132px;height:132px;border-radius:999px;background:rgba(16,26,48,.48);border:3px solid #344a72;z-index:8;pointer-events:auto;touch-action:none}
-.stick{position:absolute;left:50%;top:50%;width:56px;height:56px;margin-left:-28px;margin-top:-28px;border-radius:999px;background:#c62f2f;border:3px solid #3c0f0f;box-shadow:0 0 0 2px rgba(255,255,255,.25) inset}
-.minimap{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px)+16px);width:110px;height:110px;border-radius:10px;background:#d8e1ef;border:3px solid #273b5e;z-index:8;overflow:hidden;pointer-events:none}
+.logo-badge{position:fixed;left:10px;top:calc(env(safe-area-inset-top,0px)+8px);width:86px;height:86px;border-radius:999px;background:radial-gradient(circle at 35% 30%,#ffffff 0,#d7dff0 48%,#8b99b5 100%);border:4px solid #f8fbff;box-shadow:0 0 0 3px #2b3f63, 2px 2px 0 rgba(0,0,0,.35);z-index:9;display:grid;place-items:center;color:#243a5a;font-weight:900;font-size:.8rem;letter-spacing:.03em;line-height:.9;text-align:center}
+.joystick{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px)+16px);width:132px;height:132px;border-radius:999px;background:rgba(20,26,40,.66);border:5px solid #0d121b;z-index:8;pointer-events:auto;touch-action:none;box-shadow:inset 0 0 0 3px #4c5667}
+.stick{position:absolute;left:50%;top:50%;width:58px;height:58px;margin-left:-29px;margin-top:-29px;border-radius:999px;background:#c62f2f;border:4px solid #3c0f0f;box-shadow:0 0 0 2px rgba(255,255,255,.28) inset}
+.minimap{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px)+16px);width:112px;height:112px;border-radius:6px;background:#d8e1ef;border:4px solid #273b5e;z-index:8;overflow:hidden;pointer-events:none;box-shadow:3px 3px 0 rgba(0,0,0,.4)}
 .minimap canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
 .modal{position:fixed;inset:0;display:none;place-items:center;padding:14px;background:rgba(2,8,20,.7);z-index:20}
 .modal.open{display:grid}
@@ -31,8 +31,9 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px)+62px);z-index:30;background:rgba(8,14,28,.92);color:#e5eeff;border:1px solid #5a78ad;border-radius:999px;padding:8px 12px;font-size:.8rem;opacity:0;transition:opacity .2s}
 .toast.show{opacity:1}
 @media (max-width:820px){
-  .brand{font-size:.8rem;padding:6px 8px}
+  .brand{display:none}
   .btn{padding:7px 12px;font-size:.86rem}
+  .logo-badge{width:72px;height:72px;font-size:.66rem}
   .joystick{width:120px;height:120px}
   .stick{width:52px;height:52px;margin-left:-26px;margin-top:-26px}
 }
@@ -41,14 +42,14 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 <body>
 <canvas id="game"></canvas>
 <div class="ui">
+  <div class="logo-badge">MICHAEL<br/>COSTEA</div>
   <div class="topbar">
-    <div class="brand">MICHAEL<br/>COSTEA <small style="display:block;font-size:.54rem;letter-spacing:.08em">PORTFOLIO</small></div>
+    <div class="brand"></div>
     <div class="top-actions">
       <button class="btn" id="mapBtn">MAP</button>
       <button class="btn" id="menuBtn">MENU</button>
     </div>
   </div>
-  <div class="corner-status" id="status">Explore the city and unlock timeline chapters.</div>
   <div class="minimap"><canvas id="mini" width="110" height="110"></canvas></div>
   <div class="joystick" id="joy"><div class="stick" id="stick"></div></div>
   <div class="toast" id="toast"></div>
@@ -125,23 +126,23 @@ addEventListener('keydown',e=>{keys[e.key]=true;}); addEventListener('keyup',e=>
 
 function drawPixelGuy(x,y){
   // shadow
-  ctx.fillStyle='rgba(0,0,0,.28)'; ctx.fillRect(x-9,y+18,18,3);
-  // shoes + legs (chunkier sprite silhouette)
-  ctx.fillStyle='#0e224f'; ctx.fillRect(x-8,y+16,6,3); ctx.fillRect(x+2,y+16,6,3);
-  ctx.fillStyle='#2f5fb8'; ctx.fillRect(x-8,y+8,6,9); ctx.fillRect(x+2,y+8,6,9);
-  // torso + jacket + shirt stripe
-  ctx.fillStyle='#131a2a'; ctx.fillRect(x-10,y-3,20,13);
-  ctx.fillStyle='#f0f4fb'; ctx.fillRect(x-3,y-1,6,10);
-  ctx.fillStyle='#ffad39'; ctx.fillRect(x-2,y+2,4,2);
+  ctx.fillStyle='rgba(0,0,0,.28)'; ctx.fillRect(x-12,y+22,24,4);
+  // legs
+  ctx.fillStyle='#12306f'; ctx.fillRect(x-10,y+10,8,12); ctx.fillRect(x+2,y+10,8,12);
+  ctx.fillStyle='#0d1b34'; ctx.fillRect(x-10,y+20,8,3); ctx.fillRect(x+2,y+20,8,3);
+  // torso/jacket
+  ctx.fillStyle='#1a2233'; ctx.fillRect(x-12,y-6,24,18);
+  ctx.fillStyle='#f2f5fb'; ctx.fillRect(x-4,y-3,8,13);
+  ctx.fillStyle='#f0a436'; ctx.fillRect(x-3,y+1,6,3);
   // arms
-  ctx.fillStyle='#131a2a'; ctx.fillRect(x-12,y-2,2,10); ctx.fillRect(x+10,y-2,2,10);
+  ctx.fillStyle='#1a2233'; ctx.fillRect(x-14,y-4,3,12); ctx.fillRect(x+11,y-4,3,12);
   // head
-  ctx.fillStyle='#f0c9a7'; ctx.fillRect(x-6,y-13,12,10);
-  // cap + brim (matching ref vibe)
-  ctx.fillStyle='#2460d0'; ctx.fillRect(x-7,y-15,14,3);
-  ctx.fillStyle='#193f8f'; ctx.fillRect(x-3,y-12,8,1);
+  ctx.fillStyle='#efc9a8'; ctx.fillRect(x-8,y-18,16,12);
+  // cap + brim
+  ctx.fillStyle='#2b67da'; ctx.fillRect(x-9,y-21,18,4);
+  ctx.fillStyle='#1a448f'; ctx.fillRect(x-4,y-17,10,2);
   // face dots
-  ctx.fillStyle='#1b2f57'; ctx.fillRect(x-3,y-9,2,1); ctx.fillRect(x+1,y-9,2,1);
+  ctx.fillStyle='#1b2f57'; ctx.fillRect(x-4,y-13,2,1); ctx.fillRect(x+2,y-13,2,1);
 }
 
 function drawWorld(){
@@ -168,8 +169,11 @@ function drawWorld(){
 
   // buildings/props left and right
   ctx.fillStyle='#9a5d46'; ctx.fillRect(120,470,520,260); ctx.fillStyle='#caa883'; ctx.fillRect(140,490,480,70);
+  for(let y=500;y<720;y+=24){for(let x=130;x<620;x+=36){ctx.fillStyle='#8a4f3d';ctx.fillRect(x,y,24,2);}}
   ctx.fillStyle='#5a708f'; ctx.fillRect(1500,470,560,240); ctx.fillStyle='#9ab0cf'; ctx.fillRect(1520,490,520,70);
+  for(let x=1540;x<2030;x+=48){ctx.fillStyle='#3b4f6b';ctx.fillRect(x,560,28,42);ctx.fillStyle='#94b3da';ctx.fillRect(x+4,564,20,16);} 
   for(let i=0;i<6;i++){ctx.fillStyle='#7f552f';ctx.fillRect(190,520+i*84,26,56);ctx.fillStyle='#cda679';ctx.fillRect(194,526+i*84,18,40);} // benches
+  for(let i=0;i<18;i++){const fx=1420+(i*37)%620, fy=760+((i*71)%360);ctx.fillStyle=['#ffd66d','#ffffff','#ff8aa5','#a6e874'][i%4];ctx.fillRect(fx,fy,3,3);}
 
   // cars (readable obstacles style)
   const cars=[
@@ -191,7 +195,14 @@ function drawWorld(){
   });
 
   // npcs
-  npcs.forEach(p=>{ctx.fillStyle=p.c;ctx.fillRect(p.x-5,p.y-10,10,10);ctx.fillStyle='#2b2f3f';ctx.fillRect(p.x-6,p.y,12,10);});
+  npcs.forEach((p,i)=>{
+    const shirt=['#2f6ec7','#ffb347','#9b7cff','#f76c6c','#3abf8f'][i%5];
+    ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(p.x-7,p.y+13,14,3);
+    ctx.fillStyle=p.c;ctx.fillRect(p.x-6,p.y-12,12,10);
+    ctx.fillStyle='#2b2f3f';ctx.fillRect(p.x-7,p.y-2,14,14);
+    ctx.fillStyle=shirt;ctx.fillRect(p.x-5,p.y,10,8);
+    ctx.fillStyle='#123';ctx.fillRect(p.x-6,p.y+10,5,3);ctx.fillRect(p.x+1,p.y+10,5,3);
+  });
 }
 
 function update(){
@@ -205,7 +216,6 @@ function update(){
   nodes.forEach(n=>{
     if(Math.hypot(player.x-n.x,player.y-n.y)<34){
       if(!viewed.has(n.id)){viewed.add(n.id);save();toast('Unlocked: '+n.title);} 
-      document.getElementById('status').textContent=n.title+' — '+n.desc;
     }
   });
 
@@ -223,23 +233,11 @@ function drawMini(){
   mctx.fillStyle='#d93030';mctx.fillRect(player.x*sx-2,player.y*sy-2,4,4);
 }
 
-function drawSpeechBubble(){
-  const bx=player.x-120, by=player.y-110;
-  ctx.fillStyle='#f8fbff'; ctx.fillRect(bx,by,240,70);
-  ctx.strokeStyle='#1c2f47'; ctx.lineWidth=2; ctx.strokeRect(bx,by,240,70);
-  ctx.fillStyle='#f8fbff'; ctx.fillRect(player.x-8,by+70,16,12);
-  ctx.strokeRect(player.x-8,by+70,16,12);
-  ctx.fillStyle='#0f1b2d'; ctx.font='bold 14px monospace';
-  ctx.fillText('Move around and explore projects.',bx+14,by+28);
-  ctx.fillText('Tap nodes to unlock chapters.',bx+14,by+48);
-}
-
 function render(){
   ctx.clearRect(0,0,vw,vh);
   ctx.save(); ctx.translate(-cam.x,-cam.y);
   drawWorld();
   drawPixelGuy(player.x,player.y);
-  drawSpeechBubble();
   ctx.restore();
   drawMini();
   requestAnimationFrame(loop);
