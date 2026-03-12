@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>DO NOT TOUCH — v69 Pixel City Story Mode</title>
 <style>
-:root{--bg:#d8efe7;--ink:#0f1b2d;--line:#1c2f47;--panel:#eef5ff;--hud:#08122acc}
+:root{--bg:#d8efe7;--ink:#0f1b2d;--line:#1c2f47;--panel:#eef5ff;--hud:#08122acc;--ui-border:#5a79ac;--ui-border-strong:#2b3f63;--ui-shadow:4px 4px 0 rgba(0,0,0,.35);--ui-shadow-soft:3px 3px 0 rgba(0,0,0,.28);--ui-radius:0;--ui-font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;--ui-font-mono:700 12px/1.2 monospace}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif}
 #game{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;background:#9ecf86}
@@ -13,37 +13,38 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .topbar{position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px)+8px);display:flex;justify-content:space-between;align-items:flex-start;gap:8px;z-index:8;pointer-events:none}
 .brand{background:transparent;color:#fff;padding:2px 2px;font-weight:900;letter-spacing:.03em;text-shadow:2px 2px 0 #000, -1px -1px 0 rgba(0,0,0,.35);line-height:.9;font-size:1.9rem}
 .top-actions{display:flex;gap:8px;pointer-events:auto}
-.btn{border:3px solid #1e2e48;background:#f7faff;color:#111;padding:8px 16px;min-height:44px;border-radius:0;font-weight:900;font-size:1.05rem;box-shadow:4px 4px 0 rgba(30,46,72,.55),inset 0 1px 0 #fff;font-family:monospace}
+.btn{border:3px solid #1e2e48;background:#f7faff;color:#111;padding:8px 16px;min-height:44px;border-radius:var(--ui-radius);font-weight:900;font-size:1.05rem;box-shadow:4px 4px 0 rgba(30,46,72,.55),inset 0 1px 0 #fff;font-family:monospace}
 .btn.secondary{background:#dce7fb;color:#1a2c48;border-color:#395784;box-shadow:2px 2px 0 rgba(20,35,59,.35),inset 0 1px 0 #fff}
 .btn.danger{background:#ffe2e2;border-color:#7f2a2a;color:#4f1111}
 .btn.ghost{background:#f7faffd8;border-style:dashed}
 .btn:active{transform:translateY(1px)}
+.btn:focus-visible,.hud-close:focus-visible{outline:3px solid #ffcd57;outline-offset:2px}
 .logo-badge{position:fixed;left:10px;top:calc(env(safe-area-inset-top,0px)+8px);width:86px;height:86px;border-radius:999px;background:radial-gradient(circle at 35% 30%,#ffffff 0,#d7dff0 48%,#8b99b5 100%);border:4px solid #f8fbff;box-shadow:0 0 0 3px #2b3f63, 2px 2px 0 rgba(0,0,0,.35);z-index:9;display:grid;place-items:center;color:#243a5a;font-weight:900;font-size:.8rem;letter-spacing:.03em;line-height:.9;text-align:center}
 .joystick{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px)+16px);width:132px;height:132px;border-radius:999px;background:rgba(20,26,40,.66);border:5px solid #0d121b;z-index:8;pointer-events:auto;touch-action:none;box-shadow:inset 0 0 0 3px #4c5667}
 .stick{position:absolute;left:50%;top:50%;width:58px;height:58px;margin-left:-29px;margin-top:-29px;border-radius:999px;background:#c62f2f;border:4px solid #3c0f0f;box-shadow:0 0 0 2px rgba(255,255,255,.28) inset}
 .minimap{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px)+16px);width:112px;height:112px;border-radius:6px;background:#d8e1ef;border:4px solid #273b5e;z-index:8;overflow:hidden;pointer-events:none;box-shadow:3px 3px 0 rgba(0,0,0,.4)}
 .minimap canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
-.modal{position:fixed;inset:0;display:none;place-items:center;padding:14px;background:rgba(2,8,20,.7);z-index:20}
+.modal{position:fixed;inset:0;display:none;place-items:center;padding:14px;background:rgba(2,8,20,.74);z-index:20}
 .modal.open{display:grid}
-.card{width:min(760px,96vw);max-height:82vh;overflow:auto;background:#0f1b34;color:#e7f0ff;border:2px solid #5a79ac;border-radius:12px;padding:14px}
+.card{width:min(760px,96vw);max-height:82vh;overflow:auto;background:#0f1b34;color:#e7f0ff;border:3px solid var(--ui-border);border-radius:var(--ui-radius);padding:14px;box-shadow:var(--ui-shadow)}
 .card h3{margin:.2rem 0 .4rem}
 .card ul{margin:.2rem 0 .6rem;padding-left:18px}
 .stat-row{display:grid;grid-template-columns:150px 1fr 44px;gap:8px;align-items:center;margin:6px 0;font-size:.86rem}
-.stat-meter{height:10px;border:1px solid #6587be;border-radius:999px;overflow:hidden;background:#132544}
+.stat-meter{height:10px;border:1px solid #6587be;border-radius:var(--ui-radius);overflow:hidden;background:#132544}
 .stat-meter>span{display:block;height:100%;background:linear-gradient(90deg,#71d8ff,#94ffaf)}
-.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px)+62px);z-index:30;background:rgba(8,14,28,.92);color:#e5eeff;border:1px solid #5a78ad;border-radius:999px;padding:8px 12px;font-size:.8rem;opacity:0;transition:opacity .2s}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px)+62px);z-index:30;background:rgba(8,14,28,.92);color:#e5eeff;border:2px solid var(--ui-border);border-radius:var(--ui-radius);padding:8px 12px;font-size:.8rem;font-family:monospace;letter-spacing:.01em;opacity:0;transition:opacity .2s;box-shadow:var(--ui-shadow-soft)}
 .toast.show{opacity:1}
-.hud-panel{position:fixed;left:12px;top:calc(env(safe-area-inset-top,0px)+102px);z-index:11;pointer-events:auto;background:var(--hud);color:#eaf2ff;border:2px solid #5b79ad;padding:8px 10px;min-width:260px;max-width:min(88vw,420px);font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;box-shadow:3px 3px 0 rgba(0,0,0,.35)}
+.hud-panel{position:fixed;left:12px;top:calc(env(safe-area-inset-top,0px)+102px);z-index:11;pointer-events:auto;background:var(--hud);color:#eaf2ff;border:3px solid var(--ui-border);padding:8px 10px;min-width:260px;max-width:min(88vw,420px);font:var(--ui-font);box-shadow:var(--ui-shadow-soft)}
 .hud-row{display:flex;justify-content:space-between;gap:8px;align-items:center}
 .hud-row b{font-size:12px}
 .hud-sub{opacity:.9;font-size:12px;margin-top:4px}
-.hud-close{all:unset;cursor:pointer;background:#183057;border:1px solid #7ea2df;color:#eaf2ff;padding:2px 6px;font-size:12px}
+.hud-close{all:unset;cursor:pointer;background:#183057;border:2px solid #7ea2df;color:#eaf2ff;padding:2px 6px;font:var(--ui-font-mono);border-radius:var(--ui-radius);box-shadow:2px 2px 0 rgba(0,0,0,.25)}
 #onboardModal .card{max-width:680px}
 .onboard-list{font-size:14px;line-height:1.45}
 .onboard-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px}
-.demo-indicator{display:none;position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px)+102px);z-index:12;background:#10203ccf;color:#e7f0ff;border:2px solid #5a79ac;padding:6px 8px;font:700 12px/1.2 monospace}
+.demo-indicator{display:none;position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px)+102px);z-index:12;background:#10203ccf;color:#e7f0ff;border:3px solid var(--ui-border);padding:6px 8px;font:var(--ui-font-mono);box-shadow:var(--ui-shadow-soft)}
 .demo-indicator.show{display:block}
-.tour-panel{display:none;position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px)+138px);z-index:13;max-width:min(92vw,360px);background:rgba(8,18,36,.93);color:#eaf2ff;border:2px solid #7ea2df;box-shadow:4px 4px 0 rgba(0,0,0,.35);padding:10px}
+.tour-panel{display:none;position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px)+138px);z-index:13;max-width:min(92vw,360px);background:rgba(8,18,36,.93);color:#eaf2ff;border:3px solid var(--ui-border);box-shadow:var(--ui-shadow);padding:10px}
 .tour-panel.show{display:block}
 .tour-kicker{font:800 11px/1 monospace;letter-spacing:.08em;color:#9bc3ff;margin-bottom:6px}
 .tour-title{font:800 15px/1.2 Inter,Segoe UI,Arial,sans-serif;margin-bottom:6px}
@@ -53,6 +54,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .quick-controls{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px)+136px);z-index:10;display:flex;gap:6px;flex-wrap:wrap;pointer-events:auto}
 .quick-controls .btn{min-height:34px;padding:4px 9px;font-size:.74rem}
 .hud-keyline{margin-top:6px;font-size:11px;opacity:.88}
+.btn-cluster{display:flex;gap:8px;flex-wrap:wrap}
+.onboard-actions{display:flex;gap:8px;flex-wrap:wrap}
 
 @media (max-width:820px){
   .brand{display:none}
@@ -107,7 +110,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
   <div class="card">
     <h3>DO NOT TOUCH // MENU</h3>
     <p>Presentation-safe build: top-down movement, no forced interrupts, no death/fall states.</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <div class="btn-cluster">
       <button class="btn" id="jumpNext">Jump to Next Chapter</button>
       <button class="btn secondary" id="startDemoRoute">Start Demo Route</button>
       <button class="btn ghost" id="stopDemoRoute">Stop Demo Route</button>
@@ -151,7 +154,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
     </ul>
     <div class="onboard-foot">
       <label><input type="checkbox" id="dontShowOnboard"/> Don't show this again</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div class="onboard-actions">
         <button class="btn secondary" id="startOnboardTour">Start Guided Tour</button>
         <button class="btn" id="startOnboard">Start Exploring</button>
       </div>
@@ -243,6 +246,16 @@ const world={w:1800,h:2400};
 const ROAD_X=640, ROAD_W=STYLE_BIBLE.ref.laneW*4;
 const player={x:420,y:760,s:153};
 const cam={x:0,y:0};
+const motionState={vx:0,vy:0};
+const MOVEMENT_TUNING={
+  accel:14.5,          // higher = faster ramp-up (1/s)
+  decel:18.5,          // higher = tighter stop (1/s)
+  maxSpeedMul:1.0,
+  cameraSmooth:11.5,   // camera catch-up responsiveness (1/s)
+  cameraLead:0.065,    // velocity-based look-ahead (s)
+  cameraDeadzoneX:18,
+  cameraDeadzoneY:14
+};
 let time=0;
 const MATERIALS={
   foliage:{base:'#3b8e4f',shade:'#2b6f3d',highlight:'#56aa6a',ao:'rgba(20,36,26,.16)'},
@@ -285,6 +298,8 @@ const COLLISION={
   playerRadius:13,
   trafficEnvelope:11,
   triggerPad:16,
+  resolveEpsilon:0.05,
+  edgePadding:{left:42,right:42,top:124,bottom:42},
   staticProps:[
     {id:'block-nw',x:100,y:620,w:460,h:300},
     {id:'block-sw',x:100,y:1120,w:460,h:300},
@@ -398,6 +413,7 @@ function getScanlineLayer(){
 
 function save(){localStorage.setItem(STORAGE_KEYS.viewed,JSON.stringify([...viewed]));}
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1200);}
+function snapMotion(){motionState.vx=0;motionState.vy=0;}
 
 const joy=document.getElementById('joy'),stick=document.getElementById('stick');
 let joyState={active:false,x:0,y:0,sx:0,sy:0};
@@ -421,32 +437,67 @@ function buildTrafficSafetyEnvelopes(){
   const p=COLLISION.trafficEnvelope;
   return traffic.map((c,i)=>({id:'traffic-'+i,x:c.x-p,y:c.y-p,w:STYLE_BIBLE.ref.carW+p*2,h:STYLE_BIBLE.ref.carL+p*2}));
 }
+function expandRectForRadius(r,rad){
+  return {x:r.x-rad,y:r.y-rad,w:r.w+rad*2,h:r.h+rad*2};
+}
+function pointInExpandedRect(px,py,r){
+  return px>r.x && px<r.x+r.w && py>r.y && py<r.y+r.h;
+}
+function resolveAxisBlock(prevPrimary,nextPrimary,otherAxis,expanded,isX){
+  const minPrimary=isX?expanded.x:expanded.y;
+  const maxPrimary=minPrimary+(isX?expanded.w:expanded.h);
+  const minOther=isX?expanded.y:expanded.x;
+  const maxOther=minOther+(isX?expanded.h:expanded.w);
+  const eps=COLLISION.resolveEpsilon;
+  if(otherAxis<=minOther || otherAxis>=maxOther) return nextPrimary;
+  if(nextPrimary<=minPrimary || nextPrimary>=maxPrimary) return nextPrimary;
+
+  if(prevPrimary<=minPrimary && nextPrimary>minPrimary) return minPrimary-eps;
+  if(prevPrimary>=maxPrimary && nextPrimary<maxPrimary) return maxPrimary+eps;
+
+  const toMin=Math.abs(nextPrimary-minPrimary);
+  const toMax=Math.abs(maxPrimary-nextPrimary);
+  return toMin<toMax?(minPrimary-eps):(maxPrimary+eps);
+}
+function clampPlayerToWorld(px,py){
+  const edge=COLLISION.edgePadding;
+  return {
+    x:Math.max(edge.left,Math.min(world.w-edge.right,px)),
+    y:Math.max(edge.top,Math.min(world.h-edge.bottom,py))
+  };
+}
 function resolvePlayerCollision(nextX,nextY){
   const rad=COLLISION.playerRadius;
   const blockers=[...COLLISION.staticProps,...buildTrafficSafetyEnvelopes()];
-  let rx=nextX, ry=nextY;
+  const expanded=blockers.map(r=>expandRectForRadius(r,rad));
 
-  blockers.forEach(r=>{
-    if(!circleRectOverlap(rx,ry,rad,r)) return;
-    const nearestX=Math.max(r.x,Math.min(rx,r.x+r.w));
-    const nearestY=Math.max(r.y,Math.min(ry,r.y+r.h));
-    let dx=rx-nearestX, dy=ry-nearestY;
-    if(dx===0 && dy===0){
-      const left=Math.abs(rx-r.x), right=Math.abs((r.x+r.w)-rx), top=Math.abs(ry-r.y), bottom=Math.abs((r.y+r.h)-ry);
-      const min=Math.min(left,right,top,bottom);
-      if(min===left) dx=-1; else if(min===right) dx=1; else if(min===top) dy=-1; else dy=1;
-    }
-    const dist=Math.hypot(dx,dy)||1;
-    const push=rad-dist;
-    if(push>0){
-      rx += (dx/dist)*push;
-      ry += (dy/dist)*push;
-    }
-  });
+  const start=clampPlayerToWorld(player.x,player.y);
+  const target=clampPlayerToWorld(nextX,nextY);
+  let rx=target.x, ry=target.y;
 
-  rx=Math.max(40,Math.min(world.w-40,rx));
-  ry=Math.max(120,Math.min(world.h-40,ry));
-  return {x:rx,y:ry};
+  // Axis-separated resolution prevents sticky corners while preserving natural slide.
+  for(const r of expanded){
+    rx=resolveAxisBlock(start.x,rx,target.y,r,true);
+  }
+  for(const r of expanded){
+    ry=resolveAxisBlock(start.y,ry,rx,r,false);
+  }
+
+  // Corner fallback: if still inside after axis pass, push to nearest safe side.
+  for(const r of expanded){
+    if(!pointInExpandedRect(rx,ry,r)) continue;
+    const pushLeft=Math.abs(rx-r.x);
+    const pushRight=Math.abs((r.x+r.w)-rx);
+    const pushTop=Math.abs(ry-r.y);
+    const pushBottom=Math.abs((r.y+r.h)-ry);
+    const minPush=Math.min(pushLeft,pushRight,pushTop,pushBottom);
+    if(minPush===pushLeft) rx=r.x-COLLISION.resolveEpsilon;
+    else if(minPush===pushRight) rx=r.x+r.w+COLLISION.resolveEpsilon;
+    else if(minPush===pushTop) ry=r.y-COLLISION.resolveEpsilon;
+    else ry=r.y+r.h+COLLISION.resolveEpsilon;
+  }
+
+  return clampPlayerToWorld(rx,ry);
 }
 
 function drawCharacter(x,y,opt={}){
@@ -763,7 +814,10 @@ function update(dt){
     runRegressionGuards();
     guardClock=0;
   }
-  if(anyModalOpen()) return;
+  if(anyModalOpen()){
+    snapMotion();
+    return;
+  }
   time += dt*60;
   const phase=getProgressionPhase();
   traffic.forEach(c=>{c.y += (c.lane==='down'?1:-1)*c.speed*phase.trafficMult*dt; if(c.y>world.h-80) c.y=170; if(c.y<140) c.y=world.h-110;});
@@ -792,12 +846,33 @@ function update(dt){
   let ix=(keys['ArrowRight']||keys['d']?1:0)-(keys['ArrowLeft']||keys['a']?1:0), iy=(keys['ArrowDown']||keys['s']?1:0)-(keys['ArrowUp']||keys['w']?1:0);
   if(Math.abs(joyState.x)>0.06||Math.abs(joyState.y)>0.06){ix=joyState.x;iy=joyState.y;}
   const inputMag=Math.hypot(ix,iy), m=inputMag||1; ix/=m; iy/=m;
-  const desiredX=player.x+ix*player.s*dt;
-  const desiredY=player.y+iy*player.s*dt;
+
+  const maxSpeed=player.s*MOVEMENT_TUNING.maxSpeedMul;
+  const targetVx=ix*maxSpeed*inputMag;
+  const targetVy=iy*maxSpeed*inputMag;
+  const responseRate=(inputMag>0.04)?MOVEMENT_TUNING.accel:MOVEMENT_TUNING.decel;
+  const blend=REDUCED_MOTION?1:(1-Math.exp(-responseRate*dt));
+  motionState.vx += (targetVx-motionState.vx)*blend;
+  motionState.vy += (targetVy-motionState.vy)*blend;
+
+  const desiredX=player.x+motionState.vx*dt;
+  const desiredY=player.y+motionState.vy*dt;
   const resolved=resolvePlayerCollision(desiredX,desiredY);
+  if(resolved.x!==desiredX) motionState.vx=0;
+  if(resolved.y!==desiredY) motionState.vy=0;
   player.x=resolved.x; player.y=resolved.y;
-  playerAnim.speed=inputMag; playerAnim.moving=inputMag>0.08;
-  if(playerAnim.moving){playerAnim.dir=Math.abs(ix)>Math.abs(iy)?(ix>=0?'right':'left'):(iy>=0?'down':'up'); playerAnim.phase += dt*(14 + inputMag*8);} else playerAnim.phase *= 0.9;
+
+  const planarSpeed=Math.hypot(motionState.vx,motionState.vy);
+  const animSpeedNorm=Math.min(1,planarSpeed/(maxSpeed||1));
+  playerAnim.speed=animSpeedNorm;
+  playerAnim.moving=animSpeedNorm>0.05;
+  if(playerAnim.moving){
+    const dirX=Math.abs(motionState.vx), dirY=Math.abs(motionState.vy);
+    playerAnim.dir=dirX>dirY?(motionState.vx>=0?'right':'left'):(motionState.vy>=0?'down':'up');
+    playerAnim.phase += dt*(12 + animSpeedNorm*11);
+  } else {
+    playerAnim.phase *= 0.88;
+  }
   let unlocked=false;
   nodes.forEach(n=>{
     const zone=nodeTriggerBounds.get(n.id);
@@ -832,7 +907,19 @@ function update(dt){
     }
   }
 
-  cam.x=Math.max(0,Math.min(world.w-vw,player.x-vw*0.5)); cam.y=Math.max(0,Math.min(world.h-vh,player.y-vh*0.56));
+  const leadX=REDUCED_MOTION?0:(motionState.vx*MOVEMENT_TUNING.cameraLead);
+  const leadY=REDUCED_MOTION?0:(motionState.vy*MOVEMENT_TUNING.cameraLead);
+  const targetCamX=Math.max(0,Math.min(world.w-vw,player.x+leadX-vw*0.5));
+  const targetCamY=Math.max(0,Math.min(world.h-vh,player.y+leadY-vh*0.56));
+  const smooth=REDUCED_MOTION?1:(1-Math.exp(-MOVEMENT_TUNING.cameraSmooth*dt));
+
+  const dx=targetCamX-cam.x;
+  const dy=targetCamY-cam.y;
+  if(Math.abs(dx)>MOVEMENT_TUNING.cameraDeadzoneX) cam.x += dx*smooth; else cam.x=targetCamX;
+  if(Math.abs(dy)>MOVEMENT_TUNING.cameraDeadzoneY) cam.y += dy*smooth; else cam.y=targetCamY;
+
+  cam.x=Math.max(0,Math.min(world.w-vw,cam.x));
+  cam.y=Math.max(0,Math.min(world.h-vh,cam.y));
 }
 
 function drawMini(nowMs){
@@ -936,6 +1023,7 @@ function applyReducedMotion(enabled){
     stopDemoRoute();
     stopGuidedTour(true);
     setQuality('low','silent');
+    snapMotion();
   }
   runRegressionGuards();
 }
@@ -973,7 +1061,7 @@ function startDemoRoute(){
   const step=()=>{
     const id=demoRoute[demoRouteIndex%demoRoute.length];
     const n=nodes.find(x=>x.id===id);
-    if(n){ player.x=n.x; player.y=n.y+24; if(!viewed.has(n.id)){viewed.add(n.id); save();} }
+    if(n){ player.x=n.x; player.y=n.y+24; snapMotion(); if(!viewed.has(n.id)){viewed.add(n.id); save();} }
     demoRouteIndex++;
   };
   step();
@@ -988,7 +1076,7 @@ function renderTourStep(){
   tourTitle.textContent=step.t;
   tourCopy.textContent=step.c;
   const n=nodes.find(x=>x.id===step.node);
-  if(n){ player.x=n.x; player.y=n.y+24; if(!viewed.has(n.id)){ viewed.add(n.id); save(); } }
+  if(n){ player.x=n.x; player.y=n.y+24; snapMotion(); if(!viewed.has(n.id)){ viewed.add(n.id); save(); } }
   refreshHud();
 }
 function startGuidedTour(){
@@ -1031,11 +1119,43 @@ function openTopModal(el){ el.classList.add('open'); }
 function closeTopModal(el){ if(el.classList.contains('open')){ el.classList.remove('open'); toast('Back in city view'); } }
 function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open'); }
 
+function sanitizeViewedProgress(){
+  const validIds=new Set(nodes.map(n=>n.id));
+  let changed=false;
+  [...viewed].forEach(id=>{
+    if(!validIds.has(id)){
+      viewed.delete(id);
+      changed=true;
+    }
+  });
+  if(viewed.size>nodes.length){
+    viewed.clear();
+    nodes.forEach(n=>viewed.add(n.id));
+    changed=true;
+  }
+  if(changed) save();
+  return changed;
+}
+
+function enforceSingleModalOpen(){
+  const open=[menuModal,mapModal,statsModal,onboardModal].filter(m=>m.classList.contains('open'));
+  if(open.length<=1) return;
+  // Keep the latest priority modal (onboarding > menu > map > stats) to prevent stacked-state regressions.
+  const priority=[onboardModal,menuModal,mapModal,statsModal];
+  const keep=priority.find(m=>m.classList.contains('open')) || open[0];
+  open.forEach(m=>{ if(m!==keep) m.classList.remove('open'); });
+}
+
 function runRegressionGuards(){
+  enforceSingleModalOpen();
+
   // Demo/tour mutual exclusion and indicator sync.
   if(demoRouteTimer && guidedTourActive) stopDemoRoute();
   const demoActive=!!demoRouteTimer;
   if(demoActive!==demoIndicator.classList.contains('show')) demoIndicator.classList.toggle('show',demoActive);
+
+  // Guided-tour UI must track state exactly.
+  if(guidedTourActive!==tourPanel.classList.contains('show')) tourPanel.classList.toggle('show',guidedTourActive);
 
   // Reduced motion must remain stable and never autoplay-heavy.
   if(REDUCED_MOTION){
@@ -1044,7 +1164,7 @@ function runRegressionGuards(){
     if(quality!=='low') setQuality('low','silent');
   }
 
-  // Performance-tier integrity fallback.
+  // Quality-tier integrity fallback.
   if(!QUALITY_PRESETS[quality]){
     quality='medium';
     qp=QUALITY_PRESETS.medium;
@@ -1052,6 +1172,15 @@ function runRegressionGuards(){
     rebuildStaticLayers();
   }else if(qp!==QUALITY_PRESETS[quality]){
     qp=QUALITY_PRESETS[quality];
+  }
+  if(IS_MOBILE && quality==='high' && !REDUCED_MOTION) setQuality('medium','silent');
+
+  // Demo controls should never advertise availability in reduced motion.
+  const demoBtn=document.getElementById('startDemoRoute');
+  if(demoBtn){
+    demoBtn.disabled=REDUCED_MOTION;
+    demoBtn.setAttribute('aria-disabled',REDUCED_MOTION?'true':'false');
+    demoBtn.title=REDUCED_MOTION?'Disabled while reduced motion is enabled':'';
   }
 
   // HUD regression guard: keep hidden/visible state aligned with persisted preference.
@@ -1064,12 +1193,11 @@ function runRegressionGuards(){
     onboardModal.classList.remove('open');
   }
 
-  // Keep progression structures bounded in case localStorage was tampered.
-  if(viewed.size>nodes.length){
-    viewed.clear();
-    nodes.forEach(n=>viewed.add(n.id));
-    save();
-  }
+  // Progress integrity guard (tamper-resistant localStorage recovery).
+  sanitizeViewedProgress();
+
+  // Keep phase reactions consistent after recoveries/resets.
+  progressionReactions.forEach(r=>{ r.done = viewed.size>=r.min; });
 
   refreshHud();
 }
@@ -1078,7 +1206,7 @@ document.getElementById('menuBtn').onclick=()=>openTopModal(menuModal);
 document.getElementById('mapBtn').onclick=()=>{const list=document.getElementById('mapList');list.innerHTML=nodes.map(n=>'<li>'+(viewed.has(n.id)?'✅':'⬜')+' <b>'+n.id+'</b> — '+n.title+'</li>').join('');openTopModal(mapModal);};
 document.getElementById('tourBtn').onclick=()=>startGuidedTour();
 document.getElementById('quickTour').onclick=()=>startGuidedTour();
-document.getElementById('quickNext').onclick=()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;toast('Jumped to '+n.id+' — '+n.title);};
+document.getElementById('quickNext').onclick=()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();toast('Jumped to '+n.id+' — '+n.title);};
 document.getElementById('tourNext').onclick=()=>nextGuidedTour();
 document.getElementById('tourPrev').onclick=()=>prevGuidedTour();
 document.getElementById('tourSkip').onclick=()=>stopGuidedTour();
@@ -1092,7 +1220,7 @@ statsModal.onclick=e=>{if(e.target===statsModal)closeTopModal(statsModal)};
 onboardModal.onclick=e=>{if(e.target===onboardModal)closeTopModal(onboardModal)};
 
 document.getElementById('backSite').onclick=()=>location.href='../index.html';
-document.getElementById('jumpNext').onclick=()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;closeTopModal(menuModal);};
+document.getElementById('jumpNext').onclick=()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();closeTopModal(menuModal);};
 document.getElementById('startDemoRoute').onclick=()=>{stopGuidedTour(true); startDemoRoute(); closeTopModal(menuModal);};
 document.getElementById('stopDemoRoute').onclick=()=>{stopDemoRoute(); toast('Demo route stopped');};
 document.getElementById('hideHud').onclick=()=>{objectiveHud.style.display='none'; localStorage.setItem(STORAGE_KEYS.hudHidden,'1');};
