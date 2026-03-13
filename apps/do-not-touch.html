@@ -39,13 +39,13 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .stat-meter>span{display:block;height:100%;background:linear-gradient(90deg,#71d8ff,#94ffaf)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px)+62px);z-index:30;background:rgba(8,14,28,.92);color:#e5eeff;border:2px solid var(--ui-border);border-radius:var(--ui-radius);padding:8px 12px;font-size:.8rem;font-family:monospace;letter-spacing:.01em;max-width:min(92vw,720px);line-height:1.25;opacity:0;transition:opacity .2s;box-shadow:var(--ui-shadow-soft);text-wrap:balance}
 .toast.show{opacity:1}
-.hud-panel{position:fixed;left:12px;top:calc(env(safe-area-inset-top,0px)+102px);z-index:11;pointer-events:auto;background:rgba(6,13,28,.94);color:#eaf2ff;border:3px solid var(--ui-border);padding:8px 10px;min-width:260px;max-width:min(88vw,420px);font:var(--ui-font);box-shadow:var(--ui-shadow-soft);backdrop-filter:blur(1.5px)}
+.hud-panel{position:fixed;left:12px;top:calc(env(safe-area-inset-top,0px)+102px);z-index:7;pointer-events:none;background:rgba(6,13,28,.94);color:#eaf2ff;border:3px solid var(--ui-border);padding:8px 10px;min-width:260px;max-width:min(88vw,420px);font:var(--ui-font);box-shadow:var(--ui-shadow-soft);backdrop-filter:blur(1.5px)}
 .hud-row{display:flex;justify-content:space-between;gap:8px;align-items:center}
 .hud-row b{font-size:12px;line-height:1.25}
 .hud-pill{display:inline-block;padding:1px 6px;border:1px solid #7ea2df;background:#132b4b;color:#dce9ff;font:700 11px/1.2 monospace;letter-spacing:.04em;margin-bottom:3px}
 .hud-sub{opacity:.97;font-size:12px;line-height:1.35;margin-top:2px;text-wrap:pretty}
 .hud-meta{margin-top:4px;font-size:11px;line-height:1.35;opacity:.9;color:#c8dcff}
-.hud-close{all:unset;cursor:pointer;background:#183057;border:2px solid #7ea2df;color:#eaf2ff;padding:2px 6px;font:var(--ui-font-mono);border-radius:var(--ui-radius);box-shadow:2px 2px 0 rgba(0,0,0,.25);transition:filter var(--ui-anim-fast) var(--ui-ease)
+.hud-close{all:unset;cursor:pointer;pointer-events:auto;background:#183057;border:2px solid #7ea2df;color:#eaf2ff;padding:2px 6px;font:var(--ui-font-mono);border-radius:var(--ui-radius);box-shadow:2px 2px 0 rgba(0,0,0,.25);transition:filter var(--ui-anim-fast) var(--ui-ease)}
 #onboardModal .card{max-width:680px}
 .onboard-list{font-size:14px;line-height:1.45}
 .onboard-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -1661,7 +1661,17 @@ function pauseLoop(){
   rafId=0;
 }
 
-resize(); rebuildStaticLayers(); rafId=requestAnimationFrame(frame);
+function ensureSpawnValid(){
+  const blocked=COLLISION.staticProps.some(r=>pointInRect(player.x,player.y,r));
+  if(blocked){
+    player.x=900; player.y=780;
+    const fixed=resolvePlayerCollision(player.x,player.y);
+    player.x=fixed.x; player.y=fixed.y;
+    snapMotion();
+  }
+}
+
+resize(); rebuildStaticLayers(); ensureSpawnValid(); rafId=requestAnimationFrame(frame);
 
 const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal');
 const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath');
