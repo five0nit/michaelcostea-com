@@ -13,7 +13,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .topbar{position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px)+8px);display:flex;justify-content:space-between;align-items:flex-start;gap:8px;z-index:8;pointer-events:none}
 .brand{background:transparent;color:#fff;padding:2px 2px;font-weight:900;letter-spacing:.03em;text-shadow:2px 2px 0 #000, -1px -1px 0 rgba(0,0,0,.35);line-height:.9;font-size:1.9rem}
 .top-actions{display:flex;gap:8px;pointer-events:auto}
-.btn{border:3px solid #1e2e48;background:#f7faff;color:#111;padding:8px 16px;min-height:44px;border-radius:var(--ui-radius);font-weight:900;font-size:1.05rem;line-height:1.05;box-shadow:4px 4px 0 rgba(30,46,72,.55),inset 0 1px 0 #fff;font-family:monospace;letter-spacing:.01em;transition:transform var(--ui-anim-fast) var(--ui-ease),filter var(--ui-anim-fast) var(--ui-ease),box-shadow var(--ui-anim-fast) var(--ui-ease)}
+.btn{border:3px solid #1e2e48;background:#f7faff;color:#111;padding:8px 16px;min-height:44px;border-radius:var(--ui-radius);font-weight:900;font-size:1.05rem;line-height:1.05;box-shadow:4px 4px 0 rgba(30,46,72,.55),inset 0 1px 0 #fff;font-family:monospace;letter-spacing:.01em;transition:transform var(--ui-anim-fast) var(--ui-ease),filter var(--ui-anim-fast) var(--ui-ease),box-shadow var(--ui-anim-fast) var(--ui-ease);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn.secondary{background:#dce7fb;color:#1a2c48;border-color:#395784;box-shadow:2px 2px 0 rgba(20,35,59,.35),inset 0 1px 0 #fff}
 .btn.danger{background:#ffe2e2;border-color:#7f2a2a;color:#4f1111}
 .btn.ghost{background:#f7faffd8;border-style:dashed}
@@ -59,7 +59,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .tour-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
 .tour-actions .btn{min-height:36px;padding:6px 10px;font-size:.8rem}
 .quick-controls{position:fixed;left:12px;right:calc(var(--joystick-slot) + 8px);bottom:calc(var(--control-bottom) + 4px);z-index:10;display:flex;gap:6px;flex-wrap:wrap;pointer-events:auto}
-.quick-controls .btn{min-height:34px;padding:4px 9px;font-size:.74rem;flex:1 1 150px}
+.quick-controls .btn{min-height:44px;padding:6px 10px;font-size:.76rem;flex:1 1 150px}
 .hud-keyline{margin-top:6px;font-size:11px;opacity:.88;line-height:1.35}
 .btn-cluster{display:flex;gap:8px;flex-wrap:wrap}
 .onboard-actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -81,7 +81,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 @media (max-width:540px){
   :root{--joystick-size:112px;--control-gap:8px;--control-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}
   .top-actions{gap:6px}
-  .top-actions .btn{min-height:40px;padding:6px 9px;font-size:.78rem}
+  .top-actions .btn{min-height:44px;padding:6px 10px;font-size:.78rem}
   .hud-panel{left:8px;right:8px;max-width:none;min-width:0}
   .tour-panel{left:8px;right:8px;max-width:none;max-height:min(52vh,380px);overflow:auto}
   .quick-controls{left:8px;right:calc(var(--joystick-slot) + 4px)}
@@ -95,7 +95,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 @media (max-height:700px){
   .hud-panel{top:calc(env(safe-area-inset-top,0px)+72px)}
   .tour-panel{top:calc(env(safe-area-inset-top,0px)+108px);max-height:min(54vh,340px);overflow:auto}
-  .quick-controls .btn{min-height:32px}
+  .quick-controls .btn{min-height:44px}
 }
 body.reduced-motion *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
 @media (prefers-reduced-motion: reduce){
@@ -1943,7 +1943,15 @@ bindClick('loadFullProgress',()=>{
 });
 
 // onboarding flow
-if(safeStorageGet(STORAGE_KEYS.noOnboard)!=='1') openTopModal(onboardModal);
+if(safeStorageGet(STORAGE_KEYS.noOnboard)!=='1'){
+  openTopModal(onboardModal);
+  setTimeout(()=>{
+    if(onboardModal.classList.contains('open')){
+      closeTopModal(onboardModal);
+      toast('Tip: use MENU anytime for guide + controls');
+    }
+  },3000);
+}
 bindClick('startOnboard',()=>{
   const optOut=document.getElementById('dontShowOnboard');
   if(optOut && optOut.checked) safeStorageSet(STORAGE_KEYS.noOnboard,'1');
