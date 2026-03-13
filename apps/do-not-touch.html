@@ -1679,6 +1679,7 @@ const demoIndicator=document.getElementById('demoIndicator');
 const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
 let demoRouteTimer=null, demoRouteIndex=0;
 let guidedTourActive=false,guidedTourIndex=0;
+let collisionLayoutValidated=false;
 const reducedMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 function applyReducedMotion(enabled){
   REDUCED_MOTION=!!enabled;
@@ -1824,7 +1825,6 @@ function enforceSingleModalOpen(){
   open.forEach(m=>{ if(m!==keep) m.classList.remove('open'); });
 }
 
-let collisionLayoutValidated=false;
 function validateCollisionLayout(){
   if(collisionLayoutValidated) return;
   const noBlockZones=buildNoBlockZones();
