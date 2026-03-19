@@ -61,9 +61,11 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .battle-screen.open{display:grid}
 .battle-card{width:min(760px,96vw);background:#e7e3d2;border:4px solid #3f3525;box-shadow:6px 6px 0 rgba(0,0,0,.45);padding:10px;color:#1f1b14;font-family:monospace}
 .battle-row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.battle-scene{margin:8px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end;background:#d2cfbf;border:2px solid #6a5a40;padding:8px}
+.battle-scene{margin:8px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end;background:var(--battle-bg,#d2cfbf);border:2px solid #6a5a40;padding:8px}
 .battle-sprite-wrap{display:grid;justify-items:center;gap:4px}
 #battleBossSprite,#battlePlayerSprite{width:128px;height:96px;image-rendering:pixelated;background:#c0b89f;border:2px solid #5f5138}
+.battle-card.shake{animation:battleShake .25s linear}
+#battleBossSprite.hit,#battlePlayerSprite.hit{animation:spriteHit .24s ease}
 .battle-log{margin:8px 0;background:#f8f6ee;border:2px solid #6a5a40;padding:8px;min-height:58px;font-size:.86rem}
 .battle-actions{display:flex;flex-wrap:wrap;gap:8px}
 .battle-actions .btn{min-height:40px}
@@ -73,6 +75,13 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .encounter-flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0;background:radial-gradient(circle at center,rgba(255,255,255,.86) 0,rgba(255,255,255,0) 58%),repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 8px,rgba(0,0,0,.14) 8px 16px)}
 .encounter-flash.show{animation:encounterFlash .45s ease}
 @keyframes encounterFlash{0%{opacity:0}20%{opacity:.9}100%{opacity:0}}
+@keyframes battleShake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}
+@keyframes spriteHit{0%{transform:translateX(0);filter:brightness(1)}35%{transform:translateX(3px);filter:brightness(1.35)}100%{transform:translateX(0);filter:brightness(1)}}
+.victory-modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(5,10,20,.78);z-index:27;padding:14px}
+.victory-modal.open{display:grid}
+.victory-card{width:min(720px,96vw);background:#edf2df;border:4px solid #3f5030;box-shadow:6px 6px 0 rgba(0,0,0,.45);padding:12px;color:#172010}
+.victory-card h3{margin:.2rem 0 .5rem}
+.victory-card ul{margin:.3rem 0 .6rem;padding-left:18px}
 .tour-panel{display:none;position:fixed;right:12px;top:calc(var(--top-ui-clearance) + 36px);z-index:13;max-width:min(92vw,360px);background:rgba(8,18,36,.93);color:#eaf2ff;border:3px solid var(--ui-border);box-shadow:var(--ui-shadow);padding:10px}
 .tour-panel.show{display:block}
 .tour-kicker{font:800 11px/1 monospace;letter-spacing:.08em;color:#9bc3ff;margin-bottom:6px}
@@ -200,6 +209,18 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
       <button class="btn secondary" id="battleSkillBtn">SKILL</button>
       <button class="btn ghost" id="battleRunBtn">RUN</button>
     </div>
+  </div>
+</div>
+
+<div class="victory-modal" id="victoryModal" aria-live="polite">
+  <div class="victory-card">
+    <h3 id="victoryTitle">Stage Unlocked!</h3>
+    <p id="victorySummary">You cleared a resume stage battle.</p>
+    <p><b>Milestones unlocked</b></p>
+    <ul id="victoryMilestones"></ul>
+    <p><b>Skills gained</b></p>
+    <ul id="victorySkills"></ul>
+    <button class="btn" id="closeVictoryBtn">Continue</button>
   </div>
 </div>
 
@@ -432,6 +453,7 @@ const resumeStages={
 };
 let nearbyNodeId=null;
 const encounter={active:false,nodeId:null,boss:null,playerHp:0};
+const stageBattleTheme={N1:'#cabd9f',N2:'#b8c0d9',N3:'#bdb8b2',N4:'#c9b7d2',N5:'#a5c9be',N6:'#a7bfd0',N7:'#d2b4aa',N8:'#cfaaaa'};
 
 const npcs=[
   {x:430,y:620,c:'#efc4a4',name:'Mia',role:'planner',vx:27,vy:0,minX:250,maxX:520,minY:590,maxY:720,phrase:'Checking route'},
@@ -940,15 +962,36 @@ function updateBattleUi(msg=''){
   const stageLabel=document.getElementById('battleBossStage');
   const bossCanvas=document.getElementById('battleBossSprite');
   const playerCanvas=document.getElementById('battlePlayerSprite');
+  const scene=document.querySelector('.battle-scene');
   if(encounter.boss){
     if(bn) bn.textContent=encounter.boss.name+' · '+encounter.nodeId;
     if(bh) bh.textContent='HP: '+Math.max(0,encounter.boss.hp)+'/'+encounter.boss.maxHp;
     if(stageLabel) stageLabel.textContent='Stage '+encounter.nodeId+' Guardian';
     drawBattleSprite(bossCanvas,encounter.boss.color||'#7a6','boss');
+    if(scene) scene.style.setProperty('--battle-bg', stageBattleTheme[encounter.nodeId] || '#d2cfbf');
   }
   drawBattleSprite(playerCanvas,'#4f7fd3','player');
   if(ph) ph.textContent='HP: '+Math.max(0,encounter.playerHp)+'/'+playerStats.maxHp;
   if(log && msg) log.textContent=msg;
+}
+function playBattleHit(target='boss'){
+  const card=document.querySelector('.battle-card');
+  const sprite=document.getElementById(target==='boss'?'battleBossSprite':'battlePlayerSprite');
+  if(card){ card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake'); }
+  if(sprite){ sprite.classList.remove('hit'); void sprite.offsetWidth; sprite.classList.add('hit'); }
+}
+function showVictoryCard(nodeId,cfg){
+  const stage=resumeStages[nodeId] || {label:nodeId,milestones:['Stage objective completed'],skills:['Experience gained']};
+  const vm=document.getElementById('victoryModal');
+  const title=document.getElementById('victoryTitle');
+  const summary=document.getElementById('victorySummary');
+  const milestones=document.getElementById('victoryMilestones');
+  const skills=document.getElementById('victorySkills');
+  if(title) title.textContent='Stage '+nodeId+' Unlocked — '+stage.label;
+  if(summary) summary.textContent='Guardian defeated. This resume stage is now open with milestones and skills tracked.';
+  if(milestones) milestones.innerHTML=stage.milestones.map(m=>'<li>'+m+'</li>').join('');
+  if(skills) skills.innerHTML=stage.skills.map(s=>'<li>'+s+'</li>').join('');
+  if(vm) vm.classList.add('open');
 }
 function endEncounter(win){
   const modal=document.getElementById('battleModal');
@@ -962,6 +1005,7 @@ function endEncounter(win){
     levelUpIfReady();
     toast('Unlocked: '+encounter.nodeId+' · '+nodes.find(n=>n.id===encounter.nodeId).title,{priority:1});
     toast('Rewards +'+cfg.rewardXp+' XP · +'+cfg.rewardGold+' gold');
+    showVictoryCard(encounter.nodeId,cfg);
   }
   encounter.active=false; encounter.nodeId=null; encounter.boss=null; encounter.playerHp=0;
   refreshHud(); applyProgressionReactions();
@@ -972,6 +1016,7 @@ function runEncounterTurn(move){
   if(move==='fight'){
     const dmg=10+Math.floor(Math.random()*8)+Math.floor(playerStats.level*1.8);
     encounter.boss.hp-=dmg;
+    playBattleHit('boss');
     lines.push('You strike for '+dmg+' damage!');
   } else if(move==='skill'){
     if(playerStats.mp<10){ lines.push('Not enough MP!'); }
@@ -979,6 +1024,7 @@ function runEncounterTurn(move){
       playerStats.mp-=10;
       const dmg=18+Math.floor(Math.random()*10)+Math.floor(playerStats.level*2.2);
       encounter.boss.hp-=dmg;
+      playBattleHit('boss');
       lines.push('Skill burst hits for '+dmg+'!');
     }
   } else if(move==='run'){
@@ -992,6 +1038,7 @@ function runEncounterTurn(move){
   }
   const ret=encounter.boss.atkMin+Math.floor(Math.random()*(encounter.boss.atkMax-encounter.boss.atkMin+1));
   encounter.playerHp-=ret;
+  playBattleHit('player');
   lines.push(encounter.boss.name+' hits back for '+ret+'.');
   if(encounter.playerHp<=0){
     playerStats.hp=playerStats.maxHp;
@@ -1984,7 +2031,7 @@ function ensureSpawnValid(){
 
 resize(); rebuildStaticLayers(); ensureSpawnValid(); rafId=requestAnimationFrame(frame);
 
-const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal');
+const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal'),victoryModal=document.getElementById('victoryModal');
 const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath'),hudStats=document.getElementById('hudStats'),hudControls=document.getElementById('hudControls'),hpBar=document.getElementById('hpBar'),mpBar=document.getElementById('mpBar'),xpBar=document.getElementById('xpBar');
 const demoIndicator=document.getElementById('demoIndicator');
 const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
@@ -2136,7 +2183,7 @@ function refreshHud(){
 }
 function openTopModal(el){ resetJoystick(); snapMotion(); el.classList.add('open'); }
 function closeTopModal(el){ if(el.classList.contains('open')){ el.classList.remove('open'); resetJoystick(); toast('Back in city view'); } }
-function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open'); }
+function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open')||victoryModal.classList.contains('open'); }
 
 function sanitizeViewedProgress(){
   const validIds=new Set(nodes.map(n=>n.id));
@@ -2262,6 +2309,7 @@ bindClick('interactBtn',()=>interactNode());
 bindClick('battleFightBtn',()=>runEncounterTurn('fight'));
 bindClick('battleSkillBtn',()=>runEncounterTurn('skill'));
 bindClick('battleRunBtn',()=>runEncounterTurn('run'));
+bindClick('closeVictoryBtn',()=>{ if(victoryModal) victoryModal.classList.remove('open'); });
 bindClick('quickNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();toast('Jumped to Stage '+n.id+' — '+n.title);});
 bindClick('tourNext',()=>nextGuidedTour());
 bindClick('tourPrev',()=>prevGuidedTour());
@@ -2275,6 +2323,7 @@ mapModal.onclick=e=>{if(e.target===mapModal)closeTopModal(mapModal)};
 statsModal.onclick=e=>{if(e.target===statsModal)closeTopModal(statsModal)};
 onboardModal.onclick=e=>{if(e.target===onboardModal)closeTopModal(onboardModal)};
 battleModal.onclick=e=>{if(e.target===battleModal)runEncounterTurn('run')};
+victoryModal.onclick=e=>{if(e.target===victoryModal) victoryModal.classList.remove('open')};
 
 bindClick('backSite',()=>location.href='../index.html');
 bindClick('jumpNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();closeTopModal(menuModal);});
@@ -2317,6 +2366,7 @@ if(safeStorageGet(STORAGE_KEYS.hudHidden)==='1') objectiveHud.style.display='non
 addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(guidedTourActive) return stopGuidedTour();
+    if(victoryModal.classList.contains('open')) return victoryModal.classList.remove('open');
     if(battleModal.classList.contains('open')) return runEncounterTurn('run');
     if(statsModal.classList.contains('open')) return closeTopModal(statsModal);
     if(mapModal.classList.contains('open')) return closeTopModal(mapModal);
