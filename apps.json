@@ -11,7 +11,7 @@
       "name": "Weekend + Day Planner",
       "slug": "planner",
       "status": "beta",
-      "description": "Location-aware day planner with budget, weather fallback, kids mode, and history logs. [Primary project \u00b7 In development (beta)]",
+      "description": "Location-aware day planner with budget, weather fallback, kids mode, and history logs. [Primary project · In development (beta)]",
       "url": "./apps/planner.html",
       "category": "webapps",
       "primary": true
@@ -20,7 +20,7 @@
       "name": "Business Card 3D Webapp",
       "slug": "cards",
       "status": "beta",
-      "description": "Deterministic 3D business-card builder with visual presets and STL outputs. [Primary project \u00b7 In development (beta)]",
+      "description": "Deterministic 3D business-card builder with visual presets and STL outputs. [Primary project · In development (beta)]",
       "url": "./apps/cards.html",
       "category": "webapps",
       "primary": true
@@ -29,8 +29,17 @@
       "name": "OZQuotes Platform",
       "slug": "ozquotes",
       "status": "beta",
-      "description": "Quote and workflow platform under active development. [Primary project \u00b7 In development (beta)]",
+      "description": "Quote and workflow platform under active development. [Primary project · In development (beta)]",
       "url": "./apps/ozquotes.html",
+      "category": "webapps",
+      "primary": true
+    },
+    {
+      "name": "AI Prompt SEO Solution",
+      "slug": "ai-prompt-seo",
+      "status": "beta",
+      "description": "AI visibility ops stack for SEO monitoring, weekly action planning, and delta alerts. [Primary project · In development (beta)]",
+      "url": "./apps/ops.html",
       "category": "webapps",
       "primary": true
     },
