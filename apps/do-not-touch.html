@@ -66,6 +66,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .tour-actions .btn{min-height:36px;padding:6px 10px;font-size:.8rem}
 .quick-controls{position:fixed;left:12px;right:calc(var(--joystick-slot) + 8px);bottom:var(--quick-controls-bottom);z-index:10;display:flex;gap:6px;flex-wrap:wrap;pointer-events:auto}
 .quick-controls .btn{min-height:44px;padding:6px 10px;font-size:.76rem;flex:1 1 150px}
+.quick-controls .btn.attack{flex:1 1 110px;background:#ffd9d9;border-color:#7f2a2a;color:#4f1111}
 body.modal-open .quick-controls,body.modal-open .joystick{display:none !important}
 .hud-keyline{margin-top:6px;font-size:11px;opacity:.88;line-height:1.35}
 .btn-cluster{display:flex;gap:8px;flex-wrap:wrap}
@@ -96,6 +97,7 @@ body.modal-open .quick-controls,body.modal-open .joystick{display:none !importan
   .tour-panel{left:8px;right:8px;max-width:none;max-height:min(52vh,380px);overflow:auto}
   .quick-controls{left:8px;right:calc(var(--joystick-slot) + 2px)}
   .quick-controls .btn{flex:1 1 116px;min-height:40px;font-size:.72rem}
+  .quick-controls .btn.attack{flex:1 1 100%;order:-1;min-height:44px;font-size:.78rem}
   .toast{top:calc(env(safe-area-inset-top,0px)+56px);font-size:.76rem}
 }
 @media (pointer:fine) and (min-width:901px){
@@ -139,10 +141,11 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
       <div class="rpg-bar mp"><span id="mpBar" style="width:100%"></span></div>
       <div class="rpg-bar xp"><span id="xpBar" style="width:0%"></span></div>
     </div>
-    <div class="hud-keyline">Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>TOUR</b> guide.</div>
+    <div class="hud-keyline" id="hudControls">Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>TOUR</b> guide.</div>
   </div>
   <div class="demo-indicator" id="demoIndicator">DEMO ROUTE ACTIVE</div>
   <div class="quick-controls" id="quickControls">
+    <button class="btn attack" id="attackBtn" aria-label="Attack nearest enemy">ATTACK</button>
     <button class="btn ghost" id="quickNext" aria-label="Jump to next chapter">NEXT CHAPTER</button>
     <button class="btn ghost" id="quickTour" aria-label="Start guided showcase tour">GUIDED TOUR</button>
   </div>
@@ -200,7 +203,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     <p>An old-school fantasy-RPG-inspired portfolio world. Complete quests, defeat roaming mobs, and unlock career chapters.</p>
     <ul class="onboard-list">
       <li><b>Fast start:</b> Follow the glowing objective in the HUD to unlock chapters in sequence.</li>
-      <li><b>Controls:</b> WASD / Arrow keys on desktop, joystick on mobile.</li>
+      <li><b>Controls:</b> WASD / Arrow keys + SPACE on desktop, joystick + ATTACK button (or tap enemy) on mobile.</li>
       <li><b>Frictionless unlock:</b> Just move near a chapter flag — milestones unlock automatically.</li>
       <li><b>Premium demo mode:</b> Tap <b>GUIDED TOUR</b> for narration-style walkthrough, or <b>MENU → Start Demo Route</b> for timed autoplay.</li>
     </ul>
@@ -633,6 +636,16 @@ setStick();
 
 const keys={};
 addEventListener('keydown',e=>{keys[e.key]=true; if(e.code==='Space'){ e.preventDefault(); attackMob(); }}); addEventListener('keyup',e=>{keys[e.key]=false;});
+cv.addEventListener('pointerdown',e=>{
+  if(!IS_MOBILE || anyModalOpen()) return;
+  const rect=cv.getBoundingClientRect();
+  const wx=(e.clientX-rect.left)+cam.x;
+  const wy=(e.clientY-rect.top)+cam.y;
+  const target=mobAtWorldPoint(wx,wy,40);
+  if(target){
+    attackMob(target);
+  }
+});
 function inView(x,y,w=32,h=32,margin=100){return !(x+w<cam.x-margin || x>cam.x+vw+margin || y+h<cam.y-margin || y>cam.y+vh+margin);} 
 function pointInRect(px,py,r){return px>=r.x && px<=r.x+r.w && py>=r.y && py<=r.y+r.h;}
 function circleRectOverlap(cx,cy,rad,r){
@@ -776,6 +789,14 @@ function nearestMob(maxDist=58){
   }
   return best;
 }
+function mobAtWorldPoint(wx,wy,maxDist=34){
+  let best=null,bestD=Infinity;
+  for(const m of mobs){
+    const d=Math.hypot(wx-m.x,wy-m.y);
+    if(d<maxDist && d<bestD){best=m;bestD=d;}
+  }
+  return best;
+}
 function levelUpIfReady(){
   while(playerStats.xp>=playerStats.xpNext){
     playerStats.xp-=playerStats.xpNext;
@@ -788,11 +809,11 @@ function levelUpIfReady(){
     toast('Level up! Now level '+playerStats.level,{priority:1});
   }
 }
-function attackMob(){
+function attackMob(targetOverride=null){
   if(anyModalOpen()) return;
   const now=performance.now();
   if(now-playerStats.lastHitAt<380) return;
-  const target=nearestMob(66);
+  const target=targetOverride || nearestMob(66);
   if(!target){ toast('No target in range',{dedupeMs:700}); return; }
   playerStats.lastHitAt=now;
   const dmg=8+Math.floor(Math.random()*7)+Math.floor(playerStats.level*1.5);
@@ -1784,7 +1805,7 @@ function ensureSpawnValid(){
 resize(); rebuildStaticLayers(); ensureSpawnValid(); rafId=requestAnimationFrame(frame);
 
 const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal');
-const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath'),hudStats=document.getElementById('hudStats'),hpBar=document.getElementById('hpBar'),mpBar=document.getElementById('mpBar'),xpBar=document.getElementById('xpBar');
+const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath'),hudStats=document.getElementById('hudStats'),hudControls=document.getElementById('hudControls'),hpBar=document.getElementById('hpBar'),mpBar=document.getElementById('mpBar'),xpBar=document.getElementById('xpBar');
 const demoIndicator=document.getElementById('demoIndicator');
 const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
 let demoRouteTimer=null, demoRouteIndex=0;
@@ -1896,6 +1917,11 @@ function refreshHud(){
   if(hpBar) hpBar.style.width=(Math.max(0,playerStats.hp)/playerStats.maxHp*100).toFixed(1)+'%';
   if(mpBar) mpBar.style.width=(Math.max(0,playerStats.mp)/playerStats.maxMp*100).toFixed(1)+'%';
   if(xpBar) xpBar.style.width=(Math.max(0,playerStats.xp)/playerStats.xpNext*100).toFixed(1)+'%';
+  if(hudControls){
+    hudControls.innerHTML = IS_MOBILE
+      ? 'Controls: <b>Joystick</b> move · <b>ATTACK</b> button or tap enemy · <b>TOUR</b> guide.'
+      : 'Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>TOUR</b> guide.';
+  }
 
   if(guidedTourActive){
     const step=guidedTourSteps[guidedTourIndex];
@@ -2034,6 +2060,7 @@ bindClick('menuBtn',()=>openTopModal(menuModal));
 bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map(n=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next objective':'Locked');return '<li>'+mark+' <b>'+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small></li>';}).join('');openTopModal(mapModal);});
 bindClick('tourBtn',()=>startGuidedTour());
 bindClick('quickTour',()=>startGuidedTour());
+bindClick('attackBtn',()=>attackMob());
 bindClick('quickNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();toast('Jumped to '+n.id+' — '+n.title);});
 bindClick('tourNext',()=>nextGuidedTour());
 bindClick('tourPrev',()=>prevGuidedTour());
