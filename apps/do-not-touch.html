@@ -57,6 +57,16 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .onboard-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px}
 .demo-indicator{display:none;position:fixed;right:12px;top:var(--top-ui-clearance);z-index:12;background:#10203ccf;color:#e7f0ff;border:3px solid var(--ui-border);padding:6px 8px;font:var(--ui-font-mono);box-shadow:var(--ui-shadow-soft)}
 .demo-indicator.show{display:block}
+.battle-screen{position:fixed;inset:0;display:none;place-items:center;padding:14px;background:rgba(6,10,20,.86);z-index:26}
+.battle-screen.open{display:grid}
+.battle-card{width:min(760px,96vw);background:#e7e3d2;border:4px solid #3f3525;box-shadow:6px 6px 0 rgba(0,0,0,.45);padding:10px;color:#1f1b14;font-family:monospace}
+.battle-row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.battle-log{margin:8px 0;background:#f8f6ee;border:2px solid #6a5a40;padding:8px;min-height:58px;font-size:.86rem}
+.battle-actions{display:flex;flex-wrap:wrap;gap:8px}
+.battle-actions .btn{min-height:40px}
+.encounter-flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0;background:radial-gradient(circle at center,rgba(255,255,255,.86) 0,rgba(255,255,255,0) 58%),repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 8px,rgba(0,0,0,.14) 8px 16px)}
+.encounter-flash.show{animation:encounterFlash .45s ease}
+@keyframes encounterFlash{0%{opacity:0}20%{opacity:.9}100%{opacity:0}}
 .tour-panel{display:none;position:fixed;right:12px;top:calc(var(--top-ui-clearance) + 36px);z-index:13;max-width:min(92vw,360px);background:rgba(8,18,36,.93);color:#eaf2ff;border:3px solid var(--ui-border);box-shadow:var(--ui-shadow);padding:10px}
 .tour-panel.show{display:block}
 .tour-kicker{font:800 11px/1 monospace;letter-spacing:.08em;color:#9bc3ff;margin-bottom:6px}
@@ -146,6 +156,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
   <div class="demo-indicator" id="demoIndicator">DEMO ROUTE ACTIVE</div>
   <div class="quick-controls" id="quickControls">
     <button class="btn attack" id="attackBtn" aria-label="Attack nearest enemy">ATTACK</button>
+    <button class="btn" id="interactBtn" aria-label="Interact with chapter node">INTERACT</button>
     <button class="btn ghost" id="quickNext" aria-label="Jump to next chapter">NEXT CHAPTER</button>
     <button class="btn ghost" id="quickTour" aria-label="Start guided showcase tour">GUIDED TOUR</button>
   </div>
@@ -160,11 +171,27 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     </div>
   </div>
 </div>
+<div id="encounterFlash" class="encounter-flash" aria-hidden="true"></div>
+
+<div class="battle-screen" id="battleModal" aria-live="polite">
+  <div class="battle-card">
+    <div class="battle-row">
+      <div><b id="battleBossName">Node Guardian</b><div id="battleBossHp">HP: 100/100</div></div>
+      <div><b>Michael</b><div id="battlePlayerHp">HP: 100/100</div></div>
+    </div>
+    <div class="battle-log" id="battleLog">A wild guardian appears!</div>
+    <div class="battle-actions">
+      <button class="btn" id="battleFightBtn">FIGHT</button>
+      <button class="btn secondary" id="battleSkillBtn">SKILL</button>
+      <button class="btn ghost" id="battleRunBtn">RUN</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="menuModal">
   <div class="card">
     <h3>DO NOT TOUCH // MENU</h3>
-    <p>Presentation-safe build: top-down movement, no forced interrupts, no death/fall states.</p>
+    <p>Pokémon-style chapter mode: fast movement, node guardians, encounter transitions, and turn-based unlock battles.</p>
     <div class="btn-cluster">
       <button class="btn" id="jumpNext">Jump to Next Chapter</button>
       <button class="btn secondary" id="startDemoRoute">Start Demo Route</button>
@@ -203,8 +230,8 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     <p>An old-school fantasy-RPG-inspired portfolio world. Complete quests, defeat roaming mobs, and unlock career chapters.</p>
     <ul class="onboard-list">
       <li><b>Fast start:</b> Follow the glowing objective in the HUD to unlock chapters in sequence.</li>
-      <li><b>Controls:</b> WASD / Arrow keys + SPACE on desktop, joystick + ATTACK button (or tap enemy) on mobile.</li>
-      <li><b>Frictionless unlock:</b> Just move near a chapter flag — milestones unlock automatically.</li>
+      <li><b>Controls:</b> WASD / Arrow keys + SPACE + E on desktop, joystick + ATTACK + INTERACT on mobile.</li>
+      <li><b>Boss unlock flow:</b> Reach a chapter node, trigger INTERACT, then win the guardian fight to unlock info.</li>
       <li><b>Premium demo mode:</b> Tap <b>GUIDED TOUR</b> for narration-style walkthrough, or <b>MENU → Start Demo Route</b> for timed autoplay.</li>
     </ul>
     <div class="onboard-foot">
@@ -320,7 +347,7 @@ const CHAPTER_PALETTE={
 };
 const world={w:1800,h:2400};
 const ROAD_X=640, ROAD_W=STYLE_BIBLE.ref.laneW*4;
-const player={x:420,y:760,s:3.3};
+const player={x:420,y:760,s:5.2};
 const playerStats={hp:100,maxHp:100,mp:60,maxMp:60,xp:0,xpNext:100,level:1,gold:0,kills:0,lastHitAt:0,attackCd:0,invuln:0};
 const mobs=[
   {id:'m1',x:280,y:880,hp:28,maxHp:28,speed:20,aggro:120,color:'#4a9c5a',name:'Moss Goblin'},
@@ -368,6 +395,19 @@ const nodes=[
   {id:'N7',x:340,y:1710,title:'Sales Manager',desc:'Program-driven upgrade operations.'},
   {id:'N8',x:900,y:2100,title:'BD & Marketing Manager',desc:'Growth, partnerships, CX innovation.'}
 ];
+const nodeBosses={
+  N1:{name:'Cafe Rat King',hp:46,atkMin:4,atkMax:8,rewardXp:24,rewardGold:16},
+  N2:{name:'Retention Shade',hp:54,atkMin:5,atkMax:9,rewardXp:28,rewardGold:20},
+  N3:{name:'Process Golem',hp:60,atkMin:6,atkMax:10,rewardXp:32,rewardGold:24},
+  N4:{name:'Lore Librarian',hp:66,atkMin:7,atkMax:11,rewardXp:36,rewardGold:28},
+  N5:{name:'Ops Hydra',hp:72,atkMin:8,atkMax:12,rewardXp:40,rewardGold:33},
+  N6:{name:'Grid Sentinel',hp:78,atkMin:9,atkMax:13,rewardXp:45,rewardGold:38},
+  N7:{name:'Sales Chimera',hp:84,atkMin:10,atkMax:14,rewardXp:50,rewardGold:42},
+  N8:{name:'Growth Dragon',hp:95,atkMin:11,atkMax:16,rewardXp:62,rewardGold:55}
+};
+let nearbyNodeId=null;
+const encounter={active:false,nodeId:null,boss:null,playerHp:0};
+
 const npcs=[
   {x:430,y:620,c:'#efc4a4',name:'Mia',role:'planner',vx:27,vy:0,minX:250,maxX:520,minY:590,maxY:720,phrase:'Checking route'},
   {x:480,y:640,c:'#d9ab8c',name:'Noah',role:'driver',vx:-24,vy:0,minX:250,maxX:520,minY:590,maxY:720,phrase:'On my way'},
@@ -642,9 +682,9 @@ cv.addEventListener('pointerdown',e=>{
   const wx=(e.clientX-rect.left)+cam.x;
   const wy=(e.clientY-rect.top)+cam.y;
   const target=mobAtWorldPoint(wx,wy,40);
-  if(target){
-    attackMob(target);
-  }
+  if(target){ attackMob(target); return; }
+  const node=nodes.find(n=>!viewed.has(n.id) && Math.hypot(wx-n.x,wy-n.y)<24 && Math.hypot(player.x-n.x,player.y-n.y)<70);
+  if(node){ interactNode(); }
 });
 function inView(x,y,w=32,h=32,margin=100){return !(x+w<cam.x-margin || x>cam.x+vw+margin || y+h<cam.y-margin || y>cam.y+vh+margin);} 
 function pointInRect(px,py,r){return px>=r.x && px<=r.x+r.w && py>=r.y && py<=r.y+r.h;}
@@ -831,6 +871,100 @@ function attackMob(targetOverride=null){
     target.x=220+Math.random()*1360;
     target.y=700+Math.random()*1450;
   }
+}
+
+function showEncounterFlash(){
+  const el=document.getElementById('encounterFlash');
+  if(!el) return;
+  el.classList.remove('show');
+  void el.offsetWidth;
+  el.classList.add('show');
+}
+function getNearestLockedNode(maxDist=54){
+  const nextNode=nodes.find(n=>!viewed.has(n.id));
+  if(!nextNode) return null;
+  const d=Math.hypot(player.x-nextNode.x,player.y-nextNode.y);
+  return d<=maxDist?nextNode:null;
+}
+function updateBattleUi(msg=''){
+  const bn=document.getElementById('battleBossName');
+  const bh=document.getElementById('battleBossHp');
+  const ph=document.getElementById('battlePlayerHp');
+  const log=document.getElementById('battleLog');
+  if(encounter.boss){
+    if(bn) bn.textContent=encounter.boss.name+' · '+encounter.nodeId;
+    if(bh) bh.textContent='HP: '+Math.max(0,encounter.boss.hp)+'/'+encounter.boss.maxHp;
+  }
+  if(ph) ph.textContent='HP: '+Math.max(0,encounter.playerHp)+'/'+playerStats.maxHp;
+  if(log && msg) log.textContent=msg;
+}
+function endEncounter(win){
+  const modal=document.getElementById('battleModal');
+  if(modal) modal.classList.remove('open');
+  if(win && encounter.nodeId){
+    const cfg=nodeBosses[encounter.nodeId];
+    viewed.add(encounter.nodeId);
+    save();
+    playerStats.xp += cfg.rewardXp;
+    playerStats.gold += cfg.rewardGold;
+    levelUpIfReady();
+    toast('Unlocked: '+encounter.nodeId+' · '+nodes.find(n=>n.id===encounter.nodeId).title,{priority:1});
+    toast('Rewards +'+cfg.rewardXp+' XP · +'+cfg.rewardGold+' gold');
+  }
+  encounter.active=false; encounter.nodeId=null; encounter.boss=null; encounter.playerHp=0;
+  refreshHud(); applyProgressionReactions();
+}
+function runEncounterTurn(move){
+  if(!encounter.active || !encounter.boss) return;
+  let lines=[];
+  if(move==='fight'){
+    const dmg=10+Math.floor(Math.random()*8)+Math.floor(playerStats.level*1.8);
+    encounter.boss.hp-=dmg;
+    lines.push('You strike for '+dmg+' damage!');
+  } else if(move==='skill'){
+    if(playerStats.mp<10){ lines.push('Not enough MP!'); }
+    else {
+      playerStats.mp-=10;
+      const dmg=18+Math.floor(Math.random()*10)+Math.floor(playerStats.level*2.2);
+      encounter.boss.hp-=dmg;
+      lines.push('Skill burst hits for '+dmg+'!');
+    }
+  } else if(move==='run'){
+    if(Math.random()<0.38){ lines.push('Got away safely.'); updateBattleUi(lines.join(' ')); return endEncounter(false); }
+    lines.push('Could not escape!');
+  }
+
+  if(encounter.boss.hp<=0){
+    updateBattleUi((lines.join(' ')+' Guardian defeated!').trim());
+    return setTimeout(()=>endEncounter(true),380);
+  }
+  const ret=encounter.boss.atkMin+Math.floor(Math.random()*(encounter.boss.atkMax-encounter.boss.atkMin+1));
+  encounter.playerHp-=ret;
+  lines.push(encounter.boss.name+' hits back for '+ret+'.');
+  if(encounter.playerHp<=0){
+    playerStats.hp=playerStats.maxHp;
+    playerStats.gold=Math.max(0,playerStats.gold-30);
+    player.x=420;player.y=760;snapMotion();
+    updateBattleUi(lines.join(' ')+' You blacked out!');
+    return setTimeout(()=>endEncounter(false),420);
+  }
+  playerStats.hp=Math.max(1,encounter.playerHp);
+  updateBattleUi(lines.join(' '));
+}
+function interactNode(){
+  if(anyModalOpen()) return;
+  const node=getNearestLockedNode(58);
+  if(!node){ toast('No chapter node in range'); return; }
+  const cfg=nodeBosses[node.id];
+  if(!cfg){ viewed.add(node.id); save(); refreshHud(); return; }
+  showEncounterFlash();
+  encounter.active=true;
+  encounter.nodeId=node.id;
+  encounter.boss={...cfg,maxHp:cfg.hp};
+  encounter.playerHp=Math.max(1,playerStats.hp);
+  const modal=document.getElementById('battleModal');
+  if(modal) modal.classList.add('open');
+  updateBattleUi('A wild '+cfg.name+' blocks '+node.id+'!');
 }
 
 function drawHeroBlockTo(c2d,x,y,theme='warm'){
@@ -1595,14 +1729,8 @@ function update(dt){
   } else {
     playerAnim.phase *= 0.88;
   }
-  let unlocked=false;
-  nodes.forEach(n=>{
-    const zone=nodeTriggerBounds.get(n.id);
-    if(zone && pointInRect(player.x,player.y,zone) && !viewed.has(n.id)){
-      viewed.add(n.id);unlocked=true;toast('Unlocked: '+n.title);
-    }
-  });
-  if(unlocked){save();refreshHud();applyProgressionReactions();}
+  const nearNode=getNearestLockedNode(58);
+  nearbyNodeId=nearNode?nearNode.id:null;
 
   runRoleLoops(dt);
   runNpcProximityInteractions(dt);
@@ -1697,7 +1825,7 @@ function render(nowMs){
     ctx.fillStyle='#1a1c24'; ctx.fillRect(m.x-14,m.y-18,28,4);
     ctx.fillStyle='#bc2c2c'; ctx.fillRect(m.x-14,m.y-18,Math.max(0,28*(m.hp/m.maxHp)),4);
   });
-  nodes.forEach(n=>{if(!inView(n.x-8,n.y-22,16,22,60)) return; const seen=viewed.has(n.id); ctx.fillStyle=seen?'#8bff9e':'#ffdf6f'; ctx.fillRect(n.x-8,n.y-22,16,16); ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,9);});
+  nodes.forEach(n=>{if(!inView(n.x-8,n.y-22,16,22,60)) return; const seen=viewed.has(n.id); const near=!seen && nearbyNodeId===n.id; ctx.fillStyle=seen?'#8bff9e':(near?'#ffd15c':'#ffdf6f'); ctx.fillRect(n.x-8,n.y-22,16,16); ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,9); if(near){ctx.fillStyle='#fff';ctx.font='bold 9px monospace';ctx.fillText('!',n.x-2,n.y-27);} });
   reactiveProps.forEach(p=>{
     drawReactiveProp(p);
     if(p.lit>0.05){
@@ -1804,7 +1932,7 @@ function ensureSpawnValid(){
 
 resize(); rebuildStaticLayers(); ensureSpawnValid(); rafId=requestAnimationFrame(frame);
 
-const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal');
+const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal');
 const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath'),hudStats=document.getElementById('hudStats'),hudControls=document.getElementById('hudControls'),hpBar=document.getElementById('hpBar'),mpBar=document.getElementById('mpBar'),xpBar=document.getElementById('xpBar');
 const demoIndicator=document.getElementById('demoIndicator');
 const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
@@ -1919,8 +2047,8 @@ function refreshHud(){
   if(xpBar) xpBar.style.width=(Math.max(0,playerStats.xp)/playerStats.xpNext*100).toFixed(1)+'%';
   if(hudControls){
     hudControls.innerHTML = IS_MOBILE
-      ? 'Controls: <b>Joystick</b> move · <b>ATTACK</b> button or tap enemy · <b>TOUR</b> guide.'
-      : 'Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>TOUR</b> guide.';
+      ? 'Controls: <b>Joystick</b> move · <b>ATTACK</b> · <b>INTERACT</b> near node · <b>TOUR</b> guide.'
+      : 'Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>E</b> interact node · <b>TOUR</b> guide.';
   }
 
   if(guidedTourActive){
@@ -1930,8 +2058,12 @@ function refreshHud(){
     return;
   }
   if(next){
-    hudHint.textContent=next.id+' — '+next.title;
-    hudPath.textContent='Path: follow the gold beacon + minimap marker to '+next.id+'.';
+    hudHint.textContent=nearbyNodeId===next.id
+      ? next.id+' — Guardian nearby. Press INTERACT to start boss battle.'
+      : next.id+' — '+next.title;
+    hudPath.textContent=nearbyNodeId===next.id
+      ? 'Battle trigger: press INTERACT (or tap node on mobile) to unlock this chapter.'
+      : 'Path: follow the gold beacon + minimap marker to '+next.id+'.';
   }else{
     hudHint.textContent='All quests complete. Keep farming mobs or replay via TOUR.';
     hudPath.textContent='Path: free roam active — open MAP to revisit any chapter.';
@@ -1939,7 +2071,7 @@ function refreshHud(){
 }
 function openTopModal(el){ resetJoystick(); snapMotion(); el.classList.add('open'); }
 function closeTopModal(el){ if(el.classList.contains('open')){ el.classList.remove('open'); resetJoystick(); toast('Back in city view'); } }
-function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open'); }
+function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open'); }
 
 function sanitizeViewedProgress(){
   const validIds=new Set(nodes.map(n=>n.id));
@@ -2061,6 +2193,10 @@ bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list)
 bindClick('tourBtn',()=>startGuidedTour());
 bindClick('quickTour',()=>startGuidedTour());
 bindClick('attackBtn',()=>attackMob());
+bindClick('interactBtn',()=>interactNode());
+bindClick('battleFightBtn',()=>runEncounterTurn('fight'));
+bindClick('battleSkillBtn',()=>runEncounterTurn('skill'));
+bindClick('battleRunBtn',()=>runEncounterTurn('run'));
 bindClick('quickNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();toast('Jumped to '+n.id+' — '+n.title);});
 bindClick('tourNext',()=>nextGuidedTour());
 bindClick('tourPrev',()=>prevGuidedTour());
@@ -2115,6 +2251,7 @@ if(safeStorageGet(STORAGE_KEYS.hudHidden)==='1') objectiveHud.style.display='non
 addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(guidedTourActive) return stopGuidedTour();
+    if(battleModal.classList.contains('open')) return runEncounterTurn('run');
     if(statsModal.classList.contains('open')) return closeTopModal(statsModal);
     if(mapModal.classList.contains('open')) return closeTopModal(mapModal);
     if(menuModal.classList.contains('open')) return closeTopModal(menuModal);
@@ -2129,6 +2266,7 @@ addEventListener('keydown',e=>{
     else startGuidedTour();
   }
   if((e.key==='n' || e.key==='N') && guidedTourActive) nextGuidedTour();
+  if(e.key==='e' || e.key==='E') interactNode();
   if(e.key==='c' || e.key==='C'){
     collisionDebug.enabled=!collisionDebug.enabled;
     if(!collisionDebug.enabled) lastCollisionDebugData=[];
