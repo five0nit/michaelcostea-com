@@ -149,6 +149,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     <div class="top-actions">
       <button class="btn secondary" id="mapBtn" aria-label="Open map and chapter progress">MAP</button>
       <button class="btn secondary" id="tourBtn" aria-label="Start guided showcase tour">TOUR</button>
+      <button class="btn secondary" id="fastTrackBtn" aria-label="Open fast track resume mode">FAST TRACK</button>
       <button class="btn" id="menuBtn" aria-label="Open menu">MENU</button>
     </div>
   </div>
@@ -171,7 +172,6 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
   <div class="demo-indicator" id="demoIndicator">DEMO ROUTE ACTIVE</div>
   <div class="quick-controls" id="quickControls">
     <button class="btn attack" id="attackBtn" aria-label="Attack nearest enemy">ATTACK</button>
-    <button class="btn" id="interactBtn" aria-label="Interact with chapter node">INTERACT</button>
     <button class="btn ghost" id="quickNext" aria-label="Jump to next resume stage">NEXT STAGE</button>
     <button class="btn ghost" id="quickTour" aria-label="Start guided showcase tour">GUIDED TOUR</button>
   </div>
@@ -224,6 +224,18 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
   </div>
 </div>
 
+<div class="modal" id="fastTrackModal">
+  <div class="card">
+    <h3>Fast Track — Resume & Skills</h3>
+    <p>Quick assessment mode: review all stages, milestones, and skills without playing battles.</p>
+    <ul id="fastTrackList"></ul>
+    <div class="btn-cluster">
+      <button class="btn secondary" id="fastTrackTourBtn">Auto Walkthrough</button>
+      <button class="btn" id="closeFastTrack">Close</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="menuModal">
   <div class="card">
     <h3>DO NOT TOUCH // MENU</h3>
@@ -266,8 +278,8 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     <p>An old-school fantasy-RPG-inspired portfolio world. Complete quests, defeat roaming mobs, and unlock career chapters.</p>
     <ul class="onboard-list">
       <li><b>Fast start:</b> Follow the glowing objective in the HUD to unlock chapters in sequence.</li>
-      <li><b>Controls:</b> WASD / Arrow keys + SPACE + E on desktop, joystick + ATTACK + INTERACT on mobile.</li>
-      <li><b>Stage unlock flow:</b> Reach a resume stage node, trigger INTERACT, then win guardian battle to unlock milestones + skills.</li>
+      <li><b>Controls:</b> WASD / Arrow keys + SPACE on desktop, joystick + ATTACK on mobile.</li>
+      <li><b>Stage unlock flow:</b> Reach a resume stage node and battle auto-triggers; win to unlock milestones + skills.</li>
       <li><b>Premium demo mode:</b> Tap <b>GUIDED TOUR</b> for narration-style walkthrough, or <b>MENU → Start Demo Route</b> for timed autoplay.</li>
     </ul>
     <div class="onboard-foot">
@@ -453,6 +465,8 @@ const resumeStages={
 };
 let nearbyNodeId=null;
 const encounter={active:false,nodeId:null,boss:null,playerHp:0};
+let encounterAutoCooldown=0;
+let fastTrackTimer=null;
 const stageBattleTheme={N1:'#9bbc6f',N2:'#8bac0f',N3:'#7ea45c',N4:'#9bbc6f',N5:'#8bac0f',N6:'#7ea45c',N7:'#9bbc6f',N8:'#8bac0f'};
 
 const npcs=[
@@ -996,6 +1010,7 @@ function showVictoryCard(nodeId,cfg){
 function endEncounter(win){
   const modal=document.getElementById('battleModal');
   if(modal) modal.classList.remove('open');
+  encounterAutoCooldown=0.9;
   if(win && encounter.nodeId){
     const cfg=nodeBosses[encounter.nodeId];
     viewed.add(encounter.nodeId);
@@ -1696,6 +1711,7 @@ function update(dt){
     return;
   }
   time += dt*60;
+  encounterAutoCooldown=Math.max(0,encounterAutoCooldown-dt);
   const phase=getProgressionPhase();
   const scheduleBand=getScheduleBand();
   const cadence=getCadenceProfile(phase.id,scheduleBand.id);
@@ -1830,6 +1846,9 @@ function update(dt){
   }
   const nearNode=getNearestLockedNode(58);
   nearbyNodeId=nearNode?nearNode.id:null;
+  if(nearNode && !encounter.active && !guidedTourActive && encounterAutoCooldown<=0 && !battleModal.classList.contains('open')){
+    interactNode();
+  }
 
   runRoleLoops(dt);
   runNpcProximityInteractions(dt);
@@ -2031,7 +2050,7 @@ function ensureSpawnValid(){
 
 resize(); rebuildStaticLayers(); ensureSpawnValid(); rafId=requestAnimationFrame(frame);
 
-const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal'),victoryModal=document.getElementById('victoryModal');
+const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal'),victoryModal=document.getElementById('victoryModal'),fastTrackModal=document.getElementById('fastTrackModal');
 const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath'),hudStats=document.getElementById('hudStats'),hudControls=document.getElementById('hudControls'),hpBar=document.getElementById('hpBar'),mpBar=document.getElementById('mpBar'),xpBar=document.getElementById('xpBar');
 const demoIndicator=document.getElementById('demoIndicator');
 const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
@@ -2105,11 +2124,6 @@ function renderTourStep(){
   refreshHud();
 }
 function startGuidedTour(){
-  if(REDUCED_MOTION){
-    stopGuidedTour(true);
-    toast('Guided tour disabled in reduced-motion mode');
-    return;
-  }
   stopDemoRoute();
   guidedTourActive=true;
   guidedTourIndex=0;
@@ -2120,6 +2134,7 @@ function startGuidedTour(){
 function stopGuidedTour(silent=false){
   guidedTourActive=false;
   guidedTourIndex=0;
+  if(fastTrackTimer){ clearInterval(fastTrackTimer); fastTrackTimer=null; }
   tourPanel.classList.remove('show');
   if(!silent) toast('Guided tour ended');
 }
@@ -2133,6 +2148,25 @@ function prevGuidedTour(){
   if(!guidedTourActive) return;
   guidedTourIndex=Math.max(0,guidedTourIndex-1);
   renderTourStep();
+}
+
+function buildFastTrackList(){
+  const list=document.getElementById('fastTrackList');
+  if(!list) return;
+  list.innerHTML=nodes.map(n=>{
+    const st=resumeStages[n.id]||{label:n.title,milestones:[n.desc],skills:['—']};
+    const done=viewed.has(n.id)?'✅':'⬜';
+    return `<li>${done} <b>Stage ${n.id}</b> — ${st.label}<br><small>Milestones: ${st.milestones.join(' · ')}</small><br><small>Skills: ${st.skills.join(' · ')}</small></li>`;
+  }).join('');
+}
+function startFastTrackWalkthrough(){
+  if(fastTrackTimer){ clearInterval(fastTrackTimer); fastTrackTimer=null; }
+  startGuidedTour();
+  fastTrackTimer=setInterval(()=>{
+    if(!guidedTourActive){ clearInterval(fastTrackTimer); fastTrackTimer=null; return; }
+    if(guidedTourIndex>=guidedTourSteps.length-1){ stopGuidedTour(true); clearInterval(fastTrackTimer); fastTrackTimer=null; return; }
+    nextGuidedTour();
+  },2300);
 }
 
 function refreshHud(){
@@ -2149,8 +2183,8 @@ function refreshHud(){
   if(xpBar) xpBar.style.width=(Math.max(0,playerStats.xp)/playerStats.xpNext*100).toFixed(1)+'%';
   if(hudControls){
     hudControls.innerHTML = IS_MOBILE
-      ? 'Controls: <b>Joystick</b> move · <b>ATTACK</b> · <b>INTERACT</b> to start stage battle · <b>TOUR</b>.'
-      : 'Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>E</b> to start stage battle · <b>TOUR</b>.';
+      ? 'Controls: <b>Joystick</b> move · <b>ATTACK</b> · Stage battles auto-trigger · <b>FAST TRACK</b> quick review.'
+      : 'Controls: <b>WASD</b> move · <b>SPACE</b> attack · Stage battles auto-trigger · <b>FAST TRACK</b> quick review.';
   }
   if(next){
     const st=resumeStages[next.id];
@@ -2171,11 +2205,11 @@ function refreshHud(){
   }
   if(next){
     hudHint.textContent=nearbyNodeId===next.id
-      ? 'Stage '+next.id+' ready — trigger INTERACT to battle the guardian and unlock this resume chapter.'
+      ? 'Stage '+next.id+' encounter incoming — guardian battle auto-starts when you enter range.'
       : 'Next resume stage: '+next.id+' — '+next.title;
     hudPath.textContent=nearbyNodeId===next.id
-      ? 'Unlock flow: INTERACT → turn-based boss fight → stage milestones + skills unlocked.'
-      : 'Path: follow beacon + minimap to Stage '+next.id+'.';
+      ? 'Unlock flow: auto encounter → boss battle → milestones + skills unlocked.'
+      : 'Path: follow beacon + minimap to Stage '+next.id+' or use FAST TRACK for instant review.';
   }else{
     hudHint.textContent='All quests complete. Keep farming mobs or replay via TOUR.';
     hudPath.textContent='Path: free roam active — open MAP to revisit any chapter.';
@@ -2183,7 +2217,7 @@ function refreshHud(){
 }
 function openTopModal(el){ resetJoystick(); snapMotion(); el.classList.add('open'); }
 function closeTopModal(el){ if(el.classList.contains('open')){ el.classList.remove('open'); resetJoystick(); toast('Back in city view'); } }
-function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open')||victoryModal.classList.contains('open'); }
+function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open')||victoryModal.classList.contains('open')||fastTrackModal.classList.contains('open'); }
 
 function sanitizeViewedProgress(){
   const validIds=new Set(nodes.map(n=>n.id));
@@ -2245,7 +2279,6 @@ function runRegressionGuards(){
   // Reduced motion must remain stable and never autoplay-heavy.
   if(REDUCED_MOTION){
     if(demoRouteTimer) stopDemoRoute();
-    if(guidedTourActive) stopGuidedTour(true);
     if(quality!=='low') setQuality('low','silent');
   }
 
@@ -2270,9 +2303,9 @@ function runRegressionGuards(){
   ['tourBtn','quickTour','startOnboardTour'].forEach(id=>{
     const btn=document.getElementById(id);
     if(!btn) return;
-    btn.disabled=REDUCED_MOTION;
-    btn.setAttribute('aria-disabled',REDUCED_MOTION?'true':'false');
-    btn.title=REDUCED_MOTION?'Disabled while reduced motion is enabled':'';
+    btn.disabled=false;
+    btn.setAttribute('aria-disabled','false');
+    btn.title='';
   });
 
   // HUD regression guard: keep hidden/visible state aligned with persisted preference.
@@ -2302,10 +2335,12 @@ function bindClick(id,handler){
 
 bindClick('menuBtn',()=>openTopModal(menuModal));
 bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map(n=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next objective':'Locked');return '<li>'+mark+' <b>'+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small></li>';}).join('');openTopModal(mapModal);});
+bindClick('fastTrackBtn',()=>{buildFastTrackList(); openTopModal(fastTrackModal);});
+bindClick('fastTrackTourBtn',()=>{closeTopModal(fastTrackModal); startFastTrackWalkthrough();});
+bindClick('closeFastTrack',()=>closeTopModal(fastTrackModal));
 bindClick('tourBtn',()=>startGuidedTour());
 bindClick('quickTour',()=>startGuidedTour());
 bindClick('attackBtn',()=>attackMob());
-bindClick('interactBtn',()=>interactNode());
 bindClick('battleFightBtn',()=>runEncounterTurn('fight'));
 bindClick('battleSkillBtn',()=>runEncounterTurn('skill'));
 bindClick('battleRunBtn',()=>runEncounterTurn('run'));
@@ -2324,6 +2359,7 @@ statsModal.onclick=e=>{if(e.target===statsModal)closeTopModal(statsModal)};
 onboardModal.onclick=e=>{if(e.target===onboardModal)closeTopModal(onboardModal)};
 battleModal.onclick=e=>{if(e.target===battleModal)runEncounterTurn('run')};
 victoryModal.onclick=e=>{if(e.target===victoryModal) victoryModal.classList.remove('open')};
+fastTrackModal.onclick=e=>{if(e.target===fastTrackModal) closeTopModal(fastTrackModal)};
 
 bindClick('backSite',()=>location.href='../index.html');
 bindClick('jumpNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();closeTopModal(menuModal);});
@@ -2367,6 +2403,7 @@ addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(guidedTourActive) return stopGuidedTour();
     if(victoryModal.classList.contains('open')) return victoryModal.classList.remove('open');
+    if(fastTrackModal.classList.contains('open')) return closeTopModal(fastTrackModal);
     if(battleModal.classList.contains('open')) return runEncounterTurn('run');
     if(statsModal.classList.contains('open')) return closeTopModal(statsModal);
     if(mapModal.classList.contains('open')) return closeTopModal(mapModal);
@@ -2382,7 +2419,6 @@ addEventListener('keydown',e=>{
     else startGuidedTour();
   }
   if((e.key==='n' || e.key==='N') && guidedTourActive) nextGuidedTour();
-  if(e.key==='e' || e.key==='E') interactNode();
   if(e.key==='c' || e.key==='C'){
     collisionDebug.enabled=!collisionDebug.enabled;
     if(!collisionDebug.enabled) lastCollisionDebugData=[];
