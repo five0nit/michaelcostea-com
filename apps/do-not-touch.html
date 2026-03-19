@@ -69,7 +69,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .battle-log{margin:8px 0;background:#f8f6ee;border:2px solid #6a5a40;padding:8px;min-height:58px;font-size:.86rem}
 .battle-actions{display:flex;flex-wrap:wrap;gap:8px}
 .battle-actions .btn{min-height:40px}
-.resume-stage{position:fixed;right:12px;top:calc(var(--top-ui-clearance) + 190px);z-index:9;max-width:min(90vw,360px);background:rgba(18,48,30,.94);border:3px solid var(--ui-border);padding:8px;color:#d7f2bd;font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;box-shadow:var(--ui-shadow-soft)}
+.resume-stage{position:fixed;right:12px;top:calc(var(--top-ui-clearance) + 190px);z-index:9;max-width:min(90vw,360px);background:rgba(18,48,30,.94);border:3px solid var(--ui-border);padding:8px;color:#d7f2bd;font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;box-shadow:var(--ui-shadow-soft);pointer-events:none}
 .resume-stage b{display:block;margin-bottom:3px;font-size:12px}
 .resume-stage .mini{font-size:11px;opacity:.95}
 .encounter-flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0;background:radial-gradient(circle at center,rgba(255,255,255,.86) 0,rgba(255,255,255,0) 58%),repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 8px,rgba(0,0,0,.14) 8px 16px)}
@@ -94,7 +94,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .tour-actions .btn{min-height:36px;padding:6px 10px;font-size:.8rem}
 .quick-controls{position:fixed;left:12px;right:calc(var(--joystick-slot) + 8px);bottom:var(--quick-controls-bottom);z-index:10;display:flex;gap:6px;flex-wrap:wrap;pointer-events:auto}
 .quick-controls .btn{min-height:44px;padding:6px 10px;font-size:.76rem;flex:1 1 150px}
-.quick-controls .btn.attack{flex:1 1 110px;background:#ffd9d9;border-color:#7f2a2a;color:#4f1111}
+.quick-controls .btn.attack{flex:1 1 110px;background:#8bac0f;border-color:#306230;color:#173020}
 body.modal-open .quick-controls,body.modal-open .joystick{display:none !important}
 .hud-keyline{margin-top:6px;font-size:11px;opacity:.88;line-height:1.35}
 .btn-cluster{display:flex;gap:8px;flex-wrap:wrap}
@@ -114,6 +114,8 @@ body.modal-open .quick-controls,body.modal-open .joystick{display:none !importan
   .topbar{left:8px;right:8px}
   .top-actions{gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:74vw}
   .top-actions .btn{min-height:44px;flex:1 1 90px}
+  #resumeStagePanel{top:calc(var(--top-ui-clearance) + 145px);max-width:min(92vw,320px)}
+  #hirePanel{display:none}
   .stick{width:52px;height:52px;margin-left:-26px;margin-top:-26px}
 }
 @media (max-width:540px){
@@ -2357,7 +2359,9 @@ function refreshHud(){
     hudPath.textContent='Path: tour auto-positions you at each key resume stage.';
     return;
   }
+  const nextBtn=document.getElementById('quickNext');
   if(next){
+    if(nextBtn) nextBtn.textContent='NEXT STAGE';
     hudHint.textContent=nearbyNodeId===next.id
       ? 'Stage '+next.id+' encounter incoming — guardian battle auto-starts when you enter range.'
       : 'Next resume stage: '+next.id+' — '+next.title;
@@ -2365,6 +2369,7 @@ function refreshHud(){
       ? 'Unlock flow: auto encounter → boss battle → milestones + skills unlocked.'
       : 'Path: follow beacon + minimap to Stage '+next.id+' or use FAST TRACK for instant review.';
   }else{
+    if(nextBtn) nextBtn.textContent='REVIEW STAGES';
     hudHint.textContent='All resume stages complete. Replay TOUR or use FAST TRACK for quick assessment.';
     hudPath.textContent='Path: free roam active — open MAP to revisit any stage.';
   }
@@ -2505,7 +2510,15 @@ bindClick('battleFightBtn',()=>runEncounterTurn('fight'));
 bindClick('battleSkillBtn',()=>runEncounterTurn('skill'));
 bindClick('battleRunBtn',()=>runEncounterTurn('run'));
 bindClick('closeVictoryBtn',()=>{ if(victoryModal) victoryModal.classList.remove('open'); });
-bindClick('quickNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();toast('Jumped to Stage '+n.id+' — '+n.title);});
+bindClick('quickNext',()=>{
+  const next=nodes.find(n=>!viewed.has(n.id));
+  if(!next){
+    buildFastTrackList();
+    openTopModal(fastTrackModal);
+    return;
+  }
+  player.x=next.x;player.y=next.y+24;snapMotion();toast('Jumped to Stage '+next.id+' — '+next.title);
+});
 bindClick('tourNext',()=>nextGuidedTour());
 bindClick('tourPrev',()=>prevGuidedTour());
 bindClick('tourSkip',()=>stopGuidedTour());
