@@ -888,13 +888,40 @@ function drawCharacter(x,y,opt={}){
   const bob = moving ? Math.sin(phase*2)*1 : 0;
   const look = dir==='left' ? -1 : dir==='right' ? 1 : 0;
   const px=(dx,dy,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(Math.round(x+dx*scale),Math.round(y+(dy+bob)*scale),Math.round(w*scale),Math.round(h*scale));};
-  px(-12,22,24,4,'rgba(0,0,0,.28)'); px(-8,18,16,2,'rgba(255,255,255,.08)');
-  px(-10+stride*0.45,10,8,12,pants); px(2-stride*0.45,10,8,12,pants); px(-10+stride*0.45,20,8,3,shoe); px(2-stride*0.45,20,8,3,shoe);
-  px(-12,-6,24,18,jacket); px(-4,-3,8,13,shirt); px(-3,1,6,3,accent);
-  const armSwing = moving ? stride*0.35 : 0; px(-14-armSwing,-4,3,12,jacket); px(11+armSwing,-4,3,12,jacket);
-  px(-8+look,-18,16,12,skin); px(-8+look,-20,16,2,hair);
+
+  // Shadow + rim light for richer sprite depth
+  px(-13,22,26,4,'rgba(0,0,0,.34)');
+  px(-9,18,18,2,'rgba(255,255,255,.1)');
+
+  // legs / boots
+  px(-10+stride*0.45,9,8,13,pants);
+  px(2-stride*0.45,9,8,13,pants);
+  px(-10+stride*0.45,20,8,3,shoe);
+  px(2-stride*0.45,20,8,3,shoe);
+  px(-9+stride*0.45,11,6,1,'rgba(255,255,255,.1)');
+  px(3-stride*0.45,11,6,1,'rgba(255,255,255,.1)');
+
+  // torso + cloth folds
+  px(-12,-6,24,18,jacket);
+  px(-10,-4,20,2,'rgba(255,255,255,.08)');
+  px(-4,-3,8,13,shirt);
+  px(-3,1,6,3,accent);
+  px(-2,5,4,1,'rgba(255,255,255,.28)');
+
+  // arms
+  const armSwing = moving ? stride*0.35 : 0;
+  px(-14-armSwing,-4,3,12,jacket);
+  px(11+armSwing,-4,3,12,jacket);
+
+  // head / face details
+  px(-8+look,-18,16,12,skin);
+  px(-8+look,-20,16,2,hair);
+  px(-7+look,-19,14,1,'rgba(255,255,255,.1)');
   if(hat){ px(-9+look,-21,18,4,hat); if(brim) px(-4+look,-17,10,2,brim); }
-  const eyeOffset = dir==='up' ? -1 : dir==='down' ? 0 : look; px(-4+eyeOffset,-13,2,1,'#1b2f57'); px(2+eyeOffset,-13,2,1,'#1b2f57');
+  const eyeOffset = dir==='up' ? -1 : dir==='down' ? 0 : look;
+  px(-4+eyeOffset,-13,2,1,'#1b2f57');
+  px(2+eyeOffset,-13,2,1,'#1b2f57');
+  if(dir!=='up') px(-1+eyeOffset,-10,2,1,'#8b4f38');
 }
 function drawPixelGuy(x,y){drawCharacter(x,y,{scale:0.74,skin:MATERIALS.skin.base,jacket:MATERIALS.fabric.base,shirt:'#f2f5fb',accent:CHAPTER_PALETTE.accent[0],pants:'#12306f',shoe:'#0d1b34',hair:'#21395f',hat:'#2b67da',brim:'#1a448f',dir:playerAnim.dir,moving:playerAnim.moving,phase:playerAnim.phase});}
 function drawNPCGuy(x,y,shirt='#436f9a',skin=MATERIALS.skin.base,anim={}){drawCharacter(x,y,{scale:0.72,skin,jacket:MATERIALS.fabric.base,shirt,accent:'#dfe9ff',pants:'#263041',shoe:'#151b28',hair:'#2d3545',dir:anim.dir||'down',moving:!!anim.moving,phase:anim.phase||0});}
@@ -968,20 +995,42 @@ function drawBattleSprite(canvas,color='#7a6',type='boss'){
   const c=canvas.getContext('2d');
   c.imageSmoothingEnabled=false;
   c.clearRect(0,0,canvas.width,canvas.height);
-  c.fillStyle='#b8b096'; c.fillRect(0,0,canvas.width,canvas.height);
-  c.fillStyle='rgba(0,0,0,.12)'; c.fillRect(0,74,canvas.width,22);
-  const x=type==='boss'?70:56, y=52;
-  c.fillStyle='rgba(0,0,0,.28)'; c.fillRect(x-24,y+20,48,8);
-  c.fillStyle=color; c.fillRect(x-16,y-12,32,28);
-  c.fillStyle='#1f2430'; c.fillRect(x-12,y-20,24,10);
-  c.fillStyle='#f5d2b1'; c.fillRect(x-9,y-17,18,9);
-  c.fillStyle='#121722'; c.fillRect(x-5,y-14,2,2); c.fillRect(x+3,y-14,2,2);
-  c.fillStyle='#2a3042'; c.fillRect(x-18,y+18,8,10); c.fillRect(x+10,y+18,8,10);
+
+  // stage backdrop blocks (GBC-style)
+  c.fillStyle='#9bbc6f'; c.fillRect(0,0,128,58);
+  c.fillStyle='#8bac0f'; c.fillRect(0,58,128,38);
+  c.fillStyle='#306230'; c.fillRect(0,74,128,22);
+
+  const bob = Math.sin(time*0.18 + (type==='boss'?0:1.7))*1.2;
+  const x=type==='boss'?74:54, y=50+bob;
+
+  // shadow
+  c.fillStyle='rgba(0,0,0,.3)'; c.fillRect(x-26,y+20,52,8);
+
+  // torso
+  c.fillStyle=color; c.fillRect(x-17,y-13,34,30);
+  c.fillStyle='rgba(255,255,255,.18)'; c.fillRect(x-14,y-10,11,3);
+  c.fillStyle='rgba(0,0,0,.2)'; c.fillRect(x+4,y+8,10,6);
+
+  // head
+  c.fillStyle='#1f2430'; c.fillRect(x-13,y-22,26,10);
+  c.fillStyle='#f5d2b1'; c.fillRect(x-10,y-19,20,10);
+  c.fillStyle='#121722'; c.fillRect(x-6,y-16,2,2); c.fillRect(x+4,y-16,2,2);
+  c.fillStyle='#7a4d34'; c.fillRect(x-1,y-12,2,1);
+
+  // limbs
+  c.fillStyle='#2a3042'; c.fillRect(x-20,y+16,8,12); c.fillRect(x+12,y+16,8,12);
+  c.fillStyle='#1d2332'; c.fillRect(x-18,y+26,6,2); c.fillRect(x+12,y+26,6,2);
+
   if(type==='boss'){
-    c.fillStyle='#e1c168'; c.fillRect(x-20,y-24,40,4);
-    c.fillStyle='rgba(255,255,255,.24)'; c.fillRect(x-16,y-22,8,2);
+    // boss crown/horns
+    c.fillStyle='#e1c168'; c.fillRect(x-22,y-26,44,4);
+    c.fillStyle='#e1c168'; c.fillRect(x-24,y-28,4,4); c.fillRect(x+20,y-28,4,4);
+    c.fillStyle='rgba(255,255,255,.26)'; c.fillRect(x-16,y-24,8,2);
   } else {
-    c.fillStyle='#4a7dd8'; c.fillRect(x-14,y-24,28,5);
+    // player cap
+    c.fillStyle='#4a7dd8'; c.fillRect(x-15,y-25,30,5);
+    c.fillStyle='#2b4f8f'; c.fillRect(x-6,y-21,12,2);
   }
 }
 function updateBattleUi(msg=''){
@@ -1094,7 +1143,9 @@ function interactNode(){
   encounter.playerHp=Math.max(1,playerStats.hp);
   const modal=document.getElementById('battleModal');
   if(modal) modal.classList.add('open');
-  updateBattleUi('A wild '+cfg.name+' blocks '+node.id+'!');
+  const st=resumeStages[node.id];
+  const intro=st ? ('Stage '+node.id+': '+st.label+' — Guardian encounter!') : ('A wild '+cfg.name+' blocks '+node.id+'!');
+  updateBattleUi(intro);
 }
 
 function drawHeroBlockTo(c2d,x,y,theme='warm'){
@@ -2448,16 +2499,7 @@ bindClick('loadFullProgress',()=>{
   nodes.forEach(n=>viewed.add(n.id)); save(); refreshHud(); applyProgressionReactions(true); toast('All resume stages unlocked');
 });
 
-// onboarding flow
-if(safeStorageGet(STORAGE_KEYS.noOnboard)!=='1'){
-  openTopModal(onboardModal);
-  setTimeout(()=>{
-    if(onboardModal.classList.contains('open')){
-      closeTopModal(onboardModal);
-      toast('Tip: use MENU anytime for guide + controls');
-    }
-  },3000);
-}
+// onboarding flow (silent first run: no automatic popups)
 bindClick('startOnboard',()=>{
   const optOut=document.getElementById('dontShowOnboard');
   if(optOut && optOut.checked) safeStorageSet(STORAGE_KEYS.noOnboard,'1');
