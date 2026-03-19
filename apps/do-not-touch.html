@@ -68,7 +68,9 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 #battleBossSprite.hit,#battlePlayerSprite.hit{animation:spriteHit .24s ease}
 .battle-log{margin:8px 0;background:#f8f6ee;border:2px solid #6a5a40;padding:8px;min-height:58px;font-size:.86rem}
 .battle-actions{display:flex;flex-wrap:wrap;gap:8px}
-.battle-actions .btn{min-height:40px}
+.battle-actions .btn{min-height:40px;position:relative}
+.battle-actions .btn.selected{outline:2px solid #173021;box-shadow:0 0 0 2px #c7e69c inset}
+.battle-actions .btn.selected::before{content:'▶';position:absolute;left:6px;top:50%;transform:translateY(-50%);font:700 11px/1 monospace}
 .resume-stage{position:fixed;right:12px;top:calc(var(--top-ui-clearance) + 190px);z-index:9;max-width:min(90vw,360px);background:rgba(18,48,30,.94);border:3px solid var(--ui-border);padding:8px;color:#d7f2bd;font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;box-shadow:var(--ui-shadow-soft);pointer-events:none}
 .resume-stage b{display:block;margin-bottom:3px;font-size:12px}
 .resume-stage .mini{font-size:11px;opacity:.95}
@@ -126,7 +128,6 @@ body.modal-open .quick-controls,body.modal-open .joystick{display:none !importan
   .tour-panel{left:8px;right:8px;max-width:none;max-height:min(52vh,380px);overflow:auto}
   .quick-controls{left:8px;right:calc(var(--joystick-slot) + 2px)}
   .quick-controls .btn{flex:1 1 116px;min-height:40px;font-size:.72rem}
-  .quick-controls .btn.attack{flex:1 1 100%;order:-1;min-height:44px;font-size:.78rem}
   .toast{top:calc(env(safe-area-inset-top,0px)+56px);font-size:.76rem}
 }
 @media (pointer:fine) and (min-width:901px){
@@ -443,6 +444,8 @@ const mobs=[
 ];
 const cam={x:0,y:0};
 const motionState={vx:0,vy:0};
+const TILE_MOVE={enabled:true,size:24,stepSpeed:13};
+const tileState={moving:false,targetX:0,targetY:0};
 const MOVEMENT_TUNING={
   accel:26.5,
   decel:30.5,
@@ -504,6 +507,8 @@ let nearbyNodeId=null;
 const encounter={active:false,nodeId:null,boss:null,playerHp:0};
 let encounterAutoCooldown=0;
 let fastTrackTimer=null;
+let battleMenuIndex=0;
+let battleTypeTimer=null;
 const stageBattleTheme={N1:'#9bbc6f',N2:'#8bac0f',N3:'#7ea45c',N4:'#9bbc6f',N5:'#8bac0f',N6:'#7ea45c',N7:'#9bbc6f',N8:'#8bac0f'};
 const EXPERIENCE_FOCUS=true;
 
@@ -1083,6 +1088,22 @@ function drawBattleSprite(canvas,color='#7a6',type='boss'){
     c.fillStyle='#2b4f8f'; c.fillRect(x-6,y-21,12,2);
   }
 }
+function setBattleLogTypewriter(text=''){
+  const log=document.getElementById('battleLog');
+  if(!log) return;
+  if(battleTypeTimer){ clearInterval(battleTypeTimer); battleTypeTimer=null; }
+  log.textContent='';
+  let i=0;
+  battleTypeTimer=setInterval(()=>{
+    i++;
+    log.textContent=text.slice(0,i);
+    if(i>=text.length){ clearInterval(battleTypeTimer); battleTypeTimer=null; }
+  },14);
+}
+function updateBattleMenuCursor(){
+  const btns=[document.getElementById('battleFightBtn'),document.getElementById('battleSkillBtn'),document.getElementById('battleRunBtn')];
+  btns.forEach((b,i)=>{ if(!b) return; b.classList.toggle('selected',i===battleMenuIndex); });
+}
 function updateBattleUi(msg=''){
   const bn=document.getElementById('battleBossName');
   const bh=document.getElementById('battleBossHp');
@@ -1101,7 +1122,8 @@ function updateBattleUi(msg=''){
   }
   drawBattleSprite(playerCanvas,'#4f7fd3','player');
   if(ph) ph.textContent='HP: '+Math.max(0,encounter.playerHp)+'/'+playerStats.maxHp;
-  if(log && msg) log.textContent=msg;
+  if(msg) setBattleLogTypewriter(msg);
+  updateBattleMenuCursor();
 }
 function playBattleHit(target='boss'){
   sfxHit();
@@ -1195,6 +1217,7 @@ function interactNode(){
   encounter.nodeId=node.id;
   encounter.boss={...cfg,maxHp:cfg.hp};
   encounter.playerHp=Math.max(1,playerStats.hp);
+  battleMenuIndex=0;
   const st=resumeStages[node.id];
   const hook=(st&&st.outcomes&&st.outcomes[0])?('Proof target: '+st.outcomes[0]):'Guardian encounter!';
   const intro=st ? ('Stage '+node.id+': '+st.label+' — '+hook) : ('A wild '+cfg.name+' blocks '+node.id+'!');
@@ -1894,58 +1917,91 @@ function update(dt){
     if(npcChatPairs.length>=2) break;
   }
   let ix=(keys['ArrowRight']||keys['d']?1:0)-(keys['ArrowLeft']||keys['a']?1:0), iy=(keys['ArrowDown']||keys['s']?1:0)-(keys['ArrowUp']||keys['w']?1:0);
-  if(Math.abs(joyState.x)>0.06||Math.abs(joyState.y)>0.06){ix=joyState.x;iy=joyState.y;}
-  const inputMag=Math.hypot(ix,iy), m=inputMag||1; ix/=m; iy/=m;
+  if(Math.abs(joyState.x)>0.06||Math.abs(joyState.y)>0.06){
+    if(Math.abs(joyState.x)>Math.abs(joyState.y)){ ix=Math.sign(joyState.x); iy=0; }
+    else { iy=Math.sign(joyState.y); ix=0; }
+  }
 
-  const maxSpeed=player.s*MOVEMENT_TUNING.maxSpeedMul;
-  const targetVx=ix*maxSpeed*inputMag;
-  const targetVy=iy*maxSpeed*inputMag;
-  const responseRate=(inputMag>0.04)?MOVEMENT_TUNING.accel:MOVEMENT_TUNING.decel;
-  const blend=REDUCED_MOTION?1:(1-Math.exp(-responseRate*dt));
-  motionState.vx += (targetVx-motionState.vx)*blend;
-  motionState.vy += (targetVy-motionState.vy)*blend;
-
-  const moveX=motionState.vx*dt;
-  const moveY=motionState.vy*dt;
-  const maxTravel=Math.max(Math.abs(moveX),Math.abs(moveY));
-  const stepCount=Math.max(1,Math.min(4,Math.ceil(maxTravel/6)));
-  let nextX=player.x;
-  let nextY=player.y;
-  let hitX=false, hitY=false;
   let debugExpanded=[];
+  if(TILE_MOVE.enabled){
+    if(!tileState.moving){
+      let sx=0,sy=0;
+      if(Math.abs(ix)>Math.abs(iy)){ sx=Math.sign(ix); }
+      else if(Math.abs(iy)>0){ sy=Math.sign(iy); }
+      if(sx||sy){
+        tileState.targetX=player.x + sx*TILE_MOVE.size;
+        tileState.targetY=player.y + sy*TILE_MOVE.size;
+        tileState.moving=true;
+        playerAnim.dir=sx>0?'right':sx<0?'left':sy>0?'down':'up';
+      }
+    }
 
-  for(let s=0;s<stepCount;s++){
-    const desiredX=nextX + moveX/stepCount;
-    const desiredY=nextY + moveY/stepCount;
-    const fromX=nextX;
-    const fromY=nextY;
-    player.x=fromX;
-    player.y=fromY;
-    const resolved=resolvePlayerCollision(desiredX,desiredY);
-    nextX=resolved.x;
-    nextY=resolved.y;
-    hitX=hitX||resolved.hitX;
-    hitY=hitY||resolved.hitY;
-    if(collisionDebug.enabled) debugExpanded=resolved.expanded;
-  }
+    motionState.vx=0; motionState.vy=0;
+    if(tileState.moving){
+      const dx=tileState.targetX-player.x;
+      const dy=tileState.targetY-player.y;
+      const dist=Math.hypot(dx,dy);
+      const step=Math.min(dist,TILE_MOVE.stepSpeed*TILE_MOVE.size*dt);
+      const nx=player.x + (dist?dx/dist:0)*step;
+      const ny=player.y + (dist?dy/dist:0)*step;
+      const resolved=resolvePlayerCollision(nx,ny);
+      player.x=resolved.x; player.y=resolved.y;
+      if(collisionDebug.enabled) debugExpanded=resolved.expanded;
+      if(dist<0.9 || (resolved.hitX||resolved.hitY)){
+        player.x=Math.round(player.x/TILE_MOVE.size)*TILE_MOVE.size;
+        player.y=Math.round(player.y/TILE_MOVE.size)*TILE_MOVE.size;
+        tileState.moving=false;
+      }
+    }
 
-  player.x=nextX;
-  player.y=nextY;
-  if(collisionDebug.enabled) lastCollisionDebugData=debugExpanded;
-  if(hitX && Math.abs(moveX)>0.0001) motionState.vx=0;
-  if(hitY && Math.abs(moveY)>0.0001) motionState.vy=0;
-
-  const planarSpeed=Math.hypot(motionState.vx,motionState.vy);
-  const animSpeedNorm=Math.min(1,planarSpeed/(maxSpeed||1));
-  playerAnim.speed=animSpeedNorm;
-  playerAnim.moving=animSpeedNorm>0.05;
-  if(playerAnim.moving){
-    const dirX=Math.abs(motionState.vx), dirY=Math.abs(motionState.vy);
-    playerAnim.dir=dirX>dirY?(motionState.vx>=0?'right':'left'):(motionState.vy>=0?'down':'up');
-    playerAnim.phase += dt*(12 + animSpeedNorm*11);
+    const animSpeedNorm=tileState.moving?0.95:0;
+    playerAnim.speed=animSpeedNorm;
+    playerAnim.moving=tileState.moving;
+    if(playerAnim.moving) playerAnim.phase += dt*11;
+    else playerAnim.phase *= 0.88;
   } else {
-    playerAnim.phase *= 0.88;
+    const inputMag=Math.hypot(ix,iy), m=inputMag||1; ix/=m; iy/=m;
+    const maxSpeed=player.s*MOVEMENT_TUNING.maxSpeedMul;
+    const targetVx=ix*maxSpeed*inputMag;
+    const targetVy=iy*maxSpeed*inputMag;
+    const responseRate=(inputMag>0.04)?MOVEMENT_TUNING.accel:MOVEMENT_TUNING.decel;
+    const blend=REDUCED_MOTION?1:(1-Math.exp(-responseRate*dt));
+    motionState.vx += (targetVx-motionState.vx)*blend;
+    motionState.vy += (targetVy-motionState.vy)*blend;
+
+    const moveX=motionState.vx*dt;
+    const moveY=motionState.vy*dt;
+    const maxTravel=Math.max(Math.abs(moveX),Math.abs(moveY));
+    const stepCount=Math.max(1,Math.min(4,Math.ceil(maxTravel/6)));
+    let nextX=player.x;
+    let nextY=player.y;
+    let hitX=false, hitY=false;
+
+    for(let s=0;s<stepCount;s++){
+      const desiredX=nextX + moveX/stepCount;
+      const desiredY=nextY + moveY/stepCount;
+      player.x=nextX; player.y=nextY;
+      const resolved=resolvePlayerCollision(desiredX,desiredY);
+      nextX=resolved.x; nextY=resolved.y;
+      hitX=hitX||resolved.hitX; hitY=hitY||resolved.hitY;
+      if(collisionDebug.enabled) debugExpanded=resolved.expanded;
+    }
+
+    player.x=nextX; player.y=nextY;
+    if(hitX && Math.abs(moveX)>0.0001) motionState.vx=0;
+    if(hitY && Math.abs(moveY)>0.0001) motionState.vy=0;
+    const planarSpeed=Math.hypot(motionState.vx,motionState.vy);
+    const animSpeedNorm=Math.min(1,planarSpeed/(maxSpeed||1));
+    playerAnim.speed=animSpeedNorm;
+    playerAnim.moving=animSpeedNorm>0.05;
+    if(playerAnim.moving){
+      const dirX=Math.abs(motionState.vx), dirY=Math.abs(motionState.vy);
+      playerAnim.dir=dirX>dirY?(motionState.vx>=0?'right':'left'):(motionState.vy>=0?'down':'up');
+      playerAnim.phase += dt*(12 + animSpeedNorm*11);
+    } else playerAnim.phase *= 0.88;
   }
+
+  if(collisionDebug.enabled) lastCollisionDebugData=debugExpanded;
   const nearNode=getNearestLockedNode(84);
   nearbyNodeId=nearNode?nearNode.id:null;
   if(nearNode && !encounter.active && !guidedTourActive && encounterAutoCooldown<=0 && !battleModal.classList.contains('open')){
@@ -2501,9 +2557,9 @@ bindClick('closeFastTrackSummary',()=>closeTopModal(fastTrackSummaryModal));
 bindClick('closeFastTrack',()=>closeTopModal(fastTrackModal));
 bindClick('tourBtn',()=>startGuidedTour());
 bindClick('quickTour',()=>startGuidedTour());
-bindClick('battleFightBtn',()=>runEncounterTurn('fight'));
-bindClick('battleSkillBtn',()=>runEncounterTurn('skill'));
-bindClick('battleRunBtn',()=>runEncounterTurn('run'));
+bindClick('battleFightBtn',()=>{battleMenuIndex=0;updateBattleMenuCursor();runEncounterTurn('fight');});
+bindClick('battleSkillBtn',()=>{battleMenuIndex=1;updateBattleMenuCursor();runEncounterTurn('skill');});
+bindClick('battleRunBtn',()=>{battleMenuIndex=2;updateBattleMenuCursor();runEncounterTurn('run');});
 bindClick('closeVictoryBtn',()=>{ if(victoryModal) victoryModal.classList.remove('open'); });
 bindClick('quickNext',()=>{
   const next=nodes.find(n=>!viewed.has(n.id));
@@ -2581,6 +2637,16 @@ addEventListener('keydown',e=>{
     if(mapModal.classList.contains('open')) return closeTopModal(mapModal);
     if(menuModal.classList.contains('open')) return closeTopModal(menuModal);
     if(onboardModal.classList.contains('open')) return closeTopModal(onboardModal);
+  }
+
+  if(battleModal.classList.contains('open')){
+    if(['ArrowLeft','ArrowUp'].includes(e.key)){ e.preventDefault(); battleMenuIndex=(battleMenuIndex+2)%3; return updateBattleMenuCursor(); }
+    if(['ArrowRight','ArrowDown'].includes(e.key)){ e.preventDefault(); battleMenuIndex=(battleMenuIndex+1)%3; return updateBattleMenuCursor(); }
+    if(e.key==='Enter' || e.key===' '){
+      e.preventDefault();
+      return runEncounterTurn(['fight','skill','run'][battleMenuIndex]);
+    }
+    return;
   }
 
   // Guard against modal/tour state conflicts from global shortcuts during overlays.
