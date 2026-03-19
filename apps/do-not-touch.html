@@ -39,7 +39,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .stat-meter>span{display:block;height:100%;background:linear-gradient(90deg,#71d8ff,#94ffaf)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px)+62px);z-index:30;background:rgba(8,14,28,.92);color:#e5eeff;border:2px solid var(--ui-border);border-radius:var(--ui-radius);padding:8px 12px;font-size:.8rem;font-family:monospace;letter-spacing:.01em;max-width:min(92vw,720px);line-height:1.25;opacity:0;transition:opacity .2s;box-shadow:var(--ui-shadow-soft);text-wrap:balance}
 .toast.show{opacity:1}
-.hud-panel{position:fixed;left:12px;top:var(--top-ui-clearance);z-index:7;pointer-events:none;background:rgba(10,30,20,.94);color:#dff6c9;border:3px solid var(--ui-border);padding:8px 10px;min-width:260px;max-width:min(88vw,420px);font:var(--ui-font);box-shadow:var(--ui-shadow-soft);backdrop-filter:blur(1.5px)}
+.hud-panel{position:fixed;left:12px;top:var(--top-ui-clearance);z-index:7;pointer-events:auto;background:rgba(10,30,20,.94);color:#dff6c9;border:3px solid var(--ui-border);padding:8px 10px;min-width:260px;max-width:min(88vw,420px);font:var(--ui-font);box-shadow:var(--ui-shadow-soft);backdrop-filter:blur(1.5px)}
 .hud-row{display:flex;justify-content:space-between;gap:8px;align-items:center}
 .hud-row b{font-size:12px;line-height:1.25}
 .hud-pill{display:inline-block;padding:1px 6px;border:1px solid #7ea2df;background:#132b4b;color:#dce9ff;font:700 11px/1.2 monospace;letter-spacing:.04em;margin-bottom:3px}
@@ -69,7 +69,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .battle-log{margin:8px 0;background:#f8f6ee;border:2px solid #6a5a40;padding:8px;min-height:58px;font-size:.86rem}
 .battle-actions{display:flex;flex-wrap:wrap;gap:8px}
 .battle-actions .btn{min-height:40px}
-.resume-stage{position:fixed;right:12px;bottom:calc(var(--control-bottom) + 8px);z-index:9;max-width:min(90vw,360px);background:rgba(18,48,30,.94);border:3px solid var(--ui-border);padding:8px;color:#d7f2bd;font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;box-shadow:var(--ui-shadow-soft)}
+.resume-stage{position:fixed;right:12px;top:calc(var(--top-ui-clearance) + 190px);z-index:9;max-width:min(90vw,360px);background:rgba(18,48,30,.94);border:3px solid var(--ui-border);padding:8px;color:#d7f2bd;font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;box-shadow:var(--ui-shadow-soft)}
 .resume-stage b{display:block;margin-bottom:3px;font-size:12px}
 .resume-stage .mini{font-size:11px;opacity:.95}
 .encounter-flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0;background:radial-gradient(circle at center,rgba(255,255,255,.86) 0,rgba(255,255,255,0) 58%),repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 8px,rgba(0,0,0,.14) 8px 16px)}
@@ -150,6 +150,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
       <button class="btn secondary" id="mapBtn" aria-label="Open resume stage map and progress">MAP</button>
       <button class="btn secondary" id="tourBtn" aria-label="Start guided resume tour">TOUR</button>
       <button class="btn secondary" id="fastTrackBtn" aria-label="Open fast track resume mode">FAST TRACK</button>
+      <button class="btn secondary" id="hudToggleBtn" aria-label="Toggle objective panel">HUD</button>
       <button class="btn" id="menuBtn" aria-label="Open menu">MENU</button>
     </div>
   </div>
@@ -157,7 +158,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
   <div class="joystick" id="joy"><div class="stick" id="stick"></div></div>
   <div class="toast" id="toast"></div>
   <div class="hud-panel" id="objectiveHud" aria-live="polite">
-    <div class="hud-row"><b id="hudProgress">Quests: 0/8 completed</b><button class="hud-close" id="hideHud" aria-label="Hide objective hint">Hide</button></div>
+    <div class="hud-row"><b id="hudProgress">Resume stages: 0/8 completed</b><button class="hud-close" id="hideHud" aria-label="Toggle objective hint panel">Hide/Show</button></div>
     <div class="hud-pill">NEXT OBJECTIVE</div>
     <div class="hud-sub" id="hudHint">Move toward the highlighted stage banner to progress through the resume journey.</div>
     <div class="hud-meta" id="hudPath">Path: follow the gold beacon + minimap marker.</div>
@@ -395,7 +396,7 @@ const CHAPTER_PALETTE={
 };
 const world={w:1800,h:2400};
 const ROAD_X=640, ROAD_W=STYLE_BIBLE.ref.laneW*4;
-const player={x:420,y:760,s:7.4};
+const player={x:420,y:760,s:18.5};
 const playerStats={hp:100,maxHp:100,mp:60,maxMp:60,xp:0,xpNext:100,level:1,gold:0,kills:0,lastHitAt:0,attackCd:0,invuln:0};
 const mobs=[
   {id:'m1',x:280,y:880,hp:28,maxHp:28,speed:20,aggro:120,color:'#4a9c5a',name:'Moss Goblin'},
@@ -468,6 +469,7 @@ const encounter={active:false,nodeId:null,boss:null,playerHp:0};
 let encounterAutoCooldown=0;
 let fastTrackTimer=null;
 const stageBattleTheme={N1:'#9bbc6f',N2:'#8bac0f',N3:'#7ea45c',N4:'#9bbc6f',N5:'#8bac0f',N6:'#7ea45c',N7:'#9bbc6f',N8:'#8bac0f'};
+const EXPERIENCE_FOCUS=true;
 
 const npcs=[
   {x:430,y:620,c:'#efc4a4',name:'Mia',role:'planner',vx:27,vy:0,minX:250,maxX:520,minY:590,maxY:720,phrase:'Checking route'},
@@ -1844,41 +1846,45 @@ function update(dt){
   } else {
     playerAnim.phase *= 0.88;
   }
-  const nearNode=getNearestLockedNode(58);
+  const nearNode=getNearestLockedNode(84);
   nearbyNodeId=nearNode?nearNode.id:null;
   if(nearNode && !encounter.active && !guidedTourActive && encounterAutoCooldown<=0 && !battleModal.classList.contains('open')){
     interactNode();
   }
 
-  runRoleLoops(dt);
-  runNpcProximityInteractions(dt);
-  runZoneMicroEvents(dt);
-  runSchedulePulse(dt,phase);
-  runInteractionChains(dt,phase,scheduleBand,cadence);
+  if(!EXPERIENCE_FOCUS){
+    runRoleLoops(dt);
+    runNpcProximityInteractions(dt);
+    runZoneMicroEvents(dt);
+    runSchedulePulse(dt,phase);
+    runInteractionChains(dt,phase,scheduleBand,cadence);
+  }
 
-  reactiveProps.forEach(p=>{
-    p.cooldown=Math.max(0,p.cooldown-dt);
-    p.lit=Math.max(0,p.lit-dt*1.1);
-    const trigger=propTriggerBounds.get(p.id);
-    const near=trigger?pointInRect(player.x,player.y,trigger):distSq(player.x,player.y,p.x+p.w*0.5,p.y+p.h*0.5)<(58*58);
-    if(near){
-      p.lit=Math.min(1,p.lit+dt*3);
-      if(p.cooldown<=0){
-        toast(p.nearMsg);
-        queueSystemicChain('prop-'+p.id,p.label+' interaction ripples into the next team checkpoint.',19,0);
-        p.cooldown=13;
+  if(!EXPERIENCE_FOCUS){
+    reactiveProps.forEach(p=>{
+      p.cooldown=Math.max(0,p.cooldown-dt);
+      p.lit=Math.max(0,p.lit-dt*1.1);
+      const trigger=propTriggerBounds.get(p.id);
+      const near=trigger?pointInRect(player.x,player.y,trigger):distSq(player.x,player.y,p.x+p.w*0.5,p.y+p.h*0.5)<(58*58);
+      if(near){
+        p.lit=Math.min(1,p.lit+dt*3);
+        if(p.cooldown<=0){
+          toast(p.nearMsg);
+          queueSystemicChain('prop-'+p.id,p.label+' interaction ripples into the next team checkpoint.',19,0);
+          p.cooldown=13;
+        }
       }
-    }
-  });
+    });
 
-  microStory.beatCooldown=Math.max(0,microStory.beatCooldown-dt);
-  if(microStory.beatCooldown<=0){
-    const beat=cityBeats.find(b=>pointInRect(player.x,player.y,{x:b.zone.x1-COLLISION.triggerPad,y:b.zone.y1-COLLISION.triggerPad,w:(b.zone.x2-b.zone.x1)+COLLISION.triggerPad*2,h:(b.zone.y2-b.zone.y1)+COLLISION.triggerPad*2}));
-    if(beat && beat.id!==microStory.lastBeatId){
-      toast(beat.title+': '+beat.line);
-      queueSystemicChain('beat-'+beat.id,'Follow-up: supervisors convert this beat into a measurable KPI checkpoint.',24,1);
-      microStory.lastBeatId=beat.id;
-      microStory.beatCooldown=18;
+    microStory.beatCooldown=Math.max(0,microStory.beatCooldown-dt);
+    if(microStory.beatCooldown<=0){
+      const beat=cityBeats.find(b=>pointInRect(player.x,player.y,{x:b.zone.x1-COLLISION.triggerPad,y:b.zone.y1-COLLISION.triggerPad,w:(b.zone.x2-b.zone.x1)+COLLISION.triggerPad*2,h:(b.zone.y2-b.zone.y1)+COLLISION.triggerPad*2}));
+      if(beat && beat.id!==microStory.lastBeatId){
+        toast(beat.title+': '+beat.line);
+        queueSystemicChain('beat-'+beat.id,'Follow-up: supervisors convert this beat into a measurable KPI checkpoint.',24,1);
+        microStory.lastBeatId=beat.id;
+        microStory.beatCooldown=18;
+      }
     }
   }
 
@@ -2124,6 +2130,7 @@ function renderTourStep(){
   refreshHud();
 }
 function startGuidedTour(){
+  [menuModal,mapModal,statsModal,onboardModal,fastTrackModal,victoryModal].forEach(m=>m&&m.classList.remove('open'));
   stopDemoRoute();
   guidedTourActive=true;
   guidedTourIndex=0;
@@ -2334,7 +2341,7 @@ function bindClick(id,handler){
 }
 
 bindClick('menuBtn',()=>openTopModal(menuModal));
-bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map(n=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next stage':'Locked');return '<li>'+mark+' <b>'+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small></li>';}).join('');openTopModal(mapModal);});
+bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map(n=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next stage':'Locked');const st=resumeStages[n.id]||{milestones:[n.desc],skills:['—']};return '<li>'+mark+' <b>Stage '+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small><br><small>Milestones: '+st.milestones.join(' · ')+'</small><br><small>Skills: '+st.skills.join(' · ')+'</small></li>';}).join('');openTopModal(mapModal);});
 bindClick('fastTrackBtn',()=>{buildFastTrackList(); openTopModal(fastTrackModal);});
 bindClick('fastTrackTourBtn',()=>{closeTopModal(fastTrackModal); startFastTrackWalkthrough();});
 bindClick('closeFastTrack',()=>closeTopModal(fastTrackModal));
@@ -2365,7 +2372,16 @@ bindClick('backSite',()=>location.href='../index.html');
 bindClick('jumpNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();closeTopModal(menuModal);});
 bindClick('startDemoRoute',()=>{stopGuidedTour(true); startDemoRoute(); closeTopModal(menuModal);});
 bindClick('stopDemoRoute',()=>{stopDemoRoute(); toast('Demo route stopped');});
-bindClick('hideHud',()=>{objectiveHud.style.display='none'; safeStorageSet(STORAGE_KEYS.hudHidden,'1');});
+bindClick('hideHud',()=>{
+  const nowHidden=objectiveHud.style.display!=='none';
+  objectiveHud.style.display=nowHidden?'none':'';
+  safeStorageSet(STORAGE_KEYS.hudHidden,nowHidden?'1':'0');
+});
+bindClick('hudToggleBtn',()=>{
+  const nowHidden=objectiveHud.style.display==='none';
+  objectiveHud.style.display=nowHidden?'':'none';
+  safeStorageSet(STORAGE_KEYS.hudHidden,nowHidden?'0':'1');
+});
 
 bindClick('resetProgress',()=>{
   if(!confirm('Reset all resume stage progress?')) return;
