@@ -147,8 +147,8 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
   <div class="topbar">
     <div class="brand"></div>
     <div class="top-actions">
-      <button class="btn secondary" id="mapBtn" aria-label="Open map and chapter progress">MAP</button>
-      <button class="btn secondary" id="tourBtn" aria-label="Start guided showcase tour">TOUR</button>
+      <button class="btn secondary" id="mapBtn" aria-label="Open resume stage map and progress">MAP</button>
+      <button class="btn secondary" id="tourBtn" aria-label="Start guided resume tour">TOUR</button>
       <button class="btn secondary" id="fastTrackBtn" aria-label="Open fast track resume mode">FAST TRACK</button>
       <button class="btn" id="menuBtn" aria-label="Open menu">MENU</button>
     </div>
@@ -159,7 +159,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
   <div class="hud-panel" id="objectiveHud" aria-live="polite">
     <div class="hud-row"><b id="hudProgress">Quests: 0/8 completed</b><button class="hud-close" id="hideHud" aria-label="Hide objective hint">Hide</button></div>
     <div class="hud-pill">NEXT OBJECTIVE</div>
-    <div class="hud-sub" id="hudHint">Move toward the highlighted chapter banner to progress your journey.</div>
+    <div class="hud-sub" id="hudHint">Move toward the highlighted stage banner to progress through the resume journey.</div>
     <div class="hud-meta" id="hudPath">Path: follow the gold beacon + minimap marker.</div>
     <div class="hud-meta" id="hudStats">HP 100 · MP 60 · LVL 1 · XP 0/100 · Gold 0</div>
     <div class="rpg-bars">
@@ -173,7 +173,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
   <div class="quick-controls" id="quickControls">
     <button class="btn attack" id="attackBtn" aria-label="Attack nearest enemy">ATTACK</button>
     <button class="btn ghost" id="quickNext" aria-label="Jump to next resume stage">NEXT STAGE</button>
-    <button class="btn ghost" id="quickTour" aria-label="Start guided showcase tour">GUIDED TOUR</button>
+    <button class="btn ghost" id="quickTour" aria-label="Start guided resume tour">GUIDED TOUR</button>
   </div>
   <div class="tour-panel" id="tourPanel" aria-live="polite">
     <div class="tour-kicker" id="tourKicker">SHOWCASE TOUR</div>
@@ -239,7 +239,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
 <div class="modal" id="menuModal">
   <div class="card">
     <h3>DO NOT TOUCH // MENU</h3>
-    <p>Pokémon-style chapter mode: fast movement, node guardians, encounter transitions, and turn-based unlock battles.</p>
+    <p>Pokémon-style resume mode: fast movement, stage guardians, encounter transitions, and turn-based unlock battles.</p>
     <div class="btn-cluster">
       <button class="btn" id="jumpNext">Jump to Next Chapter</button>
       <button class="btn secondary" id="startDemoRoute">Start Demo Route</button>
@@ -255,7 +255,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
 
 <div class="modal" id="mapModal">
   <div class="card">
-    <h3>City Map / Resume Stage Progress</h3>
+    <h3>Resume Stage Map / Progress</h3>
     <ul id="mapList"></ul>
     <button class="btn" id="closeMap">Close</button>
   </div>
@@ -275,12 +275,12 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
 <div class="modal" id="onboardModal">
   <div class="card">
     <h3>Welcome — DO NOT TOUCH.EXE: Kingdom Trails</h3>
-    <p>An old-school fantasy-RPG-inspired portfolio world. Complete quests, defeat roaming mobs, and unlock career chapters.</p>
+    <p>An old-school RPG-inspired resume world. Complete stage battles to unlock milestones and skills.</p>
     <ul class="onboard-list">
-      <li><b>Fast start:</b> Follow the glowing objective in the HUD to unlock chapters in sequence.</li>
+      <li><b>Fast start:</b> Follow the glowing objective in the HUD to clear stages in sequence.</li>
       <li><b>Controls:</b> WASD / Arrow keys + SPACE on desktop, joystick + ATTACK on mobile.</li>
       <li><b>Stage unlock flow:</b> Reach a resume stage node and battle auto-triggers; win to unlock milestones + skills.</li>
-      <li><b>Premium demo mode:</b> Tap <b>GUIDED TOUR</b> for narration-style walkthrough, or <b>MENU → Start Demo Route</b> for timed autoplay.</li>
+      <li><b>Assessment mode:</b> Tap <b>FAST TRACK</b> for instant stage/milestone/skills review or auto walkthrough.</li>
     </ul>
     <div class="onboard-foot">
       <label><input type="checkbox" id="dontShowOnboard"/> Don't show this again</label>
@@ -1068,7 +1068,7 @@ function runEncounterTurn(move){
 function interactNode(){
   if(anyModalOpen()) return;
   const node=getNearestLockedNode(58);
-  if(!node){ toast('No chapter node in range'); return; }
+  if(!node){ toast('No stage node in range'); return; }
   const cfg=nodeBosses[node.id];
   if(!cfg){ viewed.add(node.id); save(); refreshHud(); return; }
   showEncounterFlash();
@@ -2087,11 +2087,11 @@ addEventListener('pagehide',()=>{
 
 const demoRoute=['N1','N2','N4','N5','N6','N8'];
 const guidedTourSteps=[
-  {k:'WELCOME',t:'City overview',c:'This map is a story-first showcase of Michael\'s career chapters. We will move through the strongest proof points.',node:'N1'},
-  {k:'EARLY OPS',t:'Foundation: service + retention systems',c:'First chapters show frontline operations discipline and retention thinking built under live pressure.',node:'N2'},
-  {k:'SCALE',t:'Cross-functional process leadership',c:'Middle chapters transition into process ownership, communications architecture, and measurable performance lift.',node:'N5'},
-  {k:'FIELD EDGE',t:'Technical execution credibility',c:'Electrical and smart-home delivery chapters prove hands-on capability, not just strategy.',node:'N6'},
-  {k:'GROWTH',t:'Executive lens: partnerships + CX',c:'Final chapter highlights growth strategy, partnership orchestration, and customer-experience innovation.',node:'N8'}
+  {k:'WELCOME',t:'Resume world overview',c:'This map is a stage-based walkthrough of Michael\'s resume. We will move through the strongest proof points.',node:'N1'},
+  {k:'EARLY OPS',t:'Stage 2: service + retention systems',c:'Early stages show frontline operations discipline and retention thinking built under live pressure.',node:'N2'},
+  {k:'SCALE',t:'Stage 5: cross-functional process leadership',c:'Middle stages transition into process ownership, communications architecture, and measurable performance lift.',node:'N5'},
+  {k:'FIELD EDGE',t:'Stage 6: technical execution credibility',c:'Electrical and smart-home delivery stages prove hands-on capability, not just strategy.',node:'N6'},
+  {k:'GROWTH',t:'Stage 8: executive lens — partnerships + CX',c:'Final stage highlights growth strategy, partnership orchestration, and customer-experience innovation.',node:'N8'}
 ];
 function startDemoRoute(){
   if(REDUCED_MOTION){
@@ -2199,8 +2199,8 @@ function refreshHud(){
 
   if(guidedTourActive){
     const step=guidedTourSteps[guidedTourIndex];
-    hudHint.textContent='Tour focus: '+(step?step.t:'Showcase complete')+'. Use Next/Back in the tour panel.';
-    hudPath.textContent='Path: tour auto-positions you at each key chapter.';
+    hudHint.textContent='Tour focus: '+(step?step.t:'Tour complete')+'. Use Next/Back in the tour panel.';
+    hudPath.textContent='Path: tour auto-positions you at each key resume stage.';
     return;
   }
   if(next){
@@ -2211,12 +2211,12 @@ function refreshHud(){
       ? 'Unlock flow: auto encounter → boss battle → milestones + skills unlocked.'
       : 'Path: follow beacon + minimap to Stage '+next.id+' or use FAST TRACK for instant review.';
   }else{
-    hudHint.textContent='All quests complete. Keep farming mobs or replay via TOUR.';
-    hudPath.textContent='Path: free roam active — open MAP to revisit any chapter.';
+    hudHint.textContent='All resume stages complete. Replay TOUR or use FAST TRACK for quick assessment.';
+    hudPath.textContent='Path: free roam active — open MAP to revisit any stage.';
   }
 }
 function openTopModal(el){ resetJoystick(); snapMotion(); el.classList.add('open'); }
-function closeTopModal(el){ if(el.classList.contains('open')){ el.classList.remove('open'); resetJoystick(); toast('Back in city view'); } }
+function closeTopModal(el){ if(el.classList.contains('open')){ el.classList.remove('open'); resetJoystick(); toast('Back in resume world'); } }
 function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open')||victoryModal.classList.contains('open')||fastTrackModal.classList.contains('open'); }
 
 function sanitizeViewedProgress(){
@@ -2334,7 +2334,7 @@ function bindClick(id,handler){
 }
 
 bindClick('menuBtn',()=>openTopModal(menuModal));
-bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map(n=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next objective':'Locked');return '<li>'+mark+' <b>'+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small></li>';}).join('');openTopModal(mapModal);});
+bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map(n=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next stage':'Locked');return '<li>'+mark+' <b>'+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small></li>';}).join('');openTopModal(mapModal);});
 bindClick('fastTrackBtn',()=>{buildFastTrackList(); openTopModal(fastTrackModal);});
 bindClick('fastTrackTourBtn',()=>{closeTopModal(fastTrackModal); startFastTrackWalkthrough();});
 bindClick('closeFastTrack',()=>closeTopModal(fastTrackModal));
@@ -2368,12 +2368,12 @@ bindClick('stopDemoRoute',()=>{stopDemoRoute(); toast('Demo route stopped');});
 bindClick('hideHud',()=>{objectiveHud.style.display='none'; safeStorageSet(STORAGE_KEYS.hudHidden,'1');});
 
 bindClick('resetProgress',()=>{
-  if(!confirm('Reset all chapter progress?')) return;
+  if(!confirm('Reset all resume stage progress?')) return;
   viewed.clear(); save(); refreshHud(); applyProgressionReactions(true); toast('Progress reset'); stopDemoRoute();
 });
 bindClick('loadFullProgress',()=>{
-  if(!confirm('Mark all chapters as unlocked?')) return;
-  nodes.forEach(n=>viewed.add(n.id)); save(); refreshHud(); applyProgressionReactions(true); toast('All chapters unlocked');
+  if(!confirm('Mark all resume stages as unlocked?')) return;
+  nodes.forEach(n=>viewed.add(n.id)); save(); refreshHud(); applyProgressionReactions(true); toast('All resume stages unlocked');
 });
 
 // onboarding flow
