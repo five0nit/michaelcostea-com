@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>DO NOT TOUCH — v69 Pixel City Story Mode</title>
+<title>DO NOT TOUCH.EXE — Kingdom Trails (RPG Overhaul)</title>
 <style>
-:root{--bg:#d8efe7;--ink:#0f1b2d;--line:#1c2f47;--panel:#eef5ff;--hud:#08122acc;--ui-border:#5a79ac;--ui-border-strong:#2b3f63;--ui-shadow:4px 4px 0 rgba(0,0,0,.35);--ui-shadow-soft:3px 3px 0 rgba(0,0,0,.28);--ui-radius:0;--ui-font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;--ui-font-mono:700 12px/1.2 monospace;--ui-ease:cubic-bezier(.22,.9,.34,1);--ui-anim-fast:140ms;--control-gap:12px;--joystick-size:132px;--joystick-slot:calc(var(--joystick-size) + var(--control-gap) + env(safe-area-inset-right,0px));--control-bottom:calc(env(safe-area-inset-bottom,0px) + 16px);--top-ui-clearance:calc(env(safe-area-inset-top,0px) + 96px);--quick-controls-bottom:calc(var(--control-bottom) + var(--joystick-size) + 8px)}
+:root{--bg:#1c2530;--ink:#f3ead6;--line:#473a2d;--panel:#2c2f3a;--hud:#11161fd9;--ui-border:#8f7a4e;--ui-border-strong:#5d4a2c;--ui-shadow:4px 4px 0 rgba(0,0,0,.45);--ui-shadow-soft:3px 3px 0 rgba(0,0,0,.35);--ui-radius:0;--ui-font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;--ui-font-mono:700 12px/1.2 monospace;--ui-ease:cubic-bezier(.22,.9,.34,1);--ui-anim-fast:140ms;--control-gap:12px;--joystick-size:132px;--joystick-slot:calc(var(--joystick-size) + var(--control-gap) + env(safe-area-inset-right,0px));--control-bottom:calc(env(safe-area-inset-bottom,0px) + 16px);--top-ui-clearance:calc(env(safe-area-inset-top,0px) + 96px);--quick-controls-bottom:calc(var(--control-bottom) + var(--joystick-size) + 8px)}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif}
 #game{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;background:#9ecf86}
@@ -45,6 +45,12 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .hud-pill{display:inline-block;padding:1px 6px;border:1px solid #7ea2df;background:#132b4b;color:#dce9ff;font:700 11px/1.2 monospace;letter-spacing:.04em;margin-bottom:3px}
 .hud-sub{opacity:.97;font-size:12px;line-height:1.35;margin-top:2px;text-wrap:pretty}
 .hud-meta{margin-top:4px;font-size:11px;line-height:1.35;opacity:.9;color:#c8dcff}
+.rpg-bars{margin-top:7px;display:grid;gap:5px}
+.rpg-bar{height:8px;background:#1d212c;border:1px solid #655233;position:relative}
+.rpg-bar>span{position:absolute;inset:0 auto 0 0;display:block}
+.rpg-bar.hp>span{background:linear-gradient(90deg,#b82727,#ff6767)}
+.rpg-bar.mp>span{background:linear-gradient(90deg,#2454b8,#69a1ff)}
+.rpg-bar.xp>span{background:linear-gradient(90deg,#8a6a1e,#f2d27a)}
 .hud-close{all:unset;cursor:pointer;pointer-events:auto;background:#183057;border:2px solid #7ea2df;color:#eaf2ff;padding:2px 6px;font:var(--ui-font-mono);border-radius:var(--ui-radius);box-shadow:2px 2px 0 rgba(0,0,0,.25);transition:filter var(--ui-anim-fast) var(--ui-ease)}
 #onboardModal .card{max-width:680px}
 .onboard-list{font-size:14px;line-height:1.45}
@@ -123,11 +129,17 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
   <div class="joystick" id="joy"><div class="stick" id="stick"></div></div>
   <div class="toast" id="toast"></div>
   <div class="hud-panel" id="objectiveHud" aria-live="polite">
-    <div class="hud-row"><b id="hudProgress">Chapters: 0/8 unlocked</b><button class="hud-close" id="hideHud" aria-label="Hide objective hint">Hide</button></div>
+    <div class="hud-row"><b id="hudProgress">Quests: 0/8 completed</b><button class="hud-close" id="hideHud" aria-label="Hide objective hint">Hide</button></div>
     <div class="hud-pill">NEXT OBJECTIVE</div>
-    <div class="hud-sub" id="hudHint">Move toward the highlighted chapter flag to unlock your next milestone.</div>
+    <div class="hud-sub" id="hudHint">Move toward the highlighted chapter banner to progress your journey.</div>
     <div class="hud-meta" id="hudPath">Path: follow the gold beacon + minimap marker.</div>
-    <div class="hud-keyline">Quick actions: <b>TOUR</b> for guided narration · <b>MENU</b> for autoplay demo.</div>
+    <div class="hud-meta" id="hudStats">HP 100 · MP 60 · LVL 1 · XP 0/100 · Gold 0</div>
+    <div class="rpg-bars">
+      <div class="rpg-bar hp"><span id="hpBar" style="width:100%"></span></div>
+      <div class="rpg-bar mp"><span id="mpBar" style="width:100%"></span></div>
+      <div class="rpg-bar xp"><span id="xpBar" style="width:0%"></span></div>
+    </div>
+    <div class="hud-keyline">Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>TOUR</b> guide.</div>
   </div>
   <div class="demo-indicator" id="demoIndicator">DEMO ROUTE ACTIVE</div>
   <div class="quick-controls" id="quickControls">
@@ -184,8 +196,8 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
 
 <div class="modal" id="onboardModal">
   <div class="card">
-    <h3>Welcome — Michael Costea Interactive Showcase</h3>
-    <p>Use this city as a guided portfolio. Every flag is a career chapter with measurable outcomes.</p>
+    <h3>Welcome — DO NOT TOUCH.EXE: Kingdom Trails</h3>
+    <p>An old-school fantasy-RPG-inspired portfolio world. Complete quests, defeat roaming mobs, and unlock career chapters.</p>
     <ul class="onboard-list">
       <li><b>Fast start:</b> Follow the glowing objective in the HUD to unlock chapters in sequence.</li>
       <li><b>Controls:</b> WASD / Arrow keys on desktop, joystick on mobile.</li>
@@ -306,6 +318,14 @@ const CHAPTER_PALETTE={
 const world={w:1800,h:2400};
 const ROAD_X=640, ROAD_W=STYLE_BIBLE.ref.laneW*4;
 const player={x:420,y:760,s:3.3};
+const playerStats={hp:100,maxHp:100,mp:60,maxMp:60,xp:0,xpNext:100,level:1,gold:0,kills:0,lastHitAt:0,attackCd:0,invuln:0};
+const mobs=[
+  {id:'m1',x:280,y:880,hp:28,maxHp:28,speed:20,aggro:120,color:'#4a9c5a',name:'Moss Goblin'},
+  {id:'m2',x:1420,y:840,hp:30,maxHp:30,speed:22,aggro:130,color:'#6a8ec8',name:'Lane Wraith'},
+  {id:'m3',x:350,y:1620,hp:34,maxHp:34,speed:19,aggro:140,color:'#b9864b',name:'Dust Boar'},
+  {id:'m4',x:1410,y:1650,hp:36,maxHp:36,speed:24,aggro:145,color:'#a06ac9',name:'Night Imp'},
+  {id:'m5',x:900,y:2080,hp:42,maxHp:42,speed:25,aggro:160,color:'#cc5858',name:'Gate Keeper'}
+];
 const cam={x:0,y:0};
 const motionState={vx:0,vy:0};
 const MOVEMENT_TUNING={
@@ -612,7 +632,7 @@ addEventListener('blur',resetJoystick);
 setStick();
 
 const keys={};
-addEventListener('keydown',e=>{keys[e.key]=true;}); addEventListener('keyup',e=>{keys[e.key]=false;});
+addEventListener('keydown',e=>{keys[e.key]=true; if(e.code==='Space'){ e.preventDefault(); attackMob(); }}); addEventListener('keyup',e=>{keys[e.key]=false;});
 function inView(x,y,w=32,h=32,margin=100){return !(x+w<cam.x-margin || x>cam.x+vw+margin || y+h<cam.y-margin || y>cam.y+vh+margin);} 
 function pointInRect(px,py,r){return px>=r.x && px<=r.x+r.w && py>=r.y && py<=r.y+r.h;}
 function circleRectOverlap(cx,cy,rad,r){
@@ -748,6 +768,49 @@ function drawCharacter(x,y,opt={}){
 }
 function drawPixelGuy(x,y){drawCharacter(x,y,{scale:0.74,skin:MATERIALS.skin.base,jacket:MATERIALS.fabric.base,shirt:'#f2f5fb',accent:CHAPTER_PALETTE.accent[0],pants:'#12306f',shoe:'#0d1b34',hair:'#21395f',hat:'#2b67da',brim:'#1a448f',dir:playerAnim.dir,moving:playerAnim.moving,phase:playerAnim.phase});}
 function drawNPCGuy(x,y,shirt='#436f9a',skin=MATERIALS.skin.base,anim={}){drawCharacter(x,y,{scale:0.72,skin,jacket:MATERIALS.fabric.base,shirt,accent:'#dfe9ff',pants:'#263041',shoe:'#151b28',hair:'#2d3545',dir:anim.dir||'down',moving:!!anim.moving,phase:anim.phase||0});}
+function nearestMob(maxDist=58){
+  let best=null,bestD=Infinity;
+  for(const m of mobs){
+    const d=Math.hypot(player.x-m.x,player.y-m.y);
+    if(d<maxDist && d<bestD){best=m;bestD=d;}
+  }
+  return best;
+}
+function levelUpIfReady(){
+  while(playerStats.xp>=playerStats.xpNext){
+    playerStats.xp-=playerStats.xpNext;
+    playerStats.level+=1;
+    playerStats.xpNext=Math.floor(playerStats.xpNext*1.25);
+    playerStats.maxHp+=12;
+    playerStats.maxMp+=8;
+    playerStats.hp=playerStats.maxHp;
+    playerStats.mp=playerStats.maxMp;
+    toast('Level up! Now level '+playerStats.level,{priority:1});
+  }
+}
+function attackMob(){
+  if(anyModalOpen()) return;
+  const now=performance.now();
+  if(now-playerStats.lastHitAt<380) return;
+  const target=nearestMob(66);
+  if(!target){ toast('No target in range',{dedupeMs:700}); return; }
+  playerStats.lastHitAt=now;
+  const dmg=8+Math.floor(Math.random()*7)+Math.floor(playerStats.level*1.5);
+  target.hp-=dmg;
+  toast('Hit '+target.name+' for '+dmg,{dedupeMs:260});
+  if(target.hp<=0){
+    playerStats.kills+=1;
+    const gainXp=18+Math.floor(Math.random()*8);
+    const gainGold=6+Math.floor(Math.random()*7);
+    playerStats.xp+=gainXp;
+    playerStats.gold+=gainGold;
+    levelUpIfReady();
+    toast('Defeated '+target.name+' · +'+gainXp+' XP · +'+gainGold+' gold',{priority:1});
+    target.hp=target.maxHp;
+    target.x=220+Math.random()*1360;
+    target.y=700+Math.random()*1450;
+  }
+}
 
 function drawHeroBlockTo(c2d,x,y,theme='warm'){
   const wall = theme==='warm' ? '#a2644d' : '#5f7797';
@@ -1408,6 +1471,40 @@ function update(dt){
     const slot=Math.floor((time*0.02 + i*0.7 + (scheduleBand.id==='handoff'?1:0))%script.length);
     n.dynamicPhrase=script[slot];
   });
+
+  playerStats.attackCd=Math.max(0,playerStats.attackCd-dt);
+  playerStats.invuln=Math.max(0,playerStats.invuln-dt);
+  playerStats.mp=Math.min(playerStats.maxMp,playerStats.mp+dt*1.2);
+  mobs.forEach((m,idx)=>{
+    const dx=player.x-m.x, dy=player.y-m.y;
+    const d=Math.hypot(dx,dy)||1;
+    const chase=d<m.aggro;
+    if(chase){
+      m.x += (dx/d)*m.speed*dt;
+      m.y += (dy/d)*m.speed*dt;
+    }else{
+      m.x += Math.sin((time+idx*23)*0.01)*8*dt;
+      m.y += Math.cos((time+idx*29)*0.01)*8*dt;
+    }
+    m.x=Math.max(90,Math.min(world.w-90,m.x));
+    m.y=Math.max(620,Math.min(world.h-80,m.y));
+
+    if(d<22 && playerStats.invuln<=0){
+      const hit=4+Math.floor(Math.random()*4);
+      playerStats.hp=Math.max(0,playerStats.hp-hit);
+      playerStats.invuln=0.9;
+      toast(m.name+' hits you for '+hit,{dedupeMs:500});
+      if(playerStats.hp<=0){
+        playerStats.hp=playerStats.maxHp;
+        playerStats.mp=playerStats.maxMp;
+        playerStats.gold=Math.max(0,playerStats.gold-25);
+        player.x=420;player.y=760;
+        snapMotion();
+        toast('You were defeated and respawned at camp (-25 gold)',{priority:1});
+      }
+    }
+  });
+
   npcChatPairs=[];
   for(let i=0;i<npcs.length;i++){
     for(let j=i+1;j<npcs.length;j++){
@@ -1518,6 +1615,8 @@ function update(dt){
     }
   }
 
+  refreshHud();
+
   const leadX=REDUCED_MOTION?0:(motionState.vx*MOVEMENT_TUNING.cameraLead);
   const leadY=REDUCED_MOTION?0:(motionState.vy*MOVEMENT_TUNING.cameraLead);
   const targetCamX=Math.max(0,Math.min(world.w-vw,player.x+leadX-vw*0.5));
@@ -1570,6 +1669,13 @@ function render(nowMs){
   ctx.save(); ctx.translate(-cam.x,-cam.y);
 
   traffic.forEach(c=>{if(!inView(c.x,c.y,STYLE_BIBLE.ref.carW+4,STYLE_BIBLE.ref.carL+4)) return; ctx.fillStyle=MATERIALS.asphalt.edge;ctx.fillRect(c.x-1,c.y-1,STYLE_BIBLE.ref.carW+2,STYLE_BIBLE.ref.carL+2); ctx.fillStyle=c.c;ctx.fillRect(c.x,c.y,STYLE_BIBLE.ref.carW,STYLE_BIBLE.ref.carL); ctx.fillStyle=MATERIALS.glass.highlight;ctx.fillRect(c.x+3,c.y+4,STYLE_BIBLE.ref.carW-6,10); ctx.fillStyle=MATERIALS.painted_metal.shade;ctx.fillRect(c.x+4,c.y+36,STYLE_BIBLE.ref.carW-8,8); ctx.fillStyle='#0d1119';ctx.fillRect(c.x+2,c.y+44,4,3);ctx.fillRect(c.x+STYLE_BIBLE.ref.carW-6,c.y+44,4,3);});
+  mobs.forEach(m=>{
+    if(!inView(m.x-18,m.y-22,36,36,80)) return;
+    ctx.fillStyle='rgba(0,0,0,.26)'; ctx.fillRect(m.x-10,m.y+11,20,4);
+    drawNPCGuy(m.x,m.y,m.color,'#d9b08f',{dir:'down',moving:true,phase:time*0.09});
+    ctx.fillStyle='#1a1c24'; ctx.fillRect(m.x-14,m.y-18,28,4);
+    ctx.fillStyle='#bc2c2c'; ctx.fillRect(m.x-14,m.y-18,Math.max(0,28*(m.hp/m.maxHp)),4);
+  });
   nodes.forEach(n=>{if(!inView(n.x-8,n.y-22,16,22,60)) return; const seen=viewed.has(n.id); ctx.fillStyle=seen?'#8bff9e':'#ffdf6f'; ctx.fillRect(n.x-8,n.y-22,16,16); ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,9);});
   reactiveProps.forEach(p=>{
     drawReactiveProp(p);
@@ -1678,7 +1784,7 @@ function ensureSpawnValid(){
 resize(); rebuildStaticLayers(); ensureSpawnValid(); rafId=requestAnimationFrame(frame);
 
 const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal');
-const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath');
+const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath'),hudStats=document.getElementById('hudStats'),hpBar=document.getElementById('hpBar'),mpBar=document.getElementById('mpBar'),xpBar=document.getElementById('xpBar');
 const demoIndicator=document.getElementById('demoIndicator');
 const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
 let demoRouteTimer=null, demoRouteIndex=0;
@@ -1782,8 +1888,15 @@ function prevGuidedTour(){
 }
 
 function refreshHud(){
-  hudProgress.textContent='Chapters: '+viewed.size+'/'+nodes.length+' unlocked';
+  hudProgress.textContent='Quests: '+viewed.size+'/'+nodes.length+' completed';
   const next=nodes.find(n=>!viewed.has(n.id));
+  if(hudStats){
+    hudStats.textContent='HP '+Math.round(playerStats.hp)+' · MP '+Math.round(playerStats.mp)+' · LVL '+playerStats.level+' · XP '+playerStats.xp+'/'+playerStats.xpNext+' · Gold '+playerStats.gold;
+  }
+  if(hpBar) hpBar.style.width=(Math.max(0,playerStats.hp)/playerStats.maxHp*100).toFixed(1)+'%';
+  if(mpBar) mpBar.style.width=(Math.max(0,playerStats.mp)/playerStats.maxMp*100).toFixed(1)+'%';
+  if(xpBar) xpBar.style.width=(Math.max(0,playerStats.xp)/playerStats.xpNext*100).toFixed(1)+'%';
+
   if(guidedTourActive){
     const step=guidedTourSteps[guidedTourIndex];
     hudHint.textContent='Tour focus: '+(step?step.t:'Showcase complete')+'. Use Next/Back in the tour panel.';
@@ -1794,7 +1907,7 @@ function refreshHud(){
     hudHint.textContent=next.id+' — '+next.title;
     hudPath.textContent='Path: follow the gold beacon + minimap marker to '+next.id+'.';
   }else{
-    hudHint.textContent='All chapters unlocked. Replay via TOUR or MENU.';
+    hudHint.textContent='All quests complete. Keep farming mobs or replay via TOUR.';
     hudPath.textContent='Path: free roam active — open MAP to revisit any chapter.';
   }
 }
