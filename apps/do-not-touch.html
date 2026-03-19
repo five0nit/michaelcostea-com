@@ -61,9 +61,15 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .battle-screen.open{display:grid}
 .battle-card{width:min(760px,96vw);background:#e7e3d2;border:4px solid #3f3525;box-shadow:6px 6px 0 rgba(0,0,0,.45);padding:10px;color:#1f1b14;font-family:monospace}
 .battle-row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.battle-scene{margin:8px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end;background:#d2cfbf;border:2px solid #6a5a40;padding:8px}
+.battle-sprite-wrap{display:grid;justify-items:center;gap:4px}
+#battleBossSprite,#battlePlayerSprite{width:128px;height:96px;image-rendering:pixelated;background:#c0b89f;border:2px solid #5f5138}
 .battle-log{margin:8px 0;background:#f8f6ee;border:2px solid #6a5a40;padding:8px;min-height:58px;font-size:.86rem}
 .battle-actions{display:flex;flex-wrap:wrap;gap:8px}
 .battle-actions .btn{min-height:40px}
+.resume-stage{position:fixed;right:12px;bottom:calc(var(--control-bottom) + 8px);z-index:9;max-width:min(90vw,360px);background:rgba(12,18,30,.94);border:3px solid var(--ui-border);padding:8px;color:#e9f0ff;font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;box-shadow:var(--ui-shadow-soft)}
+.resume-stage b{display:block;margin-bottom:3px;font-size:12px}
+.resume-stage .mini{font-size:11px;opacity:.95}
 .encounter-flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0;background:radial-gradient(circle at center,rgba(255,255,255,.86) 0,rgba(255,255,255,0) 58%),repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 8px,rgba(0,0,0,.14) 8px 16px)}
 .encounter-flash.show{animation:encounterFlash .45s ease}
 @keyframes encounterFlash{0%{opacity:0}20%{opacity:.9}100%{opacity:0}}
@@ -157,7 +163,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
   <div class="quick-controls" id="quickControls">
     <button class="btn attack" id="attackBtn" aria-label="Attack nearest enemy">ATTACK</button>
     <button class="btn" id="interactBtn" aria-label="Interact with chapter node">INTERACT</button>
-    <button class="btn ghost" id="quickNext" aria-label="Jump to next chapter">NEXT CHAPTER</button>
+    <button class="btn ghost" id="quickNext" aria-label="Jump to next resume stage">NEXT STAGE</button>
     <button class="btn ghost" id="quickTour" aria-label="Start guided showcase tour">GUIDED TOUR</button>
   </div>
   <div class="tour-panel" id="tourPanel" aria-live="polite">
@@ -170,6 +176,11 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
       <button class="btn ghost" id="tourSkip">End Tour</button>
     </div>
   </div>
+  <div class="resume-stage" id="resumeStagePanel" aria-live="polite">
+    <b id="resumeStageTitle">Stage: N1 — Foundation</b>
+    <div class="mini" id="resumeStageMilestones">Milestones: 0/3</div>
+    <div class="mini" id="resumeStageSkills">Skills gained: —</div>
+  </div>
 </div>
 <div id="encounterFlash" class="encounter-flash" aria-hidden="true"></div>
 
@@ -178,6 +189,10 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     <div class="battle-row">
       <div><b id="battleBossName">Node Guardian</b><div id="battleBossHp">HP: 100/100</div></div>
       <div><b>Michael</b><div id="battlePlayerHp">HP: 100/100</div></div>
+    </div>
+    <div class="battle-scene">
+      <div class="battle-sprite-wrap"><canvas id="battleBossSprite" width="128" height="96"></canvas><small id="battleBossStage">Stage N1 Guardian</small></div>
+      <div class="battle-sprite-wrap"><canvas id="battlePlayerSprite" width="128" height="96"></canvas><small>Operator Michael</small></div>
     </div>
     <div class="battle-log" id="battleLog">A wild guardian appears!</div>
     <div class="battle-actions">
@@ -207,7 +222,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
 
 <div class="modal" id="mapModal">
   <div class="card">
-    <h3>City Map / Chapter Progress</h3>
+    <h3>City Map / Resume Stage Progress</h3>
     <ul id="mapList"></ul>
     <button class="btn" id="closeMap">Close</button>
   </div>
@@ -231,7 +246,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     <ul class="onboard-list">
       <li><b>Fast start:</b> Follow the glowing objective in the HUD to unlock chapters in sequence.</li>
       <li><b>Controls:</b> WASD / Arrow keys + SPACE + E on desktop, joystick + ATTACK + INTERACT on mobile.</li>
-      <li><b>Boss unlock flow:</b> Reach a chapter node, trigger INTERACT, then win the guardian fight to unlock info.</li>
+      <li><b>Stage unlock flow:</b> Reach a resume stage node, trigger INTERACT, then win guardian battle to unlock milestones + skills.</li>
       <li><b>Premium demo mode:</b> Tap <b>GUIDED TOUR</b> for narration-style walkthrough, or <b>MENU → Start Demo Route</b> for timed autoplay.</li>
     </ul>
     <div class="onboard-foot">
@@ -347,7 +362,7 @@ const CHAPTER_PALETTE={
 };
 const world={w:1800,h:2400};
 const ROAD_X=640, ROAD_W=STYLE_BIBLE.ref.laneW*4;
-const player={x:420,y:760,s:5.2};
+const player={x:420,y:760,s:7.4};
 const playerStats={hp:100,maxHp:100,mp:60,maxMp:60,xp:0,xpNext:100,level:1,gold:0,kills:0,lastHitAt:0,attackCd:0,invuln:0};
 const mobs=[
   {id:'m1',x:280,y:880,hp:28,maxHp:28,speed:20,aggro:120,color:'#4a9c5a',name:'Moss Goblin'},
@@ -359,13 +374,13 @@ const mobs=[
 const cam={x:0,y:0};
 const motionState={vx:0,vy:0};
 const MOVEMENT_TUNING={
-  accel:16.5,          // higher = faster ramp-up (1/s)
-  decel:20.5,          // higher = tighter stop (1/s)
-  maxSpeedMul:1.08,
-  cameraSmooth:11.5,   // camera catch-up responsiveness (1/s)
-  cameraLead:0.065,    // velocity-based look-ahead (s)
-  cameraDeadzoneX:18,
-  cameraDeadzoneY:14
+  accel:26.5,
+  decel:30.5,
+  maxSpeedMul:1.2,
+  cameraSmooth:14.5,
+  cameraLead:0.08,
+  cameraDeadzoneX:10,
+  cameraDeadzoneY:8
 };
 let time=0;
 const MATERIALS={
@@ -396,14 +411,24 @@ const nodes=[
   {id:'N8',x:900,y:2100,title:'BD & Marketing Manager',desc:'Growth, partnerships, CX innovation.'}
 ];
 const nodeBosses={
-  N1:{name:'Cafe Rat King',hp:46,atkMin:4,atkMax:8,rewardXp:24,rewardGold:16},
-  N2:{name:'Retention Shade',hp:54,atkMin:5,atkMax:9,rewardXp:28,rewardGold:20},
-  N3:{name:'Process Golem',hp:60,atkMin:6,atkMax:10,rewardXp:32,rewardGold:24},
-  N4:{name:'Lore Librarian',hp:66,atkMin:7,atkMax:11,rewardXp:36,rewardGold:28},
-  N5:{name:'Ops Hydra',hp:72,atkMin:8,atkMax:12,rewardXp:40,rewardGold:33},
-  N6:{name:'Grid Sentinel',hp:78,atkMin:9,atkMax:13,rewardXp:45,rewardGold:38},
-  N7:{name:'Sales Chimera',hp:84,atkMin:10,atkMax:14,rewardXp:50,rewardGold:42},
-  N8:{name:'Growth Dragon',hp:95,atkMin:11,atkMax:16,rewardXp:62,rewardGold:55}
+  N1:{name:'Cafe Rat King',hp:46,atkMin:4,atkMax:8,rewardXp:24,rewardGold:16,color:'#7e5a3a'},
+  N2:{name:'Retention Shade',hp:54,atkMin:5,atkMax:9,rewardXp:28,rewardGold:20,color:'#4f5f9e'},
+  N3:{name:'Process Golem',hp:60,atkMin:6,atkMax:10,rewardXp:32,rewardGold:24,color:'#6c6f7a'},
+  N4:{name:'Lore Librarian',hp:66,atkMin:7,atkMax:11,rewardXp:36,rewardGold:28,color:'#8a6e9f'},
+  N5:{name:'Ops Hydra',hp:72,atkMin:8,atkMax:12,rewardXp:40,rewardGold:33,color:'#2d8b74'},
+  N6:{name:'Grid Sentinel',hp:78,atkMin:9,atkMax:13,rewardXp:45,rewardGold:38,color:'#3d748f'},
+  N7:{name:'Sales Chimera',hp:84,atkMin:10,atkMax:14,rewardXp:50,rewardGold:42,color:'#9a5f4b'},
+  N8:{name:'Growth Dragon',hp:95,atkMin:11,atkMax:16,rewardXp:62,rewardGold:55,color:'#aa3f3f'}
+};
+const resumeStages={
+  N1:{label:'Foundation — Coffee + service systems',milestones:['Service flow stabilised','Shift handoff routine','Customer wait reduction'],skills:['Operations discipline','Live service troubleshooting']},
+  N2:{label:'Retention — Telecom process uplift',milestones:['Churn risk triage','Retention scripting','Escalation routing'],skills:['Retention strategy','Customer recovery']},
+  N3:{label:'Process Specialist — Cross-team rollout',milestones:['Comms workflow','SOP cleanup','Rollout governance'],skills:['Process design','Cross-functional leadership']},
+  N4:{label:'Content Manager — Knowledge systems',milestones:['KB architecture','Content governance','Enablement handover'],skills:['Knowledge ops','Documentation systems']},
+  N5:{label:'Sales Ops Manager — KPI and support',milestones:['Pipeline visibility','SLA tuning','Support-sales alignment'],skills:['Sales operations','Performance analytics']},
+  N6:{label:'Electrician Roles — Field delivery',milestones:['On-site execution','Smart-home installs','Quality signoff'],skills:['Electrical tradecraft','Field diagnostics']},
+  N7:{label:'Sales Manager — Program growth',milestones:['Program scaling','Offer optimization','Team coaching'],skills:['Commercial leadership','Program management']},
+  N8:{label:'BD & Marketing — Growth strategy',milestones:['Partnership expansion','Campaign architecture','CX innovation'],skills:['Business development','Growth systems']}
 };
 let nearbyNodeId=null;
 const encounter={active:false,nodeId:null,boss:null,playerHp:0};
@@ -886,15 +911,42 @@ function getNearestLockedNode(maxDist=54){
   const d=Math.hypot(player.x-nextNode.x,player.y-nextNode.y);
   return d<=maxDist?nextNode:null;
 }
+function drawBattleSprite(canvas,color='#7a6',type='boss'){
+  if(!canvas) return;
+  const c=canvas.getContext('2d');
+  c.imageSmoothingEnabled=false;
+  c.clearRect(0,0,canvas.width,canvas.height);
+  c.fillStyle='#b8b096'; c.fillRect(0,0,canvas.width,canvas.height);
+  c.fillStyle='rgba(0,0,0,.12)'; c.fillRect(0,74,canvas.width,22);
+  const x=type==='boss'?70:56, y=52;
+  c.fillStyle='rgba(0,0,0,.28)'; c.fillRect(x-24,y+20,48,8);
+  c.fillStyle=color; c.fillRect(x-16,y-12,32,28);
+  c.fillStyle='#1f2430'; c.fillRect(x-12,y-20,24,10);
+  c.fillStyle='#f5d2b1'; c.fillRect(x-9,y-17,18,9);
+  c.fillStyle='#121722'; c.fillRect(x-5,y-14,2,2); c.fillRect(x+3,y-14,2,2);
+  c.fillStyle='#2a3042'; c.fillRect(x-18,y+18,8,10); c.fillRect(x+10,y+18,8,10);
+  if(type==='boss'){
+    c.fillStyle='#e1c168'; c.fillRect(x-20,y-24,40,4);
+    c.fillStyle='rgba(255,255,255,.24)'; c.fillRect(x-16,y-22,8,2);
+  } else {
+    c.fillStyle='#4a7dd8'; c.fillRect(x-14,y-24,28,5);
+  }
+}
 function updateBattleUi(msg=''){
   const bn=document.getElementById('battleBossName');
   const bh=document.getElementById('battleBossHp');
   const ph=document.getElementById('battlePlayerHp');
   const log=document.getElementById('battleLog');
+  const stageLabel=document.getElementById('battleBossStage');
+  const bossCanvas=document.getElementById('battleBossSprite');
+  const playerCanvas=document.getElementById('battlePlayerSprite');
   if(encounter.boss){
     if(bn) bn.textContent=encounter.boss.name+' · '+encounter.nodeId;
     if(bh) bh.textContent='HP: '+Math.max(0,encounter.boss.hp)+'/'+encounter.boss.maxHp;
+    if(stageLabel) stageLabel.textContent='Stage '+encounter.nodeId+' Guardian';
+    drawBattleSprite(bossCanvas,encounter.boss.color||'#7a6','boss');
   }
+  drawBattleSprite(playerCanvas,'#4f7fd3','player');
   if(ph) ph.textContent='HP: '+Math.max(0,encounter.playerHp)+'/'+playerStats.maxHp;
   if(log && msg) log.textContent=msg;
 }
@@ -1825,7 +1877,7 @@ function render(nowMs){
     ctx.fillStyle='#1a1c24'; ctx.fillRect(m.x-14,m.y-18,28,4);
     ctx.fillStyle='#bc2c2c'; ctx.fillRect(m.x-14,m.y-18,Math.max(0,28*(m.hp/m.maxHp)),4);
   });
-  nodes.forEach(n=>{if(!inView(n.x-8,n.y-22,16,22,60)) return; const seen=viewed.has(n.id); const near=!seen && nearbyNodeId===n.id; ctx.fillStyle=seen?'#8bff9e':(near?'#ffd15c':'#ffdf6f'); ctx.fillRect(n.x-8,n.y-22,16,16); ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,9); if(near){ctx.fillStyle='#fff';ctx.font='bold 9px monospace';ctx.fillText('!',n.x-2,n.y-27);} });
+  nodes.forEach(n=>{if(!inView(n.x-8,n.y-22,16,22,120)) return; const seen=viewed.has(n.id); const near=!seen && nearbyNodeId===n.id; ctx.fillStyle=seen?'#8bff9e':(near?'#ffd15c':'#ffdf6f'); ctx.fillRect(n.x-8,n.y-22,16,16); ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,9); ctx.fillStyle='rgba(10,16,28,.86)'; ctx.fillRect(n.x-34,n.y-38,68,10); ctx.fillStyle='#eaf2ff'; ctx.font='bold 8px monospace'; ctx.fillText('STAGE '+n.id,n.x-30,n.y-30); if(near){ctx.fillStyle='#fff';ctx.font='bold 9px monospace';ctx.fillText('!',n.x-2,n.y-27);} });
   reactiveProps.forEach(p=>{
     drawReactiveProp(p);
     if(p.lit>0.05){
@@ -2037,8 +2089,11 @@ function prevGuidedTour(){
 }
 
 function refreshHud(){
-  hudProgress.textContent='Quests: '+viewed.size+'/'+nodes.length+' completed';
+  hudProgress.textContent='Resume stages: '+viewed.size+'/'+nodes.length+' completed';
   const next=nodes.find(n=>!viewed.has(n.id));
+  const stageTitle=document.getElementById('resumeStageTitle');
+  const stageMilestones=document.getElementById('resumeStageMilestones');
+  const stageSkills=document.getElementById('resumeStageSkills');
   if(hudStats){
     hudStats.textContent='HP '+Math.round(playerStats.hp)+' · MP '+Math.round(playerStats.mp)+' · LVL '+playerStats.level+' · XP '+playerStats.xp+'/'+playerStats.xpNext+' · Gold '+playerStats.gold;
   }
@@ -2047,8 +2102,18 @@ function refreshHud(){
   if(xpBar) xpBar.style.width=(Math.max(0,playerStats.xp)/playerStats.xpNext*100).toFixed(1)+'%';
   if(hudControls){
     hudControls.innerHTML = IS_MOBILE
-      ? 'Controls: <b>Joystick</b> move · <b>ATTACK</b> · <b>INTERACT</b> near node · <b>TOUR</b> guide.'
-      : 'Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>E</b> interact node · <b>TOUR</b> guide.';
+      ? 'Controls: <b>Joystick</b> move · <b>ATTACK</b> · <b>INTERACT</b> to start stage battle · <b>TOUR</b>.'
+      : 'Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>E</b> to start stage battle · <b>TOUR</b>.';
+  }
+  if(next){
+    const st=resumeStages[next.id];
+    if(stageTitle) stageTitle.textContent='Stage '+next.id+' — '+(st?st.label:next.title);
+    if(stageMilestones) stageMilestones.textContent='Milestones: '+(st?st.milestones.join(' · '):next.desc);
+    if(stageSkills) stageSkills.textContent='Skills gained: '+(st?st.skills.join(' · '):'—');
+  } else {
+    if(stageTitle) stageTitle.textContent='All resume stages complete';
+    if(stageMilestones) stageMilestones.textContent='Milestones: fully unlocked';
+    if(stageSkills) stageSkills.textContent='Skills gained: full profile achieved';
   }
 
   if(guidedTourActive){
@@ -2059,11 +2124,11 @@ function refreshHud(){
   }
   if(next){
     hudHint.textContent=nearbyNodeId===next.id
-      ? next.id+' — Guardian nearby. Press INTERACT to start boss battle.'
-      : next.id+' — '+next.title;
+      ? 'Stage '+next.id+' ready — trigger INTERACT to battle the guardian and unlock this resume chapter.'
+      : 'Next resume stage: '+next.id+' — '+next.title;
     hudPath.textContent=nearbyNodeId===next.id
-      ? 'Battle trigger: press INTERACT (or tap node on mobile) to unlock this chapter.'
-      : 'Path: follow the gold beacon + minimap marker to '+next.id+'.';
+      ? 'Unlock flow: INTERACT → turn-based boss fight → stage milestones + skills unlocked.'
+      : 'Path: follow beacon + minimap to Stage '+next.id+'.';
   }else{
     hudHint.textContent='All quests complete. Keep farming mobs or replay via TOUR.';
     hudPath.textContent='Path: free roam active — open MAP to revisit any chapter.';
@@ -2197,7 +2262,7 @@ bindClick('interactBtn',()=>interactNode());
 bindClick('battleFightBtn',()=>runEncounterTurn('fight'));
 bindClick('battleSkillBtn',()=>runEncounterTurn('skill'));
 bindClick('battleRunBtn',()=>runEncounterTurn('run'));
-bindClick('quickNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();toast('Jumped to '+n.id+' — '+n.title);});
+bindClick('quickNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();toast('Jumped to Stage '+n.id+' — '+n.title);});
 bindClick('tourNext',()=>nextGuidedTour());
 bindClick('tourPrev',()=>prevGuidedTour());
 bindClick('tourSkip',()=>stopGuidedTour());
@@ -2209,6 +2274,7 @@ menuModal.onclick=e=>{if(e.target===menuModal)closeTopModal(menuModal)};
 mapModal.onclick=e=>{if(e.target===mapModal)closeTopModal(mapModal)};
 statsModal.onclick=e=>{if(e.target===statsModal)closeTopModal(statsModal)};
 onboardModal.onclick=e=>{if(e.target===onboardModal)closeTopModal(onboardModal)};
+battleModal.onclick=e=>{if(e.target===battleModal)runEncounterTurn('run')};
 
 bindClick('backSite',()=>location.href='../index.html');
 bindClick('jumpNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();closeTopModal(menuModal);});
