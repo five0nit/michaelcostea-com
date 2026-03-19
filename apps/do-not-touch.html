@@ -150,6 +150,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
       <button class="btn secondary" id="mapBtn" aria-label="Open resume stage map and progress">MAP</button>
       <button class="btn secondary" id="tourBtn" aria-label="Start guided resume tour">TOUR</button>
       <button class="btn secondary" id="fastTrackBtn" aria-label="Open fast track resume mode">FAST TRACK</button>
+      <button class="btn secondary" id="demoModeBtn" aria-label="Start hiring manager demo mode">DEMO MODE</button>
       <button class="btn secondary" id="hudToggleBtn" aria-label="Toggle objective panel">HUD</button>
       <button class="btn" id="menuBtn" aria-label="Open menu">MENU</button>
     </div>
@@ -232,7 +233,20 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     <ul id="fastTrackList"></ul>
     <div class="btn-cluster">
       <button class="btn secondary" id="fastTrackTourBtn">Auto Walkthrough</button>
+      <button class="btn secondary" id="openScorecardBtn">Stage Scorecard</button>
       <button class="btn" id="closeFastTrack">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="scorecardModal">
+  <div class="card">
+    <h3>Hiring Manager Scorecard</h3>
+    <p>Quick proof-of-value snapshot by resume stage.</p>
+    <ul id="scorecardList"></ul>
+    <div class="btn-cluster">
+      <button class="btn secondary" id="downloadSummaryBtn">Download 1-page Summary</button>
+      <button class="btn" id="closeScorecardBtn">Close</button>
     </div>
   </div>
 </div>
@@ -455,14 +469,14 @@ const nodeBosses={
   N8:{name:'Growth Dragon',hp:95,atkMin:11,atkMax:16,rewardXp:62,rewardGold:55,color:'#aa3f3f'}
 };
 const resumeStages={
-  N1:{label:'Foundation — Coffee + service systems',milestones:['Service flow stabilised','Shift handoff routine','Customer wait reduction'],skills:['Operations discipline','Live service troubleshooting']},
-  N2:{label:'Retention — Telecom process uplift',milestones:['Churn risk triage','Retention scripting','Escalation routing'],skills:['Retention strategy','Customer recovery']},
-  N3:{label:'Process Specialist — Cross-team rollout',milestones:['Comms workflow','SOP cleanup','Rollout governance'],skills:['Process design','Cross-functional leadership']},
-  N4:{label:'Content Manager — Knowledge systems',milestones:['KB architecture','Content governance','Enablement handover'],skills:['Knowledge ops','Documentation systems']},
-  N5:{label:'Sales Ops Manager — KPI and support',milestones:['Pipeline visibility','SLA tuning','Support-sales alignment'],skills:['Sales operations','Performance analytics']},
-  N6:{label:'Electrician Roles — Field delivery',milestones:['On-site execution','Smart-home installs','Quality signoff'],skills:['Electrical tradecraft','Field diagnostics']},
-  N7:{label:'Sales Manager — Program growth',milestones:['Program scaling','Offer optimization','Team coaching'],skills:['Commercial leadership','Program management']},
-  N8:{label:'BD & Marketing — Growth strategy',milestones:['Partnership expansion','Campaign architecture','CX innovation'],skills:['Business development','Growth systems']}
+  N1:{label:'Foundation — Coffee + service systems',milestones:['Service flow stabilised','Shift handoff routine','Customer wait reduction'],skills:['Operations discipline','Live service troubleshooting'],outcomes:['Faster service rhythm','Better shift reliability']},
+  N2:{label:'Retention — Telecom process uplift',milestones:['Churn risk triage','Retention scripting','Escalation routing'],skills:['Retention strategy','Customer recovery'],outcomes:['Improved save-rate quality','Reduced avoidable churn']},
+  N3:{label:'Process Specialist — Cross-team rollout',milestones:['Comms workflow','SOP cleanup','Rollout governance'],skills:['Process design','Cross-functional leadership'],outcomes:['Cleaner team handoffs','Lower execution friction']},
+  N4:{label:'Content Manager — Knowledge systems',milestones:['KB architecture','Content governance','Enablement handover'],skills:['Knowledge ops','Documentation systems'],outcomes:['Faster onboarding','Better information consistency']},
+  N5:{label:'Sales Ops Manager — KPI and support',milestones:['Pipeline visibility','SLA tuning','Support-sales alignment'],skills:['Sales operations','Performance analytics'],outcomes:['Higher pipeline clarity','Tighter support/sales performance']},
+  N6:{label:'Electrician Roles — Field delivery',milestones:['On-site execution','Smart-home installs','Quality signoff'],skills:['Electrical tradecraft','Field diagnostics'],outcomes:['Reliable field delivery','Stronger install quality']},
+  N7:{label:'Sales Manager — Program growth',milestones:['Program scaling','Offer optimization','Team coaching'],skills:['Commercial leadership','Program management'],outcomes:['Scalable sales motion','Improved team execution']},
+  N8:{label:'BD & Marketing — Growth strategy',milestones:['Partnership expansion','Campaign architecture','CX innovation'],skills:['Business development','Growth systems'],outcomes:['Stronger partner pipeline','Improved growth leverage']}
 };
 let nearbyNodeId=null;
 const encounter={active:false,nodeId:null,boss:null,playerHp:0};
@@ -2056,7 +2070,7 @@ function ensureSpawnValid(){
 
 resize(); rebuildStaticLayers(); ensureSpawnValid(); rafId=requestAnimationFrame(frame);
 
-const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal'),victoryModal=document.getElementById('victoryModal'),fastTrackModal=document.getElementById('fastTrackModal');
+const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal'),victoryModal=document.getElementById('victoryModal'),fastTrackModal=document.getElementById('fastTrackModal'),scorecardModal=document.getElementById('scorecardModal');
 const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath'),hudStats=document.getElementById('hudStats'),hudControls=document.getElementById('hudControls'),hpBar=document.getElementById('hpBar'),mpBar=document.getElementById('mpBar'),xpBar=document.getElementById('xpBar');
 const demoIndicator=document.getElementById('demoIndicator');
 const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
@@ -2161,10 +2175,40 @@ function buildFastTrackList(){
   const list=document.getElementById('fastTrackList');
   if(!list) return;
   list.innerHTML=nodes.map(n=>{
-    const st=resumeStages[n.id]||{label:n.title,milestones:[n.desc],skills:['—']};
+    const st=resumeStages[n.id]||{label:n.title,milestones:[n.desc],skills:['—'],outcomes:['—']};
     const done=viewed.has(n.id)?'✅':'⬜';
-    return `<li>${done} <b>Stage ${n.id}</b> — ${st.label}<br><small>Milestones: ${st.milestones.join(' · ')}</small><br><small>Skills: ${st.skills.join(' · ')}</small></li>`;
+    return `<li>${done} <b>Stage ${n.id}</b> — ${st.label}<br><small>Milestones: ${st.milestones.join(' · ')}</small><br><small>Skills: ${st.skills.join(' · ')}</small><br><small>Outcomes: ${st.outcomes.join(' · ')}</small></li>`;
   }).join('');
+}
+function buildScorecardList(){
+  const list=document.getElementById('scorecardList');
+  if(!list) return;
+  list.innerHTML=nodes.map(n=>{
+    const st=resumeStages[n.id]||{label:n.title,milestones:[n.desc],skills:['—'],outcomes:['—']};
+    const status=viewed.has(n.id)?'Unlocked':'Preview';
+    return `<li><b>Stage ${n.id}: ${st.label}</b> <small style="opacity:.82">(${status})</small><br><small><b>Milestones</b>: ${st.milestones.join(' · ')}</small><br><small><b>Skills</b>: ${st.skills.join(' · ')}</small><br><small><b>Outcomes</b>: ${st.outcomes.join(' · ')}</small></li>`;
+  }).join('');
+}
+function downloadOnePageSummary(){
+  const lines=[];
+  lines.push('Michael Costea — Interactive Resume Summary');
+  lines.push('Generated from DO NOT TOUCH.EXE hiring-manager mode');
+  lines.push('');
+  nodes.forEach(n=>{
+    const st=resumeStages[n.id]||{label:n.title,milestones:[n.desc],skills:['—'],outcomes:['—']};
+    lines.push(`Stage ${n.id}: ${st.label}`);
+    lines.push(`  Milestones: ${st.milestones.join('; ')}`);
+    lines.push(`  Skills: ${st.skills.join('; ')}`);
+    lines.push(`  Outcomes: ${st.outcomes.join('; ')}`);
+    lines.push('');
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Michael_Costea_Resume_Stage_Summary.txt';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},0);
 }
 function startFastTrackWalkthrough(){
   if(fastTrackTimer){ clearInterval(fastTrackTimer); fastTrackTimer=null; }
@@ -2174,6 +2218,13 @@ function startFastTrackWalkthrough(){
     if(guidedTourIndex>=guidedTourSteps.length-1){ stopGuidedTour(true); clearInterval(fastTrackTimer); fastTrackTimer=null; return; }
     nextGuidedTour();
   },2300);
+}
+function startHiringManagerDemo(){
+  buildScorecardList();
+  [menuModal,mapModal,statsModal,onboardModal,fastTrackModal,victoryModal].forEach(m=>m&&m.classList.remove('open'));
+  openTopModal(scorecardModal);
+  startFastTrackWalkthrough();
+  toast('Hiring-manager demo started: scorecard + guided walkthrough',{priority:1});
 }
 
 function refreshHud(){
@@ -2224,7 +2275,7 @@ function refreshHud(){
 }
 function openTopModal(el){ resetJoystick(); snapMotion(); el.classList.add('open'); }
 function closeTopModal(el){ if(el.classList.contains('open')){ el.classList.remove('open'); resetJoystick(); toast('Back in resume world'); } }
-function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open')||victoryModal.classList.contains('open')||fastTrackModal.classList.contains('open'); }
+function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open')||victoryModal.classList.contains('open')||fastTrackModal.classList.contains('open')||scorecardModal.classList.contains('open'); }
 
 function sanitizeViewedProgress(){
   const validIds=new Set(nodes.map(n=>n.id));
@@ -2343,7 +2394,11 @@ function bindClick(id,handler){
 bindClick('menuBtn',()=>openTopModal(menuModal));
 bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map(n=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next stage':'Locked');const st=resumeStages[n.id]||{milestones:[n.desc],skills:['—']};return '<li>'+mark+' <b>Stage '+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small><br><small>Milestones: '+st.milestones.join(' · ')+'</small><br><small>Skills: '+st.skills.join(' · ')+'</small></li>';}).join('');openTopModal(mapModal);});
 bindClick('fastTrackBtn',()=>{buildFastTrackList(); openTopModal(fastTrackModal);});
+bindClick('demoModeBtn',()=>startHiringManagerDemo());
 bindClick('fastTrackTourBtn',()=>{closeTopModal(fastTrackModal); startFastTrackWalkthrough();});
+bindClick('openScorecardBtn',()=>{buildScorecardList(); openTopModal(scorecardModal);});
+bindClick('downloadSummaryBtn',()=>downloadOnePageSummary());
+bindClick('closeScorecardBtn',()=>closeTopModal(scorecardModal));
 bindClick('closeFastTrack',()=>closeTopModal(fastTrackModal));
 bindClick('tourBtn',()=>startGuidedTour());
 bindClick('quickTour',()=>startGuidedTour());
@@ -2367,6 +2422,7 @@ onboardModal.onclick=e=>{if(e.target===onboardModal)closeTopModal(onboardModal)}
 battleModal.onclick=e=>{if(e.target===battleModal)runEncounterTurn('run')};
 victoryModal.onclick=e=>{if(e.target===victoryModal) victoryModal.classList.remove('open')};
 fastTrackModal.onclick=e=>{if(e.target===fastTrackModal) closeTopModal(fastTrackModal)};
+scorecardModal.onclick=e=>{if(e.target===scorecardModal) closeTopModal(scorecardModal)};
 
 bindClick('backSite',()=>location.href='../index.html');
 bindClick('jumpNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();closeTopModal(menuModal);});
@@ -2419,6 +2475,7 @@ addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(guidedTourActive) return stopGuidedTour();
     if(victoryModal.classList.contains('open')) return victoryModal.classList.remove('open');
+    if(scorecardModal.classList.contains('open')) return closeTopModal(scorecardModal);
     if(fastTrackModal.classList.contains('open')) return closeTopModal(fastTrackModal);
     if(battleModal.classList.contains('open')) return runEncounterTurn('run');
     if(statsModal.classList.contains('open')) return closeTopModal(statsModal);
