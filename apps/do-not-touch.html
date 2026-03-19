@@ -75,6 +75,9 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 .encounter-flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0;background:radial-gradient(circle at center,rgba(255,255,255,.86) 0,rgba(255,255,255,0) 58%),repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 8px,rgba(0,0,0,.14) 8px 16px)}
 .encounter-flash.show{animation:encounterFlash .45s ease}
 @keyframes encounterFlash{0%{opacity:0}20%{opacity:.9}100%{opacity:0}}
+.encounter-wipe{position:fixed;inset:0;z-index:25;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,#0f1f18 0 16px,#8bac0f 16px 32px)}
+.encounter-wipe.show{animation:encounterWipe .48s ease}
+@keyframes encounterWipe{0%{opacity:0;transform:translateY(-100%)}30%{opacity:1}100%{opacity:0;transform:translateY(100%)}}
 @keyframes battleShake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}
 @keyframes spriteHit{0%{transform:translateX(0);filter:brightness(1)}35%{transform:translateX(3px);filter:brightness(1.35)}100%{transform:translateX(0);filter:brightness(1)}}
 .victory-modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(5,10,20,.78);z-index:27;padding:14px}
@@ -192,8 +195,15 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     <div class="mini" id="resumeStageMilestones">Milestones: 0/3</div>
     <div class="mini" id="resumeStageSkills">Skills gained: —</div>
   </div>
+  <div class="resume-stage" id="hirePanel" aria-live="polite" style="top:calc(var(--top-ui-clearance) + 340px)">
+    <b>Why hire Michael</b>
+    <div class="mini">• Trade + growth hybrid operator</div>
+    <div class="mini">• Systems thinker with execution speed</div>
+    <div class="mini">• Stage outcomes mapped to business value</div>
+  </div>
 </div>
 <div id="encounterFlash" class="encounter-flash" aria-hidden="true"></div>
+<div id="encounterWipe" class="encounter-wipe" aria-hidden="true"></div>
 
 <div class="battle-screen" id="battleModal" aria-live="polite">
   <div class="battle-card">
@@ -247,6 +257,18 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
     <div class="btn-cluster">
       <button class="btn secondary" id="downloadSummaryBtn">Download 1-page Summary</button>
       <button class="btn" id="closeScorecardBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="fastTrackSummaryModal">
+  <div class="card">
+    <h3>Fast Track Complete</h3>
+    <p>Quick hiring-manager summary generated from stage walkthrough.</p>
+    <ul id="fastTrackSummaryList"></ul>
+    <div class="btn-cluster">
+      <button class="btn secondary" id="fastTrackSummaryDownload">Download Summary</button>
+      <button class="btn" id="closeFastTrackSummary">Close</button>
     </div>
   </div>
 </div>
@@ -979,10 +1001,17 @@ function attackMob(targetOverride=null){
 
 function showEncounterFlash(){
   const el=document.getElementById('encounterFlash');
-  if(!el) return;
-  el.classList.remove('show');
-  void el.offsetWidth;
-  el.classList.add('show');
+  const wipe=document.getElementById('encounterWipe');
+  if(el){
+    el.classList.remove('show');
+    void el.offsetWidth;
+    el.classList.add('show');
+  }
+  if(wipe){
+    wipe.classList.remove('show');
+    void wipe.offsetWidth;
+    wipe.classList.add('show');
+  }
 }
 function getNearestLockedNode(maxDist=54){
   const nextNode=nodes.find(n=>!viewed.has(n.id));
@@ -1144,7 +1173,8 @@ function interactNode(){
   const modal=document.getElementById('battleModal');
   if(modal) modal.classList.add('open');
   const st=resumeStages[node.id];
-  const intro=st ? ('Stage '+node.id+': '+st.label+' — Guardian encounter!') : ('A wild '+cfg.name+' blocks '+node.id+'!');
+  const hook=(st&&st.outcomes&&st.outcomes[0])?('Proof target: '+st.outcomes[0]):'Guardian encounter!';
+  const intro=st ? ('Stage '+node.id+': '+st.label+' — '+hook) : ('A wild '+cfg.name+' blocks '+node.id+'!');
   updateBattleUi(intro);
 }
 
@@ -2121,7 +2151,7 @@ function ensureSpawnValid(){
 
 resize(); rebuildStaticLayers(); ensureSpawnValid(); rafId=requestAnimationFrame(frame);
 
-const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal'),victoryModal=document.getElementById('victoryModal'),fastTrackModal=document.getElementById('fastTrackModal'),scorecardModal=document.getElementById('scorecardModal');
+const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal'),victoryModal=document.getElementById('victoryModal'),fastTrackModal=document.getElementById('fastTrackModal'),scorecardModal=document.getElementById('scorecardModal'),fastTrackSummaryModal=document.getElementById('fastTrackSummaryModal');
 const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath'),hudStats=document.getElementById('hudStats'),hudControls=document.getElementById('hudControls'),hpBar=document.getElementById('hpBar'),mpBar=document.getElementById('mpBar'),xpBar=document.getElementById('xpBar');
 const demoIndicator=document.getElementById('demoIndicator');
 const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
@@ -2261,12 +2291,27 @@ function downloadOnePageSummary(){
   a.click();
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},0);
 }
+function buildFastTrackSummary(){
+  const el=document.getElementById('fastTrackSummaryList');
+  if(!el) return;
+  const lines=nodes.map(n=>{
+    const st=resumeStages[n.id]||{outcomes:['—'],skills:['—']};
+    return `<li><b>Stage ${n.id}</b> — ${st.outcomes.slice(0,1).join('')}<br><small>Skills: ${st.skills.join(' · ')}</small></li>`;
+  });
+  el.innerHTML=lines.join('');
+}
 function startFastTrackWalkthrough(){
   if(fastTrackTimer){ clearInterval(fastTrackTimer); fastTrackTimer=null; }
   startGuidedTour();
   fastTrackTimer=setInterval(()=>{
     if(!guidedTourActive){ clearInterval(fastTrackTimer); fastTrackTimer=null; return; }
-    if(guidedTourIndex>=guidedTourSteps.length-1){ stopGuidedTour(true); clearInterval(fastTrackTimer); fastTrackTimer=null; return; }
+    if(guidedTourIndex>=guidedTourSteps.length-1){
+      stopGuidedTour(true);
+      clearInterval(fastTrackTimer); fastTrackTimer=null;
+      buildFastTrackSummary();
+      openTopModal(fastTrackSummaryModal);
+      return;
+    }
     nextGuidedTour();
   },2300);
 }
@@ -2326,7 +2371,7 @@ function refreshHud(){
 }
 function openTopModal(el){ resetJoystick(); snapMotion(); el.classList.add('open'); }
 function closeTopModal(el){ if(el.classList.contains('open')){ el.classList.remove('open'); resetJoystick(); toast('Back in resume world'); } }
-function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open')||victoryModal.classList.contains('open')||fastTrackModal.classList.contains('open')||scorecardModal.classList.contains('open'); }
+function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open')||victoryModal.classList.contains('open')||fastTrackModal.classList.contains('open')||scorecardModal.classList.contains('open')||fastTrackSummaryModal.classList.contains('open'); }
 
 function sanitizeViewedProgress(){
   const validIds=new Set(nodes.map(n=>n.id));
@@ -2450,6 +2495,8 @@ bindClick('fastTrackTourBtn',()=>{closeTopModal(fastTrackModal); startFastTrackW
 bindClick('openScorecardBtn',()=>{buildScorecardList(); openTopModal(scorecardModal);});
 bindClick('downloadSummaryBtn',()=>downloadOnePageSummary());
 bindClick('closeScorecardBtn',()=>closeTopModal(scorecardModal));
+bindClick('fastTrackSummaryDownload',()=>downloadOnePageSummary());
+bindClick('closeFastTrackSummary',()=>closeTopModal(fastTrackSummaryModal));
 bindClick('closeFastTrack',()=>closeTopModal(fastTrackModal));
 bindClick('tourBtn',()=>startGuidedTour());
 bindClick('quickTour',()=>startGuidedTour());
@@ -2474,6 +2521,7 @@ battleModal.onclick=e=>{if(e.target===battleModal)runEncounterTurn('run')};
 victoryModal.onclick=e=>{if(e.target===victoryModal) victoryModal.classList.remove('open')};
 fastTrackModal.onclick=e=>{if(e.target===fastTrackModal) closeTopModal(fastTrackModal)};
 scorecardModal.onclick=e=>{if(e.target===scorecardModal) closeTopModal(scorecardModal)};
+fastTrackSummaryModal.onclick=e=>{if(e.target===fastTrackSummaryModal) closeTopModal(fastTrackSummaryModal)};
 
 bindClick('backSite',()=>location.href='../index.html');
 bindClick('jumpNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();closeTopModal(menuModal);});
@@ -2517,6 +2565,7 @@ addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(guidedTourActive) return stopGuidedTour();
     if(victoryModal.classList.contains('open')) return victoryModal.classList.remove('open');
+    if(fastTrackSummaryModal.classList.contains('open')) return closeTopModal(fastTrackSummaryModal);
     if(scorecardModal.classList.contains('open')) return closeTopModal(scorecardModal);
     if(fastTrackModal.classList.contains('open')) return closeTopModal(fastTrackModal);
     if(battleModal.classList.contains('open')) return runEncounterTurn('run');
