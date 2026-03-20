@@ -91,7 +91,7 @@ composer.addPass(bloomPass);
 let fxEnabled = true;
 
 const TILE=1.6, W=64, H=46;
-const map = Array.from({length:H}, ()=>Array(W).fill(0)); // 0 grass 1 tree 2 water 3 gap 4 cliff 5 shrine
+const map = Array.from({length:H}, ()=>Array(W).fill(0)); // 0 grass 1 tree 2 water 3 gap 4 cliff
 for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(!x||!y||x===W-1||y===H-1) map[y][x]=1;
 const set=(x1,y1,x2,y2,t)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++) map[y][x]=t;};
 
@@ -125,10 +125,6 @@ set(8,30,40,30,2);     // extra fish requirement lane
 set(20,26,22,26,3);    // extra bird jump in late path
 set(31,23,31,25,4);    // extra goat climb gate
 
-// shrine crossover points for form switching
-set(13,14,13,14,5);
-set(29,11,29,11,5);
-set(39,22,39,22,5);
 
 const tileMeshes=[];
 
@@ -172,7 +168,6 @@ for(let y=0;y<H;y++) for(let x=0;x<W;x++){
   if(t===2){ geo=gTile; mat=mats.water; yPos=-0.08; }
   if(t===3){ geo=gTile; mat=mats.gap; yPos=-0.32; }
   if(t===4){ geo=gTile; mat=mats.cliff; yPos=0.28; }
-  if(t===5){ geo=new THREE.CylinderGeometry(TILE*0.28,TILE*0.36,0.26,12); mat=new THREE.MeshStandardMaterial({color:0xd7c07f, roughness:0.55, emissive:0x2a210c, emissiveIntensity:0.35}); yPos=0.16; }
   const m=new THREE.Mesh(geo,mat); m.receiveShadow=true; m.castShadow=t===1||t===5;
   m.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE);
   scene.add(m); tileMeshes.push(m);
@@ -307,25 +302,27 @@ addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/m
 addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/AntiqueCamera/glTF-Binary/AntiqueCamera.glb', 24, 14, 0.24, 0.7, 0.2);
 addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb', 38, 20, 0.28, 0.82, -0.7);
 
-// Otis custom rig (clean, no blocking overlay)
-const otisTorso = new THREE.Mesh(new THREE.BoxGeometry(0.9,1.0,0.5), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.56}));
-otisTorso.position.y=0.58;
-const otisHead = new THREE.Mesh(new THREE.BoxGeometry(0.78,0.74,0.52), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.62}));
-otisHead.position.set(-0.02,1.34,0.02);
-const otisEyeL = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.08,0.02), new THREE.MeshStandardMaterial({color:0x111111, emissive:0x111111, emissiveIntensity:0.45})); otisEyeL.position.set(-0.2,1.37,0.29);
-const otisEyeR = otisEyeL.clone(); otisEyeR.position.x=-0.05;
-const otisEyePatch = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.14,0.03), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); otisEyePatch.position.set(0.16,1.36,0.29);
-const otisMouth = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.08,0.03), new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.52})); otisMouth.position.set(-0.04,1.18,0.29);
-const otisHatTop = new THREE.Mesh(new THREE.BoxGeometry(0.92,0.2,0.62), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.42})); otisHatTop.position.set(-0.03,1.72,0.02);
-const otisHatBrim = new THREE.Mesh(new THREE.BoxGeometry(1.08,0.08,0.8), new THREE.MeshStandardMaterial({color:0xbf3c50, roughness:0.48})); otisHatBrim.position.set(-0.03,1.61,0.1);
-const otisLegL = new THREE.Mesh(new THREE.CylinderGeometry(0.085,0.095,0.9,12), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.6})); otisLegL.position.set(-0.16,-0.03,0.0);
-const otisLegR = otisLegL.clone(); otisLegR.position.x=0.16;
-const otisShoeL = new THREE.Mesh(new THREE.BoxGeometry(0.24,0.1,0.32), new THREE.MeshStandardMaterial({color:0x4a1b22, roughness:0.72})); otisShoeL.position.set(-0.16,-0.54,0.11);
-const otisShoeR = otisShoeL.clone(); otisShoeR.position.x=0.16;
-const otisArmL = new THREE.Mesh(new THREE.CylinderGeometry(0.065,0.07,0.8,10), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.66})); otisArmL.position.set(-0.55,0.66,0.0);
-const otisArmR = otisArmL.clone(); otisArmR.position.x=0.55;
-avatarRoot.add(otisTorso,otisHead,otisEyeL,otisEyeR,otisEyePatch,otisMouth,otisHatTop,otisHatBrim,otisLegL,otisLegR,otisShoeL,otisShoeR,otisArmL,otisArmR);
-const otisRig = {armL:otisArmL, armR:otisArmR, legL:otisLegL, legR:otisLegR, shoeL:otisShoeL, shoeR:otisShoeR, body:otisTorso};
+// Otis rebuilt from scratch with rounded, proportional body (no boxy rectangle look)
+const otisCore = new THREE.Group();
+avatarRoot.add(otisCore);
+const otisBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.7,10,16), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.56}));
+otisBody.position.y=0.62;
+const otisHead = new THREE.Mesh(new THREE.SphereGeometry(0.36,24,20), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.62}));
+otisHead.position.set(-0.02,1.36,0.02);
+const otisEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.035,10,10), new THREE.MeshStandardMaterial({color:0x101010})); otisEyeL.position.set(-0.14,1.4,0.3);
+const otisEyeR = otisEyeL.clone(); otisEyeR.position.x=0.0;
+const otisEyePatch = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.14,0.03), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); otisEyePatch.position.set(0.16,1.38,0.29);
+const otisMouth = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.07,0.02), new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.52})); otisMouth.position.set(-0.04,1.2,0.29);
+const otisHatTop = new THREE.Mesh(new THREE.CylinderGeometry(0.34,0.3,0.18,18), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.42})); otisHatTop.position.set(-0.03,1.72,0.02);
+const otisHatBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.46,0.46,0.05,22), new THREE.MeshStandardMaterial({color:0xbf3c50, roughness:0.48})); otisHatBrim.position.set(-0.03,1.62,0.08);
+const otisArmL = new THREE.Mesh(new THREE.CapsuleGeometry(0.05,0.62,6,12), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.66})); otisArmL.position.set(-0.42,0.72,0.0);
+const otisArmR = otisArmL.clone(); otisArmR.position.x=0.42;
+const otisLegL = new THREE.Mesh(new THREE.CapsuleGeometry(0.07,0.72,8,12), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.6})); otisLegL.position.set(-0.12,-0.04,0.0);
+const otisLegR = otisLegL.clone(); otisLegR.position.x=0.12;
+const otisShoeL = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.09,0.28), new THREE.MeshStandardMaterial({color:0x4a1b22, roughness:0.72})); otisShoeL.position.set(-0.12,-0.48,0.11);
+const otisShoeR = otisShoeL.clone(); otisShoeR.position.x=0.12;
+otisCore.add(otisBody,otisHead,otisEyeL,otisEyeR,otisEyePatch,otisMouth,otisHatTop,otisHatBrim,otisArmL,otisArmR,otisLegL,otisLegR,otisShoeL,otisShoeR);
+const otisRig = {armL:otisArmL, armR:otisArmR, legL:otisLegL, legR:otisLegR, shoeL:otisShoeL, shoeR:otisShoeR, body:otisBody};
 
 // Friends rebuilt from user sketches (high-detail stylized 3D)
 function buildMilo(){
