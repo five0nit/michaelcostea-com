@@ -211,9 +211,62 @@ otisArmL.position.set(-0.56,0.78,0);
 const otisArmR = otisArmL.clone(); otisArmR.position.x=0.56;
 avatarRoot.add(otisTorso,otisHead,otisHatTop,otisHatBrim,otisLegL,otisLegR,otisArmL,otisArmR);
 
-const friendGeom = new THREE.SphereGeometry(0.45, 12, 10);
-const milo = new THREE.Mesh(friendGeom, new THREE.MeshStandardMaterial({color:0xffc2ca, roughness:0.7}));
-const poppy = new THREE.Mesh(friendGeom, new THREE.MeshStandardMaterial({color:0xff9fbc, roughness:0.7}));
+// Friends rebuilt from user sketches (high-detail stylized 3D)
+function buildMilo(){
+  const g = new THREE.Group();
+  const lineMat = new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.5});
+  const skin = new THREE.MeshPhysicalMaterial({color:0xffd9de, roughness:0.58, clearcoat:0.15});
+
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.72,0.68), skin); head.position.y=1.4;
+  const fringe = new THREE.Mesh(new THREE.BoxGeometry(0.84,0.12,0.5), lineMat); fringe.position.set(0,1.68,0.1);
+  const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.03,10,10), new THREE.MeshStandardMaterial({color:0x1b1b1b})); eyeL.position.set(-0.21,1.42,0.34);
+  const eyeR = eyeL.clone(); eyeR.position.x=0.21;
+  const nose = new THREE.Mesh(new THREE.SphereGeometry(0.02,8,8), new THREE.MeshStandardMaterial({color:0xb55461})); nose.position.set(0,1.37,0.35);
+  const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.03,0.02), new THREE.MeshStandardMaterial({color:0x8a3442})); mouth.position.set(0,1.28,0.34);
+
+  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.74,8,14), new THREE.MeshPhysicalMaterial({color:0xffb7c0, roughness:0.62})); torso.position.y=0.62;
+  const armL = new THREE.Mesh(new THREE.CapsuleGeometry(0.08,0.5,6,10), new THREE.MeshStandardMaterial({color:0xffb7c0, roughness:0.65})); armL.position.set(-0.42,0.68,0.03);
+  const armR = armL.clone(); armR.position.x=0.42;
+  const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.09,0.6,6,10), new THREE.MeshStandardMaterial({color:0xd06774, roughness:0.7})); legL.position.set(-0.12,0.02,0.04);
+  const legR = legL.clone(); legR.position.x=0.12;
+
+  g.add(head,fringe,eyeL,eyeR,nose,mouth,torso,armL,armR,legL,legR);
+  g.userData={armL,armR,legL,legR};
+  return g;
+}
+
+function buildPoppy(){
+  const g = new THREE.Group();
+  const skin = new THREE.MeshPhysicalMaterial({color:0xffe6eb, roughness:0.56, clearcoat:0.12});
+  const lineMat = new THREE.MeshStandardMaterial({color:0xea6172, roughness:0.5});
+
+  const skull = new THREE.Mesh(new THREE.BoxGeometry(0.98,0.78,0.72), skin); skull.position.y=1.45;
+  const topPlate = new THREE.Mesh(new THREE.BoxGeometry(1.0,0.18,0.74), lineMat); topPlate.position.set(0,1.75,0);
+  const sideNub = new THREE.Mesh(new THREE.BoxGeometry(0.14,0.12,0.2), lineMat); sideNub.position.set(-0.56,1.55,0);
+  const eyeL = new THREE.Mesh(new THREE.BoxGeometry(0.09,0.09,0.03), new THREE.MeshStandardMaterial({color:0x7a2b39})); eyeL.position.set(-0.2,1.47,0.35);
+  const eyeR = eyeL.clone(); eyeR.position.x=0.2;
+  const nose = new THREE.Mesh(new THREE.BoxGeometry(0.07,0.07,0.03), new THREE.MeshStandardMaterial({color:0x7a2b39})); nose.position.set(0,1.39,0.35);
+
+  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.88,8,14), new THREE.MeshPhysicalMaterial({color:0xffbec8, roughness:0.64})); torso.position.y=0.56;
+  const armL = new THREE.Mesh(new THREE.CapsuleGeometry(0.07,0.66,6,10), new THREE.MeshStandardMaterial({color:0xffbec8, roughness:0.68})); armL.position.set(-0.44,0.62,0.05);
+  const armR = armL.clone(); armR.position.x=0.44;
+  const fingerL1 = new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.015,0.13,6), lineMat); fingerL1.position.set(-0.5,0.21,0.09); fingerL1.rotation.z=0.2;
+  const fingerL2 = fingerL1.clone(); fingerL2.position.z=0.02;
+  const fingerL3 = fingerL1.clone(); fingerL3.position.z=-0.05;
+  const fingerR1 = fingerL1.clone(); fingerR1.position.x=0.5; fingerR1.rotation.z=-0.2;
+  const fingerR2 = fingerR1.clone(); fingerR2.position.z=0.02;
+  const fingerR3 = fingerR1.clone(); fingerR3.position.z=-0.05;
+
+  const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.08,0.74,6,10), new THREE.MeshStandardMaterial({color:0xd86a78, roughness:0.72})); legL.position.set(-0.12,-0.02,0.05);
+  const legR = legL.clone(); legR.position.x=0.12;
+
+  g.add(skull,topPlate,sideNub,eyeL,eyeR,nose,torso,armL,armR,fingerL1,fingerL2,fingerL3,fingerR1,fingerR2,fingerR3,legL,legR);
+  g.userData={armL,armR,legL,legR};
+  return g;
+}
+
+const milo = buildMilo();
+const poppy = buildPoppy();
 const decoyGeom = new THREE.SphereGeometry(0.34, 10, 8);
 const decoyMat = new THREE.MeshStandardMaterial({color:0xf6d36a, roughness:0.7, emissive:0x2a1f08, emissiveIntensity:0.25});
 const decoyMeshes = [];
@@ -409,6 +462,24 @@ renderer.setAnimationLoop(()=>{
   } else if(form==='goat'){
     goatHead.rotation.y = Math.sin(t*3)*0.06;
     goatLegs.children.forEach((leg,i)=>{leg.rotation.x = Math.sin(t*7 + i)*0.12;});
+  }
+
+  // friend idle animation from sketch silhouettes
+  if(milo.visible){
+    milo.position.y = 0.8 + Math.sin(t*3.4)*0.04;
+    const m = milo.userData;
+    if(m?.armL) m.armL.rotation.z = 0.12 + Math.sin(t*2.8)*0.18;
+    if(m?.armR) m.armR.rotation.z = -0.12 - Math.sin(t*2.8)*0.18;
+    if(m?.legL) m.legL.rotation.x = Math.sin(t*4.4)*0.12;
+    if(m?.legR) m.legR.rotation.x = -Math.sin(t*4.4)*0.12;
+  }
+  if(poppy.visible){
+    poppy.position.y = 0.8 + Math.sin(t*2.6 + 1.2)*0.05;
+    const p = poppy.userData;
+    if(p?.armL) p.armL.rotation.z = 0.18 + Math.sin(t*2.1)*0.24;
+    if(p?.armR) p.armR.rotation.z = -0.18 - Math.sin(t*2.1)*0.24;
+    if(p?.legL) p.legL.rotation.x = Math.sin(t*3.8)*0.1;
+    if(p?.legR) p.legR.rotation.x = -Math.sin(t*3.8)*0.1;
   }
 
   // follow cam (closer framing)
