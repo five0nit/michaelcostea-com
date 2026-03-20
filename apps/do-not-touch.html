@@ -174,7 +174,7 @@ body.reduced-motion *{animation:none !important;transition:none !important;scrol
       <div class="rpg-bar mp"><span id="mpBar" style="width:100%"></span></div>
       <div class="rpg-bar xp"><span id="xpBar" style="width:0%"></span></div>
     </div>
-    <div class="hud-keyline" id="hudControls">Controls: <b>WASD</b> move · <b>SPACE</b> attack · <b>TOUR</b> guide.</div>
+    <div class="hud-keyline" id="hudControls">Controls: <b>WASD</b> move · Encounters auto-start · <b>TOUR</b> guide.</div>
   </div>
   <div class="demo-indicator" id="demoIndicator">DEMO ROUTE ACTIVE</div>
   <div class="quick-controls" id="quickControls">
@@ -504,11 +504,12 @@ const resumeStages={
   N8:{label:'BD & Marketing — Growth strategy',milestones:['Partnership expansion','Campaign architecture','CX innovation'],skills:['Business development','Growth systems'],outcomes:['Stronger partner pipeline','Improved growth leverage']}
 };
 let nearbyNodeId=null;
-const encounter={active:false,nodeId:null,boss:null,playerHp:0};
+const encounter={active:false,nodeId:null,boss:null,playerHp:0,phase:'idle',animT:0,lastAction:'idle'};
 let encounterAutoCooldown=0;
 let fastTrackTimer=null;
 let battleMenuIndex=0;
 let battleTypeTimer=null;
+const seenStageEncounters=new Set();
 const stageBattleTheme={N1:'#9bbc6f',N2:'#8bac0f',N3:'#7ea45c',N4:'#9bbc6f',N5:'#8bac0f',N6:'#7ea45c',N7:'#9bbc6f',N8:'#8bac0f'};
 const EXPERIENCE_FOCUS=true;
 
@@ -1023,6 +1024,26 @@ function getNearestLockedNode(maxDist=54){
   const d=Math.hypot(player.x-nextNode.x,player.y-nextNode.y);
   return d<=maxDist?nextNode:null;
 }
+function constrainToLinearRoute(){
+  const next=nodes.find(n=>!viewed.has(n.id));
+  if(!next) return;
+  const lastUnlocked=[...nodes].reverse().find(n=>viewed.has(n.id));
+  const ax=lastUnlocked?lastUnlocked.x:420, ay=lastUnlocked?lastUnlocked.y:760;
+  const bx=next.x, by=next.y;
+  const abx=bx-ax, aby=by-ay;
+  const apx=player.x-ax, apy=player.y-ay;
+  const ab2=abx*abx+aby*aby || 1;
+  let t=(apx*abx+apy*aby)/ab2;
+  t=Math.max(0,Math.min(1,t));
+  const cx=ax+abx*t, cy=ay+aby*t;
+  const dx=player.x-cx, dy=player.y-cy;
+  const d=Math.hypot(dx,dy)||1;
+  const lane=165; // soft forced linear lane width
+  if(d>lane){
+    player.x=cx+(dx/d)*lane;
+    player.y=cy+(dy/d)*lane;
+  }
+}
 let sfxCtx=null;
 function sfxTone(freq=440,dur=0.08,type='square',vol=0.04){
   try{
@@ -1040,10 +1061,15 @@ function sfxTone(freq=440,dur=0.08,type='square',vol=0.04){
     o.stop(sfxCtx.currentTime+dur+0.01);
   }catch{}
 }
-function sfxEncounter(){ sfxTone(520,0.06,'square',0.05); setTimeout(()=>sfxTone(380,0.08,'square',0.05),65); setTimeout(()=>sfxTone(240,0.1,'triangle',0.05),140); }
-function sfxHit(){ sfxTone(180,0.05,'square',0.045); }
-function sfxWin(){ sfxTone(420,0.07,'square',0.04); setTimeout(()=>sfxTone(520,0.07,'square',0.04),90); setTimeout(()=>sfxTone(660,0.1,'square',0.045),180); }
-function sfxLose(){ sfxTone(260,0.08,'sawtooth',0.04); setTimeout(()=>sfxTone(180,0.12,'sawtooth',0.04),110); }
+function sfxEncounter(){
+  sfxTone(784,0.04,'square',0.05);
+  setTimeout(()=>sfxTone(659,0.05,'square',0.05),45);
+  setTimeout(()=>sfxTone(523,0.06,'square',0.05),95);
+  setTimeout(()=>sfxTone(392,0.08,'triangle',0.05),160);
+}
+function sfxHit(){ sfxTone(196,0.045,'square',0.05); setTimeout(()=>sfxTone(147,0.05,'square',0.04),35); }
+function sfxWin(){ sfxTone(523,0.06,'square',0.045); setTimeout(()=>sfxTone(659,0.06,'square',0.045),85); setTimeout(()=>sfxTone(784,0.09,'square',0.05),170); }
+function sfxLose(){ sfxTone(294,0.07,'sawtooth',0.04); setTimeout(()=>sfxTone(220,0.09,'sawtooth',0.04),90); setTimeout(()=>sfxTone(147,0.12,'triangle',0.04),180); }
 
 function drawBattleSprite(canvas,color='#7a6',type='boss'){
   if(!canvas) return;
@@ -1056,7 +1082,10 @@ function drawBattleSprite(canvas,color='#7a6',type='boss'){
   c.fillStyle='#8bac0f'; c.fillRect(0,58,128,38);
   c.fillStyle='#306230'; c.fillRect(0,74,128,22);
 
-  const bob = Math.sin(time*0.18 + (type==='boss'?0:1.7))*1.2;
+  const baseBob = Math.sin(time*0.18 + (type==='boss'?0:1.7))*1.2;
+  const attackKick = encounter.phase==='attack' ? (type==='boss'? -6: 6) * Math.min(1,encounter.animT*8) : 0;
+  const hurtShake = encounter.phase==='hurt' ? (type==='boss' && encounter.lastAction==='fight' ? 2 : (type==='player' ? -2 : 0)) * Math.sin(time*1.2) : 0;
+  const bob = baseBob + attackKick + hurtShake;
   const x=type==='boss'?74:54, y=50+bob;
 
   // shadow
@@ -1168,17 +1197,21 @@ function runEncounterTurn(move){
   if(!encounter.active || !encounter.boss) return;
   let lines=[];
   if(move==='fight'){
+    encounter.phase='attack'; encounter.animT=0.22; encounter.lastAction='fight';
     const dmg=10+Math.floor(Math.random()*8)+Math.floor(playerStats.level*1.8);
     encounter.boss.hp-=dmg;
     playBattleHit('boss');
+    encounter.phase='hurt'; encounter.animT=0.18;
     lines.push('You strike for '+dmg+' damage!');
   } else if(move==='skill'){
     if(playerStats.mp<10){ lines.push('Not enough MP!'); }
     else {
+      encounter.phase='attack'; encounter.animT=0.24; encounter.lastAction='skill';
       playerStats.mp-=10;
       const dmg=18+Math.floor(Math.random()*10)+Math.floor(playerStats.level*2.2);
       encounter.boss.hp-=dmg;
       playBattleHit('boss');
+      encounter.phase='hurt'; encounter.animT=0.2;
       lines.push('Skill burst hits for '+dmg+'!');
     }
   } else if(move==='run'){
@@ -1192,9 +1225,11 @@ function runEncounterTurn(move){
   }
   const bossMoves=['Strike','Charge','Overload','Crush'];
   const moveName=bossMoves[Math.floor(Math.random()*bossMoves.length)];
+  encounter.phase='attack'; encounter.animT=0.22; encounter.lastAction='boss';
   const ret=encounter.boss.atkMin+Math.floor(Math.random()*(encounter.boss.atkMax-encounter.boss.atkMin+1));
   encounter.playerHp-=ret;
   playBattleHit('player');
+  encounter.phase='hurt'; encounter.animT=0.2;
   lines.push(encounter.boss.name+' used '+moveName+' for '+ret+'.');
   if(encounter.playerHp<=0){
     playerStats.hp=playerStats.maxHp;
@@ -1221,11 +1256,13 @@ function interactNode(){
   const st=resumeStages[node.id];
   const hook=(st&&st.outcomes&&st.outcomes[0])?('Proof target: '+st.outcomes[0]):'Guardian encounter!';
   const intro=st ? ('Stage '+node.id+': '+st.label+' — '+hook) : ('A wild '+cfg.name+' blocks '+node.id+'!');
+  const introDelay=seenStageEncounters.has(node.id)?520:980;
+  seenStageEncounters.add(node.id);
   setTimeout(()=>{
     const modal=document.getElementById('battleModal');
     if(modal) modal.classList.add('open');
     updateBattleUi(intro);
-  },380);
+  },introDelay);
 }
 
 function drawHeroBlockTo(c2d,x,y,theme='warm'){
@@ -1859,6 +1896,7 @@ function update(dt){
   }
   time += dt*60;
   encounterAutoCooldown=Math.max(0,encounterAutoCooldown-dt);
+  if(encounter.animT>0){ encounter.animT=Math.max(0,encounter.animT-dt); if(encounter.animT===0) encounter.phase='idle'; }
   const phase=getProgressionPhase();
   const scheduleBand=getScheduleBand();
   const cadence=getCadenceProfile(phase.id,scheduleBand.id);
@@ -2002,6 +2040,7 @@ function update(dt){
   }
 
   if(collisionDebug.enabled) lastCollisionDebugData=debugExpanded;
+  constrainToLinearRoute();
   const nearNode=getNearestLockedNode(84);
   nearbyNodeId=nearNode?nearNode.id:null;
   if(nearNode && !encounter.active && !guidedTourActive && encounterAutoCooldown<=0 && !battleModal.classList.contains('open')){
@@ -2545,7 +2584,7 @@ function bindClick(id,handler){
 }
 
 bindClick('menuBtn',()=>openTopModal(menuModal));
-bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map(n=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next stage':'Locked');const st=resumeStages[n.id]||{milestones:[n.desc],skills:['—']};return '<li>'+mark+' <b>Stage '+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small><br><small>Milestones: '+st.milestones.join(' · ')+'</small><br><small>Skills: '+st.skills.join(' · ')+'</small></li>';}).join('');openTopModal(mapModal);});
+bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map((n,i)=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next stage':'Locked');const st=resumeStages[n.id]||{milestones:[n.desc],skills:['—']};const arrow=i<nodes.length-1?' →':'';return '<li>'+mark+' <b>Stage '+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small>'+arrow+'<br><small>Milestones: '+st.milestones.join(' · ')+'</small><br><small>Skills: '+st.skills.join(' · ')+'</small></li>';}).join('');openTopModal(mapModal);});
 bindClick('fastTrackBtn',()=>{buildFastTrackList(); openTopModal(fastTrackModal);});
 bindClick('demoModeBtn',()=>startHiringManagerDemo());
 bindClick('fastTrackTourBtn',()=>{closeTopModal(fastTrackModal); startFastTrackWalkthrough();});
