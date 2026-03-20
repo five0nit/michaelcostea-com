@@ -47,6 +47,8 @@
 
     <div class="row" style="margin-top:10px">
       <button class="btn ghost" id="toggleEvidence">SHOW PROOF</button>
+      <button class="btn secondary" id="quickRunBtn">QUICK RECRUITER RUN</button>
+      <button class="btn secondary" id="fullRunBtn">FULL STORY RUN</button>
       <button class="btn secondary" id="restartBtn">RESTART RUN</button>
       <button class="btn secondary" id="downloadBtn">DOWNLOAD SUMMARY</button>
       <button class="btn secondary" id="backBtn">BACK TO SITE</button>
@@ -114,6 +116,9 @@ const chapters=[
 ];
 
 let i=-1, chosen=[], scores={ops:0,lead:0,cx:0,growth:0,field:0}, showEvidence=false;
+let runMode='full';
+let activeChapters=[];
+const QUICK_IDS=new Set(['C1','C3','C5']);
 const story=document.getElementById('story'), choicesEl=document.getElementById('choices'), evidence=document.getElementById('evidence');
 const badge=document.getElementById('chapterBadge'), fill=document.getElementById('progressFill');
 
@@ -128,10 +133,10 @@ function renderEvidence(ch){
 }
 
 function renderChapter(){
-  if(i>=chapters.length){ return renderSummary(); }
-  const ch=chapters[i];
-  badge.textContent=`CHAPTER ${i+1}/${chapters.length}`;
-  fill.style.width=((i)/chapters.length*100)+'%';
+  if(i>=activeChapters.length){ return renderSummary(); }
+  const ch=activeChapters[i];
+  badge.textContent=`CHAPTER ${i+1}/${activeChapters.length} · ${runMode.toUpperCase()} RUN`;
+  fill.style.width=((i)/activeChapters.length*100)+'%';
   typeText(story,`[${ch.id}] ${ch.title}\n\n${ch.setup}`);
   renderEvidence(ch);
   choicesEl.innerHTML='';
@@ -160,13 +165,17 @@ function renderSummary(){
   badge.textContent='RUN COMPLETE';
   fill.style.width='100%';
   const traits=topTraits();
+  const impactMap={ops:'Operational stability under pressure',lead:'Leadership and execution ownership',cx:'Customer recovery and trust retention',growth:'Commercial growth system thinking',field:'Technical field credibility'};
   const lines=[
     'FINAL ASSESSMENT — WHY HIRE MICHAEL',
     '',
+    `Run mode: ${runMode.toUpperCase()} (${activeChapters.length} chapters)`,
     `Top strengths: ${traits.join(' · ')}`,
     '',
-    'Decision trail:'
+    'Business impact profile:'
   ];
+  traits.forEach(t=>lines.push(`- ${impactMap[t.toLowerCase()]||t}`));
+  lines.push('', 'Decision trail:');
   chosen.forEach((c,n)=>lines.push(`${n+1}) ${c.chapter}: ${c.result}`));
   lines.push('', 'Use DOWNLOAD SUMMARY for recruiter handoff.');
   story.textContent=lines.join('\n');
@@ -174,10 +183,16 @@ function renderSummary(){
   evidence.classList.add('hidden');
 }
 
-function start(){ i=0; chosen=[]; scores={ops:0,lead:0,cx:0,growth:0,field:0}; renderChapter(); }
+function start(mode=runMode){
+  runMode=mode;
+  activeChapters = chapters.filter(c=> runMode==='full' ? true : QUICK_IDS.has(c.id));
+  i=0; chosen=[]; scores={ops:0,lead:0,cx:0,growth:0,field:0};
+  renderChapter();
+}
 
 function downloadSummary(){
   const lines=['Michael Costea — Story Run Summary',''];
+  lines.push(`Run mode: ${runMode.toUpperCase()} (${activeChapters.length} chapters)`);
   lines.push(`Top strengths: ${topTraits().join(' · ')}`,'');
   chosen.forEach((c,n)=>{ lines.push(`${n+1}. ${c.chapter}`,`Choice: ${c.choice}`,`Result: ${c.result}`,''); });
   const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
@@ -185,11 +200,13 @@ function downloadSummary(){
   document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},0);
 }
 
-document.getElementById('toggleEvidence').onclick=()=>{showEvidence=!showEvidence; if(i>=0&&i<chapters.length) renderEvidence(chapters[i]);};
-document.getElementById('restartBtn').onclick=start;
+document.getElementById('toggleEvidence').onclick=()=>{showEvidence=!showEvidence; if(i>=0&&i<activeChapters.length) renderEvidence(activeChapters[i]);};
+document.getElementById('quickRunBtn').onclick=()=>start('quick');
+document.getElementById('fullRunBtn').onclick=()=>start('full');
+document.getElementById('restartBtn').onclick=()=>start(runMode);
 document.getElementById('downloadBtn').onclick=downloadSummary;
 document.getElementById('backBtn').onclick=()=>location.href='../index.html';
-start();
+start('quick');
 </script>
 </body>
 </html>
