@@ -480,17 +480,7 @@ function place(){
 initLevel(1);
 place();
 
-function isNearShrine(){
-  for(let yy=heroGrid.y-1; yy<=heroGrid.y+1; yy++){
-    for(let xx=heroGrid.x-1; xx<=heroGrid.x+1; xx++) if(map[yy]?.[xx]===5) return true;
-  }
-  return false;
-}
 function setForm(f){
-  if(f!==form && !isNearShrine()){
-    stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1)+' · Use shrine to transform';
-    return;
-  }
   form=f; stateEl.textContent='Form: '+f[0].toUpperCase()+f.slice(1);
   avatarRoot.visible = (f==='otis');
   animalRoot.visible = (f!=='otis');
@@ -510,7 +500,8 @@ setForm('otis');
 
 function canStep(nx,ny){
   const t=map[ny]?.[nx]; if(t==null) return false;
-  if(form==='fish') return t===2 || t===5; // fish only swims, except shrine crossover tile
+  const nearWater = (x,y)=> [ [1,0],[-1,0],[0,1],[0,-1] ].some(([dx,dy])=>map[y+dy]?.[x+dx]===2);
+  if(form==='fish') return t===2 || (t===0 && nearWater(nx,ny)); // fish can crossover on grass bordering water
   if(t===1) return false;
   if(t===2) return false;
   if(t===3) return form==='bird';
