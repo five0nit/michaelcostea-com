@@ -324,8 +324,11 @@ replaceWithGLBFallback(
 // Fish stays (good per user feedback)
 replaceWithGLBFallback(
   fishModel,
-  ['https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'],
-  {scale:1.45, rotY:Math.PI/2}
+  [
+    'https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/BarramundiFish.mixed.glb',
+    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'
+  ],
+  {scale:1.5, rotY:Math.PI/2}
 );
 
 // Goat: remove horse replacement; keep goat form mesh (already built) and add subtle quality polish
