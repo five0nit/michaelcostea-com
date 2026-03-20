@@ -195,8 +195,40 @@
 
   function drawFriend(px,py,name){
     const bob=Math.sin((tick+px+py)*0.07)*1.4;
-    ctx.fillStyle=name==='Milo'?'#ffce6e':'#ff8ec2'; ctx.fillRect(px+8,py+8+bob,8,8);
-    ctx.fillStyle='#1d1d1d'; ctx.fillRect(px+10,py+10+bob,1,1); ctx.fillRect(px+13,py+10+bob,1,1); ctx.fillStyle='#fff'; ctx.fillRect(px+11,py+13+bob,2,1);
+
+    // Integrated from your two sketches:
+    // - Milo: square head with fringe
+    // - Poppy: skull-like head with side nub + long arms/fingers
+    if(name==='Milo'){
+      const y=py+bob;
+      // head + fringe
+      ctx.fillStyle='#ffd9de'; ctx.fillRect(px+6,y+4,14,10);
+      ctx.fillStyle='#e45869'; ctx.fillRect(px+6,y+4,14,2);
+      ctx.fillRect(px+7,y+6,2,1); ctx.fillRect(px+10,y+6,2,1); ctx.fillRect(px+13,y+6,2,1); ctx.fillRect(px+16,y+6,2,1);
+      // face
+      ctx.fillStyle='#2a1d24'; ctx.fillRect(px+9,y+9,1,1); ctx.fillRect(px+16,y+9,1,1); ctx.fillRect(px+12,y+10,1,1);
+      ctx.fillStyle='#80303d'; ctx.fillRect(px+11,y+12,4,1);
+      // body + limbs
+      ctx.fillStyle='#ffb7c0'; ctx.fillRect(px+9,y+14,8,9);
+      ctx.fillRect(px+7,y+14,2,8); ctx.fillRect(px+17,y+14,2,8);
+      ctx.fillRect(px+10,y+23,2,5); ctx.fillRect(px+14,y+23,2,5);
+    } else {
+      const y=py+bob;
+      // skull-like top + side nub
+      ctx.fillStyle='#ffe6eb'; ctx.fillRect(px+6,y+3,14,10);
+      ctx.fillStyle='#ea6172'; ctx.fillRect(px+6,y+3,14,2); ctx.fillRect(px+4,y+6,2,2);
+      // eye sockets + nose cavity
+      ctx.fillStyle='#7a2b39'; ctx.fillRect(px+9,y+8,2,2); ctx.fillRect(px+15,y+8,2,2); ctx.fillRect(px+12,y+10,2,2);
+      // neck + torso
+      ctx.fillStyle='#ffbec8'; ctx.fillRect(px+11,y+13,4,2); ctx.fillRect(px+9,y+15,8,9);
+      // longer arms + fingers
+      ctx.fillRect(px+6,y+16,3,7); ctx.fillRect(px+17,y+16,3,7);
+      ctx.fillRect(px+5,y+23,1,2); ctx.fillRect(px+7,y+23,1,2); ctx.fillRect(px+8,y+23,1,2);
+      ctx.fillRect(px+18,y+23,1,2); ctx.fillRect(px+19,y+23,1,2); ctx.fillRect(px+20,y+23,1,2);
+      // legs + chunky feet
+      ctx.fillRect(px+10,y+24,2,5); ctx.fillRect(px+14,y+24,2,5);
+      ctx.fillRect(px+9,y+29,4,1); ctx.fillRect(px+13,y+29,4,1);
+    }
   }
 
   function updateCamera(){camera.x=Math.max(0,Math.min(hero.x*T-canvas.width/2+T/2,W*T-canvas.width));camera.y=Math.max(0,Math.min(hero.y*T-canvas.height/2+T/2,H*T-canvas.height));}
