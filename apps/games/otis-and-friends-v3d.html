@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Otis & His Friends 3D</title>
+  <style>
+    html,body{margin:0;height:100%;overflow:hidden;background:#071018;font-family:Verdana,Arial,sans-serif}
+    #c{display:block;width:100%;height:100%}
+    .hud{position:fixed;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px;z-index:3;pointer-events:none}
+    .pill{background:rgba(8,18,30,.72);border:1px solid #4a6c8a;color:#eaf4ff;padding:6px 10px;border-radius:999px;font-size:12px}
+    .controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:3}
+    .btns{display:flex;gap:8px}
+    button{background:rgba(24,42,60,.86);color:#fff;border:1px solid #6f90a8;border-radius:10px;padding:10px 12px;font-weight:700}
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div class="hud">
+    <div class="pill" id="state">Form: Otis</div>
+    <div class="pill" id="found">Friends: 0 / 2</div>
+    <div class="pill">3D Mode</div>
+  </div>
+  <div class="controls">
+    <div class="btns">
+      <button id="f1">Otis</button><button id="f2">Bird</button><button id="f3">Fish</button><button id="f4">Goat</button>
+    </div>
+    <div class="btns"><button id="search">Search</button></div>
+  </div>
+
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.164.1/build/three.module.js';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a1620);
+scene.fog = new THREE.Fog(0x0a1620, 20, 80);
+
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(0, 14, 18);
+
+const hemi = new THREE.HemisphereLight(0x9ed0ff, 0x223319, 0.65); scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffffff, 0.9); sun.position.set(12,22,9); sun.castShadow=true; scene.add(sun);
+
+const TILE=1.6, W=32, H=24;
+const map = Array.from({length:H}, ()=>Array(W).fill(0)); // 0 grass 1 tree 2 water 3 gap 4 cliff
+for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(!x||!y||x===W-1||y===H-1) map[y][x]=1;
+const set=(x1,y1,x2,y2,t)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++) map[y][x]=t;};
+set(10,1,10,22,1); set(20,1,20,22,1);
+set(10,10,10,12,2); // fish gate
+set(20,6,20,8,4);  // goat gate
+set(25,14,27,14,3); // bird gate
+set(2,2,9,20,0); set(11,9,19,14,0); set(21,5,24,17,0); set(28,13,30,16,0);
+set(5,12,8,15,2);
+
+const tileMeshes=[];
+const mats={
+  grass:new THREE.MeshStandardMaterial({color:0x4b9650, roughness:0.9}),
+  tree:new THREE.MeshStandardMaterial({color:0x2c5f2c, roughness:0.95}),
+  water:new THREE.MeshStandardMaterial({color:0x2a79bf, roughness:0.25, metalness:0.1}),
+  gap:new THREE.MeshStandardMaterial({color:0x111922, roughness:1}),
+  cliff:new THREE.MeshStandardMaterial({color:0xa38663, roughness:0.95})
+};
+
+const gTile = new THREE.BoxGeometry(TILE, 0.35, TILE);
+const gTall = new THREE.BoxGeometry(TILE, 1.8, TILE);
+for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+  const t=map[y][x];
+  let geo=gTile, mat=mats.grass, yPos=0;
+  if(t===1){ geo=gTall; mat=mats.tree; yPos=0.7; }
+  if(t===2){ geo=gTile; mat=mats.water; yPos=-0.08; }
+  if(t===3){ geo=gTile; mat=mats.gap; yPos=-0.32; }
+  if(t===4){ geo=gTile; mat=mats.cliff; yPos=0.28; }
+  const m=new THREE.Mesh(geo,mat); m.receiveShadow=true; m.castShadow=t===1;
+  m.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE);
+  scene.add(m); tileMeshes.push(m);
+}
+
+const hero = new THREE.Group();
+const body = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.3,0.8), new THREE.MeshStandardMaterial({color:0xc2616e, roughness:0.7}));
+const head = new THREE.Mesh(new THREE.BoxGeometry(0.82,0.82,0.82), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.75}));
+head.position.y=1.05;
+const hat = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.18,0.95), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6}));
+hat.position.y=1.55;
+hero.add(body,head,hat); scene.add(hero);
+
+const friendGeom = new THREE.SphereGeometry(0.45, 12, 10);
+const milo = new THREE.Mesh(friendGeom, new THREE.MeshStandardMaterial({color:0xffc2ca, roughness:0.7}));
+const poppy = new THREE.Mesh(friendGeom, new THREE.MeshStandardMaterial({color:0xff9fbc, roughness:0.7}));
+scene.add(milo,poppy);
+
+const stateEl=document.getElementById('state'), foundEl=document.getElementById('found');
+const forms=['otis','bird','fish','goat']; let form='otis';
+let heroGrid={x:2,y:2};
+let found={milo:false,poppy:false};
+const miloPos={x:29,y:15}, poppyPos={x:6,y:13};
+
+function posFromGrid(g){ return new THREE.Vector3((g.x-W/2)*TILE,0.8,(g.y-H/2)*TILE); }
+function place(){ hero.position.copy(posFromGrid(heroGrid)); milo.position.copy(posFromGrid(miloPos)); poppy.position.copy(posFromGrid(poppyPos)); }
+place();
+
+function setForm(f){
+  form=f; stateEl.textContent='Form: '+f[0].toUpperCase()+f.slice(1);
+  body.material.color.set(f==='otis'?0xc2616e:f==='bird'?0xc6a0ff:f==='fish'?0x6ec6ff:0xd2bf9e);
+  hat.visible=f==='otis';
+}
+setForm('otis');
+
+function canStep(nx,ny){
+  const t=map[ny]?.[nx]; if(t==null) return false;
+  if(t===1) return false;
+  if(t===2) return form==='fish';
+  if(t===3) return form==='bird';
+  if(t===4) return form==='goat';
+  return true;
+}
+
+const keys={};
+addEventListener('keydown',e=>{keys[e.key]=true; if(e.key==='1')setForm('otis'); if(e.key==='2')setForm('bird'); if(e.key==='3')setForm('fish'); if(e.key==='4')setForm('goat'); if(e.key===' ')search();});
+addEventListener('keyup',e=>{keys[e.key]=false;});
+
+function move(dx,dy){ const nx=heroGrid.x+dx, ny=heroGrid.y+dy; if(canStep(nx,ny)){ heroGrid={x:nx,y:ny}; } }
+function search(){
+  const d1=Math.abs(heroGrid.x-miloPos.x)+Math.abs(heroGrid.y-miloPos.y);
+  const d2=Math.abs(heroGrid.x-poppyPos.x)+Math.abs(heroGrid.y-poppyPos.y);
+  if(d1<=1) found.milo=true;
+  if(d2<=1) found.poppy=true;
+  if(found.milo) milo.visible=false;
+  if(found.poppy) poppy.visible=false;
+  foundEl.textContent=`Friends: ${Number(found.milo)+Number(found.poppy)} / 2`;
+}
+
+['f1','f2','f3','f4'].forEach((id,i)=>document.getElementById(id).onclick=()=>setForm(forms[i]));
+document.getElementById('search').onclick=search;
+
+const clock=new THREE.Clock();
+renderer.setAnimationLoop(()=>{
+  const dt=clock.getDelta();
+  if(keys.ArrowUp||keys.w) move(0,-1);
+  else if(keys.ArrowDown||keys.s) move(0,1);
+  else if(keys.ArrowLeft||keys.a) move(-1,0);
+  else if(keys.ArrowRight||keys.d) move(1,0);
+
+  place();
+  // follow cam
+  camera.position.x += (hero.position.x - camera.position.x)*Math.min(1,dt*4);
+  camera.position.z += (hero.position.z + 16 - camera.position.z)*Math.min(1,dt*4);
+  camera.lookAt(hero.position.x,0,hero.position.z);
+
+  renderer.render(scene,camera);
+});
+
+function onResize(){ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio,2)); }
+addEventListener('resize', onResize);
+</script>
+</body>
+</html>
