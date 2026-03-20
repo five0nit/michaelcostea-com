@@ -59,6 +59,7 @@ const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
@@ -71,7 +72,7 @@ const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200)
 camera.position.set(0, 8, 10);
 
 const hemi = new THREE.HemisphereLight(0xb7ddff, 0x1f2d19, 0.75); scene.add(hemi);
-const sun = new THREE.DirectionalLight(0xffffff, 1.15); sun.position.set(12,22,9); sun.castShadow=true; scene.add(sun);
+const sun = new THREE.DirectionalLight(0xffffff, 1.15); sun.position.set(12,22,9); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048); scene.add(sun);
 const rim = new THREE.DirectionalLight(0xaad7ff, 0.6); rim.position.set(-14,10,-12); scene.add(rim);
 const fill = new THREE.PointLight(0xfff3dc, 0.28, 38); fill.position.set(0,6,8); scene.add(fill);
 
@@ -104,12 +105,36 @@ set(6,16,11,19,2); set(20,15,25,18,2); set(34,11,37,13,4); set(44,21,46,24,3);
 set(8,7,9,8,2); set(22,20,23,21,4); set(36,22,37,23,2);
 
 const tileMeshes=[];
+
+function makeTileTexture(base='#4b9650', speck='#3a7d42', lines='#2f6636'){
+  const c=document.createElement('canvas'); c.width=128; c.height=128;
+  const x=c.getContext('2d');
+  x.fillStyle=base; x.fillRect(0,0,128,128);
+  for(let i=0;i<420;i++){
+    x.fillStyle = i%3===0 ? speck : lines;
+    const px=(Math.random()*128)|0, py=(Math.random()*128)|0, s=1+((Math.random()*3)|0);
+    x.fillRect(px,py,s,s);
+  }
+  const tex=new THREE.CanvasTexture(c);
+  tex.colorSpace=THREE.SRGBColorSpace;
+  tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
+  tex.repeat.set(1,1);
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy?.() || 8;
+  return tex;
+}
+
+const texGrass = makeTileTexture('#4b9650','#6aac63','#2f6636');
+const texTree  = makeTileTexture('#2c5f2c','#3e7a3d','#244e24');
+const texWater = makeTileTexture('#2a79bf','#4aa0de','#22639d');
+const texGap   = makeTileTexture('#111922','#1c2835','#0d1219');
+const texCliff = makeTileTexture('#a38663','#b59875','#7c664a');
+
 const mats={
-  grass:new THREE.MeshStandardMaterial({color:0x4b9650, roughness:0.9}),
-  tree:new THREE.MeshStandardMaterial({color:0x2c5f2c, roughness:0.95}),
-  water:new THREE.MeshStandardMaterial({color:0x2a79bf, roughness:0.25, metalness:0.1}),
-  gap:new THREE.MeshStandardMaterial({color:0x111922, roughness:1}),
-  cliff:new THREE.MeshStandardMaterial({color:0xa38663, roughness:0.95})
+  grass:new THREE.MeshStandardMaterial({map:texGrass, color:0xffffff, roughness:0.9}),
+  tree:new THREE.MeshStandardMaterial({map:texTree, color:0xffffff, roughness:0.95}),
+  water:new THREE.MeshStandardMaterial({map:texWater, color:0xffffff, roughness:0.2, metalness:0.16}),
+  gap:new THREE.MeshStandardMaterial({map:texGap, color:0xffffff, roughness:1}),
+  cliff:new THREE.MeshStandardMaterial({map:texCliff, color:0xffffff, roughness:0.9})
 };
 
 const gTile = new THREE.BoxGeometry(TILE, 0.35, TILE);
