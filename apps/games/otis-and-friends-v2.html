@@ -211,39 +211,54 @@
 
   function drawTile(x,y,t){
     const px=x*T-camera.x, py=y*T-camera.y; if(px<-T||py<-T||px>canvas.width||py>canvas.height)return;
+    const n=map[y-1]?.[x], s=map[y+1]?.[x], w=map[y]?.[x-1], e=map[y]?.[x+1];
+
     if(t===0){
-      ctx.fillStyle='#4f9d54';ctx.fillRect(px,py,T,T);
+      // grass with subtle height + texture layers
+      const v=((x*37+y*17)%7)/100;
+      ctx.fillStyle=`rgb(${Math.floor(74+v*40)},${Math.floor(146+v*25)},${Math.floor(79+v*25)})`;
+      ctx.fillRect(px,py,T,T);
       ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(px+1,py+1,T-2,2);
-      ctx.fillStyle='rgba(0,0,0,.08)';ctx.fillRect(px+1,py+T-3,T-2,2);
-      ctx.fillStyle='rgba(255,255,255,.12)';ctx.fillRect(px+((x+y)%2?2:0),py+((x*y)%3),2,2);
+      ctx.fillStyle='rgba(0,0,0,.10)';ctx.fillRect(px+1,py+T-3,T-2,2);
+      ctx.fillStyle='rgba(0,0,0,.12)'; if(n===1||n===4) ctx.fillRect(px,py,T,3); // cast from upper solid tiles
+      ctx.fillStyle='rgba(255,255,255,.10)';ctx.fillRect(px+((x+y)%2?2:0),py+((x*y)%3),2,2);
       if((x*13+y*7)%17===0){ctx.fillStyle='#f6d66b';ctx.fillRect(px+6,py+8,2,2);} // flower
       if((x*11+y*5)%19===0){ctx.fillStyle='#7e8d96';ctx.fillRect(px+15,py+14,3,2);} // pebble
+      if((x*5+y*9)%23===0){ctx.fillStyle='#3f7f47';ctx.fillRect(px+4,py+16,1,3);ctx.fillRect(px+5,py+15,1,4);} // grass tuft
     }
     if(t===1){
       ctx.fillStyle='#285a2a';ctx.fillRect(px,py,T,T);
       ctx.fillStyle='#1d4320';ctx.fillRect(px+2,py+2,T-4,T-4);
       ctx.fillStyle='#4f8a52';ctx.fillRect(px+5,py+4,T-10,3);
       ctx.fillStyle='#132f18';ctx.fillRect(px+4,py+T-6,T-8,2);
+      ctx.fillStyle='rgba(0,0,0,.2)'; if(s===0) ctx.fillRect(px,py+T-3,T,3); // bottom depth edge
     }
     if(t===2){
       ctx.fillStyle='#2b79bf';ctx.fillRect(px,py,T,T);
       ctx.fillStyle='rgba(255,255,255,.18)';ctx.fillRect(px,py+((tick+x+y)%T),T,2);
       ctx.fillStyle='rgba(255,255,255,.1)';ctx.fillRect(px+3,py+5,7,1);ctx.fillRect(px+12,py+14,6,1);
+      ctx.fillStyle='rgba(0,26,54,.28)'; if(n!==2) ctx.fillRect(px,py,T,2); if(s!==2) ctx.fillRect(px,py+T-2,T,2); // shoreline shading
       ctx.strokeStyle='rgba(0,0,0,.2)';ctx.strokeRect(px+1,py+1,T-2,T-2);
     }
     if(t===3){
       ctx.fillStyle='#0f1820';ctx.fillRect(px,py,T,T);
       ctx.strokeStyle='#25425a';ctx.strokeRect(px+1,py+1,T-2,T-2);
       ctx.fillStyle='rgba(255,255,255,.05)';ctx.fillRect(px+2,py+2,T-4,1);
-      ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(px+2,py+T-3,T-4,1);
+      ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(px+2,py+T-3,T-4,1);
+      ctx.fillStyle='rgba(0,0,0,.35)'; if(n!==3) ctx.fillRect(px,py,T,2);
     }
     if(t===4){
       ctx.fillStyle='#a18662';ctx.fillRect(px,py,T,T);
       ctx.fillStyle='#bca27c';ctx.fillRect(px+1,py+2,T-2,3);
       ctx.fillStyle='#7b6548';ctx.fillRect(px,py+11,T,5);
       ctx.fillStyle='#5f4f39';ctx.fillRect(px+2,py+17,T-4,3);
+      ctx.fillStyle='rgba(0,0,0,.22)'; if(s===0||s===2) ctx.fillRect(px,py+T-3,T,3);
       ctx.strokeStyle='rgba(0,0,0,.25)';ctx.strokeRect(px+1,py+1,T-2,T-2);
     }
+
+    // contact shadows where terrain changes for extra depth
+    if(t===0 && (e===1||e===4)) {ctx.fillStyle='rgba(0,0,0,.09)'; ctx.fillRect(px+T-2,py,2,T);} 
+    if(t===0 && (w===1||w===4)) {ctx.fillStyle='rgba(0,0,0,.09)'; ctx.fillRect(px,py,2,T);} 
   }
 
   function drawSprite16(px,py,rows,palette,scale=1){
@@ -352,11 +367,23 @@
 
   function draw(){
     tick++; updateCamera(); ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // subtle ground gradient for scene depth
+    const g=ctx.createLinearGradient(0,0,0,canvas.height);
+    g.addColorStop(0,'#203748'); g.addColorStop(1,'#0b141c');
+    ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
+
     for(let y=0;y<H;y++) for(let x=0;x<W;x++) drawTile(x,y,map[y][x]);
     for(const f of friends){if(f.found)continue;const fx=f.x*T-camera.x,fy=f.y*T-camera.y;const d=Math.abs(hero.x-f.x)+Math.abs(hero.y-f.y);if(d<4){ctx.fillStyle='rgba(255,245,120,.95)';ctx.fillRect(fx+10,fy+2,4,4)}drawShadow(fx,fy,9);drawFriend(fx,fy,f.name)}
     const px=hero.x*T-camera.x, py=hero.y*T-camera.y;
     drawShadow(px,py,10);
     if(hero.form==='otis')drawOtis(px,py); else if(hero.form==='bird')drawBird(px,py); else if(hero.form==='fish')drawFish(px,py); else drawGoat(px,py);
+
+    // vignette = stronger focus / perceived depth
+    const vg=ctx.createRadialGradient(canvas.width/2,canvas.height/2,canvas.height*0.2,canvas.width/2,canvas.height/2,canvas.height*0.8);
+    vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(0,0,0,.20)');
+    ctx.fillStyle=vg; ctx.fillRect(0,0,canvas.width,canvas.height);
+
     ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(0,0,canvas.width,22);ctx.fillStyle='#fff';ctx.font='11px Verdana';ctx.fillText('Arrows move • Space search • 1-4 transform',8,15);
     drawMiniMap();
   }
