@@ -12,6 +12,13 @@
     .controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:3}
     .btns{display:flex;gap:8px}
     button{background:rgba(24,42,60,.86);color:#fff;border:1px solid #6f90a8;border-radius:10px;padding:10px 12px;font-weight:700}
+    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,10,16,.82);z-index:6;padding:16px}
+    .overlay .card{max-width:560px;width:100%;background:rgba(8,18,30,.95);border:1px solid #4a6c8a;border-radius:12px;padding:14px;color:#eaf4ff}
+    .overlay .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .hidden{display:none!important}
+    .touchHud{position:fixed;left:12px;bottom:84px;z-index:5;display:none}
+    .joyWrap{width:128px;height:128px;border-radius:50%;background:rgba(8,18,30,.6);border:2px solid #466787;position:relative;touch-action:none}
+    .joyKnob{position:absolute;width:44px;height:44px;border-radius:50%;left:42px;top:42px;background:#b9d8f3;border:2px solid #45637d}
     .builder{position:fixed;top:54px;right:10px;z-index:4;background:rgba(8,18,30,.86);border:1px solid #4a6c8a;color:#eaf4ff;border-radius:10px;padding:8px;min-width:210px}
     .builder h4{margin:0 0 6px;font-size:12px;letter-spacing:.04em}
     .builder label,.builder select{font-size:12px;display:block;margin:4px 0}
@@ -31,6 +38,19 @@
       <button id="f1">Otis</button><button id="f2">Bird</button><button id="f3">Fish</button><button id="f4">Goat</button>
     </div>
     <div class="btns"><button id="search">Search</button><button id="tilt">Tilt: Off</button></div>
+  </div>
+
+  <div class="touchHud" id="touchHud"><div class="joyWrap" id="joyWrap"><div class="joyKnob" id="joyKnob"></div></div></div>
+
+  <div class="overlay" id="controlOverlay">
+    <div class="card">
+      <h3 style="margin:0 0 6px">Choose Mobile Control Style</h3>
+      <div style="font-size:13px;opacity:.9">Pick how Otis moves before starting. You can switch later.</div>
+      <div class="row">
+        <button id="chooseJoystick">Joystick</button>
+        <button id="chooseTilt">Accelerometer</button>
+      </div>
+    </div>
   </div>
 
   <div class="builder">
@@ -122,12 +142,48 @@ for(let y=0;y<H;y++) for(let x=0;x<W;x++){
 
 const hero = new THREE.Group(); scene.add(hero);
 const avatarRoot = new THREE.Group(); hero.add(avatarRoot);
+const animalRoot = new THREE.Group(); hero.add(animalRoot); animalRoot.visible=false;
 
 // Fallback primitive (kept until GLB loads)
 const fallbackBody = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.3,0.8), new THREE.MeshStandardMaterial({color:0xc2616e, roughness:0.7}));
 const fallbackHead = new THREE.Mesh(new THREE.BoxGeometry(0.82,0.82,0.82), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.75})); fallbackHead.position.y=1.05;
 const fallbackHat = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.18,0.95), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6})); fallbackHat.position.y=1.55;
-avatarRoot.add(fallbackBody,fallbackHead,fallbackHat);
+const fallbackPatch = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.1,0.02), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); fallbackPatch.position.set(0.14,1.1,0.42);
+avatarRoot.add(fallbackBody,fallbackHead,fallbackHat,fallbackPatch);
+
+// Signature details from initial Otis reference: cap swirl + eye patch
+const otisSignature = new THREE.Group();
+const sigPatch = new THREE.Mesh(new THREE.BoxGeometry(0.15,0.09,0.02), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.65}));
+sigPatch.position.set(0.14,1.1,0.42);
+const sigBrim = new THREE.Mesh(new THREE.BoxGeometry(0.52,0.05,0.28), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6}));
+sigBrim.position.set(0,1.47,0.25);
+const sigSwirl = new THREE.Mesh(new THREE.TorusGeometry(0.06,0.01,8,18,Math.PI*1.5), new THREE.MeshStandardMaterial({color:0xf7cad0, roughness:0.45}));
+sigSwirl.position.set(-0.06,1.56,0.42);
+otisSignature.add(sigPatch,sigBrim,sigSwirl); avatarRoot.add(otisSignature);
+
+// High-detail transformed animal meshes
+const birdModel = new THREE.Group();
+const birdBody = new THREE.Mesh(new THREE.SphereGeometry(0.46,24,18), new THREE.MeshStandardMaterial({color:0xd8b5ff, roughness:0.45, metalness:0.05}));
+const birdWingL = new THREE.Mesh(new THREE.CapsuleGeometry(0.12,0.5,4,10), new THREE.MeshStandardMaterial({color:0xbe90f2, roughness:0.5})); birdWingL.position.set(-0.42,0.02,0);
+const birdWingR = birdWingL.clone(); birdWingR.position.x=0.42;
+const birdBeak = new THREE.Mesh(new THREE.ConeGeometry(0.11,0.35,10), new THREE.MeshStandardMaterial({color:0xffd66b, roughness:0.4})); birdBeak.rotation.x=Math.PI/2; birdBeak.position.set(0,0,0.48);
+birdModel.add(birdBody,birdWingL,birdWingR,birdBeak);
+
+const fishModel = new THREE.Group();
+const fishBody = new THREE.Mesh(new THREE.SphereGeometry(0.42,26,16), new THREE.MeshStandardMaterial({color:0x6fc8ff, roughness:0.35, metalness:0.08})); fishBody.scale.set(1.45,0.8,0.9);
+const fishTail = new THREE.Mesh(new THREE.ConeGeometry(0.18,0.4,10), new THREE.MeshStandardMaterial({color:0x48a7df, roughness:0.45})); fishTail.rotation.z=Math.PI/2; fishTail.position.set(-0.62,0,0);
+const fishFin = new THREE.Mesh(new THREE.ConeGeometry(0.09,0.2,8), new THREE.MeshStandardMaterial({color:0x9de3ff, roughness:0.3})); fishFin.position.set(0.06,0.24,0.05);
+fishModel.add(fishBody,fishTail,fishFin);
+
+const goatModel = new THREE.Group();
+const goatBody = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.62,0.52), new THREE.MeshStandardMaterial({color:0xd6bf94, roughness:0.7}));
+const goatHead = new THREE.Mesh(new THREE.BoxGeometry(0.42,0.34,0.34), new THREE.MeshStandardMaterial({color:0xe3cdab, roughness:0.66})); goatHead.position.set(0.52,0.2,0);
+const goatHornL = new THREE.Mesh(new THREE.ConeGeometry(0.05,0.2,8), new THREE.MeshStandardMaterial({color:0x826b43, roughness:0.7})); goatHornL.position.set(0.64,0.43,0.11); goatHornL.rotation.z=-0.5;
+const goatHornR = goatHornL.clone(); goatHornR.position.z=-0.11;
+goatModel.add(goatBody,goatHead,goatHornL,goatHornR);
+
+animalRoot.add(birdModel,fishModel,goatModel);
+birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
 
 const loader = new GLTFLoader();
 const modelUrls={
@@ -230,9 +286,16 @@ place();
 
 function setForm(f){
   form=f; stateEl.textContent='Form: '+f[0].toUpperCase()+f.slice(1);
-  // tint fallback / loaded meshes slightly by form
+  avatarRoot.visible = (f==='otis');
+  animalRoot.visible = (f!=='otis');
+  birdModel.visible = (f==='bird');
+  fishModel.visible = (f==='fish');
+  goatModel.visible = (f==='goat');
+
+  // subtle form tint while keeping Otis reference details intact
   const tint = f==='otis'?0xffffff : f==='bird'?0xf2dcff : f==='fish'?0xd8f2ff : 0xfff0dc;
   avatarRoot.traverse(n=>{ if(n.isMesh && n.material && n.material.color){ const base=n.userData.baseColor || n.material.color.getHex(); n.userData.baseColor=base; n.material.color.setHex(base).multiply(new THREE.Color(tint)); }});
+  otisSignature.visible = (f==='otis');
   fallbackHat.visible=f==='otis';
 }
 setForm('otis');
@@ -249,6 +312,10 @@ function canStep(nx,ny){
 
 const keys={};
 const tiltState={enabled:false,gamma:0,beta:0,lastMove:0};
+const joyState={active:false,x:0,y:0};
+let controlMode='joystick';
+let playing=false;
+
 addEventListener('keydown',e=>{keys[e.key]=true; if(e.key==='1')setForm('otis'); if(e.key==='2')setForm('bird'); if(e.key==='3')setForm('fish'); if(e.key==='4')setForm('goat'); if(e.key===' ')search();});
 addEventListener('keyup',e=>{keys[e.key]=false;});
 
@@ -308,8 +375,44 @@ document.getElementById('tilt').onclick=async()=>{
   else {
     const ok = await enableTilt();
     if(!ok) alert('Tilt permission not granted or unsupported on this browser.');
+    else controlMode='accelerometer';
   }
 };
+
+const touchHud=document.getElementById('touchHud');
+const joyWrap=document.getElementById('joyWrap');
+const joyKnob=document.getElementById('joyKnob');
+function resetJoy(){ joyState.active=false; joyState.x=0; joyState.y=0; joyKnob.style.left='42px'; joyKnob.style.top='42px'; }
+function setJoyByPointer(e){
+  const r=joyWrap.getBoundingClientRect();
+  const nx=(e.clientX-(r.left+r.width/2))/((r.width/2)-20);
+  const ny=(e.clientY-(r.top+r.height/2))/((r.height/2)-20);
+  const mag=Math.hypot(nx,ny)||1;
+  const c=Math.min(1,mag);
+  joyState.x=(nx/mag)*c; joyState.y=(ny/mag)*c; joyState.active=true;
+  joyKnob.style.left=`${42+joyState.x*28}px`; joyKnob.style.top=`${42+joyState.y*28}px`;
+}
+if(joyWrap){
+  joyWrap.addEventListener('pointerdown',(e)=>{joyWrap.setPointerCapture(e.pointerId); setJoyByPointer(e);});
+  joyWrap.addEventListener('pointermove',(e)=>{if(joyState.active) setJoyByPointer(e);});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(evt=>joyWrap.addEventListener(evt,resetJoy));
+}
+
+async function startWithMode(mode){
+  controlMode=mode;
+  if(mode==='accelerometer'){
+    const ok=await enableTilt();
+    if(!ok){ controlMode='joystick'; }
+  } else {
+    disableTilt();
+  }
+  touchHud.style.display = (controlMode==='joystick') ? 'block' : 'none';
+  document.getElementById('controlOverlay').classList.add('hidden');
+  playing=true;
+}
+
+document.getElementById('chooseJoystick').onclick=()=>startWithMode('joystick');
+document.getElementById('chooseTilt').onclick=()=>startWithMode('accelerometer');
 
 const clock=new THREE.Clock();
 let moveCooldown=0;
@@ -317,12 +420,21 @@ renderer.setAnimationLoop(()=>{
   const dt=clock.getDelta();
   moveCooldown -= dt;
 
-  if(moveCooldown<=0){
+  if(playing && moveCooldown<=0){
     if(keys.ArrowUp||keys.w) { move(0,-1); moveCooldown=0.14; }
     else if(keys.ArrowDown||keys.s) { move(0,1); moveCooldown=0.14; }
     else if(keys.ArrowLeft||keys.a) { move(-1,0); moveCooldown=0.14; }
     else if(keys.ArrowRight||keys.d) { move(1,0); moveCooldown=0.14; }
-    else if(tiltState.enabled){
+    else if(controlMode==='joystick' && joyState.active){
+      if(Math.abs(joyState.x) > Math.abs(joyState.y)){
+        if(joyState.x>0.3) { move(1,0); moveCooldown=0.16; }
+        else if(joyState.x<-0.3) { move(-1,0); moveCooldown=0.16; }
+      } else {
+        if(joyState.y>0.3) { move(0,1); moveCooldown=0.16; }
+        else if(joyState.y<-0.3) { move(0,-1); moveCooldown=0.16; }
+      }
+    }
+    else if(controlMode==='accelerometer' && tiltState.enabled){
       const g=tiltState.gamma, b=tiltState.beta;
       if(Math.abs(g) > Math.abs(b)){
         if(g>12) { move(1,0); moveCooldown=0.16; }
