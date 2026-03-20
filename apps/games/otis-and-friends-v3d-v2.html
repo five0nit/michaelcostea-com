@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Otis & His Friends 3D</title>
+  <style>
+    html,body{margin:0;height:100%;overflow:hidden;background:#071018;font-family:Verdana,Arial,sans-serif}
+    #c{display:block;width:100%;height:100%}
+    .hud{position:fixed;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px;z-index:3;pointer-events:none}
+    .pill{background:rgba(8,18,30,.72);border:1px solid #4a6c8a;color:#eaf4ff;padding:6px 10px;border-radius:999px;font-size:12px}
+    .controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:3}
+    .btns{display:flex;gap:8px}
+    button{background:rgba(24,42,60,.86);color:#fff;border:1px solid #6f90a8;border-radius:10px;padding:10px 12px;font-weight:700}
+    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,10,16,.82);z-index:6;padding:16px}
+    .overlay .card{max-width:560px;width:100%;background:rgba(8,18,30,.95);border:1px solid #4a6c8a;border-radius:12px;padding:14px;color:#eaf4ff}
+    .overlay .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .hidden{display:none!important}
+    .touchHud{position:fixed;left:12px;bottom:84px;z-index:5;display:none}
+    .joyWrap{width:128px;height:128px;border-radius:50%;background:rgba(8,18,30,.6);border:2px solid #466787;position:relative;touch-action:none}
+    .joyKnob{position:absolute;width:44px;height:44px;border-radius:50%;left:42px;top:42px;background:#b9d8f3;border:2px solid #45637d}
+    .filmGrain{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.09;background-image:radial-gradient(rgba(255,255,255,.35) 0.6px, transparent 0.7px);background-size:3px 3px;mix-blend-mode:soft-light;animation:grainShift .25s steps(2) infinite}
+    .filmGrain.off{display:none}
+    @keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}50%{transform:translate(-1px,1px)}75%{transform:translate(1px,1px)}100%{transform:translate(0,0)}}
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div class="hud">
+    <div class="pill" id="state">Form: Otis</div>
+    <div class="pill" id="found">Friends: 0 / 5</div>
+    <div class="pill" id="levelPill">Level: 1 / 3</div>
+    <div class="pill" id="hpPill">HP: 100</div>
+    <div class="pill">3D Mode</div>
+  </div>
+  <div class="controls">
+    <div class="btns">
+      <button id="f1">Otis</button><button id="f2">Bird</button><button id="f3">Fish</button><button id="f4">Goat</button>
+    </div>
+    <div class="btns"><button id="search">Search</button><button id="tilt">Tilt: Off</button><button id="fxBtn">FX: On</button></div>
+  </div>
+  <div class="filmGrain" id="filmGrain"></div>
+
+  <div class="touchHud" id="touchHud"><div class="joyWrap" id="joyWrap"><div class="joyKnob" id="joyKnob"></div></div></div>
+
+  <div class="overlay" id="controlOverlay">
+    <div class="card">
+      <h3 style="margin:0 0 6px">Choose Mobile Control Style</h3>
+      <div style="font-size:13px;opacity:.9">Pick how Otis moves before starting. You can switch later.</div>
+      <div class="row">
+        <button id="chooseJoystick">Joystick</button>
+        <button id="chooseTilt">Accelerometer</button>
+      </div>
+    </div>
+  </div>
+
+
+<script type="module">
+import * as THREE from 'https://esm.sh/three@0.164.1';
+import { GLTFLoader } from 'https://esm.sh/three@0.164.1/examples/jsm/loaders/GLTFLoader.js';
+import { EffectComposer } from 'https://esm.sh/three@0.164.1/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'https://esm.sh/three@0.164.1/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'https://esm.sh/three@0.164.1/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a1620);
+scene.fog = new THREE.Fog(0x0a1620, 20, 80);
+
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(0, 8, 10);
+
+const hemi = new THREE.HemisphereLight(0xb7ddff, 0x1f2d19, 0.75); scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffffff, 1.15); sun.position.set(12,22,9); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048); scene.add(sun);
+const rim = new THREE.DirectionalLight(0xaad7ff, 0.6); rim.position.set(-14,10,-12); scene.add(rim);
+const fill = new THREE.PointLight(0xfff3dc, 0.28, 38); fill.position.set(0,6,8); scene.add(fill);
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.28, 0.32, 0.88);
+composer.addPass(bloomPass);
+let fxEnabled = true;
+
+const TILE=1.6, W=64, H=46;
+const map = Array.from({length:H}, ()=>Array(W).fill(0)); // 0 grass 1 tree 2 water 3 gap 4 cliff
+for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(!x||!y||x===W-1||y===H-1) map[y][x]=1;
+const set=(x1,y1,x2,y2,t)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++) map[y][x]=t;};
+
+// Long multi-zone maze with forced transformation gates
+set(14,1,14,32,1); set(30,1,30,32,1);
+set(14,15,14,18,2);   // fish gate
+set(30,10,30,13,4);   // goat gate
+set(40,22,43,22,3);   // bird gap gate
+
+// Dense blockers (maze complexity)
+set(2,24,13,32,1); set(16,2,29,7,1); set(16,23,29,32,1);
+set(32,2,46,16,1); set(32,27,46,32,1);
+set(4,5,12,5,1); set(4,10,12,10,1); set(4,15,12,15,1); set(4,20,12,20,1);
+set(18,12,28,12,1); set(18,18,28,18,1);
+set(34,20,39,20,1); set(34,24,39,24,1);
+
+// Carve winding corridors
+set(2,2,13,23,0); set(16,14,29,22,0); set(32,9,39,26,0); set(44,20,46,25,0);
+set(6,6,10,9,0); set(6,11,10,14,0); set(6,16,10,19,0);
+set(20,14,23,17,0); set(24,19,28,22,0);
+set(34,11,37,14,0); set(34,21,37,23,0);
+
+// Water / cliff regions + decoy biomes
+set(6,16,11,19,2); set(20,15,25,18,2); set(34,11,37,13,4); set(44,21,46,24,3);
+set(8,7,9,8,2); set(22,20,23,21,4); set(36,22,37,23,2);
+
+// expand map footprint and force longer traversal lanes
+set(47,1,W-2,H-2,1);
+set(2,34,46,H-2,1);
+set(8,30,40,30,2);     // extra fish requirement lane
+set(20,26,22,26,3);    // extra bird jump in late path
+set(31,23,31,25,4);    // extra goat climb gate
+
+const tileMeshes=[];
+
+function makeTileTexture(base='#4b9650', speck='#3a7d42', lines='#2f6636'){
+  const c=document.createElement('canvas'); c.width=128; c.height=128;
+  const x=c.getContext('2d');
+  x.fillStyle=base; x.fillRect(0,0,128,128);
+  for(let i=0;i<420;i++){
+    x.fillStyle = i%3===0 ? speck : lines;
+    const px=(Math.random()*128)|0, py=(Math.random()*128)|0, s=1+((Math.random()*3)|0);
+    x.fillRect(px,py,s,s);
+  }
+  const tex=new THREE.CanvasTexture(c);
+  tex.colorSpace=THREE.SRGBColorSpace;
+  tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
+  tex.repeat.set(1,1);
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy?.() || 8;
+  return tex;
+}
+
+const texGrass = makeTileTexture('#4b9650','#6aac63','#2f6636');
+const texTree  = makeTileTexture('#2c5f2c','#3e7a3d','#244e24');
+const texWater = makeTileTexture('#2a79bf','#4aa0de','#22639d');
+const texGap   = makeTileTexture('#111922','#1c2835','#0d1219');
+const texCliff = makeTileTexture('#a38663','#b59875','#7c664a');
+
+const mats={
+  grass:new THREE.MeshStandardMaterial({map:texGrass, color:0xffffff, roughness:0.9}),
+  tree:new THREE.MeshStandardMaterial({map:texTree, color:0xffffff, roughness:0.95}),
+  water:new THREE.MeshStandardMaterial({map:texWater, color:0xffffff, roughness:0.2, metalness:0.16}),
+  gap:new THREE.MeshStandardMaterial({map:texGap, color:0xffffff, roughness:1}),
+  cliff:new THREE.MeshStandardMaterial({map:texCliff, color:0xffffff, roughness:0.9})
+};
+
+const gTile = new THREE.BoxGeometry(TILE, 0.35, TILE);
+const gTall = new THREE.BoxGeometry(TILE, 1.8, TILE);
+for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+  const t=map[y][x];
+  let geo=gTile, mat=mats.grass, yPos=0;
+  if(t===1){ geo=gTall; mat=mats.tree; yPos=0.7; }
+  if(t===2){ geo=gTile; mat=mats.water; yPos=-0.08; }
+  if(t===3){ geo=gTile; mat=mats.gap; yPos=-0.32; }
+  if(t===4){ geo=gTile; mat=mats.cliff; yPos=0.28; }
+  const m=new THREE.Mesh(geo,mat); m.receiveShadow=true; m.castShadow=t===1;
+  m.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE);
+  scene.add(m); tileMeshes.push(m);
+
+  // ground decal ring for richer high-quality terrain breakup
+  if(t===0 && (x*7+y*11)%9===0){
+    const ring = new THREE.Mesh(new THREE.RingGeometry(0.18,0.26,16), new THREE.MeshStandardMaterial({color:0x3f7f47, roughness:0.95, side:THREE.DoubleSide}));
+    ring.rotation.x = -Math.PI/2;
+    ring.position.set((x-W/2)*TILE + (((x+y)%3)-1)*0.12, 0.182, (y-H/2)*TILE + (((x*2+y)%3)-1)*0.1);
+    scene.add(ring);
+  }
+}
+
+// Biome/environment quality pass: props + micro detail
+const env = new THREE.Group(); scene.add(env);
+const tuftMat = new THREE.MeshStandardMaterial({color:0x3d7f45, roughness:0.92});
+const reedMat = new THREE.MeshStandardMaterial({color:0x9cd79f, roughness:0.85});
+const rockMat = new THREE.MeshStandardMaterial({color:0x9ea5ab, roughness:0.88});
+const crystalMat = new THREE.MeshPhysicalMaterial({color:0x8fd3ff, roughness:0.2, transmission:0.2, clearcoat:0.4});
+for(let y=1;y<H-1;y++) for(let x=1;x<W-1;x++){
+  const t=map[y][x];
+  const px=(x-W/2)*TILE, pz=(y-H/2)*TILE;
+  if(t===0 && (x*13+y*7)%11===0){
+    const tuft=new THREE.Mesh(new THREE.ConeGeometry(0.08,0.24,6), tuftMat);
+    tuft.position.set(px + (((x*3)%5)-2)*0.09, 0.18, pz + (((y*7)%5)-2)*0.09);
+    env.add(tuft);
+  }
+  if(t===2 && (x+y)%4===0){
+    const reed=new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.018,0.3,6), reedMat);
+    reed.position.set(px+0.22,0.08,pz-0.18); env.add(reed);
+  }
+  if(t===4 && (x*5+y*3)%5===0){
+    const rock=new THREE.Mesh(new THREE.DodecahedronGeometry(0.12,0), rockMat);
+    rock.position.set(px-0.18,0.44,pz+0.1); env.add(rock);
+  }
+  if(t===3 && (x+y)%6===0){
+    const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(0.11,0), crystalMat);
+    crystal.position.set(px,0.02,pz); env.add(crystal);
+  }
+}
+
+const hero = new THREE.Group(); scene.add(hero);
+const avatarRoot = new THREE.Group(); hero.add(avatarRoot);
+const animalRoot = new THREE.Group(); hero.add(animalRoot); animalRoot.visible=false; animalRoot.scale.setScalar(1.45);
+
+// Fallback primitive (kept until GLB loads)
+const fallbackBody = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.3,0.8), new THREE.MeshStandardMaterial({color:0xc2616e, roughness:0.7}));
+const fallbackHead = new THREE.Mesh(new THREE.BoxGeometry(0.82,0.82,0.82), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.75})); fallbackHead.position.y=1.05;
+const fallbackHat = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.18,0.95), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6})); fallbackHat.position.y=1.55;
+const fallbackPatch = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.1,0.02), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); fallbackPatch.position.set(0.14,1.1,0.42);
+avatarRoot.add(fallbackBody,fallbackHead,fallbackHat,fallbackPatch);
+
+// Signature details from initial Otis reference: cap swirl + eye patch
+const otisSignature = new THREE.Group();
+const sigPatch = new THREE.Mesh(new THREE.BoxGeometry(0.15,0.09,0.02), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.65}));
+sigPatch.position.set(0.14,1.1,0.42);
+const sigBrim = new THREE.Mesh(new THREE.BoxGeometry(0.52,0.05,0.28), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6}));
+sigBrim.position.set(0,1.47,0.25);
+const sigSwirl = new THREE.Mesh(new THREE.TorusGeometry(0.06,0.01,8,18,Math.PI*1.5), new THREE.MeshStandardMaterial({color:0xf7cad0, roughness:0.45}));
+sigSwirl.position.set(-0.06,1.56,0.42);
+otisSignature.add(sigPatch,sigBrim,sigSwirl); avatarRoot.add(otisSignature);
+
+// High-detail transformed animal meshes (more realistic proportions)
+const furMat = new THREE.MeshPhysicalMaterial({color:0xb8aa98, roughness:0.72, clearcoat:0.08});
+const featherMat = new THREE.MeshPhysicalMaterial({color:0x8f8f8f, roughness:0.55, clearcoat:0.1});
+const accentRed = new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.45});
+
+const animalSkin = new THREE.MeshPhysicalMaterial({color:0xd8d8d8, roughness:0.42, clearcoat:0.18, clearcoatRoughness:0.35});
+const animalDark = new THREE.MeshStandardMaterial({color:0x2a2a2a, roughness:0.65});
+const animalWarm = new THREE.MeshPhysicalMaterial({color:0xc8b49b, roughness:0.55, clearcoat:0.12});
+
+const birdModel = new THREE.Group();
+const birdBody = new THREE.Mesh(new THREE.SphereGeometry(0.44,72,52), new THREE.MeshPhysicalMaterial({color:0x8e949b, roughness:0.5, clearcoat:0.08})); birdBody.scale.set(1.05,1.0,1.55);
+const birdHead = new THREE.Mesh(new THREE.SphereGeometry(0.25,64,48), new THREE.MeshPhysicalMaterial({color:0xd3d8de, roughness:0.44})); birdHead.position.set(0,0.24,0.55);
+const birdChest = new THREE.Mesh(new THREE.SphereGeometry(0.2,48,36), new THREE.MeshPhysicalMaterial({color:0xf0f2f4, roughness:0.38})); birdChest.position.set(0,-0.05,0.32);
+const birdBeak = new THREE.Mesh(new THREE.ConeGeometry(0.075,0.30,28), new THREE.MeshPhysicalMaterial({color:0xffb25f, roughness:0.32})); birdBeak.rotation.x=Math.PI/2; birdBeak.position.set(0,0.2,0.82);
+const birdWingL = new THREE.Mesh(new THREE.CapsuleGeometry(0.10,0.78,10,32), new THREE.MeshPhysicalMaterial({color:0x7c838b, roughness:0.58})); birdWingL.position.set(-0.4,0.02,0.08); birdWingL.rotation.z=0.35;
+const birdWingR = birdWingL.clone(); birdWingR.position.x=0.4; birdWingR.rotation.z=-0.35;
+const birdTail = new THREE.Mesh(new THREE.ConeGeometry(0.17,0.44,24), new THREE.MeshPhysicalMaterial({color:0x7f868e, roughness:0.6})); birdTail.rotation.x=-Math.PI/2; birdTail.position.set(0,-0.04,-0.7);
+const birdLegL = new THREE.Mesh(new THREE.CylinderGeometry(0.022,0.024,0.24,14), new THREE.MeshStandardMaterial({color:0x5a4a39, roughness:0.82})); birdLegL.position.set(-0.08,-0.31,0.06);
+const birdLegR = birdLegL.clone(); birdLegR.position.x=0.08;
+const birdEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.03,16,16), animalDark); birdEyeL.position.set(-0.1,0.24,0.67);
+const birdEyeR = birdEyeL.clone(); birdEyeR.position.x=0.1;
+const birdCapBand = new THREE.Mesh(new THREE.TorusGeometry(0.19,0.02,14,34), accentRed); birdCapBand.rotation.x=Math.PI/2; birdCapBand.position.set(0,0.36,0.44);
+birdModel.add(birdBody,birdHead,birdChest,birdBeak,birdWingL,birdWingR,birdTail,birdLegL,birdLegR,birdEyeL,birdEyeR,birdCapBand);
+
+const fishModel = new THREE.Group();
+const fishBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,1.05,14,36), new THREE.MeshPhysicalMaterial({color:0x8f9f8f, roughness:0.34, metalness:0.04, clearcoat:0.25})); fishBody.rotation.z=Math.PI/2;
+const fishBelly = new THREE.Mesh(new THREE.CapsuleGeometry(0.19,0.78,12,28), new THREE.MeshPhysicalMaterial({color:0xc7d1bf, roughness:0.3, clearcoat:0.2})); fishBelly.rotation.z=Math.PI/2; fishBelly.position.set(0,-0.09,0.09);
+const fishTail = new THREE.Mesh(new THREE.ConeGeometry(0.22,0.45,26), new THREE.MeshPhysicalMaterial({color:0xbd6d52, roughness:0.4})); fishTail.rotation.z=Math.PI/2; fishTail.position.set(-0.8,0,0);
+const fishTopFin = new THREE.Mesh(new THREE.ConeGeometry(0.085,0.24,22), new THREE.MeshPhysicalMaterial({color:0xb55f4a, roughness:0.44})); fishTopFin.position.set(0.05,0.22,0.03);
+const fishFinL = new THREE.Mesh(new THREE.ConeGeometry(0.065,0.22,20), new THREE.MeshPhysicalMaterial({color:0xa85d4f, roughness:0.46})); fishFinL.rotation.z=0.9; fishFinL.position.set(0.12,0.01,0.26);
+const fishFinR = fishFinL.clone(); fishFinR.position.z=-0.26; fishFinR.rotation.z=-0.9;
+const fishEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.032,14,14), animalDark); fishEyeL.position.set(0.46,0.06,0.16);
+const fishEyeR = fishEyeL.clone(); fishEyeR.position.z=-0.16;
+const fishBand = new THREE.Mesh(new THREE.TorusGeometry(0.21,0.018,14,30), accentRed); fishBand.rotation.y=Math.PI/2; fishBand.position.set(0.18,0.02,0);
+fishModel.add(fishBody,fishBelly,fishTail,fishTopFin,fishFinL,fishFinR,fishEyeL,fishEyeR,fishBand);
+
+const goatModel = new THREE.Group();
+const goatBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.32,0.96,14,28), new THREE.MeshPhysicalMaterial({color:0xd6c6b2, roughness:0.66, clearcoat:0.06})); goatBody.rotation.z=Math.PI/2;
+const goatChest = new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.48,12,22), animalWarm.clone()); goatChest.rotation.z=Math.PI/2; goatChest.position.set(0.24,0.07,0);
+const goatNeck = new THREE.Mesh(new THREE.CapsuleGeometry(0.13,0.36,10,18), animalWarm.clone()); goatNeck.position.set(0.54,0.2,0); goatNeck.rotation.z=-0.28;
+const goatHead = new THREE.Mesh(new THREE.BoxGeometry(0.55,0.38,0.3,4,3,3), animalWarm.clone()); goatHead.position.set(0.86,0.25,0);
+const goatSnout = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.14,0.22), new THREE.MeshPhysicalMaterial({color:0xc4b09a, roughness:0.7})); goatSnout.position.set(1.1,0.16,0);
+const goatHornL = new THREE.Mesh(new THREE.TorusGeometry(0.15,0.02,12,28,Math.PI*1.22), new THREE.MeshStandardMaterial({color:0x7f6741, roughness:0.8})); goatHornL.position.set(0.84,0.47,0.11); goatHornL.rotation.y=0.62;
+const goatHornR = goatHornL.clone(); goatHornR.position.z=-0.11; goatHornR.rotation.y=-0.62;
+const goatBeard = new THREE.Mesh(new THREE.ConeGeometry(0.055,0.16,14), new THREE.MeshStandardMaterial({color:0xb8a084, roughness:0.82})); goatBeard.position.set(1.1,0.02,0); goatBeard.rotation.z=1.5;
+const goatEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.025,12,12), animalDark); goatEyeL.position.set(0.98,0.26,0.09);
+const goatEyeR = goatEyeL.clone(); goatEyeR.position.z=-0.09;
+const goatLegs = new THREE.Group();
+for(const [lx,lz] of [[-0.25,0.14],[-0.25,-0.14],[0.2,0.14],[0.2,-0.14]]){ const leg=new THREE.Mesh(new THREE.CylinderGeometry(0.052,0.056,0.62,14), new THREE.MeshStandardMaterial({color:0x8b7358, roughness:0.82})); leg.position.set(lx,-0.38,lz); goatLegs.add(leg); }
+const goatBand = new THREE.Mesh(new THREE.TorusGeometry(0.2,0.018,14,30), accentRed); goatBand.rotation.y=Math.PI/2; goatBand.position.set(0.8,0.21,0);
+goatModel.add(goatBody,goatChest,goatNeck,goatHead,goatSnout,goatHornL,goatHornR,goatBeard,goatEyeL,goatEyeR,goatLegs,goatBand);
+
+animalRoot.add(birdModel,fishModel,goatModel);
+birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
+
+// Free online GLB asset upgrade (Khronos sample models)
+const gltfLoader = new GLTFLoader();
+function fitGLB(targetGroup, gltfScene, {scale=1, rotY=0}={}){
+  targetGroup.clear();
+  const root = gltfScene;
+  const box = new THREE.Box3().setFromObject(root);
+  const size = box.getSize(new THREE.Vector3());
+  const maxDim = Math.max(size.x,size.y,size.z) || 1;
+  const s = scale / maxDim;
+  root.scale.setScalar(s);
+  const box2 = new THREE.Box3().setFromObject(root);
+  const center = box2.getCenter(new THREE.Vector3());
+  root.position.sub(center);
+  root.position.y += 0.25;
+  root.rotation.y = rotY;
+  root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; } });
+  targetGroup.add(root);
+}
+function replaceWithGLBFallback(targetGroup, urls, opts={}){
+  const tryLoad = (idx)=>{
+    if(idx>=urls.length) return;
+    gltfLoader.load(urls[idx], (gltf)=>fitGLB(targetGroup, gltf.scene, opts), undefined, ()=>tryLoad(idx+1));
+  };
+  tryLoad(0);
+}
+
+// Bird: replace rubber duck with real bird assets (free)
+replaceWithGLBFallback(
+  birdModel,
+  [
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Parrot.glb',
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Flamingo.glb',
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Stork.glb'
+  ],
+  {scale:1.45, rotY:Math.PI}
+);
+
+// Fish stays (good per user feedback)
+replaceWithGLBFallback(
+  fishModel,
+  ['https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'],
+  {scale:1.45, rotY:Math.PI/2}
+);
+
+// Goat: remove horse replacement; keep goat form mesh (already built) and add subtle quality polish
+goatModel.scale.setScalar(1.06);
+
+// Environment free-asset library props (GLB) for richer scene dressing
+const envAssetGroup = new THREE.Group(); scene.add(envAssetGroup);
+function addEnvAsset(url, gx, gy, y=0.25, scale=0.8, rotY=0){
+  gltfLoader.load(url, (gltf)=>{
+    const root=gltf.scene;
+    const box=new THREE.Box3().setFromObject(root);
+    const size=box.getSize(new THREE.Vector3());
+    const maxDim=Math.max(size.x,size.y,size.z)||1;
+    root.scale.setScalar(scale/maxDim);
+    const center=new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
+    root.position.sub(center);
+    root.position.set((gx-W/2)*TILE, y, (gy-H/2)*TILE);
+    root.rotation.y = rotY;
+    root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; }});
+    envAssetGroup.add(root);
+  });
+}
+addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Lantern/glTF-Binary/Lantern.glb', 12, 6, 0.3, 0.9, 0.6);
+addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/AntiqueCamera/glTF-Binary/AntiqueCamera.glb', 24, 14, 0.24, 0.7, 0.2);
+addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb', 38, 20, 0.28, 0.82, -0.7);
+
+// Upgraded in-scene Otis model (latest sketch: square head, slim limbs, hat swirl, patch)
+const otisTorso = new THREE.Mesh(new THREE.BoxGeometry(0.86,1.02,0.52), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.58, metalness:0.05}));
+otisTorso.position.y=0.58;
+const otisHead = new THREE.Mesh(new THREE.BoxGeometry(0.88,0.88,0.62), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.64}));
+otisHead.position.y=1.42;
+const otisEyeL = new THREE.Mesh(new THREE.BoxGeometry(0.05,0.05,0.02), new THREE.MeshStandardMaterial({color:0x111111})); otisEyeL.position.set(-0.18,1.46,0.33);
+const otisEyeR = otisEyeL.clone(); otisEyeR.position.x=-0.03;
+const otisEyePatch = new THREE.Mesh(new THREE.BoxGeometry(0.17,0.12,0.03), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); otisEyePatch.position.set(0.17,1.45,0.33);
+const otisMouth = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.09,0.03), new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.55})); otisMouth.position.set(-0.02,1.25,0.33);
+const otisHatTop = new THREE.Mesh(new THREE.BoxGeometry(0.92,0.2,0.66), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.45}));
+otisHatTop.position.set(-0.03,1.9,0.0);
+const otisHatBrim = new THREE.Mesh(new THREE.BoxGeometry(1.08,0.08,0.82), new THREE.MeshStandardMaterial({color:0xbf3c50, roughness:0.5}));
+otisHatBrim.position.set(-0.03,1.79,0.1);
+const otisLegL = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.055,0.74,10), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.62}));
+otisLegL.position.set(-0.12,-0.06,0.03);
+const otisLegR = otisLegL.clone(); otisLegR.position.x=0.12;
+const otisShoeL = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.08,0.26), new THREE.MeshStandardMaterial({color:0x4a1b22, roughness:0.7})); otisShoeL.position.set(-0.12,-0.45,0.08);
+const otisShoeR = otisShoeL.clone(); otisShoeR.position.x=0.12;
+const otisArmL = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.045,0.72,8), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.68}));
+otisArmL.position.set(-0.5,0.67,0);
+const otisArmR = otisArmL.clone(); otisArmR.position.x=0.5;
+const otisFingers = new THREE.Group();
+for(const sx of [-0.52,-0.5,-0.48]){ const f=new THREE.Mesh(new THREE.BoxGeometry(0.012,0.09,0.012), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.68})); f.position.set(sx,0.29,0.08); otisFingers.add(f); }
+for(const sx of [0.48,0.5,0.52]){ const f=new THREE.Mesh(new THREE.BoxGeometry(0.012,0.09,0.012), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.68})); f.position.set(sx,0.29,0.08); otisFingers.add(f); }
+avatarRoot.add(otisTorso,otisHead,otisEyeL,otisEyeR,otisEyePatch,otisMouth,otisHatTop,otisHatBrim,otisLegL,otisLegR,otisShoeL,otisShoeR,otisArmL,otisArmR,otisFingers);
+const otisRig = {armL:otisArmL, armR:otisArmR, legL:otisLegL, legR:otisLegR, shoeL:otisShoeL, shoeR:otisShoeR, body:otisTorso};
+
+// Friends rebuilt from user sketches (high-detail stylized 3D)
+function buildMilo(){
+  const g = new THREE.Group();
+  const lineMat = new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.5});
+  const skin = new THREE.MeshPhysicalMaterial({color:0xffd9de, roughness:0.58, clearcoat:0.15});
+
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.72,0.68), skin); head.position.y=1.4;
+  const fringe = new THREE.Mesh(new THREE.BoxGeometry(0.84,0.12,0.5), lineMat); fringe.position.set(0,1.68,0.1);
+  const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.03,10,10), new THREE.MeshStandardMaterial({color:0x1b1b1b})); eyeL.position.set(-0.21,1.42,0.34);
+  const eyeR = eyeL.clone(); eyeR.position.x=0.21;
+  const nose = new THREE.Mesh(new THREE.SphereGeometry(0.02,8,8), new THREE.MeshStandardMaterial({color:0xb55461})); nose.position.set(0,1.37,0.35);
+  const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.03,0.02), new THREE.MeshStandardMaterial({color:0x8a3442})); mouth.position.set(0,1.28,0.34);
+
+  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.74,8,14), new THREE.MeshPhysicalMaterial({color:0xffb7c0, roughness:0.62})); torso.position.y=0.62;
+  const armL = new THREE.Mesh(new THREE.CapsuleGeometry(0.08,0.5,6,10), new THREE.MeshStandardMaterial({color:0xffb7c0, roughness:0.65})); armL.position.set(-0.42,0.68,0.03);
+  const armR = armL.clone(); armR.position.x=0.42;
+  const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.09,0.6,6,10), new THREE.MeshStandardMaterial({color:0xd06774, roughness:0.7})); legL.position.set(-0.12,0.02,0.04);
+  const legR = legL.clone(); legR.position.x=0.12;
+
+  g.add(head,fringe,eyeL,eyeR,nose,mouth,torso,armL,armR,legL,legR);
+  g.userData={armL,armR,legL,legR};
+  return g;
+}
+
+function buildPoppy(){
+  const g = new THREE.Group();
+  const skin = new THREE.MeshPhysicalMaterial({color:0xffe6eb, roughness:0.56, clearcoat:0.12});
+  const lineMat = new THREE.MeshStandardMaterial({color:0xea6172, roughness:0.5});
+
+  const skull = new THREE.Mesh(new THREE.BoxGeometry(0.98,0.78,0.72), skin); skull.position.y=1.45;
+  const topPlate = new THREE.Mesh(new THREE.BoxGeometry(1.0,0.18,0.74), lineMat); topPlate.position.set(0,1.75,0);
+  const sideNub = new THREE.Mesh(new THREE.BoxGeometry(0.14,0.12,0.2), lineMat); sideNub.position.set(-0.56,1.55,0);
+  const eyeL = new THREE.Mesh(new THREE.BoxGeometry(0.09,0.09,0.03), new THREE.MeshStandardMaterial({color:0x7a2b39})); eyeL.position.set(-0.2,1.47,0.35);
+  const eyeR = eyeL.clone(); eyeR.position.x=0.2;
+  const nose = new THREE.Mesh(new THREE.BoxGeometry(0.07,0.07,0.03), new THREE.MeshStandardMaterial({color:0x7a2b39})); nose.position.set(0,1.39,0.35);
+
+  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.88,8,14), new THREE.MeshPhysicalMaterial({color:0xffbec8, roughness:0.64})); torso.position.y=0.56;
+  const armL = new THREE.Mesh(new THREE.CapsuleGeometry(0.07,0.66,6,10), new THREE.MeshStandardMaterial({color:0xffbec8, roughness:0.68})); armL.position.set(-0.44,0.62,0.05);
+  const armR = armL.clone(); armR.position.x=0.44;
+  const fingerL1 = new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.015,0.13,6), lineMat); fingerL1.position.set(-0.5,0.21,0.09); fingerL1.rotation.z=0.2;
+  const fingerL2 = fingerL1.clone(); fingerL2.position.z=0.02;
+  const fingerL3 = fingerL1.clone(); fingerL3.position.z=-0.05;
+  const fingerR1 = fingerL1.clone(); fingerR1.position.x=0.5; fingerR1.rotation.z=-0.2;
+  const fingerR2 = fingerR1.clone(); fingerR2.position.z=0.02;
+  const fingerR3 = fingerR1.clone(); fingerR3.position.z=-0.05;
+
+  const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.08,0.74,6,10), new THREE.MeshStandardMaterial({color:0xd86a78, roughness:0.72})); legL.position.set(-0.12,-0.02,0.05);
+  const legR = legL.clone(); legR.position.x=0.12;
+
+  g.add(skull,topPlate,sideNub,eyeL,eyeR,nose,torso,armL,armR,fingerL1,fingerL2,fingerL3,fingerR1,fingerR2,fingerR3,legL,legR);
+  g.userData={armL,armR,legL,legR};
+  return g;
+}
+
+const decoyMeshes = [];
+
+function buildFishFriend(){
+  const g=new THREE.Group();
+  const body=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.45,0.42), new THREE.MeshPhysicalMaterial({color:0xffd9de, roughness:0.58})); body.position.set(0,0.95,0);
+  const snout=new THREE.Mesh(new THREE.CapsuleGeometry(0.11,0.16,6,10), new THREE.MeshStandardMaterial({color:0xffc3cd, roughness:0.6})); snout.rotation.z=Math.PI/2; snout.position.set(-0.55,0.94,0);
+  const fin=new THREE.Mesh(new THREE.ConeGeometry(0.07,0.16,10), new THREE.MeshStandardMaterial({color:0xe76a7d, roughness:0.5})); fin.position.set(-0.42,0.72,0); fin.rotation.z=0.6;
+  const tail=new THREE.Mesh(new THREE.ConeGeometry(0.12,0.28,14), new THREE.MeshStandardMaterial({color:0xe46272, roughness:0.55})); tail.rotation.z=-Math.PI/2; tail.position.set(0.62,0.95,0);
+  const eye1=new THREE.Mesh(new THREE.SphereGeometry(0.025,8,8), new THREE.MeshStandardMaterial({color:0x111111})); eye1.position.set(-0.2,1.02,0.15);
+  const eye2=eye1.clone(); eye2.position.z=-0.15;
+  const mouth=new THREE.Mesh(new THREE.TorusGeometry(0.08,0.012,8,16,Math.PI), new THREE.MeshStandardMaterial({color:0xb14a58, roughness:0.6})); mouth.rotation.z=-1.2; mouth.position.set(0.02,0.9,0.16);
+  g.add(body,snout,fin,tail,eye1,eye2,mouth);
+  g.userData={};
+  return g;
+}
+function buildConeHatFriend(){
+  const g=new THREE.Group();
+  const face=new THREE.Mesh(new THREE.BoxGeometry(0.46,0.64,0.34), new THREE.MeshPhysicalMaterial({color:0xffe3e8, roughness:0.6})); face.position.y=1.04;
+  const cone=new THREE.Mesh(new THREE.ConeGeometry(0.12,0.32,10), new THREE.MeshStandardMaterial({color:0xe95a72, roughness:0.48})); cone.position.y=1.55;
+  const coneBand=new THREE.Mesh(new THREE.BoxGeometry(0.18,0.08,0.18), new THREE.MeshStandardMaterial({color:0xf59aa8, roughness:0.5})); coneBand.position.y=1.39;
+  const body=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.68,0.36), new THREE.MeshStandardMaterial({color:0xffc1ca, roughness:0.66})); body.position.y=0.5;
+  const armL=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.52,6), new THREE.MeshStandardMaterial({color:0xe56c7e})); armL.position.set(-0.33,0.57,0);
+  const armR=armL.clone(); armR.position.x=0.33;
+  const legL=new THREE.Mesh(new THREE.CylinderGeometry(0.032,0.035,0.56,6), new THREE.MeshStandardMaterial({color:0xd06373})); legL.position.set(-0.1,0.0,0);
+  const legR=legL.clone(); legR.position.x=0.1;
+  g.add(face,cone,coneBand,body,armL,armR,legL,legR); g.userData={armL,armR,legL,legR};
+  return g;
+}
+function buildBandanaFriend(){
+  const g=new THREE.Group();
+  const face=new THREE.Mesh(new THREE.BoxGeometry(0.46,0.64,0.34), new THREE.MeshPhysicalMaterial({color:0xffe3e8, roughness:0.6})); face.position.y=1.04;
+  const band=new THREE.Mesh(new THREE.TorusGeometry(0.24,0.045,10,24), new THREE.MeshStandardMaterial({color:0xe46272, roughness:0.52})); band.rotation.x=Math.PI/2; band.position.y=1.33;
+  const knot=new THREE.Mesh(new THREE.CapsuleGeometry(0.05,0.12,4,8), new THREE.MeshStandardMaterial({color:0xe46272, roughness:0.52})); knot.rotation.z=0.8; knot.position.set(-0.28,1.32,0);
+  const body=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.68,0.36), new THREE.MeshStandardMaterial({color:0xffc1ca, roughness:0.66})); body.position.y=0.5;
+  const armL=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.52,6), new THREE.MeshStandardMaterial({color:0xe56c7e})); armL.position.set(-0.33,0.57,0);
+  const armR=armL.clone(); armR.position.x=0.33;
+  const legL=new THREE.Mesh(new THREE.CylinderGeometry(0.032,0.035,0.56,6), new THREE.MeshStandardMaterial({color:0xd06373})); legL.position.set(-0.1,0.0,0);
+  const legR=legL.clone(); legR.position.x=0.1;
+  g.add(face,band,knot,body,armL,armR,legL,legR); g.userData={armL,armR,legL,legR};
+  return g;
+}
+
+const friendModels=[buildMilo(), buildPoppy(), buildFishFriend(), buildConeHatFriend(), buildBandanaFriend()];
+friendModels.forEach(f=>scene.add(f));
+
+const stateEl=document.getElementById('state'), foundEl=document.getElementById('found');
+const levelPill=document.getElementById('levelPill'), hpPill=document.getElementById('hpPill');
+const forms=['otis','bird','fish','goat']; let form='otis';
+let heroGrid={x:2,y:2};
+const heroPos={x:2,y:2};
+const heroVel={x:0,y:0};
+let found=[false,false,false,false,false];
+let hp=100;
+let currentLevel=1;
+let friendPositions=[];
+let decoys=[];
+const levels=[
+  { hero:{x:2,y:2}, friends:[{x:26,y:12},{x:8,y:15},{x:18,y:9},{x:12,y:22},{x:30,y:18}], decoys:[{x:9,y:8},{x:18,y:17},{x:24,y:12}], gates:[{t:2},{t:4}] },
+  { hero:{x:2,y:2}, friends:[{x:36,y:22},{x:12,y:18},{x:24,y:24},{x:28,y:11},{x:40,y:20}], decoys:[{x:9,y:8},{x:24,y:21},{x:27,y:16},{x:34,y:18}], gates:[{t:2},{t:4},{t:3}] },
+  { hero:{x:2,y:2}, friends:[{x:45,y:24},{x:11,y:18},{x:32,y:26},{x:22,y:14},{x:41,y:29}], decoys:[{x:9,y:8},{x:24,y:21},{x:36,y:22},{x:27,y:16},{x:42,y:24},{x:30,y:27}], gates:[{t:2},{t:4},{t:3},{t:2}] }
+];
+
+function posFromGrid(g){ return new THREE.Vector3((g.x-W/2)*TILE,0.8,(g.y-H/2)*TILE); }
+function buildDecoy(){
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.4,6,10), new THREE.MeshStandardMaterial({color:0xe7bf5e, roughness:0.65}));
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,14,12), new THREE.MeshStandardMaterial({color:0xf3d67c, roughness:0.55})); head.position.y=0.42;
+  const hornL = new THREE.Mesh(new THREE.ConeGeometry(0.04,0.14,8), new THREE.MeshStandardMaterial({color:0x7f6741, roughness:0.8})); hornL.position.set(-0.08,0.58,0.02); hornL.rotation.z=0.45;
+  const hornR = hornL.clone(); hornR.position.x=0.08; hornR.rotation.z=-0.45;
+  const eye = new THREE.Mesh(new THREE.SphereGeometry(0.025,8,8), new THREE.MeshStandardMaterial({color:0x111111})); eye.position.set(0.05,0.44,0.16);
+  const eye2 = eye.clone(); eye2.position.x=-0.05;
+  g.add(body,head,hornL,hornR,eye,eye2);
+  g.userData.hitAt=0;
+  return g;
+}
+function clearDecoys(){ while(decoyMeshes.length){ const d=decoyMeshes.pop(); scene.remove(d);} }
+function initLevel(level){
+  const cfg=levels[level-1];
+  currentLevel=level;
+  heroGrid={x:cfg.hero.x,y:cfg.hero.y};
+  heroPos.x=cfg.hero.x; heroPos.y=cfg.hero.y; heroVel.x=0; heroVel.y=0;
+  friendPositions=cfg.friends.map(v=>({...v}));
+  decoys=cfg.decoys.map(v=>({...v}));
+  found=[false,false,false,false,false];
+  friendModels.forEach(m=>m.visible=true);
+  foundEl.textContent='Friends: 0 / 5';
+  levelPill.textContent=`Level: ${currentLevel} / 3`;
+  clearDecoys();
+  decoys.forEach((d)=>{ const m=buildDecoy(); const p=posFromGrid(d); m.position.set(p.x,0.55,p.z); scene.add(m); decoyMeshes.push(m); });
+}
+function place(){
+  hero.position.copy(posFromGrid({x:heroPos.x,y:heroPos.y}));
+  friendModels.forEach((m,i)=>{ const p=posFromGrid(friendPositions[i]); m.position.copy(p); });
+  const tNow = performance.now()*0.001;
+  decoyMeshes.forEach((m,i)=>{ const p=posFromGrid(decoys[i]); m.position.set(p.x,0.55 + Math.sin(tNow*3+i)*0.02,p.z); m.rotation.y += 0.01; });
+}
+initLevel(1);
+place();
+
+function setForm(f){
+  form=f; stateEl.textContent='Form: '+f[0].toUpperCase()+f.slice(1);
+  avatarRoot.visible = (f==='otis');
+  animalRoot.visible = (f!=='otis');
+  birdModel.visible = (f==='bird');
+  fishModel.visible = (f==='fish');
+  goatModel.visible = (f==='goat');
+
+  // scale per transform for readability/proportion
+  birdModel.scale.setScalar(f==='bird'?1.05:0.95);
+  fishModel.scale.set(f==='fish'?1.1:0.95, f==='fish'?1.1:0.95, f==='fish'?1.1:0.95);
+  goatModel.scale.setScalar(f==='goat'?1.12:0.96);
+
+  // subtle form tint while keeping Otis reference details intact
+  const tint = f==='otis'?0xffffff : f==='bird'?0xf2dcff : f==='fish'?0xd8f2ff : 0xfff0dc;
+  avatarRoot.traverse(n=>{ if(n.isMesh && n.material && n.material.color){ const base=n.userData.baseColor || n.material.color.getHex(); n.userData.baseColor=base; n.material.color.setHex(base).multiply(new THREE.Color(tint)); }});
+  otisSignature.visible = (f==='otis');
+  fallbackHat.visible=f==='otis';
+}
+setForm('otis');
+
+function canStep(nx,ny){
+  const t=map[ny]?.[nx]; if(t==null) return false;
+  if(t===1) return false;
+  if(t===2) return form==='fish';
+  if(t===3) return form==='bird';
+  if(t===4) return form==='goat';
+  return true;
+}
+
+const keys={};
+const tiltState={enabled:false,gamma:0,beta:0,lastMove:0};
+const joyState={active:false,x:0,y:0};
+let controlMode='joystick';
+let playing=false;
+
+addEventListener('keydown',e=>{keys[e.key]=true; if(e.key==='1')setForm('otis'); if(e.key==='2')setForm('bird'); if(e.key==='3')setForm('fish'); if(e.key==='4')setForm('goat'); if(e.key===' ')search();});
+addEventListener('keyup',e=>{keys[e.key]=false;});
+
+function search(){
+  friendPositions.forEach((fp,i)=>{
+    if(!found[i] && Math.abs(heroGrid.x-fp.x)+Math.abs(heroGrid.y-fp.y)<=1) found[i]=true;
+  });
+
+  friendModels.forEach((m,i)=>{ if(found[i]) m.visible=false; });
+  const count = found.filter(Boolean).length;
+  foundEl.textContent=`Friends: ${count} / 5`;
+
+  if(count===5){
+    if(currentLevel<3){
+      stateEl.textContent='Level clear! Loading next level...';
+      setTimeout(()=>{ initLevel(currentLevel+1); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 900);
+    } else {
+      stateEl.textContent='All levels complete! 🎉';
+      playing=false;
+    }
+  }
+}
+
+['f1','f2','f3','f4'].forEach((id,i)=>document.getElementById(id).onclick=()=>setForm(forms[i]));
+document.getElementById('search').onclick=search;
+
+function onTilt(e){
+  tiltState.gamma = e.gamma || 0; // left/right
+  tiltState.beta = e.beta || 0;   // front/back
+}
+async function enableTilt(){
+  try{
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      const perm = await DeviceOrientationEvent.requestPermission();
+      if (perm !== 'granted') return false;
+    }
+    addEventListener('deviceorientation', onTilt, {passive:true});
+    tiltState.enabled=true;
+    document.getElementById('tilt').textContent='Tilt: On';
+    return true;
+  } catch { return false; }
+}
+function disableTilt(){
+  removeEventListener('deviceorientation', onTilt);
+  tiltState.enabled=false;
+  document.getElementById('tilt').textContent='Tilt: Off';
+}
+document.getElementById('tilt').onclick=async()=>{
+  if(tiltState.enabled) disableTilt();
+  else {
+    const ok = await enableTilt();
+    if(!ok) alert('Tilt permission not granted or unsupported on this browser.');
+    else controlMode='accelerometer';
+  }
+};
+
+const touchHud=document.getElementById('touchHud');
+const joyWrap=document.getElementById('joyWrap');
+const joyKnob=document.getElementById('joyKnob');
+function resetJoy(){ joyState.active=false; joyState.x=0; joyState.y=0; joyKnob.style.left='42px'; joyKnob.style.top='42px'; }
+function setJoyByPointer(e){
+  const r=joyWrap.getBoundingClientRect();
+  const nx=(e.clientX-(r.left+r.width/2))/((r.width/2)-20);
+  const ny=(e.clientY-(r.top+r.height/2))/((r.height/2)-20);
+  const mag=Math.hypot(nx,ny)||1;
+  const c=Math.min(1,mag);
+  joyState.x=(nx/mag)*c; joyState.y=(ny/mag)*c; joyState.active=true;
+  joyKnob.style.left=`${42+joyState.x*28}px`; joyKnob.style.top=`${42+joyState.y*28}px`;
+}
+if(joyWrap){
+  joyWrap.addEventListener('pointerdown',(e)=>{joyWrap.setPointerCapture(e.pointerId); setJoyByPointer(e);});
+  joyWrap.addEventListener('pointermove',(e)=>{if(joyState.active) setJoyByPointer(e);});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(evt=>joyWrap.addEventListener(evt,resetJoy));
+}
+
+async function startWithMode(mode){
+  controlMode=mode;
+  if(mode==='accelerometer'){
+    const ok=await enableTilt();
+    if(!ok){ controlMode='joystick'; }
+  } else {
+    disableTilt();
+  }
+  touchHud.style.display = (controlMode==='joystick') ? 'block' : 'none';
+  document.getElementById('controlOverlay').classList.add('hidden');
+  hp=100; hpPill.textContent='HP: 100';
+  initLevel(1);
+  playing=true;
+}
+
+document.getElementById('chooseJoystick').onclick=()=>startWithMode('joystick');
+document.getElementById('chooseTilt').onclick=()=>startWithMode('accelerometer');
+
+document.getElementById('fxBtn').onclick=()=>{
+  fxEnabled = !fxEnabled;
+  document.getElementById('fxBtn').textContent = fxEnabled ? 'FX: On' : 'FX: Off';
+  document.getElementById('filmGrain').classList.toggle('off', !fxEnabled);
+};
+
+const clock=new THREE.Clock();
+renderer.setAnimationLoop(()=>{
+  const dt=clock.getDelta();
+
+  if(playing){
+    let ix=0, iy=0;
+
+    if(keys.ArrowUp||keys.w) iy -= 1;
+    if(keys.ArrowDown||keys.s) iy += 1;
+    if(keys.ArrowLeft||keys.a) ix -= 1;
+    if(keys.ArrowRight||keys.d) ix += 1;
+
+    if(controlMode==='joystick' && joyState.active){
+      ix = joyState.x;
+      iy = joyState.y;
+    } else if(controlMode==='accelerometer' && tiltState.enabled){
+      const g=tiltState.gamma, b=tiltState.beta;
+      ix = THREE.MathUtils.clamp(g/24, -1, 1);
+      iy = THREE.MathUtils.clamp(b/24, -1, 1);
+    }
+
+    // deadzone + normalize for smooth analog movement
+    const mag=Math.hypot(ix,iy);
+    if(mag<0.12){ ix=0; iy=0; }
+    else { ix/=mag; iy/=mag; }
+
+    const maxSpeed = 4.2; // tiles/sec
+    const accel = 11.0;
+    const damping = 9.5;
+
+    const tx = ix*maxSpeed, ty = iy*maxSpeed;
+    const lerpA = Math.min(1, dt*accel);
+    heroVel.x += (tx-heroVel.x)*lerpA;
+    heroVel.y += (ty-heroVel.y)*lerpA;
+
+    if(ix===0) heroVel.x *= Math.max(0,1-dt*damping);
+    if(iy===0) heroVel.y *= Math.max(0,1-dt*damping);
+
+    const nx = heroPos.x + heroVel.x*dt;
+    const ny = heroPos.y + heroVel.y*dt;
+
+    // axis-separated collision so movement feels smooth, not strobe/blocky
+    if(canStep(Math.round(nx), Math.round(heroPos.y))) heroPos.x = nx; else heroVel.x = 0;
+    if(canStep(Math.round(heroPos.x), Math.round(ny))) heroPos.y = ny; else heroVel.y = 0;
+
+    heroPos.x = THREE.MathUtils.clamp(heroPos.x, 1, W-2);
+    heroPos.y = THREE.MathUtils.clamp(heroPos.y, 1, H-2);
+    heroGrid.x = Math.round(heroPos.x);
+    heroGrid.y = Math.round(heroPos.y);
+  }
+
+  place();
+
+  const t = clock.elapsedTime;
+  const speed = Math.hypot(heroVel.x, heroVel.y);
+  const walkAmp = Math.min(0.26, speed*0.06);
+
+  // player walk animation (smooth, speed-driven)
+  if(form==='otis'){
+    const moving = speed > 0.08;
+    const cycle = moving ? (12 + speed*2) : 2;
+    const stride = Math.sin(t*cycle);
+    const amp = moving ? Math.max(0.18, walkAmp*1.8) : 0.02;
+    otisRig.armL.rotation.x = stride*amp*0.9;
+    otisRig.armR.rotation.x = -stride*amp*0.9;
+    otisRig.legL.rotation.x = -stride*amp*2.2;
+    otisRig.legR.rotation.x = stride*amp*2.2;
+    otisRig.shoeL.rotation.x = -stride*amp*1.2;
+    otisRig.shoeR.rotation.x = stride*amp*1.2;
+    otisRig.body.position.y = 0.64 + Math.sin(t*cycle*2)*amp*0.08;
+  }
+
+  // subtle high-detail form animation
+  if(form==='bird'){
+    birdModel.rotation.y = Math.sin(t*(4+speed))*0.12;
+    birdModel.position.y = Math.sin(t*(6+speed))*0.04;
+  } else if(form==='fish'){
+    fishModel.rotation.y = Math.sin(t*(5+speed))*0.14;
+    fishModel.position.x = Math.sin(t*(7+speed))*0.03;
+  } else if(form==='goat'){
+    goatModel.rotation.y = Math.sin(t*(3+speed))*0.08;
+    goatModel.position.y = Math.abs(Math.sin(t*(6+speed)))*0.03;
+  }
+
+  // decoy enemy contact damage
+  const now=clock.elapsedTime;
+  decoys.forEach((d,i)=>{
+    const m=decoyMeshes[i];
+    if(!m) return;
+    const hit = Math.abs(heroGrid.x-d.x)+Math.abs(heroGrid.y-d.y) <= 1;
+    if(hit && (now-(m.userData.hitAt||0))>0.8){
+      m.userData.hitAt=now;
+      hp=Math.max(0,hp-8);
+      hpPill.textContent=`HP: ${hp}`;
+      stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1)+' · Ouch! Decoy hit';
+      setTimeout(()=>{ if(playing) stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); },500);
+      if(hp<=0){
+        hp=100; hpPill.textContent='HP: 100';
+        stateEl.textContent='You fainted. Restarting level...';
+        setTimeout(()=>{ initLevel(currentLevel); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 700);
+      }
+    }
+  });
+
+  // friend idle animation from sketch silhouettes
+  friendModels.forEach((fm,i)=>{
+    if(!fm.visible) return;
+    fm.position.y = 0.8 + Math.sin(t*(2.4+i*0.25) + i)*0.05;
+    const r = fm.userData || {};
+    if(r.armL) r.armL.rotation.z = 0.12 + Math.sin(t*(2.0+i*0.2))*0.2;
+    if(r.armR) r.armR.rotation.z = -0.12 - Math.sin(t*(2.0+i*0.2))*0.2;
+    if(r.legL) r.legL.rotation.x = Math.sin(t*(3.6+i*0.3))*0.12;
+    if(r.legR) r.legR.rotation.x = -Math.sin(t*(3.6+i*0.3))*0.12;
+  });
+
+  // follow cam (closer framing)
+  camera.position.x += (hero.position.x - camera.position.x)*Math.min(1,dt*4.5);
+  camera.position.y += (6.8 - camera.position.y)*Math.min(1,dt*3.2);
+  camera.position.z += (hero.position.z + 10.5 - camera.position.z)*Math.min(1,dt*4.5);
+  camera.lookAt(hero.position.x,1.2,hero.position.z);
+
+  if(fxEnabled) composer.render();
+  else renderer.render(scene,camera);
+});
+
+function onResize(){
+  camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  composer.setSize(innerWidth,innerHeight);
+  bloomPass.setSize(innerWidth,innerHeight);
+}
+addEventListener('resize', onResize);
+</script>
+</body>
+</html>
