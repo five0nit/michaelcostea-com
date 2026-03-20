@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OTIS & HIS FRIENDS</title>
+  <style>
+    :root{--bg:#10171d;--panel:#1a2530;--line:#365063;--text:#eaf4ff;--accent:#ffe26b}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#1d2c3a,#0b1116 65%);color:var(--text);font-family:Verdana,Arial,sans-serif}
+    .wrap{max-width:980px;margin:0 auto;padding:14px}
+    .hud{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+    .title{font-weight:800;letter-spacing:.06em}
+    .badge{font-size:12px;padding:3px 8px;border:1px solid #5f7a90;border-radius:999px;background:#14202a}
+    .game{display:grid;grid-template-columns:1fr 250px;gap:10px}
+    canvas{width:100%;image-rendering:pixelated;background:#0c1419;border:2px solid var(--line);border-radius:10px}
+    .side{background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:10px}
+    .side h3{margin:4px 0 8px;font-size:14px} .small{font-size:12px;color:#c4d8ea;line-height:1.45}
+    .forms{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    button{background:#203445;color:#f5fbff;border:1px solid #62839b;border-radius:8px;padding:8px;font-weight:700;cursor:pointer}
+    button.active{outline:2px solid var(--accent);background:#2a4560}
+    .mobile{display:none;gap:8px;grid-template-columns:repeat(3,54px);justify-content:center;margin-top:8px}
+    .mobile button{height:54px}
+    .log{margin-top:8px;padding:8px;min-height:62px;background:#101920;border:1px solid #3a5568;border-radius:8px;font-size:12px}
+    @media (max-width: 900px){.game{grid-template-columns:1fr}.mobile{display:grid}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hud">
+      <div class="title">OTIS & HIS FRIENDS <span class="badge">SNES-ZELDA STYLE HIDE & SEEK</span></div>
+      <div>
+        <span class="badge" id="foundBadge">Friends Found: 0 / 2</span>
+        <span class="badge" id="formBadge">Form: Otis</span>
+      </div>
+    </div>
+
+    <div class="game">
+      <div>
+        <canvas id="game" width="640" height="448" aria-label="Otis and his Friends game"></canvas>
+        <div class="mobile" id="mobilePad">
+          <button data-k="ArrowUp">▲</button><button data-k="ArrowLeft">◀</button><button data-k="ArrowRight">▶</button>
+          <button data-k="ArrowDown">▼</button><button data-k="Space">SEARCH</button><button id="mobileForm">FORM</button>
+        </div>
+      </div>
+
+      <aside class="side">
+        <h3>Goal</h3>
+        <p class="small">Find Otis's two hidden best friends. Transform to reach different terrain.</p>
+        <div class="forms">
+          <button data-form="otis" class="active">1 · Otis</button>
+          <button data-form="bird">2 · Bird</button>
+          <button data-form="fish">3 · Fish</button>
+          <button data-form="goat">4 · Goat</button>
+        </div>
+        <p class="small" style="margin-top:8px">
+          <b>Bird:</b> flies over huge drops/gaps<br/>
+          <b>Fish:</b> swims water tiles<br/>
+          <b>Goat:</b> climbs cliff tiles
+        </p>
+        <div class="log" id="log">Use arrow keys / mobile pad to move. Press SPACE near hiding spots.</div>
+      </aside>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const W=32,H=22,T=20;
+  const forms=['otis','bird','fish','goat'];
+  const formName={otis:'Otis',bird:'Bird',fish:'Fish',goat:'Goat'};
+
+  // 0 grass,1 tree block,2 water,3 gap/drop,4 cliff
+  const map = Array.from({length:H},()=>Array(W).fill(0));
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(x===0||y===0||x===W-1||y===H-1) map[y][x]=1;
+  for(let x=2;x<12;x++) map[6][x]=2;
+  for(let y=6;y<15;y++) map[y][11]=2;
+  for(let x=14;x<29;x++) map[11][x]=3;
+  for(let x=18;x<30;x++) map[4][x]=4;
+  for(let y=4;y<11;y++) map[y][18]=4;
+  for(let y=14;y<20;y++) for(let x=4;x<10;x++) if((x+y)%2===0) map[y][x]=1;
+  for(let y=2;y<9;y++) for(let x=23;x<29;x++) if((x+y)%3===0) map[y][x]=1;
+
+  const hero={x:3,y:3,form:'otis'};
+  const friends=[
+    {name:'Milo',x:27,y:7,found:false,hint:'You hear giggles from up high...'},
+    {name:'Poppy',x:8,y:17,found:false,hint:'A splashy clue came from the lower woods...'}
+  ];
+
+  const keys={};
+  let tick=0;
+  const log=document.getElementById('log');
+  const foundBadge=document.getElementById('foundBadge');
+  const formBadge=document.getElementById('formBadge');
+
+  function setLog(t){ log.textContent=t; }
+  function setForm(form){ hero.form=form; formBadge.textContent='Form: '+formName[form]; document.querySelectorAll('[data-form]').forEach(b=>b.classList.toggle('active',b.dataset.form===form)); }
+
+  function canStep(nx,ny){
+    const t=map[ny]?.[nx]; if(t==null) return false;
+    if(t===1) return false;
+    if(t===2) return hero.form==='fish';
+    if(t===3) return hero.form==='bird';
+    if(t===4) return hero.form==='goat' || hero.form==='bird';
+    return true;
+  }
+
+  function tryMove(dx,dy){
+    const nx=hero.x+dx, ny=hero.y+dy;
+    if(canStep(nx,ny)){ hero.x=nx; hero.y=ny; }
+  }
+
+  function search(){
+    let foundAny=false;
+    for(const f of friends){
+      if(!f.found && Math.abs(f.x-hero.x)+Math.abs(f.y-hero.y)<=1){
+        f.found=true; foundAny=true; setLog(`You found ${f.name}! 🎉`);
+      }
+    }
+    const n=friends.filter(f=>f.found).length;
+    foundBadge.textContent=`Friends Found: ${n} / 2`;
+    if(!foundAny){
+      const hidden=friends.find(f=>!f.found);
+      setLog(hidden?hidden.hint:'All friends found! Return to town as the hero of hide-and-seek!');
+    }
+  }
+
+  function drawTile(x,y,t){
+    const px=x*T, py=y*T;
+    if(t===0){ ctx.fillStyle='#4c8d4a'; ctx.fillRect(px,py,T,T); ctx.fillStyle='rgba(255,255,255,.08)'; if((x+y)%2===0) ctx.fillRect(px,py,2,2); }
+    if(t===1){ ctx.fillStyle='#2f5f2a'; ctx.fillRect(px,py,T,T); ctx.fillStyle='#20431f'; ctx.fillRect(px+4,py+4,12,12); }
+    if(t===2){ ctx.fillStyle='#2f77b8'; ctx.fillRect(px,py,T,T); ctx.fillStyle='rgba(255,255,255,.16)'; ctx.fillRect(px,py+((tick+x+y)%T),T,2); }
+    if(t===3){ ctx.fillStyle='#0f1820'; ctx.fillRect(px,py,T,T); ctx.strokeStyle='#243846'; ctx.strokeRect(px+1,py+1,T-2,T-2); }
+    if(t===4){ ctx.fillStyle='#8f7b5d'; ctx.fillRect(px,py,T,T); ctx.fillStyle='#6f5d45'; ctx.fillRect(px,py+10,T,4); }
+  }
+
+  function draw(){
+    tick++;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++) drawTile(x,y,map[y][x]);
+
+    for(const f of friends){
+      if(f.found) continue;
+      const d=Math.abs(hero.x-f.x)+Math.abs(hero.y-f.y);
+      if(d<4){ ctx.fillStyle='rgba(255, 245, 120, .9)'; ctx.fillRect(f.x*T+8,f.y*T+2,4,4); }
+    }
+
+    const px=hero.x*T+10, py=hero.y*T+10;
+    ctx.fillStyle = hero.form==='otis' ? '#ffe26b' : hero.form==='bird' ? '#f3b7ff' : hero.form==='fish' ? '#97d8ff' : '#d6bf94';
+    ctx.beginPath(); ctx.arc(px,py,7,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#111'; ctx.fillRect(px-2,py-2,2,2); ctx.fillRect(px+1,py-2,2,2);
+
+    ctx.fillStyle='rgba(0,0,0,.45)'; ctx.fillRect(0,0,640,24);
+    ctx.fillStyle='#fff'; ctx.font='12px Verdana';
+    ctx.fillText('Arrows: Move  |  Space: Search  |  1-4: Transform',10,16);
+  }
+
+  window.addEventListener('keydown',(e)=>{
+    keys[e.key]=true;
+    if(['1','2','3','4'].includes(e.key)){ setForm(forms[+e.key-1]); }
+    if(e.key===' ') search();
+  });
+  window.addEventListener('keyup',(e)=>{ keys[e.key]=false; });
+
+  document.querySelectorAll('[data-form]').forEach(btn=>btn.addEventListener('click',()=>setForm(btn.dataset.form)));
+  document.getElementById('mobileForm').addEventListener('click',()=>{ const i=(forms.indexOf(hero.form)+1)%forms.length; setForm(forms[i]); });
+  document.querySelectorAll('#mobilePad [data-k]').forEach(btn=>btn.addEventListener('click',()=>{
+    const k=btn.dataset.k;
+    if(k==='ArrowUp') tryMove(0,-1);
+    if(k==='ArrowDown') tryMove(0,1);
+    if(k==='ArrowLeft') tryMove(-1,0);
+    if(k==='ArrowRight') tryMove(1,0);
+    if(k==='Space') search();
+  }));
+
+  let stepCd=0;
+  function loop(){
+    stepCd--;
+    if(stepCd<=0){
+      if(keys.ArrowUp) { tryMove(0,-1); stepCd=6; }
+      else if(keys.ArrowDown) { tryMove(0,1); stepCd=6; }
+      else if(keys.ArrowLeft) { tryMove(-1,0); stepCd=6; }
+      else if(keys.ArrowRight) { tryMove(1,0); stepCd=6; }
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  setLog('Tip: Milo is hidden beyond the cliff line. Poppy is near water and trees.');
+  loop();
+})();
+</script>
+</body>
+</html>

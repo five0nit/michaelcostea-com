@@ -125,6 +125,15 @@
       "primary": false
     },
     {
+      "name": "OTIS & HIS FRIENDS",
+      "slug": "otis-and-friends",
+      "status": "beta",
+      "description": "SNES-Zelda style hide-and-seek adventure where Otis transforms into animals to reach hidden friends. [Fun/experimental side app]",
+      "url": "./apps/games/otis-and-friends.html",
+      "category": "games",
+      "primary": false
+    },
+    {
       "name": "DO NOT TOUCH",
       "slug": "do-not-touch",
       "status": "beta",
