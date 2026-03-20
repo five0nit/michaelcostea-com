@@ -19,11 +19,6 @@
     .touchHud{position:fixed;left:12px;bottom:84px;z-index:5;display:none}
     .joyWrap{width:128px;height:128px;border-radius:50%;background:rgba(8,18,30,.6);border:2px solid #466787;position:relative;touch-action:none}
     .joyKnob{position:absolute;width:44px;height:44px;border-radius:50%;left:42px;top:42px;background:#b9d8f3;border:2px solid #45637d}
-    .builder{position:fixed;top:54px;right:10px;z-index:4;background:rgba(8,18,30,.86);border:1px solid #4a6c8a;color:#eaf4ff;border-radius:10px;padding:8px;min-width:210px}
-    .builder h4{margin:0 0 6px;font-size:12px;letter-spacing:.04em}
-    .builder label,.builder select{font-size:12px;display:block;margin:4px 0}
-    .builder .row{display:flex;gap:6px;flex-wrap:wrap}
-    .builder .mini{padding:6px 8px;font-size:11px}
   </style>
 </head>
 <body>
@@ -53,25 +48,9 @@
     </div>
   </div>
 
-  <div class="builder">
-    <h4>CHARACTER BUILDER</h4>
-    <label>Base model
-      <select id="modelPick">
-        <option value="astronaut">Astronaut</option>
-        <option value="robot">Robot</option>
-        <option value="cesium">Cesium Man</option>
-      </select>
-    </label>
-    <label><input type="checkbox" id="accGlasses" /> Funny glasses</label>
-    <label><input type="checkbox" id="accPropeller" /> Propeller cap</label>
-    <label><input type="checkbox" id="accNose" /> Clown nose</label>
-    <label><input type="checkbox" id="accDuck" /> Rubber duck buddy</label>
-    <div class="row"><button class="mini" id="applyBuild">Apply</button><button class="mini" id="randomBuild">Random</button></div>
-  </div>
 
 <script type="module">
 import * as THREE from 'https://esm.sh/three@0.164.1';
-import { GLTFLoader } from 'https://esm.sh/three@0.164.1/examples/jsm/loaders/GLTFLoader.js';
 
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
@@ -163,96 +142,56 @@ otisSignature.add(sigPatch,sigBrim,sigSwirl); avatarRoot.add(otisSignature);
 
 // High-detail transformed animal meshes
 const birdModel = new THREE.Group();
-const birdBody = new THREE.Mesh(new THREE.SphereGeometry(0.46,24,18), new THREE.MeshStandardMaterial({color:0xd8b5ff, roughness:0.45, metalness:0.05}));
-const birdWingL = new THREE.Mesh(new THREE.CapsuleGeometry(0.12,0.5,4,10), new THREE.MeshStandardMaterial({color:0xbe90f2, roughness:0.5})); birdWingL.position.set(-0.42,0.02,0);
+const birdBody = new THREE.Mesh(new THREE.SphereGeometry(0.46,28,22), new THREE.MeshStandardMaterial({color:0xd8b5ff, roughness:0.35, metalness:0.06}));
+const birdChest = new THREE.Mesh(new THREE.SphereGeometry(0.24,18,14), new THREE.MeshStandardMaterial({color:0xf5e9ff, roughness:0.4})); birdChest.position.set(0,-0.05,0.24);
+const birdWingL = new THREE.Mesh(new THREE.CapsuleGeometry(0.12,0.5,4,12), new THREE.MeshStandardMaterial({color:0xbe90f2, roughness:0.45})); birdWingL.position.set(-0.42,0.02,0.02);
 const birdWingR = birdWingL.clone(); birdWingR.position.x=0.42;
-const birdBeak = new THREE.Mesh(new THREE.ConeGeometry(0.11,0.35,10), new THREE.MeshStandardMaterial({color:0xffd66b, roughness:0.4})); birdBeak.rotation.x=Math.PI/2; birdBeak.position.set(0,0,0.48);
-birdModel.add(birdBody,birdWingL,birdWingR,birdBeak);
+const birdBeak = new THREE.Mesh(new THREE.ConeGeometry(0.11,0.35,12), new THREE.MeshStandardMaterial({color:0xffd66b, roughness:0.3, metalness:0.05})); birdBeak.rotation.x=Math.PI/2; birdBeak.position.set(0,0,0.5);
+const birdEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.035,10,10), new THREE.MeshStandardMaterial({color:0x111111})); birdEyeL.position.set(-0.13,0.12,0.36);
+const birdEyeR = birdEyeL.clone(); birdEyeR.position.x=0.13;
+const birdCapBand = new THREE.Mesh(new THREE.TorusGeometry(0.22,0.025,10,24), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.5})); birdCapBand.rotation.x=Math.PI/2; birdCapBand.position.set(0,0.28,0.02);
+birdModel.add(birdBody,birdChest,birdWingL,birdWingR,birdBeak,birdEyeL,birdEyeR,birdCapBand);
 
 const fishModel = new THREE.Group();
-const fishBody = new THREE.Mesh(new THREE.SphereGeometry(0.42,26,16), new THREE.MeshStandardMaterial({color:0x6fc8ff, roughness:0.35, metalness:0.08})); fishBody.scale.set(1.45,0.8,0.9);
-const fishTail = new THREE.Mesh(new THREE.ConeGeometry(0.18,0.4,10), new THREE.MeshStandardMaterial({color:0x48a7df, roughness:0.45})); fishTail.rotation.z=Math.PI/2; fishTail.position.set(-0.62,0,0);
-const fishFin = new THREE.Mesh(new THREE.ConeGeometry(0.09,0.2,8), new THREE.MeshStandardMaterial({color:0x9de3ff, roughness:0.3})); fishFin.position.set(0.06,0.24,0.05);
-fishModel.add(fishBody,fishTail,fishFin);
+const fishBody = new THREE.Mesh(new THREE.SphereGeometry(0.42,28,18), new THREE.MeshStandardMaterial({color:0x6fc8ff, roughness:0.28, metalness:0.12})); fishBody.scale.set(1.45,0.8,0.95);
+const fishTail = new THREE.Mesh(new THREE.ConeGeometry(0.18,0.42,12), new THREE.MeshStandardMaterial({color:0x48a7df, roughness:0.38})); fishTail.rotation.z=Math.PI/2; fishTail.position.set(-0.64,0,0);
+const fishFinTop = new THREE.Mesh(new THREE.ConeGeometry(0.08,0.22,10), new THREE.MeshStandardMaterial({color:0x9de3ff, roughness:0.25})); fishFinTop.position.set(0.06,0.24,0.05);
+const fishFinSide = new THREE.Mesh(new THREE.ConeGeometry(0.06,0.18,8), new THREE.MeshStandardMaterial({color:0x7fd1ff, roughness:0.3})); fishFinSide.rotation.z=0.8; fishFinSide.position.set(0.15,0.02,0.34);
+const fishEye = new THREE.Mesh(new THREE.SphereGeometry(0.035,10,10), new THREE.MeshStandardMaterial({color:0x111111})); fishEye.position.set(0.32,0.09,0.26);
+const fishStripe = new THREE.Mesh(new THREE.TorusGeometry(0.36,0.03,8,24), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.4})); fishStripe.rotation.y=Math.PI/2; fishStripe.position.set(0.03,0.02,0);
+fishModel.add(fishBody,fishTail,fishFinTop,fishFinSide,fishEye,fishStripe);
 
 const goatModel = new THREE.Group();
-const goatBody = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.62,0.52), new THREE.MeshStandardMaterial({color:0xd6bf94, roughness:0.7}));
-const goatHead = new THREE.Mesh(new THREE.BoxGeometry(0.42,0.34,0.34), new THREE.MeshStandardMaterial({color:0xe3cdab, roughness:0.66})); goatHead.position.set(0.52,0.2,0);
-const goatHornL = new THREE.Mesh(new THREE.ConeGeometry(0.05,0.2,8), new THREE.MeshStandardMaterial({color:0x826b43, roughness:0.7})); goatHornL.position.set(0.64,0.43,0.11); goatHornL.rotation.z=-0.5;
+const goatBody = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.62,0.52), new THREE.MeshStandardMaterial({color:0xd6bf94, roughness:0.68}));
+const goatChest = new THREE.Mesh(new THREE.BoxGeometry(0.38,0.4,0.24), new THREE.MeshStandardMaterial({color:0xe7d3b3, roughness:0.64})); goatChest.position.set(0.34,0.1,0);
+const goatHead = new THREE.Mesh(new THREE.BoxGeometry(0.44,0.36,0.34), new THREE.MeshStandardMaterial({color:0xe3cdab, roughness:0.64})); goatHead.position.set(0.55,0.2,0);
+const goatHornL = new THREE.Mesh(new THREE.ConeGeometry(0.05,0.2,10), new THREE.MeshStandardMaterial({color:0x826b43, roughness:0.72})); goatHornL.position.set(0.67,0.45,0.11); goatHornL.rotation.z=-0.5;
 const goatHornR = goatHornL.clone(); goatHornR.position.z=-0.11;
-goatModel.add(goatBody,goatHead,goatHornL,goatHornR);
+const goatBeard = new THREE.Mesh(new THREE.ConeGeometry(0.06,0.14,8), new THREE.MeshStandardMaterial({color:0xcab28a, roughness:0.75})); goatBeard.position.set(0.69,0.02,0); goatBeard.rotation.z=1.5;
+const goatEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.025,8,8), new THREE.MeshStandardMaterial({color:0x101010})); goatEyeL.position.set(0.68,0.23,0.1);
+const goatEyeR = goatEyeL.clone(); goatEyeR.position.z=-0.1;
+const goatBand = new THREE.Mesh(new THREE.TorusGeometry(0.19,0.02,8,20), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.5})); goatBand.rotation.y=Math.PI/2; goatBand.position.set(0.58,0.22,0);
+goatModel.add(goatBody,goatChest,goatHead,goatHornL,goatHornR,goatBeard,goatEyeL,goatEyeR,goatBand);
 
 animalRoot.add(birdModel,fishModel,goatModel);
 birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
 
-const loader = new GLTFLoader();
-const modelUrls={
-  astronaut:'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
-  robot:'https://modelviewer.dev/shared-assets/models/RobotExpressive.glb',
-  cesium:'https://modelviewer.dev/shared-assets/models/CesiumMan.glb'
-};
-let activeModel=null;
-const accessories = new THREE.Group(); avatarRoot.add(accessories);
-
-function clearAccessories(){
-  while(accessories.children.length){
-    const c=accessories.children.pop();
-    if(c.geometry) c.geometry.dispose?.();
-    if(c.material) c.material.dispose?.();
-    accessories.remove(c);
-  }
-}
-function addAccessoryGlasses(){
-  const frame=new THREE.Mesh(new THREE.TorusGeometry(0.18,0.03,10,24), new THREE.MeshStandardMaterial({color:0x111111, roughness:0.4}));
-  frame.position.set(-0.16,1.2,0.38);
-  const frame2=frame.clone(); frame2.position.x=0.16;
-  const bridge=new THREE.Mesh(new THREE.BoxGeometry(0.14,0.03,0.03), new THREE.MeshStandardMaterial({color:0x111111})); bridge.position.set(0,1.2,0.38);
-  accessories.add(frame,frame2,bridge);
-}
-function addAccessoryPropeller(){
-  const cap=new THREE.Mesh(new THREE.SphereGeometry(0.22,14,10), new THREE.MeshStandardMaterial({color:0xff6b7f, roughness:0.6})); cap.position.set(0,1.65,0);
-  const stick=new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.015,0.22), new THREE.MeshStandardMaterial({color:0xdddddd})); stick.position.set(0,1.83,0);
-  const blade=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.02,0.08), new THREE.MeshStandardMaterial({color:0x7ad0ff})); blade.position.set(0,1.95,0);
-  accessories.add(cap,stick,blade);
-}
-function addAccessoryNose(){
-  const nose=new THREE.Mesh(new THREE.SphereGeometry(0.08,12,12), new THREE.MeshStandardMaterial({color:0xff2f3b, roughness:0.35})); nose.position.set(0,1.14,0.44); accessories.add(nose);
-}
-function addAccessoryDuck(){
-  const duck=new THREE.Mesh(new THREE.SphereGeometry(0.13,12,10), new THREE.MeshStandardMaterial({color:0xffd34d, roughness:0.6})); duck.position.set(0.55,0.45,0.2);
-  const beak=new THREE.Mesh(new THREE.BoxGeometry(0.09,0.04,0.06), new THREE.MeshStandardMaterial({color:0xff8f36})); beak.position.set(0.63,0.44,0.2);
-  accessories.add(duck,beak);
-}
-
-function applyAccessories(){
-  clearAccessories();
-  if(document.getElementById('accGlasses').checked) addAccessoryGlasses();
-  if(document.getElementById('accPropeller').checked) addAccessoryPropeller();
-  if(document.getElementById('accNose').checked) addAccessoryNose();
-  if(document.getElementById('accDuck').checked) addAccessoryDuck();
-}
-
-function disposeObject3D(obj){
-  obj.traverse((n)=>{ if(n.geometry) n.geometry.dispose?.(); if(n.material){ if(Array.isArray(n.material)) n.material.forEach(m=>m.dispose?.()); else n.material.dispose?.(); }});
-}
-
-function loadAvatarModel(kind='astronaut'){
-  const url=modelUrls[kind]||modelUrls.astronaut;
-  loader.load(url,(gltf)=>{
-    if(activeModel){ avatarRoot.remove(activeModel); disposeObject3D(activeModel); activeModel=null; }
-    activeModel=gltf.scene;
-    activeModel.scale.setScalar(kind==='robot'?0.32:0.75);
-    activeModel.position.set(0,0,0);
-    activeModel.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; }});
-    // remove fallback primitives when real asset is present
-    fallbackBody.visible=false; fallbackHead.visible=false; fallbackHat.visible=false;
-    avatarRoot.add(activeModel);
-    applyAccessories();
-  }, undefined, ()=>{
-    // fallback stays visible on error
-    fallbackBody.visible=true; fallbackHead.visible=true; fallbackHat.visible=true;
-  });
-}
+// Upgraded in-scene Otis model (reference-matching style)
+const otisTorso = new THREE.Mesh(new THREE.BoxGeometry(0.95,1.15,0.6), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.58, metalness:0.05}));
+otisTorso.position.y=0.64;
+const otisHead = new THREE.Mesh(new THREE.BoxGeometry(0.75,0.75,0.7), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.64}));
+otisHead.position.y=1.45;
+const otisHatTop = new THREE.Mesh(new THREE.BoxGeometry(0.85,0.2,0.75), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.45}));
+otisHatTop.position.y=1.88;
+const otisHatBrim = new THREE.Mesh(new THREE.BoxGeometry(1.05,0.07,0.92), new THREE.MeshStandardMaterial({color:0xbf3c50, roughness:0.5}));
+otisHatBrim.position.y=1.77;
+const otisLegL = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.55,0.22), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.65}));
+otisLegL.position.set(-0.2,0.12,0);
+const otisLegR = otisLegL.clone(); otisLegR.position.x=0.2;
+const otisArmL = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.58,0.16), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.68}));
+otisArmL.position.set(-0.56,0.78,0);
+const otisArmR = otisArmL.clone(); otisArmR.position.x=0.56;
+avatarRoot.add(otisTorso,otisHead,otisHatTop,otisHatBrim,otisLegL,otisLegR,otisArmL,otisArmR);
 
 const friendGeom = new THREE.SphereGeometry(0.45, 12, 10);
 const milo = new THREE.Mesh(friendGeom, new THREE.MeshStandardMaterial({color:0xffc2ca, roughness:0.7}));
@@ -299,7 +238,6 @@ function setForm(f){
   fallbackHat.visible=f==='otis';
 }
 setForm('otis');
-loadAvatarModel('astronaut');
 
 function canStep(nx,ny){
   const t=map[ny]?.[nx]; if(t==null) return false;
@@ -341,13 +279,6 @@ function search(){
 
 ['f1','f2','f3','f4'].forEach((id,i)=>document.getElementById(id).onclick=()=>setForm(forms[i]));
 document.getElementById('search').onclick=search;
-document.getElementById('applyBuild').onclick=()=>{ loadAvatarModel(document.getElementById('modelPick').value); applyAccessories(); };
-document.getElementById('randomBuild').onclick=()=>{
-  const models=['astronaut','robot','cesium'];
-  document.getElementById('modelPick').value=models[Math.floor(Math.random()*models.length)];
-  ['accGlasses','accPropeller','accNose','accDuck'].forEach(id=>{ document.getElementById(id).checked=Math.random()>0.5; });
-  loadAvatarModel(document.getElementById('modelPick').value); applyAccessories();
-};
 
 function onTilt(e){
   tiltState.gamma = e.gamma || 0; // left/right
