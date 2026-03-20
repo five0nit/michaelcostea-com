@@ -534,6 +534,7 @@ function themeIconKey(btn){
   if(label.includes('doom')) return 'doom';
   if(label.includes('hacker.exe')) return 'hackerexe';
   if(label.includes('do not touch')) return 'donottouch';
+  if(label.includes('otis')) return 'otis';
   if(label.includes('minesweeper')) return 'minesweeper';
   if(label.includes('solitaire')) return 'solitaire';
   if(label.includes('sky slope') || label.includes('ski')) return 'skifree';
@@ -542,7 +543,7 @@ function themeIconKey(btn){
 
 function themedIconDataUrl(theme,key){
   const appGlyphs = {
-    readme:'📘', settings:'🛠️', planner:'🗓️', cards:'🪪', ozquotes:'💡', paint:'🎨', text:'📝', chat:'💬', programs:'🗂️', recycle:'🗑️', ifexe:'⚙️', doom:'👹', hackerexe:'👾', donottouch:'🐇', minesweeper:'💣', solitaire:'🃏', skifree:'⛷️'
+    readme:'📘', settings:'🛠️', planner:'🗓️', cards:'🪪', ozquotes:'💡', paint:'🎨', text:'📝', chat:'💬', programs:'🗂️', recycle:'🗑️', ifexe:'⚙️', doom:'👹', hackerexe:'👾', donottouch:'🐇', otis:'🧢', minesweeper:'💣', solitaire:'🃏', skifree:'⛷️'
   };
   const themeGlyphs = { matrix:'🕶️', tmnt:'🐢', element:'🛸', hacker:'💻', catdog:'🐾', spiderman:'🕷️', mario:'🍄' };
   const palettes = {

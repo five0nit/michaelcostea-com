@@ -8,11 +8,11 @@
     :root{--panel:#1a2530;--line:#365063;--text:#eaf4ff;--accent:#ffe26b}
     *{box-sizing:border-box}
     body{margin:0;background:radial-gradient(circle at top,#1d2c3a,#0b1116 65%);color:var(--text);font-family:Verdana,Arial,sans-serif}
-    .wrap{max-width:1040px;margin:0 auto;padding:14px}
+    .wrap{max-width:1080px;margin:0 auto;padding:14px}
     .hud{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px}
     .title{font-weight:800;letter-spacing:.06em}
     .badge{font-size:12px;padding:3px 8px;border:1px solid #5f7a90;border-radius:999px;background:#14202a}
-    .game{display:grid;grid-template-columns:1fr 250px;gap:10px}
+    .game{display:grid;grid-template-columns:1fr 270px;gap:10px}
     canvas{width:100%;image-rendering:pixelated;background:#0c1419;border:2px solid var(--line);border-radius:10px}
     .side{background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:10px}
     .small{font-size:12px;color:#c4d8ea;line-height:1.45}
@@ -26,6 +26,8 @@
     .overlay.show{display:flex}
     .card{max-width:640px;width:100%;background:#1a2530;border:2px solid #527190;border-radius:14px;padding:16px}
     .card h2{margin:0 0 8px}.card p{margin:8px 0;color:#d9ecff}
+    .rowBtns{display:flex;gap:8px;flex-wrap:wrap}
+    #miniMap{width:100%;height:auto;margin-top:8px;border:1px solid #4f6b80;border-radius:8px;background:#071018;image-rendering:pixelated}
     @media (max-width: 900px){.game{grid-template-columns:1fr}.mobile{display:grid}}
   </style>
 </head>
@@ -58,6 +60,7 @@
           <button data-form="goat">4 · Goat</button>
         </div>
         <p class="small" style="margin-top:8px"><b>Bird</b>: gap flight · <b>Fish</b>: swim water · <b>Goat</b>: climb cliffs</p>
+        <canvas id="miniMap" width="240" height="170" aria-label="Mini map with fog of war"></canvas>
         <div class="log" id="log">Press START ADVENTURE to begin.</div>
       </aside>
     </div>
@@ -68,7 +71,10 @@
       <h2>🌟 Otis & His Friends</h2>
       <p>Milo and Poppy hid somewhere across the valley. Otis must transform and search every corner.</p>
       <p><b>Controls:</b> Arrows move · Space search · 1-4 transform</p>
-      <button id="startAdventure">Start Adventure</button>
+      <div class="rowBtns">
+        <button id="startAdventure">Start Adventure</button>
+        <button id="continueAdventure" style="display:none">Continue from Checkpoint</button>
+      </div>
     </div>
   </div>
 
@@ -83,8 +89,11 @@
 
 <script>
 (() => {
+  const SAVE_KEY='otis_and_friends_save_v1';
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
+  const mini = document.getElementById('miniMap');
+  const mctx = mini.getContext('2d');
   const W=42,H=30,T=24;
   const forms=['otis','bird','fish','goat'];
   const formName={otis:'Otis',bird:'Bird',fish:'Fish',goat:'Goat'};
@@ -104,6 +113,7 @@
     {name:'Milo',x:36,y:8,found:false,hint:'You hear giggles from the high cliffs...'},
     {name:'Poppy',x:10,y:24,found:false,hint:'A splashy clue came from near the river forest...'}
   ];
+  const discovered = new Set();
   const camera={x:0,y:0};
   const keys={};
   let tick=0, playing=false;
@@ -113,6 +123,7 @@
   const formBadge=document.getElementById('formBadge');
   const introOverlay=document.getElementById('introOverlay');
   const winOverlay=document.getElementById('winOverlay');
+  const continueBtn=document.getElementById('continueAdventure');
 
   const audio={ctx:null};
   function beep(freq=440,dur=0.08,type='square',vol=0.03){
@@ -121,7 +132,34 @@
   const sfx=(k)=>{ if(k==='step') beep(220+Math.random()*20,0.04,'square',0.018); if(k==='search'){beep(330,0.08,'triangle'); setTimeout(()=>beep(420,0.09,'triangle'),60)} if(k==='found'){beep(520,0.1); setTimeout(()=>beep(660,0.12),70)} if(k==='win'){beep(520,0.12);setTimeout(()=>beep(660,0.12),80);setTimeout(()=>beep(780,0.2),160)} };
 
   const setLog=t=>log.textContent=t;
-  function setForm(form){ hero.form=form; formBadge.textContent='Form: '+formName[form]; document.querySelectorAll('[data-form]').forEach(b=>b.classList.toggle('active',b.dataset.form===form)); }
+  function markDiscovered(x,y){ for(let yy=y-2;yy<=y+2;yy++) for(let xx=x-2;xx<=x+2;xx++) if(xx>=0&&yy>=0&&xx<W&&yy<H) discovered.add(`${xx},${yy}`); }
+
+  function saveCheckpoint(){
+    const payload={
+      hero:{x:hero.x,y:hero.y,form:hero.form,dir:hero.dir},
+      friends:friends.map(f=>({name:f.name,found:f.found})),
+      discovered:[...discovered]
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
+  }
+
+  function loadCheckpoint(){
+    try{
+      const raw=localStorage.getItem(SAVE_KEY); if(!raw) return false;
+      const p=JSON.parse(raw);
+      hero.x=p.hero?.x??4; hero.y=p.hero?.y??4; hero.form=p.hero?.form??'otis'; hero.dir=p.hero?.dir??'down';
+      for(const f of friends){ const s=(p.friends||[]).find(x=>x.name===f.name); if(s) f.found=!!s.found; }
+      discovered.clear(); (p.discovered||[]).forEach(k=>discovered.add(k));
+      setForm(hero.form);
+      const n=friends.filter(f=>f.found).length; foundBadge.textContent=`Friends Found: ${n} / 2`;
+      setLog('Checkpoint loaded. Keep searching!');
+      return true;
+    }catch{return false}
+  }
+
+  function clearCheckpoint(){ localStorage.removeItem(SAVE_KEY); }
+
+  function setForm(form){ hero.form=form; formBadge.textContent='Form: '+formName[form]; document.querySelectorAll('[data-form]').forEach(b=>b.classList.toggle('active',b.dataset.form===form)); saveCheckpoint(); }
 
   function canStep(nx,ny){
     const t=map[ny]?.[nx]; if(t==null) return false;
@@ -136,7 +174,7 @@
     if(!playing) return;
     hero.dir=dir;
     const nx=hero.x+dx, ny=hero.y+dy;
-    if(canStep(nx,ny)){ hero.x=nx; hero.y=ny; hero.moving=true; hero.step=(hero.step+1)%2; sfx('step'); }
+    if(canStep(nx,ny)){ hero.x=nx; hero.y=ny; hero.moving=true; hero.step=(hero.step+1)%2; sfx('step'); markDiscovered(hero.x,hero.y); saveCheckpoint(); }
     else hero.moving=false;
   }
 
@@ -149,7 +187,8 @@
     }
     const n=friends.filter(f=>f.found).length;
     foundBadge.textContent=`Friends Found: ${n} / 2`;
-    if(n===2){ sfx('win'); document.getElementById('winStory').textContent='Milo and Poppy pop out and cheer for Otis!'; winOverlay.classList.add('show'); playing=false; return; }
+    saveCheckpoint();
+    if(n===2){ sfx('win'); document.getElementById('winStory').textContent='Milo and Poppy pop out and cheer for Otis!'; winOverlay.classList.add('show'); playing=false; clearCheckpoint(); return; }
     if(!foundAny){ const hidden=friends.find(f=>!f.found); setLog(hidden?hidden.hint:'All friends found!'); }
   }
 
@@ -171,34 +210,19 @@
     ctx.fillStyle='#fff'; ctx.fillRect(px+11,py+13+bob,2,1);
   }
 
-  // Pixel-sheet feel: 2-frame walk, directional pose offsets
   function drawOtis(px,py){
     const bob = hero.moving ? (hero.step?1:-1) : 0;
     const arm = hero.moving ? (hero.step?1:-1) : 0;
     const dir = hero.dir;
-
-    ctx.fillStyle='#f2d8b8'; ctx.fillRect(px+6,py+4+bob,12,10);     // head
-    ctx.fillStyle='#d74d5f'; ctx.fillRect(px+5,py+1+bob,14,4);      // hat top
-    ctx.fillRect(px+18,py+3+bob,5,3);                               // hat side
+    ctx.fillStyle='#f2d8b8'; ctx.fillRect(px+6,py+4+bob,12,10);
+    ctx.fillStyle='#d74d5f'; ctx.fillRect(px+5,py+1+bob,14,4); ctx.fillRect(px+18,py+3+bob,5,3);
     ctx.strokeStyle='#f7cad0'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(px+12,py+3+bob,2.1,0,Math.PI*1.9); ctx.stroke();
-    ctx.fillStyle='#1e1518'; ctx.fillRect(px+8,py+7+bob,2,2);       // left eye
-    ctx.fillStyle='#7a1f28'; ctx.fillRect(px+13,py+6+bob,3,3);      // patch
-    ctx.strokeStyle='#9f2b36'; ctx.beginPath(); ctx.moveTo(px+12,py+5+bob); ctx.lineTo(px+16,py+7+bob); ctx.stroke();
-    ctx.fillStyle='#fff'; ctx.fillRect(px+10,py+10+bob,4,2);        // mouth
-    ctx.strokeStyle='#b34a4f'; ctx.strokeRect(px+10,py+10+bob,4,2);
-
-    // torso + direction details
-    ctx.fillStyle='#b24c57'; ctx.fillRect(px+8,py+14+bob,8,8);
-    if(dir==='left') ctx.fillRect(px+7,py+16+bob,2,2);
-    if(dir==='right') ctx.fillRect(px+15,py+16+bob,2,2);
-
-    ctx.fillStyle='#f2d8b8';
-    ctx.fillRect(px+6-arm,py+14+bob,1,7);
-    ctx.fillRect(px+16+arm,py+14+bob,1,7);
-
-    ctx.fillStyle='#9e3944';
-    ctx.fillRect(px+9,py+22+(hero.step?0:1),2,5);
-    ctx.fillRect(px+13,py+22+(hero.step?1:0),2,5);
+    ctx.fillStyle='#1e1518'; ctx.fillRect(px+8,py+7+bob,2,2);
+    ctx.fillStyle='#7a1f28'; ctx.fillRect(px+13,py+6+bob,3,3); ctx.strokeStyle='#9f2b36'; ctx.beginPath(); ctx.moveTo(px+12,py+5+bob); ctx.lineTo(px+16,py+7+bob); ctx.stroke();
+    ctx.fillStyle='#fff'; ctx.fillRect(px+10,py+10+bob,4,2); ctx.strokeStyle='#b34a4f'; ctx.strokeRect(px+10,py+10+bob,4,2);
+    ctx.fillStyle='#b24c57'; ctx.fillRect(px+8,py+14+bob,8,8); if(dir==='left') ctx.fillRect(px+7,py+16+bob,2,2); if(dir==='right') ctx.fillRect(px+15,py+16+bob,2,2);
+    ctx.fillStyle='#f2d8b8'; ctx.fillRect(px+6-arm,py+14+bob,1,7); ctx.fillRect(px+16+arm,py+14+bob,1,7);
+    ctx.fillStyle='#9e3944'; ctx.fillRect(px+9,py+22+(hero.step?0:1),2,5); ctx.fillRect(px+13,py+22+(hero.step?1:0),2,5);
   }
 
   function drawFormSprite(px,py){
@@ -213,6 +237,21 @@
     camera.y = hero.y*T - canvas.height/2 + T/2;
     camera.x = Math.max(0, Math.min(camera.x, W*T - canvas.width));
     camera.y = Math.max(0, Math.min(camera.y, H*T - canvas.height));
+  }
+
+  function drawMiniMap(){
+    const sx = mini.width / W, sy = mini.height / H;
+    mctx.clearRect(0,0,mini.width,mini.height);
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+      const k=`${x},${y}`;
+      if(!discovered.has(k)){ mctx.fillStyle='#04080d'; mctx.fillRect(x*sx,y*sy,sx+1,sy+1); continue; }
+      const t=map[y][x];
+      mctx.fillStyle = t===0?'#4c8d4a':t===1?'#2f5f2a':t===2?'#2f77b8':t===3?'#0f1820':'#8f7b5d';
+      mctx.fillRect(x*sx,y*sy,sx+1,sy+1);
+    }
+    for(const f of friends){ if(!f.found && discovered.has(`${f.x},${f.y}`)){ mctx.fillStyle='#ffe873'; mctx.fillRect(f.x*sx,f.y*sy,Math.max(2,sx),Math.max(2,sy)); } }
+    mctx.fillStyle='#ff6c7c'; mctx.fillRect(hero.x*sx,hero.y*sy,Math.max(2,sx),Math.max(2,sy));
+    mctx.strokeStyle='rgba(255,255,255,.25)'; mctx.strokeRect(0,0,mini.width,mini.height);
   }
 
   function draw(){
@@ -234,6 +273,7 @@
 
     ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(0,0,canvas.width,24);
     ctx.fillStyle='#fff';ctx.font='12px Verdana';ctx.fillText('Arrows: Move  |  Space: Search  |  1-4: Transform',10,16);
+    drawMiniMap();
   }
 
   window.addEventListener('keydown',(e)=>{
@@ -250,8 +290,11 @@
     if(k==='ArrowUp') tryMove(0,-1,'up'); if(k==='ArrowDown') tryMove(0,1,'down'); if(k==='ArrowLeft') tryMove(-1,0,'left'); if(k==='ArrowRight') tryMove(1,0,'right'); if(k==='Space') search();
   }));
 
-  document.getElementById('startAdventure').addEventListener('click',()=>{introOverlay.classList.remove('show'); playing=true; setLog('Adventure started. Milo is near cliffs. Poppy is near river trees.'); beep(360,0.09,'triangle');});
-  document.getElementById('playAgain').addEventListener('click',()=>location.reload());
+  document.getElementById('startAdventure').addEventListener('click',()=>{introOverlay.classList.remove('show'); playing=true; markDiscovered(hero.x,hero.y); setLog('Adventure started. Milo is near cliffs. Poppy is near river trees.'); beep(360,0.09,'triangle'); saveCheckpoint();});
+  continueBtn.addEventListener('click',()=>{if(loadCheckpoint()){introOverlay.classList.remove('show'); playing=true; beep(360,0.09,'triangle');}});
+  document.getElementById('playAgain').addEventListener('click',()=>{clearCheckpoint(); location.reload();});
+
+  if(localStorage.getItem(SAVE_KEY)) continueBtn.style.display='inline-block';
 
   let stepCd=0;
   function loop(){
