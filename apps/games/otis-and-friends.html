@@ -7,7 +7,7 @@
   <style>
     :root{--bg:#10171d;--panel:#1a2530;--line:#365063;--text:#eaf4ff;--accent:#ffe26b}
     *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#1d2c3a,#0b1116 65%);color:var(--text);font-family:Verdana,Arial,sans-serif}
-    .wrap{max-width:980px;margin:0 auto;padding:14px}
+    .wrap{max-width:1040px;margin:0 auto;padding:14px}
     .hud{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px}
     .title{font-weight:800;letter-spacing:.06em}
     .badge{font-size:12px;padding:3px 8px;border:1px solid #5f7a90;border-radius:999px;background:#14202a}
@@ -21,6 +21,11 @@
     .mobile{display:none;gap:8px;grid-template-columns:repeat(3,54px);justify-content:center;margin-top:8px}
     .mobile button{height:54px}
     .log{margin-top:8px;padding:8px;min-height:62px;background:#101920;border:1px solid #3a5568;border-radius:8px;font-size:12px}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:9;padding:18px}
+    .overlay.show{display:flex}
+    .card{max-width:600px;width:100%;background:#1a2530;border:2px solid #527190;border-radius:14px;padding:16px}
+    .card h2{margin:0 0 8px}.card p{margin:8px 0;color:#d9ecff}
+    .card button{margin-top:8px}
     @media (max-width: 900px){.game{grid-template-columns:1fr}.mobile{display:grid}}
   </style>
 </head>
@@ -36,7 +41,7 @@
 
     <div class="game">
       <div>
-        <canvas id="game" width="640" height="448" aria-label="Otis and his Friends game"></canvas>
+        <canvas id="game" width="768" height="512" aria-label="Otis and his Friends game"></canvas>
         <div class="mobile" id="mobilePad">
           <button data-k="ArrowUp">▲</button><button data-k="ArrowLeft">◀</button><button data-k="ArrowRight">▶</button>
           <button data-k="ArrowDown">▼</button><button data-k="Space">SEARCH</button><button id="mobileForm">FORM</button>
@@ -62,36 +67,68 @@
     </div>
   </div>
 
+  <div class="overlay" id="winOverlay" aria-live="polite">
+    <div class="card">
+      <h2>🎉 Otis Found Everyone!</h2>
+      <p id="winStory">Milo and Poppy jump out laughing — hide and seek champion unlocked.</p>
+      <p><b>Cutscene:</b> Otis raises his hat, the swirl glows, and all three friends run back to town together.</p>
+      <button id="playAgain">Play Again</button>
+    </div>
+  </div>
+
 <script>
 (() => {
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
-  const W=32,H=22,T=20;
+  const W=42,H=30,T=24;
   const forms=['otis','bird','fish','goat'];
   const formName={otis:'Otis',bird:'Bird',fish:'Fish',goat:'Goat'};
 
   // 0 grass,1 tree block,2 water,3 gap/drop,4 cliff
   const map = Array.from({length:H},()=>Array(W).fill(0));
   for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(x===0||y===0||x===W-1||y===H-1) map[y][x]=1;
-  for(let x=2;x<12;x++) map[6][x]=2;
-  for(let y=6;y<15;y++) map[y][11]=2;
-  for(let x=14;x<29;x++) map[11][x]=3;
-  for(let x=18;x<30;x++) map[4][x]=4;
-  for(let y=4;y<11;y++) map[y][18]=4;
-  for(let y=14;y<20;y++) for(let x=4;x<10;x++) if((x+y)%2===0) map[y][x]=1;
-  for(let y=2;y<9;y++) for(let x=23;x<29;x++) if((x+y)%3===0) map[y][x]=1;
+  for(let x=2;x<18;x++) map[8][x]=2;
+  for(let y=8;y<22;y++) map[y][17]=2;
+  for(let x=20;x<40;x++) map[15][x]=3;
+  for(let x=24;x<41;x++) map[5][x]=4;
+  for(let y=5;y<15;y++) map[y][24]=4;
+  for(let y=20;y<28;y++) for(let x=5;x<14;x++) if((x+y)%2===0) map[y][x]=1;
+  for(let y=3;y<11;y++) for(let x=31;x<40;x++) if((x+y)%3===0) map[y][x]=1;
 
-  const hero={x:3,y:3,form:'otis'};
+  const hero={x:4,y:4,form:'otis'};
   const friends=[
-    {name:'Milo',x:27,y:7,found:false,hint:'You hear giggles from up high...'},
-    {name:'Poppy',x:8,y:17,found:false,hint:'A splashy clue came from the lower woods...'}
+    {name:'Milo',x:36,y:8,found:false,hint:'You hear giggles from the high cliffs...'},
+    {name:'Poppy',x:10,y:24,found:false,hint:'A splashy clue came from near the river forest...'}
   ];
 
+  const camera={x:0,y:0};
   const keys={};
   let tick=0;
   const log=document.getElementById('log');
   const foundBadge=document.getElementById('foundBadge');
   const formBadge=document.getElementById('formBadge');
+  const winOverlay=document.getElementById('winOverlay');
+
+  const audio = {ctx:null};
+  function beep(freq=440,dur=0.08,type='square',vol=0.035){
+    try{
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audio.ctx = audio.ctx || new AC();
+      const o = audio.ctx.createOscillator();
+      const g = audio.ctx.createGain();
+      o.type=type; o.frequency.value=freq;
+      g.gain.setValueAtTime(0.0001,audio.ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(vol,audio.ctx.currentTime+0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001,audio.ctx.currentTime+dur);
+      o.connect(g); g.connect(audio.ctx.destination); o.start(); o.stop(audio.ctx.currentTime+dur+0.01);
+    }catch{}
+  }
+  function sfx(kind){
+    if(kind==='step') beep(220+Math.random()*20,0.04,'square',0.02);
+    if(kind==='search') {beep(330,0.08,'triangle'); setTimeout(()=>beep(420,0.09,'triangle'),60);}
+    if(kind==='found') {beep(520,0.1,'square'); setTimeout(()=>beep(660,0.12,'square'),70);}
+    if(kind==='win') {beep(520,0.12); setTimeout(()=>beep(660,0.12),70); setTimeout(()=>beep(780,0.2),140);}
+  }
 
   function setLog(t){ log.textContent=t; }
   function setForm(form){ hero.form=form; formBadge.textContent='Form: '+formName[form]; document.querySelectorAll('[data-form]').forEach(b=>b.classList.toggle('active',b.dataset.form===form)); }
@@ -107,50 +144,100 @@
 
   function tryMove(dx,dy){
     const nx=hero.x+dx, ny=hero.y+dy;
-    if(canStep(nx,ny)){ hero.x=nx; hero.y=ny; }
+    if(canStep(nx,ny)){ hero.x=nx; hero.y=ny; sfx('step'); }
   }
 
   function search(){
     let foundAny=false;
+    sfx('search');
     for(const f of friends){
       if(!f.found && Math.abs(f.x-hero.x)+Math.abs(f.y-hero.y)<=1){
-        f.found=true; foundAny=true; setLog(`You found ${f.name}! 🎉`);
+        f.found=true; foundAny=true; sfx('found'); setLog(`You found ${f.name}! 🎉`);
       }
     }
     const n=friends.filter(f=>f.found).length;
     foundBadge.textContent=`Friends Found: ${n} / 2`;
+    if(n===2){
+      sfx('win');
+      document.getElementById('winStory').textContent='Milo and Poppy jump out from their hiding spots and cheer for Otis!';
+      winOverlay.classList.add('show');
+      return;
+    }
     if(!foundAny){
       const hidden=friends.find(f=>!f.found);
-      setLog(hidden?hidden.hint:'All friends found! Return to town as the hero of hide-and-seek!');
+      setLog(hidden?hidden.hint:'All friends found!');
     }
   }
 
   function drawTile(x,y,t){
-    const px=x*T, py=y*T;
+    const px=x*T-camera.x, py=y*T-camera.y;
+    if(px<-T||py<-T||px>canvas.width||py>canvas.height) return;
     if(t===0){ ctx.fillStyle='#4c8d4a'; ctx.fillRect(px,py,T,T); ctx.fillStyle='rgba(255,255,255,.08)'; if((x+y)%2===0) ctx.fillRect(px,py,2,2); }
-    if(t===1){ ctx.fillStyle='#2f5f2a'; ctx.fillRect(px,py,T,T); ctx.fillStyle='#20431f'; ctx.fillRect(px+4,py+4,12,12); }
+    if(t===1){ ctx.fillStyle='#2f5f2a'; ctx.fillRect(px,py,T,T); ctx.fillStyle='#20431f'; ctx.fillRect(px+4,py+4,14,14); }
     if(t===2){ ctx.fillStyle='#2f77b8'; ctx.fillRect(px,py,T,T); ctx.fillStyle='rgba(255,255,255,.16)'; ctx.fillRect(px,py+((tick+x+y)%T),T,2); }
     if(t===3){ ctx.fillStyle='#0f1820'; ctx.fillRect(px,py,T,T); ctx.strokeStyle='#243846'; ctx.strokeRect(px+1,py+1,T-2,T-2); }
-    if(t===4){ ctx.fillStyle='#8f7b5d'; ctx.fillRect(px,py,T,T); ctx.fillStyle='#6f5d45'; ctx.fillRect(px,py+10,T,4); }
+    if(t===4){ ctx.fillStyle='#8f7b5d'; ctx.fillRect(px,py,T,T); ctx.fillStyle='#6f5d45'; ctx.fillRect(px,py+12,T,4); }
+  }
+
+  // Integrated based on your drawing: square head/body, hat brim + swirl, one darker eye patch, open mouth
+  function drawOtis(px,py){
+    ctx.fillStyle='#f2d8b8'; ctx.fillRect(px+6,py+4,12,10); // head
+    ctx.fillStyle='#d74d5f'; ctx.fillRect(px+5,py+1,14,4);  // hat top
+    ctx.fillRect(px+18,py+3,5,3);                           // hat side
+    ctx.strokeStyle='#f7cad0'; ctx.lineWidth=1;             // swirl logo
+    ctx.beginPath(); ctx.arc(px+12,py+3,2.1,0,Math.PI*1.9); ctx.stroke();
+    ctx.fillStyle='#1e1518'; ctx.fillRect(px+8,py+7,2,2);   // left eye
+    ctx.fillStyle='#7a1f28'; ctx.fillRect(px+13,py+6,3,3);  // eye patch
+    ctx.strokeStyle='#9f2b36'; ctx.beginPath(); ctx.moveTo(px+12,py+5); ctx.lineTo(px+16,py+7); ctx.stroke();
+    ctx.fillStyle='#ffffff'; ctx.fillRect(px+10,py+10,4,2); // mouth
+    ctx.strokeStyle='#b34a4f'; ctx.strokeRect(px+10,py+10,4,2);
+    ctx.fillStyle='#b24c57'; ctx.fillRect(px+8,py+14,8,8);  // torso
+    ctx.fillStyle='#f2d8b8';                                 // arms
+    ctx.fillRect(px+6,py+14,1,7); ctx.fillRect(px+16,py+14,1,7);
+    ctx.fillStyle='#9e3944';                                 // legs
+    ctx.fillRect(px+9,py+22,2,5); ctx.fillRect(px+13,py+22,2,5);
+  }
+
+  function drawHero(px,py){
+    if(hero.form==='otis') return drawOtis(px,py);
+    if(hero.form==='bird'){
+      ctx.fillStyle='#f3b7ff'; ctx.fillRect(px+8,py+8,8,7); ctx.fillRect(px+6,py+10,3,3); ctx.fillRect(px+16,py+10,3,3);
+      ctx.fillStyle='#f9f1a5'; ctx.fillRect(px+16,py+11,3,2); // beak
+    }
+    if(hero.form==='fish'){
+      ctx.fillStyle='#97d8ff'; ctx.fillRect(px+7,py+10,10,6); ctx.fillRect(px+17,py+11,3,4); ctx.fillStyle='#fff'; ctx.fillRect(px+9,py+12,1,1);
+    }
+    if(hero.form==='goat'){
+      ctx.fillStyle='#d6bf94'; ctx.fillRect(px+7,py+8,10,10); ctx.fillStyle='#7f6a42'; ctx.fillRect(px+8,py+6,2,2); ctx.fillRect(px+14,py+6,2,2);
+    }
+  }
+
+  function updateCamera(){
+    camera.x = hero.x*T - canvas.width/2 + T/2;
+    camera.y = hero.y*T - canvas.height/2 + T/2;
+    camera.x = Math.max(0, Math.min(camera.x, W*T - canvas.width));
+    camera.y = Math.max(0, Math.min(camera.y, H*T - canvas.height));
   }
 
   function draw(){
     tick++;
+    updateCamera();
     ctx.clearRect(0,0,canvas.width,canvas.height);
     for(let y=0;y<H;y++) for(let x=0;x<W;x++) drawTile(x,y,map[y][x]);
 
     for(const f of friends){
       if(f.found) continue;
       const d=Math.abs(hero.x-f.x)+Math.abs(hero.y-f.y);
-      if(d<4){ ctx.fillStyle='rgba(255, 245, 120, .9)'; ctx.fillRect(f.x*T+8,f.y*T+2,4,4); }
+      if(d<4){
+        const fx=f.x*T-camera.x, fy=f.y*T-camera.y;
+        ctx.fillStyle='rgba(255,245,120,.95)'; ctx.fillRect(fx+10,fy+2,4,4);
+      }
     }
 
-    const px=hero.x*T+10, py=hero.y*T+10;
-    ctx.fillStyle = hero.form==='otis' ? '#ffe26b' : hero.form==='bird' ? '#f3b7ff' : hero.form==='fish' ? '#97d8ff' : '#d6bf94';
-    ctx.beginPath(); ctx.arc(px,py,7,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#111'; ctx.fillRect(px-2,py-2,2,2); ctx.fillRect(px+1,py-2,2,2);
+    const px=hero.x*T-camera.x, py=hero.y*T-camera.y;
+    drawHero(px,py);
 
-    ctx.fillStyle='rgba(0,0,0,.45)'; ctx.fillRect(0,0,640,24);
+    ctx.fillStyle='rgba(0,0,0,.45)'; ctx.fillRect(0,0,canvas.width,24);
     ctx.fillStyle='#fff'; ctx.font='12px Verdana';
     ctx.fillText('Arrows: Move  |  Space: Search  |  1-4: Transform',10,16);
   }
@@ -173,6 +260,8 @@
     if(k==='Space') search();
   }));
 
+  document.getElementById('playAgain').addEventListener('click',()=>location.reload());
+
   let stepCd=0;
   function loop(){
     stepCd--;
@@ -186,7 +275,7 @@
     requestAnimationFrame(loop);
   }
 
-  setLog('Tip: Milo is hidden beyond the cliff line. Poppy is near water and trees.');
+  setLog('Otis look integrated from your sketch. Next step shipped: bigger map + SFX + win cutscene.');
   loop();
 })();
 </script>
