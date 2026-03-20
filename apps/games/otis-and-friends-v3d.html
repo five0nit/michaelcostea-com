@@ -57,6 +57,9 @@ const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.shadowMap.enabled = true;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a1620);
@@ -66,8 +69,9 @@ const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200)
 camera.position.set(0, 8, 10);
 
 const hemi = new THREE.HemisphereLight(0xb7ddff, 0x1f2d19, 0.75); scene.add(hemi);
-const sun = new THREE.DirectionalLight(0xffffff, 1.1); sun.position.set(12,22,9); sun.castShadow=true; scene.add(sun);
-const rim = new THREE.DirectionalLight(0xaad7ff, 0.55); rim.position.set(-14,10,-12); scene.add(rim);
+const sun = new THREE.DirectionalLight(0xffffff, 1.15); sun.position.set(12,22,9); sun.castShadow=true; scene.add(sun);
+const rim = new THREE.DirectionalLight(0xaad7ff, 0.6); rim.position.set(-14,10,-12); scene.add(rim);
+const fill = new THREE.PointLight(0xfff3dc, 0.28, 38); fill.position.set(0,6,8); scene.add(fill);
 
 const TILE=1.6, W=48, H=34;
 const map = Array.from({length:H}, ()=>Array(W).fill(0)); // 0 grass 1 tree 2 water 3 gap 4 cliff
@@ -118,6 +122,14 @@ for(let y=0;y<H;y++) for(let x=0;x<W;x++){
   const m=new THREE.Mesh(geo,mat); m.receiveShadow=true; m.castShadow=t===1;
   m.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE);
   scene.add(m); tileMeshes.push(m);
+
+  // ground decal ring for richer high-quality terrain breakup
+  if(t===0 && (x*7+y*11)%9===0){
+    const ring = new THREE.Mesh(new THREE.RingGeometry(0.18,0.26,16), new THREE.MeshStandardMaterial({color:0x3f7f47, roughness:0.95, side:THREE.DoubleSide}));
+    ring.rotation.x = -Math.PI/2;
+    ring.position.set((x-W/2)*TILE + (((x+y)%3)-1)*0.12, 0.182, (y-H/2)*TILE + (((x*2+y)%3)-1)*0.1);
+    scene.add(ring);
+  }
 }
 
 // Biome/environment quality pass: props + micro detail
@@ -238,6 +250,7 @@ const otisArmL = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.58,0.16), new THREE
 otisArmL.position.set(-0.56,0.78,0);
 const otisArmR = otisArmL.clone(); otisArmR.position.x=0.56;
 avatarRoot.add(otisTorso,otisHead,otisHatTop,otisHatBrim,otisLegL,otisLegR,otisArmL,otisArmR);
+const otisRig = {armL:otisArmL, armR:otisArmR, legL:otisLegL, legR:otisLegR, body:otisTorso};
 
 // Friends rebuilt from user sketches (high-detail stylized 3D)
 function buildMilo(){
@@ -498,18 +511,31 @@ renderer.setAnimationLoop(()=>{
 
   place();
 
-  // subtle high-detail form animation
   const t = clock.elapsedTime;
+  const speed = Math.hypot(heroVel.x, heroVel.y);
+  const walkAmp = Math.min(0.26, speed*0.06);
+
+  // player walk animation (smooth, speed-driven)
+  if(form==='otis'){
+    otisRig.armL.rotation.x = Math.sin(t*10)*walkAmp;
+    otisRig.armR.rotation.x = -Math.sin(t*10)*walkAmp;
+    otisRig.legL.rotation.x = -Math.sin(t*10)*walkAmp*1.2;
+    otisRig.legR.rotation.x = Math.sin(t*10)*walkAmp*1.2;
+    otisRig.body.position.y = 0.64 + Math.sin(t*20)*walkAmp*0.08;
+  }
+
+  // subtle high-detail form animation
   if(form==='bird'){
-    birdWingL.rotation.z = 0.45 + Math.sin(t*8)*0.18;
-    birdWingR.rotation.z = -0.45 - Math.sin(t*8)*0.18;
-    birdModel.position.y = Math.sin(t*6)*0.03;
+    const flap = 0.16 + speed*0.08;
+    birdWingL.rotation.z = 0.45 + Math.sin(t*(8+speed*2))*flap;
+    birdWingR.rotation.z = -0.45 - Math.sin(t*(8+speed*2))*flap;
+    birdModel.position.y = Math.sin(t*(6+speed))*0.03;
   } else if(form==='fish'){
-    fishModel.rotation.y = Math.sin(t*5)*0.08;
-    fishTail.rotation.z = Math.PI/2 + Math.sin(t*10)*0.18;
+    fishModel.rotation.y = Math.sin(t*(5+speed))*0.08;
+    fishTail.rotation.z = Math.PI/2 + Math.sin(t*(10+speed*3))*(0.12+speed*0.03);
   } else if(form==='goat'){
-    goatHead.rotation.y = Math.sin(t*3)*0.06;
-    goatLegs.children.forEach((leg,i)=>{leg.rotation.x = Math.sin(t*7 + i)*0.12;});
+    goatHead.rotation.y = Math.sin(t*(3+speed))*0.06;
+    goatLegs.children.forEach((leg,i)=>{leg.rotation.x = Math.sin(t*(7+speed*2) + i)*0.12;});
   }
 
   // friend idle animation from sketch silhouettes
