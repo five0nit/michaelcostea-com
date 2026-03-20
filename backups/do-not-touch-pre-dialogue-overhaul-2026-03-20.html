@@ -1,0 +1,2715 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>DO NOT TOUCH.EXE — Kingdom Trails (RPG Overhaul)</title>
+<style>
+:root{--bg:#0f2a20;--ink:#d6f5c3;--line:#274f3d;--panel:#173729;--hud:#0f2119ee;--ui-border:#6b9f6c;--ui-border-strong:#3f6b4b;--ui-shadow:4px 4px 0 rgba(0,0,0,.45);--ui-shadow-soft:3px 3px 0 rgba(0,0,0,.35);--ui-radius:0;--ui-font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;--ui-font-mono:700 12px/1.2 monospace;--ui-ease:cubic-bezier(.22,.9,.34,1);--ui-anim-fast:140ms;--control-gap:12px;--joystick-size:132px;--joystick-slot:calc(var(--joystick-size) + var(--control-gap) + env(safe-area-inset-right,0px));--control-bottom:calc(env(safe-area-inset-bottom,0px) + 16px);--top-ui-clearance:calc(env(safe-area-inset-top,0px) + 96px);--quick-controls-bottom:calc(var(--control-bottom) + var(--joystick-size) + 8px)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif}
+#game{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;background:#9ecf86}
+.ui{position:fixed;inset:0;pointer-events:none}
+.topbar{position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px)+8px);display:flex;justify-content:space-between;align-items:flex-start;gap:8px;z-index:8;pointer-events:none}
+.brand{background:transparent;color:#fff;padding:2px 2px;font-weight:900;letter-spacing:.03em;text-shadow:2px 2px 0 #000, -1px -1px 0 rgba(0,0,0,.35);line-height:.9;font-size:1.9rem}
+.top-actions{display:flex;gap:8px;pointer-events:auto}
+.btn{border:3px solid #2f5a3a;background:#c7e69c;color:#1b321f;padding:8px 16px;min-height:44px;border-radius:var(--ui-radius);font-weight:900;font-size:1.05rem;line-height:1.05;box-shadow:4px 4px 0 rgba(19,42,27,.55),inset 0 1px 0 #e8f9d2;font-family:monospace;letter-spacing:.01em;transition:transform var(--ui-anim-fast) var(--ui-ease),filter var(--ui-anim-fast) var(--ui-ease),box-shadow var(--ui-anim-fast) var(--ui-ease);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn.secondary{background:#a9cf7a;color:#18311e;border-color:#3b6a42;box-shadow:2px 2px 0 rgba(20,35,59,.35),inset 0 1px 0 #dff0bf}
+.btn.danger{background:#bcd96f;border-color:#55723a;color:#24321b}
+.btn.ghost{background:#b5d66fd8;border-style:dashed}
+.btn:hover{filter:brightness(1.03)}
+.btn:active{transform:translateY(1px);filter:brightness(.98)}
+.btn:disabled,.btn[aria-disabled='true']{opacity:.58;cursor:not-allowed;filter:saturate(.76)}
+.btn:focus-visible,.hud-close:focus-visible{outline:3px solid #ffcd57;outline-offset:2px}
+.logo-badge{position:fixed;left:10px;top:calc(env(safe-area-inset-top,0px)+8px);width:86px;height:86px;border-radius:999px;background:radial-gradient(circle at 35% 30%,#ffffff 0,#d7dff0 48%,#8b99b5 100%);border:4px solid #f8fbff;box-shadow:0 0 0 3px #2b3f63, 2px 2px 0 rgba(0,0,0,.35);z-index:9;display:grid;place-items:center;color:#243a5a;font-weight:900;font-size:.8rem;letter-spacing:.03em;line-height:.9;text-align:center}
+.joystick{position:fixed;top:auto !important;left:auto !important;right:var(--control-gap) !important;bottom:var(--control-bottom) !important;width:var(--joystick-size);height:var(--joystick-size);border-radius:999px;background:rgba(20,26,40,.66);border:5px solid #0d121b;z-index:8;pointer-events:auto;touch-action:none;box-shadow:inset 0 0 0 3px #4c5667}
+.stick{position:absolute;left:50%;top:50%;width:58px;height:58px;margin-left:-29px;margin-top:-29px;border-radius:999px;background:#c62f2f;border:4px solid #3c0f0f;box-shadow:0 0 0 2px rgba(255,255,255,.28) inset}
+.minimap{position:fixed;left:12px;bottom:var(--control-bottom);width:112px;height:112px;border-radius:6px;background:#d8e1ef;border:4px solid #273b5e;z-index:8;overflow:hidden;pointer-events:none;box-shadow:3px 3px 0 rgba(0,0,0,.4)}
+.minimap canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+.modal{position:fixed;inset:0;display:none;place-items:center;padding:14px;background:rgba(4,14,10,.74);z-index:20;backdrop-filter:blur(2px)}
+.modal.open{display:grid}
+.modal.open .card{animation:ui-pop var(--ui-anim-fast) var(--ui-ease)}
+.card{width:min(760px,96vw);max-height:82vh;overflow:auto;background:#132f23;color:#d6f5c3;border:3px solid var(--ui-border);border-radius:var(--ui-radius);padding:14px 14px 12px;box-shadow:var(--ui-shadow)}
+.card h3{margin:.2rem 0 .4rem;line-height:1.15}
+.card p{margin:.35rem 0 .55rem;line-height:1.45}
+.card ul{margin:.2rem 0 .6rem;padding-left:18px;line-height:1.4}
+.card li+li{margin-top:.2rem}
+.stat-row{display:grid;grid-template-columns:150px 1fr 44px;gap:8px;align-items:center;margin:6px 0;font-size:.86rem}
+.stat-meter{height:10px;border:1px solid #6587be;border-radius:var(--ui-radius);overflow:hidden;background:#132544}
+.stat-meter>span{display:block;height:100%;background:linear-gradient(90deg,#71d8ff,#94ffaf)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px)+62px);z-index:30;background:rgba(8,14,28,.92);color:#e5eeff;border:2px solid var(--ui-border);border-radius:var(--ui-radius);padding:8px 12px;font-size:.8rem;font-family:monospace;letter-spacing:.01em;max-width:min(92vw,720px);line-height:1.25;opacity:0;transition:opacity .2s;box-shadow:var(--ui-shadow-soft);text-wrap:balance}
+.toast.show{opacity:1}
+.hud-panel{position:fixed;left:12px;top:var(--top-ui-clearance);z-index:7;pointer-events:auto;background:rgba(10,30,20,.94);color:#dff6c9;border:3px solid var(--ui-border);padding:8px 10px;min-width:260px;max-width:min(88vw,420px);font:var(--ui-font);box-shadow:var(--ui-shadow-soft);backdrop-filter:blur(1.5px)}
+.hud-row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.hud-row b{font-size:12px;line-height:1.25}
+.hud-pill{display:inline-block;padding:1px 6px;border:1px solid #7ea2df;background:#132b4b;color:#dce9ff;font:700 11px/1.2 monospace;letter-spacing:.04em;margin-bottom:3px}
+.hud-sub{opacity:.97;font-size:12px;line-height:1.35;margin-top:2px;text-wrap:pretty}
+.hud-meta{margin-top:4px;font-size:11px;line-height:1.35;opacity:.9;color:#c8dcff}
+.rpg-bars{margin-top:7px;display:grid;gap:5px}
+.rpg-bar{height:8px;background:#1d212c;border:1px solid #655233;position:relative}
+.rpg-bar>span{position:absolute;inset:0 auto 0 0;display:block}
+.rpg-bar.hp>span{background:linear-gradient(90deg,#b82727,#ff6767)}
+.rpg-bar.mp>span{background:linear-gradient(90deg,#2454b8,#69a1ff)}
+.rpg-bar.xp>span{background:linear-gradient(90deg,#8a6a1e,#f2d27a)}
+.hud-close{all:unset;cursor:pointer;pointer-events:auto;background:#183057;border:2px solid #7ea2df;color:#eaf2ff;padding:2px 6px;font:var(--ui-font-mono);border-radius:var(--ui-radius);box-shadow:2px 2px 0 rgba(0,0,0,.25);transition:filter var(--ui-anim-fast) var(--ui-ease)}
+#onboardModal .card{max-width:680px}
+.onboard-list{font-size:14px;line-height:1.45}
+.onboard-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px}
+.demo-indicator{display:none;position:fixed;right:12px;top:var(--top-ui-clearance);z-index:12;background:#10203ccf;color:#e7f0ff;border:3px solid var(--ui-border);padding:6px 8px;font:var(--ui-font-mono);box-shadow:var(--ui-shadow-soft)}
+.demo-indicator.show{display:block}
+.battle-screen{position:fixed;inset:0;display:none;place-items:center;padding:14px;background:rgba(6,10,20,.86);z-index:26}
+.battle-screen.open{display:grid}
+.battle-card{width:min(760px,96vw);background:#c8e8ad;border:4px solid #2f5a3a;box-shadow:6px 6px 0 rgba(0,0,0,.45);padding:10px;color:#183221;font-family:monospace}
+.battle-row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.battle-scene{margin:8px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end;background:var(--battle-bg,#9bbc6f);border:2px solid #4f7d46;padding:8px}
+.battle-sprite-wrap{display:grid;justify-items:center;gap:4px}
+#battleBossSprite,#battlePlayerSprite{width:128px;height:96px;image-rendering:pixelated;background:#8bac0f;border:2px solid #306230}
+.battle-card.shake{animation:battleShake .25s linear}
+#battleBossSprite.hit,#battlePlayerSprite.hit{animation:spriteHit .24s ease}
+.battle-log{margin:8px 0;background:#f8f6ee;border:2px solid #6a5a40;padding:8px;min-height:58px;font-size:.86rem}
+.battle-actions{display:flex;flex-wrap:wrap;gap:8px}
+.battle-actions .btn{min-height:40px;position:relative}
+.battle-actions .btn.selected{outline:2px solid #173021;box-shadow:0 0 0 2px #c7e69c inset}
+.battle-actions .btn.selected::before{content:'▶';position:absolute;left:6px;top:50%;transform:translateY(-50%);font:700 11px/1 monospace}
+.resume-stage{position:fixed;right:12px;top:calc(var(--top-ui-clearance) + 190px);z-index:9;max-width:min(90vw,360px);background:rgba(18,48,30,.94);border:3px solid var(--ui-border);padding:8px;color:#d7f2bd;font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;box-shadow:var(--ui-shadow-soft);pointer-events:none}
+.resume-stage b{display:block;margin-bottom:3px;font-size:12px}
+.resume-stage .mini{font-size:11px;opacity:.95}
+.encounter-flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0;background:radial-gradient(circle at center,rgba(255,255,255,.86) 0,rgba(255,255,255,0) 58%),repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 8px,rgba(0,0,0,.14) 8px 16px)}
+.encounter-flash.show{animation:encounterFlash .45s ease}
+@keyframes encounterFlash{0%{opacity:0}20%{opacity:.9}100%{opacity:0}}
+.encounter-wipe{position:fixed;inset:0;z-index:25;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,#0f1f18 0 16px,#8bac0f 16px 32px)}
+.encounter-wipe.show{animation:encounterWipe .48s ease}
+@keyframes encounterWipe{0%{opacity:0;transform:translateY(-100%)}30%{opacity:1}100%{opacity:0;transform:translateY(100%)}}
+@keyframes battleShake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}
+@keyframes spriteHit{0%{transform:translateX(0);filter:brightness(1)}35%{transform:translateX(3px);filter:brightness(1.35)}100%{transform:translateX(0);filter:brightness(1)}}
+.victory-modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(5,10,20,.78);z-index:27;padding:14px}
+.victory-modal.open{display:grid}
+.victory-card{width:min(720px,96vw);background:#edf2df;border:4px solid #3f5030;box-shadow:6px 6px 0 rgba(0,0,0,.45);padding:12px;color:#172010}
+.victory-card h3{margin:.2rem 0 .5rem}
+.victory-card ul{margin:.3rem 0 .6rem;padding-left:18px}
+.tour-panel{display:none;position:fixed;right:12px;top:calc(var(--top-ui-clearance) + 36px);z-index:13;max-width:min(92vw,360px);background:rgba(8,18,36,.93);color:#eaf2ff;border:3px solid var(--ui-border);box-shadow:var(--ui-shadow);padding:10px}
+.tour-panel.show{display:block}
+.tour-kicker{font:800 11px/1 monospace;letter-spacing:.08em;color:#9bc3ff;margin-bottom:6px}
+.tour-title{font:800 15px/1.2 Inter,Segoe UI,Arial,sans-serif;margin-bottom:6px}
+.tour-copy{font:600 12px/1.35 Inter,Segoe UI,Arial,sans-serif;opacity:.95}
+.tour-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tour-actions .btn{min-height:36px;padding:6px 10px;font-size:.8rem}
+.quick-controls{position:fixed;left:12px;right:calc(var(--joystick-slot) + 8px);bottom:var(--quick-controls-bottom);z-index:10;display:flex;gap:6px;flex-wrap:wrap;pointer-events:auto}
+.quick-controls .btn{min-height:44px;padding:6px 10px;font-size:.76rem;flex:1 1 150px}
+body.modal-open .quick-controls,body.modal-open .joystick{display:none !important}
+.hud-keyline{margin-top:6px;font-size:11px;opacity:.88;line-height:1.35}
+.btn-cluster{display:flex;gap:8px;flex-wrap:wrap}
+.onboard-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+@keyframes ui-pop{
+  from{opacity:.92;transform:translateY(4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@media (max-width:900px){
+  :root{--joystick-size:120px;--control-gap:10px;--control-bottom:calc(env(safe-area-inset-bottom,0px) + 14px);--top-ui-clearance:calc(env(safe-area-inset-top,0px) + 96px);--quick-controls-bottom:calc(var(--control-bottom) + var(--joystick-size) + 10px)}
+  .brand{display:none}
+  .btn{padding:7px 12px;font-size:.86rem}
+  .hud-panel{min-width:220px}
+  .logo-badge{display:none}
+  .topbar{left:8px;right:8px}
+  .top-actions{gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:74vw}
+  .top-actions .btn{min-height:44px;flex:1 1 90px}
+  #resumeStagePanel{top:calc(var(--top-ui-clearance) + 145px);max-width:min(92vw,320px)}
+  #hirePanel{display:none}
+  .stick{width:52px;height:52px;margin-left:-26px;margin-top:-26px}
+}
+@media (max-width:540px){
+  :root{--joystick-size:108px;--control-gap:8px;--control-bottom:calc(env(safe-area-inset-bottom,0px) + 10px);--top-ui-clearance:calc(env(safe-area-inset-top,0px) + 122px);--quick-controls-bottom:calc(var(--control-bottom) + var(--joystick-size) + 8px)}
+  .topbar{left:8px;right:8px}
+  .top-actions{gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:100%}
+  .top-actions .btn{min-height:42px;padding:6px 9px;font-size:.76rem;flex:1 1 86px}
+  .hud-panel{left:8px;right:8px;max-width:none;min-width:0}
+  .tour-panel{left:8px;right:8px;max-width:none;max-height:min(52vh,380px);overflow:auto}
+  .quick-controls{left:8px;right:calc(var(--joystick-slot) + 2px)}
+  .quick-controls .btn{flex:1 1 116px;min-height:40px;font-size:.72rem}
+  .toast{top:calc(env(safe-area-inset-top,0px)+56px);font-size:.76rem}
+}
+@media (pointer:fine) and (min-width:901px){
+  .joystick{display:none}
+  .quick-controls{right:12px}
+}
+@media (max-height:700px){
+  :root{--top-ui-clearance:calc(env(safe-area-inset-top,0px) + 74px)}
+  .tour-panel{max-height:min(54vh,340px);overflow:auto}
+  .quick-controls .btn{min-height:44px}
+}
+body.reduced-motion *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div class="ui">
+  <div class="logo-badge">MICHAEL<br/>COSTEA</div>
+  <div class="topbar">
+    <div class="brand"></div>
+    <div class="top-actions">
+      <button class="btn secondary" id="mapBtn" aria-label="Open resume stage map and progress">MAP</button>
+      <button class="btn secondary" id="tourBtn" aria-label="Start guided resume tour">TOUR</button>
+      <button class="btn secondary" id="fastTrackBtn" aria-label="Open fast track resume mode">FAST TRACK</button>
+      <button class="btn secondary" id="demoModeBtn" aria-label="Start hiring manager demo mode">DEMO MODE</button>
+      <button class="btn secondary" id="hudToggleBtn" aria-label="Toggle objective panel">HUD</button>
+      <button class="btn" id="menuBtn" aria-label="Open menu">MENU</button>
+    </div>
+  </div>
+  <div class="minimap"><canvas id="mini" width="110" height="110"></canvas></div>
+  <div class="joystick" id="joy"><div class="stick" id="stick"></div></div>
+  <div class="toast" id="toast"></div>
+  <div class="hud-panel" id="objectiveHud" aria-live="polite">
+    <div class="hud-row"><b id="hudProgress">Resume stages: 0/8 completed</b><button class="hud-close" id="hideHud" aria-label="Toggle objective hint panel">Hide/Show</button></div>
+    <div class="hud-pill">NEXT OBJECTIVE</div>
+    <div class="hud-sub" id="hudHint">Move toward the highlighted stage banner to progress through the resume journey.</div>
+    <div class="hud-meta" id="hudPath">Path: follow the gold beacon + minimap marker.</div>
+    <div class="hud-meta" id="hudStats">HP 100 · MP 60 · LVL 1 · XP 0/100 · Gold 0</div>
+    <div class="rpg-bars">
+      <div class="rpg-bar hp"><span id="hpBar" style="width:100%"></span></div>
+      <div class="rpg-bar mp"><span id="mpBar" style="width:100%"></span></div>
+      <div class="rpg-bar xp"><span id="xpBar" style="width:0%"></span></div>
+    </div>
+    <div class="hud-keyline" id="hudControls">Controls: <b>WASD</b> move · Encounters auto-start · <b>TOUR</b> guide.</div>
+  </div>
+  <div class="demo-indicator" id="demoIndicator">DEMO ROUTE ACTIVE</div>
+  <div class="quick-controls" id="quickControls">
+    <button class="btn ghost" id="quickNext" aria-label="Jump to next resume stage">NEXT STAGE</button>
+    <button class="btn ghost" id="quickTour" aria-label="Start guided resume tour">GUIDED TOUR</button>
+  </div>
+  <div class="tour-panel" id="tourPanel" aria-live="polite">
+    <div class="tour-kicker" id="tourKicker">SHOWCASE TOUR</div>
+    <div class="tour-title" id="tourTitle"></div>
+    <div class="tour-copy" id="tourCopy"></div>
+    <div class="tour-actions">
+      <button class="btn secondary" id="tourPrev">Back</button>
+      <button class="btn" id="tourNext">Next</button>
+      <button class="btn ghost" id="tourSkip">End Tour</button>
+    </div>
+  </div>
+  <div class="resume-stage" id="resumeStagePanel" aria-live="polite">
+    <b id="resumeStageTitle">Stage: N1 — Foundation</b>
+    <div class="mini" id="resumeStageMilestones">Milestones: 0/3</div>
+    <div class="mini" id="resumeStageSkills">Skills gained: —</div>
+  </div>
+  <div class="resume-stage" id="hirePanel" aria-live="polite" style="top:calc(var(--top-ui-clearance) + 340px)">
+    <b>Why hire Michael</b>
+    <div class="mini">• Trade + growth hybrid operator</div>
+    <div class="mini">• Systems thinker with execution speed</div>
+    <div class="mini">• Stage outcomes mapped to business value</div>
+  </div>
+</div>
+<div id="encounterFlash" class="encounter-flash" aria-hidden="true"></div>
+<div id="encounterWipe" class="encounter-wipe" aria-hidden="true"></div>
+
+<div class="battle-screen" id="battleModal" aria-live="polite">
+  <div class="battle-card">
+    <div class="battle-row">
+      <div><b id="battleBossName">Node Guardian</b><div id="battleBossHp">HP: 100/100</div></div>
+      <div><b>Michael</b><div id="battlePlayerHp">HP: 100/100</div></div>
+    </div>
+    <div class="battle-scene">
+      <div class="battle-sprite-wrap"><canvas id="battleBossSprite" width="128" height="96"></canvas><small id="battleBossStage">Stage N1 Guardian</small></div>
+      <div class="battle-sprite-wrap"><canvas id="battlePlayerSprite" width="128" height="96"></canvas><small>Operator Michael</small></div>
+    </div>
+    <div class="battle-log" id="battleLog">A wild guardian appears!</div>
+    <div class="battle-actions">
+      <button class="btn" id="battleFightBtn">FIGHT</button>
+      <button class="btn secondary" id="battleSkillBtn">SKILL</button>
+      <button class="btn ghost" id="battleRunBtn">RUN</button>
+    </div>
+  </div>
+</div>
+
+<div class="victory-modal" id="victoryModal" aria-live="polite">
+  <div class="victory-card">
+    <h3 id="victoryTitle">Stage Unlocked!</h3>
+    <p id="victorySummary">You cleared a resume stage battle.</p>
+    <p><b>Milestones unlocked</b></p>
+    <ul id="victoryMilestones"></ul>
+    <p><b>Skills gained</b></p>
+    <ul id="victorySkills"></ul>
+    <button class="btn" id="closeVictoryBtn">Continue</button>
+  </div>
+</div>
+
+<div class="modal" id="fastTrackModal">
+  <div class="card">
+    <h3>Fast Track — Resume & Skills</h3>
+    <p>Quick assessment mode: review all stages, milestones, and skills without playing battles.</p>
+    <ul id="fastTrackList"></ul>
+    <div class="btn-cluster">
+      <button class="btn secondary" id="fastTrackTourBtn">Auto Walkthrough</button>
+      <button class="btn secondary" id="openScorecardBtn">Stage Scorecard</button>
+      <button class="btn" id="closeFastTrack">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="scorecardModal">
+  <div class="card">
+    <h3>Hiring Manager Scorecard</h3>
+    <p>Quick proof-of-value snapshot by resume stage.</p>
+    <ul id="scorecardList"></ul>
+    <div class="btn-cluster">
+      <button class="btn secondary" id="downloadSummaryBtn">Download 1-page Summary</button>
+      <button class="btn" id="closeScorecardBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="fastTrackSummaryModal">
+  <div class="card">
+    <h3>Fast Track Complete</h3>
+    <p>Quick hiring-manager summary generated from stage walkthrough.</p>
+    <ul id="fastTrackSummaryList"></ul>
+    <div class="btn-cluster">
+      <button class="btn secondary" id="fastTrackSummaryDownload">Download Summary</button>
+      <button class="btn" id="closeFastTrackSummary">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="menuModal">
+  <div class="card">
+    <h3>DO NOT TOUCH // MENU</h3>
+    <p>Pokémon-style resume mode: fast movement, stage guardians, encounter transitions, and turn-based unlock battles.</p>
+    <div class="btn-cluster">
+      <button class="btn" id="jumpNext">Jump to Next Chapter</button>
+      <button class="btn secondary" id="startDemoRoute">Start Demo Route</button>
+      <button class="btn ghost" id="stopDemoRoute">Stop Demo Route</button>
+      <button class="btn" id="openStatsFromMenu">Character Stats</button>
+      <button class="btn danger" id="resetProgress">Reset Progress</button>
+      <button class="btn secondary" id="loadFullProgress">Load Full Progress</button>
+      <button class="btn" id="backSite">Back to MichaelOS</button>
+      <button class="btn" id="closeMenu">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="mapModal">
+  <div class="card">
+    <h3>Resume Stage Map / Progress</h3>
+    <ul id="mapList"></ul>
+    <button class="btn" id="closeMap">Close</button>
+  </div>
+</div>
+
+<div class="modal" id="statsModal">
+  <div class="card">
+    <h3>CHARACTER SHEET // MICHAEL COSTEA</h3>
+    <p>Class: Field Systems Strategist · Spec: Growth + Ops + Electrical Trade</p>
+    <div id="statsBars"></div>
+    <ul id="skillList"></ul>
+    <button class="btn" id="closeStats">Close</button>
+  </div>
+</div>
+
+
+<div class="modal" id="onboardModal">
+  <div class="card">
+    <h3>Welcome — DO NOT TOUCH.EXE: Kingdom Trails</h3>
+    <p>An old-school RPG-inspired resume world. Complete stage battles to unlock milestones and skills.</p>
+    <ul class="onboard-list">
+      <li><b>Fast start:</b> Follow the glowing objective in the HUD to clear stages in sequence.</li>
+      <li><b>Controls:</b> WASD / Arrow keys on desktop, joystick on mobile. Battles use the in-battle menu only.</li>
+      <li><b>Stage unlock flow:</b> Reach a resume stage node and battle auto-triggers; win to unlock milestones + skills.</li>
+      <li><b>Assessment mode:</b> Tap <b>FAST TRACK</b> for instant stage/milestone/skills review or auto walkthrough.</li>
+    </ul>
+    <div class="onboard-foot">
+      <label><input type="checkbox" id="dontShowOnboard"/> Don't show this again</label>
+      <div class="onboard-actions">
+        <button class="btn secondary" id="startOnboardTour">Start Guided Tour</button>
+        <button class="btn" id="startOnboard">Start Exploring</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cv=document.getElementById('game'),ctx=cv.getContext('2d');
+const mini=document.getElementById('mini'),mctx=mini.getContext('2d');
+let vw=0,vh=0,dpr=1;
+let REDUCED_MOTION=false;
+
+const QUALITY_PRESETS={
+  high:{name:'high',pixelCap:2.5,crowd:20,scanlineStep:3,bloom:true,miniHz:15,shadowPass:true},
+  medium:{name:'medium',pixelCap:2,crowd:10,scanlineStep:4,bloom:false,miniHz:12,shadowPass:true},
+  low:{name:'low',pixelCap:1.5,crowd:4,scanlineStep:6,bloom:false,miniHz:8,shadowPass:false}
+};
+const IS_MOBILE = window.matchMedia && window.matchMedia('(max-width: 900px), (pointer: coarse)').matches;
+let quality=IS_MOBILE?'medium':'high';
+let qp=QUALITY_PRESETS[quality];
+
+const PERF_SAMPLE_WINDOW=90;
+const perf={
+  samples:new Float32Array(PERF_SAMPLE_WINDOW),
+  sampleCount:0,
+  sampleCursor:0,
+  sampleSum:0,
+  slowFor:0,fastFor:0,lastMini:0,dropStreak:0,lastDowngradeAt:0,lastUpgradeAt:0,pressure:0,effectsBudget:1,hotspotBudget:1
+};
+let guardClock=0;
+
+function setQuality(next,reason='auto'){
+  if(!QUALITY_PRESETS[next]||quality===next) return;
+  quality=next;
+  qp=QUALITY_PRESETS[quality];
+  resize();
+  rebuildStaticLayers();
+  if(reason!=='silent') toast('Quality: '+quality.toUpperCase());
+}
+
+function autoQuality(frameMs, nowMs){
+  const idx=perf.sampleCursor;
+  const prev=perf.samples[idx]||0;
+  perf.sampleSum += frameMs - prev;
+  perf.samples[idx]=frameMs;
+  perf.sampleCursor=(idx+1)%PERF_SAMPLE_WINDOW;
+  if(perf.sampleCount<PERF_SAMPLE_WINDOW) perf.sampleCount++;
+  const avg=perf.sampleSum/Math.max(1,perf.sampleCount);
+  const sinceDown=nowMs-perf.lastDowngradeAt;
+  const sinceUp=nowMs-perf.lastUpgradeAt;
+
+  const loadMs=Math.max(frameMs,avg);
+  const overBudget=Math.max(0,loadMs-16.7);
+  if(overBudget>6) perf.pressure=Math.min(1,perf.pressure+0.12);
+  else if(overBudget>2.5) perf.pressure=Math.min(1,perf.pressure+0.05);
+  else perf.pressure=Math.max(0,perf.pressure-0.04);
+  perf.effectsBudget=Math.max(0.3,1-perf.pressure*0.75);
+  perf.hotspotBudget=Math.max(0.25,1-perf.pressure*0.9);
+
+  if(frameMs>34) perf.dropStreak=Math.min(18,perf.dropStreak+1); else perf.dropStreak=Math.max(0,perf.dropStreak-0.7);
+
+  // Fast panic path to prevent visible stutter cascades.
+  if(perf.dropStreak>=3 && sinceDown>2200){
+    if(quality==='high') setQuality('medium');
+    else if(quality==='medium') setQuality('low');
+    perf.lastDowngradeAt=nowMs;
+    perf.dropStreak=0;
+    perf.pressure=Math.min(1,perf.pressure+0.18);
+    return;
+  }
+
+  // Hysteresis tuning for smoother adaptive behavior.
+  if(avg>18 && perf.slowFor>900 && sinceDown>2400){
+    if(quality==='high') setQuality('medium');
+    else if(quality==='medium') setQuality('low');
+    perf.slowFor=0;
+    perf.lastDowngradeAt=nowMs;
+    perf.pressure=Math.min(1,perf.pressure+0.1);
+  }else if(avg<12.5 && perf.fastFor>5200 && sinceUp>6400 && !REDUCED_MOTION && perf.pressure<0.25){
+    if(quality==='low') setQuality('medium');
+    else if(quality==='medium' && !IS_MOBILE) setQuality('high');
+    perf.fastFor=0;
+    perf.lastUpgradeAt=nowMs;
+  }
+}
+
+function resize(){
+  dpr=Math.max(1,Math.min(qp.pixelCap,devicePixelRatio||1));
+  vw=innerWidth;vh=innerHeight;
+  cv.width=Math.round(vw*dpr);cv.height=Math.round(vh*dpr);
+  cv.style.width=vw+'px';cv.style.height=vh+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.imageSmoothingEnabled=false;
+}
+addEventListener('resize',()=>{resize();rebuildStaticLayers();});
+
+const STYLE_BIBLE={
+  tile:8,
+  scaleTolerance:0.05,
+  ref:{heroH:32,npcMin:30,npcMax:34,carL:48,carW:22,laneW:32,doorW:16,doorH:24,floorH:48},
+  lightVector:{x:1,y:1}
+};
+const CHAPTER_PALETTE={
+  dominant:['#2f5d47','#3b8e4f','#436f9a'],
+  support:['#d1cbbd','#343840','#4f6278'],
+  accent:['#ffcd57','#7ce38f','#ff8f6b']
+};
+const world={w:1800,h:2400};
+const ROAD_X=640, ROAD_W=STYLE_BIBLE.ref.laneW*4;
+const player={x:420,y:760,s:24.0};
+const playerStats={hp:100,maxHp:100,mp:60,maxMp:60,xp:0,xpNext:100,level:1,gold:0,kills:0,lastHitAt:0,attackCd:0,invuln:0};
+const mobs=[
+  {id:'m1',x:280,y:880,hp:28,maxHp:28,speed:20,aggro:120,color:'#4a9c5a',name:'Moss Goblin'},
+  {id:'m2',x:1420,y:840,hp:30,maxHp:30,speed:22,aggro:130,color:'#6a8ec8',name:'Lane Wraith'},
+  {id:'m3',x:350,y:1620,hp:34,maxHp:34,speed:19,aggro:140,color:'#b9864b',name:'Dust Boar'},
+  {id:'m4',x:1410,y:1650,hp:36,maxHp:36,speed:24,aggro:145,color:'#a06ac9',name:'Night Imp'},
+  {id:'m5',x:900,y:2080,hp:42,maxHp:42,speed:25,aggro:160,color:'#cc5858',name:'Gate Keeper'}
+];
+const cam={x:0,y:0};
+const motionState={vx:0,vy:0};
+const TILE_MOVE={enabled:true,size:24,stepSpeed:13};
+const tileState={moving:false,targetX:0,targetY:0};
+const MOVEMENT_TUNING={
+  accel:26.5,
+  decel:30.5,
+  maxSpeedMul:1.2,
+  cameraSmooth:14.5,
+  cameraLead:0.08,
+  cameraDeadzoneX:10,
+  cameraDeadzoneY:8
+};
+let time=0;
+const MATERIALS={
+  foliage:{base:'#3b8e4f',shade:'#2b6f3d',highlight:'#56aa6a',ao:'rgba(20,36,26,.16)'},
+  asphalt:{base:'#343840',shade:'#292d34',edge:'#1f232a',highlight:'#5b616b',ao:'rgba(12,14,18,.26)'},
+  concrete:{base:'#ddd8cd',shade:'#d1cbbd',highlight:'#ebe5d8',ao:'rgba(32,28,20,.12)'},
+  painted_metal:{base:'#4f6278',shade:'#3b4b5d',highlight:'#94a7bf',spec:'#bfd3ea'},
+  glass:{base:'#9ab9df',shade:'#7fa0c9',highlight:'#d9ebff'},
+  skin:{base:'#eab89c',shade:'#ce9a80',highlight:'#f5cfb7'},
+  fabric:{base:'#1a2233',shade:'#111826',highlight:'#2a3550'}
+};
+const ART_PASS={
+  facade:['#445f80','#516d8f','#5d7a9c','#6b88a8'],
+  neutral:['#2a3a52','#364a66','#3f5675','#4a6384'],
+  warmAccent:['#d89d4f','#e3b86c','#f0c982'],
+  coolAccent:['#7db6d9','#91c5e5','#b0d7ee'],
+  foliage:['#5c8754','#6a9561','#78a26f','#89b684']
+};
+const DEPTH_BANDS=[{y:620,a:0.04},{y:1150,a:0.07},{y:1650,a:0.1},{y:2050,a:0.14}];
+const nodes=[
+  {id:'N1',x:260,y:680,title:'Bloom Coffee Bar',desc:'Startup operations and service flow.'},
+  {id:'N2',x:340,y:980,title:'Optus Retention',desc:'Retention process redesign.'},
+  {id:'N3',x:260,y:1320,title:'Process Specialist',desc:'Cross-team communications and rollout.'},
+  {id:'N4',x:1520,y:740,title:'Content Manager',desc:'Knowledge system leadership.'},
+  {id:'N5',x:1460,y:1110,title:'Sales Ops Manager',desc:'KPI and support redesign.'},
+  {id:'N6',x:1460,y:1460,title:'Electrician Roles',desc:'Field execution and smart-home delivery.'},
+  {id:'N7',x:340,y:1710,title:'Sales Manager',desc:'Program-driven upgrade operations.'},
+  {id:'N8',x:900,y:2100,title:'BD & Marketing Manager',desc:'Growth, partnerships, CX innovation.'}
+];
+const nodeBosses={
+  N1:{name:'Cafe Rat King',hp:46,atkMin:4,atkMax:8,rewardXp:24,rewardGold:16,color:'#7e5a3a'},
+  N2:{name:'Retention Shade',hp:54,atkMin:5,atkMax:9,rewardXp:28,rewardGold:20,color:'#4f5f9e'},
+  N3:{name:'Process Golem',hp:60,atkMin:6,atkMax:10,rewardXp:32,rewardGold:24,color:'#6c6f7a'},
+  N4:{name:'Lore Librarian',hp:66,atkMin:7,atkMax:11,rewardXp:36,rewardGold:28,color:'#8a6e9f'},
+  N5:{name:'Ops Hydra',hp:72,atkMin:8,atkMax:12,rewardXp:40,rewardGold:33,color:'#2d8b74'},
+  N6:{name:'Grid Sentinel',hp:78,atkMin:9,atkMax:13,rewardXp:45,rewardGold:38,color:'#3d748f'},
+  N7:{name:'Sales Chimera',hp:84,atkMin:10,atkMax:14,rewardXp:50,rewardGold:42,color:'#9a5f4b'},
+  N8:{name:'Growth Dragon',hp:95,atkMin:11,atkMax:16,rewardXp:62,rewardGold:55,color:'#aa3f3f'}
+};
+const resumeStages={
+  N1:{label:'Foundation — Coffee + service systems',milestones:['Service flow stabilised','Shift handoff routine','Customer wait reduction'],skills:['Operations discipline','Live service troubleshooting'],outcomes:['Faster service rhythm','Better shift reliability']},
+  N2:{label:'Retention — Telecom process uplift',milestones:['Churn risk triage','Retention scripting','Escalation routing'],skills:['Retention strategy','Customer recovery'],outcomes:['Improved save-rate quality','Reduced avoidable churn']},
+  N3:{label:'Process Specialist — Cross-team rollout',milestones:['Comms workflow','SOP cleanup','Rollout governance'],skills:['Process design','Cross-functional leadership'],outcomes:['Cleaner team handoffs','Lower execution friction']},
+  N4:{label:'Content Manager — Knowledge systems',milestones:['KB architecture','Content governance','Enablement handover'],skills:['Knowledge ops','Documentation systems'],outcomes:['Faster onboarding','Better information consistency']},
+  N5:{label:'Sales Ops Manager — KPI and support',milestones:['Pipeline visibility','SLA tuning','Support-sales alignment'],skills:['Sales operations','Performance analytics'],outcomes:['Higher pipeline clarity','Tighter support/sales performance']},
+  N6:{label:'Electrician Roles — Field delivery',milestones:['On-site execution','Smart-home installs','Quality signoff'],skills:['Electrical tradecraft','Field diagnostics'],outcomes:['Reliable field delivery','Stronger install quality']},
+  N7:{label:'Sales Manager — Program growth',milestones:['Program scaling','Offer optimization','Team coaching'],skills:['Commercial leadership','Program management'],outcomes:['Scalable sales motion','Improved team execution']},
+  N8:{label:'BD & Marketing — Growth strategy',milestones:['Partnership expansion','Campaign architecture','CX innovation'],skills:['Business development','Growth systems'],outcomes:['Stronger partner pipeline','Improved growth leverage']}
+};
+let nearbyNodeId=null;
+const encounter={active:false,nodeId:null,boss:null,playerHp:0,phase:'idle',animT:0,lastAction:'idle'};
+let encounterAutoCooldown=0;
+let fastTrackTimer=null;
+let battleMenuIndex=0;
+let battleTypeTimer=null;
+const seenStageEncounters=new Set();
+const stageBattleTheme={N1:'#9bbc6f',N2:'#8bac0f',N3:'#7ea45c',N4:'#9bbc6f',N5:'#8bac0f',N6:'#7ea45c',N7:'#9bbc6f',N8:'#8bac0f'};
+const EXPERIENCE_FOCUS=true;
+
+const npcs=[
+  {x:430,y:620,c:'#efc4a4',name:'Mia',role:'planner',vx:27,vy:0,minX:250,maxX:520,minY:590,maxY:720,phrase:'Checking route'},
+  {x:480,y:640,c:'#d9ab8c',name:'Noah',role:'driver',vx:-24,vy:0,minX:250,maxX:520,minY:590,maxY:720,phrase:'On my way'},
+  {x:1360,y:640,c:'#f2cab0',name:'Ari',role:'ops',vx:0,vy:21,minX:1290,maxX:1560,minY:620,maxY:900,phrase:'Ops synced'},
+  {x:1420,y:760,c:'#c99477',name:'Liv',role:'sales',vx:0,vy:-24,minX:1290,maxX:1560,minY:620,maxY:900,phrase:'Lead warm'},
+  {x:1500,y:920,c:'#b57d62',name:'Kai',role:'field',vx:21,vy:0,minX:1280,maxX:1660,minY:880,maxY:1120,phrase:'Site ready'},
+  {x:360,y:1540,c:'#e5b393',name:'Jules',role:'support',vx:25,vy:0,minX:230,maxX:520,minY:1480,maxY:1780,phrase:'Tickets clear'},
+  {x:1330,y:1680,c:'#f1c5a3',name:'Rin',role:'partner',vx:-23,vy:0,minX:1210,maxX:1600,minY:1580,maxY:1880,phrase:'Pilot live'}
+];
+const traffic=[
+  {x:ROAD_X+38,y:860,c:'#436f9a',speed:44,lane:'down'},
+  {x:ROAD_X+70,y:1060,c:'#a26842',speed:53,lane:'down'},
+  {x:ROAD_X+36,y:1520,c:'#657a45',speed:46,lane:'down'},
+  {x:ROAD_X+72,y:520,c:'#7a8694',speed:55,lane:'up'},
+  {x:ROAD_X+40,y:1760,c:'#5b6272',speed:48,lane:'up'}
+];
+
+const COLLISION={
+  playerRadius:11,
+  trafficEnvelope:{x:6,y:4},
+  triggerPad:16,
+  resolveEpsilon:0.08,
+  maxResolvePasses:2,
+  zoneClearance:8,
+  edgePadding:{left:42,right:42,top:124,bottom:42},
+  staticProps:[
+    // Keep collisions to intentional hard barriers only.
+    // Large district art blocks are visual dressing; colliding with them made node pads/props feel "stuck".
+    {id:'guardrail-1-left',x:100,y:1850,w:650,h:24},
+    {id:'guardrail-1-right',x:1050,y:1850,w:650,h:24},
+    {id:'guardrail-2-left',x:100,y:1930,w:650,h:24},
+    {id:'guardrail-2-right',x:1050,y:1930,w:650,h:24},
+    {id:'service-crate-north',x:610,y:604,w:36,h:24},
+    {id:'service-crate-south',x:1154,y:1572,w:38,h:26}
+  ]
+};
+
+const collisionDebug={enabled:false};
+let lastCollisionDebugData=[];
+
+const nodeTriggerBounds = new Map(nodes.map(n=>[n.id,{x:n.x-28,y:n.y-28,w:56,h:56}]));
+const STORAGE_KEYS={
+  viewed:'dnt_v68_viewed',
+  noOnboard:'dnt_v68_no_onboard',
+  hudHidden:'dnt_v68_hud_hidden'
+};
+function safeStorageGet(key,fallback=null){
+  try{
+    const value=localStorage.getItem(key);
+    return value===null?fallback:value;
+  }catch(_err){
+    return fallback;
+  }
+}
+function safeStorageSet(key,value){
+  try{ localStorage.setItem(key,value); }catch(_err){}
+}
+function safeParseArray(raw,fallback=[]){
+  try{
+    const parsed=JSON.parse(raw);
+    return Array.isArray(parsed)?parsed:fallback;
+  }catch(_err){
+    return fallback;
+  }
+}
+const viewed=new Set(safeParseArray(safeStorageGet(STORAGE_KEYS.viewed,'[]')||'[]'));
+let npcChatPairs=[];
+let playerAnim={moving:false,dir:'down',speed:0,phase:0};
+
+const roleScripts={
+  planner:['Drafting a cleaner route','Flagging blockers early','Locking down tomorrow\'s run sheet'],
+  driver:['Staging van at loading bay','Courier lane is clear','Drop complete, returning loop'],
+  ops:['Reconciling ticket queue','Escalation path confirmed','Handoff notes shipped'],
+  sales:['Warm lead ready for call','Proposal sent, waiting sign-off','Client follow-up booked'],
+  field:['Panel check in progress','Smart-home install synced','Final testing underway'],
+  support:['Backlog dropping fast','Customer issue resolved','Knowledge base updated'],
+  partner:['Partner pilot now live','Co-marketing assets approved','Expansion meeting scheduled']
+};
+
+const reactiveProps=[
+  {id:'P1',x:218,y:742,w:34,h:24,type:'cart',label:'Coffee Cart',nearMsg:'Barista slides over a fresh espresso for the morning shift.',cooldown:0,lit:0},
+  {id:'P2',x:887,y:1288,w:44,h:28,type:'kiosk',label:'Transit Kiosk',nearMsg:'The timetable updates — delivery windows tighten by 12 minutes.',cooldown:0,lit:0},
+  {id:'P3',x:1336,y:742,w:34,h:30,type:'console',label:'Ops Console',nearMsg:'A status panel flickers green: all teams synchronized.',cooldown:0,lit:0},
+  {id:'P4',x:296,y:1732,w:32,h:28,type:'bench',label:'Mentor Bench',nearMsg:'A quick coaching huddle wraps with a confident nod.',cooldown:0,lit:0},
+  {id:'P5',x:1446,y:1486,w:36,h:30,type:'toolbox',label:'Field Toolbox',nearMsg:'Toolkit clicks shut — install handoff marked complete.',cooldown:0,lit:0}
+];
+const propTriggerBounds = new Map(reactiveProps.map(p=>[p.id,{x:p.x-COLLISION.triggerPad,y:p.y-COLLISION.triggerPad,w:p.w+COLLISION.triggerPad*2,h:p.h+COLLISION.triggerPad*2}]));
+
+const cityBeats=[
+  {id:'B1',zone:{x1:180,x2:560,y1:600,y2:1080},title:'Morning Rush',line:'Commuters stack the queue while Bloom opens two minutes early.'},
+  {id:'B2',zone:{x1:1240,x2:1640,y1:620,y2:1160},title:'Ops Pulse',line:'Screens tick upward — response times are beating target.'},
+  {id:'B3',zone:{x1:200,x2:560,y1:1480,y2:1880},title:'Support Window',line:'A quick callback turns a frustrated customer into a referral.'},
+  {id:'B4',zone:{x1:1220,x2:1650,y1:1360,y2:1880},title:'Field Momentum',line:'A smart-home retrofit wraps just before the afternoon storm.'},
+  {id:'B5',zone:{x1:760,x2:1060,y1:1960,y2:2240},title:'Growth Brief',line:'Partnership notes evolve into next quarter\'s playbook.'}
+];
+
+const microStory={beatCooldown:0,lastBeatId:null};
+
+const narrativeState={
+  npcTalkCooldown:0,
+  roleLoopCooldown:0,
+  phase:'bootstrap',
+  phaseAnnounced:new Set(),
+  zonePulseCooldown:0,
+  lastRoleLoop:'',
+  talkLedger:new Map(),
+  pairLedger:new Map(),
+  scheduleToastCooldown:0,
+  lastScheduleBand:''
+};
+
+const systemicState={
+  chainCooldown:0,
+  chainQueue:[],
+  recentTags:new Map(),
+  districtFocus:'north',
+  routinePulse:0,
+  socialEnergy:0.52
+};
+
+const progressionPhases=[
+  {id:'bootstrap',min:0,max:1,trafficMult:0.94,lightMult:0.88,roleToast:'The city is waking up — teams are still syncing.'},
+  {id:'growing',min:2,max:3,trafficMult:1.0,lightMult:1.0,roleToast:'Momentum is rising. Intersections start to feel intentional.'},
+  {id:'coordinated',min:4,max:6,trafficMult:1.08,lightMult:1.1,roleToast:'Cross-team loops are now coordinated block-to-block.'},
+  {id:'citywide',min:7,max:8,trafficMult:1.14,lightMult:1.16,roleToast:'Citywide cadence achieved. Every district is reacting in sync.'}
+];
+
+const progressionReactions=[
+  {min:2,done:false,msg:'World Reaction: Transit lanes re-time for faster handoffs.'},
+  {min:4,done:false,msg:'World Reaction: Ops districts start broadcasting live status.'},
+  {min:6,done:false,msg:'World Reaction: Field + support loops now auto-escalate.'},
+  {min:8,done:false,msg:'World Reaction: Full-city growth protocol unlocked.'}
+];
+
+const zoneMicroEvents=[
+  {id:'Z1',phase:['bootstrap','growing','coordinated','citywide'],cooldown:16,when:()=>player.x<560&&player.y>620&&player.y<1120,msg:'Micro-event: A shift lead reroutes staff to absorb a surprise rush.'},
+  {id:'Z2',phase:['growing','coordinated','citywide'],cooldown:18,when:()=>player.x>1220&&player.x<1650&&player.y>620&&player.y<1180,msg:'Micro-event: The ops wall flags a red queue, then clears it in one cycle.'},
+  {id:'Z3',phase:['coordinated','citywide'],cooldown:20,when:()=>player.x>1180&&player.y>1360&&player.y<1920,msg:'Micro-event: Install crews complete two homes back-to-back before sunset.'},
+  {id:'Z4',phase:['citywide'],cooldown:22,when:()=>player.x>760&&player.x<1060&&player.y>1960,msg:'Micro-event: Partnership scouts convert feedback into the next campaign brief.'}
+];
+
+const scheduleBands=[
+  {id:'open',start:300,end:540,label:'Opening shift',traffic:0.92,npc:0.9,social:0.38},
+  {id:'rush',start:540,end:720,label:'Morning rush',traffic:1.18,npc:1.06,social:0.46},
+  {id:'flow',start:720,end:1020,label:'Core flow',traffic:1.02,npc:1.0,social:0.54},
+  {id:'handoff',start:1020,end:1200,label:'Handoff window',traffic:1.12,npc:0.94,social:0.62},
+  {id:'close',start:1200,end:1380,label:'Closeout',traffic:0.86,npc:0.82,social:0.42},
+  {id:'night',start:1380,end:300,label:'Night prep',traffic:0.68,npc:0.72,social:0.3}
+];
+const phaseCadence={
+  bootstrap:{traffic:0.94,npc:0.92,social:0.84},
+  growing:{traffic:1.0,npc:1.0,social:1.0},
+  coordinated:{traffic:1.08,npc:1.04,social:1.12},
+  citywide:{traffic:1.14,npc:1.08,social:1.2}
+};
+const pairScripts={
+  planner_driver:['Route board updated.','Loading bay handoff in 6 min.','Courier lane clear.'],
+  ops_sales:['Queue dipped below SLA.','Campaign spike absorbed.','Follow-up window reopened.'],
+  field_support:['Ticket matched to install slot.','Remote check cleared first try.','Callback converted to referral.'],
+  partner_sales:['Partner feedback tagged + shipped.','Co-promo brief signed off.','Next market pilot penciled in.']
+};
+
+const RENDER_NPC_SHIRTS=['#436f9a','#6d7f4d','#6e5f8e','#915f52','#3f7a69'];
+const CROWD_SHIRTS=['#577ca4','#8a7b52','#736496','#9a6e63','#4e8a6f'];
+const CROWD_SKINS=['#f1c5a3','#e9bd9f','#d7a88a','#f2c9ad'];
+const crowdAnchors=[
+  {x:286,y:804,w:196,h:210},
+  {x:1320,y:786,w:242,h:258},
+  {x:258,y:1488,w:228,h:236},
+  {x:1260,y:1544,w:280,h:260},
+  {x:802,y:2010,w:220,h:170}
+];
+
+const distSq=(ax,ay,bx,by)=>{
+  const dx=ax-bx, dy=ay-by;
+  return dx*dx + dy*dy;
+};
+const makeOrderedPairKey=(a,b)=>a<b?(a+'|'+b):(b+'|'+a);
+
+let staticBase=null, staticDetail=null;
+let scanlineLayer=null, scanlineMeta={w:0,h:0,step:0};
+function makeLayer(){
+  if(typeof OffscreenCanvas!=='undefined') return new OffscreenCanvas(world.w,world.h);
+  const c=document.createElement('canvas'); c.width=world.w; c.height=world.h; return c;
+}
+function makeViewportLayer(w,h){
+  if(typeof OffscreenCanvas!=='undefined') return new OffscreenCanvas(w,h);
+  const c=document.createElement('canvas'); c.width=w; c.height=h; return c;
+}
+function getScanlineLayer(){
+  if(!scanlineLayer || scanlineMeta.w!==vw || scanlineMeta.h!==vh || scanlineMeta.step!==qp.scanlineStep){
+    scanlineLayer=makeViewportLayer(vw,vh);
+    const sctx=scanlineLayer.getContext('2d');
+    sctx.clearRect(0,0,vw,vh);
+    sctx.fillStyle='rgba(8,12,20,.04)';
+    for(let y=0;y<vh;y+=qp.scanlineStep) sctx.fillRect(0,y,vw,1);
+    scanlineMeta={w:vw,h:vh,step:qp.scanlineStep};
+  }
+  return scanlineLayer;
+}
+
+function save(){safeStorageSet(STORAGE_KEYS.viewed,JSON.stringify([...viewed]));}
+const toastState={
+  queue:[],
+  lastText:'',
+  lastAt:0,
+  visibleUntil:0,
+  defaultHold:1300,
+  minGap:2400,
+  dedupeMs:14000,
+  maxQueue:5
+};
+function flushToastQueue(force=false){
+  const now=performance.now();
+  if(!force && (now<toastState.visibleUntil || now-toastState.lastAt<toastState.minGap)) return;
+  const next=toastState.queue.shift();
+  if(!next) return;
+  const el=document.getElementById('toast');
+  if(!el) return;
+  el.textContent=next.text;
+  el.classList.add('show');
+  clearTimeout(flushToastQueue.t);
+  const hold=next.hold||toastState.defaultHold;
+  toastState.lastText=next.text;
+  toastState.lastAt=now;
+  toastState.visibleUntil=now+hold;
+  flushToastQueue.t=setTimeout(()=>{
+    el.classList.remove('show');
+    setTimeout(()=>flushToastQueue(true),Math.max(120,toastState.minGap*0.22));
+  },hold);
+}
+function toast(text,opt={}){
+  if(!text) return;
+  const msg=String(text).trim();
+  if(!msg) return;
+  const now=performance.now();
+  const dedupeMs=opt.dedupeMs ?? toastState.dedupeMs;
+  if(msg===toastState.lastText && now-toastState.lastAt<dedupeMs) return;
+
+  const queued=toastState.queue.some(item=>item.text===msg);
+  if(queued) return;
+
+  const entry={text:msg,hold:opt.hold||toastState.defaultHold};
+  if(opt.priority){
+    toastState.queue.unshift(entry);
+  }else{
+    toastState.queue.push(entry);
+  }
+
+  if(toastState.queue.length>toastState.maxQueue){
+    toastState.queue.splice(0,toastState.queue.length-toastState.maxQueue);
+  }
+  flushToastQueue(true);
+}
+function snapMotion(){motionState.vx=0;motionState.vy=0;}
+
+const joy=document.getElementById('joy'),stick=document.getElementById('stick');
+let joyState={active:false,x:0,y:0,sx:0,sy:0};
+function setStick(){const r=38;stick.style.left=(50+joyState.x*r)+'%';stick.style.top=(50+joyState.y*r)+'%';}
+function resetJoystick(){joyState.active=false;joyState.x=0;joyState.y=0;setStick();}
+joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);joyState.active=true;joyState.sx=e.clientX;joyState.sy=e.clientY;});
+joy.addEventListener('pointermove',e=>{if(!joyState.active) return;const dx=(e.clientX-joyState.sx)/46,dy=(e.clientY-joyState.sy)/46;const m=Math.hypot(dx,dy)||1;joyState.x=Math.max(-1,Math.min(1,dx/(m>1?m:1)));joyState.y=Math.max(-1,Math.min(1,dy/(m>1?m:1)));setStick();});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>joy.addEventListener(ev,resetJoystick));
+addEventListener('blur',resetJoystick);
+setStick();
+
+const keys={};
+addEventListener('keydown',e=>{keys[e.key]=true;}); addEventListener('keyup',e=>{keys[e.key]=false;});
+cv.addEventListener('pointerdown',e=>{
+  if(!IS_MOBILE || anyModalOpen()) return;
+  const rect=cv.getBoundingClientRect();
+  const wx=(e.clientX-rect.left)+cam.x;
+  const wy=(e.clientY-rect.top)+cam.y;
+  const node=nodes.find(n=>!viewed.has(n.id) && Math.hypot(wx-n.x,wy-n.y)<24 && Math.hypot(player.x-n.x,player.y-n.y)<90);
+  if(node){ interactNode(); }
+});
+function inView(x,y,w=32,h=32,margin=100){return !(x+w<cam.x-margin || x>cam.x+vw+margin || y+h<cam.y-margin || y>cam.y+vh+margin);} 
+function pointInRect(px,py,r){return px>=r.x && px<=r.x+r.w && py>=r.y && py<=r.y+r.h;}
+function circleRectOverlap(cx,cy,rad,r){
+  const nx=Math.max(r.x,Math.min(cx,r.x+r.w));
+  const ny=Math.max(r.y,Math.min(cy,r.y+r.h));
+  const dx=cx-nx, dy=cy-ny;
+  return dx*dx+dy*dy < rad*rad;
+}
+function buildTrafficSafetyEnvelopes(){
+  const padX=COLLISION.trafficEnvelope.x;
+  const padY=COLLISION.trafficEnvelope.y;
+  return traffic.map((c,i)=>({id:'traffic-'+i,x:c.x-padX,y:c.y-padY,w:STYLE_BIBLE.ref.carW+padX*2,h:STYLE_BIBLE.ref.carL+padY*2}));
+}
+function expandRectForRadius(r,rad){
+  return {x:r.x-rad,y:r.y-rad,w:r.w+rad*2,h:r.h+rad*2,id:r.id};
+}
+function pointInExpandedRect(px,py,r){
+  return px>r.x && px<r.x+r.w && py>r.y && py<r.y+r.h;
+}
+function rectsOverlap(a,b){
+  return !(a.x+a.w<=b.x || b.x+b.w<=a.x || a.y+a.h<=b.y || b.y+b.h<=a.y);
+}
+function expandRect(r,pad){
+  return {x:r.x-pad,y:r.y-pad,w:r.w+pad*2,h:r.h+pad*2,id:r.id};
+}
+function buildNoBlockZones(){
+  const pad=COLLISION.zoneClearance;
+  const zones=[];
+  nodeTriggerBounds.forEach((zone,id)=>zones.push(expandRect({...zone,id:'node-'+id},pad)));
+  propTriggerBounds.forEach((zone,id)=>zones.push(expandRect({...zone,id:'prop-'+id},pad)));
+  return zones;
+}
+function clampPlayerToWorld(px,py){
+  const edge=COLLISION.edgePadding;
+  return {
+    x:Math.max(edge.left,Math.min(world.w-edge.right,px)),
+    y:Math.max(edge.top,Math.min(world.h-edge.bottom,py))
+  };
+}
+function resolvePlayerCollision(nextX,nextY){
+  const rad=COLLISION.playerRadius;
+  const eps=COLLISION.resolveEpsilon;
+  const noBlockZones=buildNoBlockZones();
+  const blockers=[...COLLISION.staticProps,...buildTrafficSafetyEnvelopes()].filter(r=>!noBlockZones.some(zone=>rectsOverlap(r,zone)));
+  const expanded=blockers.map(r=>expandRectForRadius(r,rad));
+
+  const start=clampPlayerToWorld(player.x,player.y);
+  const target=clampPlayerToWorld(nextX,nextY);
+  let rx=start.x, ry=start.y;
+  let hitX=false, hitY=false;
+
+  const sx=target.x-start.x;
+  const sy=target.y-start.y;
+
+  // Resolve in dominant-axis order so corners slide instead of snapping back.
+  const resolveXFirst=Math.abs(sx)>=Math.abs(sy);
+  const axisOrder=resolveXFirst?['x','y']:['y','x'];
+
+  for(const axis of axisOrder){
+    if(axis==='x'){
+      const desired=target.x;
+      let nx=desired;
+      for(const r of expanded){
+        if(ry<r.y || ry>r.y+r.h) continue;
+        const movingRight=nx>rx;
+        const movingLeft=nx<rx;
+        if(movingRight && rx<=r.x && nx>r.x) { nx=r.x-eps; hitX=true; }
+        else if(movingLeft && rx>=r.x+r.w && nx<r.x+r.w) { nx=r.x+r.w+eps; hitX=true; }
+        if(nx>r.x && nx<r.x+r.w){
+          if(Math.abs(nx-r.x)<Math.abs(nx-(r.x+r.w))) nx=r.x-eps;
+          else nx=r.x+r.w+eps;
+          hitX=true;
+        }
+      }
+      rx=nx;
+    }else{
+      const desired=target.y;
+      let ny=desired;
+      for(const r of expanded){
+        if(rx<r.x || rx>r.x+r.w) continue;
+        const movingDown=ny>ry;
+        const movingUp=ny<ry;
+        if(movingDown && ry<=r.y && ny>r.y) { ny=r.y-eps; hitY=true; }
+        else if(movingUp && ry>=r.y+r.h && ny<r.y+r.h) { ny=r.y+r.h+eps; hitY=true; }
+        if(ny>r.y && ny<r.y+r.h){
+          if(Math.abs(ny-r.y)<Math.abs(ny-(r.y+r.h))) ny=r.y-eps;
+          else ny=r.y+r.h+eps;
+          hitY=true;
+        }
+      }
+      ry=ny;
+    }
+  }
+
+  // Minimal depenetration pass to remove residual corner jitter without strong pushback.
+  for(let pass=0; pass<COLLISION.maxResolvePasses; pass++){
+    let corrected=false;
+    for(const r of expanded){
+      if(!pointInExpandedRect(rx,ry,r)) continue;
+      const leftPen=Math.abs(rx-r.x);
+      const rightPen=Math.abs((r.x+r.w)-rx);
+      const topPen=Math.abs(ry-r.y);
+      const botPen=Math.abs((r.y+r.h)-ry);
+      const minPen=Math.min(leftPen,rightPen,topPen,botPen);
+      if(minPen===leftPen){ rx=r.x-eps; hitX=true; }
+      else if(minPen===rightPen){ rx=r.x+r.w+eps; hitX=true; }
+      else if(minPen===topPen){ ry=r.y-eps; hitY=true; }
+      else { ry=r.y+r.h+eps; hitY=true; }
+      corrected=true;
+    }
+    if(!corrected) break;
+  }
+
+  const clamped=clampPlayerToWorld(rx,ry);
+  if(clamped.x!==rx) hitX=true;
+  if(clamped.y!==ry) hitY=true;
+  return {x:clamped.x,y:clamped.y,hitX,hitY,expanded};
+}
+
+function drawCharacter(x,y,opt={}){
+  const {scale=1,skin='#f1c5a3',jacket='#1a2233',shirt='#f2f5fb',accent='#f0a436',pants='#163575',shoe='#0d1b34',hair='#2a3d5a',hat=null,brim=null,dir='down',moving=false,phase=0}=opt;
+  const stride = moving ? Math.sin(phase)*2 : 0;
+  const bob = moving ? Math.sin(phase*2)*1 : 0;
+  const look = dir==='left' ? -1 : dir==='right' ? 1 : 0;
+  const px=(dx,dy,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(Math.round(x+dx*scale),Math.round(y+(dy+bob)*scale),Math.round(w*scale),Math.round(h*scale));};
+
+  // Shadow + rim light for richer sprite depth
+  px(-13,22,26,4,'rgba(0,0,0,.34)');
+  px(-9,18,18,2,'rgba(255,255,255,.1)');
+
+  // legs / boots
+  px(-10+stride*0.45,9,8,13,pants);
+  px(2-stride*0.45,9,8,13,pants);
+  px(-10+stride*0.45,20,8,3,shoe);
+  px(2-stride*0.45,20,8,3,shoe);
+  px(-9+stride*0.45,11,6,1,'rgba(255,255,255,.1)');
+  px(3-stride*0.45,11,6,1,'rgba(255,255,255,.1)');
+
+  // torso + cloth folds
+  px(-12,-6,24,18,jacket);
+  px(-10,-4,20,2,'rgba(255,255,255,.08)');
+  px(-4,-3,8,13,shirt);
+  px(-3,1,6,3,accent);
+  px(-2,5,4,1,'rgba(255,255,255,.28)');
+
+  // arms
+  const armSwing = moving ? stride*0.35 : 0;
+  px(-14-armSwing,-4,3,12,jacket);
+  px(11+armSwing,-4,3,12,jacket);
+
+  // head / face details
+  px(-8+look,-18,16,12,skin);
+  px(-8+look,-20,16,2,hair);
+  px(-7+look,-19,14,1,'rgba(255,255,255,.1)');
+  if(hat){ px(-9+look,-21,18,4,hat); if(brim) px(-4+look,-17,10,2,brim); }
+  const eyeOffset = dir==='up' ? -1 : dir==='down' ? 0 : look;
+  px(-4+eyeOffset,-13,2,1,'#1b2f57');
+  px(2+eyeOffset,-13,2,1,'#1b2f57');
+  if(dir!=='up') px(-1+eyeOffset,-10,2,1,'#8b4f38');
+}
+function drawPixelGuy(x,y){drawCharacter(x,y,{scale:0.74,skin:MATERIALS.skin.base,jacket:MATERIALS.fabric.base,shirt:'#f2f5fb',accent:CHAPTER_PALETTE.accent[0],pants:'#12306f',shoe:'#0d1b34',hair:'#21395f',hat:'#2b67da',brim:'#1a448f',dir:playerAnim.dir,moving:playerAnim.moving,phase:playerAnim.phase});}
+function drawNPCGuy(x,y,shirt='#436f9a',skin=MATERIALS.skin.base,anim={}){drawCharacter(x,y,{scale:0.72,skin,jacket:MATERIALS.fabric.base,shirt,accent:'#dfe9ff',pants:'#263041',shoe:'#151b28',hair:'#2d3545',dir:anim.dir||'down',moving:!!anim.moving,phase:anim.phase||0});}
+function nearestMob(maxDist=58){
+  let best=null,bestD=Infinity;
+  for(const m of mobs){
+    const d=Math.hypot(player.x-m.x,player.y-m.y);
+    if(d<maxDist && d<bestD){best=m;bestD=d;}
+  }
+  return best;
+}
+function mobAtWorldPoint(wx,wy,maxDist=34){
+  let best=null,bestD=Infinity;
+  for(const m of mobs){
+    const d=Math.hypot(wx-m.x,wy-m.y);
+    if(d<maxDist && d<bestD){best=m;bestD=d;}
+  }
+  return best;
+}
+function levelUpIfReady(){
+  while(playerStats.xp>=playerStats.xpNext){
+    playerStats.xp-=playerStats.xpNext;
+    playerStats.level+=1;
+    playerStats.xpNext=Math.floor(playerStats.xpNext*1.25);
+    playerStats.maxHp+=12;
+    playerStats.maxMp+=8;
+    playerStats.hp=playerStats.maxHp;
+    playerStats.mp=playerStats.maxMp;
+    toast('Level up! Now level '+playerStats.level,{priority:1});
+  }
+}
+function attackMob(targetOverride=null){
+  if(anyModalOpen()) return;
+  const now=performance.now();
+  if(now-playerStats.lastHitAt<380) return;
+  const target=targetOverride || nearestMob(66);
+  if(!target){ toast('No target in range',{dedupeMs:700}); return; }
+  playerStats.lastHitAt=now;
+  const dmg=8+Math.floor(Math.random()*7)+Math.floor(playerStats.level*1.5);
+  target.hp-=dmg;
+  toast('Hit '+target.name+' for '+dmg,{dedupeMs:260});
+  if(target.hp<=0){
+    playerStats.kills+=1;
+    const gainXp=18+Math.floor(Math.random()*8);
+    const gainGold=6+Math.floor(Math.random()*7);
+    playerStats.xp+=gainXp;
+    playerStats.gold+=gainGold;
+    levelUpIfReady();
+    toast('Defeated '+target.name+' · +'+gainXp+' XP · +'+gainGold+' gold',{priority:1});
+    target.hp=target.maxHp;
+    target.x=220+Math.random()*1360;
+    target.y=700+Math.random()*1450;
+  }
+}
+
+function showEncounterFlash(){
+  sfxEncounter();
+  const el=document.getElementById('encounterFlash');
+  const wipe=document.getElementById('encounterWipe');
+  if(el){
+    el.classList.remove('show');
+    void el.offsetWidth;
+    el.classList.add('show');
+  }
+  if(wipe){
+    wipe.classList.remove('show');
+    void wipe.offsetWidth;
+    wipe.classList.add('show');
+  }
+}
+function getNearestLockedNode(maxDist=54){
+  const nextNode=nodes.find(n=>!viewed.has(n.id));
+  if(!nextNode) return null;
+  const d=Math.hypot(player.x-nextNode.x,player.y-nextNode.y);
+  return d<=maxDist?nextNode:null;
+}
+function constrainToLinearRoute(){
+  const next=nodes.find(n=>!viewed.has(n.id));
+  if(!next) return;
+  const lastUnlocked=[...nodes].reverse().find(n=>viewed.has(n.id));
+  const ax=lastUnlocked?lastUnlocked.x:420, ay=lastUnlocked?lastUnlocked.y:760;
+  const bx=next.x, by=next.y;
+  const abx=bx-ax, aby=by-ay;
+  const apx=player.x-ax, apy=player.y-ay;
+  const ab2=abx*abx+aby*aby || 1;
+  let t=(apx*abx+apy*aby)/ab2;
+  t=Math.max(0,Math.min(1,t));
+  const cx=ax+abx*t, cy=ay+aby*t;
+  const dx=player.x-cx, dy=player.y-cy;
+  const d=Math.hypot(dx,dy)||1;
+  const lane=165; // soft forced linear lane width
+  if(d>lane){
+    player.x=cx+(dx/d)*lane;
+    player.y=cy+(dy/d)*lane;
+  }
+}
+let sfxCtx=null;
+function sfxTone(freq=440,dur=0.08,type='square',vol=0.04){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC) return;
+    if(!sfxCtx) sfxCtx=new AC();
+    if(sfxCtx.state==='suspended') sfxCtx.resume();
+    const o=sfxCtx.createOscillator();
+    const g=sfxCtx.createGain();
+    o.type=type; o.frequency.value=freq;
+    g.gain.value=vol;
+    o.connect(g); g.connect(sfxCtx.destination);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.0001,sfxCtx.currentTime+dur);
+    o.stop(sfxCtx.currentTime+dur+0.01);
+  }catch{}
+}
+function sfxEncounter(){
+  sfxTone(784,0.04,'square',0.05);
+  setTimeout(()=>sfxTone(659,0.05,'square',0.05),45);
+  setTimeout(()=>sfxTone(523,0.06,'square',0.05),95);
+  setTimeout(()=>sfxTone(392,0.08,'triangle',0.05),160);
+}
+function sfxHit(){ sfxTone(196,0.045,'square',0.05); setTimeout(()=>sfxTone(147,0.05,'square',0.04),35); }
+function sfxWin(){ sfxTone(523,0.06,'square',0.045); setTimeout(()=>sfxTone(659,0.06,'square',0.045),85); setTimeout(()=>sfxTone(784,0.09,'square',0.05),170); }
+function sfxLose(){ sfxTone(294,0.07,'sawtooth',0.04); setTimeout(()=>sfxTone(220,0.09,'sawtooth',0.04),90); setTimeout(()=>sfxTone(147,0.12,'triangle',0.04),180); }
+
+function drawBattleSprite(canvas,color='#7a6',type='boss'){
+  if(!canvas) return;
+  const c=canvas.getContext('2d');
+  c.imageSmoothingEnabled=false;
+  c.clearRect(0,0,canvas.width,canvas.height);
+
+  // stage backdrop blocks (GBC-style)
+  c.fillStyle='#9bbc6f'; c.fillRect(0,0,128,58);
+  c.fillStyle='#8bac0f'; c.fillRect(0,58,128,38);
+  c.fillStyle='#306230'; c.fillRect(0,74,128,22);
+
+  const baseBob = Math.sin(time*0.18 + (type==='boss'?0:1.7))*1.2;
+  const attackKick = encounter.phase==='attack' ? (type==='boss'? -6: 6) * Math.min(1,encounter.animT*8) : 0;
+  const hurtShake = encounter.phase==='hurt' ? (type==='boss' && encounter.lastAction==='fight' ? 2 : (type==='player' ? -2 : 0)) * Math.sin(time*1.2) : 0;
+  const bob = baseBob + attackKick + hurtShake;
+  const x=type==='boss'?74:54, y=50+bob;
+
+  // shadow
+  c.fillStyle='rgba(0,0,0,.3)'; c.fillRect(x-26,y+20,52,8);
+
+  // torso
+  c.fillStyle=color; c.fillRect(x-17,y-13,34,30);
+  c.fillStyle='rgba(255,255,255,.18)'; c.fillRect(x-14,y-10,11,3);
+  c.fillStyle='rgba(0,0,0,.2)'; c.fillRect(x+4,y+8,10,6);
+
+  // head
+  c.fillStyle='#1f2430'; c.fillRect(x-13,y-22,26,10);
+  c.fillStyle='#f5d2b1'; c.fillRect(x-10,y-19,20,10);
+  c.fillStyle='#121722'; c.fillRect(x-6,y-16,2,2); c.fillRect(x+4,y-16,2,2);
+  c.fillStyle='#7a4d34'; c.fillRect(x-1,y-12,2,1);
+
+  // limbs
+  c.fillStyle='#2a3042'; c.fillRect(x-20,y+16,8,12); c.fillRect(x+12,y+16,8,12);
+  c.fillStyle='#1d2332'; c.fillRect(x-18,y+26,6,2); c.fillRect(x+12,y+26,6,2);
+
+  if(type==='boss'){
+    // boss crown/horns
+    c.fillStyle='#e1c168'; c.fillRect(x-22,y-26,44,4);
+    c.fillStyle='#e1c168'; c.fillRect(x-24,y-28,4,4); c.fillRect(x+20,y-28,4,4);
+    c.fillStyle='rgba(255,255,255,.26)'; c.fillRect(x-16,y-24,8,2);
+  } else {
+    // player cap
+    c.fillStyle='#4a7dd8'; c.fillRect(x-15,y-25,30,5);
+    c.fillStyle='#2b4f8f'; c.fillRect(x-6,y-21,12,2);
+  }
+}
+function setBattleLogTypewriter(text=''){
+  const log=document.getElementById('battleLog');
+  if(!log) return;
+  if(battleTypeTimer){ clearInterval(battleTypeTimer); battleTypeTimer=null; }
+  log.textContent='';
+  let i=0;
+  battleTypeTimer=setInterval(()=>{
+    i++;
+    log.textContent=text.slice(0,i);
+    if(i>=text.length){ clearInterval(battleTypeTimer); battleTypeTimer=null; }
+  },14);
+}
+function updateBattleMenuCursor(){
+  const btns=[document.getElementById('battleFightBtn'),document.getElementById('battleSkillBtn'),document.getElementById('battleRunBtn')];
+  btns.forEach((b,i)=>{ if(!b) return; b.classList.toggle('selected',i===battleMenuIndex); });
+}
+function updateBattleUi(msg=''){
+  const bn=document.getElementById('battleBossName');
+  const bh=document.getElementById('battleBossHp');
+  const ph=document.getElementById('battlePlayerHp');
+  const log=document.getElementById('battleLog');
+  const stageLabel=document.getElementById('battleBossStage');
+  const bossCanvas=document.getElementById('battleBossSprite');
+  const playerCanvas=document.getElementById('battlePlayerSprite');
+  const scene=document.querySelector('.battle-scene');
+  if(encounter.boss){
+    if(bn) bn.textContent=encounter.boss.name+' · '+encounter.nodeId;
+    if(bh) bh.textContent='HP: '+Math.max(0,encounter.boss.hp)+'/'+encounter.boss.maxHp;
+    if(stageLabel) stageLabel.textContent='Stage '+encounter.nodeId+' Guardian';
+    drawBattleSprite(bossCanvas,encounter.boss.color||'#7a6','boss');
+    if(scene) scene.style.setProperty('--battle-bg', stageBattleTheme[encounter.nodeId] || '#d2cfbf');
+  }
+  drawBattleSprite(playerCanvas,'#4f7fd3','player');
+  if(ph) ph.textContent='HP: '+Math.max(0,encounter.playerHp)+'/'+playerStats.maxHp;
+  if(msg) setBattleLogTypewriter(msg);
+  updateBattleMenuCursor();
+}
+function playBattleHit(target='boss'){
+  sfxHit();
+  const card=document.querySelector('.battle-card');
+  const sprite=document.getElementById(target==='boss'?'battleBossSprite':'battlePlayerSprite');
+  if(card){ card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake'); }
+  if(sprite){ sprite.classList.remove('hit'); void sprite.offsetWidth; sprite.classList.add('hit'); }
+}
+function showVictoryCard(nodeId,cfg){
+  const stage=resumeStages[nodeId] || {label:nodeId,milestones:['Stage objective completed'],skills:['Experience gained']};
+  const vm=document.getElementById('victoryModal');
+  const title=document.getElementById('victoryTitle');
+  const summary=document.getElementById('victorySummary');
+  const milestones=document.getElementById('victoryMilestones');
+  const skills=document.getElementById('victorySkills');
+  if(title) title.textContent='Stage '+nodeId+' Unlocked — '+stage.label;
+  if(summary) summary.textContent='Guardian defeated. This resume stage is now open with milestones and skills tracked.';
+  if(milestones) milestones.innerHTML=stage.milestones.map(m=>'<li>'+m+'</li>').join('');
+  if(skills) skills.innerHTML=stage.skills.map(s=>'<li>'+s+'</li>').join('');
+  if(vm) vm.classList.add('open');
+}
+function endEncounter(win){
+  const modal=document.getElementById('battleModal');
+  if(modal) modal.classList.remove('open');
+  encounterAutoCooldown=0.9;
+  if(win) sfxWin(); else sfxLose();
+  if(win && encounter.nodeId){
+    const cfg=nodeBosses[encounter.nodeId];
+    viewed.add(encounter.nodeId);
+    save();
+    playerStats.xp += cfg.rewardXp;
+    playerStats.gold += cfg.rewardGold;
+    levelUpIfReady();
+    toast('Unlocked: '+encounter.nodeId+' · '+nodes.find(n=>n.id===encounter.nodeId).title,{priority:1});
+    toast('Rewards +'+cfg.rewardXp+' XP · +'+cfg.rewardGold+' gold');
+    showVictoryCard(encounter.nodeId,cfg);
+  }
+  encounter.active=false; encounter.nodeId=null; encounter.boss=null; encounter.playerHp=0;
+  refreshHud(); applyProgressionReactions();
+}
+function runEncounterTurn(move){
+  if(!encounter.active || !encounter.boss) return;
+  let lines=[];
+  if(move==='fight'){
+    encounter.phase='attack'; encounter.animT=0.22; encounter.lastAction='fight';
+    const dmg=10+Math.floor(Math.random()*8)+Math.floor(playerStats.level*1.8);
+    encounter.boss.hp-=dmg;
+    playBattleHit('boss');
+    encounter.phase='hurt'; encounter.animT=0.18;
+    lines.push('You strike for '+dmg+' damage!');
+  } else if(move==='skill'){
+    if(playerStats.mp<10){ lines.push('Not enough MP!'); }
+    else {
+      encounter.phase='attack'; encounter.animT=0.24; encounter.lastAction='skill';
+      playerStats.mp-=10;
+      const dmg=18+Math.floor(Math.random()*10)+Math.floor(playerStats.level*2.2);
+      encounter.boss.hp-=dmg;
+      playBattleHit('boss');
+      encounter.phase='hurt'; encounter.animT=0.2;
+      lines.push('Skill burst hits for '+dmg+'!');
+    }
+  } else if(move==='run'){
+    if(Math.random()<0.38){ lines.push('Got away safely.'); updateBattleUi(lines.join(' ')); return endEncounter(false); }
+    lines.push('Could not escape!');
+  }
+
+  if(encounter.boss.hp<=0){
+    updateBattleUi((lines.join(' ')+' Guardian defeated!').trim());
+    return setTimeout(()=>endEncounter(true),380);
+  }
+  const bossMoves=['Strike','Charge','Overload','Crush'];
+  const moveName=bossMoves[Math.floor(Math.random()*bossMoves.length)];
+  encounter.phase='attack'; encounter.animT=0.22; encounter.lastAction='boss';
+  const ret=encounter.boss.atkMin+Math.floor(Math.random()*(encounter.boss.atkMax-encounter.boss.atkMin+1));
+  encounter.playerHp-=ret;
+  playBattleHit('player');
+  encounter.phase='hurt'; encounter.animT=0.2;
+  lines.push(encounter.boss.name+' used '+moveName+' for '+ret+'.');
+  if(encounter.playerHp<=0){
+    playerStats.hp=playerStats.maxHp;
+    playerStats.gold=Math.max(0,playerStats.gold-30);
+    player.x=420;player.y=760;snapMotion();
+    updateBattleUi(lines.join(' ')+' You blacked out!');
+    return setTimeout(()=>endEncounter(false),420);
+  }
+  playerStats.hp=Math.max(1,encounter.playerHp);
+  updateBattleUi(lines.join(' '));
+}
+function interactNode(){
+  if(anyModalOpen()) return;
+  const node=getNearestLockedNode(58);
+  if(!node){ toast('No stage node in range'); return; }
+  const cfg=nodeBosses[node.id];
+  if(!cfg){ viewed.add(node.id); save(); refreshHud(); return; }
+  showEncounterFlash();
+  encounter.active=true;
+  encounter.nodeId=node.id;
+  encounter.boss={...cfg,maxHp:cfg.hp};
+  encounter.playerHp=Math.max(1,playerStats.hp);
+  battleMenuIndex=0;
+  const st=resumeStages[node.id];
+  const hook=(st&&st.outcomes&&st.outcomes[0])?('Proof target: '+st.outcomes[0]):'Guardian encounter!';
+  const intro=st ? ('Stage '+node.id+': '+st.label+' — '+hook) : ('A wild '+cfg.name+' blocks '+node.id+'!');
+  const introDelay=seenStageEncounters.has(node.id)?520:980;
+  seenStageEncounters.add(node.id);
+  setTimeout(()=>{
+    const modal=document.getElementById('battleModal');
+    if(modal) modal.classList.add('open');
+    updateBattleUi(intro);
+  },introDelay);
+}
+
+function drawHeroBlockTo(c2d,x,y,theme='warm'){
+  const wall = theme==='warm' ? '#a2644d' : '#5f7797';
+  const trim = theme==='warm' ? '#d3b08c' : '#a0b8d8';
+  const dark = theme==='warm' ? '#8f5342' : '#3d516f';
+  const glass = MATERIALS.glass.base;
+  c2d.fillStyle=wall; c2d.fillRect(x,y,460,300); c2d.fillStyle=trim; c2d.fillRect(x+20,y+20,420,90); c2d.fillStyle='rgba(0,0,0,.16)'; c2d.fillRect(x,y+300,460,10);
+  for(let i=0;i<7;i++){const rx=x+30+i*58; c2d.fillStyle=dark; c2d.fillRect(rx,y-22,36,14); c2d.fillStyle=trim; c2d.fillRect(rx+4,y-18,28,4);} 
+  for(let yy=y+128;yy<y+286;yy+=24){for(let xx=x+16;xx<x+440;xx+=34){c2d.fillStyle=dark; c2d.fillRect(xx,yy,22,2);}}
+  for(let yy=y+136;yy<y+276;yy+=42){for(let xx=x+32;xx<x+428;xx+=54){c2d.fillStyle=dark; c2d.fillRect(xx,yy,26,44); c2d.fillStyle=glass; c2d.fillRect(xx+4,yy+4,18,18); c2d.fillStyle=MATERIALS.glass.highlight; c2d.fillRect(xx+4,yy+4,8,2);}}
+  for(let yy=y+192;yy<y+290;yy+=18){c2d.fillStyle='rgba(22,34,50,.22)'; c2d.fillRect(x+20,yy,420,2);}
+  c2d.fillStyle=MATERIALS.painted_metal.shade;
+  c2d.fillRect(x+222,y+274,STYLE_BIBLE.ref.doorW,STYLE_BIBLE.ref.doorH);
+  c2d.fillStyle=MATERIALS.painted_metal.spec;
+  c2d.fillRect(x+224,y+276,4,STYLE_BIBLE.ref.doorH-4);
+}
+
+function drawPremiumHeroDistrictTo(c2d,x,y){
+  const base='#455e7f', shadow='#33455f', trim='#8fa9c8', glow='#eaf5ff', accent='#f2b347', plaza='#7c8ea7', grass='#6e9f6d';
+
+  c2d.fillStyle='rgba(0,0,0,.2)'; c2d.fillRect(x-12,y+304,506,12);
+  c2d.fillStyle=base; c2d.fillRect(x,y,482,304);
+  c2d.fillStyle=shadow; c2d.fillRect(x+10,y+10,462,284);
+
+  c2d.fillStyle=trim; c2d.fillRect(x+18,y+20,446,18);
+  c2d.fillStyle='#2a3850'; c2d.fillRect(x+36,y+48,410,64);
+  c2d.fillStyle=accent; c2d.fillRect(x+176,y+54,132,18);
+  c2d.fillStyle='#1f2e47'; c2d.fillRect(x+184,y+58,116,10);
+  c2d.fillStyle=glow; c2d.fillRect(x+196,y+60,18,6); c2d.fillRect(x+270,y+60,18,6);
+
+  c2d.fillStyle='#3f5675'; c2d.fillRect(x+42,y+124,398,132);
+  c2d.fillStyle='#263752'; c2d.fillRect(x+52,y+132,378,116);
+
+  for(let col=0;col<5;col++){
+    const wx=x+66+col*74;
+    c2d.fillStyle='#1f304a'; c2d.fillRect(wx,y+142,58,92);
+    c2d.fillStyle='#8cb1dc'; c2d.fillRect(wx+4,y+146,50,30);
+    c2d.fillStyle='rgba(255,255,255,.24)'; c2d.fillRect(wx+6,y+148,18,3);
+    c2d.fillStyle='#5f7fa8'; c2d.fillRect(wx+4,y+180,50,2);
+    c2d.fillStyle='#7694bb'; c2d.fillRect(wx+4,y+188,50,44);
+  }
+
+  c2d.fillStyle='#293a54'; c2d.fillRect(x+210,y+116,64,144);
+  c2d.fillStyle='#9ac5ec'; c2d.fillRect(x+218,y+126,48,124);
+  for(let i=0;i<7;i++){
+    c2d.fillStyle=i%2===0?'rgba(255,255,255,.26)':'rgba(50,76,110,.28)';
+    c2d.fillRect(x+222,y+132+i*16,40,6);
+  }
+
+  c2d.fillStyle=trim; c2d.fillRect(x+26,y+262,430,12);
+  c2d.fillStyle=plaza; c2d.fillRect(x+12,y+274,458,26);
+  for(let i=0;i<8;i++){
+    c2d.fillStyle=i%2===0?'#6e819b':'#8599b3';
+    c2d.fillRect(x+24+i*54,y+278,42,18);
+  }
+
+  c2d.fillStyle=grass; c2d.fillRect(x-10,y+278,20,28); c2d.fillRect(x+472,y+278,20,28);
+  c2d.fillStyle='#46764a'; c2d.fillRect(x-4,y+282,8,20); c2d.fillRect(x+478,y+282,8,20);
+
+  c2d.fillStyle='#2b3f5a'; c2d.fillRect(x+84,y+84,8,44); c2d.fillRect(x+390,y+84,8,44);
+  c2d.fillStyle='#ffd770'; c2d.fillRect(x+81,y+88,14,14); c2d.fillRect(x+387,y+88,14,14);
+}
+
+function drawStreetPropsTo(c2d){
+  const kioskAccent=['#f4b26a','#8fc7ef','#f29ba9','#9fd48a','#c9b8ff'];
+  for(let i=0;i<10;i++){
+    const kx=170 + i*150 + Math.floor(hash2(i,1,2)*10)-5;
+    const ky=980 + (i%2)*360 + Math.floor(hash2(i,2,3)*8)-4;
+    c2d.fillStyle='#2f3f5d'; c2d.fillRect(kx,ky,18,26);
+    c2d.fillStyle=kioskAccent[i%kioskAccent.length]; c2d.fillRect(kx+3,ky+4,12,9);
+    c2d.fillStyle='rgba(255,255,255,.34)'; c2d.fillRect(kx+4,ky+5,5,2);
+    c2d.fillStyle='#dce8ff'; c2d.fillRect(kx+4,ky+16,10,6);
+    c2d.fillStyle='rgba(15,23,38,.3)'; c2d.fillRect(kx+2,ky+24,14,2);
+  }
+  for(let i=0;i<14;i++){
+    const sx=120 + i*120 + Math.floor(hash2(i,3,4)*12)-6;
+    const sy=600 + (i%3)*520;
+    c2d.fillStyle='#4d607f'; c2d.fillRect(sx,sy,4,36);
+    c2d.fillStyle='#eaf3ff'; c2d.fillRect(sx-3,sy+4,10,10);
+    c2d.fillStyle='rgba(255,232,167,.45)'; c2d.fillRect(sx-1,sy+6,6,4);
+  }
+
+  // Premium pass: non-repetitive urban furniture pockets, baked into static layer.
+  const furnitureBands=[
+    {x:112,y:654,w:430,h:116},
+    {x:1226,y:660,w:450,h:120},
+    {x:118,y:1168,w:430,h:122},
+    {x:1222,y:1162,w:460,h:126},
+    {x:144,y:1604,w:420,h:124},
+    {x:1228,y:1608,w:452,h:126}
+  ];
+  furnitureBands.forEach((band,bIdx)=>{
+    c2d.fillStyle='rgba(24,38,58,.08)'; c2d.fillRect(band.x,band.y,band.w,band.h);
+    const pieces=10 + bIdx;
+    for(let i=0;i<pieces;i++){
+      const r1=hash2(bIdx,i,21), r2=hash2(bIdx,i,22), r3=hash2(bIdx,i,23);
+      const px=band.x+8+Math.floor(r1*(band.w-24));
+      const py=band.y+10+Math.floor(r2*(band.h-26));
+      if(r3<0.34){
+        c2d.fillStyle='#7f6044'; c2d.fillRect(px,py,14,6);
+        c2d.fillStyle='#a27d57'; c2d.fillRect(px+1,py+1,8,2);
+      }else if(r3<0.66){
+        c2d.fillStyle='#3a5476'; c2d.fillRect(px,py,6,16);
+        c2d.fillStyle='#d6e7ff'; c2d.fillRect(px-2,py+2,10,6);
+      }else{
+        c2d.fillStyle=ART_PASS.foliage[(i+bIdx)%ART_PASS.foliage.length]; c2d.fillRect(px,py,12,8);
+        c2d.fillStyle='rgba(209,243,193,.3)'; c2d.fillRect(px+2,py+2,5,2);
+      }
+    }
+  });
+}
+
+function hash2(x,y,s=1){
+  const v=Math.sin((x*127.1 + y*311.7 + s*17.37))*43758.5453;
+  return v-Math.floor(v);
+}
+
+function drawDistrictMicroScenesTo(c2d){
+  // Handcrafted-feel districts: deterministic variation without per-frame runtime cost.
+  const pockets=[
+    {x:140,y:930,w:390,h:140,t:'market'},
+    {x:1240,y:940,w:410,h:160,t:'ops-yard'},
+    {x:140,y:1450,w:400,h:180,t:'support'},
+    {x:1230,y:1510,w:420,h:190,t:'field'},
+    {x:760,y:2020,w:300,h:170,t:'growth'}
+  ];
+
+  pockets.forEach((p,idx)=>{
+    c2d.fillStyle='rgba(22,36,55,.08)';
+    c2d.fillRect(p.x-8,p.y-8,p.w+16,p.h+16);
+    c2d.fillStyle='rgba(255,255,255,.08)';
+    c2d.fillRect(p.x,p.y,p.w,p.h);
+
+    const clusters=18 + idx*2;
+    for(let i=0;i<clusters;i++){
+      const r1=hash2(i,idx,1), r2=hash2(i,idx,2), r3=hash2(i,idx,3);
+      const sx=p.x+10+Math.floor(r1*(p.w-20));
+      const sy=p.y+10+Math.floor(r2*(p.h-20));
+      const sw=6+Math.floor(r3*10);
+      const sh=3+Math.floor(hash2(i,idx,5)*5);
+      c2d.fillStyle=i%4===0?'rgba(18,28,44,.18)':i%3===0?'rgba(255,255,255,.11)':'rgba(62,84,112,.16)';
+      c2d.fillRect(sx,sy,sw,sh);
+    }
+
+    const fixtureCount=5 + idx;
+    for(let i=0;i<fixtureCount;i++){
+      const rx=p.x+24+i*Math.floor((p.w-58)/fixtureCount);
+      const ry=p.y+p.h-28-Math.floor(hash2(i,idx,7)*44);
+      c2d.fillStyle='#2a3a55'; c2d.fillRect(rx,ry,16,20);
+      c2d.fillStyle=['#8fd8ff','#ffd87a','#ffa5b6','#9de487','#c0b7ff'][(i+idx)%5]; c2d.fillRect(rx+3,ry+3,10,8);
+      c2d.fillStyle='rgba(255,255,255,.26)'; c2d.fillRect(rx+4,ry+4,5,2);
+    }
+  });
+
+  // Sidewalk furniture strips reduce grid repetition and strengthen world density.
+  for(let strip=0;strip<2;strip++){
+    const baseX=strip===0?560:1124;
+    for(let i=0;i<44;i++){
+      const y=630+i*38;
+      const v=hash2(strip,i,9);
+      if(v<0.34){
+        c2d.fillStyle='#6f845a'; c2d.fillRect(baseX,y,18,10);
+        c2d.fillStyle='#8fb575'; c2d.fillRect(baseX+2,y+2,10,3);
+      }else if(v<0.68){
+        c2d.fillStyle='#7c5d41'; c2d.fillRect(baseX,y,16,8);
+      }else{
+        c2d.fillStyle='#3d5778'; c2d.fillRect(baseX+4,y,8,14);
+        c2d.fillStyle='#dce8ff'; c2d.fillRect(baseX+3,y+2,10,6);
+      }
+    }
+  }
+}
+
+function drawPremiumSilhouettePassTo(c2d){
+  // Cleaner skyline silhouette rhythm with deterministic variety (static-baked).
+  for(let lane=0;lane<3;lane++){
+    const laneY=126 + lane*54;
+    const color=lane===0?'rgba(48,72,104,.24)':lane===1?'rgba(42,64,92,.2)':'rgba(36,54,80,.16)';
+    for(let i=0;i<20;i++){
+      const sx=40+i*92+Math.floor(hash2(lane,i,51)*18);
+      const sw=44+Math.floor(hash2(lane,i,52)*26);
+      const sh=26+Math.floor(hash2(lane,i,53)*42);
+      c2d.fillStyle=color; c2d.fillRect(sx,laneY-sh,sw,sh);
+      if(i%4===0){
+        c2d.fillStyle='rgba(235,244,255,.14)'; c2d.fillRect(sx+6,laneY-sh+7,10,2);
+      }
+    }
+  }
+}
+
+function drawSkyCloudBandsTo(c2d){
+  // Self-crit fix: horizon still felt flat in motion; add deterministic cloud bands for depth separation.
+  for(let lane=0;lane<4;lane++){
+    const y=66+lane*42;
+    const alpha=0.04+lane*0.012;
+    for(let i=0;i<12;i++){
+      const cx=70+i*154+Math.floor(hash2(lane,i,61)*26)-13;
+      const w=86+Math.floor(hash2(lane,i,62)*54);
+      const h=12+Math.floor(hash2(lane,i,63)*10);
+      c2d.fillStyle='rgba(255,255,255,'+alpha.toFixed(3)+')';
+      c2d.fillRect(cx,y,w,h);
+      c2d.fillStyle='rgba(123,157,196,'+(alpha*0.65).toFixed(3)+')';
+      c2d.fillRect(cx+6,y+h-3,w-12,3);
+    }
+  }
+}
+
+function drawRoadSurfaceBreakupTo(c2d){
+  // Self-crit fix: road read was too uniform. Add deterministic wear, seams, and curb contact shadows.
+  for(let i=0;i<84;i++){
+    const y=150+i*26;
+    const left=ROAD_X+20+Math.floor(hash2(i,1,71)*46);
+    const width=10+Math.floor(hash2(i,1,72)*32);
+    const tone=hash2(i,1,73);
+    c2d.fillStyle=tone<0.5?'rgba(255,255,255,.035)':'rgba(0,0,0,.045)';
+    c2d.fillRect(left,y,width,2);
+    if(i%3===0){
+      const right=ROAD_X+ROAD_W-26-Math.floor(hash2(i,2,74)*42);
+      c2d.fillRect(right,y,8+Math.floor(hash2(i,2,75)*22),2);
+    }
+  }
+  for(let y=210;y<world.h-70;y+=124){
+    const seamJitter=Math.floor(hash2(y,4,76)*12)-6;
+    c2d.fillStyle='rgba(18,24,34,.14)';
+    c2d.fillRect(ROAD_X+ROAD_W*0.25+seamJitter,y,2,42);
+    c2d.fillRect(ROAD_X+ROAD_W*0.75-seamJitter,y+16,2,44);
+  }
+  c2d.fillStyle='rgba(0,0,0,.08)';
+  c2d.fillRect(ROAD_X+12,120,6,world.h-120);
+  c2d.fillRect(ROAD_X+ROAD_W-18,120,6,world.h-120);
+}
+
+function drawChapterLandmarkPadsTo(c2d){
+  // Self-crit fix: chapter locations needed stronger scene anchoring before interaction.
+  nodes.forEach((n,idx)=>{
+    const r=22 + (idx%3)*4;
+    c2d.fillStyle='rgba(28,40,58,.2)';
+    c2d.fillRect(n.x-r,n.y+r-2,r*2,4);
+    c2d.fillStyle='rgba(255,243,196,.18)';
+    c2d.fillRect(n.x-r+4,n.y-r+6,r*2-8,2);
+    c2d.fillStyle='rgba(255,210,122,.13)';
+    c2d.fillRect(n.x-r+8,n.y-r+10,r*2-16,2);
+  });
+}
+
+function buildStaticBase(c2d){
+  const sky=c2d.createLinearGradient(0,0,0,620); sky.addColorStop(0,'#9ec3f5'); sky.addColorStop(1,'#d9f0ff'); c2d.fillStyle=sky; c2d.fillRect(0,0,world.w,620);
+  drawSkyCloudBandsTo(c2d);
+  c2d.fillStyle=MATERIALS.foliage.base; c2d.fillRect(0,0,world.w,560);
+  drawPremiumSilhouettePassTo(c2d);
+  for(let y=0;y<560;y+=16){
+    for(let x=0;x<world.w;x+=20){
+      const n=hash2(x,y,11);
+      c2d.fillStyle=n<0.22?MATERIALS.foliage.shade:n<0.44?'#41985a':n<0.7?MATERIALS.foliage.base:MATERIALS.foliage.highlight;
+      c2d.fillRect(x,y,18+Math.floor(hash2(x,y,12)*4),12+Math.floor(hash2(x,y,13)*5));
+      if(n>0.72){c2d.fillStyle='rgba(210,250,190,.2)';c2d.fillRect(x+2,y+2,5+Math.floor(hash2(x,y,14)*4),2);}
+    }
+  }
+  c2d.fillStyle=MATERIALS.concrete.base; c2d.fillRect(0,560,world.w,world.h-560);
+  for(let y=560;y<world.h;y+=18){
+    for(let x=0;x<world.w;x+=18){
+      const n=hash2(x,y,21);
+      c2d.fillStyle=n<0.28?MATERIALS.concrete.shade:n<0.9?MATERIALS.concrete.base:MATERIALS.concrete.highlight;
+      c2d.fillRect(x,y,15+Math.floor(hash2(x,y,22)*2),15+Math.floor(hash2(x,y,23)*2));
+      if(n>0.8){c2d.fillStyle='rgba(0,0,0,.06)';c2d.fillRect(x+5,y+6,2+Math.floor(hash2(x,y,24)*3),2);}
+      if(n<0.11){c2d.fillStyle='rgba(255,255,255,.09)';c2d.fillRect(x+2,y+2,4,1);}
+    }
+  }
+  const grime=c2d.createLinearGradient(0,1200,0,world.h); grime.addColorStop(0,'rgba(0,0,0,0)'); grime.addColorStop(1,'rgba(0,0,0,.12)'); c2d.fillStyle=grime; c2d.fillRect(0,1200,world.w,world.h-1200);
+  c2d.fillStyle=MATERIALS.asphalt.base; c2d.fillRect(ROAD_X,120,ROAD_W,world.h-120); c2d.fillStyle=MATERIALS.asphalt.shade; c2d.fillRect(ROAD_X+10,120,ROAD_W-20,world.h-120);
+  c2d.fillStyle='rgba(0,0,0,.22)'; c2d.fillRect(ROAD_X,120,10,world.h-120); c2d.fillRect(ROAD_X+ROAD_W-10,120,10,world.h-120);
+  c2d.fillStyle='rgba(255,255,255,.08)'; c2d.fillRect(ROAD_X+14,120,4,world.h-120); c2d.fillRect(ROAD_X+ROAD_W-18,120,4,world.h-120);
+  c2d.fillStyle='rgba(255,255,255,.04)'; c2d.fillRect(ROAD_X+ROAD_W/2-2,120,4,world.h-120);
+  for(let y=180;y<world.h-60;y+=92){c2d.fillStyle='#f5f5f5';c2d.fillRect(ROAD_X+ROAD_W/2-6,y,12,46);} 
+  drawRoadSurfaceBreakupTo(c2d);
+  for(let i=0;i<12;i++){c2d.fillStyle='#f8f8f8'; c2d.fillRect(ROAD_X+70+i*32,720,18,90); c2d.fillRect(ROAD_X+70+i*32,1360,18,90); c2d.fillStyle='rgba(0,0,0,.08)'; c2d.fillRect(ROAD_X+70+i*32,810,18,3); c2d.fillRect(ROAD_X+70+i*32,1450,18,3);} 
+  drawHeroBlockTo(c2d,100,620,'warm'); drawHeroBlockTo(c2d,1240,620,'cool'); drawHeroBlockTo(c2d,100,1120,'warm'); drawPremiumHeroDistrictTo(c2d,1230,1108);
+  drawStreetPropsTo(c2d);
+  c2d.fillStyle='#4f5f77'; c2d.fillRect(610,604,36,24); c2d.fillStyle='#b8c7df'; c2d.fillRect(614,608,12,4);
+  c2d.fillStyle='#556981'; c2d.fillRect(1154,1572,38,26); c2d.fillStyle='#c5d4ea'; c2d.fillRect(1158,1576,14,4);
+  drawDistrictMicroScenesTo(c2d);
+  drawChapterLandmarkPadsTo(c2d);
+  for(let i=0;i<8;i++){c2d.fillStyle='#7f552f';c2d.fillRect(150,700+i*120,28,56);c2d.fillStyle='#cda679';c2d.fillRect(154,706+i*120,20,40);} 
+  for(let i=0;i<26;i++){const fx=1210+(i*29)%520, fy=980+((i*67)%540);c2d.fillStyle=['#ffd66d','#ffffff','#ff8aa5','#a6e874'][i%4];c2d.fillRect(fx,fy,3,3);} 
+  for(let i=0;i<40;i++){const dx=80+((i*83)%1640), dy=620+((i*61)%1660); c2d.fillStyle=i%3===0?'rgba(0,0,0,.10)':'rgba(255,255,255,.08)'; c2d.fillRect(dx,dy,6,2);} 
+  c2d.fillStyle=MATERIALS.painted_metal.base;
+  c2d.fillRect(100,1850,650,24); c2d.fillRect(1050,1850,650,24);
+  c2d.fillRect(100,1930,650,24); c2d.fillRect(1050,1930,650,24);
+  for(let x=110;x<740;x+=30){c2d.fillStyle=MATERIALS.painted_metal.highlight;c2d.fillRect(x,1850,4,24);c2d.fillRect(x,1930,4,24);} 
+  for(let x=1060;x<1690;x+=30){c2d.fillStyle=MATERIALS.painted_metal.highlight;c2d.fillRect(x,1850,4,24);c2d.fillRect(x,1930,4,24);} 
+  c2d.fillStyle='rgba(0,0,0,.16)';
+  c2d.fillRect(100,1874,650,8); c2d.fillRect(1050,1874,650,8);
+  c2d.fillRect(100,1954,650,8); c2d.fillRect(1050,1954,650,8);
+  c2d.fillStyle='rgba(255,235,160,.18)'; c2d.fillRect(770,1858,260,6); c2d.fillRect(770,1938,260,6);
+  DEPTH_BANDS.forEach(b=>{c2d.fillStyle='rgba(20,30,45,'+b.a+')'; c2d.fillRect(0,b.y,world.w,world.h-b.y);});
+}
+function buildStaticDetail(c2d){for(let i=0;i<120;i++){const x=(i*149)%world.w, y=620+((i*97)%1700); c2d.fillStyle=i%2?'rgba(20,30,45,.04)':'rgba(255,255,255,.05)'; c2d.fillRect(x,y,4,2);}}
+function rebuildStaticLayers(){
+  staticBase=makeLayer(); staticDetail=makeLayer();
+  const bctx=staticBase.getContext('2d'), dctx=staticDetail.getContext('2d');
+  bctx.imageSmoothingEnabled=false; dctx.imageSmoothingEnabled=false;
+  bctx.clearRect(0,0,world.w,world.h); dctx.clearRect(0,0,world.w,world.h);
+  buildStaticBase(bctx); buildStaticDetail(dctx);
+}
+
+function drawParallaxBack(){
+  const drift=cam.x*0.18, baseY=158;
+  for(let i=0;i<16;i++){
+    const seed=hash2(i,7,31);
+    const x=((i*178-drift)% (world.w+300)) - 150;
+    const w=108+Math.floor(seed*42);
+    const h=94+Math.floor(hash2(i,11,32)*66);
+    const y=baseY+84-h;
+    ctx.fillStyle=ART_PASS.facade[i%ART_PASS.facade.length]; ctx.fillRect(x,y,w,h);
+    ctx.fillStyle='rgba(255,255,255,.12)'; ctx.fillRect(x+8,y+10,Math.max(14,Math.floor(w*0.18)),3);
+    ctx.fillStyle='rgba(23,36,56,.2)'; ctx.fillRect(x,y+h-6,w,6);
+    if(i%3===0){
+      ctx.fillStyle=ART_PASS.neutral[(i+1)%ART_PASS.neutral.length]; ctx.fillRect(x+Math.floor(w*0.64),y-18,12,18);
+      ctx.fillStyle='rgba(255,216,145,.2)'; ctx.fillRect(x+Math.floor(w*0.64)+2,y-15,8,4);
+    }
+  }
+}
+function drawParallaxFront(){
+  const drift=cam.x*0.32;
+  for(let i=0;i<22;i++){
+    const x=((i*118-drift)% (world.w+220)) - 110;
+    const y=558 + (i%3)*6 + Math.floor(hash2(i,9,41)*4);
+    const w=44+Math.floor(hash2(i,10,42)*18);
+    const h=14+Math.floor(hash2(i,11,43)*8);
+    ctx.fillStyle='rgba(28,66,42,.33)'; ctx.fillRect(x,y,w,h);
+    ctx.fillStyle='rgba(210,250,190,.15)'; ctx.fillRect(x+6,y+3,Math.max(10,Math.floor(w*0.24)),3);
+    if(i%5===0){
+      ctx.fillStyle='rgba(72,96,128,.28)'; ctx.fillRect(x+Math.floor(w*0.56),y-6,8,6);
+    }
+  }
+}
+
+function drawReactiveProp(p){
+  if(!inView(p.x-8,p.y-12,p.w+16,p.h+20,70)) return;
+  const glow=Math.min(1,p.lit);
+  const frame='rgba(15,27,45,.95)';
+  const accent=glow>0.1?'#8df7ff':'#f7d78f';
+  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fillRect(p.x+2,p.y+p.h,p.w,4);
+  ctx.fillStyle=frame; ctx.fillRect(p.x,p.y,p.w,p.h);
+  ctx.fillStyle=accent; ctx.fillRect(p.x+3,p.y+3,p.w-6,Math.max(4,p.h-10));
+  if(p.type==='cart'){ ctx.fillStyle='#5b3b2d'; ctx.fillRect(p.x+4,p.y+p.h-6,p.w-8,4); ctx.fillStyle='#d4a46f'; ctx.fillRect(p.x+7,p.y+1,p.w-14,3); }
+  if(p.type==='toolbox'){ ctx.fillStyle='#394f70'; ctx.fillRect(p.x+6,p.y+4,p.w-12,4); }
+  if(p.type==='bench'){ ctx.fillStyle='#8d6b49'; ctx.fillRect(p.x+5,p.y+p.h-8,p.w-10,3); }
+  if(glow>0.05){ ctx.fillStyle='rgba(141,247,255,'+(0.14+glow*0.2)+')'; ctx.fillRect(p.x-4,p.y-4,p.w+8,p.h+8); }
+}
+
+const LIGHT_ZONES=[
+  {id:'north-garden',x:330,y:760,r:330,color:'100,196,138',strength:0.26,flicker:0.03},
+  {id:'north-plaza',x:1450,y:800,r:310,color:'108,173,255',strength:0.24,flicker:0.02},
+  {id:'mid-corridor',x:900,y:1290,r:420,color:'255,198,122',strength:0.15,flicker:0.015},
+  {id:'south-market',x:360,y:1710,r:300,color:'245,130,138',strength:0.2,flicker:0.03},
+  {id:'south-hub',x:1360,y:1730,r:330,color:'142,124,255',strength:0.2,flicker:0.025},
+  {id:'finale',x:900,y:2110,r:360,color:'108,232,212',strength:0.28,flicker:0.018}
+];
+const LENS_ACCENTS={
+  avenueGlow:0.08,
+  depthFogMax:0.2,
+  beaconPulse:0.12,
+  rimBoost:1.15
+};
+
+function drawCinematicAtmosphere(){
+  const depthRatio=Math.min(1,Math.max(0,cam.y/(world.h-vh||1)));
+  const fx=perf.effectsBudget;
+
+  // Subtle aerial perspective to separate near/far planes and improve readability.
+  if(fx<0.52){
+    ctx.fillStyle='rgba(30,38,52,'+(0.05 + depthRatio*0.12).toFixed(3)+')';
+    ctx.fillRect(0,0,vw,vh);
+  }else{
+    const fog=ctx.createLinearGradient(0,0,0,vh);
+    fog.addColorStop(0,'rgba(188,220,255,'+(0.02 + depthRatio*0.02).toFixed(3)+')');
+    fog.addColorStop(0.55,'rgba(120,145,176,'+(0.03 + depthRatio*0.04).toFixed(3)+')');
+    fog.addColorStop(1,'rgba(30,38,52,'+(0.08 + depthRatio*LENS_ACCENTS.depthFogMax).toFixed(3)+')');
+    ctx.fillStyle=fog;
+    ctx.fillRect(0,0,vw,vh);
+  }
+
+  // Vertical story composition guide: center corridor stays legible without explicit UI lines.
+  if(fx>0.45){
+    const corridorX=ROAD_X-cam.x+ROAD_W*0.5;
+    const corridor=ctx.createRadialGradient(corridorX,vh*0.48,24,corridorX,vh*0.55,Math.max(180,vw*0.35));
+    corridor.addColorStop(0,'rgba(255,230,170,'+((0.055+LENS_ACCENTS.avenueGlow)*fx).toFixed(3)+')');
+    corridor.addColorStop(1,'rgba(255,230,170,0)');
+    ctx.fillStyle=corridor;
+    ctx.fillRect(corridorX-vw*0.38,0,vw*0.76,vh);
+  }
+}
+
+function getProgressionPhase(){
+  const unlocked=viewed.size;
+  return progressionPhases.find(p=>unlocked>=p.min && unlocked<=p.max) || progressionPhases[progressionPhases.length-1];
+}
+function getCityMinute(){
+  return Math.floor((time*0.2)%1440);
+}
+function getScheduleBand(minute=getCityMinute()){
+  return scheduleBands.find(b=>b.start<=b.end ? (minute>=b.start && minute<b.end) : (minute>=b.start || minute<b.end)) || scheduleBands[2];
+}
+function getCadenceProfile(phaseId,bandId){
+  const phase=phaseCadence[phaseId]||phaseCadence.bootstrap;
+  const band=scheduleBands.find(b=>b.id===bandId)||scheduleBands[2];
+  return {
+    traffic:phase.traffic*band.traffic,
+    npc:phase.npc*band.npc,
+    social:Math.max(0.18,Math.min(0.9,phase.social*band.social))
+  };
+}
+function shouldAnnounce(key,minGapSec){
+  const now=time/60;
+  const last=narrativeState.talkLedger.get(key) ?? -999;
+  if(now-last<minGapSec) return false;
+  narrativeState.talkLedger.set(key,now);
+  return true;
+}
+function getPairScript(a,b,bandId){
+  const key=[a.role,b.role].sort().join('_');
+  const script=pairScripts[key] || ['Quick sync complete.','Loop adjusted, continuing.'];
+  const phaseOffset=bandId==='rush'?1:bandId==='handoff'?2:0;
+  const idx=Math.floor((time*0.017 + a.x*0.001 + b.y*0.001)+phaseOffset)%script.length;
+  return script[(idx+script.length)%script.length];
+}
+
+function queueSystemicChain(tag,msg,minGapSec=18,priority=0){
+  const now=time/60;
+  const last=systemicState.recentTags.get(tag)??-999;
+  if(now-last<minGapSec) return;
+  systemicState.recentTags.set(tag,now);
+  systemicState.chainQueue.push({tag,msg,priority});
+  if(systemicState.chainQueue.length>4) systemicState.chainQueue.shift();
+}
+
+function runInteractionChains(dt,phase,band,cadence){
+  systemicState.chainCooldown=Math.max(0,systemicState.chainCooldown-dt);
+  systemicState.routinePulse=Math.max(0,systemicState.routinePulse-dt);
+  if(systemicState.chainCooldown>0 || systemicState.chainQueue.length===0) return;
+
+  const focusMsg={
+    north:'Dispatch focus: north blocks stabilize with shorter handoff loops.',
+    center:'Dispatch focus: avenue corridor balancing delivery and callback traffic.',
+    south:'Dispatch focus: south districts absorb field + support demand cleanly.'
+  };
+
+  const picked=systemicState.chainQueue.sort((a,b)=>b.priority-a.priority).shift();
+  if(!picked) return;
+  toast(picked.msg,{priority:picked.priority>0?1:0,hold:1450});
+
+  if(systemicState.routinePulse<=0 && Math.random()<(0.28*cadence.social)){
+    toast(focusMsg[systemicState.districtFocus]||focusMsg.center,{dedupeMs:22000});
+    systemicState.routinePulse=18;
+  }
+
+  systemicState.chainCooldown=Math.max(7.5,12.5/cadence.social);
+}
+
+function applyProgressionReactions(force=false){
+  const phase=getProgressionPhase();
+  if(force || phase.id!==narrativeState.phase){
+    narrativeState.phase=phase.id;
+    LIGHT_ZONES.forEach(z=>{z.dynamicStrength=z.strength*phase.lightMult;});
+    if(!narrativeState.phaseAnnounced.has(phase.id)){
+      toast('City Phase: '+phase.id.toUpperCase()+' — '+phase.roleToast);
+      narrativeState.phaseAnnounced.add(phase.id);
+    }
+  }
+  progressionReactions.forEach(r=>{
+    if(!r.done && viewed.size>=r.min){ r.done=true; toast(r.msg); }
+  });
+}
+
+function runRoleLoops(dt){
+  narrativeState.roleLoopCooldown=Math.max(0,narrativeState.roleLoopCooldown-dt);
+  if(narrativeState.roleLoopCooldown>0) return;
+  const phase=narrativeState.phase;
+  const band=getScheduleBand();
+  const cadence=getCadenceProfile(phase,band.id);
+  const rolesByPhase={
+    bootstrap:['planner','driver','support'],
+    growing:['planner','driver','ops','sales'],
+    coordinated:['ops','sales','field','support'],
+    citywide:['ops','field','partner','sales']
+  };
+  const choices=rolesByPhase[phase]||rolesByPhase.bootstrap;
+  const role=choices[Math.floor((time*0.09)%choices.length)];
+  if(role===narrativeState.lastRoleLoop){ narrativeState.roleLoopCooldown=5; return; }
+  const actor=npcs.find(n=>n.role===role);
+  if(actor && distSq(player.x,player.y,actor.x,actor.y)<(220*220) && shouldAnnounce('role-'+role,11/cadence.social)){
+    toast('Role Loop ['+band.label+']: '+actor.name+' ('+role+') → '+(actor.dynamicPhrase||actor.phrase));
+    queueSystemicChain('role-loop-'+role,actor.name+' relays to adjacent teams; lane timing adjusts for the next cycle.',20,0);
+    narrativeState.lastRoleLoop=role;
+    narrativeState.roleLoopCooldown=Math.max(8,13/cadence.social);
+  }else{
+    narrativeState.roleLoopCooldown=6;
+  }
+}
+
+function runNpcProximityInteractions(dt){
+  narrativeState.npcTalkCooldown=Math.max(0,narrativeState.npcTalkCooldown-dt);
+  if(narrativeState.npcTalkCooldown>0) return;
+  const band=getScheduleBand();
+  const cadence=getCadenceProfile(narrativeState.phase,band.id);
+  const nearby=npcs.find(n=>distSq(player.x,player.y,n.x,n.y)<(46*46));
+  if(!nearby) return;
+  if(Math.random()>cadence.social) { narrativeState.npcTalkCooldown=3; return; }
+  const phaseTag=narrativeState.phase==='citywide'?'[citywide sync]':narrativeState.phase==='coordinated'?'[coord loop]':'[local loop]';
+  const key='npc-near-'+nearby.name+'-'+band.id;
+  if(!shouldAnnounce(key,14/cadence.social)){ narrativeState.npcTalkCooldown=4; return; }
+  toast(nearby.name+': '+(nearby.dynamicPhrase||nearby.phrase)+' '+phaseTag);
+  queueSystemicChain('npc-prox-'+nearby.role,nearby.name+' syncs a quick handoff and the district cadence tightens.',16,0);
+  systemicState.socialEnergy=Math.min(0.9,systemicState.socialEnergy+0.03);
+  narrativeState.npcTalkCooldown=Math.max(6,11/cadence.social);
+}
+
+function runZoneMicroEvents(dt){
+  narrativeState.zonePulseCooldown=Math.max(0,narrativeState.zonePulseCooldown-dt);
+  if(narrativeState.zonePulseCooldown>0) return;
+  const phase=narrativeState.phase;
+  const hit=zoneMicroEvents.find(e=>e.phase.includes(phase) && e.when());
+  if(!hit) return;
+  toast(hit.msg);
+  const focusByZone={Z1:'north',Z2:'north',Z3:'south',Z4:'center'};
+  systemicState.districtFocus=focusByZone[hit.id]||systemicState.districtFocus;
+  queueSystemicChain('zone-'+hit.id,'Chain reaction: nearby teams mirror this adjustment within one block.',22,1);
+  narrativeState.zonePulseCooldown=hit.cooldown;
+}
+function runSchedulePulse(dt,phase){
+  narrativeState.scheduleToastCooldown=Math.max(0,narrativeState.scheduleToastCooldown-dt);
+  const band=getScheduleBand();
+  if(band.id!==narrativeState.lastScheduleBand && narrativeState.scheduleToastCooldown<=0){
+    const profile=getCadenceProfile(phase.id,band.id);
+    toast('City Schedule: '+band.label+' — cadence x'+profile.traffic.toFixed(2)+' traffic / x'+profile.npc.toFixed(2)+' teams');
+    narrativeState.lastScheduleBand=band.id;
+    narrativeState.scheduleToastCooldown=22;
+  }
+}
+
+function drawArtDirectedLighting(){
+  const playerSX=player.x-cam.x, playerSY=player.y-cam.y;
+  const nextNode=nodes.find(n=>!viewed.has(n.id));
+  const isLow=quality==='low' || REDUCED_MOTION;
+  const isMedium=quality==='medium';
+  const fx=perf.effectsBudget;
+
+  const vignette=ctx.createRadialGradient(vw*0.5,vh*0.42,Math.min(vw,vh)*0.16,vw*0.5,vh*0.54,Math.max(vw,vh)*0.88);
+  vignette.addColorStop(0,'rgba(0,0,0,0)');
+  vignette.addColorStop(0.62,isLow?'rgba(8,16,28,.12)':'rgba(8,16,28,.16)');
+  vignette.addColorStop(1,isLow?'rgba(5,10,18,.32)':'rgba(5,10,18,.43)');
+  ctx.fillStyle=vignette;
+  ctx.fillRect(0,0,vw,vh);
+
+  if(!isLow && fx>0.58){
+    const diag=ctx.createLinearGradient(0,0,vw,vh);
+    diag.addColorStop(0,'rgba(116,164,255,'+(0.12*fx).toFixed(3)+')');
+    diag.addColorStop(0.5,'rgba(18,28,44,'+(0.04*fx).toFixed(3)+')');
+    diag.addColorStop(1,'rgba(255,172,122,'+(0.12*fx).toFixed(3)+')');
+    ctx.fillStyle=diag;
+    ctx.fillRect(0,0,vw,vh);
+  }
+
+  const zoneCap=isLow?2:(isMedium?4:LIGHT_ZONES.length);
+  const maxZones=Math.max(1,Math.floor(zoneCap*Math.max(0.45,perf.hotspotBudget)));
+  for(let i=0;i<LIGHT_ZONES.length && i<maxZones;i++){
+    const z=LIGHT_ZONES[i];
+    const sx=z.x-cam.x, sy=z.y-cam.y;
+    if(sx<-z.r || sx>vw+z.r || sy<-z.r || sy>vh+z.r) continue;
+    const pulse=1+Math.sin(time*0.011+i*1.7)*(isLow?0:z.flicker);
+    const strength=(z.dynamicStrength||z.strength)*(isLow?0.65:1);
+    const rg=ctx.createRadialGradient(sx,sy,z.r*0.15,sx,sy,z.r*pulse);
+    rg.addColorStop(0,'rgba('+z.color+','+(strength*0.9).toFixed(3)+')');
+    rg.addColorStop(0.56,'rgba('+z.color+','+(strength*0.42).toFixed(3)+')');
+    rg.addColorStop(1,'rgba('+z.color+',0)');
+    ctx.fillStyle=rg;
+    ctx.fillRect(sx-z.r,sy-z.r,z.r*2,z.r*2);
+  }
+
+  if(!isLow && fx>0.5){
+    const roadLeft=ROAD_X-cam.x+18, roadWidth=ROAD_W-36;
+    const roadGuide=ctx.createLinearGradient(0,0,0,vh);
+    roadGuide.addColorStop(0,'rgba(255,255,255,'+(0.045*fx).toFixed(3)+')');
+    roadGuide.addColorStop(0.45,'rgba(250,218,140,'+(0.06*fx).toFixed(3)+')');
+    roadGuide.addColorStop(1,'rgba(25,18,16,'+(0.16*fx).toFixed(3)+')');
+    ctx.fillStyle=roadGuide;
+    ctx.fillRect(roadLeft,0,roadWidth,vh);
+  }
+
+  const objective=nextNode || nodes[nodes.length-1];
+  if(objective){
+    const ox=objective.x-cam.x, oy=objective.y-cam.y;
+    const or=nextNode?150:210;
+    const cue=ctx.createRadialGradient(ox,oy,12,ox,oy,or);
+    cue.addColorStop(0,nextNode?'rgba(255,228,140,.34)':'rgba(112,255,190,.28)');
+    cue.addColorStop(0.4,nextNode?'rgba(255,201,110,.14)':'rgba(112,255,190,.12)');
+    cue.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=cue;
+    ctx.fillRect(ox-or,oy-or,or*2,or*2);
+
+    if(nextNode && !isLow && fx>0.62){
+      const pulse=0.65+Math.sin(time*0.02)*LENS_ACCENTS.beaconPulse;
+      const beacon=ctx.createLinearGradient(ox,0,ox,oy);
+      beacon.addColorStop(0,'rgba(255,234,174,0)');
+      beacon.addColorStop(0.65,'rgba(255,218,132,'+(0.035*pulse).toFixed(3)+')');
+      beacon.addColorStop(1,'rgba(255,198,116,'+(0.09*pulse).toFixed(3)+')');
+      ctx.fillStyle=beacon;
+      ctx.fillRect(ox-18,0,36,Math.max(0,oy));
+    }
+  }
+
+  const heroLight=ctx.createRadialGradient(playerSX,playerSY-6,4,playerSX,playerSY-2,58);
+  heroLight.addColorStop(0,'rgba(255,248,210,'+(0.26*LENS_ACCENTS.rimBoost).toFixed(3)+')');
+  heroLight.addColorStop(0.4,'rgba(255,214,138,'+(0.13*LENS_ACCENTS.rimBoost).toFixed(3)+')');
+  heroLight.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=heroLight;
+  ctx.fillRect(playerSX-58,playerSY-58,116,116);
+}
+
+function update(dt){
+  guardClock+=dt;
+  if(guardClock>1.2){
+    runRegressionGuards();
+    guardClock=0;
+  }
+  if(anyModalOpen()){
+    snapMotion();
+    return;
+  }
+  time += dt*60;
+  encounterAutoCooldown=Math.max(0,encounterAutoCooldown-dt);
+  if(encounter.animT>0){ encounter.animT=Math.max(0,encounter.animT-dt); if(encounter.animT===0) encounter.phase='idle'; }
+  const phase=getProgressionPhase();
+  const scheduleBand=getScheduleBand();
+  const cadence=getCadenceProfile(phase.id,scheduleBand.id);
+  traffic.forEach((c,i)=>{
+    c.signal=(Math.sin(time*0.015+i*0.8)+1)*0.5;
+    const stopGo=0.68 + c.signal*0.52;
+    c.y += (c.lane==='down'?1:-1)*c.speed*phase.trafficMult*cadence.traffic*stopGo*dt;
+    if(c.y>world.h-80) c.y=170;
+    if(c.y<140) c.y=world.h-110;
+  });
+  npcs.forEach((n,i)=>{
+    n.pause=Math.max(0,(n.pause||0)-dt);
+    if(n.pause<=0 && Math.random()<0.012*cadence.social){
+      n.pause=0.8+Math.random()*1.8;
+    }
+    const drift=n.pause>0?0.18:1;
+    n.x += n.vx*dt*cadence.npc*drift;
+    n.y += n.vy*dt*cadence.npc*drift;
+    if(n.x<n.minX || n.x>n.maxX) n.vx*=-1;
+    if(n.y<n.minY || n.y>n.maxY) n.vy*=-1;
+    if(i%2===0) n.x += Math.sin((time+i*13)*0.03)*0.12;
+    const speed=Math.hypot(n.vx*drift,n.vy*drift)*cadence.npc;
+    n.moving=speed>4;
+    n.dir=Math.abs(n.vx)>Math.abs(n.vy)?(n.vx>=0?'right':'left'):(n.vy>=0?'down':'up');
+    n.phase=(n.phase||0)+(dt*8 + speed*dt*0.03);
+    const script=roleScripts[n.role]||[n.phrase];
+    const slot=Math.floor((time*0.02 + i*0.7 + (scheduleBand.id==='handoff'?1:0))%script.length);
+    n.dynamicPhrase=script[slot];
+  });
+
+  playerStats.attackCd=Math.max(0,playerStats.attackCd-dt);
+  playerStats.invuln=Math.max(0,playerStats.invuln-dt);
+  playerStats.mp=Math.min(playerStats.maxMp,playerStats.mp+dt*1.2);
+  // Overworld is non-combat; battles occur only in encounter modal.
+  mobs.forEach((m,idx)=>{
+    m.x += Math.sin((time+idx*23)*0.01)*3*dt;
+    m.y += Math.cos((time+idx*29)*0.01)*3*dt;
+    m.x=Math.max(90,Math.min(world.w-90,m.x));
+    m.y=Math.max(620,Math.min(world.h-80,m.y));
+  });
+
+  npcChatPairs=[];
+  for(let i=0;i<npcs.length;i++){
+    for(let j=i+1;j<npcs.length;j++){
+      const a=npcs[i], b=npcs[j];
+      const pairKey=makeOrderedPairKey(a.name,b.name);
+      const last=narrativeState.pairLedger.get(pairKey)||0;
+      const now=time/60;
+      if(now-last<8.5) continue;
+      if(distSq(a.x,a.y,b.x,b.y)<(56*56) && inView((a.x+b.x)/2,(a.y+b.y)/2,30,30,150) && Math.random()<(0.42*cadence.social)){
+        npcChatPairs.push({a,b,msg:getPairScript(a,b,scheduleBand.id)});
+        narrativeState.pairLedger.set(pairKey,now);
+        if(npcChatPairs.length>=2) break;
+      }
+    }
+    if(npcChatPairs.length>=2) break;
+  }
+  let ix=(keys['ArrowRight']||keys['d']?1:0)-(keys['ArrowLeft']||keys['a']?1:0), iy=(keys['ArrowDown']||keys['s']?1:0)-(keys['ArrowUp']||keys['w']?1:0);
+  if(Math.abs(joyState.x)>0.06||Math.abs(joyState.y)>0.06){
+    if(Math.abs(joyState.x)>Math.abs(joyState.y)){ ix=Math.sign(joyState.x); iy=0; }
+    else { iy=Math.sign(joyState.y); ix=0; }
+  }
+
+  let debugExpanded=[];
+  if(TILE_MOVE.enabled){
+    if(!tileState.moving){
+      let sx=0,sy=0;
+      if(Math.abs(ix)>Math.abs(iy)){ sx=Math.sign(ix); }
+      else if(Math.abs(iy)>0){ sy=Math.sign(iy); }
+      if(sx||sy){
+        tileState.targetX=player.x + sx*TILE_MOVE.size;
+        tileState.targetY=player.y + sy*TILE_MOVE.size;
+        tileState.moving=true;
+        playerAnim.dir=sx>0?'right':sx<0?'left':sy>0?'down':'up';
+      }
+    }
+
+    motionState.vx=0; motionState.vy=0;
+    if(tileState.moving){
+      const dx=tileState.targetX-player.x;
+      const dy=tileState.targetY-player.y;
+      const dist=Math.hypot(dx,dy);
+      const step=Math.min(dist,TILE_MOVE.stepSpeed*TILE_MOVE.size*dt);
+      const nx=player.x + (dist?dx/dist:0)*step;
+      const ny=player.y + (dist?dy/dist:0)*step;
+      const resolved=resolvePlayerCollision(nx,ny);
+      player.x=resolved.x; player.y=resolved.y;
+      if(collisionDebug.enabled) debugExpanded=resolved.expanded;
+      if(dist<0.9 || (resolved.hitX||resolved.hitY)){
+        player.x=Math.round(player.x/TILE_MOVE.size)*TILE_MOVE.size;
+        player.y=Math.round(player.y/TILE_MOVE.size)*TILE_MOVE.size;
+        tileState.moving=false;
+      }
+    }
+
+    const animSpeedNorm=tileState.moving?0.95:0;
+    playerAnim.speed=animSpeedNorm;
+    playerAnim.moving=tileState.moving;
+    if(playerAnim.moving) playerAnim.phase += dt*11;
+    else playerAnim.phase *= 0.88;
+  } else {
+    const inputMag=Math.hypot(ix,iy), m=inputMag||1; ix/=m; iy/=m;
+    const maxSpeed=player.s*MOVEMENT_TUNING.maxSpeedMul;
+    const targetVx=ix*maxSpeed*inputMag;
+    const targetVy=iy*maxSpeed*inputMag;
+    const responseRate=(inputMag>0.04)?MOVEMENT_TUNING.accel:MOVEMENT_TUNING.decel;
+    const blend=REDUCED_MOTION?1:(1-Math.exp(-responseRate*dt));
+    motionState.vx += (targetVx-motionState.vx)*blend;
+    motionState.vy += (targetVy-motionState.vy)*blend;
+
+    const moveX=motionState.vx*dt;
+    const moveY=motionState.vy*dt;
+    const maxTravel=Math.max(Math.abs(moveX),Math.abs(moveY));
+    const stepCount=Math.max(1,Math.min(4,Math.ceil(maxTravel/6)));
+    let nextX=player.x;
+    let nextY=player.y;
+    let hitX=false, hitY=false;
+
+    for(let s=0;s<stepCount;s++){
+      const desiredX=nextX + moveX/stepCount;
+      const desiredY=nextY + moveY/stepCount;
+      player.x=nextX; player.y=nextY;
+      const resolved=resolvePlayerCollision(desiredX,desiredY);
+      nextX=resolved.x; nextY=resolved.y;
+      hitX=hitX||resolved.hitX; hitY=hitY||resolved.hitY;
+      if(collisionDebug.enabled) debugExpanded=resolved.expanded;
+    }
+
+    player.x=nextX; player.y=nextY;
+    if(hitX && Math.abs(moveX)>0.0001) motionState.vx=0;
+    if(hitY && Math.abs(moveY)>0.0001) motionState.vy=0;
+    const planarSpeed=Math.hypot(motionState.vx,motionState.vy);
+    const animSpeedNorm=Math.min(1,planarSpeed/(maxSpeed||1));
+    playerAnim.speed=animSpeedNorm;
+    playerAnim.moving=animSpeedNorm>0.05;
+    if(playerAnim.moving){
+      const dirX=Math.abs(motionState.vx), dirY=Math.abs(motionState.vy);
+      playerAnim.dir=dirX>dirY?(motionState.vx>=0?'right':'left'):(motionState.vy>=0?'down':'up');
+      playerAnim.phase += dt*(12 + animSpeedNorm*11);
+    } else playerAnim.phase *= 0.88;
+  }
+
+  if(collisionDebug.enabled) lastCollisionDebugData=debugExpanded;
+  constrainToLinearRoute();
+  const nearNode=getNearestLockedNode(84);
+  nearbyNodeId=nearNode?nearNode.id:null;
+  if(nearNode && !encounter.active && !guidedTourActive && encounterAutoCooldown<=0 && !battleModal.classList.contains('open')){
+    interactNode();
+  }
+
+  if(!EXPERIENCE_FOCUS){
+    runRoleLoops(dt);
+    runNpcProximityInteractions(dt);
+    runZoneMicroEvents(dt);
+    runSchedulePulse(dt,phase);
+    runInteractionChains(dt,phase,scheduleBand,cadence);
+  }
+
+  if(!EXPERIENCE_FOCUS){
+    reactiveProps.forEach(p=>{
+      p.cooldown=Math.max(0,p.cooldown-dt);
+      p.lit=Math.max(0,p.lit-dt*1.1);
+      const trigger=propTriggerBounds.get(p.id);
+      const near=trigger?pointInRect(player.x,player.y,trigger):distSq(player.x,player.y,p.x+p.w*0.5,p.y+p.h*0.5)<(58*58);
+      if(near){
+        p.lit=Math.min(1,p.lit+dt*3);
+        if(p.cooldown<=0){
+          toast(p.nearMsg);
+          queueSystemicChain('prop-'+p.id,p.label+' interaction ripples into the next team checkpoint.',19,0);
+          p.cooldown=13;
+        }
+      }
+    });
+
+    microStory.beatCooldown=Math.max(0,microStory.beatCooldown-dt);
+    if(microStory.beatCooldown<=0){
+      const beat=cityBeats.find(b=>pointInRect(player.x,player.y,{x:b.zone.x1-COLLISION.triggerPad,y:b.zone.y1-COLLISION.triggerPad,w:(b.zone.x2-b.zone.x1)+COLLISION.triggerPad*2,h:(b.zone.y2-b.zone.y1)+COLLISION.triggerPad*2}));
+      if(beat && beat.id!==microStory.lastBeatId){
+        toast(beat.title+': '+beat.line);
+        queueSystemicChain('beat-'+beat.id,'Follow-up: supervisors convert this beat into a measurable KPI checkpoint.',24,1);
+        microStory.lastBeatId=beat.id;
+        microStory.beatCooldown=18;
+      }
+    }
+  }
+
+  refreshHud();
+
+  const leadX=REDUCED_MOTION?0:(motionState.vx*MOVEMENT_TUNING.cameraLead);
+  const leadY=REDUCED_MOTION?0:(motionState.vy*MOVEMENT_TUNING.cameraLead);
+  const targetCamX=Math.max(0,Math.min(world.w-vw,player.x+leadX-vw*0.5));
+  const targetCamY=Math.max(0,Math.min(world.h-vh,player.y+leadY-vh*0.56));
+  const smooth=REDUCED_MOTION?1:(1-Math.exp(-MOVEMENT_TUNING.cameraSmooth*dt));
+
+  const dx=targetCamX-cam.x;
+  const dy=targetCamY-cam.y;
+  if(Math.abs(dx)>MOVEMENT_TUNING.cameraDeadzoneX) cam.x += dx*smooth; else cam.x=targetCamX;
+  if(Math.abs(dy)>MOVEMENT_TUNING.cameraDeadzoneY) cam.y += dy*smooth; else cam.y=targetCamY;
+
+  cam.x=Math.max(0,Math.min(world.w-vw,cam.x));
+  cam.y=Math.max(0,Math.min(world.h-vh,cam.y));
+}
+
+function drawCollisionDebugOverlay(){
+  if(!collisionDebug.enabled) return;
+  ctx.save();
+  ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(255,80,80,.55)';
+  ctx.fillStyle='rgba(255,80,80,.09)';
+  const blocks=lastCollisionDebugData.length?lastCollisionDebugData:COLLISION.staticProps.map(r=>expandRectForRadius(r,COLLISION.playerRadius));
+  blocks.forEach(r=>{
+    if(!inView(r.x,r.y,r.w,r.h,40)) return;
+    ctx.fillRect(r.x,r.y,r.w,r.h);
+    ctx.strokeRect(r.x,r.y,r.w,r.h);
+  });
+  ctx.strokeStyle='rgba(99,235,168,.95)';
+  ctx.beginPath();
+  ctx.arc(player.x,player.y,COLLISION.playerRadius,0,Math.PI*2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawMini(nowMs){
+  const interval=1000/qp.miniHz; if(nowMs - perf.lastMini < interval) return; perf.lastMini=nowMs;
+  mctx.clearRect(0,0,110,110); mctx.fillStyle='#9bbc6f';mctx.fillRect(0,0,110,110);
+  const sx=110/world.w, sy=110/world.h;
+  mctx.fillStyle='#7ea45c';mctx.fillRect(0,560*sy,110,110-(560*sy)); mctx.fillStyle='#306230';mctx.fillRect(ROAD_X*sx,120*sy,ROAD_W*sx,(world.h-120)*sy);
+  mctx.fillStyle='#4f7d46';mctx.fillRect(100*sx,1850*sy,1600*sx,24*sy);mctx.fillRect(100*sx,1930*sy,1600*sx,24*sy);
+  nodes.forEach(n=>{mctx.fillStyle=viewed.has(n.id)?'#c7f09d':'#8bac0f';mctx.fillRect(n.x*sx-1,n.y*sy-1,3,3);});
+  mctx.fillStyle='#d6f5c3';mctx.fillRect(player.x*sx-2,player.y*sy-2,4,4);
+}
+
+function render(nowMs){
+  ctx.clearRect(0,0,vw,vh);
+  ctx.save(); ctx.translate(-cam.x*0.88,-cam.y*0.88); drawParallaxBack(); ctx.restore();
+  ctx.drawImage(staticBase,cam.x,cam.y,vw,vh,0,0,vw,vh);
+  ctx.drawImage(staticDetail,cam.x,cam.y,vw,vh,0,0,vw,vh);
+  ctx.save(); ctx.translate(-cam.x,-cam.y);
+
+  traffic.forEach(c=>{if(!inView(c.x,c.y,STYLE_BIBLE.ref.carW+4,STYLE_BIBLE.ref.carL+4)) return; ctx.fillStyle=MATERIALS.asphalt.edge;ctx.fillRect(c.x-1,c.y-1,STYLE_BIBLE.ref.carW+2,STYLE_BIBLE.ref.carL+2); ctx.fillStyle=c.c;ctx.fillRect(c.x,c.y,STYLE_BIBLE.ref.carW,STYLE_BIBLE.ref.carL); ctx.fillStyle=MATERIALS.glass.highlight;ctx.fillRect(c.x+3,c.y+4,STYLE_BIBLE.ref.carW-6,10); ctx.fillStyle=MATERIALS.painted_metal.shade;ctx.fillRect(c.x+4,c.y+36,STYLE_BIBLE.ref.carW-8,8); ctx.fillStyle='#0d1119';ctx.fillRect(c.x+2,c.y+44,4,3);ctx.fillRect(c.x+STYLE_BIBLE.ref.carW-6,c.y+44,4,3);});
+  nodes.forEach(n=>{if(!inView(n.x-8,n.y-22,16,22,120)) return; const seen=viewed.has(n.id); const near=!seen && nearbyNodeId===n.id; ctx.fillStyle=seen?'#8bff9e':(near?'#ffd15c':'#ffdf6f'); ctx.fillRect(n.x-8,n.y-22,16,16); ctx.fillStyle='#1f2e4b'; ctx.fillRect(n.x-2,n.y-6,4,9); ctx.fillStyle='rgba(10,16,28,.86)'; ctx.fillRect(n.x-34,n.y-38,68,10); ctx.fillStyle='#eaf2ff'; ctx.font='bold 8px monospace'; ctx.fillText('STAGE '+n.id,n.x-30,n.y-30); if(near){ctx.fillStyle='#fff';ctx.font='bold 9px monospace';ctx.fillText('!',n.x-2,n.y-27);} });
+  reactiveProps.forEach(p=>{
+    drawReactiveProp(p);
+    if(p.lit>0.05){
+      ctx.fillStyle='rgba(8,14,24,.8)'; ctx.fillRect(p.x-4,p.y-12,p.label.length*4+8,9);
+      ctx.fillStyle='#eaf2ff'; ctx.font='bold 7px monospace'; ctx.fillText(p.label,p.x,p.y-5);
+    }
+  });
+  npcs.forEach((p,i)=>{if(!inView(p.x-16,p.y-24,32,48,80)) return; const shirt=RENDER_NPC_SHIRTS[i%RENDER_NPC_SHIRTS.length]; drawNPCGuy(p.x,p.y,shirt,p.c,{dir:p.dir,moving:p.moving,phase:p.phase});});
+  npcChatPairs.forEach(({a,b,msg})=>{const mx=(a.x+b.x)/2, my=(a.y+b.y)/2-34; if(!inView(mx-40,my-20,80,24,50)) return; ctx.fillStyle='#f8fbff'; ctx.fillRect(mx-34,my-16,68,16); ctx.strokeStyle='#1c2f47'; ctx.lineWidth=1; ctx.strokeRect(mx-34,my-16,68,16); ctx.fillStyle='#0f1b2d'; ctx.font='bold 8px monospace'; ctx.fillText(msg,mx-30,my-5);});
+  npcs.forEach((n,i)=>{if(!inView(n.x-8,n.y-30,16,14,50)) return; const icon=(i%3===0)?'…':(i%3===1?'!':'$'); ctx.fillStyle='rgba(8,14,24,.7)'; ctx.fillRect(n.x-4,n.y-26,8,8); ctx.fillStyle='#eaf2ff'; ctx.font='bold 8px monospace'; ctx.fillText(icon,n.x-3,n.y-19);});
+
+  const hotspotBudget=perf.hotspotBudget;
+  const crowdBase=REDUCED_MOTION?Math.min(2,qp.crowd):qp.crowd;
+  const crowdCap=Math.max(1,Math.floor(crowdBase*Math.max(0.35,hotspotBudget)));
+  for(let i=0;i<crowdCap;i++){
+    const zone=crowdAnchors[i%crowdAnchors.length];
+    const seed=i*1.17;
+    const px=zone.x+((Math.sin(time*0.006+seed)*0.5+0.5)*zone.w);
+    const py=zone.y+((Math.cos(time*0.004+seed*1.3)*0.5+0.5)*zone.h)+Math.sin((time+i*9)*0.03)*(REDUCED_MOTION?0:2);
+    if(!inView(px-16,py-24,32,48,80)) continue;
+    const shirt=CROWD_SHIRTS[i%CROWD_SHIRTS.length], skin=CROWD_SKINS[i%CROWD_SKINS.length];
+    const driftX=Math.sin(time*0.01+seed), driftY=Math.cos(time*0.012+seed);
+    const dir=Math.abs(driftX)>Math.abs(driftY)?(driftX>=0?'right':'left'):(driftY>=0?'down':'up');
+    drawNPCGuy(px,py,shirt,skin,{dir,moving:!REDUCED_MOTION,phase:(time*0.1+i)});
+  }
+
+  if(qp.shadowPass && hotspotBudget>0.4){
+    const shadowCount=Math.max(8,Math.floor(24*hotspotBudget));
+    ctx.fillStyle='rgba(10,35,14,.08)';
+    for(let i=0;i<shadowCount;i++){
+      const sx=(i*91 + time*0.45)%world.w, sy=620 + (i*67)%1500;
+      if(!inView(sx,sy,56,12,0)) continue;
+      ctx.fillRect(sx,sy,56,12);
+    }
+  }
+  drawPixelGuy(player.x,player.y);
+  drawParallaxFront();
+  drawCollisionDebugOverlay();
+  ctx.restore();
+
+  drawCinematicAtmosphere();
+  drawArtDirectedLighting();
+  if(!REDUCED_MOTION && perf.effectsBudget>0.36){
+    ctx.globalAlpha=Math.min(1,perf.effectsBudget*1.1);
+    ctx.drawImage(getScanlineLayer(),0,0);
+    ctx.globalAlpha=1;
+    if(qp.bloom && perf.effectsBudget>0.68){
+      ctx.globalCompositeOperation='screen';
+      ctx.globalAlpha=0.06*Math.min(1,perf.effectsBudget*1.2);
+      ctx.drawImage(cv,1,0,vw-1,vh,0,0,vw,vh);
+      ctx.drawImage(cv,0,1,vw,vh-1,0,0,vw,vh);
+      ctx.globalAlpha=1;
+      ctx.globalCompositeOperation='source-over';
+    }
+  }
+  drawMini(nowMs);
+}
+
+let lastTs=performance.now();
+let rafId=0;
+let isPaused=false;
+function frame(now){
+  if(isPaused) return;
+  const rawDt=(now-lastTs)/1000;
+  const dt=Math.min(0.05,Math.max(0.001,rawDt));
+  lastTs=now;
+
+  // Spike guard: skip one heavy render after tab wake/background throttling.
+  if(rawDt>0.18){
+    perf.dropStreak=Math.min(18,perf.dropStreak+2);
+    rafId=requestAnimationFrame(frame);
+    return;
+  }
+
+  update(dt); render(now);
+  const frameMs=dt*1000;
+  if(frameMs>20) perf.slowFor += frameMs; else perf.slowFor=Math.max(0,perf.slowFor-frameMs*0.5);
+  if(frameMs<13) perf.fastFor += frameMs; else perf.fastFor=Math.max(0,perf.fastFor-frameMs*0.5);
+  autoQuality(frameMs, now);
+  rafId=requestAnimationFrame(frame);
+}
+
+function resumeLoop(){
+  if(!isPaused) return;
+  isPaused=false;
+  lastTs=performance.now();
+  rafId=requestAnimationFrame(frame);
+}
+function pauseLoop(){
+  isPaused=true;
+  if(rafId) cancelAnimationFrame(rafId);
+  rafId=0;
+}
+
+function ensureSpawnValid(){
+  const blocked=COLLISION.staticProps.some(r=>pointInRect(player.x,player.y,r));
+  if(blocked){
+    player.x=900; player.y=780;
+    const fixed=resolvePlayerCollision(player.x,player.y);
+    player.x=fixed.x; player.y=fixed.y;
+    snapMotion();
+  }
+}
+
+resize(); rebuildStaticLayers(); ensureSpawnValid(); rafId=requestAnimationFrame(frame);
+
+const menuModal=document.getElementById('menuModal'),mapModal=document.getElementById('mapModal'),statsModal=document.getElementById('statsModal'),onboardModal=document.getElementById('onboardModal'),battleModal=document.getElementById('battleModal'),victoryModal=document.getElementById('victoryModal'),fastTrackModal=document.getElementById('fastTrackModal'),scorecardModal=document.getElementById('scorecardModal'),fastTrackSummaryModal=document.getElementById('fastTrackSummaryModal');
+const objectiveHud=document.getElementById('objectiveHud'),hudProgress=document.getElementById('hudProgress'),hudHint=document.getElementById('hudHint'),hudPath=document.getElementById('hudPath'),hudStats=document.getElementById('hudStats'),hudControls=document.getElementById('hudControls'),hpBar=document.getElementById('hpBar'),mpBar=document.getElementById('mpBar'),xpBar=document.getElementById('xpBar');
+const demoIndicator=document.getElementById('demoIndicator');
+const tourPanel=document.getElementById('tourPanel'),tourKicker=document.getElementById('tourKicker'),tourTitle=document.getElementById('tourTitle'),tourCopy=document.getElementById('tourCopy');
+let demoRouteTimer=null, demoRouteIndex=0;
+let guidedTourActive=false,guidedTourIndex=0;
+let collisionLayoutValidated=false;
+const reducedMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+function applyReducedMotion(enabled){
+  REDUCED_MOTION=!!enabled;
+  document.body.classList.toggle('reduced-motion',REDUCED_MOTION);
+  if(REDUCED_MOTION){
+    stopDemoRoute();
+    stopGuidedTour(true);
+    setQuality('low','silent');
+    snapMotion();
+  }
+  runRegressionGuards();
+}
+applyReducedMotion(reducedMotionQuery && reducedMotionQuery.matches);
+if(reducedMotionQuery){
+  const onMotionChange=e=>applyReducedMotion(e.matches);
+  if(typeof reducedMotionQuery.addEventListener==='function') reducedMotionQuery.addEventListener('change',onMotionChange);
+  else if(typeof reducedMotionQuery.addListener==='function') reducedMotionQuery.addListener(onMotionChange);
+}
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden) pauseLoop();
+  else resumeLoop();
+});
+addEventListener('pagehide',()=>{
+  pauseLoop();
+  stopDemoRoute();
+});
+
+const demoRoute=['N1','N2','N4','N5','N6','N8'];
+const guidedTourSteps=[
+  {k:'WELCOME',t:'Resume world overview',c:'This map is a stage-based walkthrough of Michael\'s resume. We will move through the strongest proof points.',node:'N1'},
+  {k:'EARLY OPS',t:'Stage 2: service + retention systems',c:'Early stages show frontline operations discipline and retention thinking built under live pressure.',node:'N2'},
+  {k:'SCALE',t:'Stage 5: cross-functional process leadership',c:'Middle stages transition into process ownership, communications architecture, and measurable performance lift.',node:'N5'},
+  {k:'FIELD EDGE',t:'Stage 6: technical execution credibility',c:'Electrical and smart-home delivery stages prove hands-on capability, not just strategy.',node:'N6'},
+  {k:'GROWTH',t:'Stage 8: executive lens — partnerships + CX',c:'Final stage highlights growth strategy, partnership orchestration, and customer-experience innovation.',node:'N8'}
+];
+function startDemoRoute(){
+  if(REDUCED_MOTION){
+    toast('Demo route disabled in reduced-motion mode');
+    return;
+  }
+  stopGuidedTour(true);
+  stopDemoRoute();
+  demoRouteIndex=0;
+  demoIndicator.classList.add('show');
+  const step=()=>{
+    const id=demoRoute[demoRouteIndex%demoRoute.length];
+    const n=nodes.find(x=>x.id===id);
+    if(n){ player.x=n.x; player.y=n.y+24; snapMotion(); if(!viewed.has(n.id)){viewed.add(n.id); save();} }
+    demoRouteIndex++;
+  };
+  step();
+  demoRouteTimer=setInterval(step,10000);
+}
+function stopDemoRoute(){ if(demoRouteTimer){ clearInterval(demoRouteTimer); demoRouteTimer=null; } demoIndicator.classList.remove('show'); }
+
+function renderTourStep(){
+  const step=guidedTourSteps[guidedTourIndex];
+  if(!step) return stopGuidedTour(true);
+  tourKicker.textContent='SHOWCASE TOUR · '+(guidedTourIndex+1)+'/'+guidedTourSteps.length;
+  tourTitle.textContent=step.t;
+  tourCopy.textContent=step.c;
+  const n=nodes.find(x=>x.id===step.node);
+  if(n){ player.x=n.x; player.y=n.y+24; snapMotion(); if(!viewed.has(n.id)){ viewed.add(n.id); save(); } }
+  refreshHud();
+}
+function startGuidedTour(){
+  [menuModal,mapModal,statsModal,onboardModal,fastTrackModal,victoryModal].forEach(m=>m&&m.classList.remove('open'));
+  stopDemoRoute();
+  guidedTourActive=true;
+  guidedTourIndex=0;
+  tourPanel.classList.add('show');
+  renderTourStep();
+  toast('Guided tour started');
+}
+function stopGuidedTour(silent=false){
+  guidedTourActive=false;
+  guidedTourIndex=0;
+  if(fastTrackTimer){ clearInterval(fastTrackTimer); fastTrackTimer=null; }
+  tourPanel.classList.remove('show');
+  if(!silent) toast('Guided tour ended');
+}
+function nextGuidedTour(){
+  if(!guidedTourActive) return;
+  guidedTourIndex++;
+  if(guidedTourIndex>=guidedTourSteps.length) return stopGuidedTour(true);
+  renderTourStep();
+}
+function prevGuidedTour(){
+  if(!guidedTourActive) return;
+  guidedTourIndex=Math.max(0,guidedTourIndex-1);
+  renderTourStep();
+}
+
+function buildFastTrackList(){
+  const list=document.getElementById('fastTrackList');
+  if(!list) return;
+  list.innerHTML=nodes.map(n=>{
+    const st=resumeStages[n.id]||{label:n.title,milestones:[n.desc],skills:['—'],outcomes:['—']};
+    const done=viewed.has(n.id)?'✅':'⬜';
+    return `<li>${done} <b>Stage ${n.id}</b> — ${st.label}<br><small>Milestones: ${st.milestones.join(' · ')}</small><br><small>Skills: ${st.skills.join(' · ')}</small><br><small>Outcomes: ${st.outcomes.join(' · ')}</small></li>`;
+  }).join('');
+}
+function buildScorecardList(){
+  const list=document.getElementById('scorecardList');
+  if(!list) return;
+  list.innerHTML=nodes.map(n=>{
+    const st=resumeStages[n.id]||{label:n.title,milestones:[n.desc],skills:['—'],outcomes:['—']};
+    const status=viewed.has(n.id)?'Unlocked':'Preview';
+    return `<li><b>Stage ${n.id}: ${st.label}</b> <small style="opacity:.82">(${status})</small><br><small><b>Milestones</b>: ${st.milestones.join(' · ')}</small><br><small><b>Skills</b>: ${st.skills.join(' · ')}</small><br><small><b>Outcomes</b>: ${st.outcomes.join(' · ')}</small></li>`;
+  }).join('');
+}
+function downloadOnePageSummary(){
+  const lines=[];
+  lines.push('Michael Costea — Interactive Resume Summary');
+  lines.push('Generated from DO NOT TOUCH.EXE hiring-manager mode');
+  lines.push('');
+  nodes.forEach(n=>{
+    const st=resumeStages[n.id]||{label:n.title,milestones:[n.desc],skills:['—'],outcomes:['—']};
+    lines.push(`Stage ${n.id}: ${st.label}`);
+    lines.push(`  Milestones: ${st.milestones.join('; ')}`);
+    lines.push(`  Skills: ${st.skills.join('; ')}`);
+    lines.push(`  Outcomes: ${st.outcomes.join('; ')}`);
+    lines.push('');
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Michael_Costea_Resume_Stage_Summary.txt';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},0);
+}
+function buildFastTrackSummary(){
+  const el=document.getElementById('fastTrackSummaryList');
+  if(!el) return;
+  const lines=nodes.map(n=>{
+    const st=resumeStages[n.id]||{outcomes:['—'],skills:['—']};
+    return `<li><b>Stage ${n.id}</b> — ${st.outcomes.slice(0,1).join('')}<br><small>Skills: ${st.skills.join(' · ')}</small></li>`;
+  });
+  el.innerHTML=lines.join('');
+}
+function startFastTrackWalkthrough(){
+  if(fastTrackTimer){ clearInterval(fastTrackTimer); fastTrackTimer=null; }
+  startGuidedTour();
+  fastTrackTimer=setInterval(()=>{
+    if(!guidedTourActive){ clearInterval(fastTrackTimer); fastTrackTimer=null; return; }
+    if(guidedTourIndex>=guidedTourSteps.length-1){
+      stopGuidedTour(true);
+      clearInterval(fastTrackTimer); fastTrackTimer=null;
+      buildFastTrackSummary();
+      openTopModal(fastTrackSummaryModal);
+      return;
+    }
+    nextGuidedTour();
+  },2300);
+}
+function startHiringManagerDemo(){
+  buildScorecardList();
+  [menuModal,mapModal,statsModal,onboardModal,fastTrackModal,victoryModal].forEach(m=>m&&m.classList.remove('open'));
+  openTopModal(scorecardModal);
+  startFastTrackWalkthrough();
+  toast('Hiring-manager demo started: scorecard + guided walkthrough',{priority:1});
+}
+
+function refreshHud(){
+  hudProgress.textContent='Resume stages: '+viewed.size+'/'+nodes.length+' completed';
+  const next=nodes.find(n=>!viewed.has(n.id));
+  const stageTitle=document.getElementById('resumeStageTitle');
+  const stageMilestones=document.getElementById('resumeStageMilestones');
+  const stageSkills=document.getElementById('resumeStageSkills');
+  if(hudStats){
+    hudStats.textContent='HP '+Math.round(playerStats.hp)+' · MP '+Math.round(playerStats.mp)+' · LVL '+playerStats.level+' · XP '+playerStats.xp+'/'+playerStats.xpNext+' · Gold '+playerStats.gold;
+  }
+  if(hpBar) hpBar.style.width=(Math.max(0,playerStats.hp)/playerStats.maxHp*100).toFixed(1)+'%';
+  if(mpBar) mpBar.style.width=(Math.max(0,playerStats.mp)/playerStats.maxMp*100).toFixed(1)+'%';
+  if(xpBar) xpBar.style.width=(Math.max(0,playerStats.xp)/playerStats.xpNext*100).toFixed(1)+'%';
+  if(hudControls){
+    hudControls.innerHTML = IS_MOBILE
+      ? 'Controls: <b>Joystick</b> move · Stage battles auto-trigger · Battle menu handles combat · <b>FAST TRACK</b> quick review.'
+      : 'Controls: <b>WASD</b> move · Stage battles auto-trigger · Battle menu handles combat · <b>FAST TRACK</b> quick review.';
+  }
+  if(next){
+    const st=resumeStages[next.id];
+    if(stageTitle) stageTitle.textContent='Stage '+next.id+' — '+(st?st.label:next.title);
+    if(stageMilestones) stageMilestones.textContent='Milestones: '+(st?st.milestones.join(' · '):next.desc);
+    if(stageSkills) stageSkills.textContent='Skills gained: '+(st?st.skills.join(' · '):'—');
+  } else {
+    if(stageTitle) stageTitle.textContent='All resume stages complete';
+    if(stageMilestones) stageMilestones.textContent='Milestones: fully unlocked';
+    if(stageSkills) stageSkills.textContent='Skills gained: full profile achieved';
+  }
+
+  if(guidedTourActive){
+    const step=guidedTourSteps[guidedTourIndex];
+    hudHint.textContent='Tour focus: '+(step?step.t:'Tour complete')+'. Use Next/Back in the tour panel.';
+    hudPath.textContent='Path: tour auto-positions you at each key resume stage.';
+    return;
+  }
+  const nextBtn=document.getElementById('quickNext');
+  if(next){
+    if(nextBtn) nextBtn.textContent='NEXT STAGE';
+    hudHint.textContent=nearbyNodeId===next.id
+      ? 'Stage '+next.id+' encounter incoming — guardian battle auto-starts when you enter range.'
+      : 'Next resume stage: '+next.id+' — '+next.title;
+    hudPath.textContent=nearbyNodeId===next.id
+      ? 'Unlock flow: auto encounter → boss battle → milestones + skills unlocked.'
+      : 'Path: follow beacon + minimap to Stage '+next.id+' or use FAST TRACK for instant review.';
+  }else{
+    if(nextBtn) nextBtn.textContent='REVIEW STAGES';
+    hudHint.textContent='All resume stages complete. Replay TOUR or use FAST TRACK for quick assessment.';
+    hudPath.textContent='Path: free roam active — open MAP to revisit any stage.';
+  }
+}
+function openTopModal(el){ resetJoystick(); snapMotion(); el.classList.add('open'); }
+function closeTopModal(el){ if(el.classList.contains('open')){ el.classList.remove('open'); resetJoystick(); toast('Back in resume world'); } }
+function anyModalOpen(){ return menuModal.classList.contains('open')||mapModal.classList.contains('open')||statsModal.classList.contains('open')||onboardModal.classList.contains('open')||battleModal.classList.contains('open')||victoryModal.classList.contains('open')||fastTrackModal.classList.contains('open')||scorecardModal.classList.contains('open')||fastTrackSummaryModal.classList.contains('open'); }
+
+function sanitizeViewedProgress(){
+  const validIds=new Set(nodes.map(n=>n.id));
+  let changed=false;
+  [...viewed].forEach(id=>{
+    if(!validIds.has(id)){
+      viewed.delete(id);
+      changed=true;
+    }
+  });
+  if(viewed.size>nodes.length){
+    viewed.clear();
+    nodes.forEach(n=>viewed.add(n.id));
+    changed=true;
+  }
+  if(changed) save();
+  return changed;
+}
+
+function enforceSingleModalOpen(){
+  const open=[menuModal,mapModal,statsModal,onboardModal].filter(m=>m.classList.contains('open'));
+  if(open.length<=1) return;
+  // Keep the latest priority modal (onboarding > menu > map > stats) to prevent stacked-state regressions.
+  const priority=[onboardModal,menuModal,mapModal,statsModal];
+  const keep=priority.find(m=>m.classList.contains('open')) || open[0];
+  open.forEach(m=>{ if(m!==keep) m.classList.remove('open'); });
+}
+
+function validateCollisionLayout(){
+  if(collisionLayoutValidated) return;
+  const noBlockZones=buildNoBlockZones();
+  const overlaps=[];
+  COLLISION.staticProps.forEach(block=>{
+    const hit=noBlockZones.find(zone=>rectsOverlap(block,zone));
+    if(hit) overlaps.push(block.id+'→'+hit.id);
+  });
+  if(overlaps.length){
+    console.warn('Collision layout overlap(s) detected:',overlaps);
+    toast('Collision sweep adjusted '+overlaps.length+' blocker overlap'+(overlaps.length>1?'s':''),{dedupeMs:600});
+  }
+  collisionLayoutValidated=true;
+}
+
+function runRegressionGuards(){
+  enforceSingleModalOpen();
+  validateCollisionLayout();
+
+  const modalOpen=anyModalOpen();
+  if(document.body.classList.contains('modal-open')!==modalOpen) document.body.classList.toggle('modal-open',modalOpen);
+
+  // Demo/tour mutual exclusion and indicator sync.
+  if(demoRouteTimer && guidedTourActive) stopDemoRoute();
+  const demoActive=!!demoRouteTimer;
+  if(demoActive!==demoIndicator.classList.contains('show')) demoIndicator.classList.toggle('show',demoActive);
+
+  // Guided-tour UI must track state exactly.
+  if(guidedTourActive!==tourPanel.classList.contains('show')) tourPanel.classList.toggle('show',guidedTourActive);
+
+  // Reduced motion must remain stable and never autoplay-heavy.
+  if(REDUCED_MOTION){
+    if(demoRouteTimer) stopDemoRoute();
+    if(quality!=='low') setQuality('low','silent');
+  }
+
+  // Quality-tier integrity fallback.
+  if(!QUALITY_PRESETS[quality]){
+    quality='medium';
+    qp=QUALITY_PRESETS.medium;
+    resize();
+    rebuildStaticLayers();
+  }else if(qp!==QUALITY_PRESETS[quality]){
+    qp=QUALITY_PRESETS[quality];
+  }
+  if(IS_MOBILE && quality==='high' && !REDUCED_MOTION) setQuality('medium','silent');
+
+  // Demo controls should never advertise availability in reduced motion.
+  const demoBtn=document.getElementById('startDemoRoute');
+  if(demoBtn){
+    demoBtn.disabled=REDUCED_MOTION;
+    demoBtn.setAttribute('aria-disabled',REDUCED_MOTION?'true':'false');
+    demoBtn.title=REDUCED_MOTION?'Disabled while reduced motion is enabled':'';
+  }
+  ['tourBtn','quickTour','startOnboardTour'].forEach(id=>{
+    const btn=document.getElementById(id);
+    if(!btn) return;
+    btn.disabled=false;
+    btn.setAttribute('aria-disabled','false');
+    btn.title='';
+  });
+
+  // HUD regression guard: keep hidden/visible state aligned with persisted preference.
+  const hudShouldHide=safeStorageGet(STORAGE_KEYS.hudHidden)==='1';
+  if(objectiveHud.style.display==='none' && !hudShouldHide && !anyModalOpen()) objectiveHud.style.display='';
+  if(objectiveHud.style.display!=='none' && hudShouldHide) objectiveHud.style.display='none';
+
+  // Onboarding guard: never reopen when user has opted out.
+  if(safeStorageGet(STORAGE_KEYS.noOnboard)==='1' && onboardModal.classList.contains('open')){
+    onboardModal.classList.remove('open');
+  }
+
+  // Progress integrity guard (tamper-resistant localStorage recovery).
+  sanitizeViewedProgress();
+
+  // Keep phase reactions consistent after recoveries/resets.
+  progressionReactions.forEach(r=>{ r.done = viewed.size>=r.min; });
+
+  refreshHud();
+}
+
+function bindClick(id,handler){
+  const el=document.getElementById(id);
+  if(el) el.onclick=handler;
+  return el;
+}
+
+bindClick('menuBtn',()=>openTopModal(menuModal));
+bindClick('mapBtn',()=>{const list=document.getElementById('mapList'); if(!list) return; const next=nodes.find(n=>!viewed.has(n.id)); list.innerHTML=nodes.map((n,i)=>{const done=viewed.has(n.id);const isNext=next&&next.id===n.id;const mark=done?'✅':(isNext?'🟨':'⬜');const label=done?'Unlocked':(isNext?'Next stage':'Locked');const st=resumeStages[n.id]||{milestones:[n.desc],skills:['—']};const arrow=i<nodes.length-1?' →':'';return '<li>'+mark+' <b>Stage '+n.id+'</b> — '+n.title+' <small style="opacity:.82">('+label+')</small>'+arrow+'<br><small>Milestones: '+st.milestones.join(' · ')+'</small><br><small>Skills: '+st.skills.join(' · ')+'</small></li>';}).join('');openTopModal(mapModal);});
+bindClick('fastTrackBtn',()=>{buildFastTrackList(); openTopModal(fastTrackModal);});
+bindClick('demoModeBtn',()=>startHiringManagerDemo());
+bindClick('fastTrackTourBtn',()=>{closeTopModal(fastTrackModal); startFastTrackWalkthrough();});
+bindClick('openScorecardBtn',()=>{buildScorecardList(); openTopModal(scorecardModal);});
+bindClick('downloadSummaryBtn',()=>downloadOnePageSummary());
+bindClick('closeScorecardBtn',()=>closeTopModal(scorecardModal));
+bindClick('fastTrackSummaryDownload',()=>downloadOnePageSummary());
+bindClick('closeFastTrackSummary',()=>closeTopModal(fastTrackSummaryModal));
+bindClick('closeFastTrack',()=>closeTopModal(fastTrackModal));
+bindClick('tourBtn',()=>startGuidedTour());
+bindClick('quickTour',()=>startGuidedTour());
+bindClick('battleFightBtn',()=>{battleMenuIndex=0;updateBattleMenuCursor();runEncounterTurn('fight');});
+bindClick('battleSkillBtn',()=>{battleMenuIndex=1;updateBattleMenuCursor();runEncounterTurn('skill');});
+bindClick('battleRunBtn',()=>{battleMenuIndex=2;updateBattleMenuCursor();runEncounterTurn('run');});
+bindClick('closeVictoryBtn',()=>{ if(victoryModal) victoryModal.classList.remove('open'); });
+bindClick('quickNext',()=>{
+  const next=nodes.find(n=>!viewed.has(n.id));
+  if(!next){
+    buildFastTrackList();
+    openTopModal(fastTrackModal);
+    return;
+  }
+  player.x=next.x;player.y=next.y+24;snapMotion();toast('Jumped to Stage '+next.id+' — '+next.title);
+});
+bindClick('tourNext',()=>nextGuidedTour());
+bindClick('tourPrev',()=>prevGuidedTour());
+bindClick('tourSkip',()=>stopGuidedTour());
+bindClick('openStatsFromMenu',()=>{menuModal.classList.remove('open');openTopModal(statsModal);});
+bindClick('closeMenu',()=>closeTopModal(menuModal));
+bindClick('closeMap',()=>closeTopModal(mapModal));
+bindClick('closeStats',()=>closeTopModal(statsModal));
+menuModal.onclick=e=>{if(e.target===menuModal)closeTopModal(menuModal)};
+mapModal.onclick=e=>{if(e.target===mapModal)closeTopModal(mapModal)};
+statsModal.onclick=e=>{if(e.target===statsModal)closeTopModal(statsModal)};
+onboardModal.onclick=e=>{if(e.target===onboardModal)closeTopModal(onboardModal)};
+battleModal.onclick=e=>{if(e.target===battleModal)runEncounterTurn('run')};
+victoryModal.onclick=e=>{if(e.target===victoryModal) victoryModal.classList.remove('open')};
+fastTrackModal.onclick=e=>{if(e.target===fastTrackModal) closeTopModal(fastTrackModal)};
+scorecardModal.onclick=e=>{if(e.target===scorecardModal) closeTopModal(scorecardModal)};
+fastTrackSummaryModal.onclick=e=>{if(e.target===fastTrackSummaryModal) closeTopModal(fastTrackSummaryModal)};
+
+bindClick('backSite',()=>location.href='../index.html');
+bindClick('jumpNext',()=>{const n=nodes.find(n=>!viewed.has(n.id))||nodes[nodes.length-1];player.x=n.x;player.y=n.y+24;snapMotion();closeTopModal(menuModal);});
+bindClick('startDemoRoute',()=>{stopGuidedTour(true); startDemoRoute(); closeTopModal(menuModal);});
+bindClick('stopDemoRoute',()=>{stopDemoRoute(); toast('Demo route stopped');});
+bindClick('hideHud',()=>{
+  const nowHidden=objectiveHud.style.display!=='none';
+  objectiveHud.style.display=nowHidden?'none':'';
+  safeStorageSet(STORAGE_KEYS.hudHidden,nowHidden?'1':'0');
+});
+bindClick('hudToggleBtn',()=>{
+  const nowHidden=objectiveHud.style.display==='none';
+  objectiveHud.style.display=nowHidden?'':'none';
+  safeStorageSet(STORAGE_KEYS.hudHidden,nowHidden?'0':'1');
+});
+
+bindClick('resetProgress',()=>{
+  if(!confirm('Reset all resume stage progress?')) return;
+  viewed.clear(); save(); refreshHud(); applyProgressionReactions(true); toast('Progress reset'); stopDemoRoute();
+});
+bindClick('loadFullProgress',()=>{
+  if(!confirm('Mark all resume stages as unlocked?')) return;
+  nodes.forEach(n=>viewed.add(n.id)); save(); refreshHud(); applyProgressionReactions(true); toast('All resume stages unlocked');
+});
+
+// onboarding flow (silent first run: no automatic popups)
+bindClick('startOnboard',()=>{
+  const optOut=document.getElementById('dontShowOnboard');
+  if(optOut && optOut.checked) safeStorageSet(STORAGE_KEYS.noOnboard,'1');
+  closeTopModal(onboardModal);
+});
+bindClick('startOnboardTour',()=>{
+  const optOut=document.getElementById('dontShowOnboard');
+  if(optOut && optOut.checked) safeStorageSet(STORAGE_KEYS.noOnboard,'1');
+  closeTopModal(onboardModal);
+  startGuidedTour();
+});
+if(safeStorageGet(STORAGE_KEYS.hudHidden)==='1') objectiveHud.style.display='none';
+
+addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(guidedTourActive) return stopGuidedTour();
+    if(victoryModal.classList.contains('open')) return victoryModal.classList.remove('open');
+    if(fastTrackSummaryModal.classList.contains('open')) return closeTopModal(fastTrackSummaryModal);
+    if(scorecardModal.classList.contains('open')) return closeTopModal(scorecardModal);
+    if(fastTrackModal.classList.contains('open')) return closeTopModal(fastTrackModal);
+    if(battleModal.classList.contains('open')) return runEncounterTurn('run');
+    if(statsModal.classList.contains('open')) return closeTopModal(statsModal);
+    if(mapModal.classList.contains('open')) return closeTopModal(mapModal);
+    if(menuModal.classList.contains('open')) return closeTopModal(menuModal);
+    if(onboardModal.classList.contains('open')) return closeTopModal(onboardModal);
+  }
+
+  if(battleModal.classList.contains('open')){
+    if(['ArrowLeft','ArrowUp'].includes(e.key)){ e.preventDefault(); battleMenuIndex=(battleMenuIndex+2)%3; return updateBattleMenuCursor(); }
+    if(['ArrowRight','ArrowDown'].includes(e.key)){ e.preventDefault(); battleMenuIndex=(battleMenuIndex+1)%3; return updateBattleMenuCursor(); }
+    if(e.key==='Enter' || e.key===' '){
+      e.preventDefault();
+      return runEncounterTurn(['fight','skill','run'][battleMenuIndex]);
+    }
+    return;
+  }
+
+  // Guard against modal/tour state conflicts from global shortcuts during overlays.
+  if(anyModalOpen()) return;
+
+  if(e.key==='t' || e.key==='T'){
+    if(guidedTourActive) stopGuidedTour(true);
+    else startGuidedTour();
+  }
+  if((e.key==='n' || e.key==='N') && guidedTourActive) nextGuidedTour();
+  if(e.key==='c' || e.key==='C'){
+    collisionDebug.enabled=!collisionDebug.enabled;
+    if(!collisionDebug.enabled) lastCollisionDebugData=[];
+    toast('Collision debug '+(collisionDebug.enabled?'ON':'OFF'),{dedupeMs:250});
+  }
+});
+
+refreshHud();
+applyProgressionReactions(true);
+
+const stats=[['Leadership',95],['Electrical Tradecraft',92],['Sales Strategy',94],['Process Engineering',96],['Automation Systems',90],['Customer Experience',93],['Partnership Development',91],['Execution Speed',97]];
+const skills=['VEU upgrade operations','Lead-gen optimization','Cross-brand growth orchestration','Field-to-digital systems translation','Training + process rollout','Electrical/smart-home delivery'];
+document.getElementById('statsBars').innerHTML=stats.map(([k,v])=>"<div class='stat-row'><span>"+k+"</span><div class='stat-meter'><span style='width:"+v+"%'></span></div><b>"+v+"</b></div>").join('');
+document.getElementById('skillList').innerHTML=skills.map(s=>'<li>'+s+'</li>').join('');
+</script>
+</body>
+</html>
