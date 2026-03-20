@@ -226,47 +226,51 @@ const furMat = new THREE.MeshPhysicalMaterial({color:0xb8aa98, roughness:0.72, c
 const featherMat = new THREE.MeshPhysicalMaterial({color:0x8f8f8f, roughness:0.55, clearcoat:0.1});
 const accentRed = new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.45});
 
+const animalSkin = new THREE.MeshPhysicalMaterial({color:0xd8d8d8, roughness:0.42, clearcoat:0.18, clearcoatRoughness:0.35});
+const animalDark = new THREE.MeshStandardMaterial({color:0x2a2a2a, roughness:0.65});
+const animalWarm = new THREE.MeshPhysicalMaterial({color:0xc8b49b, roughness:0.55, clearcoat:0.12});
+
 const birdModel = new THREE.Group();
-const birdBody = new THREE.Mesh(new THREE.SphereGeometry(0.42,42,30), new THREE.MeshPhysicalMaterial({color:0x9ea4ab, roughness:0.48, clearcoat:0.12})); birdBody.scale.set(1.0,1.0,1.45);
-const birdHead = new THREE.Mesh(new THREE.SphereGeometry(0.24,32,24), new THREE.MeshPhysicalMaterial({color:0xd7dbe0, roughness:0.45})); birdHead.position.set(0,0.22,0.5);
-const birdChest = new THREE.Mesh(new THREE.SphereGeometry(0.19,24,18), new THREE.MeshPhysicalMaterial({color:0xf0f2f4, roughness:0.42})); birdChest.position.set(0,-0.06,0.3);
-const birdBeak = new THREE.Mesh(new THREE.ConeGeometry(0.07,0.28,18), new THREE.MeshPhysicalMaterial({color:0xffb15a, roughness:0.35})); birdBeak.rotation.x=Math.PI/2; birdBeak.position.set(0,0.2,0.78);
-const birdWingL = new THREE.Mesh(new THREE.BoxGeometry(0.14,0.52,0.8), featherMat.clone()); birdWingL.position.set(-0.37,0.02,0.04); birdWingL.rotation.z=0.38;
-const birdWingR = birdWingL.clone(); birdWingR.position.x=0.37; birdWingR.rotation.z=-0.38;
-const birdTail = new THREE.Mesh(new THREE.ConeGeometry(0.16,0.4,16), featherMat.clone()); birdTail.rotation.x=-Math.PI/2; birdTail.position.set(0,-0.04,-0.64);
-const birdLegL = new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.2,10), new THREE.MeshStandardMaterial({color:0x4e3f2f, roughness:0.8})); birdLegL.position.set(-0.08,-0.3,0.05);
+const birdBody = new THREE.Mesh(new THREE.SphereGeometry(0.44,72,52), new THREE.MeshPhysicalMaterial({color:0x8e949b, roughness:0.5, clearcoat:0.08})); birdBody.scale.set(1.05,1.0,1.55);
+const birdHead = new THREE.Mesh(new THREE.SphereGeometry(0.25,64,48), new THREE.MeshPhysicalMaterial({color:0xd3d8de, roughness:0.44})); birdHead.position.set(0,0.24,0.55);
+const birdChest = new THREE.Mesh(new THREE.SphereGeometry(0.2,48,36), new THREE.MeshPhysicalMaterial({color:0xf0f2f4, roughness:0.38})); birdChest.position.set(0,-0.05,0.32);
+const birdBeak = new THREE.Mesh(new THREE.ConeGeometry(0.075,0.30,28), new THREE.MeshPhysicalMaterial({color:0xffb25f, roughness:0.32})); birdBeak.rotation.x=Math.PI/2; birdBeak.position.set(0,0.2,0.82);
+const birdWingL = new THREE.Mesh(new THREE.CapsuleGeometry(0.10,0.78,10,32), new THREE.MeshPhysicalMaterial({color:0x7c838b, roughness:0.58})); birdWingL.position.set(-0.4,0.02,0.08); birdWingL.rotation.z=0.35;
+const birdWingR = birdWingL.clone(); birdWingR.position.x=0.4; birdWingR.rotation.z=-0.35;
+const birdTail = new THREE.Mesh(new THREE.ConeGeometry(0.17,0.44,24), new THREE.MeshPhysicalMaterial({color:0x7f868e, roughness:0.6})); birdTail.rotation.x=-Math.PI/2; birdTail.position.set(0,-0.04,-0.7);
+const birdLegL = new THREE.Mesh(new THREE.CylinderGeometry(0.022,0.024,0.24,14), new THREE.MeshStandardMaterial({color:0x5a4a39, roughness:0.82})); birdLegL.position.set(-0.08,-0.31,0.06);
 const birdLegR = birdLegL.clone(); birdLegR.position.x=0.08;
-const birdEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.028,10,10), new THREE.MeshStandardMaterial({color:0x111111})); birdEyeL.position.set(-0.09,0.24,0.64);
-const birdEyeR = birdEyeL.clone(); birdEyeR.position.x=0.09;
-const birdCapBand = new THREE.Mesh(new THREE.TorusGeometry(0.18,0.02,10,24), accentRed); birdCapBand.rotation.x=Math.PI/2; birdCapBand.position.set(0,0.36,0.42);
+const birdEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.03,16,16), animalDark); birdEyeL.position.set(-0.1,0.24,0.67);
+const birdEyeR = birdEyeL.clone(); birdEyeR.position.x=0.1;
+const birdCapBand = new THREE.Mesh(new THREE.TorusGeometry(0.19,0.02,14,34), accentRed); birdCapBand.rotation.x=Math.PI/2; birdCapBand.position.set(0,0.36,0.44);
 birdModel.add(birdBody,birdHead,birdChest,birdBeak,birdWingL,birdWingR,birdTail,birdLegL,birdLegR,birdEyeL,birdEyeR,birdCapBand);
 
 const fishModel = new THREE.Group();
-const fishBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.23,0.95,12,26), new THREE.MeshPhysicalMaterial({color:0x8ea493, roughness:0.36, metalness:0.06, clearcoat:0.2})); fishBody.rotation.z=Math.PI/2;
-const fishBelly = new THREE.Mesh(new THREE.CapsuleGeometry(0.18,0.7,10,20), new THREE.MeshPhysicalMaterial({color:0xc7d1bf, roughness:0.34, clearcoat:0.18})); fishBelly.rotation.z=Math.PI/2; fishBelly.position.set(0,-0.08,0.08);
-const fishTail = new THREE.Mesh(new THREE.ConeGeometry(0.2,0.42,18), new THREE.MeshPhysicalMaterial({color:0xbe6d4e, roughness:0.42})); fishTail.rotation.z=Math.PI/2; fishTail.position.set(-0.72,0,0);
-const fishTopFin = new THREE.Mesh(new THREE.ConeGeometry(0.08,0.22,12), new THREE.MeshPhysicalMaterial({color:0xb45a44, roughness:0.45})); fishTopFin.position.set(0.03,0.2,0.02);
-const fishFinL = new THREE.Mesh(new THREE.ConeGeometry(0.06,0.2,10), new THREE.MeshPhysicalMaterial({color:0xa45f4f, roughness:0.46})); fishFinL.rotation.z=0.95; fishFinL.position.set(0.1,0.01,0.24);
-const fishFinR = fishFinL.clone(); fishFinR.position.z=-0.24; fishFinR.rotation.z=-0.95;
-const fishEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.03,10,10), new THREE.MeshStandardMaterial({color:0x111111})); fishEyeL.position.set(0.42,0.06,0.15);
-const fishEyeR = fishEyeL.clone(); fishEyeR.position.z=-0.15;
-const fishBand = new THREE.Mesh(new THREE.TorusGeometry(0.2,0.018,10,22), accentRed); fishBand.rotation.y=Math.PI/2; fishBand.position.set(0.17,0.02,0);
+const fishBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,1.05,14,36), new THREE.MeshPhysicalMaterial({color:0x8f9f8f, roughness:0.34, metalness:0.04, clearcoat:0.25})); fishBody.rotation.z=Math.PI/2;
+const fishBelly = new THREE.Mesh(new THREE.CapsuleGeometry(0.19,0.78,12,28), new THREE.MeshPhysicalMaterial({color:0xc7d1bf, roughness:0.3, clearcoat:0.2})); fishBelly.rotation.z=Math.PI/2; fishBelly.position.set(0,-0.09,0.09);
+const fishTail = new THREE.Mesh(new THREE.ConeGeometry(0.22,0.45,26), new THREE.MeshPhysicalMaterial({color:0xbd6d52, roughness:0.4})); fishTail.rotation.z=Math.PI/2; fishTail.position.set(-0.8,0,0);
+const fishTopFin = new THREE.Mesh(new THREE.ConeGeometry(0.085,0.24,22), new THREE.MeshPhysicalMaterial({color:0xb55f4a, roughness:0.44})); fishTopFin.position.set(0.05,0.22,0.03);
+const fishFinL = new THREE.Mesh(new THREE.ConeGeometry(0.065,0.22,20), new THREE.MeshPhysicalMaterial({color:0xa85d4f, roughness:0.46})); fishFinL.rotation.z=0.9; fishFinL.position.set(0.12,0.01,0.26);
+const fishFinR = fishFinL.clone(); fishFinR.position.z=-0.26; fishFinR.rotation.z=-0.9;
+const fishEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.032,14,14), animalDark); fishEyeL.position.set(0.46,0.06,0.16);
+const fishEyeR = fishEyeL.clone(); fishEyeR.position.z=-0.16;
+const fishBand = new THREE.Mesh(new THREE.TorusGeometry(0.21,0.018,14,30), accentRed); fishBand.rotation.y=Math.PI/2; fishBand.position.set(0.18,0.02,0);
 fishModel.add(fishBody,fishBelly,fishTail,fishTopFin,fishFinL,fishFinR,fishEyeL,fishEyeR,fishBand);
 
 const goatModel = new THREE.Group();
-const goatBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.3,0.92,12,20), furMat.clone()); goatBody.rotation.z=Math.PI/2;
-const goatChest = new THREE.Mesh(new THREE.CapsuleGeometry(0.2,0.45,10,16), new THREE.MeshPhysicalMaterial({color:0xd8c9b7, roughness:0.68})); goatChest.rotation.z=Math.PI/2; goatChest.position.set(0.22,0.06,0);
-const goatNeck = new THREE.Mesh(new THREE.CapsuleGeometry(0.12,0.34,8,12), furMat.clone()); goatNeck.position.set(0.52,0.18,0); goatNeck.rotation.z=-0.3;
-const goatHead = new THREE.Mesh(new THREE.BoxGeometry(0.52,0.36,0.28,3,2,2), new THREE.MeshPhysicalMaterial({color:0xd4c4b0, roughness:0.66})); goatHead.position.set(0.82,0.24,0);
-const goatSnout = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.13,0.2), new THREE.MeshPhysicalMaterial({color:0xc5b29a, roughness:0.68})); goatSnout.position.set(1.05,0.15,0);
-const goatHornL = new THREE.Mesh(new THREE.TorusGeometry(0.14,0.02,8,20,Math.PI*1.2), new THREE.MeshStandardMaterial({color:0x7f6741, roughness:0.78})); goatHornL.position.set(0.81,0.45,0.11); goatHornL.rotation.y=0.6;
-const goatHornR = goatHornL.clone(); goatHornR.position.z=-0.11; goatHornR.rotation.y=-0.6;
-const goatBeard = new THREE.Mesh(new THREE.ConeGeometry(0.05,0.14,10), new THREE.MeshStandardMaterial({color:0xbaa488, roughness:0.8})); goatBeard.position.set(1.05,0.02,0); goatBeard.rotation.z=1.5;
-const goatEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.024,8,8), new THREE.MeshStandardMaterial({color:0x101010})); goatEyeL.position.set(0.95,0.25,0.09);
+const goatBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.32,0.96,14,28), new THREE.MeshPhysicalMaterial({color:0xd6c6b2, roughness:0.66, clearcoat:0.06})); goatBody.rotation.z=Math.PI/2;
+const goatChest = new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.48,12,22), animalWarm.clone()); goatChest.rotation.z=Math.PI/2; goatChest.position.set(0.24,0.07,0);
+const goatNeck = new THREE.Mesh(new THREE.CapsuleGeometry(0.13,0.36,10,18), animalWarm.clone()); goatNeck.position.set(0.54,0.2,0); goatNeck.rotation.z=-0.28;
+const goatHead = new THREE.Mesh(new THREE.BoxGeometry(0.55,0.38,0.3,4,3,3), animalWarm.clone()); goatHead.position.set(0.86,0.25,0);
+const goatSnout = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.14,0.22), new THREE.MeshPhysicalMaterial({color:0xc4b09a, roughness:0.7})); goatSnout.position.set(1.1,0.16,0);
+const goatHornL = new THREE.Mesh(new THREE.TorusGeometry(0.15,0.02,12,28,Math.PI*1.22), new THREE.MeshStandardMaterial({color:0x7f6741, roughness:0.8})); goatHornL.position.set(0.84,0.47,0.11); goatHornL.rotation.y=0.62;
+const goatHornR = goatHornL.clone(); goatHornR.position.z=-0.11; goatHornR.rotation.y=-0.62;
+const goatBeard = new THREE.Mesh(new THREE.ConeGeometry(0.055,0.16,14), new THREE.MeshStandardMaterial({color:0xb8a084, roughness:0.82})); goatBeard.position.set(1.1,0.02,0); goatBeard.rotation.z=1.5;
+const goatEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.025,12,12), animalDark); goatEyeL.position.set(0.98,0.26,0.09);
 const goatEyeR = goatEyeL.clone(); goatEyeR.position.z=-0.09;
 const goatLegs = new THREE.Group();
-for(const [lx,lz] of [[-0.24,0.13],[-0.24,-0.13],[0.18,0.13],[0.18,-0.13]]){ const leg=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.055,0.58,10), new THREE.MeshStandardMaterial({color:0x8b7358, roughness:0.8})); leg.position.set(lx,-0.36,lz); goatLegs.add(leg); }
-const goatBand = new THREE.Mesh(new THREE.TorusGeometry(0.19,0.018,10,24), accentRed); goatBand.rotation.y=Math.PI/2; goatBand.position.set(0.78,0.21,0);
+for(const [lx,lz] of [[-0.25,0.14],[-0.25,-0.14],[0.2,0.14],[0.2,-0.14]]){ const leg=new THREE.Mesh(new THREE.CylinderGeometry(0.052,0.056,0.62,14), new THREE.MeshStandardMaterial({color:0x8b7358, roughness:0.82})); leg.position.set(lx,-0.38,lz); goatLegs.add(leg); }
+const goatBand = new THREE.Mesh(new THREE.TorusGeometry(0.2,0.018,14,30), accentRed); goatBand.rotation.y=Math.PI/2; goatBand.position.set(0.8,0.21,0);
 goatModel.add(goatBody,goatChest,goatNeck,goatHead,goatSnout,goatHornL,goatHornR,goatBeard,goatEyeL,goatEyeR,goatLegs,goatBand);
 
 animalRoot.add(birdModel,fishModel,goatModel);
