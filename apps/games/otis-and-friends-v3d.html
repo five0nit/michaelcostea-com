@@ -303,13 +303,15 @@ scene.add(milo,poppy);
 const stateEl=document.getElementById('state'), foundEl=document.getElementById('found');
 const forms=['otis','bird','fish','goat']; let form='otis';
 let heroGrid={x:2,y:2};
+const heroPos={x:2,y:2};
+const heroVel={x:0,y:0};
 let found={milo:false,poppy:false};
 const miloPos={x:45,y:24}, poppyPos={x:11,y:18};
 const decoys=[{x:9,y:8},{x:24,y:21},{x:36,y:22},{x:27,y:16},{x:42,y:24}];
 
 function posFromGrid(g){ return new THREE.Vector3((g.x-W/2)*TILE,0.8,(g.y-H/2)*TILE); }
 function place(){
-  hero.position.copy(posFromGrid(heroGrid));
+  hero.position.copy(posFromGrid({x:heroPos.x,y:heroPos.y}));
   milo.position.copy(posFromGrid(miloPos));
   poppy.position.copy(posFromGrid(poppyPos));
   decoyMeshes.forEach((m,i)=>{ const p=posFromGrid(decoys[i]); m.position.set(p.x,0.55,p.z); m.rotation.y += 0.01; });
@@ -356,7 +358,6 @@ let playing=false;
 addEventListener('keydown',e=>{keys[e.key]=true; if(e.key==='1')setForm('otis'); if(e.key==='2')setForm('bird'); if(e.key==='3')setForm('fish'); if(e.key==='4')setForm('goat'); if(e.key===' ')search();});
 addEventListener('keyup',e=>{keys[e.key]=false;});
 
-function move(dx,dy){ const nx=heroGrid.x+dx, ny=heroGrid.y+dy; if(canStep(nx,ny)){ heroGrid={x:nx,y:ny}; } }
 function search(){
   const d1=Math.abs(heroGrid.x-miloPos.x)+Math.abs(heroGrid.y-miloPos.y);
   const d2=Math.abs(heroGrid.x-poppyPos.x)+Math.abs(heroGrid.y-poppyPos.y);
@@ -445,35 +446,54 @@ document.getElementById('chooseJoystick').onclick=()=>startWithMode('joystick');
 document.getElementById('chooseTilt').onclick=()=>startWithMode('accelerometer');
 
 const clock=new THREE.Clock();
-let moveCooldown=0;
 renderer.setAnimationLoop(()=>{
   const dt=clock.getDelta();
-  moveCooldown -= dt;
 
-  if(playing && moveCooldown<=0){
-    if(keys.ArrowUp||keys.w) { move(0,-1); moveCooldown=0.14; }
-    else if(keys.ArrowDown||keys.s) { move(0,1); moveCooldown=0.14; }
-    else if(keys.ArrowLeft||keys.a) { move(-1,0); moveCooldown=0.14; }
-    else if(keys.ArrowRight||keys.d) { move(1,0); moveCooldown=0.14; }
-    else if(controlMode==='joystick' && joyState.active){
-      if(Math.abs(joyState.x) > Math.abs(joyState.y)){
-        if(joyState.x>0.3) { move(1,0); moveCooldown=0.16; }
-        else if(joyState.x<-0.3) { move(-1,0); moveCooldown=0.16; }
-      } else {
-        if(joyState.y>0.3) { move(0,1); moveCooldown=0.16; }
-        else if(joyState.y<-0.3) { move(0,-1); moveCooldown=0.16; }
-      }
-    }
-    else if(controlMode==='accelerometer' && tiltState.enabled){
+  if(playing){
+    let ix=0, iy=0;
+
+    if(keys.ArrowUp||keys.w) iy -= 1;
+    if(keys.ArrowDown||keys.s) iy += 1;
+    if(keys.ArrowLeft||keys.a) ix -= 1;
+    if(keys.ArrowRight||keys.d) ix += 1;
+
+    if(controlMode==='joystick' && joyState.active){
+      ix = joyState.x;
+      iy = joyState.y;
+    } else if(controlMode==='accelerometer' && tiltState.enabled){
       const g=tiltState.gamma, b=tiltState.beta;
-      if(Math.abs(g) > Math.abs(b)){
-        if(g>12) { move(1,0); moveCooldown=0.16; }
-        else if(g<-12) { move(-1,0); moveCooldown=0.16; }
-      } else {
-        if(b>14) { move(0,1); moveCooldown=0.16; }
-        else if(b<-14) { move(0,-1); moveCooldown=0.16; }
-      }
+      ix = THREE.MathUtils.clamp(g/24, -1, 1);
+      iy = THREE.MathUtils.clamp(b/24, -1, 1);
     }
+
+    // deadzone + normalize for smooth analog movement
+    const mag=Math.hypot(ix,iy);
+    if(mag<0.12){ ix=0; iy=0; }
+    else { ix/=mag; iy/=mag; }
+
+    const maxSpeed = 4.2; // tiles/sec
+    const accel = 11.0;
+    const damping = 9.5;
+
+    const tx = ix*maxSpeed, ty = iy*maxSpeed;
+    const lerpA = Math.min(1, dt*accel);
+    heroVel.x += (tx-heroVel.x)*lerpA;
+    heroVel.y += (ty-heroVel.y)*lerpA;
+
+    if(ix===0) heroVel.x *= Math.max(0,1-dt*damping);
+    if(iy===0) heroVel.y *= Math.max(0,1-dt*damping);
+
+    const nx = heroPos.x + heroVel.x*dt;
+    const ny = heroPos.y + heroVel.y*dt;
+
+    // axis-separated collision so movement feels smooth, not strobe/blocky
+    if(canStep(Math.round(nx), Math.round(heroPos.y))) heroPos.x = nx; else heroVel.x = 0;
+    if(canStep(Math.round(heroPos.x), Math.round(ny))) heroPos.y = ny; else heroVel.y = 0;
+
+    heroPos.x = THREE.MathUtils.clamp(heroPos.x, 1, W-2);
+    heroPos.y = THREE.MathUtils.clamp(heroPos.y, 1, H-2);
+    heroGrid.x = Math.round(heroPos.x);
+    heroGrid.y = Math.round(heroPos.y);
   }
 
   place();
