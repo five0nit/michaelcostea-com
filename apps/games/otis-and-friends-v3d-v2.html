@@ -733,21 +733,30 @@ renderer.setAnimationLoop(()=>{
 
   const t = clock.elapsedTime;
   const speed = Math.hypot(heroVel.x, heroVel.y);
-  const walkAmp = Math.min(0.26, speed*0.06);
+  const walkAmp = Math.min(0.3, speed*0.075);
+
+  // face walking direction (smooth yaw)
+  if(speed > 0.03){
+    const targetYaw = Math.atan2(heroVel.x, heroVel.y);
+    let delta = targetYaw - hero.rotation.y;
+    while(delta > Math.PI) delta -= Math.PI*2;
+    while(delta < -Math.PI) delta += Math.PI*2;
+    hero.rotation.y += delta * Math.min(1, dt*12);
+  }
 
   // player walk animation (smooth, speed-driven)
   if(form==='otis'){
-    const moving = speed > 0.08;
-    const cycle = moving ? (12 + speed*2) : 2;
+    const moving = speed > 0.06;
+    const cycle = moving ? (14 + speed*2.6) : 2;
     const stride = Math.sin(t*cycle);
-    const amp = moving ? Math.max(0.18, walkAmp*1.8) : 0.02;
-    otisRig.armL.rotation.x = stride*amp*0.9;
-    otisRig.armR.rotation.x = -stride*amp*0.9;
-    otisRig.legL.rotation.x = -stride*amp*2.2;
-    otisRig.legR.rotation.x = stride*amp*2.2;
-    otisRig.shoeL.rotation.x = -stride*amp*1.2;
-    otisRig.shoeR.rotation.x = stride*amp*1.2;
-    otisRig.body.position.y = 0.64 + Math.sin(t*cycle*2)*amp*0.08;
+    const amp = moving ? Math.max(0.24, walkAmp*2.2) : 0.02;
+    otisRig.armL.rotation.x = stride*amp*0.95;
+    otisRig.armR.rotation.x = -stride*amp*0.95;
+    otisRig.legL.rotation.x = -stride*amp*2.6;
+    otisRig.legR.rotation.x = stride*amp*2.6;
+    otisRig.shoeL.rotation.x = -stride*amp*1.5;
+    otisRig.shoeR.rotation.x = stride*amp*1.5;
+    otisRig.body.position.y = 0.56 + Math.sin(t*cycle*2)*amp*0.09;
   }
 
   // subtle high-detail form animation
