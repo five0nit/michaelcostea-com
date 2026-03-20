@@ -27,6 +27,13 @@
 
     .mobilePad{display:none;gap:8px;grid-template-columns:repeat(3,58px);justify-content:center;margin:8px auto 0}
     .mobilePad button{height:58px;font-size:18px}
+    .touchHud{display:none;position:fixed;left:10px;right:10px;bottom:10px;z-index:8;pointer-events:none;justify-content:space-between;align-items:flex-end}
+    .joyWrap,.touchActions{pointer-events:auto}
+    .joyWrap{width:136px;height:136px;border-radius:50%;background:rgba(8,18,30,.6);border:2px solid #466787;position:relative;touch-action:none}
+    .joyBase{position:absolute;inset:12px;border-radius:50%;background:rgba(24,42,60,.5);border:1px solid #6f90a8}
+    .joyKnob{position:absolute;width:46px;height:46px;border-radius:50%;left:45px;top:45px;background:#b9d8f3;border:2px solid #45637d;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+    .touchActions{display:flex;gap:8px}
+    .touchBtn{min-width:74px;height:54px;border-radius:12px}
 
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.76);display:none;align-items:center;justify-content:center;z-index:9;padding:18px}
     .overlay.show{display:flex}
@@ -40,7 +47,8 @@
       .game{grid-template-columns:1fr}
       canvas#game{height:74vh;min-height:420px;border-radius:8px}
       .side{padding:8px}
-      .mobilePad{display:grid}
+      .mobilePad{display:none}
+      .touchHud{display:flex}
       .forms{grid-template-columns:repeat(4,1fr)}
       .forms button{padding:7px 4px;font-size:13px}
       .side details summary{cursor:pointer;font-weight:700}
@@ -78,6 +86,17 @@
         <canvas id="miniMap" width="240" height="150"></canvas>
         <div class="log" id="log">Press START ADVENTURE.</div>
       </aside>
+    </div>
+  </div>
+
+  <div class="touchHud" id="touchHud" aria-label="Touch controls">
+    <div class="joyWrap" id="joyWrap">
+      <div class="joyBase"></div>
+      <div class="joyKnob" id="joyKnob"></div>
+    </div>
+    <div class="touchActions">
+      <button class="touchBtn" id="touchSearch">SEARCH</button>
+      <button class="touchBtn" id="touchForm">FORM</button>
     </div>
   </div>
 
@@ -124,10 +143,13 @@
   const discovered=new Set();
   const camera={x:0,y:0};
   const keys={};
+  const touchMove={x:0,y:0,active:false};
   let tick=0, playing=false;
 
   const log=document.getElementById('log'), foundBadge=document.getElementById('foundBadge'), formBadge=document.getElementById('formBadge');
   const introOverlay=document.getElementById('introOverlay'), winOverlay=document.getElementById('winOverlay'), continueBtn=document.getElementById('continueAdventure');
+  const joyWrap=document.getElementById('joyWrap'), joyKnob=document.getElementById('joyKnob');
+  const touchSearch=document.getElementById('touchSearch'), touchForm=document.getElementById('touchForm');
 
   const audio={ctx:null};
   function beep(freq=440,dur=0.08,type='square',vol=0.03){try{const AC=window.AudioContext||window.webkitAudioContext;audio.ctx=audio.ctx||new AC();const o=audio.ctx.createOscillator();const g=audio.ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0.0001,audio.ctx.currentTime);g.gain.exponentialRampToValueAtTime(vol,audio.ctx.currentTime+0.01);g.gain.exponentialRampToValueAtTime(0.0001,audio.ctx.currentTime+dur);o.connect(g);g.connect(audio.ctx.destination);o.start();o.stop(audio.ctx.currentTime+dur+0.01);}catch{}}
@@ -257,12 +279,55 @@
   document.getElementById('mobileForm').addEventListener('click',()=>{const i=(forms.indexOf(hero.form)+1)%forms.length;setForm(forms[i]);});
   document.querySelectorAll('#mobilePad [data-k]').forEach(btn=>btn.addEventListener('click',()=>{const k=btn.dataset.k;if(k==='ArrowUp')tryMove(0,-1,'up');if(k==='ArrowDown')tryMove(0,1,'down');if(k==='ArrowLeft')tryMove(-1,0,'left');if(k==='ArrowRight')tryMove(1,0,'right');if(k==='Space')search();}));
 
+  function setJoy(nx,ny){
+    const mag=Math.hypot(nx,ny)||1;
+    const clamped=Math.min(1,mag);
+    touchMove.x=(nx/mag)*clamped;
+    touchMove.y=(ny/mag)*clamped;
+    touchMove.active=true;
+    const px=45 + touchMove.x*30;
+    const py=45 + touchMove.y*30;
+    joyKnob.style.left=`${px}px`;
+    joyKnob.style.top=`${py}px`;
+  }
+  function resetJoy(){
+    touchMove.x=0; touchMove.y=0; touchMove.active=false;
+    joyKnob.style.left='45px'; joyKnob.style.top='45px';
+  }
+  if(joyWrap){
+    joyWrap.addEventListener('pointerdown',(e)=>{joyWrap.setPointerCapture(e.pointerId); const r=joyWrap.getBoundingClientRect(); setJoy((e.clientX-(r.left+r.width/2))/ (r.width/2-18),(e.clientY-(r.top+r.height/2))/ (r.height/2-18));});
+    joyWrap.addEventListener('pointermove',(e)=>{if(!touchMove.active) return; const r=joyWrap.getBoundingClientRect(); setJoy((e.clientX-(r.left+r.width/2))/ (r.width/2-18),(e.clientY-(r.top+r.height/2))/ (r.height/2-18));});
+    ['pointerup','pointercancel','lostpointercapture'].forEach(evt=>joyWrap.addEventListener(evt,resetJoy));
+  }
+  touchSearch?.addEventListener('click',search);
+  touchForm?.addEventListener('click',()=>{const i=(forms.indexOf(hero.form)+1)%forms.length;setForm(forms[i]);});
+
   document.getElementById('startAdventure').addEventListener('click',()=>{introOverlay.classList.remove('show');playing=true;markDiscovered(hero.x,hero.y);setLog('Adventure started.');beep(360,0.09,'triangle');saveCheckpoint();});
   continueBtn.addEventListener('click',()=>{if(loadCheckpoint()){introOverlay.classList.remove('show');playing=true;beep(360,0.09,'triangle');}});
   document.getElementById('playAgain').addEventListener('click',()=>{localStorage.removeItem(SAVE_KEY);location.reload();});
   if(localStorage.getItem(SAVE_KEY)) continueBtn.style.display='inline-block';
 
-  let stepCd=0; function loop(){stepCd--;if(playing&&stepCd<=0){if(keys.ArrowUp){tryMove(0,-1,'up');stepCd=6}else if(keys.ArrowDown){tryMove(0,1,'down');stepCd=6}else if(keys.ArrowLeft){tryMove(-1,0,'left');stepCd=6}else if(keys.ArrowRight){tryMove(1,0,'right');stepCd=6}}draw();requestAnimationFrame(loop)}
+  let stepCd=0; function loop(){
+    stepCd--;
+    if(playing&&stepCd<=0){
+      if(keys.ArrowUp){tryMove(0,-1,'up');stepCd=6}
+      else if(keys.ArrowDown){tryMove(0,1,'down');stepCd=6}
+      else if(keys.ArrowLeft){tryMove(-1,0,'left');stepCd=6}
+      else if(keys.ArrowRight){tryMove(1,0,'right');stepCd=6}
+      else if(touchMove.active){
+        if(Math.abs(touchMove.x)>Math.abs(touchMove.y)){
+          if(touchMove.x>0.2) tryMove(1,0,'right');
+          else if(touchMove.x<-0.2) tryMove(-1,0,'left');
+        } else {
+          if(touchMove.y>0.2) tryMove(0,1,'down');
+          else if(touchMove.y<-0.2) tryMove(0,-1,'up');
+        }
+        stepCd=6;
+      }
+    }
+    draw();
+    requestAnimationFrame(loop)
+  }
   loop();
 })();
 </script>
