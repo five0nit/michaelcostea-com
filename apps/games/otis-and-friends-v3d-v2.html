@@ -91,7 +91,7 @@ composer.addPass(bloomPass);
 let fxEnabled = true;
 
 const TILE=1.6, W=64, H=46;
-const map = Array.from({length:H}, ()=>Array(W).fill(0)); // 0 grass 1 tree 2 water 3 gap 4 cliff
+const map = Array.from({length:H}, ()=>Array(W).fill(0)); // 0 grass 1 tree 2 water 3 gap 4 cliff 5 shrine
 for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(!x||!y||x===W-1||y===H-1) map[y][x]=1;
 const set=(x1,y1,x2,y2,t)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++) map[y][x]=t;};
 
@@ -124,6 +124,11 @@ set(2,34,46,H-2,1);
 set(8,30,40,30,2);     // extra fish requirement lane
 set(20,26,22,26,3);    // extra bird jump in late path
 set(31,23,31,25,4);    // extra goat climb gate
+
+// shrine crossover points for form switching
+set(13,14,13,14,5);
+set(29,11,29,11,5);
+set(39,22,39,22,5);
 
 const tileMeshes=[];
 
@@ -167,7 +172,8 @@ for(let y=0;y<H;y++) for(let x=0;x<W;x++){
   if(t===2){ geo=gTile; mat=mats.water; yPos=-0.08; }
   if(t===3){ geo=gTile; mat=mats.gap; yPos=-0.32; }
   if(t===4){ geo=gTile; mat=mats.cliff; yPos=0.28; }
-  const m=new THREE.Mesh(geo,mat); m.receiveShadow=true; m.castShadow=t===1;
+  if(t===5){ geo=new THREE.CylinderGeometry(TILE*0.28,TILE*0.36,0.26,12); mat=new THREE.MeshStandardMaterial({color:0xd7c07f, roughness:0.55, emissive:0x2a210c, emissiveIntensity:0.35}); yPos=0.16; }
+  const m=new THREE.Mesh(geo,mat); m.receiveShadow=true; m.castShadow=t===1||t===5;
   m.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE);
   scene.add(m); tileMeshes.push(m);
 
@@ -474,7 +480,17 @@ function place(){
 initLevel(1);
 place();
 
+function isNearShrine(){
+  for(let yy=heroGrid.y-1; yy<=heroGrid.y+1; yy++){
+    for(let xx=heroGrid.x-1; xx<=heroGrid.x+1; xx++) if(map[yy]?.[xx]===5) return true;
+  }
+  return false;
+}
 function setForm(f){
+  if(f!==form && !isNearShrine()){
+    stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1)+' · Use shrine to transform';
+    return;
+  }
   form=f; stateEl.textContent='Form: '+f[0].toUpperCase()+f.slice(1);
   avatarRoot.visible = (f==='otis');
   animalRoot.visible = (f!=='otis');
@@ -487,18 +503,16 @@ function setForm(f){
   fishModel.scale.set(f==='fish'?1.1:0.95, f==='fish'?1.1:0.95, f==='fish'?1.1:0.95);
   goatModel.scale.setScalar(f==='goat'?1.12:0.96);
 
-  // subtle form tint while keeping Otis reference details intact
   const tint = f==='otis'?0xffffff : f==='bird'?0xf2dcff : f==='fish'?0xd8f2ff : 0xfff0dc;
   avatarRoot.traverse(n=>{ if(n.isMesh && n.material && n.material.color){ const base=n.userData.baseColor || n.material.color.getHex(); n.userData.baseColor=base; n.material.color.setHex(base).multiply(new THREE.Color(tint)); }});
-  otisSignature.visible = (f==='otis');
-  fallbackHat.visible=f==='otis';
 }
 setForm('otis');
 
 function canStep(nx,ny){
   const t=map[ny]?.[nx]; if(t==null) return false;
+  if(form==='fish') return t===2 || t===5; // fish only swims, except shrine crossover tile
   if(t===1) return false;
-  if(t===2) return form==='fish';
+  if(t===2) return false;
   if(t===3) return form==='bird';
   if(t===4) return form==='goat';
   return true;
