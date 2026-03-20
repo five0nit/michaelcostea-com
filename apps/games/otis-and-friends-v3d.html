@@ -245,14 +245,16 @@ const otisHatTop = new THREE.Mesh(new THREE.BoxGeometry(0.85,0.2,0.75), new THRE
 otisHatTop.position.y=1.88;
 const otisHatBrim = new THREE.Mesh(new THREE.BoxGeometry(1.05,0.07,0.92), new THREE.MeshStandardMaterial({color:0xbf3c50, roughness:0.5}));
 otisHatBrim.position.y=1.77;
-const otisLegL = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.55,0.22), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.65}));
-otisLegL.position.set(-0.2,0.12,0);
+const otisLegL = new THREE.Mesh(new THREE.CapsuleGeometry(0.11,0.64,8,12), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.62}));
+otisLegL.position.set(-0.2,0.0,0.02);
 const otisLegR = otisLegL.clone(); otisLegR.position.x=0.2;
+const otisShoeL = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.08,0.28), new THREE.MeshStandardMaterial({color:0x4a1b22, roughness:0.7})); otisShoeL.position.set(-0.2,-0.38,0.08);
+const otisShoeR = otisShoeL.clone(); otisShoeR.position.x=0.2;
 const otisArmL = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.58,0.16), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.68}));
 otisArmL.position.set(-0.56,0.78,0);
 const otisArmR = otisArmL.clone(); otisArmR.position.x=0.56;
-avatarRoot.add(otisTorso,otisHead,otisHatTop,otisHatBrim,otisLegL,otisLegR,otisArmL,otisArmR);
-const otisRig = {armL:otisArmL, armR:otisArmR, legL:otisLegL, legR:otisLegR, body:otisTorso};
+avatarRoot.add(otisTorso,otisHead,otisHatTop,otisHatBrim,otisLegL,otisLegR,otisShoeL,otisShoeR,otisArmL,otisArmR);
+const otisRig = {armL:otisArmL, armR:otisArmR, legL:otisLegL, legR:otisLegR, shoeL:otisShoeL, shoeR:otisShoeR, body:otisTorso};
 
 // Friends rebuilt from user sketches (high-detail stylized 3D)
 function buildMilo(){
@@ -551,11 +553,14 @@ renderer.setAnimationLoop(()=>{
 
   // player walk animation (smooth, speed-driven)
   if(form==='otis'){
-    otisRig.armL.rotation.x = Math.sin(t*10)*walkAmp;
-    otisRig.armR.rotation.x = -Math.sin(t*10)*walkAmp;
-    otisRig.legL.rotation.x = -Math.sin(t*10)*walkAmp*1.2;
-    otisRig.legR.rotation.x = Math.sin(t*10)*walkAmp*1.2;
-    otisRig.body.position.y = 0.64 + Math.sin(t*20)*walkAmp*0.08;
+    const stride = Math.sin(t*10);
+    otisRig.armL.rotation.x = stride*walkAmp*1.1;
+    otisRig.armR.rotation.x = -stride*walkAmp*1.1;
+    otisRig.legL.rotation.x = -stride*walkAmp*1.8;
+    otisRig.legR.rotation.x = stride*walkAmp*1.8;
+    otisRig.shoeL.rotation.x = -stride*walkAmp*0.9;
+    otisRig.shoeR.rotation.x = stride*walkAmp*0.9;
+    otisRig.body.position.y = 0.64 + Math.sin(t*20)*walkAmp*0.12;
   }
 
   // subtle high-detail form animation
