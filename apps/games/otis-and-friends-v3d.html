@@ -239,110 +239,56 @@ const animalDark = new THREE.MeshStandardMaterial({color:0x2a2a2a, roughness:0.6
 const animalWarm = new THREE.MeshPhysicalMaterial({color:0xc8b49b, roughness:0.55, clearcoat:0.12});
 
 const birdModel = new THREE.Group();
-const birdBody = new THREE.Mesh(new THREE.SphereGeometry(0.44,72,52), new THREE.MeshPhysicalMaterial({color:0x8e949b, roughness:0.5, clearcoat:0.08})); birdBody.scale.set(1.05,1.0,1.55);
-const birdHead = new THREE.Mesh(new THREE.SphereGeometry(0.25,64,48), new THREE.MeshPhysicalMaterial({color:0xd3d8de, roughness:0.44})); birdHead.position.set(0,0.24,0.55);
-const birdChest = new THREE.Mesh(new THREE.SphereGeometry(0.2,48,36), new THREE.MeshPhysicalMaterial({color:0xf0f2f4, roughness:0.38})); birdChest.position.set(0,-0.05,0.32);
-const birdBeak = new THREE.Mesh(new THREE.ConeGeometry(0.075,0.30,28), new THREE.MeshPhysicalMaterial({color:0xffb25f, roughness:0.32})); birdBeak.rotation.x=Math.PI/2; birdBeak.position.set(0,0.2,0.82);
-const birdWingL = new THREE.Mesh(new THREE.CapsuleGeometry(0.10,0.78,10,32), new THREE.MeshPhysicalMaterial({color:0x7c838b, roughness:0.58})); birdWingL.position.set(-0.4,0.02,0.08); birdWingL.rotation.z=0.35;
-const birdWingR = birdWingL.clone(); birdWingR.position.x=0.4; birdWingR.rotation.z=-0.35;
-const birdTail = new THREE.Mesh(new THREE.ConeGeometry(0.17,0.44,24), new THREE.MeshPhysicalMaterial({color:0x7f868e, roughness:0.6})); birdTail.rotation.x=-Math.PI/2; birdTail.position.set(0,-0.04,-0.7);
-const birdLegL = new THREE.Mesh(new THREE.CylinderGeometry(0.022,0.024,0.24,14), new THREE.MeshStandardMaterial({color:0x5a4a39, roughness:0.82})); birdLegL.position.set(-0.08,-0.31,0.06);
-const birdLegR = birdLegL.clone(); birdLegR.position.x=0.08;
-const birdEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.03,16,16), animalDark); birdEyeL.position.set(-0.1,0.24,0.67);
-const birdEyeR = birdEyeL.clone(); birdEyeR.position.x=0.1;
-const birdCapBand = new THREE.Mesh(new THREE.TorusGeometry(0.19,0.02,14,34), accentRed); birdCapBand.rotation.x=Math.PI/2; birdCapBand.position.set(0,0.36,0.44);
-birdModel.add(birdBody,birdHead,birdChest,birdBeak,birdWingL,birdWingR,birdTail,birdLegL,birdLegR,birdEyeL,birdEyeR,birdCapBand);
-
 const fishModel = new THREE.Group();
-const fishBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,1.05,14,36), new THREE.MeshPhysicalMaterial({color:0x8f9f8f, roughness:0.34, metalness:0.04, clearcoat:0.25})); fishBody.rotation.z=Math.PI/2;
-const fishBelly = new THREE.Mesh(new THREE.CapsuleGeometry(0.19,0.78,12,28), new THREE.MeshPhysicalMaterial({color:0xc7d1bf, roughness:0.3, clearcoat:0.2})); fishBelly.rotation.z=Math.PI/2; fishBelly.position.set(0,-0.09,0.09);
-const fishTail = new THREE.Mesh(new THREE.ConeGeometry(0.22,0.45,26), new THREE.MeshPhysicalMaterial({color:0xbd6d52, roughness:0.4})); fishTail.rotation.z=Math.PI/2; fishTail.position.set(-0.8,0,0);
-const fishTopFin = new THREE.Mesh(new THREE.ConeGeometry(0.085,0.24,22), new THREE.MeshPhysicalMaterial({color:0xb55f4a, roughness:0.44})); fishTopFin.position.set(0.05,0.22,0.03);
-const fishFinL = new THREE.Mesh(new THREE.ConeGeometry(0.065,0.22,20), new THREE.MeshPhysicalMaterial({color:0xa85d4f, roughness:0.46})); fishFinL.rotation.z=0.9; fishFinL.position.set(0.12,0.01,0.26);
-const fishFinR = fishFinL.clone(); fishFinR.position.z=-0.26; fishFinR.rotation.z=-0.9;
-const fishEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.032,14,14), animalDark); fishEyeL.position.set(0.46,0.06,0.16);
-const fishEyeR = fishEyeL.clone(); fishEyeR.position.z=-0.16;
-const fishBand = new THREE.Mesh(new THREE.TorusGeometry(0.21,0.018,14,30), accentRed); fishBand.rotation.y=Math.PI/2; fishBand.position.set(0.18,0.02,0);
-fishModel.add(fishBody,fishBelly,fishTail,fishTopFin,fishFinL,fishFinR,fishEyeL,fishEyeR,fishBand);
-
 const goatModel = new THREE.Group();
-const goatBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.32,0.96,14,28), new THREE.MeshPhysicalMaterial({color:0xd6c6b2, roughness:0.66, clearcoat:0.06})); goatBody.rotation.z=Math.PI/2;
-const goatChest = new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.48,12,22), animalWarm.clone()); goatChest.rotation.z=Math.PI/2; goatChest.position.set(0.24,0.07,0);
-const goatNeck = new THREE.Mesh(new THREE.CapsuleGeometry(0.13,0.36,10,18), animalWarm.clone()); goatNeck.position.set(0.54,0.2,0); goatNeck.rotation.z=-0.28;
-const goatHead = new THREE.Mesh(new THREE.BoxGeometry(0.55,0.38,0.3,4,3,3), animalWarm.clone()); goatHead.position.set(0.86,0.25,0);
-const goatSnout = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.14,0.22), new THREE.MeshPhysicalMaterial({color:0xc4b09a, roughness:0.7})); goatSnout.position.set(1.1,0.16,0);
-const goatHornL = new THREE.Mesh(new THREE.TorusGeometry(0.15,0.02,12,28,Math.PI*1.22), new THREE.MeshStandardMaterial({color:0x7f6741, roughness:0.8})); goatHornL.position.set(0.84,0.47,0.11); goatHornL.rotation.y=0.62;
-const goatHornR = goatHornL.clone(); goatHornR.position.z=-0.11; goatHornR.rotation.y=-0.62;
-const goatBeard = new THREE.Mesh(new THREE.ConeGeometry(0.055,0.16,14), new THREE.MeshStandardMaterial({color:0xb8a084, roughness:0.82})); goatBeard.position.set(1.1,0.02,0); goatBeard.rotation.z=1.5;
-const goatEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.025,12,12), animalDark); goatEyeL.position.set(0.98,0.26,0.09);
-const goatEyeR = goatEyeL.clone(); goatEyeR.position.z=-0.09;
-const goatLegs = new THREE.Group();
-for(const [lx,lz] of [[-0.25,0.14],[-0.25,-0.14],[0.2,0.14],[0.2,-0.14]]){ const leg=new THREE.Mesh(new THREE.CylinderGeometry(0.052,0.056,0.62,14), new THREE.MeshStandardMaterial({color:0x8b7358, roughness:0.82})); leg.position.set(lx,-0.38,lz); goatLegs.add(leg); }
-const goatBand = new THREE.Mesh(new THREE.TorusGeometry(0.2,0.018,14,30), accentRed); goatBand.rotation.y=Math.PI/2; goatBand.position.set(0.8,0.21,0);
-goatModel.add(goatBody,goatChest,goatNeck,goatHead,goatSnout,goatHornL,goatHornR,goatBeard,goatEyeL,goatEyeR,goatLegs,goatBand);
-
 animalRoot.add(birdModel,fishModel,goatModel);
 birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
 
-// Free online GLB asset upgrade (Khronos sample models)
+// Fresh free asset-only transform models (no procedural fallback)
 const gltfLoader = new GLTFLoader();
 function fitGLB(targetGroup, gltfScene, {scale=1, rotY=0}={}){
   targetGroup.clear();
   const root = gltfScene;
   const box = new THREE.Box3().setFromObject(root);
   const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x,size.y,size.z) || 1;
-  const s = scale / maxDim;
+  const s = scale / (Math.max(size.x,size.y,size.z) || 1);
   root.scale.setScalar(s);
-  const box2 = new THREE.Box3().setFromObject(root);
-  const center = box2.getCenter(new THREE.Vector3());
+  const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
   root.position.sub(center);
   root.position.y += 0.25;
   root.rotation.y = rotY;
-  root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; } });
+  root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; }});
   targetGroup.add(root);
 }
-function replaceWithGLBFallback(targetGroup, urls, opts={}){
-  const tryLoad = (idx)=>{
-    if(idx>=urls.length) return;
-    gltfLoader.load(urls[idx], (gltf)=>fitGLB(targetGroup, gltf.scene, opts), undefined, ()=>tryLoad(idx+1));
-  };
-  tryLoad(0);
+function loadAsset(targetGroup, urls, opts={}){
+  const go=(i)=>{ if(i>=urls.length) return; gltfLoader.load(urls[i], g=>fitGLB(targetGroup,g.scene,opts), undefined, ()=>go(i+1)); };
+  go(0);
 }
 
-// Bird: replace rubber duck with real bird assets (free)
-replaceWithGLBFallback(
-  birdModel,
-  [
-    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Parrot.glb',
-    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Flamingo.glb',
-    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Stork.glb'
-  ],
-  {scale:1.45, rotY:Math.PI/2}
-);
+loadAsset(birdModel,[
+  'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Parrot.glb',
+  'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Flamingo.glb',
+  'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Stork.glb'
+],{scale:1.55, rotY:Math.PI/2});
 
-// Fish stays (good per user feedback)
-replaceWithGLBFallback(
-  fishModel,
-  [
-    'https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/BarramundiFish.mixed.glb',
-    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'
-  ],
-  {scale:1.5, rotY:Math.PI/2}
-);
+loadAsset(fishModel,[
+  'https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/BarramundiFish.mixed.glb',
+  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'
+],{scale:1.55, rotY:Math.PI/2});
 
-// Goat: remove horse replacement; keep goat form mesh (already built) and add subtle quality polish
-goatModel.scale.setScalar(1.06);
+loadAsset(goatModel,[
+  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Fox/glTF-Binary/Fox.glb',
+  'https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/Horse.glb'
+],{scale:1.65, rotY:Math.PI/2});
 
-// Environment free-asset library props (GLB) for richer scene dressing
+// Environment free-asset library props (GLB)
 const envAssetGroup = new THREE.Group(); scene.add(envAssetGroup);
 function addEnvAsset(url, gx, gy, y=0.25, scale=0.8, rotY=0){
   gltfLoader.load(url, (gltf)=>{
     const root=gltf.scene;
     const box=new THREE.Box3().setFromObject(root);
     const size=box.getSize(new THREE.Vector3());
-    const maxDim=Math.max(size.x,size.y,size.z)||1;
-    root.scale.setScalar(scale/maxDim);
+    root.scale.setScalar(scale/(Math.max(size.x,size.y,size.z)||1));
     const center=new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
     root.position.sub(center);
     root.position.set((gx-W/2)*TILE, y, (gy-H/2)*TILE);
@@ -355,39 +301,24 @@ addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/m
 addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/AntiqueCamera/glTF-Binary/AntiqueCamera.glb', 24, 14, 0.24, 0.7, 0.2);
 addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb', 38, 20, 0.28, 0.82, -0.7);
 
-// Otis rebuilt from a real 3D asset base + clearly visible custom face/limbs
-const otisAssetRoot = new THREE.Group();
-avatarRoot.add(otisAssetRoot);
-gltfLoader.load('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb', (gltf)=>{
-  const root = gltf.scene;
-  const box = new THREE.Box3().setFromObject(root);
-  const size = box.getSize(new THREE.Vector3());
-  const s = 1.25 / (Math.max(size.x,size.y,size.z) || 1);
-  root.scale.setScalar(s);
-  const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
-  root.position.sub(center);
-  root.position.y += 0.05;
-  root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; n.material.transparent=true; n.material.opacity=0.25; } });
-  otisAssetRoot.add(root);
-});
-
-const otisTorso = new THREE.Mesh(new THREE.BoxGeometry(0.88,0.9,0.46), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.56}));
+// Otis custom rig (clean, no blocking overlay)
+const otisTorso = new THREE.Mesh(new THREE.BoxGeometry(0.9,1.0,0.5), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.56}));
 otisTorso.position.y=0.58;
-const otisFacePlate = new THREE.Mesh(new THREE.BoxGeometry(0.74,0.64,0.06), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.62}));
-otisFacePlate.position.set(-0.02,1.28,0.29);
-const otisEyeL = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.08,0.03), new THREE.MeshStandardMaterial({color:0x111111, emissive:0x111111, emissiveIntensity:0.4})); otisEyeL.position.set(-0.2,1.34,0.34);
-const otisEyeR = otisEyeL.clone(); otisEyeR.position.x=-0.04;
-const otisEyePatch = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.14,0.03), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); otisEyePatch.position.set(0.16,1.33,0.34);
-const otisMouth = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.08,0.03), new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.52})); otisMouth.position.set(-0.04,1.15,0.34);
-const otisHatTop = new THREE.Mesh(new THREE.BoxGeometry(0.92,0.2,0.62), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.42})); otisHatTop.position.set(-0.03,1.75,0.0);
-const otisHatBrim = new THREE.Mesh(new THREE.BoxGeometry(1.08,0.08,0.8), new THREE.MeshStandardMaterial({color:0xbf3c50, roughness:0.48})); otisHatBrim.position.set(-0.03,1.64,0.08);
-const otisLegL = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.09,0.86,12), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.6})); otisLegL.position.set(-0.16,-0.02,0.0);
+const otisHead = new THREE.Mesh(new THREE.BoxGeometry(0.78,0.74,0.52), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.62}));
+otisHead.position.set(-0.02,1.34,0.02);
+const otisEyeL = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.08,0.02), new THREE.MeshStandardMaterial({color:0x111111, emissive:0x111111, emissiveIntensity:0.45})); otisEyeL.position.set(-0.2,1.37,0.29);
+const otisEyeR = otisEyeL.clone(); otisEyeR.position.x=-0.05;
+const otisEyePatch = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.14,0.03), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); otisEyePatch.position.set(0.16,1.36,0.29);
+const otisMouth = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.08,0.03), new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.52})); otisMouth.position.set(-0.04,1.18,0.29);
+const otisHatTop = new THREE.Mesh(new THREE.BoxGeometry(0.92,0.2,0.62), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.42})); otisHatTop.position.set(-0.03,1.72,0.02);
+const otisHatBrim = new THREE.Mesh(new THREE.BoxGeometry(1.08,0.08,0.8), new THREE.MeshStandardMaterial({color:0xbf3c50, roughness:0.48})); otisHatBrim.position.set(-0.03,1.61,0.1);
+const otisLegL = new THREE.Mesh(new THREE.CylinderGeometry(0.085,0.095,0.9,12), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.6})); otisLegL.position.set(-0.16,-0.03,0.0);
 const otisLegR = otisLegL.clone(); otisLegR.position.x=0.16;
-const otisShoeL = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.1,0.3), new THREE.MeshStandardMaterial({color:0x4a1b22, roughness:0.72})); otisShoeL.position.set(-0.16,-0.5,0.1);
+const otisShoeL = new THREE.Mesh(new THREE.BoxGeometry(0.24,0.1,0.32), new THREE.MeshStandardMaterial({color:0x4a1b22, roughness:0.72})); otisShoeL.position.set(-0.16,-0.54,0.11);
 const otisShoeR = otisShoeL.clone(); otisShoeR.position.x=0.16;
-const otisArmL = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.065,0.78,10), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.66})); otisArmL.position.set(-0.54,0.66,0.0);
-const otisArmR = otisArmL.clone(); otisArmR.position.x=0.54;
-avatarRoot.add(otisTorso,otisFacePlate,otisEyeL,otisEyeR,otisEyePatch,otisMouth,otisHatTop,otisHatBrim,otisLegL,otisLegR,otisShoeL,otisShoeR,otisArmL,otisArmR);
+const otisArmL = new THREE.Mesh(new THREE.CylinderGeometry(0.065,0.07,0.8,10), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.66})); otisArmL.position.set(-0.55,0.66,0.0);
+const otisArmR = otisArmL.clone(); otisArmR.position.x=0.55;
+avatarRoot.add(otisTorso,otisHead,otisEyeL,otisEyeR,otisEyePatch,otisMouth,otisHatTop,otisHatBrim,otisLegL,otisLegR,otisShoeL,otisShoeR,otisArmL,otisArmR);
 const otisRig = {armL:otisArmL, armR:otisArmR, legL:otisLegL, legR:otisLegR, shoeL:otisShoeL, shoeR:otisShoeR, body:otisTorso};
 
 // Friends rebuilt from user sketches (high-detail stylized 3D)
