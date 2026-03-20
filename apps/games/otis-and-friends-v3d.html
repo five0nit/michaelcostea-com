@@ -120,6 +120,34 @@ for(let y=0;y<H;y++) for(let x=0;x<W;x++){
   scene.add(m); tileMeshes.push(m);
 }
 
+// Biome/environment quality pass: props + micro detail
+const env = new THREE.Group(); scene.add(env);
+const tuftMat = new THREE.MeshStandardMaterial({color:0x3d7f45, roughness:0.92});
+const reedMat = new THREE.MeshStandardMaterial({color:0x9cd79f, roughness:0.85});
+const rockMat = new THREE.MeshStandardMaterial({color:0x9ea5ab, roughness:0.88});
+const crystalMat = new THREE.MeshPhysicalMaterial({color:0x8fd3ff, roughness:0.2, transmission:0.2, clearcoat:0.4});
+for(let y=1;y<H-1;y++) for(let x=1;x<W-1;x++){
+  const t=map[y][x];
+  const px=(x-W/2)*TILE, pz=(y-H/2)*TILE;
+  if(t===0 && (x*13+y*7)%11===0){
+    const tuft=new THREE.Mesh(new THREE.ConeGeometry(0.08,0.24,6), tuftMat);
+    tuft.position.set(px + (((x*3)%5)-2)*0.09, 0.18, pz + (((y*7)%5)-2)*0.09);
+    env.add(tuft);
+  }
+  if(t===2 && (x+y)%4===0){
+    const reed=new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.018,0.3,6), reedMat);
+    reed.position.set(px+0.22,0.08,pz-0.18); env.add(reed);
+  }
+  if(t===4 && (x*5+y*3)%5===0){
+    const rock=new THREE.Mesh(new THREE.DodecahedronGeometry(0.12,0), rockMat);
+    rock.position.set(px-0.18,0.44,pz+0.1); env.add(rock);
+  }
+  if(t===3 && (x+y)%6===0){
+    const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(0.11,0), crystalMat);
+    crystal.position.set(px,0.02,pz); env.add(crystal);
+  }
+}
+
 const hero = new THREE.Group(); scene.add(hero);
 const avatarRoot = new THREE.Group(); hero.add(avatarRoot);
 const animalRoot = new THREE.Group(); hero.add(animalRoot); animalRoot.visible=false; animalRoot.scale.setScalar(1.45);
