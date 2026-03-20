@@ -246,42 +246,54 @@
     }
   }
 
-  function pxDraw(baseX,baseY,pix,scale=1){for(const p of pix){ctx.fillStyle=p[2];ctx.fillRect(baseX+p[0]*scale,baseY+p[1]*scale,p[3]*scale,p[4]*scale)}}
-  function drawShadow(px,py,w=10){ctx.fillStyle='rgba(0,0,0,.28)';ctx.fillRect(px+12-w/2,py+25,w,2)}
+  function drawSprite16(px,py,rows,palette,scale=1){
+    for(let y=0;y<rows.length;y++){
+      const row=rows[y];
+      for(let x=0;x<row.length;x++){
+        const k=row[x];
+        if(k==='.') continue;
+        ctx.fillStyle=palette[k]||'#ff00ff';
+        ctx.fillRect(px+x*scale,py+y*scale,scale,scale);
+      }
+    }
+  }
+  function drawShadow(px,py,w=12){ctx.fillStyle='rgba(0,0,0,.28)';ctx.fillRect(px+12-w/2,py+26,w,2)}
+
+  const SHEETS={
+    otis:[
+      ['....AAAAAA......','...ABBBBBBA.....','...BCCCCCCB.....','...BCd..eCB.....','...BCCCCCCB.....','....BffffB......','....GGGGGG......','...HGGGGGGH.....','....I....I......','....I....I......'],
+      ['....AAAAAA......','...ABBBBBBA.....','...BCCCCCCB.....','...BCd..eCB.....','...BCCCCCCB.....','....BffffB......','....GGGGGG......','..HGGGGGGGH.....','...I......I.....','....I....I......']
+    ],
+    bird:[
+      ['......pp........','.....pqqp.......','....pqqqqp......','...pqqqqqqp.....','....pqqqqyyy....','.....pqqqyy.....','......pqq.......','.......p........','......r.r.......','.....r...r......'],
+      ['......pp........','.....pqqp.......','....pqqqqp......','...pqqqqqqp.....','....pqqqqyyy....','.....pqqqyy.....','......pqq.......','.......p........','.....r...r......','......r.r.......']
+    ],
+    fish:[
+      ['................','................','....tttttttt....','...tuuuuuuuuv...','..tuuwwwuuuuuv..','...tuuuuuuuuv...','....tttttttt....','.......vv.......','................','................'],
+      ['................','................','....tttttttt....','...tuuuuuuuuv...','..tuuw.wuuuuuv..','...tuuuuuuuuv...','....tttttttt....','......v..v......','................','................']
+    ],
+    goat:[
+      ['.....mm..mm.....','......mmmm......','....nnnnnnnn....','....nno..onn....','....nnnnnnnn....','....nnnnnnnn....','....nnnnnnnn....','.....o....o.....','.....o....o.....','....o......o....'],
+      ['.....mm..mm.....','......mmmm......','....nnnnnnnn....','....nno..onn....','....nnnnnnnn....','....nnnnnnnn....','....nnnnnnnn....','....o......o....','.....o....o.....','.....o....o.....']
+    ]
+  };
+  const PAL={
+    otis:{A:'#d94f63',B:'#f07b8b',C:'#f1d6b5',d:'#1f1718',e:'#74212c',f:'#f9f9f9',G:'#b34b58',H:'#f1d6b5',I:'#9d3945'},
+    bird:{p:'#6f4a88',q:'#dca4ff',y:'#ffe89b',r:'#c992f0'},
+    fish:{t:'#59b7ee',u:'#9ce4ff',v:'#4db2ef',w:'#0f2030'},
+    goat:{m:'#826b43',n:'#d7bf95',o:'#8e7756'}
+  };
 
   function drawOtis(px,py){
-    const b=hero.moving?(hero.step?1:-1):0, a=hero.moving?(hero.step?1:-1):0;
-    const pix=[
-      [5,1+b,'#d94f63',14,3],[18,3+b,'#d94f63',4,2],[6,3+b,'#f07b8b',10,1],
-      [6,4+b,'#f1d6b5',12,10],[6,13+b,'#d9b998',12,1],[8,7+b,'#1f1718',2,2],[13,6+b,'#74212c',3,3],[10,10+b,'#f9f9f9',4,2],
-      [8,14+b,'#b34b58',8,8],[8,21+b,'#8f3944',8,1],[6-a,14+b,'#f1d6b5',1,7],[16+a,14+b,'#f1d6b5',1,7],[9,22+(hero.step?0:1),'#9d3945',2,5],[13,22+(hero.step?1:0),'#9d3945',2,5]
-    ];
-    pxDraw(px,py,pix,1);
-    ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.strokeRect(px+6,py+4+b,12,18);
-    ctx.strokeStyle='#f7cad0';ctx.beginPath();ctx.arc(px+12,py+3+b,2.1,0,Math.PI*1.9);ctx.stroke();
-    ctx.strokeStyle='#9f2b36';ctx.beginPath();ctx.moveTo(px+12,py+5+b);ctx.lineTo(px+16,py+7+b);ctx.stroke();
+    const i=hero.moving?(hero.step?1:0):0;
+    const isMobile=window.matchMedia('(max-width: 900px)').matches;
+    const s=isMobile?1.9:1.6; // larger main character for mobile readability
+    drawSprite16(px+2,py+2,SHEETS.otis[i],PAL.otis,s);
   }
 
-  function drawBird(px,py){
-    const b=hero.moving?(hero.step?1:-1):0;
-    const pix=[[7,10+b,'#6f4a88',1,5],[8,8+b,'#dca4ff',8,8],[8,8+b,'#f0c9ff',4,1],[6,10+b,'#c992f0',2,4],[16,10+b,'#c992f0',2,4],[16,11+b,'#ffe89b',3,2],[10,11+b,'#1b1515',1,1],[11,13+b,'#fff',3,1]];
-    pxDraw(px,py,pix,1);
-    ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.strokeRect(px+8,py+8+b,8,8);
-  }
-
-  function drawFish(px,py){
-    const b=hero.moving?(hero.step?1:-1):0;
-    const pix=[[7,10+b,'#59b7ee',11,6],[8,10+b,'#9ce4ff',7,1],[17,11+b,'#4db2ef',3,4],[6,11+b,'#9ce4ff',2,4],[9,12+b,'#0f2030',1,1],[12,13+b,'#dff8ff',3,1],[10,15+b,'#2c7fb2',5,1]];
-    pxDraw(px,py,pix,1);
-    ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.strokeRect(px+7,py+10+b,11,6);
-  }
-
-  function drawGoat(px,py){
-    const b=hero.moving?(hero.step?1:-1):0;
-    const pix=[[7,8+b,'#d7bf95',10,10],[7,17+b,'#b79f77',10,1],[8,6+b,'#826b43',2,2],[14,6+b,'#826b43',2,2],[10,10+b,'#1c1813',1,1],[12,10+b,'#1c1813',1,1],[9,22+(hero.step?0:1),'#8e7756',2,4],[13,22+(hero.step?1:0),'#8e7756',2,4]];
-    pxDraw(px,py,pix,1);
-    ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.strokeRect(px+7,py+8+b,10,10);
-  }
+  function drawBird(px,py){ const i=hero.moving?(hero.step?1:0):0; drawSprite16(px+4,py+6,SHEETS.bird[i],PAL.bird,1.45); }
+  function drawFish(px,py){ const i=hero.moving?(hero.step?1:0):0; drawSprite16(px+2,py+8,SHEETS.fish[i],PAL.fish,1.45); }
+  function drawGoat(px,py){ const i=hero.moving?(hero.step?1:0):0; drawSprite16(px+3,py+6,SHEETS.goat[i],PAL.goat,1.45); }
 
   function drawFriend(px,py,name){
     const phase = Math.floor(tick/24)%4;
