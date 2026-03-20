@@ -12,6 +12,11 @@
     .controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:3}
     .btns{display:flex;gap:8px}
     button{background:rgba(24,42,60,.86);color:#fff;border:1px solid #6f90a8;border-radius:10px;padding:10px 12px;font-weight:700}
+    .builder{position:fixed;top:54px;right:10px;z-index:4;background:rgba(8,18,30,.86);border:1px solid #4a6c8a;color:#eaf4ff;border-radius:10px;padding:8px;min-width:210px}
+    .builder h4{margin:0 0 6px;font-size:12px;letter-spacing:.04em}
+    .builder label,.builder select{font-size:12px;display:block;margin:4px 0}
+    .builder .row{display:flex;gap:6px;flex-wrap:wrap}
+    .builder .mini{padding:6px 8px;font-size:11px}
   </style>
 </head>
 <body>
@@ -28,8 +33,25 @@
     <div class="btns"><button id="search">Search</button><button id="tilt">Tilt: Off</button></div>
   </div>
 
+  <div class="builder">
+    <h4>CHARACTER BUILDER</h4>
+    <label>Base model
+      <select id="modelPick">
+        <option value="astronaut">Astronaut</option>
+        <option value="robot">Robot</option>
+        <option value="cesium">Cesium Man</option>
+      </select>
+    </label>
+    <label><input type="checkbox" id="accGlasses" /> Funny glasses</label>
+    <label><input type="checkbox" id="accPropeller" /> Propeller cap</label>
+    <label><input type="checkbox" id="accNose" /> Clown nose</label>
+    <label><input type="checkbox" id="accDuck" /> Rubber duck buddy</label>
+    <div class="row"><button class="mini" id="applyBuild">Apply</button><button class="mini" id="randomBuild">Random</button></div>
+  </div>
+
 <script type="module">
 import * as THREE from 'https://unpkg.com/three@0.164.1/build/three.module.js';
+import { GLTFLoader } from 'https://unpkg.com/three@0.164.1/examples/jsm/loaders/GLTFLoader.js';
 
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
@@ -81,13 +103,83 @@ for(let y=0;y<H;y++) for(let x=0;x<W;x++){
   scene.add(m); tileMeshes.push(m);
 }
 
-const hero = new THREE.Group();
-const body = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.3,0.8), new THREE.MeshStandardMaterial({color:0xc2616e, roughness:0.7}));
-const head = new THREE.Mesh(new THREE.BoxGeometry(0.82,0.82,0.82), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.75}));
-head.position.y=1.05;
-const hat = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.18,0.95), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6}));
-hat.position.y=1.55;
-hero.add(body,head,hat); scene.add(hero);
+const hero = new THREE.Group(); scene.add(hero);
+const avatarRoot = new THREE.Group(); hero.add(avatarRoot);
+
+// Fallback primitive (kept until GLB loads)
+const fallbackBody = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.3,0.8), new THREE.MeshStandardMaterial({color:0xc2616e, roughness:0.7}));
+const fallbackHead = new THREE.Mesh(new THREE.BoxGeometry(0.82,0.82,0.82), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.75})); fallbackHead.position.y=1.05;
+const fallbackHat = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.18,0.95), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6})); fallbackHat.position.y=1.55;
+avatarRoot.add(fallbackBody,fallbackHead,fallbackHat);
+
+const loader = new GLTFLoader();
+const modelUrls={
+  astronaut:'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
+  robot:'https://modelviewer.dev/shared-assets/models/RobotExpressive.glb',
+  cesium:'https://modelviewer.dev/shared-assets/models/CesiumMan.glb'
+};
+let activeModel=null;
+const accessories = new THREE.Group(); avatarRoot.add(accessories);
+
+function clearAccessories(){
+  while(accessories.children.length){
+    const c=accessories.children.pop();
+    if(c.geometry) c.geometry.dispose?.();
+    if(c.material) c.material.dispose?.();
+    accessories.remove(c);
+  }
+}
+function addAccessoryGlasses(){
+  const frame=new THREE.Mesh(new THREE.TorusGeometry(0.18,0.03,10,24), new THREE.MeshStandardMaterial({color:0x111111, roughness:0.4}));
+  frame.position.set(-0.16,1.2,0.38);
+  const frame2=frame.clone(); frame2.position.x=0.16;
+  const bridge=new THREE.Mesh(new THREE.BoxGeometry(0.14,0.03,0.03), new THREE.MeshStandardMaterial({color:0x111111})); bridge.position.set(0,1.2,0.38);
+  accessories.add(frame,frame2,bridge);
+}
+function addAccessoryPropeller(){
+  const cap=new THREE.Mesh(new THREE.SphereGeometry(0.22,14,10), new THREE.MeshStandardMaterial({color:0xff6b7f, roughness:0.6})); cap.position.set(0,1.65,0);
+  const stick=new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.015,0.22), new THREE.MeshStandardMaterial({color:0xdddddd})); stick.position.set(0,1.83,0);
+  const blade=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.02,0.08), new THREE.MeshStandardMaterial({color:0x7ad0ff})); blade.position.set(0,1.95,0);
+  accessories.add(cap,stick,blade);
+}
+function addAccessoryNose(){
+  const nose=new THREE.Mesh(new THREE.SphereGeometry(0.08,12,12), new THREE.MeshStandardMaterial({color:0xff2f3b, roughness:0.35})); nose.position.set(0,1.14,0.44); accessories.add(nose);
+}
+function addAccessoryDuck(){
+  const duck=new THREE.Mesh(new THREE.SphereGeometry(0.13,12,10), new THREE.MeshStandardMaterial({color:0xffd34d, roughness:0.6})); duck.position.set(0.55,0.45,0.2);
+  const beak=new THREE.Mesh(new THREE.BoxGeometry(0.09,0.04,0.06), new THREE.MeshStandardMaterial({color:0xff8f36})); beak.position.set(0.63,0.44,0.2);
+  accessories.add(duck,beak);
+}
+
+function applyAccessories(){
+  clearAccessories();
+  if(document.getElementById('accGlasses').checked) addAccessoryGlasses();
+  if(document.getElementById('accPropeller').checked) addAccessoryPropeller();
+  if(document.getElementById('accNose').checked) addAccessoryNose();
+  if(document.getElementById('accDuck').checked) addAccessoryDuck();
+}
+
+function disposeObject3D(obj){
+  obj.traverse((n)=>{ if(n.geometry) n.geometry.dispose?.(); if(n.material){ if(Array.isArray(n.material)) n.material.forEach(m=>m.dispose?.()); else n.material.dispose?.(); }});
+}
+
+function loadAvatarModel(kind='astronaut'){
+  const url=modelUrls[kind]||modelUrls.astronaut;
+  loader.load(url,(gltf)=>{
+    if(activeModel){ avatarRoot.remove(activeModel); disposeObject3D(activeModel); activeModel=null; }
+    activeModel=gltf.scene;
+    activeModel.scale.setScalar(kind==='robot'?0.32:0.75);
+    activeModel.position.set(0,0,0);
+    activeModel.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; }});
+    // remove fallback primitives when real asset is present
+    fallbackBody.visible=false; fallbackHead.visible=false; fallbackHat.visible=false;
+    avatarRoot.add(activeModel);
+    applyAccessories();
+  }, undefined, ()=>{
+    // fallback stays visible on error
+    fallbackBody.visible=true; fallbackHead.visible=true; fallbackHat.visible=true;
+  });
+}
 
 const friendGeom = new THREE.SphereGeometry(0.45, 12, 10);
 const milo = new THREE.Mesh(friendGeom, new THREE.MeshStandardMaterial({color:0xffc2ca, roughness:0.7}));
@@ -106,10 +198,13 @@ place();
 
 function setForm(f){
   form=f; stateEl.textContent='Form: '+f[0].toUpperCase()+f.slice(1);
-  body.material.color.set(f==='otis'?0xc2616e:f==='bird'?0xc6a0ff:f==='fish'?0x6ec6ff:0xd2bf9e);
-  hat.visible=f==='otis';
+  // tint fallback / loaded meshes slightly by form
+  const tint = f==='otis'?0xffffff : f==='bird'?0xf2dcff : f==='fish'?0xd8f2ff : 0xfff0dc;
+  avatarRoot.traverse(n=>{ if(n.isMesh && n.material && n.material.color){ const base=n.userData.baseColor || n.material.color.getHex(); n.userData.baseColor=base; n.material.color.setHex(base).multiply(new THREE.Color(tint)); }});
+  fallbackHat.visible=f==='otis';
 }
 setForm('otis');
+loadAvatarModel('astronaut');
 
 function canStep(nx,ny){
   const t=map[ny]?.[nx]; if(t==null) return false;
@@ -138,6 +233,13 @@ function search(){
 
 ['f1','f2','f3','f4'].forEach((id,i)=>document.getElementById(id).onclick=()=>setForm(forms[i]));
 document.getElementById('search').onclick=search;
+document.getElementById('applyBuild').onclick=()=>{ loadAvatarModel(document.getElementById('modelPick').value); applyAccessories(); };
+document.getElementById('randomBuild').onclick=()=>{
+  const models=['astronaut','robot','cesium'];
+  document.getElementById('modelPick').value=models[Math.floor(Math.random()*models.length)];
+  ['accGlasses','accPropeller','accNose','accDuck'].forEach(id=>{ document.getElementById(id).checked=Math.random()>0.5; });
+  loadAvatarModel(document.getElementById('modelPick').value); applyAccessories();
+};
 
 function onTilt(e){
   tiltState.gamma = e.gamma || 0; // left/right
