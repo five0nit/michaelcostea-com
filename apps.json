@@ -129,7 +129,7 @@
       "slug": "otis-and-friends",
       "status": "beta",
       "description": "SNES-Zelda style hide-and-seek adventure where Otis transforms into animals to reach hidden friends. [Fun/experimental side app]",
-      "url": "./apps/games/otis-and-friends.html",
+      "url": "./apps/games/otis-and-friends-v2.html",
       "category": "games",
       "primary": false
     },

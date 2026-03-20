@@ -748,8 +748,8 @@ function initQuirkyStartActions(){
     solitaire:'./apps/games/solitaire.html',
     'sky slope':'./apps/games/skifree.html',
     skifree:'./apps/games/skifree.html',
-    otis:'./apps/games/otis-and-friends.html',
-    'otis and his friends':'./apps/games/otis-and-friends.html'
+    otis:'./apps/games/otis-and-friends-v2.html',
+    'otis and his friends':'./apps/games/otis-and-friends-v2.html'
   };
 
   const renderBlackCell = ()=>{
