@@ -69,16 +69,33 @@ camera.position.set(0, 14, 18);
 const hemi = new THREE.HemisphereLight(0x9ed0ff, 0x223319, 0.65); scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xffffff, 0.9); sun.position.set(12,22,9); sun.castShadow=true; scene.add(sun);
 
-const TILE=1.6, W=32, H=24;
+const TILE=1.6, W=48, H=34;
 const map = Array.from({length:H}, ()=>Array(W).fill(0)); // 0 grass 1 tree 2 water 3 gap 4 cliff
 for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(!x||!y||x===W-1||y===H-1) map[y][x]=1;
 const set=(x1,y1,x2,y2,t)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++) map[y][x]=t;};
-set(10,1,10,22,1); set(20,1,20,22,1);
-set(10,10,10,12,2); // fish gate
-set(20,6,20,8,4);  // goat gate
-set(25,14,27,14,3); // bird gate
-set(2,2,9,20,0); set(11,9,19,14,0); set(21,5,24,17,0); set(28,13,30,16,0);
-set(5,12,8,15,2);
+
+// Long multi-zone maze with forced transformation gates
+set(14,1,14,32,1); set(30,1,30,32,1);
+set(14,15,14,18,2);   // fish gate
+set(30,10,30,13,4);   // goat gate
+set(40,22,43,22,3);   // bird gap gate
+
+// Dense blockers (maze complexity)
+set(2,24,13,32,1); set(16,2,29,7,1); set(16,23,29,32,1);
+set(32,2,46,16,1); set(32,27,46,32,1);
+set(4,5,12,5,1); set(4,10,12,10,1); set(4,15,12,15,1); set(4,20,12,20,1);
+set(18,12,28,12,1); set(18,18,28,18,1);
+set(34,20,39,20,1); set(34,24,39,24,1);
+
+// Carve winding corridors
+set(2,2,13,23,0); set(16,14,29,22,0); set(32,9,39,26,0); set(44,20,46,25,0);
+set(6,6,10,9,0); set(6,11,10,14,0); set(6,16,10,19,0);
+set(20,14,23,17,0); set(24,19,28,22,0);
+set(34,11,37,14,0); set(34,21,37,23,0);
+
+// Water / cliff regions + decoy biomes
+set(6,16,11,19,2); set(20,15,25,18,2); set(34,11,37,13,4); set(44,21,46,24,3);
+set(8,7,9,8,2); set(22,20,23,21,4); set(36,22,37,23,2);
 
 const tileMeshes=[];
 const mats={
@@ -184,16 +201,31 @@ function loadAvatarModel(kind='astronaut'){
 const friendGeom = new THREE.SphereGeometry(0.45, 12, 10);
 const milo = new THREE.Mesh(friendGeom, new THREE.MeshStandardMaterial({color:0xffc2ca, roughness:0.7}));
 const poppy = new THREE.Mesh(friendGeom, new THREE.MeshStandardMaterial({color:0xff9fbc, roughness:0.7}));
+const decoyGeom = new THREE.SphereGeometry(0.34, 10, 8);
+const decoyMat = new THREE.MeshStandardMaterial({color:0xf6d36a, roughness:0.7, emissive:0x2a1f08, emissiveIntensity:0.25});
+const decoyMeshes = [];
 scene.add(milo,poppy);
 
 const stateEl=document.getElementById('state'), foundEl=document.getElementById('found');
 const forms=['otis','bird','fish','goat']; let form='otis';
 let heroGrid={x:2,y:2};
 let found={milo:false,poppy:false};
-const miloPos={x:29,y:15}, poppyPos={x:6,y:13};
+const miloPos={x:45,y:24}, poppyPos={x:11,y:18};
+const decoys=[{x:9,y:8},{x:24,y:21},{x:36,y:22},{x:27,y:16},{x:42,y:24}];
 
 function posFromGrid(g){ return new THREE.Vector3((g.x-W/2)*TILE,0.8,(g.y-H/2)*TILE); }
-function place(){ hero.position.copy(posFromGrid(heroGrid)); milo.position.copy(posFromGrid(miloPos)); poppy.position.copy(posFromGrid(poppyPos)); }
+function place(){
+  hero.position.copy(posFromGrid(heroGrid));
+  milo.position.copy(posFromGrid(miloPos));
+  poppy.position.copy(posFromGrid(poppyPos));
+  decoyMeshes.forEach((m,i)=>{ const p=posFromGrid(decoys[i]); m.position.set(p.x,0.55,p.z); m.rotation.y += 0.01; });
+}
+
+for(const d of decoys){
+  const m = new THREE.Mesh(decoyGeom, decoyMat.clone());
+  const p=posFromGrid(d); m.position.set(p.x,0.55,p.z);
+  scene.add(m); decoyMeshes.push(m);
+}
 place();
 
 function setForm(f){
@@ -226,6 +258,15 @@ function search(){
   const d2=Math.abs(heroGrid.x-poppyPos.x)+Math.abs(heroGrid.y-poppyPos.y);
   if(d1<=1) found.milo=true;
   if(d2<=1) found.poppy=true;
+
+  const decoyHit = decoys.findIndex(d=>Math.abs(heroGrid.x-d.x)+Math.abs(heroGrid.y-d.y)<=1);
+  if(decoyHit>=0){
+    const m=decoyMeshes[decoyHit];
+    if(m){ m.material.emissiveIntensity = 1.2; setTimeout(()=>{ if(m.material) m.material.emissiveIntensity = 0.25; }, 300); }
+    stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1)+' · False clue!';
+    setTimeout(()=>{stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1);},700);
+  }
+
   if(found.milo) milo.visible=false;
   if(found.poppy) poppy.visible=false;
   foundEl.textContent=`Friends: ${Number(found.milo)+Number(found.poppy)} / 2`;
