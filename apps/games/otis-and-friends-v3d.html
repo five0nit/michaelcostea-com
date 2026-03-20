@@ -26,6 +26,8 @@
   <div class="hud">
     <div class="pill" id="state">Form: Otis</div>
     <div class="pill" id="found">Friends: 0 / 2</div>
+    <div class="pill" id="levelPill">Level: 1 / 3</div>
+    <div class="pill" id="hpPill">HP: 100</div>
     <div class="pill">3D Mode</div>
   </div>
   <div class="controls">
@@ -308,33 +310,61 @@ function buildPoppy(){
 
 const milo = buildMilo();
 const poppy = buildPoppy();
-const decoyGeom = new THREE.SphereGeometry(0.34, 10, 8);
-const decoyMat = new THREE.MeshStandardMaterial({color:0xf6d36a, roughness:0.7, emissive:0x2a1f08, emissiveIntensity:0.25});
 const decoyMeshes = [];
 scene.add(milo,poppy);
 
 const stateEl=document.getElementById('state'), foundEl=document.getElementById('found');
+const levelPill=document.getElementById('levelPill'), hpPill=document.getElementById('hpPill');
 const forms=['otis','bird','fish','goat']; let form='otis';
 let heroGrid={x:2,y:2};
 const heroPos={x:2,y:2};
 const heroVel={x:0,y:0};
 let found={milo:false,poppy:false};
-const miloPos={x:45,y:24}, poppyPos={x:11,y:18};
-const decoys=[{x:9,y:8},{x:24,y:21},{x:36,y:22},{x:27,y:16},{x:42,y:24}];
+let hp=100;
+let currentLevel=1;
+let miloPos={x:45,y:24}, poppyPos={x:11,y:18};
+let decoys=[];
+const levels=[
+  { hero:{x:2,y:2}, milo:{x:26,y:12}, poppy:{x:8,y:15}, decoys:[{x:9,y:8},{x:18,y:17},{x:24,y:12}] },
+  { hero:{x:2,y:2}, milo:{x:36,y:22}, poppy:{x:12,y:18}, decoys:[{x:9,y:8},{x:24,y:21},{x:27,y:16},{x:34,y:18}] },
+  { hero:{x:2,y:2}, milo:{x:45,y:24}, poppy:{x:11,y:18}, decoys:[{x:9,y:8},{x:24,y:21},{x:36,y:22},{x:27,y:16},{x:42,y:24},{x:30,y:27}] }
+];
 
 function posFromGrid(g){ return new THREE.Vector3((g.x-W/2)*TILE,0.8,(g.y-H/2)*TILE); }
+function buildDecoy(){
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.4,6,10), new THREE.MeshStandardMaterial({color:0xe7bf5e, roughness:0.65}));
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,14,12), new THREE.MeshStandardMaterial({color:0xf3d67c, roughness:0.55})); head.position.y=0.42;
+  const hornL = new THREE.Mesh(new THREE.ConeGeometry(0.04,0.14,8), new THREE.MeshStandardMaterial({color:0x7f6741, roughness:0.8})); hornL.position.set(-0.08,0.58,0.02); hornL.rotation.z=0.45;
+  const hornR = hornL.clone(); hornR.position.x=0.08; hornR.rotation.z=-0.45;
+  const eye = new THREE.Mesh(new THREE.SphereGeometry(0.025,8,8), new THREE.MeshStandardMaterial({color:0x111111})); eye.position.set(0.05,0.44,0.16);
+  const eye2 = eye.clone(); eye2.position.x=-0.05;
+  g.add(body,head,hornL,hornR,eye,eye2);
+  g.userData.hitAt=0;
+  return g;
+}
+function clearDecoys(){ while(decoyMeshes.length){ const d=decoyMeshes.pop(); scene.remove(d);} }
+function initLevel(level){
+  const cfg=levels[level-1];
+  currentLevel=level;
+  heroGrid={x:cfg.hero.x,y:cfg.hero.y};
+  heroPos.x=cfg.hero.x; heroPos.y=cfg.hero.y; heroVel.x=0; heroVel.y=0;
+  miloPos={...cfg.milo}; poppyPos={...cfg.poppy}; decoys=cfg.decoys.map(v=>({...v}));
+  found={milo:false,poppy:false};
+  milo.visible=true; poppy.visible=true;
+  foundEl.textContent='Friends: 0 / 2';
+  levelPill.textContent=`Level: ${currentLevel} / 3`;
+  clearDecoys();
+  decoys.forEach((d)=>{ const m=buildDecoy(); const p=posFromGrid(d); m.position.set(p.x,0.55,p.z); scene.add(m); decoyMeshes.push(m); });
+}
 function place(){
   hero.position.copy(posFromGrid({x:heroPos.x,y:heroPos.y}));
   milo.position.copy(posFromGrid(miloPos));
   poppy.position.copy(posFromGrid(poppyPos));
-  decoyMeshes.forEach((m,i)=>{ const p=posFromGrid(decoys[i]); m.position.set(p.x,0.55,p.z); m.rotation.y += 0.01; });
+  const tNow = performance.now()*0.001;
+  decoyMeshes.forEach((m,i)=>{ const p=posFromGrid(decoys[i]); m.position.set(p.x,0.55 + Math.sin(tNow*3+i)*0.02,p.z); m.rotation.y += 0.01; });
 }
-
-for(const d of decoys){
-  const m = new THREE.Mesh(decoyGeom, decoyMat.clone());
-  const p=posFromGrid(d); m.position.set(p.x,0.55,p.z);
-  scene.add(m); decoyMeshes.push(m);
-}
+initLevel(1);
 place();
 
 function setForm(f){
@@ -377,17 +407,19 @@ function search(){
   if(d1<=1) found.milo=true;
   if(d2<=1) found.poppy=true;
 
-  const decoyHit = decoys.findIndex(d=>Math.abs(heroGrid.x-d.x)+Math.abs(heroGrid.y-d.y)<=1);
-  if(decoyHit>=0){
-    const m=decoyMeshes[decoyHit];
-    if(m){ m.material.emissiveIntensity = 1.2; setTimeout(()=>{ if(m.material) m.material.emissiveIntensity = 0.25; }, 300); }
-    stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1)+' · False clue!';
-    setTimeout(()=>{stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1);},700);
-  }
-
   if(found.milo) milo.visible=false;
   if(found.poppy) poppy.visible=false;
   foundEl.textContent=`Friends: ${Number(found.milo)+Number(found.poppy)} / 2`;
+
+  if(found.milo && found.poppy){
+    if(currentLevel<3){
+      stateEl.textContent='Level clear! Loading next level...';
+      setTimeout(()=>{ initLevel(currentLevel+1); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 900);
+    } else {
+      stateEl.textContent='All levels complete! 🎉';
+      playing=false;
+    }
+  }
 }
 
 ['f1','f2','f3','f4'].forEach((id,i)=>document.getElementById(id).onclick=()=>setForm(forms[i]));
@@ -452,6 +484,8 @@ async function startWithMode(mode){
   }
   touchHud.style.display = (controlMode==='joystick') ? 'block' : 'none';
   document.getElementById('controlOverlay').classList.add('hidden');
+  hp=100; hpPill.textContent='HP: 100';
+  initLevel(1);
   playing=true;
 }
 
@@ -537,6 +571,26 @@ renderer.setAnimationLoop(()=>{
     goatHead.rotation.y = Math.sin(t*(3+speed))*0.06;
     goatLegs.children.forEach((leg,i)=>{leg.rotation.x = Math.sin(t*(7+speed*2) + i)*0.12;});
   }
+
+  // decoy enemy contact damage
+  const now=clock.elapsedTime;
+  decoys.forEach((d,i)=>{
+    const m=decoyMeshes[i];
+    if(!m) return;
+    const hit = Math.abs(heroGrid.x-d.x)+Math.abs(heroGrid.y-d.y) <= 1;
+    if(hit && (now-(m.userData.hitAt||0))>0.8){
+      m.userData.hitAt=now;
+      hp=Math.max(0,hp-8);
+      hpPill.textContent=`HP: ${hp}`;
+      stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1)+' · Ouch! Decoy hit';
+      setTimeout(()=>{ if(playing) stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); },500);
+      if(hp<=0){
+        hp=100; hpPill.textContent='HP: 100';
+        stateEl.textContent='You fainted. Restarting level...';
+        setTimeout(()=>{ initLevel(currentLevel); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 700);
+      }
+    }
+  });
 
   // friend idle animation from sketch silhouettes
   if(milo.visible){
