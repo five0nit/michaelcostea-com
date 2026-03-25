@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "title": "DO NOT TOUCH — 3D Resume Adventure",
+    "theme": "pokemon-retro-inspired",
+    "tone": ["playful", "intelligent"],
+    "visualStyle": "high-poly high-end retro"
+  },
+  "zones": [
+    {
+      "id": "profile-town",
+      "name": "Profile Town",
+      "description": "Starting zone that introduces Michael and the corrupted resume archive."
+    },
+    {
+      "id": "trades-district",
+      "name": "Trades District",
+      "description": "Hands-on field work, electrical capability, and practical execution."
+    },
+    {
+      "id": "builder-labs",
+      "name": "Builder Labs",
+      "description": "Automations, systems, web tools, and product building."
+    },
+    {
+      "id": "operations-city",
+      "name": "Operations City",
+      "description": "Process, leadership, reliability, and delivery systems."
+    },
+    {
+      "id": "growth-route",
+      "name": "Growth Route",
+      "description": "Customer outcomes, partnerships, and commercial thinking."
+    },
+    {
+      "id": "archive-tower",
+      "name": "Archive Tower",
+      "description": "Final assembled resume and contact portal."
+    }
+  ],
+  "resumeSections": [
+    {
+      "id": "summary",
+      "type": "profile",
+      "title": "Profile Summary",
+      "summary": "Who Michael is and what he builds.",
+      "details": "Replace with production content.",
+      "tags": ["intro", "profile"],
+      "zone": "profile-town",
+      "order": 1,
+      "visible": true,
+      "future": true
+    },
+    {
+      "id": "experience-electrical",
+      "type": "experience",
+      "title": "Electrical & Field Experience",
+      "summary": "Practical field execution and technical delivery.",
+      "details": "Replace with production content.",
+      "tags": ["electrical", "field", "technical"],
+      "zone": "trades-district",
+      "order": 10,
+      "visible": true,
+      "future": true
+    },
+    {
+      "id": "projects-automation",
+      "type": "projects",
+      "title": "Automation & System Building",
+      "summary": "Automations, tooling, and workflow systems.",
+      "details": "Replace with production content.",
+      "tags": ["automation", "systems", "builder"],
+      "zone": "builder-labs",
+      "order": 20,
+      "visible": true,
+      "future": true
+    }
+  ],
+  "assetChecklist": {
+    "player": ["main character model", "idle/walk interaction animations"],
+    "npcs": ["guide npc", "trade npc", "builder npc", "operations npc", "archive npc"],
+    "world": ["terrain tiles", "buildings", "trees", "props", "collectibles", "gates"],
+    "ui": ["journal icons", "resume shards", "zone markers", "menu frames"]
+  }
+}

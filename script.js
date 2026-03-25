@@ -429,10 +429,43 @@ function initStartMenu(projects){
   const subSettings = document.getElementById('startSettingsMenu');
 
   const hideSubmenus = () => {
-    [subPrograms, subWebApps, subGames, subSettings].forEach(s => { if(s){ s.classList.remove('open'); s.setAttribute('aria-hidden','true'); } });
+    [subPrograms, subWebApps, subGames, subSettings].forEach(s => {
+      if(s){
+        s.classList.remove('open');
+        s.classList.remove('submenu-flip-left');
+        s.setAttribute('aria-hidden','true');
+      }
+    });
   };
-  const openSub = (el) => { if(el){ el.classList.add('open'); el.setAttribute('aria-hidden','false'); } };
-  const showSubmenu = (name) => {
+  const positionSubmenu = (triggerEl, submenuEl) => {
+    if(!triggerEl || !submenuEl || isMobileMode()) return;
+    submenuEl.classList.remove('submenu-flip-left');
+    const triggerRect = triggerEl.getBoundingClientRect();
+    const menuRect = menu.getBoundingClientRect();
+    const submenuRect = submenuEl.getBoundingClientRect();
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+
+    const defaultLeft = triggerRect.right - menuRect.left;
+    const flippedLeft = triggerRect.left - menuRect.left - submenuRect.width;
+    const shouldFlipLeft = triggerRect.right + submenuRect.width > viewportW - 8 && flippedLeft >= 8 - menuRect.left;
+
+    submenuEl.style.left = `${shouldFlipLeft ? flippedLeft : defaultLeft}px`;
+    submenuEl.style.right = 'auto';
+
+    const topWithinMenu = triggerRect.top - menuRect.top;
+    const maxTop = Math.max(6, viewportH - menuRect.top - submenuRect.height - 12);
+    submenuEl.style.top = `${Math.max(6, Math.min(topWithinMenu, maxTop))}px`;
+    submenuEl.classList.toggle('submenu-flip-left', shouldFlipLeft);
+  };
+  const openSub = (el, triggerEl) => {
+    if(el){
+      el.classList.add('open');
+      el.setAttribute('aria-hidden','false');
+      positionSubmenu(triggerEl, el);
+    }
+  };
+  const showSubmenu = (name, triggerEl = null) => {
     const mobile = isMobileMode();
 
     if(mobile){
@@ -451,19 +484,25 @@ function initStartMenu(projects){
 
       // Mobile: close previous branch first, then open requested branch.
       hideSubmenus();
-      if(name === 'programs') return openSub(subPrograms);
-      if(name === 'settings') return openSub(subSettings);
-      if(name === 'webapps'){ openSub(subPrograms); return openSub(subWebApps); }
-      if(name === 'games'){ openSub(subPrograms); return openSub(subGames); }
+      if(name === 'programs') return openSub(subPrograms, triggerEl);
+      if(name === 'settings') return openSub(subSettings, triggerEl);
+      if(name === 'webapps'){ openSub(subPrograms, items.querySelector('[data-submenu="programs"]')); return openSub(subWebApps, triggerEl); }
+      if(name === 'games'){ openSub(subPrograms, items.querySelector('[data-submenu="programs"]')); return openSub(subGames, triggerEl); }
       return;
     }
 
     // Desktop cascade behavior
     hideSubmenus();
-    if(name === 'programs') return openSub(subPrograms);
-    if(name === 'settings') return openSub(subSettings);
-    if(name === 'webapps'){ openSub(subPrograms); return openSub(subWebApps); }
-    if(name === 'games'){ openSub(subPrograms); return openSub(subGames); }
+    if(name === 'programs') return openSub(subPrograms, triggerEl);
+    if(name === 'settings') return openSub(subSettings, triggerEl);
+    if(name === 'webapps'){
+      openSub(subPrograms, items.querySelector('[data-submenu="programs"]'));
+      return openSub(subWebApps, triggerEl);
+    }
+    if(name === 'games'){
+      openSub(subPrograms, items.querySelector('[data-submenu="programs"]'));
+      return openSub(subGames, triggerEl);
+    }
   };
 
   let scrollHint = menu.querySelector('.start-scroll-hint');
@@ -490,14 +529,14 @@ function initStartMenu(projects){
     if(isMobileMode()) return;
     const link = e.target.closest('.start-item[data-submenu]');
     if(!link) return;
-    showSubmenu(link.getAttribute('data-submenu'));
+    showSubmenu(link.getAttribute('data-submenu'), link);
   });
 
   menu.addEventListener('click', (e) => {
     const link = e.target.closest('.start-item');
     if(!link) return;
     const sub = link.getAttribute('data-submenu');
-    if(sub){ e.preventDefault(); showSubmenu(sub); return; }
+    if(sub){ e.preventDefault(); showSubmenu(sub, link); return; }
 
     // Any non-submenu click should collapse previous submenu branch.
     hideSubmenus();

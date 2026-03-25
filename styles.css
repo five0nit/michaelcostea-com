@@ -97,7 +97,7 @@ a.btn,button.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2
 .start-scroll-hint.show{opacity:1;transform:translateY(0)}
 #startProgramsMenu{top:2px}
 #startSettingsMenu{top:98px}
-#startWebAppsMenu,#startGamesMenu{left:calc(100% + 230px);top:2px}
+#startWebAppsMenu,#startGamesMenu{left:100%;top:2px}
 #startGamesMenu{top:32px}
 body.mobile-mode .desktop{
   display:grid;
