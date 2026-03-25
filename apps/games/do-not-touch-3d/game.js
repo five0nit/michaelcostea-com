@@ -1,4 +1,5 @@
 import * as THREE from 'https://esm.sh/three@0.164.1';
+import { GLTFLoader } from 'https://esm.sh/three@0.164.1/examples/jsm/loaders/GLTFLoader.js';
 
 const canvas = document.getElementById('game');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -63,7 +64,8 @@ const state = {
   foundClues: new Set(),
   talkedTo: new Set(),
   activeFilter: 'all',
-  activeQuestIndex: 0
+  activeQuestIndex: 0,
+  pendingBuilderUnlock: false
 };
 
 const TILE = 2;
@@ -71,14 +73,22 @@ const mapSize = 18;
 const walls = new Set();
 const npcMeshes = [];
 const clueMeshes = [];
-
+const worldObjects = [];
 const keys = {};
 let interactionCooldown = 0;
 const isMobile = window.matchMedia('(max-width: 720px)').matches;
 const joystick = { active: false, x: 0, y: 0 };
+const tapMoveTarget = new THREE.Vector3();
+let hasTapMoveTarget = false;
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const gltfLoader = new GLTFLoader();
 
 const player = new THREE.Group();
 scene.add(player);
+const playerVisualRoot = new THREE.Group();
+player.add(playerVisualRoot);
+
 const playerBody = new THREE.Mesh(
   new THREE.CapsuleGeometry(0.55, 1.0, 8, 16),
   new THREE.MeshStandardMaterial({ color: 0x3b6cff, roughness: 0.5 })
@@ -115,7 +125,7 @@ const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.11, 0.85, 6, 10), new TH
 legL.position.set(-0.18, 0.28, 0);
 const legR = legL.clone();
 legR.position.x = 0.18;
-player.add(playerBody, playerHead, capTop, capBrim, eyeL, eyeR, armL, armR, legL, legR);
+playerVisualRoot.add(playerBody, playerHead, capTop, capBrim, eyeL, eyeR, armL, armR, legL, legR);
 
 const playerState = {
   position: new THREE.Vector3(0, 0, 0),
@@ -142,7 +152,7 @@ if (isMobile) {
   touchHud?.classList.remove('hidden');
   mobileInteract?.classList.remove('hidden');
 }
-console.info('DO NOT TOUCH 3D assets manifest loaded', assetManifest);
+loadAssetHooks();
 
 function buildWorld() {
   const ground = new THREE.Mesh(
@@ -152,6 +162,7 @@ function buildWorld() {
   ground.receiveShadow = true;
   ground.position.y = -0.5;
   scene.add(ground);
+  worldObjects.push(ground);
 
   const pathMaterial = new THREE.MeshStandardMaterial({ color: 0xe4d39b, roughness: 0.96 });
   for (let i = -mapSize; i <= mapSize; i++) {
@@ -159,13 +170,24 @@ function buildWorld() {
     tile.position.set(i * TILE, 0.02, 0);
     tile.receiveShadow = true;
     scene.add(tile);
+    worldObjects.push(tile);
   }
   for (let i = -8; i <= 8; i++) {
     const tile = new THREE.Mesh(new THREE.BoxGeometry(TILE, 0.06, TILE), pathMaterial);
     tile.position.set(0, 0.02, i * TILE);
     tile.receiveShadow = true;
     scene.add(tile);
+    worldObjects.push(tile);
   }
+
+  const workshopLane = new THREE.Mesh(
+    new THREE.BoxGeometry(14, 0.08, 4),
+    new THREE.MeshStandardMaterial({ color: 0xc6b07a, roughness: 0.95 })
+  );
+  workshopLane.position.set(24, 0.03, -18);
+  workshopLane.receiveShadow = true;
+  scene.add(workshopLane);
+  worldObjects.push(workshopLane);
 
   const water = new THREE.Mesh(
     new THREE.BoxGeometry(12, 0.18, 16),
@@ -173,13 +195,27 @@ function buildWorld() {
   );
   water.position.set(-18, -0.18, 10);
   scene.add(water);
+  worldObjects.push(water);
 
   const housePositions = [
     { x: -10, z: -8, color: 0xffd36b },
     { x: 10, z: 8, color: 0xff9fb0 },
-    { x: 0, z: -14, color: 0xb6a0ff }
+    { x: 0, z: -14, color: 0xb6a0ff },
+    { x: 14, z: -10, color: 0x8ed0ff }
   ];
-  housePositions.forEach((h, idx) => scene.add(createHouse(h.x * TILE, h.z * TILE, h.color, idx)));
+  housePositions.forEach((h, idx) => {
+    const house = createHouse(h.x * TILE, h.z * TILE, h.color, idx);
+    scene.add(house);
+    worldObjects.push(house);
+  });
+
+  const workshopBeacon = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.45, 0.55, 2.2, 10),
+    new THREE.MeshStandardMaterial({ color: 0xffd76a, emissive: 0x5b4710, roughness: 0.55 })
+  );
+  workshopBeacon.position.set(28, 1.15, -20);
+  workshopBeacon.castShadow = true;
+  scene.add(workshopBeacon);
 
   worldData.blockedPaths.forEach(({ x, z }) => {
     walls.add(`${x},${z}`);
@@ -191,6 +227,7 @@ function buildWorld() {
     rock.castShadow = true;
     rock.receiveShadow = true;
     scene.add(rock);
+    worldObjects.push(rock);
   });
 
   for (let x = -mapSize; x <= mapSize; x += 2) {
@@ -258,13 +295,14 @@ function addTree(x, z) {
   tree.add(trunk, leaves);
   tree.position.set(x, 0, z);
   scene.add(tree);
+  worldObjects.push(tree);
 }
 
 function createNPC(npc, idx) {
   const group = new THREE.Group();
   const body = new THREE.Mesh(
     new THREE.CapsuleGeometry(0.48, 0.8, 8, 16),
-    new THREE.MeshStandardMaterial({ color: [0xff9c6b, 0x7b9cff, 0x7ef0be][idx % 3], roughness: 0.58 })
+    new THREE.MeshStandardMaterial({ color: [0xff9c6b, 0x7b9cff, 0x7ef0be, 0xffd66c, 0x89d0ff][idx % 5], roughness: 0.58 })
   );
   body.castShadow = true;
   body.position.y = 0.92;
@@ -301,10 +339,41 @@ function createClue(clue, idx) {
   return group;
 }
 
+function loadAssetHooks() {
+  const playerModel = assetManifest?.player?.plannedModel;
+  if (playerModel) {
+    gltfLoader.load(playerModel.replace('.glb', '.gltf'), gltf => applyImportedModel(playerVisualRoot, gltf.scene, 1.6), undefined, () => {});
+  }
+
+  npcMeshes.forEach(npc => {
+    const entry = (assetManifest.npcs || []).find(v => v.id === npc.id);
+    if (!entry?.plannedModel) return;
+    gltfLoader.load(entry.plannedModel.replace('.glb', '.gltf'), gltf => applyImportedModel(npc.mesh, gltf.scene, 1.35), undefined, () => {});
+  });
+}
+
+function applyImportedModel(target, importedScene, scale = 1) {
+  const clone = importedScene.clone(true);
+  const box = new THREE.Box3().setFromObject(clone);
+  const size = box.getSize(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  clone.scale.setScalar(scale / maxDim);
+  const centered = new THREE.Box3().setFromObject(clone).getCenter(new THREE.Vector3());
+  clone.position.sub(centered);
+  clone.position.y += 0.8;
+  clone.traverse(node => {
+    if (node.isMesh) {
+      node.castShadow = true;
+      node.receiveShadow = true;
+    }
+  });
+  target.add(clone);
+}
+
 function refreshHUD() {
   foundPill.textContent = `Clues: ${state.foundClues.size} / ${worldData.clues.length}`;
   entriesPill.textContent = `Resume Entries: ${state.unlocked.size}`;
-  mobileInteract.textContent = nearestInteractable() ? 'Interact' : 'Scan';
+  if (mobileInteract) mobileInteract.textContent = nearestInteractable() ? 'Interact' : 'Scan';
 }
 
 function questCompleted(quest) {
@@ -450,6 +519,7 @@ function interact() {
   if (target.kind === 'clue') {
     state.foundClues.add(target.data.id);
     target.data.mesh.visible = false;
+    if (target.data.id === 'shard-projects') state.pendingBuilderUnlock = true;
     unlockEntries(target.data.unlocks || []);
     openDialogue(target.data.label, `${target.data.message}\n\nResume journal updated.`);
     return;
@@ -458,8 +528,13 @@ function interact() {
   if (target.kind === 'npc') {
     const firstTalk = !state.talkedTo.has(target.data.id);
     state.talkedTo.add(target.data.id);
-    unlockEntries(target.data.unlocks || []);
-    const suffix = firstTalk && (target.data.unlocks || []).length
+    let unlocks = [...(target.data.unlocks || [])];
+    if (target.data.id === 'npc-workshop-terminal' && state.pendingBuilderUnlock) {
+      unlocks.push('projects-automation');
+      state.pendingBuilderUnlock = false;
+    }
+    unlockEntries(unlocks);
+    const suffix = firstTalk && unlocks.length
       ? '\n\nNew resume entry recovered.'
       : '';
     openDialogue(target.data.name, `${target.data.dialogue}${suffix}`);
@@ -482,6 +557,18 @@ function cellBlocked(x, z) {
   return walls.has(`${Math.round(x / TILE)},${Math.round(z / TILE)}`);
 }
 
+function setTapMoveTargetFromPointer(clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(worldObjects, true);
+  if (!hits.length) return;
+  tapMoveTarget.copy(hits[0].point);
+  tapMoveTarget.y = 0;
+  hasTapMoveTarget = true;
+}
+
 function movePlayer(dt) {
   if (!state.started || state.dialogueOpen || state.journalOpen) return;
 
@@ -493,6 +580,16 @@ function movePlayer(dt) {
   if (Math.abs(joystick.x) > 0.08 || Math.abs(joystick.y) > 0.08) {
     dir.x += joystick.x;
     dir.z += joystick.y;
+    hasTapMoveTarget = false;
+  } else if (hasTapMoveTarget) {
+    const toTarget = new THREE.Vector3().subVectors(tapMoveTarget, playerState.position);
+    toTarget.y = 0;
+    if (toTarget.length() < 0.65) {
+      hasTapMoveTarget = false;
+    } else {
+      toTarget.normalize();
+      dir.copy(toTarget);
+    }
   }
 
   const moving = dir.lengthSq() > 0;
@@ -538,6 +635,7 @@ renderer.setAnimationLoop(() => {
   movePlayer(dt);
   updatePlayerTransform(elapsed);
   animateWorld(elapsed);
+  refreshHUD();
 
   camera.position.x += (player.position.x - camera.position.x) * 0.08;
   camera.position.z += (player.position.z + 16 - camera.position.z) * 0.08;
@@ -625,6 +723,11 @@ if (joyWrap) {
   });
 }
 
+canvas.addEventListener('pointerdown', event => {
+  if (!isMobile || !state.started || state.dialogueOpen || state.journalOpen) return;
+  setTapMoveTargetFromPointer(event.clientX, event.clientY);
+});
+
 mobileInteract?.addEventListener('click', () => {
   if (!state.started) return;
   if (state.dialogueOpen) closeDialogue();
@@ -639,7 +742,3 @@ startBtn.addEventListener('click', () => {
   state.started = true;
   intro.classList.add('hidden');
 });
-
-unlockEntries([]);
-refreshHUD();
-renderJournal();

@@ -3,7 +3,7 @@
     {
       "id": "qt-01",
       "title": "Recover Your Core Profile",
-      "description": "Find the Profile Shard hidden in Profile Town and restore the summary entry.",
+      "description": "Find the Profile Shard hidden near the water edge and restore the first journal entry.",
       "steps": [
         "Talk to Guide Byte",
         "Recover the Profile Shard",
@@ -24,11 +24,12 @@
     },
     {
       "id": "qt-03",
-      "title": "Restore the Builder Layer",
-      "description": "Recover the Builder Shard near the workshop route to unlock automation and product systems.",
+      "title": "Stabilize the Workshop Route",
+      "description": "Recover the Builder Shard and bring it to the Workshop Terminal to reassemble the builder/product layer of the resume.",
       "steps": [
         "Find the glowing Builder Shard",
         "Collect the shard",
+        "Reach the Workshop Terminal",
         "Unlock Automation & Product Systems"
       ],
       "unlocks": ["projects-automation"]

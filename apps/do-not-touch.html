@@ -1,212 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>DO NOT TOUCH.EXE — Michael Costea Story Run</title>
-<style>
-:root{--bg:#0f2a20;--panel:#173729;--ink:#d6f5c3;--muted:#a9c79a;--line:#306230;--accent:#8bac0f}
-*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}
-.wrap{max-width:920px;margin:0 auto;padding:14px}
-.card{background:var(--panel);border:3px solid var(--line);padding:12px;box-shadow:4px 4px 0 rgba(0,0,0,.35)}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.badge{font:700 11px/1 monospace;border:1px solid var(--line);padding:4px 6px;background:#10291f}
-.h1{font:900 22px/1.1 monospace;margin:0 0 6px}
-.sub{color:var(--muted);font-size:14px;margin:0}
-.progress{height:12px;border:2px solid var(--line);background:#10291f;margin:10px 0;position:relative}
-.progress>span{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#6d8f22,#a7d24a);width:0}
-.story{min-height:170px;line-height:1.45;font-size:15px;white-space:pre-wrap}
-.choices{display:grid;gap:8px;margin-top:10px}
-.btn{all:unset;display:block;cursor:pointer;background:#c7e69c;color:#173020;border:3px solid var(--line);padding:10px 12px;font:800 14px/1.2 monospace;box-shadow:3px 3px 0 rgba(0,0,0,.25)}
-.btn.secondary{background:#9fcb70}
-.btn.ghost{background:#7ea45c}
-.btn:active{transform:translate(1px,1px)}
-.kv{display:grid;gap:6px;margin-top:10px}
-.kv small{color:var(--muted)}
-.hidden{display:none}
-@media (max-width:700px){.h1{font-size:18px}.story{font-size:14px;min-height:140px}}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Redirecting — DO NOT TOUCH 3D</title>
+  <meta http-equiv="refresh" content="0; url=./games/do-not-touch-3d/index.html" />
+  <style>
+    html,body{margin:0;height:100%;display:grid;place-items:center;background:#09131d;color:#eef7ff;font-family:Inter,Segoe UI,Arial,sans-serif}
+    .card{max-width:560px;padding:24px;border-radius:20px;background:rgba(10,19,31,.92);border:1px solid rgba(108,195,255,.25);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+    a{color:#7dd8ff}
+  </style>
 </head>
 <body>
-<div class="wrap">
   <div class="card">
-    <div class="row" style="justify-content:space-between">
-      <div>
-        <p class="h1">DO NOT TOUCH.EXE — STORY RUN</p>
-        <p class="sub">A narrative resume adventure focused on judgment, execution, and business impact.</p>
-      </div>
-      <span class="badge" id="chapterBadge">CHAPTER 0/5</span>
-    </div>
-    <div class="progress"><span id="progressFill"></span></div>
-
-    <div class="story" id="story"></div>
-
-    <div class="choices" id="choices"></div>
-
-    <div class="kv hidden" id="evidence"></div>
-
-    <div class="row" style="margin-top:10px">
-      <button class="btn ghost" id="toggleEvidence">SHOW PROOF</button>
-      <button class="btn secondary" id="quickRunBtn">QUICK RECRUITER RUN</button>
-      <button class="btn secondary" id="fullRunBtn">FULL STORY RUN</button>
-      <button class="btn secondary" id="restartBtn">RESTART RUN</button>
-      <button class="btn secondary" id="downloadBtn">DOWNLOAD SUMMARY</button>
-      <button class="btn secondary" id="backBtn">BACK TO SITE</button>
-    </div>
+    <h1>DO NOT TOUCH has moved</h1>
+    <p>The legacy experience now redirects to the new 3D resume adventure.</p>
+    <p><a href="./games/do-not-touch-3d/index.html">Open DO NOT TOUCH 3D</a></p>
   </div>
-</div>
-
-<script>
-const chapters=[
-  {
-    id:'C1',
-    title:'Service Pressure, Zero Excuses',
-    setup:`Morning queue is blowing out. Team is stretched. Customer sentiment is dropping fast.\n\nYou need to stabilize flow in under an hour.`,
-    choices:[
-      {text:'Reassign roles live, protect bottlenecks, and tighten handoffs.',score:{ops:2,lead:1},result:'Flow stabilizes. Wait times drop. Team rhythm returns.'},
-      {text:'Push speed only and skip process changes.',score:{ops:0,lead:0},result:'Short-term output improves, then errors spike.'},
-      {text:'Pause and brief team on one simple service protocol.',score:{ops:1,lead:2},result:'Consistency improves and pressure drops across shifts.'}
-    ],
-    proof:['Built service flow discipline','Improved shift handoff reliability','Reduced avoidable wait friction']
-  },
-  {
-    id:'C2',
-    title:'Retention Under Fire',
-    setup:`Churn risk climbs and escalations are messy. You own the recovery system.`,
-    choices:[
-      {text:'Deploy triage + save-script layers with escalation lanes.',score:{cx:2,growth:1},result:'Recovery quality rises and churn pressure eases.'},
-      {text:'Offer discounts broadly to stop cancellations.',score:{cx:0,growth:0},result:'Saves look better briefly, margins and trust erode.'},
-      {text:'Coach team to diagnose root causes before offers.',score:{cx:1,growth:2},result:'Save rates improve with healthier long-term value.'}
-    ],
-    proof:['Retention scripting + routing','Escalation path redesign','Customer recovery improvement']
-  },
-  {
-    id:'C3',
-    title:'Cross-Team Process Rebuild',
-    setup:`Communication breaks between teams are slowing execution and creating rework.`,
-    choices:[
-      {text:'Map the workflow, remove ambiguity, enforce ownership.',score:{ops:2,lead:1},result:'Handoffs become cleaner and delivery speed improves.'},
-      {text:'Add more status meetings.',score:{ops:0,lead:0},result:'Noise increases, accountability still unclear.'},
-      {text:'Define one-page SOPs and rollout checkpoints.',score:{ops:1,lead:2},result:'Execution variance drops and onboarding gets easier.'}
-    ],
-    proof:['SOP cleanup and rollout','Cross-functional clarity','Lower process friction']
-  },
-  {
-    id:'C4',
-    title:'Field + Technical Credibility',
-    setup:`Complex installs and real-world constraints demand precision under time pressure.`,
-    choices:[
-      {text:'Prioritize quality checks + practical sequencing onsite.',score:{field:2,lead:1},result:'Install reliability and customer confidence increase.'},
-      {text:'Rush completion and fix later if needed.',score:{field:0,lead:0},result:'Rework and trust issues compound quickly.'},
-      {text:'Standardize diagnostics and signoff criteria.',score:{field:1,ops:1,lead:1},result:'Fewer failures and stronger repeatability.'}
-    ],
-    proof:['Electrical + smart-home delivery','Field diagnostics rigor','Quality signoff discipline']
-  },
-  {
-    id:'C5',
-    title:'Growth Leadership Layer',
-    setup:`You now orchestrate partnerships, marketing, and operational delivery as one system.`,
-    choices:[
-      {text:'Build partner pipeline with CX-aligned campaign loops.',score:{growth:2,cx:1},result:'Acquisition quality improves with stronger retention.'},
-      {text:'Chase top-of-funnel volume only.',score:{growth:0,cx:0},result:'Lead quality drifts and conversion suffers.'},
-      {text:'Link revenue goals to service capability and execution.',score:{growth:1,ops:1,lead:1},result:'Sustainable growth with fewer downstream failures.'}
-    ],
-    proof:['B2B / partner relations','Revenue + acquisition systems','CX + operations integration']
-  }
-];
-
-let i=-1, chosen=[], scores={ops:0,lead:0,cx:0,growth:0,field:0}, showEvidence=false;
-let runMode='full';
-let activeChapters=[];
-const QUICK_IDS=new Set(['C1','C3','C5']);
-const story=document.getElementById('story'), choicesEl=document.getElementById('choices'), evidence=document.getElementById('evidence');
-const badge=document.getElementById('chapterBadge'), fill=document.getElementById('progressFill');
-
-function typeText(el,text,cb){
-  el.textContent=''; let p=0;
-  const t=setInterval(()=>{ p++; el.textContent=text.slice(0,p); if(p>=text.length){clearInterval(t); cb&&cb();}}, 9);
-}
-
-function renderEvidence(ch){
-  evidence.innerHTML = `<small>PROOF / OUTCOMES</small>` + ch.proof.map(p=>`<div>• ${p}</div>`).join('');
-  evidence.classList.toggle('hidden',!showEvidence);
-}
-
-function renderChapter(){
-  if(i>=activeChapters.length){ return renderSummary(); }
-  const ch=activeChapters[i];
-  badge.textContent=`CHAPTER ${i+1}/${activeChapters.length} · ${runMode.toUpperCase()} RUN`;
-  fill.style.width=((i)/activeChapters.length*100)+'%';
-  typeText(story,`[${ch.id}] ${ch.title}\n\n${ch.setup}`);
-  renderEvidence(ch);
-  choicesEl.innerHTML='';
-  ch.choices.forEach((c,idx)=>{
-    const b=document.createElement('button');
-    b.className='btn';
-    b.textContent=`${idx+1}. ${c.text}`;
-    b.onclick=()=>selectChoice(idx);
-    choicesEl.appendChild(b);
-  });
-}
-
-function selectChoice(idx){
-  const ch=chapters[i], c=ch.choices[idx];
-  Object.keys(c.score).forEach(k=>scores[k]=(scores[k]||0)+c.score[k]);
-  chosen.push({chapter:ch.id,choice:c.text,result:c.result});
-  choicesEl.innerHTML='';
-  typeText(story,`${c.result}\n\n→ Outcome captured. Moving to next chapter...`,()=>setTimeout(()=>{i++; renderChapter();},320));
-}
-
-function topTraits(){
-  return Object.entries(scores).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=>k.toUpperCase());
-}
-
-function renderSummary(){
-  badge.textContent='RUN COMPLETE';
-  fill.style.width='100%';
-  const traits=topTraits();
-  const impactMap={ops:'Operational stability under pressure',lead:'Leadership and execution ownership',cx:'Customer recovery and trust retention',growth:'Commercial growth system thinking',field:'Technical field credibility'};
-  const lines=[
-    'FINAL ASSESSMENT — WHY HIRE MICHAEL',
-    '',
-    `Run mode: ${runMode.toUpperCase()} (${activeChapters.length} chapters)`,
-    `Top strengths: ${traits.join(' · ')}`,
-    '',
-    'Business impact profile:'
-  ];
-  traits.forEach(t=>lines.push(`- ${impactMap[t.toLowerCase()]||t}`));
-  lines.push('', 'Decision trail:');
-  chosen.forEach((c,n)=>lines.push(`${n+1}) ${c.chapter}: ${c.result}`));
-  lines.push('', 'Use DOWNLOAD SUMMARY for recruiter handoff.');
-  story.textContent=lines.join('\n');
-  choicesEl.innerHTML='';
-  evidence.classList.add('hidden');
-}
-
-function start(mode=runMode){
-  runMode=mode;
-  activeChapters = chapters.filter(c=> runMode==='full' ? true : QUICK_IDS.has(c.id));
-  i=0; chosen=[]; scores={ops:0,lead:0,cx:0,growth:0,field:0};
-  renderChapter();
-}
-
-function downloadSummary(){
-  const lines=['Michael Costea — Story Run Summary',''];
-  lines.push(`Run mode: ${runMode.toUpperCase()} (${activeChapters.length} chapters)`);
-  lines.push(`Top strengths: ${topTraits().join(' · ')}`,'');
-  chosen.forEach((c,n)=>{ lines.push(`${n+1}. ${c.chapter}`,`Choice: ${c.choice}`,`Result: ${c.result}`,''); });
-  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='Michael_Costea_Story_Run_Summary.txt';
-  document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},0);
-}
-
-document.getElementById('toggleEvidence').onclick=()=>{showEvidence=!showEvidence; if(i>=0&&i<activeChapters.length) renderEvidence(activeChapters[i]);};
-document.getElementById('quickRunBtn').onclick=()=>start('quick');
-document.getElementById('fullRunBtn').onclick=()=>start('full');
-document.getElementById('restartBtn').onclick=()=>start(runMode);
-document.getElementById('downloadBtn').onclick=downloadSummary;
-document.getElementById('backBtn').onclick=()=>location.href='../index.html';
-start('quick');
-</script>
+  <script>location.replace('./games/do-not-touch-3d/index.html');</script>
 </body>
 </html>

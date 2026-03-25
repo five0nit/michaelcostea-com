@@ -3,8 +3,20 @@
   "zone": {
     "id": "profile-town",
     "name": "Profile Town",
-    "objective": "Recover archive shards and speak to the town archivists."
+    "objective": "Recover archive shards, explore the workshop route, and speak to the town archivists."
   },
+  "subAreas": [
+    {
+      "id": "profile-square",
+      "name": "Profile Square",
+      "description": "Central town area where the archive recovery starts."
+    },
+    {
+      "id": "workshop-route",
+      "name": "Workshop Route",
+      "description": "A builder-focused lane that unlocks automation and project systems."
+    }
+  ],
   "npcs": [
     {
       "id": "npc-guide",
@@ -19,7 +31,7 @@
       "name": "Workshop Scout",
       "x": 6,
       "z": -8,
-      "dialogue": "The Builder Shard is powering the old workshop route. Recover it and you’ll restore the automation/product systems layer of the resume.",
+      "dialogue": "The workshop route is where systems get built. Recover the Builder Shard, inspect the workshop terminal, and you’ll restore the automation/product systems layer of the resume.",
       "unlocks": []
     },
     {
@@ -37,6 +49,14 @@
       "z": -10,
       "dialogue": "A resume is more than a list. It’s a map of how someone thinks, builds, and delivers. I’ve restored the Operations, Leadership & Delivery entry.",
       "unlocks": ["operations-leadership"]
+    },
+    {
+      "id": "npc-workshop-terminal",
+      "name": "Workshop Terminal",
+      "x": 14,
+      "z": -10,
+      "dialogue": "Builder systems restored. This terminal marks the product/workflow lane of the portfolio. Future project quests will branch from here.",
+      "unlocks": ["projects-automation"]
     }
   ],
   "clues": [
@@ -53,8 +73,8 @@
       "label": "Builder Shard",
       "x": 12,
       "z": -6,
-      "unlocks": ["projects-automation"],
-      "message": "You recovered the Automation & Product Systems shard."
+      "unlocks": [],
+      "message": "You recovered the Builder Shard. Bring it to the Workshop Terminal to stabilize the systems archive."
     }
   ],
   "blockedPaths": [
@@ -66,6 +86,14 @@
     { "x": -12, "z": -8 },
     { "x": 14, "z": 10 },
     { "x": 14, "z": 8 },
-    { "x": 14, "z": 6 }
+    { "x": 14, "z": 6 },
+    { "x": 10, "z": -12 },
+    { "x": 12, "z": -12 },
+    { "x": 16, "z": -12 }
+  ],
+  "tapTargets": [
+    { "id": "water-edge", "x": -10, "z": 8 },
+    { "id": "workshop-route", "x": 12, "z": -6 },
+    { "id": "archive-house", "x": 0, "z": -10 }
   ]
 }
