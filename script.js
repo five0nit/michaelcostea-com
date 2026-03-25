@@ -211,7 +211,7 @@ function toggleMaximizeWindow(id){
 
 function launchInMikeNet(url, title='Program'){
   // Immersive experiences should take over the full site, not run in iframe windows.
-  if((url||'').includes('do-not-touch.html')){
+  if((url||'').includes('do-not-touch.html') || (url||'').includes('do-not-touch-3d/index.html')){
     try{
       if(window.top && window.top !== window.self){ window.top.location.href = url; }
       else { window.location.href = url; }

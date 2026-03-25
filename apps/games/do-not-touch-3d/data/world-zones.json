@@ -11,7 +11,15 @@
       "name": "Guide Byte",
       "x": -6,
       "z": -2,
-      "dialogue": "Welcome to Profile Town. The archive fractured into memory shards. Recover them and the resume journal will rebuild itself.",
+      "dialogue": "Welcome to Profile Town. The archive fractured into memory shards. Recover them and the resume journal will rebuild itself. Start by finding the Profile Shard near the water edge.",
+      "unlocks": []
+    },
+    {
+      "id": "npc-builder",
+      "name": "Workshop Scout",
+      "x": 6,
+      "z": -8,
+      "dialogue": "The Builder Shard is powering the old workshop route. Recover it and you’ll restore the automation/product systems layer of the resume.",
       "unlocks": []
     },
     {

@@ -1,0 +1,43 @@
+{
+  "player": {
+    "placeholder": true,
+    "plannedModel": "./assets/models/player-main.glb",
+    "notes": "Replace current placeholder hero with custom original protagonist model."
+  },
+  "npcs": [
+    {
+      "id": "npc-guide",
+      "plannedModel": "./assets/models/npc-guide-byte.glb",
+      "notes": "Town guide / archivist starter NPC."
+    },
+    {
+      "id": "npc-electric",
+      "plannedModel": "./assets/models/npc-field-mentor.glb",
+      "notes": "Field credibility / practical execution NPC."
+    },
+    {
+      "id": "npc-archivist",
+      "plannedModel": "./assets/models/npc-archive-keeper.glb",
+      "notes": "Narrative/journal unlock NPC."
+    }
+  ],
+  "props": [
+    {
+      "id": "profile-shard",
+      "plannedModel": "./assets/models/collectible-profile-shard.glb"
+    },
+    {
+      "id": "builder-shard",
+      "plannedModel": "./assets/models/collectible-builder-shard.glb"
+    },
+    {
+      "id": "profile-town-house-a",
+      "plannedModel": "./assets/models/profile-town-house-a.glb"
+    }
+  ],
+  "environment": {
+    "tileset": "./assets/models/profile-town-tileset.glb",
+    "trees": "./assets/models/profile-town-tree.glb",
+    "waterProps": "./assets/models/profile-town-water-props.glb"
+  }
+}

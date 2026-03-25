@@ -134,13 +134,13 @@
       "primary": false
     },
     {
-      "name": "DO NOT TOUCH",
-      "slug": "do-not-touch",
+      "name": "DO NOT TOUCH 3D",
+      "slug": "do-not-touch-3d",
       "status": "beta",
-      "category": "webapps",
+      "category": "games",
       "primary": false,
-      "description": "Interactive white-rabbit wormhole experience with swipe/tap/hold progression. [Fun/experimental side app]",
-      "url": "./apps/do-not-touch.html"
+      "description": "Pokémon-retro-inspired 3D resume adventure where players recover clue shards to rebuild Michael’s profile journal. [Interactive portfolio rebuild · In active development (beta)]",
+      "url": "./apps/games/do-not-touch-3d/index.html"
     }
   ]
 }

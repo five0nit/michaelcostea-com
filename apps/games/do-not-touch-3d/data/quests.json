@@ -1,0 +1,48 @@
+{
+  "quests": [
+    {
+      "id": "qt-01",
+      "title": "Recover Your Core Profile",
+      "description": "Find the Profile Shard hidden in Profile Town and restore the summary entry.",
+      "steps": [
+        "Talk to Guide Byte",
+        "Recover the Profile Shard",
+        "Open the journal and review the restored summary"
+      ],
+      "unlocks": ["summary"]
+    },
+    {
+      "id": "qt-02",
+      "title": "Prove Field Credibility",
+      "description": "Meet the Field Mentor to restore the practical field-work section.",
+      "steps": [
+        "Reach the east side of town",
+        "Speak with the Field Mentor",
+        "Unlock Electrical & Field Experience"
+      ],
+      "unlocks": ["experience-electrical"]
+    },
+    {
+      "id": "qt-03",
+      "title": "Restore the Builder Layer",
+      "description": "Recover the Builder Shard near the workshop route to unlock automation and product systems.",
+      "steps": [
+        "Find the glowing Builder Shard",
+        "Collect the shard",
+        "Unlock Automation & Product Systems"
+      ],
+      "unlocks": ["projects-automation"]
+    },
+    {
+      "id": "qt-04",
+      "title": "Assemble the Operating System",
+      "description": "Speak to the Archive Keeper and restore the operations/leadership layer of the resume.",
+      "steps": [
+        "Reach the northern archive house",
+        "Speak to the Archive Keeper",
+        "Unlock Operations, Leadership & Delivery"
+      ],
+      "unlocks": ["operations-leadership"]
+    }
+  ]
+}

@@ -22,13 +22,31 @@
   <div class="hud bottom-left controls-card">
     <div class="card-title">Controls</div>
     <div>Move: WASD / Arrows</div>
-    <div>Interact: Space / Enter</div>
+    <div>Interact: Space / Enter / Tap prompt</div>
     <div>Journal: J</div>
   </div>
 
   <div class="hud bottom-right controls-card mobile-hint">
     <div class="card-title">Hint</div>
     <div>Find glowing archive shards and talk to NPCs to unlock resume sections.</div>
+  </div>
+
+  <div class="hud quest-panel" id="questPanel">
+    <div class="controls-card quest-card">
+      <div class="card-title">Active Quest</div>
+      <div id="questTitle">Loading quest…</div>
+      <div id="questDesc" class="quest-desc"></div>
+      <ul id="questSteps" class="quest-steps"></ul>
+    </div>
+  </div>
+
+  <button id="mobileInteract" class="mobile-action hidden">Interact</button>
+
+  <div id="touchHud" class="touch-hud hidden">
+    <div class="joy-wrap" id="joyWrap">
+      <div class="joy-knob" id="joyKnob"></div>
+    </div>
+    <button id="touchJournal" class="touch-btn">Journal</button>
   </div>
 
   <div id="dialogue" class="dialogue hidden">

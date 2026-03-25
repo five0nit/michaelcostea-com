@@ -45,6 +45,14 @@ const journalEntries = document.getElementById('journalEntries');
 const journalEmpty = document.getElementById('journalEmpty');
 const intro = document.getElementById('intro');
 const startBtn = document.getElementById('startBtn');
+const touchHud = document.getElementById('touchHud');
+const joyWrap = document.getElementById('joyWrap');
+const joyKnob = document.getElementById('joyKnob');
+const mobileInteract = document.getElementById('mobileInteract');
+const touchJournal = document.getElementById('touchJournal');
+const questTitle = document.getElementById('questTitle');
+const questDesc = document.getElementById('questDesc');
+const questSteps = document.getElementById('questSteps');
 
 const state = {
   ready: false,
@@ -54,7 +62,8 @@ const state = {
   unlocked: new Set(),
   foundClues: new Set(),
   talkedTo: new Set(),
-  activeFilter: 'all'
+  activeFilter: 'all',
+  activeQuestIndex: 0
 };
 
 const TILE = 2;
@@ -65,6 +74,8 @@ const clueMeshes = [];
 
 const keys = {};
 let interactionCooldown = 0;
+const isMobile = window.matchMedia('(max-width: 720px)').matches;
+const joystick = { active: false, x: 0, y: 0 };
 
 const player = new THREE.Group();
 scene.add(player);
@@ -114,6 +125,8 @@ const playerState = {
 
 const resumeData = await fetch('./data/resume-sections.json').then(r => r.json());
 const worldData = await fetch('./data/world-zones.json').then(r => r.json());
+const questData = await fetch('./data/quests.json').then(r => r.json());
+const assetManifest = await fetch('./data/assets.json').then(r => r.json()).catch(() => ({ player:{placeholder:true}, npcs:[], props:[] }));
 state.ready = true;
 
 zonePill.textContent = `Zone: ${worldData.zone.name}`;
@@ -124,6 +137,12 @@ playerState.position.set(worldData.spawn.x * TILE, 0, worldData.spawn.z * TILE);
 updatePlayerTransform(0);
 refreshHUD();
 renderJournal();
+renderQuestPanel();
+if (isMobile) {
+  touchHud?.classList.remove('hidden');
+  mobileInteract?.classList.remove('hidden');
+}
+console.info('DO NOT TOUCH 3D assets manifest loaded', assetManifest);
 
 function buildWorld() {
   const ground = new THREE.Mesh(
@@ -285,6 +304,29 @@ function createClue(clue, idx) {
 function refreshHUD() {
   foundPill.textContent = `Clues: ${state.foundClues.size} / ${worldData.clues.length}`;
   entriesPill.textContent = `Resume Entries: ${state.unlocked.size}`;
+  mobileInteract.textContent = nearestInteractable() ? 'Interact' : 'Scan';
+}
+
+function questCompleted(quest) {
+  return (quest.unlocks || []).every(id => state.unlocked.has(id));
+}
+
+function renderQuestPanel() {
+  const quests = questData.quests || [];
+  const nextIndex = quests.findIndex(q => !questCompleted(q));
+  state.activeQuestIndex = nextIndex === -1 ? Math.max(quests.length - 1, 0) : nextIndex;
+  const quest = quests[state.activeQuestIndex];
+  if (!quest) return;
+  questTitle.textContent = quest.title;
+  questDesc.textContent = quest.description;
+  questSteps.innerHTML = '';
+  (quest.steps || []).forEach((step, idx) => {
+    const li = document.createElement('li');
+    li.textContent = step;
+    const unlockedCount = (quest.unlocks || []).filter(id => state.unlocked.has(id)).length;
+    if (idx < unlockedCount) li.classList.add('done');
+    questSteps.appendChild(li);
+  });
 }
 
 function unlockEntries(ids = []) {
@@ -298,6 +340,7 @@ function unlockEntries(ids = []) {
   if (changed) {
     refreshHUD();
     renderJournal();
+    renderQuestPanel();
   }
 }
 
@@ -399,7 +442,10 @@ function nearestInteractable() {
 
 function interact() {
   const target = nearestInteractable();
-  if (!target) return;
+  if (!target) {
+    openDialogue('Archive Scan', 'No immediate shard or NPC is close enough. Keep exploring Profile Town.');
+    return;
+  }
 
   if (target.kind === 'clue') {
     state.foundClues.add(target.data.id);
@@ -444,6 +490,10 @@ function movePlayer(dt) {
   if (keys['s'] || keys['arrowdown']) dir.z += 1;
   if (keys['a'] || keys['arrowleft']) dir.x -= 1;
   if (keys['d'] || keys['arrowright']) dir.x += 1;
+  if (Math.abs(joystick.x) > 0.08 || Math.abs(joystick.y) > 0.08) {
+    dir.x += joystick.x;
+    dir.z += joystick.y;
+  }
 
   const moving = dir.lengthSq() > 0;
   if (moving) {
@@ -531,6 +581,58 @@ window.addEventListener('keydown', (event) => {
 
 window.addEventListener('keyup', (event) => {
   keys[event.key.toLowerCase()] = false;
+});
+
+function resetJoystick() {
+  joystick.active = false;
+  joystick.x = 0;
+  joystick.y = 0;
+  if (joyKnob) {
+    joyKnob.style.left = '42px';
+    joyKnob.style.top = '42px';
+  }
+}
+
+function updateJoystickFromEvent(event) {
+  if (!joyWrap || !joyKnob) return;
+  const rect = joyWrap.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  let dx = (event.clientX - cx) / ((rect.width / 2) - 24);
+  let dy = (event.clientY - cy) / ((rect.height / 2) - 24);
+  const mag = Math.hypot(dx, dy) || 1;
+  if (mag > 1) {
+    dx /= mag;
+    dy /= mag;
+  }
+  joystick.x = dx;
+  joystick.y = dy;
+  joystick.active = true;
+  joyKnob.style.left = `${42 + dx * 28}px`;
+  joyKnob.style.top = `${42 + dy * 28}px`;
+}
+
+if (joyWrap) {
+  joyWrap.addEventListener('pointerdown', event => {
+    joyWrap.setPointerCapture(event.pointerId);
+    updateJoystickFromEvent(event);
+  });
+  joyWrap.addEventListener('pointermove', event => {
+    if (joystick.active) updateJoystickFromEvent(event);
+  });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => {
+    joyWrap.addEventListener(type, resetJoystick);
+  });
+}
+
+mobileInteract?.addEventListener('click', () => {
+  if (!state.started) return;
+  if (state.dialogueOpen) closeDialogue();
+  else interact();
+});
+
+touchJournal?.addEventListener('click', () => {
+  if (state.started && !state.dialogueOpen) toggleJournal();
 });
 
 startBtn.addEventListener('click', () => {
