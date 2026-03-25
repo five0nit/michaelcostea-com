@@ -2,45 +2,56 @@
   "quests": [
     {
       "id": "qt-01",
-      "title": "Recover Your Core Profile",
-      "description": "Find the Profile Shard hidden near the water edge and restore the first journal entry.",
+      "title": "Step 1 — Meet Guide Byte",
+      "description": "Start at the town guide. He will point you to the first resume fragment.",
       "steps": [
+        "Walk to Guide Byte",
         "Talk to Guide Byte",
-        "Recover the Profile Shard",
-        "Open the journal and review the restored summary"
+        "Receive the first instruction"
+      ],
+      "unlocks": []
+    },
+    {
+      "id": "qt-02",
+      "title": "Step 2 — Recover the Core Profile",
+      "description": "Collect the Profile Shard near the water edge to unlock the first resume entry.",
+      "steps": [
+        "Follow the objective toward the water edge",
+        "Collect the Profile Shard",
+        "Review the unlocked summary"
       ],
       "unlocks": ["summary"]
     },
     {
-      "id": "qt-02",
-      "title": "Prove Field Credibility",
-      "description": "Meet the Field Mentor to restore the practical field-work section.",
+      "id": "qt-03",
+      "title": "Step 3 — Prove Field Credibility",
+      "description": "Meet the Field Mentor to unlock the practical field-work section.",
       "steps": [
-        "Reach the east side of town",
-        "Speak with the Field Mentor",
+        "Reach the east side mentor",
+        "Talk to the Field Mentor",
         "Unlock Electrical & Field Experience"
       ],
       "unlocks": ["experience-electrical"]
     },
     {
-      "id": "qt-03",
-      "title": "Stabilize the Workshop Route",
-      "description": "Recover the Builder Shard and bring it to the Workshop Terminal to reassemble the builder/product layer of the resume.",
+      "id": "qt-04",
+      "title": "Step 4 — Stabilize the Workshop Route",
+      "description": "Collect the Builder Shard, then deliver it to the Workshop Terminal to restore the builder/product systems section.",
       "steps": [
-        "Find the glowing Builder Shard",
-        "Collect the shard",
-        "Reach the Workshop Terminal",
+        "Reach the workshop route",
+        "Collect the Builder Shard",
+        "Bring it to the Workshop Terminal",
         "Unlock Automation & Product Systems"
       ],
       "unlocks": ["projects-automation"]
     },
     {
-      "id": "qt-04",
-      "title": "Assemble the Operating System",
+      "id": "qt-05",
+      "title": "Step 5 — Assemble the Operating System",
       "description": "Speak to the Archive Keeper and restore the operations/leadership layer of the resume.",
       "steps": [
-        "Reach the northern archive house",
-        "Speak to the Archive Keeper",
+        "Reach the archive house",
+        "Talk to the Archive Keeper",
         "Unlock Operations, Leadership & Delivery"
       ],
       "unlocks": ["operations-leadership"]

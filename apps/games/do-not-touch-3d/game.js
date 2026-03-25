@@ -153,6 +153,7 @@ if (isMobile) {
   mobileInteract?.classList.remove('hidden');
 }
 loadAssetHooks();
+applyGuidedVisibility();
 
 function buildWorld() {
   const ground = new THREE.Mesh(
@@ -370,13 +371,39 @@ function applyImportedModel(target, importedScene, scale = 1) {
   target.add(clone);
 }
 
+function getGuidedStep() {
+  if (!state.talkedTo.has('npc-guide')) return { kind: 'npc', id: 'npc-guide', objective: 'Talk to Guide Byte to begin the guided resume path.' };
+  if (!state.unlocked.has('summary')) return { kind: 'clue', id: 'shard-summary', objective: 'Collect the Profile Shard to unlock the first resume section.' };
+  if (!state.unlocked.has('experience-electrical')) return { kind: 'npc', id: 'npc-electric', objective: 'Talk to the Field Mentor to unlock field experience.' };
+  if (!state.pendingBuilderUnlock && !state.foundClues.has('shard-projects') && !state.unlocked.has('projects-automation')) return { kind: 'clue', id: 'shard-projects', objective: 'Collect the Builder Shard on the workshop route.' };
+  if ((state.pendingBuilderUnlock || state.foundClues.has('shard-projects')) && !state.unlocked.has('projects-automation')) return { kind: 'npc', id: 'npc-workshop-terminal', objective: 'Bring the Builder Shard to the Workshop Terminal.' };
+  if (!state.unlocked.has('operations-leadership')) return { kind: 'npc', id: 'npc-archivist', objective: 'Talk to the Archive Keeper to complete the guided resume journey.' };
+  return { kind: 'done', id: 'complete', objective: 'Resume path complete. Open the journal to review the full guided unlock sequence.' };
+}
+
+function applyGuidedVisibility() {
+  const step = getGuidedStep();
+  objectivePill.textContent = `Objective: ${step.objective}`;
+
+  npcMeshes.forEach(npc => {
+    const visible = step.kind === 'done' || npc.id === step.id;
+    npc.mesh.visible = visible;
+  });
+
+  clueMeshes.forEach(clue => {
+    const visible = !state.foundClues.has(clue.id) && clue.id === step.id;
+    clue.mesh.visible = visible;
+  });
+}
+
 function refreshHUD() {
   foundPill.textContent = `Clues: ${state.foundClues.size} / ${worldData.clues.length}`;
   entriesPill.textContent = `Resume Entries: ${state.unlocked.size}`;
-  if (mobileInteract) mobileInteract.textContent = nearestInteractable() ? 'Interact' : 'Scan';
+  if (mobileInteract) mobileInteract.textContent = nearestInteractable() ? 'Interact' : 'Follow Objective';
 }
 
 function questCompleted(quest) {
+  if (quest.id === 'qt-01') return state.talkedTo.has('npc-guide');
   return (quest.unlocks || []).every(id => state.unlocked.has(id));
 }
 
@@ -392,13 +419,15 @@ function renderQuestPanel() {
   (quest.steps || []).forEach((step, idx) => {
     const li = document.createElement('li');
     li.textContent = step;
-    const unlockedCount = (quest.unlocks || []).filter(id => state.unlocked.has(id)).length;
-    if (idx < unlockedCount) li.classList.add('done');
+    const completed = (quest.id === 'qt-01')
+      ? (idx === 0 ? state.talkedTo.has('npc-guide') : false)
+      : idx < (quest.unlocks || []).filter(id => state.unlocked.has(id)).length;
+    if (completed) li.classList.add('done');
     questSteps.appendChild(li);
   });
 }
 
-function unlockEntries(ids = []) {
+function unlockEntries(ids = [], options = {}) {
   let changed = false;
   ids.forEach(id => {
     if (!state.unlocked.has(id)) {
@@ -410,6 +439,8 @@ function unlockEntries(ids = []) {
     refreshHUD();
     renderJournal();
     renderQuestPanel();
+    applyGuidedVisibility();
+    if (options.openJournal !== false) toggleJournal(true);
   }
 }
 
@@ -485,34 +516,31 @@ function formatZone(zoneId) {
 }
 
 function nearestInteractable() {
+  const step = getGuidedStep();
   const playerFlat = new THREE.Vector2(player.position.x, player.position.z);
-  let best = null;
-  let bestDist = Infinity;
 
-  npcMeshes.forEach(npc => {
+  if (step.kind === 'npc') {
+    const npc = npcMeshes.find(v => v.id === step.id);
+    if (!npc || !npc.mesh.visible) return null;
     const dist = playerFlat.distanceTo(new THREE.Vector2(npc.mesh.position.x, npc.mesh.position.z));
-    if (dist < 3.2 && dist < bestDist) {
-      best = { kind: 'npc', data: npc };
-      bestDist = dist;
-    }
-  });
+    return dist < 3.2 ? { kind: 'npc', data: npc } : null;
+  }
 
-  clueMeshes.forEach(clue => {
-    if (state.foundClues.has(clue.id)) return;
+  if (step.kind === 'clue') {
+    const clue = clueMeshes.find(v => v.id === step.id);
+    if (!clue || !clue.mesh.visible) return null;
     const dist = playerFlat.distanceTo(new THREE.Vector2(clue.mesh.position.x, clue.mesh.position.z));
-    if (dist < 2.7 && dist < bestDist) {
-      best = { kind: 'clue', data: clue };
-      bestDist = dist;
-    }
-  });
+    return dist < 2.7 ? { kind: 'clue', data: clue } : null;
+  }
 
-  return best;
+  return null;
 }
 
 function interact() {
+  const step = getGuidedStep();
   const target = nearestInteractable();
   if (!target) {
-    openDialogue('Archive Scan', 'No immediate shard or NPC is close enough. Keep exploring Profile Town.');
+    openDialogue('Next Step', step.objective);
     return;
   }
 
@@ -538,6 +566,8 @@ function interact() {
       ? '\n\nNew resume entry recovered.'
       : '';
     openDialogue(target.data.name, `${target.data.dialogue}${suffix}`);
+    renderQuestPanel();
+    applyGuidedVisibility();
   }
 }
 
@@ -614,6 +644,7 @@ function movePlayer(dt) {
 
 function animateWorld(time) {
   npcMeshes.forEach((npc, idx) => {
+    if (!npc.mesh.visible) return;
     npc.mesh.position.y = Math.sin(time * 2 + idx) * 0.08;
     npc.mesh.children[2].rotation.y += 0.02;
   });
@@ -686,8 +717,8 @@ function resetJoystick() {
   joystick.x = 0;
   joystick.y = 0;
   if (joyKnob) {
-    joyKnob.style.left = '42px';
-    joyKnob.style.top = '42px';
+    joyKnob.style.left = '50px';
+    joyKnob.style.top = '50px';
   }
 }
 
@@ -696,8 +727,8 @@ function updateJoystickFromEvent(event) {
   const rect = joyWrap.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
   const cy = rect.top + rect.height / 2;
-  let dx = (event.clientX - cx) / ((rect.width / 2) - 24);
-  let dy = (event.clientY - cy) / ((rect.height / 2) - 24);
+  let dx = (event.clientX - cx) / ((rect.width / 2) - 28);
+  let dy = (event.clientY - cy) / ((rect.height / 2) - 28);
   const mag = Math.hypot(dx, dy) || 1;
   if (mag > 1) {
     dx /= mag;
@@ -706,8 +737,8 @@ function updateJoystickFromEvent(event) {
   joystick.x = dx;
   joystick.y = dy;
   joystick.active = true;
-  joyKnob.style.left = `${42 + dx * 28}px`;
-  joyKnob.style.top = `${42 + dy * 28}px`;
+  joyKnob.style.left = `${50 + dx * 34}px`;
+  joyKnob.style.top = `${50 + dy * 34}px`;
 }
 
 if (joyWrap) {
@@ -741,4 +772,6 @@ touchJournal?.addEventListener('click', () => {
 startBtn.addEventListener('click', () => {
   state.started = true;
   intro.classList.add('hidden');
+  applyGuidedVisibility();
+  openDialogue('Guide Byte', 'Welcome in. This experience is now guided step by step. I’ll only reveal the next required resume fragment so the journey stays simple.');
 });

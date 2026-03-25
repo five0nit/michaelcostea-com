@@ -19,7 +19,7 @@
     <div class="pill" id="entriesPill">Resume Entries: 0</div>
   </div>
 
-  <div class="hud bottom-left controls-card">
+  <div class="hud bottom-left controls-card desktop-controls">
     <div class="card-title">Controls</div>
     <div>Move: WASD / Arrows</div>
     <div>Interact: Space / Enter / Tap prompt</div>
@@ -27,8 +27,8 @@
   </div>
 
   <div class="hud bottom-right controls-card mobile-hint">
-    <div class="card-title">Hint</div>
-    <div>Find glowing archive shards and talk to NPCs to unlock resume sections.</div>
+    <div class="card-title">Guidance</div>
+    <div>Follow the active objective. Only the next required resume step stays visible.</div>
   </div>
 
   <div class="hud quest-panel" id="questPanel">
@@ -43,10 +43,15 @@
   <button id="mobileInteract" class="mobile-action hidden">Interact</button>
 
   <div id="touchHud" class="touch-hud hidden">
-    <div class="joy-wrap" id="joyWrap">
-      <div class="joy-knob" id="joyKnob"></div>
+    <div class="touch-left">
+      <div class="joy-label">MOVE</div>
+      <div class="joy-wrap" id="joyWrap">
+        <div class="joy-knob" id="joyKnob"></div>
+      </div>
     </div>
-    <button id="touchJournal" class="touch-btn">Journal</button>
+    <div class="touch-right">
+      <button id="touchJournal" class="touch-btn">Journal</button>
+    </div>
   </div>
 
   <div id="dialogue" class="dialogue hidden">
@@ -74,7 +79,7 @@
           <div id="journalNav" class="journal-nav"></div>
         </aside>
         <main class="journal-main">
-          <div id="journalEmpty" class="journal-empty">No entries unlocked yet. Explore the map and recover archive shards.</div>
+          <div id="journalEmpty" class="journal-empty">No entries unlocked yet. Follow the active objective and recover the next required resume fragment.</div>
           <div id="journalEntries" class="journal-entries"></div>
         </main>
       </div>
