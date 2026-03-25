@@ -3,44 +3,45 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>DO NOT TOUCH — 3D Resume Adventure</title>
+  <title>DO NOT TOUCH — Interactive Resume Tour</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <canvas id="game"></canvas>
 
-  <div class="hud top-left">
-    <div class="pill" id="zonePill">Zone: Loading…</div>
-    <div class="pill" id="objectivePill">Objective: Rebuild the archive</div>
+  <div class="hud top-left resume-hud">
+    <div class="pill strong-pill">Michael Costea</div>
+    <div class="pill">Electrician • Systems Builder • Operator</div>
+    <div class="pill" id="objectivePill">Objective: Start the guided resume tour</div>
   </div>
 
-  <div class="hud top-right">
-    <div class="pill" id="foundPill">Clues: 0 / 0</div>
-    <div class="pill" id="entriesPill">Resume Entries: 0</div>
+  <div class="hud top-right progress-hud">
+    <div class="pill" id="foundPill">Resume Stops: 0 / 4</div>
+    <div class="pill" id="entriesPill">Unlocked: 0</div>
   </div>
 
   <div class="hud bottom-left controls-card desktop-controls">
-    <div class="card-title">Controls</div>
+    <div class="card-title">Interactive Resume Tour</div>
     <div>Move: WASD / Arrows</div>
     <div>Interact: Space / Enter / Tap prompt</div>
-    <div>Journal: J</div>
+    <div>Resume Deck: J</div>
   </div>
 
   <div class="hud bottom-right controls-card mobile-hint">
-    <div class="card-title">Guidance</div>
-    <div>Follow the active objective. Only the next required resume step stays visible.</div>
+    <div class="card-title">What this is</div>
+    <div>A guided resume experience with game energy — built to show capability, not distract from it.</div>
   </div>
 
   <div class="hud quest-panel" id="questPanel">
     <div class="controls-card quest-card">
-      <div class="card-title">Active Quest</div>
-      <div id="questTitle">Loading quest…</div>
+      <div class="card-title">Current Resume Step</div>
+      <div id="questTitle">Loading…</div>
       <div id="questDesc" class="quest-desc"></div>
       <ul id="questSteps" class="quest-steps"></ul>
     </div>
   </div>
 
-  <button id="mobileInteract" class="mobile-action hidden">Interact</button>
+  <button id="mobileInteract" class="mobile-action hidden">Open Step</button>
 
   <div id="touchHud" class="touch-hud hidden">
     <div class="touch-left">
@@ -50,13 +51,13 @@
       </div>
     </div>
     <div class="touch-right">
-      <button id="touchJournal" class="touch-btn">Journal</button>
+      <button id="touchJournal" class="touch-btn">Resume Deck</button>
     </div>
   </div>
 
   <div id="dialogue" class="dialogue hidden">
-    <div class="dialogue-card">
-      <div class="dialogue-title" id="dialogueTitle">Guide</div>
+    <div class="dialogue-card resume-card-shell">
+      <div class="dialogue-title" id="dialogueTitle">Resume Step</div>
       <div class="dialogue-body" id="dialogueBody"></div>
       <button id="dialogueClose" class="btn">Continue</button>
     </div>
@@ -66,8 +67,8 @@
     <div class="journal-shell">
       <div class="journal-head">
         <div>
-          <h1>Resume Journal</h1>
-          <p>Recovered archive entries from across the world.</p>
+          <h1>Resume Deck</h1>
+          <p>Each unlocked stop adds a structured resume card with what Michael does, why it matters, and proof.</p>
         </div>
         <div class="journal-actions">
           <button id="journalClose" class="btn">Close</button>
@@ -79,7 +80,7 @@
           <div id="journalNav" class="journal-nav"></div>
         </aside>
         <main class="journal-main">
-          <div id="journalEmpty" class="journal-empty">No entries unlocked yet. Follow the active objective and recover the next required resume fragment.</div>
+          <div id="journalEmpty" class="journal-empty">No resume cards unlocked yet. Start the guided tour and reveal each section step by step.</div>
           <div id="journalEntries" class="journal-entries"></div>
         </main>
       </div>
@@ -88,18 +89,18 @@
 
   <div id="intro" class="intro-overlay">
     <div class="intro-card">
-      <div class="eyebrow">DO NOT TOUCH — REBUILD MVP</div>
-      <h1>3D Resume Adventure</h1>
+      <div class="eyebrow">DO NOT TOUCH — INTERACTIVE RESUME</div>
+      <h1>A memorable resume with game energy</h1>
       <p>
-        The archive has been scrambled. Explore Profile Town, recover clue shards,
-        and rebuild Michael Costea’s resume one section at a time.
+        This is a guided resume tour. Move through a premium retro-inspired world,
+        but every stop is designed to show real capability, real value, and why Michael is worth hiring.
       </p>
       <ul>
-        <li>Pokémon-retro-inspired overworld</li>
-        <li>Playable first map</li>
-        <li>JSON-driven resume journal</li>
+        <li>Resume-first structure</li>
+        <li>Short guided path</li>
+        <li>Interactive but easy to follow</li>
       </ul>
-      <button id="startBtn" class="btn primary">Start Adventure</button>
+      <button id="startBtn" class="btn primary">Start Resume Tour</button>
     </div>
   </div>
 

@@ -14,19 +14,21 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:
 body{touch-action:none}
 #game{display:block;width:100vw;height:100vh}
 .hud{position:fixed;z-index:10;display:flex;gap:10px;flex-wrap:wrap;pointer-events:none}
-.top-left{top:12px;left:12px;max-width:min(52vw,640px)}
+.top-left{top:12px;left:12px;max-width:min(62vw,760px)}
 .top-right{top:12px;right:12px;justify-content:flex-end;max-width:min(42vw,520px)}
 .bottom-left{left:12px;bottom:12px;max-width:280px}
-.bottom-right{right:12px;bottom:12px;max-width:280px}
+.bottom-right{right:12px;bottom:12px;max-width:320px}
 .desktop-controls{display:block}
 .pill,.controls-card{background:var(--panel);border:1px solid var(--line-soft);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.24)}
 .pill{padding:10px 12px;border-radius:999px;font-size:13px;line-height:1.2}
+.strong-pill{font-weight:900;color:var(--accent)}
 .controls-card{padding:12px 14px;border-radius:16px;font-size:13px;line-height:1.45}
 .card-title{font-weight:800;color:var(--accent);margin-bottom:6px}
 .dialogue,.journal,.intro-overlay{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,8,14,.62);backdrop-filter:blur(8px)}
 .hidden{display:none!important}
 .dialogue-card,.intro-card,.journal-shell{width:min(980px,100%);background:var(--panel-strong);border:1px solid var(--line-soft);border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-.dialogue-card{max-width:560px;padding:20px}
+.resume-card-shell{max-width:760px}
+.dialogue-card{padding:20px}
 .dialogue-title{font-size:20px;font-weight:900;color:var(--accent);margin-bottom:10px}
 .dialogue-body{font-size:15px;line-height:1.55;color:var(--text);margin-bottom:16px;white-space:pre-wrap}
 .btn{pointer-events:auto;appearance:none;border:1px solid var(--line-soft);background:#17314a;color:var(--text);border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
@@ -49,17 +51,15 @@ body{touch-action:none}
 .journal-nav button.active{background:#1d3852;border-color:rgba(108,195,255,.35)}
 .journal-empty{color:var(--muted);padding:18px;border:1px dashed rgba(255,255,255,.12);border-radius:16px}
 .journal-entries{display:grid;gap:12px}
-.entry-card{padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:#101d2c}
+.entry-card{padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:#101d2c}
 .entry-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .entry-chip{font-size:11px;padding:4px 8px;border-radius:999px;background:#19324a;color:#c8e9ff;border:1px solid rgba(108,195,255,.22)}
-.entry-card h3{margin:0 0 8px;font-size:18px}
-.entry-card p{margin:0 0 8px;color:var(--muted);line-height:1.5}
-.entry-details{color:var(--text);font-size:14px;line-height:1.6;white-space:pre-wrap}
-@media (max-width:900px){
-  .journal-grid{grid-template-columns:1fr}
-  .journal-sidebar{max-height:180px}
-}
-.quest-panel{top:92px;right:12px;max-width:320px}
+.entry-card h3{margin:0 0 8px;font-size:20px}
+.entry-card p{margin:0 0 10px;color:var(--muted);line-height:1.55}
+.entry-details{color:var(--text);font-size:14px;line-height:1.65;white-space:pre-wrap}
+.entry-section-title{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:14px 0 6px}
+.entry-list{margin:0;padding-left:18px;color:var(--text);line-height:1.6}
+.quest-panel{top:92px;right:12px;max-width:340px}
 .quest-card{pointer-events:none}
 .quest-desc{color:var(--muted);font-size:13px;line-height:1.45;margin-top:6px}
 .quest-steps{margin:10px 0 0;padding-left:18px;color:var(--text);font-size:13px;line-height:1.45}
@@ -70,7 +70,11 @@ body{touch-action:none}
 .joy-wrap{width:148px;height:148px;border-radius:50%;background:rgba(10,19,31,.72);border:1px solid var(--line-soft);backdrop-filter:blur(10px);position:relative;pointer-events:auto;touch-action:none;box-shadow:0 10px 30px rgba(0,0,0,.22)}
 .joy-knob{position:absolute;left:50px;top:50px;width:48px;height:48px;border-radius:50%;background:linear-gradient(180deg,#dff4ff,#8fccff);border:1px solid rgba(255,255,255,.4);box-shadow:0 6px 20px rgba(0,0,0,.22)}
 .touch-btn,.mobile-action{pointer-events:auto;appearance:none;border:none;background:linear-gradient(180deg,#1d3954,#13283b);color:var(--text);padding:16px 20px;border-radius:18px;font-weight:900;box-shadow:0 10px 24px rgba(0,0,0,.25)}
-.mobile-action{position:fixed;right:14px;bottom:124px;z-index:22;min-width:132px;font-size:16px}
+.mobile-action{position:fixed;right:14px;bottom:124px;z-index:22;min-width:148px;font-size:16px}
+@media (max-width:900px){
+  .journal-grid{grid-template-columns:1fr}
+  .journal-sidebar{max-height:180px}
+}
 @media (max-width:720px){
   .top-left,.top-right{max-width:calc(100vw - 24px)}
   .top-right{top:auto;right:12px;bottom:222px;justify-content:flex-start}

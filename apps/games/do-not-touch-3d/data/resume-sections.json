@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "DO NOT TOUCH — 3D Resume Adventure",
+    "title": "DO NOT TOUCH — Interactive Resume Tour",
     "theme": "pokemon-retro-inspired",
     "tone": ["playful", "intelligent"],
     "visualStyle": "high-poly high-end retro"
@@ -9,7 +9,7 @@
     {
       "id": "profile-town",
       "name": "Profile Town",
-      "description": "The starting town where the archive has broken apart into recoverable shards."
+      "description": "A guided interactive resume path presented as a premium retro-inspired world."
     },
     {
       "id": "trades-district",
@@ -26,54 +26,62 @@
     {
       "id": "summary",
       "type": "profile",
-      "title": "Profile Summary",
+      "title": "Who Michael Is",
       "summary": "Builder-minded operator with practical trade experience and a bias for useful systems.",
-      "details": "Michael Costea builds practical systems, automations, and web tools that turn ideas into reliable workflows. This experience is being rebuilt into a modular interactive world so the resume can grow over time. The new format is designed to let players explore capability, not just read bullet points.",
+      "details": "Michael Costea builds practical systems, automations, and web tools that turn ideas into reliable workflows. He sits at the intersection of hands-on execution, systems thinking, and product-minded problem solving.",
+      "impact": "Strong fit for roles needing someone who can both do the work and improve the way the work gets done.",
+      "proof": ["Practical field background", "System-building mindset", "Execution-focused problem solving"],
       "tags": ["profile", "builder", "systems"],
       "zone": "profile-town",
       "order": 1,
       "visible": true,
       "future": true,
-      "unlock": "shard-summary"
+      "unlock": "summary"
     },
     {
       "id": "experience-electrical",
       "type": "experience",
-      "title": "Electrical & Field Experience",
+      "title": "Field Credibility",
       "summary": "Hands-on technical delivery, field execution, and real-world problem solving.",
-      "details": "Grounded in practical on-site work, diagnostics, and quality-focused delivery. This section will expand with role-specific history, install capability, and field impact examples as more archive shards are recovered.",
+      "details": "Grounded in practical on-site work, diagnostics, quality-focused delivery, and getting results in environments where constraints are real and performance matters.",
+      "impact": "Shows Michael can execute reliably in practical settings, not just talk strategy.",
+      "proof": ["On-site execution mindset", "Diagnostics and quality focus", "Works effectively under practical constraints"],
       "tags": ["electrical", "field", "technical"],
       "zone": "profile-town",
       "order": 2,
       "visible": true,
       "future": true,
-      "unlock": "npc-electric"
+      "unlock": "experience-electrical"
     },
     {
       "id": "projects-automation",
       "type": "projects",
-      "title": "Automation & Product Systems",
+      "title": "Systems & Automation",
       "summary": "Automation workflows, internal tools, and product-style execution.",
-      "details": "From workflow automation to interactive web builds, Michael focuses on systems that improve execution, visibility, and repeatability. This section is designed to expand into a larger project archive inside later game zones, including richer project stories, visual unlocks, and portfolio quest lines.",
+      "details": "From workflow automation to interactive web builds, Michael focuses on systems that improve execution, visibility, repeatability, and operational leverage.",
+      "impact": "Demonstrates product thinking and the ability to convert messy work into scalable systems.",
+      "proof": ["Workflow automation thinking", "Internal tool / product execution", "Focus on visibility and repeatability"],
       "tags": ["automation", "products", "workflows"],
       "zone": "profile-town",
       "order": 3,
       "visible": true,
       "future": true,
-      "unlock": "shard-projects"
+      "unlock": "projects-automation"
     },
     {
       "id": "operations-leadership",
       "type": "impact",
-      "title": "Operations, Leadership & Delivery",
+      "title": "Operations & Leadership",
       "summary": "Execution discipline, process thinking, and operational reliability.",
-      "details": "Process improvement, service flow thinking, operational stability, and practical coordination across moving parts. Future unlocks can expand this into achievement-based story beats, leadership moments, and measurable outcomes.",
+      "details": "Process improvement, service flow thinking, operational stability, and practical coordination across moving parts. Michael brings structure to execution and helps turn effort into dependable outcomes.",
+      "impact": "Signals leadership value through reliability, coordination, and system improvement.",
+      "proof": ["Operational thinking", "Delivery coordination", "Improves execution quality and clarity"],
       "tags": ["operations", "leadership", "delivery"],
       "zone": "profile-town",
       "order": 4,
       "visible": true,
       "future": true,
-      "unlock": "npc-archivist"
+      "unlock": "operations-leadership"
     }
   ]
 }

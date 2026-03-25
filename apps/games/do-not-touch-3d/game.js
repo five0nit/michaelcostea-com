@@ -31,7 +31,6 @@ const fill = new THREE.DirectionalLight(0xa6d6ff, 0.45);
 fill.position.set(-12, 10, -8);
 scene.add(fill);
 
-const zonePill = document.getElementById('zonePill');
 const objectivePill = document.getElementById('objectivePill');
 const foundPill = document.getElementById('foundPill');
 const entriesPill = document.getElementById('entriesPill');
@@ -61,18 +60,15 @@ const state = {
   dialogueOpen: false,
   journalOpen: false,
   unlocked: new Set(),
-  foundClues: new Set(),
   talkedTo: new Set(),
   activeFilter: 'all',
-  activeQuestIndex: 0,
-  pendingBuilderUnlock: false
+  activeQuestIndex: 0
 };
 
 const TILE = 2;
 const mapSize = 18;
 const walls = new Set();
 const npcMeshes = [];
-const clueMeshes = [];
 const worldObjects = [];
 const keys = {};
 let interactionCooldown = 0;
@@ -138,9 +134,6 @@ const worldData = await fetch('./data/world-zones.json').then(r => r.json());
 const questData = await fetch('./data/quests.json').then(r => r.json());
 const assetManifest = await fetch('./data/assets.json').then(r => r.json()).catch(() => ({ player:{placeholder:true}, npcs:[], props:[] }));
 state.ready = true;
-
-zonePill.textContent = `Zone: ${worldData.zone.name}`;
-objectivePill.textContent = `Objective: ${worldData.zone.objective}`;
 
 buildWorld();
 playerState.position.set(worldData.spawn.x * TILE, 0, worldData.spawn.z * TILE);
@@ -210,14 +203,6 @@ function buildWorld() {
     worldObjects.push(house);
   });
 
-  const workshopBeacon = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.45, 0.55, 2.2, 10),
-    new THREE.MeshStandardMaterial({ color: 0xffd76a, emissive: 0x5b4710, roughness: 0.55 })
-  );
-  workshopBeacon.position.set(28, 1.15, -20);
-  workshopBeacon.castShadow = true;
-  scene.add(workshopBeacon);
-
   worldData.blockedPaths.forEach(({ x, z }) => {
     walls.add(`${x},${z}`);
     const rock = new THREE.Mesh(
@@ -243,12 +228,6 @@ function buildWorld() {
   worldData.npcs.forEach((npc, idx) => {
     const mesh = createNPC(npc, idx);
     npcMeshes.push({ ...npc, mesh });
-    scene.add(mesh);
-  });
-
-  worldData.clues.forEach((clue, idx) => {
-    const mesh = createClue(clue, idx);
-    clueMeshes.push({ ...clue, mesh });
     scene.add(mesh);
   });
 }
@@ -323,23 +302,6 @@ function createNPC(npc, idx) {
   return group;
 }
 
-function createClue(clue, idx) {
-  const group = new THREE.Group();
-  const core = new THREE.Mesh(
-    new THREE.OctahedronGeometry(0.55, 0),
-    new THREE.MeshStandardMaterial({ color: idx % 2 === 0 ? 0x79e4ff : 0xffe07a, emissive: idx % 2 === 0 ? 0x1b4b67 : 0x6a5414, roughness: 0.2, metalness: 0.08 })
-  );
-  core.castShadow = true;
-  const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(0.9, 0.05, 10, 26),
-    new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x28465f, roughness: 0.35 })
-  );
-  ring.rotation.x = Math.PI / 2;
-  group.add(core, ring);
-  group.position.set(clue.x * TILE, 1.2, clue.z * TILE);
-  return group;
-}
-
 function loadAssetHooks() {
   const playerModel = assetManifest?.player?.plannedModel;
   if (playerModel) {
@@ -371,14 +333,22 @@ function applyImportedModel(target, importedScene, scale = 1) {
   target.add(clone);
 }
 
+function getSection(id) {
+  return resumeData.resumeSections.find(section => section.id === id);
+}
+
+function formatSectionReveal(section) {
+  const proof = (section.proof || []).map(item => `• ${item}`).join('\n');
+  return `${section.summary}\n\nWHY IT MATTERS\n${section.impact || ''}\n\nPROOF / SIGNALS\n${proof}\n\nDETAIL\n${section.details}`;
+}
+
 function getGuidedStep() {
-  if (!state.talkedTo.has('npc-guide')) return { kind: 'npc', id: 'npc-guide', objective: 'Talk to Guide Byte to begin the guided resume path.' };
-  if (!state.unlocked.has('summary')) return { kind: 'clue', id: 'shard-summary', objective: 'Collect the Profile Shard to unlock the first resume section.' };
-  if (!state.unlocked.has('experience-electrical')) return { kind: 'npc', id: 'npc-electric', objective: 'Talk to the Field Mentor to unlock field experience.' };
-  if (!state.pendingBuilderUnlock && !state.foundClues.has('shard-projects') && !state.unlocked.has('projects-automation')) return { kind: 'clue', id: 'shard-projects', objective: 'Collect the Builder Shard on the workshop route.' };
-  if ((state.pendingBuilderUnlock || state.foundClues.has('shard-projects')) && !state.unlocked.has('projects-automation')) return { kind: 'npc', id: 'npc-workshop-terminal', objective: 'Bring the Builder Shard to the Workshop Terminal.' };
-  if (!state.unlocked.has('operations-leadership')) return { kind: 'npc', id: 'npc-archivist', objective: 'Talk to the Archive Keeper to complete the guided resume journey.' };
-  return { kind: 'done', id: 'complete', objective: 'Resume path complete. Open the journal to review the full guided unlock sequence.' };
+  if (!state.talkedTo.has('npc-guide')) return { kind: 'npc', id: 'npc-guide', objective: 'Start the guided resume tour by meeting Guide Byte.' };
+  if (!state.unlocked.has('summary')) return { kind: 'section', sectionId: 'summary', npcId: 'npc-guide', objective: 'Open the first resume card: Who Michael Is.' };
+  if (!state.unlocked.has('experience-electrical')) return { kind: 'section', sectionId: 'experience-electrical', npcId: 'npc-electric', objective: 'Open the field credibility card.' };
+  if (!state.unlocked.has('projects-automation')) return { kind: 'section', sectionId: 'projects-automation', npcId: 'npc-workshop-terminal', objective: 'Open the systems & automation card.' };
+  if (!state.unlocked.has('operations-leadership')) return { kind: 'section', sectionId: 'operations-leadership', npcId: 'npc-archivist', objective: 'Open the operations & leadership card.' };
+  return { kind: 'done', id: 'complete', objective: 'Resume tour complete. Review the full Resume Deck.' };
 }
 
 function applyGuidedVisibility() {
@@ -386,20 +356,15 @@ function applyGuidedVisibility() {
   objectivePill.textContent = `Objective: ${step.objective}`;
 
   npcMeshes.forEach(npc => {
-    const visible = step.kind === 'done' || npc.id === step.id;
+    const visible = step.kind === 'done' || npc.id === step.id || npc.id === step.npcId;
     npc.mesh.visible = visible;
-  });
-
-  clueMeshes.forEach(clue => {
-    const visible = !state.foundClues.has(clue.id) && clue.id === step.id;
-    clue.mesh.visible = visible;
   });
 }
 
 function refreshHUD() {
-  foundPill.textContent = `Clues: ${state.foundClues.size} / ${worldData.clues.length}`;
-  entriesPill.textContent = `Resume Entries: ${state.unlocked.size}`;
-  if (mobileInteract) mobileInteract.textContent = nearestInteractable() ? 'Interact' : 'Follow Objective';
+  foundPill.textContent = `Resume Stops: ${state.unlocked.size} / ${resumeData.resumeSections.length}`;
+  entriesPill.textContent = `Unlocked: ${state.unlocked.size}`;
+  if (mobileInteract) mobileInteract.textContent = nearestInteractable() ? 'Open Step' : 'Follow Step';
 }
 
 function questCompleted(quest) {
@@ -473,7 +438,7 @@ function renderJournal() {
   journalNav.innerHTML = '';
   sections.forEach(section => {
     const btn = document.createElement('button');
-    btn.textContent = section === 'all' ? 'All Unlocked' : formatLabel(section);
+    btn.textContent = section === 'all' ? 'All Resume Cards' : formatLabel(section);
     btn.classList.toggle('active', state.activeFilter === section);
     btn.addEventListener('click', () => {
       state.activeFilter = section;
@@ -497,6 +462,11 @@ function renderJournal() {
       </div>
       <h3>${entry.title}</h3>
       <p>${entry.summary}</p>
+      <div class="entry-section-title">Why it matters</div>
+      <div class="entry-details">${entry.impact || ''}</div>
+      <div class="entry-section-title">Proof / signals</div>
+      <ul class="entry-list">${(entry.proof || []).map(item => `<li>${item}</li>`).join('')}</ul>
+      <div class="entry-section-title">Detail</div>
       <div class="entry-details">${entry.details}</div>
     `;
     journalEntries.appendChild(card);
@@ -526,11 +496,11 @@ function nearestInteractable() {
     return dist < 3.2 ? { kind: 'npc', data: npc } : null;
   }
 
-  if (step.kind === 'clue') {
-    const clue = clueMeshes.find(v => v.id === step.id);
-    if (!clue || !clue.mesh.visible) return null;
-    const dist = playerFlat.distanceTo(new THREE.Vector2(clue.mesh.position.x, clue.mesh.position.z));
-    return dist < 2.7 ? { kind: 'clue', data: clue } : null;
+  if (step.kind === 'section') {
+    const npc = npcMeshes.find(v => v.id === step.npcId);
+    if (!npc || !npc.mesh.visible) return null;
+    const dist = playerFlat.distanceTo(new THREE.Vector2(npc.mesh.position.x, npc.mesh.position.z));
+    return dist < 3.2 ? { kind: 'section', data: getSection(step.sectionId), npc } : null;
   }
 
   return null;
@@ -540,34 +510,21 @@ function interact() {
   const step = getGuidedStep();
   const target = nearestInteractable();
   if (!target) {
-    openDialogue('Next Step', step.objective);
-    return;
-  }
-
-  if (target.kind === 'clue') {
-    state.foundClues.add(target.data.id);
-    target.data.mesh.visible = false;
-    if (target.data.id === 'shard-projects') state.pendingBuilderUnlock = true;
-    unlockEntries(target.data.unlocks || []);
-    openDialogue(target.data.label, `${target.data.message}\n\nResume journal updated.`);
+    openDialogue('Next Resume Step', step.objective);
     return;
   }
 
   if (target.kind === 'npc') {
-    const firstTalk = !state.talkedTo.has(target.data.id);
     state.talkedTo.add(target.data.id);
-    let unlocks = [...(target.data.unlocks || [])];
-    if (target.data.id === 'npc-workshop-terminal' && state.pendingBuilderUnlock) {
-      unlocks.push('projects-automation');
-      state.pendingBuilderUnlock = false;
-    }
-    unlockEntries(unlocks);
-    const suffix = firstTalk && unlocks.length
-      ? '\n\nNew resume entry recovered.'
-      : '';
-    openDialogue(target.data.name, `${target.data.dialogue}${suffix}`);
     renderQuestPanel();
     applyGuidedVisibility();
+    openDialogue(target.data.name, 'This interactive experience is a guided resume tour. Each stop is designed to show who Michael is, what he does, and why it matters — without making you dig for meaning.');
+    return;
+  }
+
+  if (target.kind === 'section') {
+    unlockEntries([target.data.id]);
+    openDialogue(target.data.title, formatSectionReveal(target.data));
   }
 }
 
@@ -647,13 +604,6 @@ function animateWorld(time) {
     if (!npc.mesh.visible) return;
     npc.mesh.position.y = Math.sin(time * 2 + idx) * 0.08;
     npc.mesh.children[2].rotation.y += 0.02;
-  });
-
-  clueMeshes.forEach((clue, idx) => {
-    if (!clue.mesh.visible) return;
-    clue.mesh.position.y = 1.2 + Math.sin(time * 3 + idx) * 0.18;
-    clue.mesh.rotation.y += 0.03;
-    clue.mesh.children[1].rotation.z += 0.025;
   });
 }
 
@@ -773,5 +723,5 @@ startBtn.addEventListener('click', () => {
   state.started = true;
   intro.classList.add('hidden');
   applyGuidedVisibility();
-  openDialogue('Guide Byte', 'Welcome in. This experience is now guided step by step. I’ll only reveal the next required resume fragment so the journey stays simple.');
+  openDialogue('Guide Byte', 'Welcome. This is a guided interactive resume tour. The world adds personality, but the point is simple: show who Michael is, what he does well, and why that matters.');
 });

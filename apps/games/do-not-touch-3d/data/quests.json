@@ -2,57 +2,56 @@
   "quests": [
     {
       "id": "qt-01",
-      "title": "Step 1 — Meet Guide Byte",
-      "description": "Start at the town guide. He will point you to the first resume fragment.",
+      "title": "Step 1 — Start the Resume Tour",
+      "description": "Meet Guide Byte to begin the guided resume walkthrough and understand what this experience is about.",
       "steps": [
         "Walk to Guide Byte",
-        "Talk to Guide Byte",
-        "Receive the first instruction"
+        "Open the first resume step",
+        "Start the guided path"
       ],
       "unlocks": []
     },
     {
       "id": "qt-02",
-      "title": "Step 2 — Recover the Core Profile",
-      "description": "Collect the Profile Shard near the water edge to unlock the first resume entry.",
+      "title": "Step 2 — Who Michael Is",
+      "description": "Reveal the profile card so the viewer immediately understands Michael’s positioning and strengths.",
       "steps": [
-        "Follow the objective toward the water edge",
-        "Collect the Profile Shard",
-        "Review the unlocked summary"
+        "Follow the active objective",
+        "Open the profile reveal",
+        "Review the first resume card"
       ],
       "unlocks": ["summary"]
     },
     {
       "id": "qt-03",
-      "title": "Step 3 — Prove Field Credibility",
-      "description": "Meet the Field Mentor to unlock the practical field-work section.",
+      "title": "Step 3 — Field Credibility",
+      "description": "Meet the Field Mentor to show practical execution and real-world technical credibility.",
       "steps": [
         "Reach the east side mentor",
-        "Talk to the Field Mentor",
-        "Unlock Electrical & Field Experience"
+        "Open the field credibility step",
+        "Unlock the field experience card"
       ],
       "unlocks": ["experience-electrical"]
     },
     {
       "id": "qt-04",
-      "title": "Step 4 — Stabilize the Workshop Route",
-      "description": "Collect the Builder Shard, then deliver it to the Workshop Terminal to restore the builder/product systems section.",
+      "title": "Step 4 — Systems & Automation",
+      "description": "Move through the workshop route to reveal how Michael turns work into systems, tools, and leverage.",
       "steps": [
         "Reach the workshop route",
-        "Collect the Builder Shard",
-        "Bring it to the Workshop Terminal",
-        "Unlock Automation & Product Systems"
+        "Open the systems reveal",
+        "Unlock the systems & automation card"
       ],
       "unlocks": ["projects-automation"]
     },
     {
       "id": "qt-05",
-      "title": "Step 5 — Assemble the Operating System",
-      "description": "Speak to the Archive Keeper and restore the operations/leadership layer of the resume.",
+      "title": "Step 5 — Operations & Leadership",
+      "description": "Finish the tour by showing operational thinking, coordination, and delivery value.",
       "steps": [
         "Reach the archive house",
-        "Talk to the Archive Keeper",
-        "Unlock Operations, Leadership & Delivery"
+        "Open the leadership/operations reveal",
+        "Unlock the final resume card"
       ],
       "unlocks": ["operations-leadership"]
     }
