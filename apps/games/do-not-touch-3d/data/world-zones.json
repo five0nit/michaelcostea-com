@@ -1,0 +1,63 @@
+{
+  "spawn": { "x": 0, "z": 0 },
+  "zone": {
+    "id": "profile-town",
+    "name": "Profile Town",
+    "objective": "Recover archive shards and speak to the town archivists."
+  },
+  "npcs": [
+    {
+      "id": "npc-guide",
+      "name": "Guide Byte",
+      "x": -6,
+      "z": -2,
+      "dialogue": "Welcome to Profile Town. The archive fractured into memory shards. Recover them and the resume journal will rebuild itself.",
+      "unlocks": []
+    },
+    {
+      "id": "npc-electric",
+      "name": "Field Mentor",
+      "x": 8,
+      "z": 6,
+      "dialogue": "Practical capability matters. Real work happens where plans meet constraints, tools, and pressure. I’ve restored the Electrical & Field Experience entry.",
+      "unlocks": ["experience-electrical"]
+    },
+    {
+      "id": "npc-archivist",
+      "name": "Archive Keeper",
+      "x": 0,
+      "z": -10,
+      "dialogue": "A resume is more than a list. It’s a map of how someone thinks, builds, and delivers. I’ve restored the Operations, Leadership & Delivery entry.",
+      "unlocks": ["operations-leadership"]
+    }
+  ],
+  "clues": [
+    {
+      "id": "shard-summary",
+      "label": "Profile Shard",
+      "x": -10,
+      "z": 8,
+      "unlocks": ["summary"],
+      "message": "You recovered the Profile Summary shard."
+    },
+    {
+      "id": "shard-projects",
+      "label": "Builder Shard",
+      "x": 12,
+      "z": -6,
+      "unlocks": ["projects-automation"],
+      "message": "You recovered the Automation & Product Systems shard."
+    }
+  ],
+  "blockedPaths": [
+    { "x": -2, "z": 12 },
+    { "x": 0, "z": 12 },
+    { "x": 2, "z": 12 },
+    { "x": -12, "z": -12 },
+    { "x": -12, "z": -10 },
+    { "x": -12, "z": -8 },
+    { "x": 14, "z": 10 },
+    { "x": 14, "z": 8 },
+    { "x": 14, "z": 6 }
+  ]
+}

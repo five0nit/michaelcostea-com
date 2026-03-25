@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>DO NOT TOUCH — 3D Resume Adventure</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <div class="hud top-left">
+    <div class="pill" id="zonePill">Zone: Loading…</div>
+    <div class="pill" id="objectivePill">Objective: Rebuild the archive</div>
+  </div>
+
+  <div class="hud top-right">
+    <div class="pill" id="foundPill">Clues: 0 / 0</div>
+    <div class="pill" id="entriesPill">Resume Entries: 0</div>
+  </div>
+
+  <div class="hud bottom-left controls-card">
+    <div class="card-title">Controls</div>
+    <div>Move: WASD / Arrows</div>
+    <div>Interact: Space / Enter</div>
+    <div>Journal: J</div>
+  </div>
+
+  <div class="hud bottom-right controls-card mobile-hint">
+    <div class="card-title">Hint</div>
+    <div>Find glowing archive shards and talk to NPCs to unlock resume sections.</div>
+  </div>
+
+  <div id="dialogue" class="dialogue hidden">
+    <div class="dialogue-card">
+      <div class="dialogue-title" id="dialogueTitle">Guide</div>
+      <div class="dialogue-body" id="dialogueBody"></div>
+      <button id="dialogueClose" class="btn">Continue</button>
+    </div>
+  </div>
+
+  <div id="journal" class="journal hidden">
+    <div class="journal-shell">
+      <div class="journal-head">
+        <div>
+          <h1>Resume Journal</h1>
+          <p>Recovered archive entries from across the world.</p>
+        </div>
+        <div class="journal-actions">
+          <button id="journalClose" class="btn">Close</button>
+        </div>
+      </div>
+      <div class="journal-grid">
+        <aside class="journal-sidebar">
+          <h2>Sections</h2>
+          <div id="journalNav" class="journal-nav"></div>
+        </aside>
+        <main class="journal-main">
+          <div id="journalEmpty" class="journal-empty">No entries unlocked yet. Explore the map and recover archive shards.</div>
+          <div id="journalEntries" class="journal-entries"></div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div id="intro" class="intro-overlay">
+    <div class="intro-card">
+      <div class="eyebrow">DO NOT TOUCH — REBUILD MVP</div>
+      <h1>3D Resume Adventure</h1>
+      <p>
+        The archive has been scrambled. Explore Profile Town, recover clue shards,
+        and rebuild Michael Costea’s resume one section at a time.
+      </p>
+      <ul>
+        <li>Pokémon-retro-inspired overworld</li>
+        <li>Playable first map</li>
+        <li>JSON-driven resume journal</li>
+      </ul>
+      <button id="startBtn" class="btn primary">Start Adventure</button>
+    </div>
+  </div>
+
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
