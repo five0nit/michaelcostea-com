@@ -5,55 +5,112 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Otis & His Friends 3D</title>
   <style>
-    html,body{margin:0;height:100%;overflow:hidden;background:#071018;font-family:Verdana,Arial,sans-serif}
+    :root{
+      --bg:#071018;
+      --panel:rgba(8,18,30,.78);
+      --panel-strong:rgba(8,18,30,.92);
+      --line:#4a6c8a;
+      --text:#eaf4ff;
+      --muted:#a8c1d8;
+      --accent:#ffd95e;
+      --accent2:#8df0b1;
+    }
+    html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Verdana,Arial,sans-serif;color:var(--text)}
     #c{display:block;width:100%;height:100%}
-    .hud{position:fixed;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px;z-index:3;pointer-events:none}
-    .pill{background:rgba(8,18,30,.72);border:1px solid #4a6c8a;color:#eaf4ff;padding:6px 10px;border-radius:999px;font-size:12px}
-    .controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:3}
-    .btns{display:flex;gap:8px}
-    button{background:rgba(24,42,60,.86);color:#fff;border:1px solid #6f90a8;border-radius:10px;padding:10px 12px;font-weight:700}
-    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,10,16,.82);z-index:6;padding:16px}
-    .overlay .card{max-width:560px;width:100%;background:rgba(8,18,30,.95);border:1px solid #4a6c8a;border-radius:12px;padding:14px;color:#eaf4ff}
-    .overlay .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .hud{position:fixed;z-index:5;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
+    .topLeft{top:10px;left:10px;max-width:min(60vw,720px)}
+    .topRight{top:10px;right:10px;justify-content:flex-end;max-width:min(40vw,520px)}
+    .objectivePanel{position:fixed;top:72px;right:10px;z-index:5;max-width:340px;pointer-events:none}
+    .controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:4;gap:10px}
+    .pill,.card,button{border:1px solid var(--line)}
+    .pill{background:var(--panel);color:var(--text);padding:8px 12px;border-radius:999px;font-size:12px;backdrop-filter:blur(10px)}
+    .card{background:var(--panel-strong);border-radius:16px;padding:12px 14px;box-shadow:0 14px 34px rgba(0,0,0,.28)}
+    .card h3,.card h4{margin:0 0 6px}
+    .objectiveTitle{font-size:14px;font-weight:900;color:var(--accent)}
+    .objectiveText{font-size:13px;line-height:1.45;color:var(--text);margin-top:6px}
+    .objectiveHint{font-size:12px;line-height:1.4;color:var(--muted);margin-top:8px}
+    .controls .btns{display:flex;gap:8px;flex-wrap:wrap}
+    button{background:rgba(24,42,60,.9);color:#fff;border-radius:12px;padding:11px 14px;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+    button.primary{background:linear-gradient(180deg,#ffd95e,#f4b321);color:#1c1402;border-color:rgba(255,217,94,.45)}
+    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,10,16,.82);z-index:8;padding:16px}
+    .overlay .card{max-width:600px;width:100%}
+    .overlay .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
     .hidden{display:none!important}
-    .touchHud{position:fixed;left:12px;bottom:84px;z-index:5;display:none}
-    .joyWrap{width:128px;height:128px;border-radius:50%;background:rgba(8,18,30,.6);border:2px solid #466787;position:relative;touch-action:none}
-    .joyKnob{position:absolute;width:44px;height:44px;border-radius:50%;left:42px;top:42px;background:#b9d8f3;border:2px solid #45637d}
+    .touchHud{position:fixed;left:12px;right:12px;bottom:12px;z-index:7;display:none;align-items:flex-end;justify-content:space-between;gap:12px;pointer-events:none}
+    .touchLeft,.touchRight{display:flex;flex-direction:column;gap:10px;align-items:center}
+    .joyLabel{font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--accent);background:rgba(8,18,30,.72);padding:6px 10px;border-radius:999px;border:1px solid var(--line)}
+    .joyWrap{width:148px;height:148px;border-radius:50%;background:rgba(8,18,30,.72);border:2px solid #466787;position:relative;touch-action:none;pointer-events:auto;backdrop-filter:blur(10px)}
+    .joyKnob{position:absolute;width:48px;height:48px;border-radius:50%;left:50px;top:50px;background:#b9d8f3;border:2px solid #45637d;box-shadow:0 8px 22px rgba(0,0,0,.24)}
+    .mobileAction{position:fixed;right:14px;bottom:126px;z-index:7;min-width:132px;pointer-events:auto;background:linear-gradient(180deg,#1d3954,#13283b);color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:900;box-shadow:0 12px 28px rgba(0,0,0,.28)}
+    .touchBtn{pointer-events:auto;background:linear-gradient(180deg,#1d3954,#13283b);color:#fff;border:none;border-radius:18px;padding:14px 18px;font-weight:900}
     .filmGrain{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.09;background-image:radial-gradient(rgba(255,255,255,.35) 0.6px, transparent 0.7px);background-size:3px 3px;mix-blend-mode:soft-light;animation:grainShift .25s steps(2) infinite}
     .filmGrain.off{display:none}
     @keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}50%{transform:translate(-1px,1px)}75%{transform:translate(1px,1px)}100%{transform:translate(0,0)}}
+    @media (max-width:900px){
+      .objectivePanel{left:10px;right:10px;top:auto;bottom:194px;max-width:none}
+    }
+    @media (max-width:720px){
+      .topLeft,.topRight{max-width:calc(100vw - 20px)}
+      .topRight{top:auto;right:10px;bottom:234px;justify-content:flex-start}
+      .controls{display:none}
+      .touchHud{display:flex}
+      .objectivePanel{bottom:196px}
+    }
   </style>
 </head>
 <body>
   <canvas id="c"></canvas>
-  <div class="hud">
+
+  <div class="hud topLeft">
     <div class="pill" id="state">Form: Otis</div>
     <div class="pill" id="found">Friends: 0 / 5</div>
     <div class="pill" id="levelPill">Level: 1 / 3</div>
-    <div class="pill" id="hpPill">HP: 100</div>
-    <div class="pill">3D Mode</div>
   </div>
+  <div class="hud topRight">
+    <div class="pill" id="hpPill">HP: 100</div>
+    <div class="pill" id="hintPill">Mission: Find all friends</div>
+    <div class="pill">3D Adventure</div>
+  </div>
+
+  <div class="objectivePanel" id="objectivePanel">
+    <div class="card">
+      <div class="objectiveTitle" id="objectiveTitle">Current Goal</div>
+      <div class="objectiveText" id="objectiveText">Explore, transform, and rescue Otis’s hidden friends.</div>
+      <div class="objectiveHint" id="objectiveHint">Use the nearby form buttons when terrain blocks your path.</div>
+    </div>
+  </div>
+
   <div class="controls">
     <div class="btns">
       <button id="f1">Otis</button><button id="f2">Bird</button><button id="f3">Fish</button><button id="f4">Goat</button>
     </div>
-    <div class="btns"><button id="search">Search</button><button id="tilt">Tilt: Off</button><button id="fxBtn">FX: On</button></div>
+    <div class="btns"><button id="search" class="primary">Rescue Friend</button><button id="tilt">Tilt: Off</button><button id="fxBtn">FX: On</button></div>
   </div>
   <div class="filmGrain" id="filmGrain"></div>
 
-  <div class="touchHud" id="touchHud"><div class="joyWrap" id="joyWrap"><div class="joyKnob" id="joyKnob"></div></div></div>
+  <button id="mobileAction" class="mobileAction hidden">Rescue Friend</button>
 
-  <div class="overlay" id="controlOverlay">
-    <div class="card">
-      <h3 style="margin:0 0 6px">Choose Mobile Control Style</h3>
-      <div style="font-size:13px;opacity:.9">Pick how Otis moves before starting. You can switch later.</div>
-      <div class="row">
-        <button id="chooseJoystick">Joystick</button>
-        <button id="chooseTilt">Accelerometer</button>
-      </div>
+  <div class="touchHud" id="touchHud">
+    <div class="touchLeft">
+      <div class="joyLabel">MOVE</div>
+      <div class="joyWrap" id="joyWrap"><div class="joyKnob" id="joyKnob"></div></div>
+    </div>
+    <div class="touchRight">
+      <button id="touchSearch" class="touchBtn">Rescue</button>
+      <button id="touchForm" class="touchBtn">Switch Form</button>
     </div>
   </div>
 
+  <div class="overlay" id="controlOverlay">
+    <div class="card">
+      <h3 style="margin:0 0 6px">Otis & His Friends</h3>
+      <div style="font-size:14px;line-height:1.5;color:var(--muted)">A guided hide-and-seek adventure. Rescue all five friends in each level using the right animal form for the terrain.</div>
+      <div class="row">
+        <button id="chooseJoystick" class="primary">Start with Joystick</button>
+        <button id="chooseTilt">Use Accelerometer</button>
+      </div>
+    </div>
+  </div>
 
 <script type="module">
 import * as THREE from 'https://esm.sh/three@0.164.1';
@@ -91,43 +148,32 @@ composer.addPass(bloomPass);
 let fxEnabled = true;
 
 const TILE=1.6, W=64, H=46;
-const map = Array.from({length:H}, ()=>Array(W).fill(0)); // 0 grass 1 tree 2 water 3 gap 4 cliff
+const map = Array.from({length:H}, ()=>Array(W).fill(0));
 for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(!x||!y||x===W-1||y===H-1) map[y][x]=1;
 const set=(x1,y1,x2,y2,t)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++) map[y][x]=t;};
 
-// Long multi-zone maze with forced transformation gates
 set(14,1,14,32,1); set(30,1,30,32,1);
-set(14,15,14,18,2);   // fish gate
-set(30,10,30,13,4);   // goat gate
-set(40,22,43,22,3);   // bird gap gate
-
-// Dense blockers (maze complexity)
+set(14,15,14,18,2);
+set(30,10,30,13,4);
+set(40,22,43,22,3);
 set(2,24,13,32,1); set(16,2,29,7,1); set(16,23,29,32,1);
 set(32,2,46,16,1); set(32,27,46,32,1);
 set(4,5,12,5,1); set(4,10,12,10,1); set(4,15,12,15,1); set(4,20,12,20,1);
 set(18,12,28,12,1); set(18,18,28,18,1);
 set(34,20,39,20,1); set(34,24,39,24,1);
-
-// Carve winding corridors
 set(2,2,13,23,0); set(16,14,29,22,0); set(32,9,39,26,0); set(44,20,46,25,0);
 set(6,6,10,9,0); set(6,11,10,14,0); set(6,16,10,19,0);
 set(20,14,23,17,0); set(24,19,28,22,0);
 set(34,11,37,14,0); set(34,21,37,23,0);
-
-// Water / cliff regions + decoy biomes
 set(6,16,11,19,2); set(20,15,25,18,2); set(34,11,37,13,4); set(44,21,46,24,3);
 set(8,7,9,8,2); set(22,20,23,21,4); set(36,22,37,23,2);
-
-// expand map footprint and force longer traversal lanes
 set(47,1,W-2,H-2,1);
 set(2,34,46,H-2,1);
-set(8,30,40,30,2);     // extra fish requirement lane
-set(20,26,22,26,3);    // extra bird jump in late path
-set(31,23,31,25,4);    // extra goat climb gate
-
+set(8,30,40,30,2);
+set(20,26,22,26,3);
+set(31,23,31,25,4);
 
 const tileMeshes=[];
-
 function makeTileTexture(base='#4b9650', speck='#3a7d42', lines='#2f6636'){
   const c=document.createElement('canvas'); c.width=128; c.height=128;
   const x=c.getContext('2d');
@@ -144,13 +190,11 @@ function makeTileTexture(base='#4b9650', speck='#3a7d42', lines='#2f6636'){
   tex.anisotropy = renderer.capabilities.getMaxAnisotropy?.() || 8;
   return tex;
 }
-
 const texGrass = makeTileTexture('#4b9650','#6aac63','#2f6636');
 const texTree  = makeTileTexture('#2c5f2c','#3e7a3d','#244e24');
 const texWater = makeTileTexture('#2a79bf','#4aa0de','#22639d');
 const texGap   = makeTileTexture('#111922','#1c2835','#0d1219');
 const texCliff = makeTileTexture('#a38663','#b59875','#7c664a');
-
 const mats={
   grass:new THREE.MeshStandardMaterial({map:texGrass, color:0xffffff, roughness:0.9}),
   tree:new THREE.MeshStandardMaterial({map:texTree, color:0xffffff, roughness:0.95}),
@@ -158,7 +202,6 @@ const mats={
   gap:new THREE.MeshStandardMaterial({map:texGap, color:0xffffff, roughness:1}),
   cliff:new THREE.MeshStandardMaterial({map:texCliff, color:0xffffff, roughness:0.9})
 };
-
 const gTile = new THREE.BoxGeometry(TILE, 0.35, TILE);
 const gTall = new THREE.BoxGeometry(TILE, 1.8, TILE);
 for(let y=0;y<H;y++) for(let x=0;x<W;x++){
@@ -171,8 +214,6 @@ for(let y=0;y<H;y++) for(let x=0;x<W;x++){
   const m=new THREE.Mesh(geo,mat); m.receiveShadow=true; m.castShadow=t===1||t===5;
   m.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE);
   scene.add(m); tileMeshes.push(m);
-
-  // ground decal ring for richer high-quality terrain breakup
   if(t===0 && (x*7+y*11)%9===0){
     const ring = new THREE.Mesh(new THREE.RingGeometry(0.18,0.26,16), new THREE.MeshStandardMaterial({color:0x3f7f47, roughness:0.95, side:THREE.DoubleSide}));
     ring.rotation.x = -Math.PI/2;
@@ -181,7 +222,6 @@ for(let y=0;y<H;y++) for(let x=0;x<W;x++){
   }
 }
 
-// Biome/environment quality pass: props + micro detail
 const env = new THREE.Group(); scene.add(env);
 const tuftMat = new THREE.MeshStandardMaterial({color:0x3d7f45, roughness:0.92});
 const reedMat = new THREE.MeshStandardMaterial({color:0x9cd79f, roughness:0.85});
@@ -213,39 +253,12 @@ const hero = new THREE.Group(); scene.add(hero);
 const avatarRoot = new THREE.Group(); hero.add(avatarRoot);
 const animalRoot = new THREE.Group(); hero.add(animalRoot); animalRoot.visible=false; animalRoot.scale.setScalar(1.45);
 
-// Fallback primitive (kept until GLB loads)
 const fallbackBody = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.3,0.8), new THREE.MeshStandardMaterial({color:0xc2616e, roughness:0.7}));
 const fallbackHead = new THREE.Mesh(new THREE.BoxGeometry(0.82,0.82,0.82), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.75})); fallbackHead.position.y=1.05;
 const fallbackHat = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.18,0.95), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6})); fallbackHat.position.y=1.55;
 const fallbackPatch = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.1,0.02), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); fallbackPatch.position.set(0.14,1.1,0.42);
 avatarRoot.add(fallbackBody,fallbackHead,fallbackHat,fallbackPatch);
 
-// Signature details from initial Otis reference: cap swirl + eye patch
-const otisSignature = new THREE.Group();
-const sigPatch = new THREE.Mesh(new THREE.BoxGeometry(0.15,0.09,0.02), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.65}));
-sigPatch.position.set(0.14,1.1,0.42);
-const sigBrim = new THREE.Mesh(new THREE.BoxGeometry(0.52,0.05,0.28), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6}));
-sigBrim.position.set(0,1.47,0.25);
-const sigSwirl = new THREE.Mesh(new THREE.TorusGeometry(0.06,0.01,8,18,Math.PI*1.5), new THREE.MeshStandardMaterial({color:0xf7cad0, roughness:0.45}));
-sigSwirl.position.set(-0.06,1.56,0.42);
-otisSignature.add(sigPatch,sigBrim,sigSwirl); avatarRoot.add(otisSignature);
-
-// High-detail transformed animal meshes (more realistic proportions)
-const furMat = new THREE.MeshPhysicalMaterial({color:0xb8aa98, roughness:0.72, clearcoat:0.08});
-const featherMat = new THREE.MeshPhysicalMaterial({color:0x8f8f8f, roughness:0.55, clearcoat:0.1});
-const accentRed = new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.45});
-
-const animalSkin = new THREE.MeshPhysicalMaterial({color:0xd8d8d8, roughness:0.42, clearcoat:0.18, clearcoatRoughness:0.35});
-const animalDark = new THREE.MeshStandardMaterial({color:0x2a2a2a, roughness:0.65});
-const animalWarm = new THREE.MeshPhysicalMaterial({color:0xc8b49b, roughness:0.55, clearcoat:0.12});
-
-const birdModel = new THREE.Group();
-const fishModel = new THREE.Group();
-const goatModel = new THREE.Group();
-animalRoot.add(birdModel,fishModel,goatModel);
-birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
-
-// Fresh free asset-only transform models (no procedural fallback)
 const gltfLoader = new GLTFLoader();
 function fitGLB(targetGroup, gltfScene, {scale=1, rotY=0}={}){
   targetGroup.clear();
@@ -266,49 +279,28 @@ function loadAsset(targetGroup, urls, opts={}){
   go(0);
 }
 
+const birdModel = new THREE.Group();
+const fishModel = new THREE.Group();
+const goatModel = new THREE.Group();
+animalRoot.add(birdModel,fishModel,goatModel);
+birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
 loadAsset(birdModel,[
   'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Parrot.glb',
   'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Flamingo.glb',
   'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Stork.glb'
 ],{scale:1.55, rotY:Math.PI/2});
-
 loadAsset(fishModel,[
   'https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/BarramundiFish.mixed.glb',
   'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'
 ],{scale:1.55, rotY:Math.PI/2});
-
 loadAsset(goatModel,[
   'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Fox/glTF-Binary/Fox.glb',
   'https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/Horse.glb'
 ],{scale:1.65, rotY:Math.PI/2});
 
-// Environment free-asset library props (GLB)
-const envAssetGroup = new THREE.Group(); scene.add(envAssetGroup);
-function addEnvAsset(url, gx, gy, y=0.25, scale=0.8, rotY=0){
-  gltfLoader.load(url, (gltf)=>{
-    const root=gltf.scene;
-    const box=new THREE.Box3().setFromObject(root);
-    const size=box.getSize(new THREE.Vector3());
-    root.scale.setScalar(scale/(Math.max(size.x,size.y,size.z)||1));
-    const center=new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
-    root.position.sub(center);
-    root.position.set((gx-W/2)*TILE, y, (gy-H/2)*TILE);
-    root.rotation.y = rotY;
-    root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; }});
-    envAssetGroup.add(root);
-  });
-}
-addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Lantern/glTF-Binary/Lantern.glb', 12, 6, 0.3, 0.9, 0.6);
-addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/AntiqueCamera/glTF-Binary/AntiqueCamera.glb', 24, 14, 0.24, 0.7, 0.2);
-addEnvAsset('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb', 38, 20, 0.28, 0.82, -0.7);
-
-// Otis rebuilt from scratch with rounded, proportional body (no boxy rectangle look)
-const otisCore = new THREE.Group();
-avatarRoot.add(otisCore);
-const otisBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.7,10,16), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.56}));
-otisBody.position.y=0.62;
-const otisHead = new THREE.Mesh(new THREE.SphereGeometry(0.36,24,20), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.62}));
-otisHead.position.set(-0.02,1.36,0.02);
+const otisCore = new THREE.Group(); avatarRoot.add(otisCore);
+const otisBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.7,10,16), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.56})); otisBody.position.y=0.62;
+const otisHead = new THREE.Mesh(new THREE.SphereGeometry(0.36,24,20), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.62})); otisHead.position.set(-0.02,1.36,0.02);
 const otisEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.035,10,10), new THREE.MeshStandardMaterial({color:0x101010})); otisEyeL.position.set(-0.14,1.4,0.3);
 const otisEyeR = otisEyeL.clone(); otisEyeR.position.x=0.0;
 const otisEyePatch = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.14,0.03), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); otisEyePatch.position.set(0.16,1.38,0.29);
@@ -324,107 +316,36 @@ const otisShoeR = otisShoeL.clone(); otisShoeR.position.x=0.12;
 otisCore.add(otisBody,otisHead,otisEyeL,otisEyeR,otisEyePatch,otisMouth,otisHatTop,otisHatBrim,otisArmL,otisArmR,otisLegL,otisLegR,otisShoeL,otisShoeR);
 const otisRig = {armL:otisArmL, armR:otisArmR, legL:otisLegL, legR:otisLegR, shoeL:otisShoeL, shoeR:otisShoeR, body:otisBody};
 
-// Friends rebuilt from user sketches (high-detail stylized 3D)
-function buildMilo(){
-  const g = new THREE.Group();
-  const lineMat = new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.5});
-  const skin = new THREE.MeshPhysicalMaterial({color:0xffd9de, roughness:0.58, clearcoat:0.15});
-
-  const head = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.72,0.68), skin); head.position.y=1.4;
-  const fringe = new THREE.Mesh(new THREE.BoxGeometry(0.84,0.12,0.5), lineMat); fringe.position.set(0,1.68,0.1);
-  const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.03,10,10), new THREE.MeshStandardMaterial({color:0x1b1b1b})); eyeL.position.set(-0.21,1.42,0.34);
-  const eyeR = eyeL.clone(); eyeR.position.x=0.21;
-  const nose = new THREE.Mesh(new THREE.SphereGeometry(0.02,8,8), new THREE.MeshStandardMaterial({color:0xb55461})); nose.position.set(0,1.37,0.35);
-  const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.03,0.02), new THREE.MeshStandardMaterial({color:0x8a3442})); mouth.position.set(0,1.28,0.34);
-
-  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.74,8,14), new THREE.MeshPhysicalMaterial({color:0xffb7c0, roughness:0.62})); torso.position.y=0.62;
-  const armL = new THREE.Mesh(new THREE.CapsuleGeometry(0.08,0.5,6,10), new THREE.MeshStandardMaterial({color:0xffb7c0, roughness:0.65})); armL.position.set(-0.42,0.68,0.03);
-  const armR = armL.clone(); armR.position.x=0.42;
-  const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.09,0.6,6,10), new THREE.MeshStandardMaterial({color:0xd06774, roughness:0.7})); legL.position.set(-0.12,0.02,0.04);
-  const legR = legL.clone(); legR.position.x=0.12;
-
-  g.add(head,fringe,eyeL,eyeR,nose,mouth,torso,armL,armR,legL,legR);
-  g.userData={armL,armR,legL,legR};
-  return g;
-}
-
-function buildPoppy(){
-  const g = new THREE.Group();
-  const skin = new THREE.MeshPhysicalMaterial({color:0xffe6eb, roughness:0.56, clearcoat:0.12});
-  const lineMat = new THREE.MeshStandardMaterial({color:0xea6172, roughness:0.5});
-
-  const skull = new THREE.Mesh(new THREE.BoxGeometry(0.98,0.78,0.72), skin); skull.position.y=1.45;
-  const topPlate = new THREE.Mesh(new THREE.BoxGeometry(1.0,0.18,0.74), lineMat); topPlate.position.set(0,1.75,0);
-  const sideNub = new THREE.Mesh(new THREE.BoxGeometry(0.14,0.12,0.2), lineMat); sideNub.position.set(-0.56,1.55,0);
-  const eyeL = new THREE.Mesh(new THREE.BoxGeometry(0.09,0.09,0.03), new THREE.MeshStandardMaterial({color:0x7a2b39})); eyeL.position.set(-0.2,1.47,0.35);
-  const eyeR = eyeL.clone(); eyeR.position.x=0.2;
-  const nose = new THREE.Mesh(new THREE.BoxGeometry(0.07,0.07,0.03), new THREE.MeshStandardMaterial({color:0x7a2b39})); nose.position.set(0,1.39,0.35);
-
-  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.88,8,14), new THREE.MeshPhysicalMaterial({color:0xffbec8, roughness:0.64})); torso.position.y=0.56;
-  const armL = new THREE.Mesh(new THREE.CapsuleGeometry(0.07,0.66,6,10), new THREE.MeshStandardMaterial({color:0xffbec8, roughness:0.68})); armL.position.set(-0.44,0.62,0.05);
-  const armR = armL.clone(); armR.position.x=0.44;
-  const fingerL1 = new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.015,0.13,6), lineMat); fingerL1.position.set(-0.5,0.21,0.09); fingerL1.rotation.z=0.2;
-  const fingerL2 = fingerL1.clone(); fingerL2.position.z=0.02;
-  const fingerL3 = fingerL1.clone(); fingerL3.position.z=-0.05;
-  const fingerR1 = fingerL1.clone(); fingerR1.position.x=0.5; fingerR1.rotation.z=-0.2;
-  const fingerR2 = fingerR1.clone(); fingerR2.position.z=0.02;
-  const fingerR3 = fingerR1.clone(); fingerR3.position.z=-0.05;
-
-  const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.08,0.74,6,10), new THREE.MeshStandardMaterial({color:0xd86a78, roughness:0.72})); legL.position.set(-0.12,-0.02,0.05);
-  const legR = legL.clone(); legR.position.x=0.12;
-
-  g.add(skull,topPlate,sideNub,eyeL,eyeR,nose,torso,armL,armR,fingerL1,fingerL2,fingerL3,fingerR1,fingerR2,fingerR3,legL,legR);
-  g.userData={armL,armR,legL,legR};
-  return g;
-}
-
-const decoyMeshes = [];
-
-function buildFishFriend(){
+function buildFriendVariant(kind){
+  if(kind===0){
+    const g=new THREE.Group();
+    const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.74,8,14), new THREE.MeshPhysicalMaterial({color:0xffb7c0, roughness:0.62})); body.position.y=0.62;
+    const head=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.72,0.68), new THREE.MeshPhysicalMaterial({color:0xffd9de, roughness:0.58, clearcoat:0.15})); head.position.y=1.4;
+    g.add(body,head); return g;
+  }
+  if(kind===1){
+    const g=new THREE.Group();
+    const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.88,8,14), new THREE.MeshPhysicalMaterial({color:0xffbec8, roughness:0.64})); torso.position.y=0.56;
+    const head=new THREE.Mesh(new THREE.BoxGeometry(0.98,0.78,0.72), new THREE.MeshPhysicalMaterial({color:0xffe6eb, roughness:0.56, clearcoat:0.12})); head.position.y=1.45;
+    g.add(torso,head); return g;
+  }
+  if(kind===2){
+    const g=new THREE.Group();
+    const body=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.45,0.42), new THREE.MeshPhysicalMaterial({color:0xffd9de, roughness:0.58})); body.position.set(0,0.95,0);
+    g.add(body); return g;
+  }
   const g=new THREE.Group();
-  const body=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.45,0.42), new THREE.MeshPhysicalMaterial({color:0xffd9de, roughness:0.58})); body.position.set(0,0.95,0);
-  const snout=new THREE.Mesh(new THREE.CapsuleGeometry(0.11,0.16,6,10), new THREE.MeshStandardMaterial({color:0xffc3cd, roughness:0.6})); snout.rotation.z=Math.PI/2; snout.position.set(-0.55,0.94,0);
-  const fin=new THREE.Mesh(new THREE.ConeGeometry(0.07,0.16,10), new THREE.MeshStandardMaterial({color:0xe76a7d, roughness:0.5})); fin.position.set(-0.42,0.72,0); fin.rotation.z=0.6;
-  const tail=new THREE.Mesh(new THREE.ConeGeometry(0.12,0.28,14), new THREE.MeshStandardMaterial({color:0xe46272, roughness:0.55})); tail.rotation.z=-Math.PI/2; tail.position.set(0.62,0.95,0);
-  const eye1=new THREE.Mesh(new THREE.SphereGeometry(0.025,8,8), new THREE.MeshStandardMaterial({color:0x111111})); eye1.position.set(-0.2,1.02,0.15);
-  const eye2=eye1.clone(); eye2.position.z=-0.15;
-  const mouth=new THREE.Mesh(new THREE.TorusGeometry(0.08,0.012,8,16,Math.PI), new THREE.MeshStandardMaterial({color:0xb14a58, roughness:0.6})); mouth.rotation.z=-1.2; mouth.position.set(0.02,0.9,0.16);
-  g.add(body,snout,fin,tail,eye1,eye2,mouth);
-  g.userData={};
-  return g;
+  const body=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.68,0.36), new THREE.MeshStandardMaterial({color:0xffc1ca, roughness:0.66})); body.position.y=0.5; g.add(body); return g;
 }
-function buildConeHatFriend(){
-  const g=new THREE.Group();
-  const face=new THREE.Mesh(new THREE.BoxGeometry(0.46,0.64,0.34), new THREE.MeshPhysicalMaterial({color:0xffe3e8, roughness:0.6})); face.position.y=1.04;
-  const cone=new THREE.Mesh(new THREE.ConeGeometry(0.12,0.32,10), new THREE.MeshStandardMaterial({color:0xe95a72, roughness:0.48})); cone.position.y=1.55;
-  const coneBand=new THREE.Mesh(new THREE.BoxGeometry(0.18,0.08,0.18), new THREE.MeshStandardMaterial({color:0xf59aa8, roughness:0.5})); coneBand.position.y=1.39;
-  const body=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.68,0.36), new THREE.MeshStandardMaterial({color:0xffc1ca, roughness:0.66})); body.position.y=0.5;
-  const armL=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.52,6), new THREE.MeshStandardMaterial({color:0xe56c7e})); armL.position.set(-0.33,0.57,0);
-  const armR=armL.clone(); armR.position.x=0.33;
-  const legL=new THREE.Mesh(new THREE.CylinderGeometry(0.032,0.035,0.56,6), new THREE.MeshStandardMaterial({color:0xd06373})); legL.position.set(-0.1,0.0,0);
-  const legR=legL.clone(); legR.position.x=0.1;
-  g.add(face,cone,coneBand,body,armL,armR,legL,legR); g.userData={armL,armR,legL,legR};
-  return g;
-}
-function buildBandanaFriend(){
-  const g=new THREE.Group();
-  const face=new THREE.Mesh(new THREE.BoxGeometry(0.46,0.64,0.34), new THREE.MeshPhysicalMaterial({color:0xffe3e8, roughness:0.6})); face.position.y=1.04;
-  const band=new THREE.Mesh(new THREE.TorusGeometry(0.24,0.045,10,24), new THREE.MeshStandardMaterial({color:0xe46272, roughness:0.52})); band.rotation.x=Math.PI/2; band.position.y=1.33;
-  const knot=new THREE.Mesh(new THREE.CapsuleGeometry(0.05,0.12,4,8), new THREE.MeshStandardMaterial({color:0xe46272, roughness:0.52})); knot.rotation.z=0.8; knot.position.set(-0.28,1.32,0);
-  const body=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.68,0.36), new THREE.MeshStandardMaterial({color:0xffc1ca, roughness:0.66})); body.position.y=0.5;
-  const armL=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.52,6), new THREE.MeshStandardMaterial({color:0xe56c7e})); armL.position.set(-0.33,0.57,0);
-  const armR=armL.clone(); armR.position.x=0.33;
-  const legL=new THREE.Mesh(new THREE.CylinderGeometry(0.032,0.035,0.56,6), new THREE.MeshStandardMaterial({color:0xd06373})); legL.position.set(-0.1,0.0,0);
-  const legR=legL.clone(); legR.position.x=0.1;
-  g.add(face,band,knot,body,armL,armR,legL,legR); g.userData={armL,armR,legL,legR};
-  return g;
-}
-
-const friendModels=[buildMilo(), buildPoppy(), buildFishFriend(), buildConeHatFriend(), buildBandanaFriend()];
+const friendModels=[0,1,2,3,4].map(i=>buildFriendVariant(i));
 friendModels.forEach(f=>scene.add(f));
 
 const stateEl=document.getElementById('state'), foundEl=document.getElementById('found');
 const levelPill=document.getElementById('levelPill'), hpPill=document.getElementById('hpPill');
+const hintPill=document.getElementById('hintPill');
+const objectiveTitle=document.getElementById('objectiveTitle');
+const objectiveText=document.getElementById('objectiveText');
+const objectiveHint=document.getElementById('objectiveHint');
 const forms=['otis','bird','fish','goat']; let form='otis';
 let heroGrid={x:2,y:2};
 const heroPos={x:2,y:2};
@@ -434,10 +355,17 @@ let hp=100;
 let currentLevel=1;
 let friendPositions=[];
 let decoys=[];
+let rescuedCount=0;
+let playing=false;
+let controlMode='joystick';
+const tiltState={enabled:false,gamma:0,beta:0};
+const joyState={active:false,x:0,y:0};
+const decoyMeshes=[];
+
 const levels=[
-  { hero:{x:2,y:2}, friends:[{x:26,y:12},{x:8,y:15},{x:18,y:9},{x:12,y:22},{x:30,y:18}], decoys:[{x:9,y:8},{x:18,y:17},{x:24,y:12}], gates:[{t:2},{t:4}] },
-  { hero:{x:2,y:2}, friends:[{x:36,y:22},{x:12,y:18},{x:24,y:24},{x:28,y:11},{x:40,y:20}], decoys:[{x:9,y:8},{x:24,y:21},{x:27,y:16},{x:34,y:18}], gates:[{t:2},{t:4},{t:3}] },
-  { hero:{x:2,y:2}, friends:[{x:45,y:24},{x:11,y:18},{x:32,y:26},{x:22,y:14},{x:41,y:29}], decoys:[{x:9,y:8},{x:24,y:21},{x:36,y:22},{x:27,y:16},{x:42,y:24},{x:30,y:27}], gates:[{t:2},{t:4},{t:3},{t:2}] }
+  { hero:{x:2,y:2}, friends:[{x:26,y:12},{x:8,y:15},{x:18,y:9},{x:12,y:22},{x:30,y:18}], decoys:[{x:9,y:8},{x:18,y:17}], intro:'Level 1: Learn the world. Rescue all five friends and get used to switching forms.' },
+  { hero:{x:2,y:2}, friends:[{x:36,y:22},{x:12,y:18},{x:24,y:24},{x:28,y:11},{x:40,y:20}], decoys:[{x:9,y:8},{x:24,y:21},{x:27,y:16},{x:34,y:18}], intro:'Level 2: The map opens up. Use bird, fish, and goat forms more deliberately.' },
+  { hero:{x:2,y:2}, friends:[{x:45,y:24},{x:11,y:18},{x:32,y:26},{x:22,y:14},{x:41,y:29}], decoys:[{x:9,y:8},{x:24,y:21},{x:36,y:22},{x:27,y:16},{x:42,y:24},{x:30,y:27}], intro:'Level 3: Final rescue run. Read terrain carefully and avoid decoys.' }
 ];
 
 function posFromGrid(g){ return new THREE.Vector3((g.x-W/2)*TILE,0.8,(g.y-H/2)*TILE); }
@@ -445,15 +373,35 @@ function buildDecoy(){
   const g = new THREE.Group();
   const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.4,6,10), new THREE.MeshStandardMaterial({color:0xe7bf5e, roughness:0.65}));
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,14,12), new THREE.MeshStandardMaterial({color:0xf3d67c, roughness:0.55})); head.position.y=0.42;
-  const hornL = new THREE.Mesh(new THREE.ConeGeometry(0.04,0.14,8), new THREE.MeshStandardMaterial({color:0x7f6741, roughness:0.8})); hornL.position.set(-0.08,0.58,0.02); hornL.rotation.z=0.45;
-  const hornR = hornL.clone(); hornR.position.x=0.08; hornR.rotation.z=-0.45;
-  const eye = new THREE.Mesh(new THREE.SphereGeometry(0.025,8,8), new THREE.MeshStandardMaterial({color:0x111111})); eye.position.set(0.05,0.44,0.16);
-  const eye2 = eye.clone(); eye2.position.x=-0.05;
-  g.add(body,head,hornL,hornR,eye,eye2);
-  g.userData.hitAt=0;
-  return g;
+  g.add(body,head); g.userData.hitAt=0; return g;
 }
 function clearDecoys(){ while(decoyMeshes.length){ const d=decoyMeshes.pop(); scene.remove(d);} }
+function nearestFriendDistance(){
+  const remaining=friendPositions.filter((_,i)=>!found[i]);
+  if(!remaining.length) return 0;
+  return Math.min(...remaining.map(fp=>Math.abs(heroGrid.x-fp.x)+Math.abs(heroGrid.y-fp.y)));
+}
+function updateObjective(){
+  const remaining = 5 - rescuedCount;
+  objectiveTitle.textContent = remaining>0 ? `Rescue ${remaining} friend${remaining===1?'':'s'} in Level ${currentLevel}` : `Level ${currentLevel} cleared`;
+  const near = nearestFriendDistance();
+  if(remaining<=0){
+    objectiveText.textContent = currentLevel<3 ? 'Nice. The next level will begin automatically.' : 'You found everyone. Otis and all friends are safe.';
+    objectiveHint.textContent = 'Great run.';
+    hintPill.textContent='Mission complete';
+    return;
+  }
+  if(near<=2){
+    objectiveText.textContent = 'A friend is close. Hit Rescue Friend now.';
+    objectiveHint.textContent = 'Use Rescue when you are right next to a hidden friend.';
+    hintPill.textContent='Friend nearby';
+  } else {
+    objectiveText.textContent = levels[currentLevel-1].intro;
+    const formHint = form==='otis' ? 'Switch forms when terrain blocks you.' : `Current form: ${form[0].toUpperCase()+form.slice(1)}.`;
+    objectiveHint.textContent = formHint;
+    hintPill.textContent='Keep exploring';
+  }
+}
 function initLevel(level){
   const cfg=levels[level-1];
   currentLevel=level;
@@ -462,11 +410,14 @@ function initLevel(level){
   friendPositions=cfg.friends.map(v=>({...v}));
   decoys=cfg.decoys.map(v=>({...v}));
   found=[false,false,false,false,false];
+  rescuedCount=0;
   friendModels.forEach(m=>m.visible=true);
   foundEl.textContent='Friends: 0 / 5';
   levelPill.textContent=`Level: ${currentLevel} / 3`;
+  hp=100; hpPill.textContent='HP: 100';
   clearDecoys();
   decoys.forEach((d)=>{ const m=buildDecoy(); const p=posFromGrid(d); m.position.set(p.x,0.55,p.z); scene.add(m); decoyMeshes.push(m); });
+  updateObjective();
 }
 function place(){
   hero.position.copy(posFromGrid({x:heroPos.x,y:heroPos.y}));
@@ -474,8 +425,7 @@ function place(){
   const tNow = performance.now()*0.001;
   decoyMeshes.forEach((m,i)=>{ const p=posFromGrid(decoys[i]); m.position.set(p.x,0.55 + Math.sin(tNow*3+i)*0.02,p.z); m.rotation.y += 0.01; });
 }
-initLevel(1);
-place();
+initLevel(1); place();
 
 function setForm(f){
   form=f; stateEl.textContent='Form: '+f[0].toUpperCase()+f.slice(1);
@@ -484,21 +434,17 @@ function setForm(f){
   birdModel.visible = (f==='bird');
   fishModel.visible = (f==='fish');
   goatModel.visible = (f==='goat');
-
-  // scale per transform for readability/proportion
   birdModel.scale.setScalar(f==='bird'?1.05:0.95);
   fishModel.scale.set(f==='fish'?1.1:0.95, f==='fish'?1.1:0.95, f==='fish'?1.1:0.95);
   goatModel.scale.setScalar(f==='goat'?1.12:0.96);
-
-  const tint = f==='otis'?0xffffff : f==='bird'?0xf2dcff : f==='fish'?0xd8f2ff : 0xfff0dc;
-  avatarRoot.traverse(n=>{ if(n.isMesh && n.material && n.material.color){ const base=n.userData.baseColor || n.material.color.getHex(); n.userData.baseColor=base; n.material.color.setHex(base).multiply(new THREE.Color(tint)); }});
+  updateObjective();
 }
 setForm('otis');
 
 function canStep(nx,ny){
   const t=map[ny]?.[nx]; if(t==null) return false;
   const nearWater = (x,y)=> [ [1,0],[-1,0],[0,1],[0,-1] ].some(([dx,dy])=>map[y+dy]?.[x+dx]===2);
-  if(form==='fish') return t===2 || (t===0 && nearWater(nx,ny)); // fish can crossover on grass bordering water
+  if(form==='fish') return t===2 || (t===0 && nearWater(nx,ny));
   if(t===1) return false;
   if(t===2) return false;
   if(t===3) return form==='bird';
@@ -506,42 +452,42 @@ function canStep(nx,ny){
   return true;
 }
 
-const keys={};
-const tiltState={enabled:false,gamma:0,beta:0,lastMove:0};
-const joyState={active:false,x:0,y:0};
-let controlMode='joystick';
-let playing=false;
-
 addEventListener('keydown',e=>{keys[e.key]=true; if(e.key==='1')setForm('otis'); if(e.key==='2')setForm('bird'); if(e.key==='3')setForm('fish'); if(e.key==='4')setForm('goat'); if(e.key===' ')search();});
 addEventListener('keyup',e=>{keys[e.key]=false;});
 
 function search(){
+  let rescuedThisPress=false;
   friendPositions.forEach((fp,i)=>{
-    if(!found[i] && Math.abs(heroGrid.x-fp.x)+Math.abs(heroGrid.y-fp.y)<=1) found[i]=true;
+    if(!found[i] && Math.abs(heroGrid.x-fp.x)+Math.abs(heroGrid.y-fp.y)<=1){ found[i]=true; rescuedThisPress=true; }
   });
-
   friendModels.forEach((m,i)=>{ if(found[i]) m.visible=false; });
-  const count = found.filter(Boolean).length;
-  foundEl.textContent=`Friends: ${count} / 5`;
-
-  if(count===5){
+  rescuedCount = found.filter(Boolean).length;
+  foundEl.textContent=`Friends: ${rescuedCount} / 5`;
+  if(rescuedThisPress){
+    stateEl.textContent='Friend rescued!';
+    setTimeout(()=>{ if(playing) stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); },700);
+  }
+  updateObjective();
+  if(rescuedCount===5){
     if(currentLevel<3){
       stateEl.textContent='Level clear! Loading next level...';
-      setTimeout(()=>{ initLevel(currentLevel+1); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 900);
+      setTimeout(()=>{ initLevel(currentLevel+1); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 1200);
     } else {
-      stateEl.textContent='All levels complete! 🎉';
+      stateEl.textContent='All friends rescued! 🎉';
+      objectiveTitle.textContent='Adventure complete';
+      objectiveText.textContent='Otis found every friend across all three levels.';
+      objectiveHint.textContent='You can keep exploring or refresh to play again.';
       playing=false;
     }
   }
 }
-
 ['f1','f2','f3','f4'].forEach((id,i)=>document.getElementById(id).onclick=()=>setForm(forms[i]));
 document.getElementById('search').onclick=search;
+document.getElementById('touchSearch').onclick=search;
+document.getElementById('mobileAction').onclick=search;
+document.getElementById('touchForm').onclick=()=>setForm(forms[(forms.indexOf(form)+1)%forms.length]);
 
-function onTilt(e){
-  tiltState.gamma = e.gamma || 0; // left/right
-  tiltState.beta = e.beta || 0;   // front/back
-}
+function onTilt(e){ tiltState.gamma = e.gamma || 0; tiltState.beta = e.beta || 0; }
 async function enableTilt(){
   try{
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -554,15 +500,11 @@ async function enableTilt(){
     return true;
   } catch { return false; }
 }
-function disableTilt(){
-  removeEventListener('deviceorientation', onTilt);
-  tiltState.enabled=false;
-  document.getElementById('tilt').textContent='Tilt: Off';
-}
+function disableTilt(){ removeEventListener('deviceorientation', onTilt); tiltState.enabled=false; document.getElementById('tilt').textContent='Tilt: Off'; }
 document.getElementById('tilt').onclick=async()=>{
   if(tiltState.enabled) disableTilt();
   else {
-    const ok = await enableTilt();
+    const ok=await enableTilt();
     if(!ok) alert('Tilt permission not granted or unsupported on this browser.');
     else controlMode='accelerometer';
   }
@@ -571,15 +513,15 @@ document.getElementById('tilt').onclick=async()=>{
 const touchHud=document.getElementById('touchHud');
 const joyWrap=document.getElementById('joyWrap');
 const joyKnob=document.getElementById('joyKnob');
-function resetJoy(){ joyState.active=false; joyState.x=0; joyState.y=0; joyKnob.style.left='42px'; joyKnob.style.top='42px'; }
+function resetJoy(){ joyState.active=false; joyState.x=0; joyState.y=0; joyKnob.style.left='50px'; joyKnob.style.top='50px'; }
 function setJoyByPointer(e){
   const r=joyWrap.getBoundingClientRect();
-  const nx=(e.clientX-(r.left+r.width/2))/((r.width/2)-20);
-  const ny=(e.clientY-(r.top+r.height/2))/((r.height/2)-20);
+  const nx=(e.clientX-(r.left+r.width/2))/((r.width/2)-24);
+  const ny=(e.clientY-(r.top+r.height/2))/((r.height/2)-24);
   const mag=Math.hypot(nx,ny)||1;
   const c=Math.min(1,mag);
   joyState.x=(nx/mag)*c; joyState.y=(ny/mag)*c; joyState.active=true;
-  joyKnob.style.left=`${42+joyState.x*28}px`; joyKnob.style.top=`${42+joyState.y*28}px`;
+  joyKnob.style.left=`${50+joyState.x*34}px`; joyKnob.style.top=`${50+joyState.y*34}px`;
 }
 if(joyWrap){
   joyWrap.addEventListener('pointerdown',(e)=>{joyWrap.setPointerCapture(e.pointerId); setJoyByPointer(e);});
@@ -595,16 +537,14 @@ async function startWithMode(mode){
   } else {
     disableTilt();
   }
-  touchHud.style.display = (controlMode==='joystick') ? 'block' : 'none';
+  touchHud.style.display = 'flex';
+  document.getElementById('mobileAction').classList.remove('hidden');
   document.getElementById('controlOverlay').classList.add('hidden');
-  hp=100; hpPill.textContent='HP: 100';
   initLevel(1);
   playing=true;
 }
-
 document.getElementById('chooseJoystick').onclick=()=>startWithMode('joystick');
 document.getElementById('chooseTilt').onclick=()=>startWithMode('accelerometer');
-
 document.getElementById('fxBtn').onclick=()=>{
   fxEnabled = !fxEnabled;
   document.getElementById('fxBtn').textContent = fxEnabled ? 'FX: On' : 'FX: Off';
@@ -613,49 +553,30 @@ document.getElementById('fxBtn').onclick=()=>{
 
 const clock=new THREE.Clock();
 renderer.setAnimationLoop(()=>{
-  const dt=clock.getDelta();
-
+  const dt=Math.min(clock.getDelta(),0.05);
   if(playing){
     let ix=0, iy=0;
-
     if(keys.ArrowUp||keys.w) iy -= 1;
     if(keys.ArrowDown||keys.s) iy += 1;
     if(keys.ArrowLeft||keys.a) ix -= 1;
     if(keys.ArrowRight||keys.d) ix += 1;
-
-    if(controlMode==='joystick' && joyState.active){
-      ix = joyState.x;
-      iy = joyState.y;
-    } else if(controlMode==='accelerometer' && tiltState.enabled){
-      const g=tiltState.gamma, b=tiltState.beta;
-      ix = THREE.MathUtils.clamp(g/24, -1, 1);
-      iy = THREE.MathUtils.clamp(b/24, -1, 1);
-    }
-
-    // deadzone + normalize for smooth analog movement
+    if(controlMode==='joystick' && joyState.active){ ix = joyState.x; iy = joyState.y; }
+    else if(controlMode==='accelerometer' && tiltState.enabled){ ix = THREE.MathUtils.clamp(tiltState.gamma/24, -1, 1); iy = THREE.MathUtils.clamp(tiltState.beta/24, -1, 1); }
     const mag=Math.hypot(ix,iy);
-    if(mag<0.12){ ix=0; iy=0; }
-    else { ix/=mag; iy/=mag; }
-
-    const maxSpeed = 4.2; // tiles/sec
-    const accel = 11.0;
+    if(mag<0.12){ ix=0; iy=0; } else { ix/=mag; iy/=mag; }
+    const maxSpeed = 4.8;
+    const accel = 12.5;
     const damping = 9.5;
-
     const tx = ix*maxSpeed, ty = iy*maxSpeed;
     const lerpA = Math.min(1, dt*accel);
     heroVel.x += (tx-heroVel.x)*lerpA;
     heroVel.y += (ty-heroVel.y)*lerpA;
-
     if(ix===0) heroVel.x *= Math.max(0,1-dt*damping);
     if(iy===0) heroVel.y *= Math.max(0,1-dt*damping);
-
     const nx = heroPos.x + heroVel.x*dt;
     const ny = heroPos.y + heroVel.y*dt;
-
-    // axis-separated collision so movement feels smooth, not strobe/blocky
     if(canStep(Math.round(nx), Math.round(heroPos.y))) heroPos.x = nx; else heroVel.x = 0;
     if(canStep(Math.round(heroPos.x), Math.round(ny))) heroPos.y = ny; else heroVel.y = 0;
-
     heroPos.x = THREE.MathUtils.clamp(heroPos.x, 1, W-2);
     heroPos.y = THREE.MathUtils.clamp(heroPos.y, 1, H-2);
     heroGrid.x = Math.round(heroPos.x);
@@ -663,12 +584,9 @@ renderer.setAnimationLoop(()=>{
   }
 
   place();
-
   const t = clock.elapsedTime;
   const speed = Math.hypot(heroVel.x, heroVel.y);
   const walkAmp = Math.min(0.3, speed*0.075);
-
-  // face walking direction (smooth yaw)
   if(speed > 0.03){
     const targetYaw = Math.atan2(heroVel.x, heroVel.y);
     let delta = targetYaw - hero.rotation.y;
@@ -676,8 +594,6 @@ renderer.setAnimationLoop(()=>{
     while(delta < -Math.PI) delta += Math.PI*2;
     hero.rotation.y += delta * Math.min(1, dt*12);
   }
-
-  // player walk animation (smooth, speed-driven)
   if(form==='otis'){
     const moving = speed > 0.06;
     const cycle = moving ? (14 + speed*2.6) : 2;
@@ -691,65 +607,41 @@ renderer.setAnimationLoop(()=>{
     otisRig.shoeR.rotation.x = stride*amp*1.5;
     otisRig.body.position.y = 0.56 + Math.sin(t*cycle*2)*amp*0.09;
   }
+  if(form==='bird'){ birdModel.rotation.y = Math.sin(t*(4+speed))*0.12; birdModel.position.y = Math.sin(t*(6+speed))*0.04; }
+  else if(form==='fish'){ fishModel.rotation.y = Math.sin(t*(5+speed))*0.14; fishModel.position.x = Math.sin(t*(7+speed))*0.03; }
+  else if(form==='goat'){ goatModel.rotation.y = Math.sin(t*(3+speed))*0.08; goatModel.position.y = Math.abs(Math.sin(t*(6+speed)))*0.03; }
 
-  // subtle high-detail form animation
-  if(form==='bird'){
-    birdModel.rotation.y = Math.sin(t*(4+speed))*0.12;
-    birdModel.position.y = Math.sin(t*(6+speed))*0.04;
-  } else if(form==='fish'){
-    fishModel.rotation.y = Math.sin(t*(5+speed))*0.14;
-    fishModel.position.x = Math.sin(t*(7+speed))*0.03;
-  } else if(form==='goat'){
-    goatModel.rotation.y = Math.sin(t*(3+speed))*0.08;
-    goatModel.position.y = Math.abs(Math.sin(t*(6+speed)))*0.03;
-  }
-
-  // decoy enemy contact damage
   const now=clock.elapsedTime;
   decoys.forEach((d,i)=>{
-    const m=decoyMeshes[i];
-    if(!m) return;
+    const m=decoyMeshes[i]; if(!m) return;
     const hit = Math.abs(heroGrid.x-d.x)+Math.abs(heroGrid.y-d.y) <= 1;
-    if(hit && (now-(m.userData.hitAt||0))>0.8){
+    if(hit && (now-(m.userData.hitAt||0))>0.9){
       m.userData.hitAt=now;
-      hp=Math.max(0,hp-8);
-      hpPill.textContent=`HP: ${hp}`;
-      stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1)+' · Ouch! Decoy hit';
+      hp=Math.max(0,hp-8); hpPill.textContent=`HP: ${hp}`;
+      stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1)+' · Ouch!';
       setTimeout(()=>{ if(playing) stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); },500);
       if(hp<=0){
         hp=100; hpPill.textContent='HP: 100';
         stateEl.textContent='You fainted. Restarting level...';
-        setTimeout(()=>{ initLevel(currentLevel); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 700);
+        setTimeout(()=>{ initLevel(currentLevel); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 900);
       }
     }
   });
 
-  // friend idle animation from sketch silhouettes
   friendModels.forEach((fm,i)=>{
     if(!fm.visible) return;
     fm.position.y = 0.8 + Math.sin(t*(2.4+i*0.25) + i)*0.05;
-    const r = fm.userData || {};
-    if(r.armL) r.armL.rotation.z = 0.12 + Math.sin(t*(2.0+i*0.2))*0.2;
-    if(r.armR) r.armR.rotation.z = -0.12 - Math.sin(t*(2.0+i*0.2))*0.2;
-    if(r.legL) r.legL.rotation.x = Math.sin(t*(3.6+i*0.3))*0.12;
-    if(r.legR) r.legR.rotation.x = -Math.sin(t*(3.6+i*0.3))*0.12;
   });
-
-  // follow cam (closer framing)
   camera.position.x += (hero.position.x - camera.position.x)*Math.min(1,dt*4.5);
   camera.position.y += (6.8 - camera.position.y)*Math.min(1,dt*3.2);
   camera.position.z += (hero.position.z + 10.5 - camera.position.z)*Math.min(1,dt*4.5);
   camera.lookAt(hero.position.x,1.2,hero.position.z);
-
-  if(fxEnabled) composer.render();
-  else renderer.render(scene,camera);
+  if(fxEnabled) composer.render(); else renderer.render(scene,camera);
 });
-
 function onResize(){
   camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
   renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  composer.setSize(innerWidth,innerHeight);
-  bloomPass.setSize(innerWidth,innerHeight);
+  composer.setSize(innerWidth,innerHeight); bloomPass.setSize(innerWidth,innerHeight);
 }
 addEventListener('resize', onResize);
 </script>
