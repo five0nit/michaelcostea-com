@@ -7,52 +7,55 @@
   <style>
     :root{
       --bg:#071018;
-      --panel:rgba(8,18,30,.82);
+      --panel:rgba(8,18,30,.84);
       --panel-strong:rgba(8,18,30,.94);
-      --line:#4a6c8a;
+      --line:#456784;
       --text:#eaf4ff;
       --muted:#a8c1d8;
       --accent:#ffd95e;
       --accent2:#8df0b1;
+      --btn:#17314a;
+      --btn2:#1d3954;
     }
     *{box-sizing:border-box}
     html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Verdana,Arial,sans-serif;color:var(--text)}
     #c{display:block;width:100vw;height:100vh}
-    .hud{position:fixed;z-index:6;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
+    .hud{position:fixed;z-index:5;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
     .topLeft{top:10px;left:10px;max-width:min(62vw,760px)}
-    .topRight{top:10px;right:10px;justify-content:flex-end;max-width:min(40vw,520px)}
-    .objectivePanel{position:fixed;top:72px;right:10px;z-index:6;max-width:360px;pointer-events:none}
-    .controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:5;gap:10px}
-    .pill,.card,button{border:1px solid var(--line)}
-    .pill{background:var(--panel);color:var(--text);padding:8px 12px;border-radius:999px;font-size:12px;backdrop-filter:blur(10px)}
-    .card{background:var(--panel-strong);border-radius:16px;padding:12px 14px;box-shadow:0 14px 34px rgba(0,0,0,.28)}
-    .objectiveTitle{font-size:14px;font-weight:900;color:var(--accent)}
-    .objectiveText{font-size:13px;line-height:1.45;color:var(--text);margin-top:6px}
-    .objectiveHint{font-size:12px;line-height:1.4;color:var(--muted);margin-top:8px}
-    .controls .btns{display:flex;gap:8px;flex-wrap:wrap}
-    button{background:rgba(24,42,60,.9);color:#fff;border-radius:12px;padding:11px 14px;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);cursor:pointer}
-    button.primary{background:linear-gradient(180deg,#ffd95e,#f4b321);color:#1c1402;border-color:rgba(255,217,94,.45)}
-    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,10,16,.82);z-index:10;padding:16px}
-    .overlay .card{max-width:620px;width:100%}
-    .overlay .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .hidden{display:none!important}
-    .touchHud{position:fixed;left:12px;right:12px;bottom:12px;z-index:8;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;pointer-events:none}
-    .touchLeft,.touchRight{display:flex;flex-direction:column;gap:10px;align-items:center}
-    .joyLabel,.formLabel{font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--accent);background:rgba(8,18,30,.72);padding:6px 10px;border-radius:999px;border:1px solid var(--line)}
-    .joyWrap{width:148px;height:148px;border-radius:50%;background:rgba(8,18,30,.72);border:2px solid #466787;position:relative;touch-action:none;pointer-events:auto;backdrop-filter:blur(10px)}
-    .joyKnob{position:absolute;width:48px;height:48px;border-radius:50%;left:50px;top:50px;background:#b9d8f3;border:2px solid #45637d;box-shadow:0 8px 22px rgba(0,0,0,.24)}
-    .mobileAction{position:fixed;right:14px;bottom:126px;z-index:8;min-width:144px;pointer-events:auto;background:linear-gradient(180deg,#1d3954,#13283b);color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:900;box-shadow:0 12px 28px rgba(0,0,0,.28)}
-    .touchBtn{pointer-events:auto;background:linear-gradient(180deg,#1d3954,#13283b);color:#fff;border:none;border-radius:18px;padding:14px 18px;font-weight:900}
-    .filmGrain{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.08;background-image:radial-gradient(rgba(255,255,255,.35) 0.6px, transparent 0.7px);background-size:3px 3px;mix-blend-mode:soft-light;animation:grainShift .25s steps(2) infinite}
-    .filmGrain.off{display:none}
-    @keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}50%{transform:translate(-1px,1px)}75%{transform:translate(1px,1px)}100%{transform:translate(0,0)}}
-    @media (max-width:900px){ .objectivePanel{left:10px;right:10px;top:auto;bottom:196px;max-width:none} }
-    @media (max-width:720px){
-      .topLeft,.topRight{max-width:calc(100vw - 20px)}
-      .topRight{top:auto;right:10px;bottom:236px;justify-content:flex-start}
-      .controls{display:none}
-      .touchHud{display:flex}
-      .objectivePanel{bottom:196px}
+    .topRight{top:10px;right:10px;max-width:min(34vw,420px);justify-content:flex-end}
+    .objectivePanel{position:fixed;left:10px;right:10px;bottom:188px;z-index:5;pointer-events:none}
+    .pill,.card,.btn{border:1px solid var(--line)}
+    .pill{background:var(--panel);padding:8px 12px;border-radius:999px;font-size:12px;backdrop-filter:blur(10px)}
+    .card{background:var(--panel-strong);border-radius:18px;padding:14px 16px;box-shadow:0 12px 34px rgba(0,0,0,.28)}
+    .goalTitle{font-size:14px;font-weight:900;color:var(--accent);margin-bottom:8px}
+    .goalText{font-size:13px;line-height:1.45}
+    .goalHint{font-size:12px;line-height:1.4;color:var(--muted);margin-top:8px}
+    .startup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,10,16,.84);z-index:20;padding:18px}
+    .startup.hidden{display:none}
+    .startup .card{max-width:560px;width:100%}
+    .startup h1{margin:0 0 10px;font-size:28px}
+    .startup p{margin:0;color:var(--muted);line-height:1.55}
+    .startup .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .btn{appearance:none;background:linear-gradient(180deg,var(--btn2),var(--btn));color:#fff;border-radius:16px;padding:14px 18px;font-weight:900;cursor:pointer}
+    .btn.primary{background:linear-gradient(180deg,#ffd95e,#f4b321);color:#1d1402;border-color:rgba(255,217,94,.45)}
+    .touchHud{position:fixed;left:12px;right:12px;bottom:12px;z-index:10;display:flex;align-items:flex-end;justify-content:space-between;gap:14px;pointer-events:none}
+    .touchLeft{display:flex;flex-direction:column;gap:10px;align-items:center;min-width:150px}
+    .touchRight{display:flex;flex-direction:column;gap:10px;align-items:flex-end;min-width:220px}
+    .joyLabel,.formsLabel{font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--accent);background:rgba(8,18,30,.76);padding:6px 10px;border-radius:999px;border:1px solid var(--line)}
+    .joyWrap{width:148px;height:148px;border-radius:50%;background:rgba(8,18,30,.76);border:2px solid #466787;position:relative;pointer-events:auto;touch-action:none;backdrop-filter:blur(10px)}
+    .joyKnob{position:absolute;left:50px;top:50px;width:48px;height:48px;border-radius:50%;background:#b9d8f3;border:2px solid #45637d;box-shadow:0 8px 22px rgba(0,0,0,.24)}
+    .actionRow{display:flex;gap:10px;align-items:center;pointer-events:auto}
+    .actionBtn{appearance:none;background:linear-gradient(180deg,var(--btn2),var(--btn));color:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;font-weight:900;min-width:152px;cursor:pointer;box-shadow:0 12px 28px rgba(0,0,0,.28)}
+    .actionBtn.primary{background:linear-gradient(180deg,#ffd95e,#f4b321);color:#1d1402;border-color:rgba(255,217,94,.45)}
+    .formsPanel{pointer-events:auto;background:rgba(8,18,30,.76);border:1px solid var(--line);border-radius:20px;padding:10px;backdrop-filter:blur(10px)}
+    .formsGrid{display:grid;grid-template-columns:repeat(2,minmax(92px,1fr));gap:8px;min-width:220px}
+    .formBtn{appearance:none;background:linear-gradient(180deg,var(--btn2),var(--btn));color:#fff;border:1px solid var(--line);border-radius:16px;padding:13px 14px;font-weight:900;cursor:pointer}
+    .formBtn.active{outline:2px solid var(--accent2);border-color:var(--accent2)}
+    .legendText{font-size:11px;color:var(--muted);margin-top:8px;text-align:right;max-width:220px}
+    .desktopOnly{display:none}
+    @media (min-width:900px){
+      .desktopOnly{display:flex;position:fixed;left:10px;right:10px;bottom:10px;z-index:4;justify-content:space-between;gap:10px}
+      .desktopOnly .cluster{display:flex;gap:8px;flex-wrap:wrap}
     }
   </style>
 </head>
@@ -65,55 +68,64 @@
     <div class="pill" id="levelPill">Level: 1 / 3</div>
   </div>
   <div class="hud topRight">
-    <div class="pill" id="hpPill">HP: 100</div>
-    <div class="pill" id="hintPill">Mission: Rescue your friends</div>
-    <div class="pill">3D Adventure</div>
+    <div class="pill" id="statusPill">HP: 100 · Rescue your friends</div>
   </div>
 
   <div class="objectivePanel">
     <div class="card">
-      <div class="objectiveTitle" id="objectiveTitle">Current Goal</div>
-      <div class="objectiveText" id="objectiveText">Rescue all five friends in the level.</div>
-      <div class="objectiveHint" id="objectiveHint">Use different animal forms to cross special terrain.</div>
+      <div class="goalTitle" id="objectiveTitle">Current Goal</div>
+      <div class="goalText" id="objectiveText">Rescue all five friends in the level.</div>
+      <div class="goalHint" id="objectiveHint">Use Bird for gaps, Fish for water, Goat for cliffs.</div>
     </div>
   </div>
 
-  <div class="controls">
-    <div class="btns">
-      <button id="f1">Otis</button>
-      <button id="f2">Bird</button>
-      <button id="f3">Fish</button>
-      <button id="f4">Goat</button>
-    </div>
-    <div class="btns"><button id="search" class="primary">Rescue Friend</button><button id="tilt">Tilt: Off</button><button id="fxBtn">FX: On</button></div>
-  </div>
-  <div class="filmGrain" id="filmGrain"></div>
-
-  <button id="mobileAction" class="mobileAction hidden">Rescue Friend</button>
-
-  <div class="touchHud" id="touchHud">
+  <div class="touchHud">
     <div class="touchLeft">
       <div class="joyLabel">MOVE</div>
       <div class="joyWrap" id="joyWrap"><div class="joyKnob" id="joyKnob"></div></div>
     </div>
     <div class="touchRight">
-      <button id="touchSearch" class="touchBtn">Rescue</button>
-      <button id="touchForm" class="touchBtn">Switch Form</button>
-      <div style="font-size:11px;color:var(--muted);text-align:center;max-width:140px">Bird = gaps · Fish = water · Goat = cliffs</div>
+      <div class="actionRow">
+        <button id="rescueBtn" class="actionBtn primary">Rescue Friend</button>
+      </div>
+      <div class="formsPanel">
+        <div class="formsLabel">FORMS</div>
+        <div class="formsGrid">
+          <button id="form-otis" class="formBtn active">Otis</button>
+          <button id="form-bird" class="formBtn">Bird</button>
+          <button id="form-fish" class="formBtn">Fish</button>
+          <button id="form-goat" class="formBtn">Goat</button>
+        </div>
+        <div class="legendText">Bird = gaps · Fish = water only · Goat = cliffs</div>
+      </div>
     </div>
   </div>
 
-  <div class="overlay hidden" id="controlOverlay">
+  <div class="desktopOnly">
+    <div class="cluster">
+      <button id="desk-otis" class="btn">Otis</button>
+      <button id="desk-bird" class="btn">Bird</button>
+      <button id="desk-fish" class="btn">Fish</button>
+      <button id="desk-goat" class="btn">Goat</button>
+    </div>
+    <div class="cluster">
+      <button id="desk-rescue" class="btn primary">Rescue Friend</button>
+    </div>
+  </div>
+
+  <div class="startup" id="startup">
     <div class="card">
-      <h3 style="margin:0 0 6px">Otis & His Friends</h3>
-      <div style="font-size:14px;line-height:1.5;color:var(--muted)">A guided hide-and-seek adventure. Rescue all five friends in each level using the right animal form for the terrain.</div>
-      <div class="row"><button id="chooseJoystick" class="primary">Joystick</button><button id="chooseTilt">Accelerometer</button></div>
+      <h1>Otis & His Friends</h1>
+      <p>Rescue Otis’s friends by switching into the right animal form for the terrain. This start screen is now just a clean entry point — not a blocking broken control modal.</p>
+      <div class="actions">
+        <button id="startJoystick" class="btn primary">Start with Joystick</button>
+        <button id="startTilt" class="btn">Start with Accelerometer</button>
+      </div>
     </div>
   </div>
 
 <script type="module">
 import * as THREE from 'https://esm.sh/three@0.164.1';
-import { GLTFLoader } from 'https://esm.sh/three@0.164.1/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from 'https://esm.sh/three@0.164.1/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'https://esm.sh/three@0.164.1/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'https://esm.sh/three@0.164.1/examples/jsm/postprocessing/UnrealBloomPass.js';
@@ -134,17 +146,28 @@ scene.fog = new THREE.Fog(0x0a1620, 20, 80);
 
 const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200);
 camera.position.set(0, 8, 10);
-
-const hemi = new THREE.HemisphereLight(0xb7ddff, 0x1f2d19, 0.75); scene.add(hemi);
+scene.add(new THREE.HemisphereLight(0xb7ddff, 0x1f2d19, 0.75));
 const sun = new THREE.DirectionalLight(0xffffff, 1.15); sun.position.set(12,22,9); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048); scene.add(sun);
 const rim = new THREE.DirectionalLight(0xaad7ff, 0.6); rim.position.set(-14,10,-12); scene.add(rim);
 const fill = new THREE.PointLight(0xfff3dc, 0.28, 38); fill.position.set(0,6,8); scene.add(fill);
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
-const bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.28, 0.32, 0.88);
-composer.addPass(bloomPass);
-let fxEnabled = true;
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.28, 0.32, 0.88));
+
+const ui = {
+  startup: document.getElementById('startup'),
+  state: document.getElementById('state'),
+  found: document.getElementById('found'),
+  level: document.getElementById('levelPill'),
+  status: document.getElementById('statusPill'),
+  objectiveTitle: document.getElementById('objectiveTitle'),
+  objectiveText: document.getElementById('objectiveText'),
+  objectiveHint: document.getElementById('objectiveHint'),
+  joyWrap: document.getElementById('joyWrap'),
+  joyKnob: document.getElementById('joyKnob'),
+  rescueBtn: document.getElementById('rescueBtn')
+};
 
 const TILE=1.6, W=64, H=46;
 const map = Array.from({length:H}, ()=>Array(W).fill(0));
@@ -152,98 +175,56 @@ for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(!x||!y||x===W-1||y===H-1) map[y][x]
 const set=(x1,y1,x2,y2,t)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++) map[y][x]=t;};
 set(14,1,14,32,1); set(30,1,30,32,1); set(14,15,14,18,2); set(30,10,30,13,4); set(40,22,43,22,3); set(2,24,13,32,1); set(16,2,29,7,1); set(16,23,29,32,1); set(32,2,46,16,1); set(32,27,46,32,1); set(47,1,W-2,H-2,1); set(2,34,46,H-2,1); set(8,30,40,30,2); set(20,26,22,26,3); set(31,23,31,25,4);
 
-const tileMeshes=[];
-function makeTileTexture(base='#4b9650', speck='#3a7d42', lines='#2f6636'){ const c=document.createElement('canvas'); c.width=128; c.height=128; const x=c.getContext('2d'); x.fillStyle=base; x.fillRect(0,0,128,128); for(let i=0;i<420;i++){ x.fillStyle = i%3===0 ? speck : lines; const px=(Math.random()*128)|0, py=(Math.random()*128)|0, s=1+((Math.random()*3)|0); x.fillRect(px,py,s,s);} const tex=new THREE.CanvasTexture(c); tex.colorSpace=THREE.SRGBColorSpace; tex.wrapS=tex.wrapT=THREE.RepeatWrapping; tex.repeat.set(1,1); tex.anisotropy = renderer.capabilities.getMaxAnisotropy?.() || 8; return tex; }
-const texGrass = makeTileTexture('#4b9650','#6aac63','#2f6636');
-const texTree  = makeTileTexture('#2c5f2c','#3e7a3d','#244e24');
-const texWater = makeTileTexture('#2a79bf','#4aa0de','#22639d');
-const texGap   = makeTileTexture('#111922','#1c2835','#0d1219');
-const texCliff = makeTileTexture('#a38663','#b59875','#7c664a');
-const mats={ grass:new THREE.MeshStandardMaterial({map:texGrass, color:0xffffff, roughness:0.9}), tree:new THREE.MeshStandardMaterial({map:texTree, color:0xffffff, roughness:0.95}), water:new THREE.MeshStandardMaterial({map:texWater, color:0xffffff, roughness:0.2, metalness:0.16}), gap:new THREE.MeshStandardMaterial({map:texGap, color:0xffffff, roughness:1}), cliff:new THREE.MeshStandardMaterial({map:texCliff, color:0xffffff, roughness:0.9}) };
-const gTile = new THREE.BoxGeometry(TILE, 0.35, TILE);
-const gTall = new THREE.BoxGeometry(TILE, 1.8, TILE);
-for(let y=0;y<H;y++) for(let x=0;x<W;x++){ const t=map[y][x]; let geo=gTile, mat=mats.grass, yPos=0; if(t===1){ geo=gTall; mat=mats.tree; yPos=0.7; } if(t===2){ geo=gTile; mat=mats.water; yPos=-0.08; } if(t===3){ geo=gTile; mat=mats.gap; yPos=-0.32; } if(t===4){ geo=gTile; mat=mats.cliff; yPos=0.28; } const m=new THREE.Mesh(geo,mat); m.receiveShadow=true; m.castShadow=t===1||t===5; m.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE); scene.add(m); tileMeshes.push(m); }
+function tex(base,speck,lines){ const c=document.createElement('canvas'); c.width=128; c.height=128; const x=c.getContext('2d'); x.fillStyle=base; x.fillRect(0,0,128,128); for(let i=0;i<420;i++){ x.fillStyle=i%3===0?speck:lines; x.fillRect((Math.random()*128)|0,(Math.random()*128)|0,1+((Math.random()*3)|0),1+((Math.random()*3)|0)); } const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; }
+const mats={ grass:new THREE.MeshStandardMaterial({map:tex('#4b9650','#6aac63','#2f6636'), roughness:0.9}), tree:new THREE.MeshStandardMaterial({map:tex('#2c5f2c','#3e7a3d','#244e24'), roughness:0.95}), water:new THREE.MeshStandardMaterial({map:tex('#2a79bf','#4aa0de','#22639d'), roughness:0.2, metalness:0.16}), gap:new THREE.MeshStandardMaterial({map:tex('#111922','#1c2835','#0d1219'), roughness:1}), cliff:new THREE.MeshStandardMaterial({map:tex('#a38663','#b59875','#7c664a'), roughness:0.9}) };
+const gTile = new THREE.BoxGeometry(TILE, 0.35, TILE), gTall = new THREE.BoxGeometry(TILE, 1.8, TILE);
+for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+  const t=map[y][x]; let geo=gTile, mat=mats.grass, yPos=0;
+  if(t===1){ geo=gTall; mat=mats.tree; yPos=0.7; }
+  if(t===2){ mat=mats.water; yPos=-0.08; }
+  if(t===3){ mat=mats.gap; yPos=-0.32; }
+  if(t===4){ mat=mats.cliff; yPos=0.28; }
+  const mesh=new THREE.Mesh(geo,mat); mesh.receiveShadow=true; mesh.castShadow=t===1; mesh.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE); scene.add(mesh);
+}
 
 const hero = new THREE.Group(); scene.add(hero);
-const avatarRoot = new THREE.Group(); hero.add(avatarRoot);
-const animalRoot = new THREE.Group(); hero.add(animalRoot); animalRoot.visible=false; animalRoot.scale.setScalar(1.45);
+const avatarRoot = new THREE.Group(); const animalRoot = new THREE.Group(); hero.add(avatarRoot); hero.add(animalRoot); animalRoot.visible=false; animalRoot.scale.setScalar(1.45);
 const fallbackBody = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.3,0.8), new THREE.MeshStandardMaterial({color:0xc2616e, roughness:0.7}));
 const fallbackHead = new THREE.Mesh(new THREE.BoxGeometry(0.82,0.82,0.82), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.75})); fallbackHead.position.y=1.05;
 const fallbackHat = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.18,0.95), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6})); fallbackHat.position.y=1.55;
 avatarRoot.add(fallbackBody,fallbackHead,fallbackHat);
+const birdModel = new THREE.Group(); const fishModel = new THREE.Group(); const goatModel = new THREE.Group(); animalRoot.add(birdModel,fishModel,goatModel); birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
+function buildBird(){ const g=new THREE.Group(); const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.18,0.46,8,12),new THREE.MeshStandardMaterial({color:0xb8bed8,roughness:0.52})); body.rotation.z=Math.PI/2; body.position.y=0.55; const wing=new THREE.Mesh(new THREE.BoxGeometry(0.55,0.08,0.28),new THREE.MeshStandardMaterial({color:0xdfe6ff,roughness:0.44})); wing.position.y=0.58; g.add(body,wing); return g; }
+function buildFish(){ const g=new THREE.Group(); const body=new THREE.Mesh(new THREE.SphereGeometry(0.24,16,12),new THREE.MeshStandardMaterial({color:0x8fd3ff,roughness:0.35})); body.scale.set(1.5,0.8,0.7); body.position.y=0.55; const tail=new THREE.Mesh(new THREE.ConeGeometry(0.12,0.28,12),new THREE.MeshStandardMaterial({color:0x6db8f5,roughness:0.4})); tail.rotation.z=-Math.PI/2; tail.position.set(0.34,0.55,0); g.add(body,tail); return g; }
+function buildGoat(){ const g=new THREE.Group(); const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.46,8,12),new THREE.MeshStandardMaterial({color:0xd8c6ad,roughness:0.55})); body.rotation.z=Math.PI/2; body.position.y=0.56; const head=new THREE.Mesh(new THREE.SphereGeometry(0.16,12,12),new THREE.MeshStandardMaterial({color:0xe8d8c2,roughness:0.48})); head.position.set(-0.28,0.62,0); const hornL=new THREE.Mesh(new THREE.ConeGeometry(0.04,0.16,8),new THREE.MeshStandardMaterial({color:0x7d6852,roughness:0.72})); hornL.position.set(-0.34,0.82,0.08); hornL.rotation.z=0.4; const hornR=hornL.clone(); hornR.position.z=-0.08; hornR.rotation.z=-0.4; g.add(body,head,hornL,hornR); return g; }
+birdModel.add(buildBird()); fishModel.add(buildFish()); goatModel.add(buildGoat());
 
-const birdModel = new THREE.Group();
-const fishModel = new THREE.Group();
-const goatModel = new THREE.Group();
-animalRoot.add(birdModel,fishModel,goatModel);
-birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
-function buildBirdLocalModel(){
-  const g=new THREE.Group();
-  const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.16,0.34,8,10), new THREE.MeshStandardMaterial({color:0xb9c4df, roughness:0.46}));
-  body.rotation.z=Math.PI/2; body.position.set(0,0.58,0);
-  const wingL=new THREE.Mesh(new THREE.BoxGeometry(0.34,0.05,0.22), new THREE.MeshStandardMaterial({color:0xe1ebff, roughness:0.4}));
-  wingL.position.set(-0.02,0.62,0.16); wingL.rotation.z=0.25;
-  const wingR=wingL.clone(); wingR.position.z=-0.16; wingR.rotation.z=-0.25;
-  const beak=new THREE.Mesh(new THREE.ConeGeometry(0.04,0.14,8), new THREE.MeshStandardMaterial({color:0xf2c15d, roughness:0.45}));
-  beak.rotation.z=-Math.PI/2; beak.position.set(-0.24,0.62,0);
-  g.add(body,wingL,wingR,beak);
-  return g;
-}
-function buildFishLocalModel(){
-  const g=new THREE.Group();
-  const body=new THREE.Mesh(new THREE.SphereGeometry(0.24,16,12), new THREE.MeshStandardMaterial({color:0x8fd3ff, roughness:0.28, metalness:0.05}));
-  body.scale.set(1.6,0.78,0.7); body.position.y=0.56;
-  const tail=new THREE.Mesh(new THREE.ConeGeometry(0.12,0.24,12), new THREE.MeshStandardMaterial({color:0x63b6ef, roughness:0.34}));
-  tail.rotation.z=-Math.PI/2; tail.position.set(0.35,0.56,0);
-  const finTop=new THREE.Mesh(new THREE.ConeGeometry(0.05,0.14,8), new THREE.MeshStandardMaterial({color:0x6bbef5, roughness:0.36}));
-  finTop.position.set(0.02,0.74,0); finTop.rotation.x=Math.PI;
-  g.add(body,tail,finTop);
-  return g;
-}
-birdModel.add(buildBirdLocalModel());
-fishModel.add(buildFishLocalModel());
-const gltfLoader = new GLTFLoader();
-function fitGLB(targetGroup, gltfScene, {scale=1, rotY=0}={}){ targetGroup.clear(); const root = gltfScene; const box = new THREE.Box3().setFromObject(root); const size = box.getSize(new THREE.Vector3()); const s = scale / (Math.max(size.x,size.y,size.z) || 1); root.scale.setScalar(s); const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3()); root.position.sub(center); root.position.y += 0.25; root.rotation.y = rotY; root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; }}); targetGroup.add(root); }
-function loadAsset(targetGroup, urls, opts={}){ const go=(i)=>{ if(i>=urls.length) return; gltfLoader.load(urls[i], g=>fitGLB(targetGroup,g.scene,opts), undefined, ()=>go(i+1)); }; go(0); }
-function buildGoatLocalModel(){
-  const g=new THREE.Group();
-  const matBody=new THREE.MeshStandardMaterial({color:0xdac8b0, roughness:0.55});
-  const matDark=new THREE.MeshStandardMaterial({color:0x6d5948, roughness:0.72});
-  const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.5,8,12), matBody);
-  torso.rotation.z=Math.PI/2; torso.position.set(0,0.62,0);
-  const neck=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.09,0.26,10), matBody);
-  neck.rotation.z=-0.55; neck.position.set(-0.28,0.74,0);
-  const head=new THREE.Mesh(new THREE.BoxGeometry(0.26,0.18,0.16), matBody);
-  head.position.set(-0.42,0.82,0);
-  const beard=new THREE.Mesh(new THREE.ConeGeometry(0.05,0.12,8), matDark);
-  beard.position.set(-0.48,0.68,0); beard.rotation.z=Math.PI;
-  const hornL=new THREE.Mesh(new THREE.ConeGeometry(0.035,0.16,8), matDark);
-  hornL.position.set(-0.48,0.96,0.07); hornL.rotation.z=0.35;
-  const hornR=hornL.clone(); hornR.position.z=-0.07; hornR.rotation.z=-0.35;
-  const legGeo=new THREE.CapsuleGeometry(0.03,0.26,4,8);
-  const legs=[[-0.12,0.32,0.08],[-0.12,0.32,-0.08],[0.12,0.32,0.08],[0.12,0.32,-0.08]].map(([x,y,z])=>{const l=new THREE.Mesh(legGeo,matDark); l.position.set(x,y,z); return l;});
-  g.add(torso,neck,head,beard,hornL,hornR,...legs);
-  return g;
-}
-function buildFriendOriginalish(seed){
-  const g=new THREE.Group();
-  const palettes=[
-    {body:0xffc6d2,head:0xffe9ee,accent:0xe26b7f},
-    {body:0xffd3db,head:0xffedf1,accent:0xd85f74},
-    {body:0xffbcc8,head:0xffe2e8,accent:0xc75469},
-    {body:0xfec9d6,head:0xffedf1,accent:0xe87f90},
-    {body:0xffd6de,head:0xffeef2,accent:0xdb7083}
-  ];
-  const p=palettes[seed%palettes.length];
-  const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.5,8,12),new THREE.MeshStandardMaterial({color:p.body,roughness:0.64})); body.position.y=0.56;
-  const head=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.56,0.34),new THREE.MeshStandardMaterial({color:p.head,roughness:0.58})); head.position.y=1.15;
-  const eyeL=new THREE.Mesh(new THREE.SphereGeometry(0.025,8,8),new THREE.MeshStandardMaterial({color:0x111111})); eyeL.position.set(-0.09,1.16,0.18);
-  const eyeR=eyeL.clone(); eyeR.position.x=0.09;
-  const accent=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.08,0.12),new THREE.MeshStandardMaterial({color:p.accent,roughness:0.5})); accent.position.set(0,1.42,0.02);
-  const ring=new THREE.Mesh(new THREE.TorusGeometry(0.42,0.025,8,20),new THREE.MeshStandardMaterial({color:0xfff1a6,emissive:0x664d10,roughness:0.3})); ring.rotation.x=Math.PI/2; ring.position.y=0.18;
-  g.add(body,head,eyeL,eyeR,accent,ring);
-  return g;
-}
-loadAsset(birdModel,['https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Parrot.glb','https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Stork.glb'],{scale:1.55, rotY:Math.PI/2});
-loadAsset(fishModel,['https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/BarramundiFish.mixed.glb','https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'],{scale:1.55, rotY:Math.PI/2});
-goatModel.add(buildGoatLocalModel());
+const friendMeshes=[]; const friendPositions=[{x:26,y:12},{x:8,y:15},{x:18,y:9},{x:12,y:22},{x:30,y:18}]; let found=[false,false,false,false,false];
+function buildFriend(seed){ const g=new THREE.Group(); const palette=[0xffc6d2,0xffd3db,0xffbcc8,0xfec9d6,0xffd6de][seed%5]; const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.5,8,12),new THREE.MeshStandardMaterial({color:palette,roughness:0.64})); body.position.y=0.56; const head=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.56,0.34),new THREE.MeshStandardMaterial({color:0xffeef2,roughness:0.58})); head.position.y=1.15; g.add(body,head); return g; }
+friendPositions.forEach((p,i)=>{ const m=buildFriend(i); friendMeshes.push(m); scene.add(m); });
+
+const forms=['otis','bird','fish','goat']; let form='otis'; let controlMode='joystick'; let playing=false; let hp=100; const keys={}; const joy={active:false,x:0,y:0}; const tilt={enabled:false,gamma:0,beta:0}; const heroPos={x:2,y:2}, heroVel={x:0,y:0}, heroGrid={x:2,y:2};
+function setForm(next){ form=next; ui.state.textContent='Form: '+next[0].toUpperCase()+next.slice(1); avatarRoot.visible=(next==='otis'); animalRoot.visible=(next!=='otis'); birdModel.visible=(next==='bird'); fishModel.visible=(next==='fish'); goatModel.visible=(next==='goat'); document.querySelectorAll('.formBtn,.btn').forEach(()=>{}); }
+setForm('otis');
+function canStep(nx,ny){ const t=map[ny]?.[nx]; if(t==null) return false; if(form==='fish') return t===2; if(form==='bird') return t===0||t===3; if(form==='goat') return t===0||t===4; return t===0; }
+function pos(x,y){ return new THREE.Vector3((x-W/2)*TILE,0.8,(y-H/2)*TILE); }
+function updateGoal(){ const rescued=found.filter(Boolean).length; ui.found.textContent=`Friends: ${rescued} / 5`; ui.level.textContent='Level: 1 / 3'; ui.status.textContent=`HP: ${hp} · Rescue your friends`; }
+function rescue(){ friendPositions.forEach((fp,i)=>{ if(!found[i] && Math.abs(heroGrid.x-fp.x)+Math.abs(heroGrid.y-fp.y)<=1) found[i]=true; }); updateGoal(); }
+ui.rescueBtn.onclick=rescue; document.getElementById('desk-rescue').onclick=rescue;
+document.getElementById('form-otis').onclick=()=>setForm('otis'); document.getElementById('form-bird').onclick=()=>setForm('bird'); document.getElementById('form-fish').onclick=()=>setForm('fish'); document.getElementById('form-goat').onclick=()=>setForm('goat');
+document.getElementById('desk-otis').onclick=()=>setForm('otis'); document.getElementById('desk-bird').onclick=()=>setForm('bird'); document.getElementById('desk-fish').onclick=()=>setForm('fish'); document.getElementById('desk-goat').onclick=()=>setForm('goat');
+function onTilt(e){ tilt.gamma=e.gamma||0; tilt.beta=e.beta||0; }
+async function start(mode){ controlMode=mode; if(mode==='accelerometer'){ try{ if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){ const perm=await DeviceOrientationEvent.requestPermission(); if(perm==='granted') addEventListener('deviceorientation', onTilt, {passive:true}); else controlMode='joystick'; } else addEventListener('deviceorientation', onTilt, {passive:true}); }catch{ controlMode='joystick'; } } ui.startup.classList.add('hidden'); playing=true; updateGoal(); }
+document.getElementById('startJoystick').onclick=()=>start('joystick'); document.getElementById('startTilt').onclick=()=>start('accelerometer');
+function resetJoy(){ joy.active=false; joy.x=0; joy.y=0; ui.joyKnob.style.left='50px'; ui.joyKnob.style.top='50px'; }
+function setJoyByPointer(e){ const r=ui.joyWrap.getBoundingClientRect(); const nx=(e.clientX-(r.left+r.width/2))/((r.width/2)-24); const ny=(e.clientY-(r.top+r.height/2))/((r.height/2)-24); const mag=Math.hypot(nx,ny)||1; const c=Math.min(1,mag); joy.x=(nx/mag)*c; joy.y=(ny/mag)*c; joy.active=true; ui.joyKnob.style.left=`${50+joy.x*34}px`; ui.joyKnob.style.top=`${50+joy.y*34}px`; }
+ui.joyWrap.addEventListener('pointerdown',e=>{ ui.joyWrap.setPointerCapture(e.pointerId); setJoyByPointer(e); }); ui.joyWrap.addEventListener('pointermove',e=>{ if(joy.active) setJoyByPointer(e); }); ['pointerup','pointercancel','lostpointercapture'].forEach(evt=>ui.joyWrap.addEventListener(evt,resetJoy));
+addEventListener('keydown',e=>{ keys[e.key]=true; if(e.key===' ') rescue(); }); addEventListener('keyup',e=>{ keys[e.key]=false; });
+const clock=new THREE.Clock(); renderer.setAnimationLoop(()=>{ const dt=Math.min(clock.getDelta(),0.05); if(playing){ let ix=0,iy=0; if(keys.ArrowUp||keys.w) iy-=1; if(keys.ArrowDown||keys.s) iy+=1; if(keys.ArrowLeft||keys.a) ix-=1; if(keys.ArrowRight||keys.d) ix+=1; if(controlMode==='joystick'&&joy.active){ ix=joy.x; iy=joy.y; } else if(controlMode==='accelerometer'){ ix=THREE.MathUtils.clamp(tilt.gamma/24,-1,1); iy=THREE.MathUtils.clamp(tilt.beta/24,-1,1); } const mag=Math.hypot(ix,iy); if(mag>0.12){ ix/=mag; iy/=mag; const maxSpeed=form==='fish'?3.1:form==='bird'?5.4:form==='goat'?4.1:4.9; heroVel.x += (ix*maxSpeed-heroVel.x)*Math.min(1,dt*12); heroVel.y += (iy*maxSpeed-heroVel.y)*Math.min(1,dt*12); } else { heroVel.x*=Math.max(0,1-dt*9); heroVel.y*=Math.max(0,1-dt*9); } const nx=heroPos.x+heroVel.x*dt, ny=heroPos.y+heroVel.y*dt; if(canStep(Math.round(nx),Math.round(heroPos.y))) heroPos.x=nx; else heroVel.x=0; if(canStep(Math.round(heroPos.x),Math.round(ny))) heroPos.y=ny; else heroVel.y=0; heroGrid.x=Math.round(heroPos.x); heroGrid.y=Math.round(heroPos.y); }
+  const hp=pos(heroPos.x,heroPos.y); hero.position.copy(hp); const speed=Math.hypot(heroVel.x,heroVel.y); if(speed>0.03){ const targetYaw=Math.atan2(heroVel.x,heroVel.y); hero.rotation.y += (targetYaw-hero.rotation.y)*0.18; }
+  const t=clock.elapsedTime; friendMeshes.forEach((m,i)=>{ const p=pos(friendPositions[i].x,friendPositions[i].y); m.position.copy(p); m.visible=!found[i]; m.position.y=0.8+Math.sin(t*(2.4+i*0.25))*0.05; });
+  camera.position.x += (hero.position.x-camera.position.x)*0.08; camera.position.y += (6.8-camera.position.y)*0.08; camera.position.z += (hero.position.z+10.5-camera.position.z)*0.08; camera.lookAt(hero.position.x,1.2,hero.position.z); composer.render(); });
+addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio,2)); composer.setSize(innerWidth,innerHeight); });
+</script>
+</body>
+</html>
