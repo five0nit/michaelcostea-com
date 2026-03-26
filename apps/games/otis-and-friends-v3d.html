@@ -180,6 +180,45 @@ birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
 const gltfLoader = new GLTFLoader();
 function fitGLB(targetGroup, gltfScene, {scale=1, rotY=0}={}){ targetGroup.clear(); const root = gltfScene; const box = new THREE.Box3().setFromObject(root); const size = box.getSize(new THREE.Vector3()); const s = scale / (Math.max(size.x,size.y,size.z) || 1); root.scale.setScalar(s); const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3()); root.position.sub(center); root.position.y += 0.25; root.rotation.y = rotY; root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; }}); targetGroup.add(root); }
 function loadAsset(targetGroup, urls, opts={}){ const go=(i)=>{ if(i>=urls.length) return; gltfLoader.load(urls[i], g=>fitGLB(targetGroup,g.scene,opts), undefined, ()=>go(i+1)); }; go(0); }
+function buildGoatLocalModel(){
+  const g=new THREE.Group();
+  const matBody=new THREE.MeshStandardMaterial({color:0xdac8b0, roughness:0.55});
+  const matDark=new THREE.MeshStandardMaterial({color:0x6d5948, roughness:0.72});
+  const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.5,8,12), matBody);
+  torso.rotation.z=Math.PI/2; torso.position.set(0,0.62,0);
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.09,0.26,10), matBody);
+  neck.rotation.z=-0.55; neck.position.set(-0.28,0.74,0);
+  const head=new THREE.Mesh(new THREE.BoxGeometry(0.26,0.18,0.16), matBody);
+  head.position.set(-0.42,0.82,0);
+  const beard=new THREE.Mesh(new THREE.ConeGeometry(0.05,0.12,8), matDark);
+  beard.position.set(-0.48,0.68,0); beard.rotation.z=Math.PI;
+  const hornL=new THREE.Mesh(new THREE.ConeGeometry(0.035,0.16,8), matDark);
+  hornL.position.set(-0.48,0.96,0.07); hornL.rotation.z=0.35;
+  const hornR=hornL.clone(); hornR.position.z=-0.07; hornR.rotation.z=-0.35;
+  const legGeo=new THREE.CapsuleGeometry(0.03,0.26,4,8);
+  const legs=[[-0.12,0.32,0.08],[-0.12,0.32,-0.08],[0.12,0.32,0.08],[0.12,0.32,-0.08]].map(([x,y,z])=>{const l=new THREE.Mesh(legGeo,matDark); l.position.set(x,y,z); return l;});
+  g.add(torso,neck,head,beard,hornL,hornR,...legs);
+  return g;
+}
+function buildFriendOriginalish(seed){
+  const g=new THREE.Group();
+  const palettes=[
+    {body:0xffc6d2,head:0xffe9ee,accent:0xe26b7f},
+    {body:0xffd3db,head:0xffedf1,accent:0xd85f74},
+    {body:0xffbcc8,head:0xffe2e8,accent:0xc75469},
+    {body:0xfec9d6,head:0xffedf1,accent:0xe87f90},
+    {body:0xffd6de,head:0xffeef2,accent:0xdb7083}
+  ];
+  const p=palettes[seed%palettes.length];
+  const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.5,8,12),new THREE.MeshStandardMaterial({color:p.body,roughness:0.64})); body.position.y=0.56;
+  const head=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.56,0.34),new THREE.MeshStandardMaterial({color:p.head,roughness:0.58})); head.position.y=1.15;
+  const eyeL=new THREE.Mesh(new THREE.SphereGeometry(0.025,8,8),new THREE.MeshStandardMaterial({color:0x111111})); eyeL.position.set(-0.09,1.16,0.18);
+  const eyeR=eyeL.clone(); eyeR.position.x=0.09;
+  const accent=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.08,0.12),new THREE.MeshStandardMaterial({color:p.accent,roughness:0.5})); accent.position.set(0,1.42,0.02);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(0.42,0.025,8,20),new THREE.MeshStandardMaterial({color:0xfff1a6,emissive:0x664d10,roughness:0.3})); ring.rotation.x=Math.PI/2; ring.position.y=0.18;
+  g.add(body,head,eyeL,eyeR,accent,ring);
+  return g;
+}
 loadAsset(birdModel,['https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Parrot.glb','https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Stork.glb'],{scale:1.55, rotY:Math.PI/2});
 loadAsset(fishModel,['https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/BarramundiFish.mixed.glb','https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'],{scale:1.55, rotY:Math.PI/2});
-// Intentionally no external fox fallback here. Goat stays goat-like only.
+goatModel.add(buildGoatLocalModel());
