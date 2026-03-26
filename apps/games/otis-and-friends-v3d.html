@@ -177,6 +177,31 @@ const fishModel = new THREE.Group();
 const goatModel = new THREE.Group();
 animalRoot.add(birdModel,fishModel,goatModel);
 birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
+function buildBirdLocalModel(){
+  const g=new THREE.Group();
+  const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.16,0.34,8,10), new THREE.MeshStandardMaterial({color:0xb9c4df, roughness:0.46}));
+  body.rotation.z=Math.PI/2; body.position.set(0,0.58,0);
+  const wingL=new THREE.Mesh(new THREE.BoxGeometry(0.34,0.05,0.22), new THREE.MeshStandardMaterial({color:0xe1ebff, roughness:0.4}));
+  wingL.position.set(-0.02,0.62,0.16); wingL.rotation.z=0.25;
+  const wingR=wingL.clone(); wingR.position.z=-0.16; wingR.rotation.z=-0.25;
+  const beak=new THREE.Mesh(new THREE.ConeGeometry(0.04,0.14,8), new THREE.MeshStandardMaterial({color:0xf2c15d, roughness:0.45}));
+  beak.rotation.z=-Math.PI/2; beak.position.set(-0.24,0.62,0);
+  g.add(body,wingL,wingR,beak);
+  return g;
+}
+function buildFishLocalModel(){
+  const g=new THREE.Group();
+  const body=new THREE.Mesh(new THREE.SphereGeometry(0.24,16,12), new THREE.MeshStandardMaterial({color:0x8fd3ff, roughness:0.28, metalness:0.05}));
+  body.scale.set(1.6,0.78,0.7); body.position.y=0.56;
+  const tail=new THREE.Mesh(new THREE.ConeGeometry(0.12,0.24,12), new THREE.MeshStandardMaterial({color:0x63b6ef, roughness:0.34}));
+  tail.rotation.z=-Math.PI/2; tail.position.set(0.35,0.56,0);
+  const finTop=new THREE.Mesh(new THREE.ConeGeometry(0.05,0.14,8), new THREE.MeshStandardMaterial({color:0x6bbef5, roughness:0.36}));
+  finTop.position.set(0.02,0.74,0); finTop.rotation.x=Math.PI;
+  g.add(body,tail,finTop);
+  return g;
+}
+birdModel.add(buildBirdLocalModel());
+fishModel.add(buildFishLocalModel());
 const gltfLoader = new GLTFLoader();
 function fitGLB(targetGroup, gltfScene, {scale=1, rotY=0}={}){ targetGroup.clear(); const root = gltfScene; const box = new THREE.Box3().setFromObject(root); const size = box.getSize(new THREE.Vector3()); const s = scale / (Math.max(size.x,size.y,size.z) || 1); root.scale.setScalar(s); const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3()); root.position.sub(center); root.position.y += 0.25; root.rotation.y = rotY; root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; }}); targetGroup.add(root); }
 function loadAsset(targetGroup, urls, opts={}){ const go=(i)=>{ if(i>=urls.length) return; gltfLoader.load(urls[i], g=>fitGLB(targetGroup,g.scene,opts), undefined, ()=>go(i+1)); }; go(0); }
