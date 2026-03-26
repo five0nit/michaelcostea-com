@@ -99,6 +99,7 @@
     <div class="touchRight">
       <button id="touchSearch" class="touchBtn">Rescue</button>
       <button id="touchForm" class="touchBtn">Switch Form</button>
+      <div style="font-size:11px;color:var(--muted);text-align:center;max-width:140px">Bird = gaps · Fish = water · Goat = cliffs</div>
     </div>
   </div>
 
@@ -181,4 +182,4 @@ function fitGLB(targetGroup, gltfScene, {scale=1, rotY=0}={}){ targetGroup.clear
 function loadAsset(targetGroup, urls, opts={}){ const go=(i)=>{ if(i>=urls.length) return; gltfLoader.load(urls[i], g=>fitGLB(targetGroup,g.scene,opts), undefined, ()=>go(i+1)); }; go(0); }
 loadAsset(birdModel,['https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Parrot.glb','https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Stork.glb'],{scale:1.55, rotY:Math.PI/2});
 loadAsset(fishModel,['https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/BarramundiFish.mixed.glb','https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'],{scale:1.55, rotY:Math.PI/2});
-loadAsset(goatModel,['https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Fox/glTF-Binary/Fox.glb'],{scale:1.65, rotY:Math.PI/2});
+// Intentionally no external fox fallback here. Goat stays goat-like only.
