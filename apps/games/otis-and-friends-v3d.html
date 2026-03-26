@@ -2,56 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Otis & His Friends 3D</title>
   <style>
     :root{
       --bg:#071018;
-      --panel:rgba(8,18,30,.78);
-      --panel-strong:rgba(8,18,30,.92);
+      --panel:rgba(8,18,30,.82);
+      --panel-strong:rgba(8,18,30,.94);
       --line:#4a6c8a;
       --text:#eaf4ff;
       --muted:#a8c1d8;
       --accent:#ffd95e;
       --accent2:#8df0b1;
     }
+    *{box-sizing:border-box}
     html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Verdana,Arial,sans-serif;color:var(--text)}
-    #c{display:block;width:100%;height:100%}
-    .hud{position:fixed;z-index:5;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
-    .topLeft{top:10px;left:10px;max-width:min(60vw,720px)}
+    #c{display:block;width:100vw;height:100vh}
+    .hud{position:fixed;z-index:6;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
+    .topLeft{top:10px;left:10px;max-width:min(62vw,760px)}
     .topRight{top:10px;right:10px;justify-content:flex-end;max-width:min(40vw,520px)}
-    .objectivePanel{position:fixed;top:72px;right:10px;z-index:5;max-width:340px;pointer-events:none}
-    .controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:4;gap:10px}
+    .objectivePanel{position:fixed;top:72px;right:10px;z-index:6;max-width:360px;pointer-events:none}
+    .controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:5;gap:10px}
     .pill,.card,button{border:1px solid var(--line)}
     .pill{background:var(--panel);color:var(--text);padding:8px 12px;border-radius:999px;font-size:12px;backdrop-filter:blur(10px)}
     .card{background:var(--panel-strong);border-radius:16px;padding:12px 14px;box-shadow:0 14px 34px rgba(0,0,0,.28)}
-    .card h3,.card h4{margin:0 0 6px}
     .objectiveTitle{font-size:14px;font-weight:900;color:var(--accent)}
     .objectiveText{font-size:13px;line-height:1.45;color:var(--text);margin-top:6px}
     .objectiveHint{font-size:12px;line-height:1.4;color:var(--muted);margin-top:8px}
     .controls .btns{display:flex;gap:8px;flex-wrap:wrap}
-    button{background:rgba(24,42,60,.9);color:#fff;border-radius:12px;padding:11px 14px;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+    button{background:rgba(24,42,60,.9);color:#fff;border-radius:12px;padding:11px 14px;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);cursor:pointer}
     button.primary{background:linear-gradient(180deg,#ffd95e,#f4b321);color:#1c1402;border-color:rgba(255,217,94,.45)}
-    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,10,16,.82);z-index:8;padding:16px}
-    .overlay .card{max-width:600px;width:100%}
+    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,10,16,.82);z-index:10;padding:16px}
+    .overlay .card{max-width:620px;width:100%}
     .overlay .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
     .hidden{display:none!important}
-    .touchHud{position:fixed;left:12px;right:12px;bottom:12px;z-index:7;display:none;align-items:flex-end;justify-content:space-between;gap:12px;pointer-events:none}
+    .touchHud{position:fixed;left:12px;right:12px;bottom:12px;z-index:8;display:none;align-items:flex-end;justify-content:space-between;gap:12px;pointer-events:none}
     .touchLeft,.touchRight{display:flex;flex-direction:column;gap:10px;align-items:center}
     .joyLabel{font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--accent);background:rgba(8,18,30,.72);padding:6px 10px;border-radius:999px;border:1px solid var(--line)}
     .joyWrap{width:148px;height:148px;border-radius:50%;background:rgba(8,18,30,.72);border:2px solid #466787;position:relative;touch-action:none;pointer-events:auto;backdrop-filter:blur(10px)}
     .joyKnob{position:absolute;width:48px;height:48px;border-radius:50%;left:50px;top:50px;background:#b9d8f3;border:2px solid #45637d;box-shadow:0 8px 22px rgba(0,0,0,.24)}
-    .mobileAction{position:fixed;right:14px;bottom:126px;z-index:7;min-width:132px;pointer-events:auto;background:linear-gradient(180deg,#1d3954,#13283b);color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:900;box-shadow:0 12px 28px rgba(0,0,0,.28)}
+    .mobileAction{position:fixed;right:14px;bottom:126px;z-index:8;min-width:144px;pointer-events:auto;background:linear-gradient(180deg,#1d3954,#13283b);color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:900;box-shadow:0 12px 28px rgba(0,0,0,.28)}
     .touchBtn{pointer-events:auto;background:linear-gradient(180deg,#1d3954,#13283b);color:#fff;border:none;border-radius:18px;padding:14px 18px;font-weight:900}
-    .filmGrain{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.09;background-image:radial-gradient(rgba(255,255,255,.35) 0.6px, transparent 0.7px);background-size:3px 3px;mix-blend-mode:soft-light;animation:grainShift .25s steps(2) infinite}
+    .filmGrain{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.08;background-image:radial-gradient(rgba(255,255,255,.35) 0.6px, transparent 0.7px);background-size:3px 3px;mix-blend-mode:soft-light;animation:grainShift .25s steps(2) infinite}
     .filmGrain.off{display:none}
     @keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}50%{transform:translate(-1px,1px)}75%{transform:translate(1px,1px)}100%{transform:translate(0,0)}}
-    @media (max-width:900px){
-      .objectivePanel{left:10px;right:10px;top:auto;bottom:194px;max-width:none}
-    }
+    @media (max-width:900px){ .objectivePanel{left:10px;right:10px;top:auto;bottom:196px;max-width:none} }
     @media (max-width:720px){
       .topLeft,.topRight{max-width:calc(100vw - 20px)}
-      .topRight{top:auto;right:10px;bottom:234px;justify-content:flex-start}
+      .topRight{top:auto;right:10px;bottom:236px;justify-content:flex-start}
       .controls{display:none}
       .touchHud{display:flex}
       .objectivePanel{bottom:196px}
@@ -68,26 +66,33 @@
   </div>
   <div class="hud topRight">
     <div class="pill" id="hpPill">HP: 100</div>
-    <div class="pill" id="hintPill">Mission: Find all friends</div>
+    <div class="pill" id="hintPill">Mission: Rescue your friends</div>
     <div class="pill">3D Adventure</div>
   </div>
 
-  <div class="objectivePanel" id="objectivePanel">
+  <div class="objectivePanel">
     <div class="card">
       <div class="objectiveTitle" id="objectiveTitle">Current Goal</div>
-      <div class="objectiveText" id="objectiveText">Explore, transform, and rescue Otis’s hidden friends.</div>
-      <div class="objectiveHint" id="objectiveHint">Use the nearby form buttons when terrain blocks your path.</div>
+      <div class="objectiveText" id="objectiveText">Rescue all five friends in the level.</div>
+      <div class="objectiveHint" id="objectiveHint">Use different animal forms to cross special terrain.</div>
     </div>
   </div>
 
   <div class="controls">
     <div class="btns">
-      <button id="f1">Otis</button><button id="f2">Bird</button><button id="f3">Fish</button><button id="f4">Goat</button>
+      <button id="f1">Otis</button>
+      <button id="f2">Bird</button>
+      <button id="f3">Fish</button>
+      <button id="f4">Goat</button>
     </div>
-    <div class="btns"><button id="search" class="primary">Rescue Friend</button><button id="tilt">Tilt: Off</button><button id="fxBtn">FX: On</button></div>
+    <div class="btns">
+      <button id="search" class="primary">Rescue Friend</button>
+      <button id="tilt">Tilt: Off</button>
+      <button id="fxBtn">FX: On</button>
+    </div>
   </div>
-  <div class="filmGrain" id="filmGrain"></div>
 
+  <div class="filmGrain" id="filmGrain"></div>
   <button id="mobileAction" class="mobileAction hidden">Rescue Friend</button>
 
   <div class="touchHud" id="touchHud">
@@ -104,7 +109,9 @@
   <div class="overlay" id="controlOverlay">
     <div class="card">
       <h3 style="margin:0 0 6px">Otis & His Friends</h3>
-      <div style="font-size:14px;line-height:1.5;color:var(--muted)">A guided hide-and-seek adventure. Rescue all five friends in each level using the right animal form for the terrain.</div>
+      <div style="font-size:14px;line-height:1.5;color:var(--muted)">
+        Otis needs to rescue all his hidden friends. Transform into different animals to cross water, cliffs, and gaps.
+      </div>
       <div class="row">
         <button id="chooseJoystick" class="primary">Start with Joystick</button>
         <button id="chooseTilt">Use Accelerometer</button>
@@ -114,7 +121,6 @@
 
 <script type="module">
 import * as THREE from 'https://esm.sh/three@0.164.1';
-import { GLTFLoader } from 'https://esm.sh/three@0.164.1/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from 'https://esm.sh/three@0.164.1/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'https://esm.sh/three@0.164.1/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'https://esm.sh/three@0.164.1/examples/jsm/postprocessing/UnrealBloomPass.js';
@@ -127,522 +133,355 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.04;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a1620);
-scene.fog = new THREE.Fog(0x0a1620, 20, 80);
+scene.fog = new THREE.Fog(0x0a1620, 18, 74);
 
 const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200);
-camera.position.set(0, 8, 10);
+camera.position.set(0, 7, 9);
 
-const hemi = new THREE.HemisphereLight(0xb7ddff, 0x1f2d19, 0.75); scene.add(hemi);
+scene.add(new THREE.HemisphereLight(0xb7ddff, 0x1f2d19, 0.82));
 const sun = new THREE.DirectionalLight(0xffffff, 1.15); sun.position.set(12,22,9); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048); scene.add(sun);
-const rim = new THREE.DirectionalLight(0xaad7ff, 0.6); rim.position.set(-14,10,-12); scene.add(rim);
+scene.add(new THREE.DirectionalLight(0xaad7ff, 0.5).position.set(-14,10,-12));
 const fill = new THREE.PointLight(0xfff3dc, 0.28, 38); fill.position.set(0,6,8); scene.add(fill);
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
-const bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.28, 0.32, 0.88);
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.22, 0.28, 0.9);
 composer.addPass(bloomPass);
 let fxEnabled = true;
 
-const TILE=1.6, W=64, H=46;
-const map = Array.from({length:H}, ()=>Array(W).fill(0));
-for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(!x||!y||x===W-1||y===H-1) map[y][x]=1;
-const set=(x1,y1,x2,y2,t)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++) map[y][x]=t;};
-
-set(14,1,14,32,1); set(30,1,30,32,1);
-set(14,15,14,18,2);
-set(30,10,30,13,4);
-set(40,22,43,22,3);
-set(2,24,13,32,1); set(16,2,29,7,1); set(16,23,29,32,1);
-set(32,2,46,16,1); set(32,27,46,32,1);
-set(4,5,12,5,1); set(4,10,12,10,1); set(4,15,12,15,1); set(4,20,12,20,1);
-set(18,12,28,12,1); set(18,18,28,18,1);
-set(34,20,39,20,1); set(34,24,39,24,1);
-set(2,2,13,23,0); set(16,14,29,22,0); set(32,9,39,26,0); set(44,20,46,25,0);
-set(6,6,10,9,0); set(6,11,10,14,0); set(6,16,10,19,0);
-set(20,14,23,17,0); set(24,19,28,22,0);
-set(34,11,37,14,0); set(34,21,37,23,0);
-set(6,16,11,19,2); set(20,15,25,18,2); set(34,11,37,13,4); set(44,21,46,24,3);
-set(8,7,9,8,2); set(22,20,23,21,4); set(36,22,37,23,2);
-set(47,1,W-2,H-2,1);
-set(2,34,46,H-2,1);
-set(8,30,40,30,2);
-set(20,26,22,26,3);
-set(31,23,31,25,4);
-
-const tileMeshes=[];
-function makeTileTexture(base='#4b9650', speck='#3a7d42', lines='#2f6636'){
-  const c=document.createElement('canvas'); c.width=128; c.height=128;
-  const x=c.getContext('2d');
-  x.fillStyle=base; x.fillRect(0,0,128,128);
-  for(let i=0;i<420;i++){
-    x.fillStyle = i%3===0 ? speck : lines;
-    const px=(Math.random()*128)|0, py=(Math.random()*128)|0, s=1+((Math.random()*3)|0);
-    x.fillRect(px,py,s,s);
-  }
-  const tex=new THREE.CanvasTexture(c);
-  tex.colorSpace=THREE.SRGBColorSpace;
-  tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
-  tex.repeat.set(1,1);
-  tex.anisotropy = renderer.capabilities.getMaxAnisotropy?.() || 8;
-  return tex;
-}
-const texGrass = makeTileTexture('#4b9650','#6aac63','#2f6636');
-const texTree  = makeTileTexture('#2c5f2c','#3e7a3d','#244e24');
-const texWater = makeTileTexture('#2a79bf','#4aa0de','#22639d');
-const texGap   = makeTileTexture('#111922','#1c2835','#0d1219');
-const texCliff = makeTileTexture('#a38663','#b59875','#7c664a');
-const mats={
-  grass:new THREE.MeshStandardMaterial({map:texGrass, color:0xffffff, roughness:0.9}),
-  tree:new THREE.MeshStandardMaterial({map:texTree, color:0xffffff, roughness:0.95}),
-  water:new THREE.MeshStandardMaterial({map:texWater, color:0xffffff, roughness:0.2, metalness:0.16}),
-  gap:new THREE.MeshStandardMaterial({map:texGap, color:0xffffff, roughness:1}),
-  cliff:new THREE.MeshStandardMaterial({map:texCliff, color:0xffffff, roughness:0.9})
+const ui = {
+  state: document.getElementById('state'),
+  found: document.getElementById('found'),
+  level: document.getElementById('levelPill'),
+  hp: document.getElementById('hpPill'),
+  hint: document.getElementById('hintPill'),
+  objectiveTitle: document.getElementById('objectiveTitle'),
+  objectiveText: document.getElementById('objectiveText'),
+  objectiveHint: document.getElementById('objectiveHint'),
+  touchHud: document.getElementById('touchHud'),
+  mobileAction: document.getElementById('mobileAction'),
+  joyWrap: document.getElementById('joyWrap'),
+  joyKnob: document.getElementById('joyKnob')
 };
-const gTile = new THREE.BoxGeometry(TILE, 0.35, TILE);
-const gTall = new THREE.BoxGeometry(TILE, 1.8, TILE);
-for(let y=0;y<H;y++) for(let x=0;x<W;x++){
-  const t=map[y][x];
-  let geo=gTile, mat=mats.grass, yPos=0;
-  if(t===1){ geo=gTall; mat=mats.tree; yPos=0.7; }
-  if(t===2){ geo=gTile; mat=mats.water; yPos=-0.08; }
-  if(t===3){ geo=gTile; mat=mats.gap; yPos=-0.32; }
-  if(t===4){ geo=gTile; mat=mats.cliff; yPos=0.28; }
-  const m=new THREE.Mesh(geo,mat); m.receiveShadow=true; m.castShadow=t===1||t===5;
-  m.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE);
-  scene.add(m); tileMeshes.push(m);
-  if(t===0 && (x*7+y*11)%9===0){
-    const ring = new THREE.Mesh(new THREE.RingGeometry(0.18,0.26,16), new THREE.MeshStandardMaterial({color:0x3f7f47, roughness:0.95, side:THREE.DoubleSide}));
-    ring.rotation.x = -Math.PI/2;
-    ring.position.set((x-W/2)*TILE + (((x+y)%3)-1)*0.12, 0.182, (y-H/2)*TILE + (((x*2+y)%3)-1)*0.1);
-    scene.add(ring);
-  }
-}
 
-const env = new THREE.Group(); scene.add(env);
-const tuftMat = new THREE.MeshStandardMaterial({color:0x3d7f45, roughness:0.92});
-const reedMat = new THREE.MeshStandardMaterial({color:0x9cd79f, roughness:0.85});
-const rockMat = new THREE.MeshStandardMaterial({color:0x9ea5ab, roughness:0.88});
-const crystalMat = new THREE.MeshPhysicalMaterial({color:0x8fd3ff, roughness:0.2, transmission:0.2, clearcoat:0.4});
-for(let y=1;y<H-1;y++) for(let x=1;x<W-1;x++){
-  const t=map[y][x];
-  const px=(x-W/2)*TILE, pz=(y-H/2)*TILE;
-  if(t===0 && (x*13+y*7)%11===0){
-    const tuft=new THREE.Mesh(new THREE.ConeGeometry(0.08,0.24,6), tuftMat);
-    tuft.position.set(px + (((x*3)%5)-2)*0.09, 0.18, pz + (((y*7)%5)-2)*0.09);
-    env.add(tuft);
-  }
-  if(t===2 && (x+y)%4===0){
-    const reed=new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.018,0.3,6), reedMat);
-    reed.position.set(px+0.22,0.08,pz-0.18); env.add(reed);
-  }
-  if(t===4 && (x*5+y*3)%5===0){
-    const rock=new THREE.Mesh(new THREE.DodecahedronGeometry(0.12,0), rockMat);
-    rock.position.set(px-0.18,0.44,pz+0.1); env.add(rock);
-  }
-  if(t===3 && (x+y)%6===0){
-    const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(0.11,0), crystalMat);
-    crystal.position.set(px,0.02,pz); env.add(crystal);
-  }
-}
+const TILE=1.7, W=28, H=22;
+const tiles=[];
+const tileState=[];
+const friendMeshes=[];
+const decoyMeshes=[];
+const map = Array.from({length:H},()=>Array(W).fill(0));
+const hero = new THREE.Group();
+scene.add(hero);
+const avatarRoot = new THREE.Group();
+const animalRoot = new THREE.Group();
+hero.add(avatarRoot); hero.add(animalRoot); animalRoot.visible=false;
 
-const hero = new THREE.Group(); scene.add(hero);
-const avatarRoot = new THREE.Group(); hero.add(avatarRoot);
-const animalRoot = new THREE.Group(); hero.add(animalRoot); animalRoot.visible=false; animalRoot.scale.setScalar(1.45);
-
-const fallbackBody = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.3,0.8), new THREE.MeshStandardMaterial({color:0xc2616e, roughness:0.7}));
-const fallbackHead = new THREE.Mesh(new THREE.BoxGeometry(0.82,0.82,0.82), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.75})); fallbackHead.position.y=1.05;
-const fallbackHat = new THREE.Mesh(new THREE.BoxGeometry(0.95,0.18,0.95), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.6})); fallbackHat.position.y=1.55;
-const fallbackPatch = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.1,0.02), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); fallbackPatch.position.set(0.14,1.1,0.42);
-avatarRoot.add(fallbackBody,fallbackHead,fallbackHat,fallbackPatch);
-
-const gltfLoader = new GLTFLoader();
-function fitGLB(targetGroup, gltfScene, {scale=1, rotY=0}={}){
-  targetGroup.clear();
-  const root = gltfScene;
-  const box = new THREE.Box3().setFromObject(root);
-  const size = box.getSize(new THREE.Vector3());
-  const s = scale / (Math.max(size.x,size.y,size.z) || 1);
-  root.scale.setScalar(s);
-  const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
-  root.position.sub(center);
-  root.position.y += 0.25;
-  root.rotation.y = rotY;
-  root.traverse(n=>{ if(n.isMesh){ n.castShadow=true; n.receiveShadow=true; }});
-  targetGroup.add(root);
-}
-function loadAsset(targetGroup, urls, opts={}){
-  const go=(i)=>{ if(i>=urls.length) return; gltfLoader.load(urls[i], g=>fitGLB(targetGroup,g.scene,opts), undefined, ()=>go(i+1)); };
-  go(0);
-}
-
-const birdModel = new THREE.Group();
-const fishModel = new THREE.Group();
-const goatModel = new THREE.Group();
-animalRoot.add(birdModel,fishModel,goatModel);
-birdModel.visible=false; fishModel.visible=false; goatModel.visible=false;
-loadAsset(birdModel,[
-  'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Parrot.glb',
-  'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Flamingo.glb',
-  'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Stork.glb'
-],{scale:1.55, rotY:Math.PI/2});
-loadAsset(fishModel,[
-  'https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/BarramundiFish.mixed.glb',
-  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb'
-],{scale:1.55, rotY:Math.PI/2});
-loadAsset(goatModel,[
-  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/Fox/glTF-Binary/Fox.glb',
-  'https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/Horse.glb'
-],{scale:1.65, rotY:Math.PI/2});
-
-const otisCore = new THREE.Group(); avatarRoot.add(otisCore);
-const otisBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.7,10,16), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.56})); otisBody.position.y=0.62;
-const otisHead = new THREE.Mesh(new THREE.SphereGeometry(0.36,24,20), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.62})); otisHead.position.set(-0.02,1.36,0.02);
-const otisEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.035,10,10), new THREE.MeshStandardMaterial({color:0x101010})); otisEyeL.position.set(-0.14,1.4,0.3);
-const otisEyeR = otisEyeL.clone(); otisEyeR.position.x=0.0;
-const otisEyePatch = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.14,0.03), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); otisEyePatch.position.set(0.16,1.38,0.29);
-const otisMouth = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.07,0.02), new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.52})); otisMouth.position.set(-0.04,1.2,0.29);
-const otisHatTop = new THREE.Mesh(new THREE.CylinderGeometry(0.34,0.3,0.18,18), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.42})); otisHatTop.position.set(-0.03,1.72,0.02);
-const otisHatBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.46,0.46,0.05,22), new THREE.MeshStandardMaterial({color:0xbf3c50, roughness:0.48})); otisHatBrim.position.set(-0.03,1.62,0.08);
-const otisArmL = new THREE.Mesh(new THREE.CapsuleGeometry(0.05,0.62,6,12), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.66})); otisArmL.position.set(-0.42,0.72,0.0);
-const otisArmR = otisArmL.clone(); otisArmR.position.x=0.42;
-const otisLegL = new THREE.Mesh(new THREE.CapsuleGeometry(0.07,0.72,8,12), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.6})); otisLegL.position.set(-0.12,-0.04,0.0);
-const otisLegR = otisLegL.clone(); otisLegR.position.x=0.12;
-const otisShoeL = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.09,0.28), new THREE.MeshStandardMaterial({color:0x4a1b22, roughness:0.72})); otisShoeL.position.set(-0.12,-0.48,0.11);
-const otisShoeR = otisShoeL.clone(); otisShoeR.position.x=0.12;
-otisCore.add(otisBody,otisHead,otisEyeL,otisEyeR,otisEyePatch,otisMouth,otisHatTop,otisHatBrim,otisArmL,otisArmR,otisLegL,otisLegR,otisShoeL,otisShoeR);
-const otisRig = {armL:otisArmL, armR:otisArmR, legL:otisLegL, legR:otisLegR, shoeL:otisShoeL, shoeR:otisShoeR, body:otisBody};
-
-function buildFriendVariant(kind){
-  if(kind===0){
-    const g=new THREE.Group();
-    const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.74,8,14), new THREE.MeshPhysicalMaterial({color:0xffb7c0, roughness:0.62})); body.position.y=0.62;
-    const head=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.72,0.68), new THREE.MeshPhysicalMaterial({color:0xffd9de, roughness:0.58, clearcoat:0.15})); head.position.y=1.4;
-    g.add(body,head); return g;
-  }
-  if(kind===1){
-    const g=new THREE.Group();
-    const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.88,8,14), new THREE.MeshPhysicalMaterial({color:0xffbec8, roughness:0.64})); torso.position.y=0.56;
-    const head=new THREE.Mesh(new THREE.BoxGeometry(0.98,0.78,0.72), new THREE.MeshPhysicalMaterial({color:0xffe6eb, roughness:0.56, clearcoat:0.12})); head.position.y=1.45;
-    g.add(torso,head); return g;
-  }
-  if(kind===2){
-    const g=new THREE.Group();
-    const body=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.45,0.42), new THREE.MeshPhysicalMaterial({color:0xffd9de, roughness:0.58})); body.position.set(0,0.95,0);
-    g.add(body); return g;
-  }
-  const g=new THREE.Group();
-  const body=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.68,0.36), new THREE.MeshStandardMaterial({color:0xffc1ca, roughness:0.66})); body.position.y=0.5; g.add(body); return g;
-}
-const friendModels=[0,1,2,3,4].map(i=>buildFriendVariant(i));
-friendModels.forEach(f=>scene.add(f));
-
-const stateEl=document.getElementById('state'), foundEl=document.getElementById('found');
-const levelPill=document.getElementById('levelPill'), hpPill=document.getElementById('hpPill');
-const hintPill=document.getElementById('hintPill');
-const objectiveTitle=document.getElementById('objectiveTitle');
-const objectiveText=document.getElementById('objectiveText');
-const objectiveHint=document.getElementById('objectiveHint');
-const forms=['otis','bird','fish','goat']; let form='otis';
-let heroGrid={x:2,y:2};
+const forms=['otis','bird','fish','goat'];
+let form='otis';
+let currentLevel=1;
+let playing=false;
+let fxOn=true;
+let hp=100;
+let rescued=0;
+let friendPositions=[];
+let decoyPositions=[];
+let found=[];
+let controlMode='joystick';
+const keys={};
+const tilt={enabled:false,gamma:0,beta:0};
+const joy={active:false,x:0,y:0};
 const heroPos={x:2,y:2};
 const heroVel={x:0,y:0};
-let found=[false,false,false,false,false];
-let hp=100;
-let currentLevel=1;
-let friendPositions=[];
-let decoys=[];
-let rescuedCount=0;
-let playing=false;
-let controlMode='joystick';
-const tiltState={enabled:false,gamma:0,beta:0};
-const joyState={active:false,x:0,y:0};
-const decoyMeshes=[];
+const heroGrid={x:2,y:2};
 
 const levels=[
-  { hero:{x:2,y:2}, friends:[{x:26,y:12},{x:8,y:15},{x:18,y:9},{x:12,y:22},{x:30,y:18}], decoys:[{x:9,y:8},{x:18,y:17}], intro:'Level 1: Learn the world. Rescue all five friends and get used to switching forms.' },
-  { hero:{x:2,y:2}, friends:[{x:36,y:22},{x:12,y:18},{x:24,y:24},{x:28,y:11},{x:40,y:20}], decoys:[{x:9,y:8},{x:24,y:21},{x:27,y:16},{x:34,y:18}], intro:'Level 2: The map opens up. Use bird, fish, and goat forms more deliberately.' },
-  { hero:{x:2,y:2}, friends:[{x:45,y:24},{x:11,y:18},{x:32,y:26},{x:22,y:14},{x:41,y:29}], decoys:[{x:9,y:8},{x:24,y:21},{x:36,y:22},{x:27,y:16},{x:42,y:24},{x:30,y:27}], intro:'Level 3: Final rescue run. Read terrain carefully and avoid decoys.' }
+  {
+    intro:'Level 1: Rescue all 5 friends. Learn each form and how terrain works.',
+    hero:{x:2,y:2},
+    friends:[{x:5,y:4},{x:11,y:6},{x:16,y:9},{x:8,y:14},{x:20,y:16}],
+    decoys:[{x:14,y:5},{x:18,y:12}],
+    water:[[7,3,9,5],[15,12,18,14]],
+    gaps:[[12,8,13,8]],
+    cliffs:[[19,6,20,7]]
+  },
+  {
+    intro:'Level 2: Use forms more deliberately. Water, cliffs, and gaps matter more here.',
+    hero:{x:2,y:2},
+    friends:[{x:6,y:6},{x:13,y:4},{x:19,y:8},{x:10,y:15},{x:22,y:16}],
+    decoys:[{x:8,y:10},{x:17,y:13},{x:22,y:6}],
+    water:[[5,11,9,13],[16,3,18,6]],
+    gaps:[[12,10,14,10],[20,11,21,11]],
+    cliffs:[[18,15,21,16]]
+  },
+  {
+    intro:'Level 3: Final rescue run. Read terrain well and avoid decoys while switching forms fast.',
+    hero:{x:2,y:2},
+    friends:[{x:7,y:5},{x:14,y:7},{x:20,y:5},{x:12,y:16},{x:23,y:15}],
+    decoys:[{x:10,y:10},{x:17,y:9},{x:21,y:12},{x:15,y:18}],
+    water:[[4,8,8,10],[17,13,20,15]],
+    gaps:[[11,6,12,6],[19,9,21,9]],
+    cliffs:[[13,14,16,15]]
+  }
 ];
 
-function posFromGrid(g){ return new THREE.Vector3((g.x-W/2)*TILE,0.8,(g.y-H/2)*TILE); }
+function buildWorld(){
+  const tex = (base, speck, lines)=>{
+    const c=document.createElement('canvas'); c.width=128; c.height=128;
+    const x=c.getContext('2d'); x.fillStyle=base; x.fillRect(0,0,128,128);
+    for(let i=0;i<300;i++){ x.fillStyle=i%3===0?speck:lines; x.fillRect((Math.random()*128)|0,(Math.random()*128)|0,1+((Math.random()*3)|0),1+((Math.random()*3)|0)); }
+    const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
+  };
+  const mats={
+    grass:new THREE.MeshStandardMaterial({map:tex('#4b9650','#6aac63','#2f6636'), roughness:0.92}),
+    wall:new THREE.MeshStandardMaterial({map:tex('#2c5f2c','#3e7a3d','#244e24'), roughness:0.95}),
+    water:new THREE.MeshStandardMaterial({map:tex('#2a79bf','#4aa0de','#22639d'), roughness:0.18, metalness:0.14}),
+    gap:new THREE.MeshStandardMaterial({map:tex('#111922','#1c2835','#0d1219'), roughness:1}),
+    cliff:new THREE.MeshStandardMaterial({map:tex('#a38663','#b59875','#7c664a'), roughness:0.9})
+  };
+  const gTile = new THREE.BoxGeometry(TILE,0.35,TILE);
+  const gWall = new THREE.BoxGeometry(TILE,1.9,TILE);
+  for(let y=0;y<H;y++){
+    tiles[y]=[]; tileState[y]=[];
+    for(let x=0;x<W;x++){
+      let type=0;
+      if(!x||!y||x===W-1||y===H-1) type=1;
+      map[y][x]=type; tileState[y][x]=type;
+      const mesh=new THREE.Mesh(gTile,mats.grass);
+      mesh.receiveShadow=true;
+      mesh.position.set((x-W/2)*TILE,0,(y-H/2)*TILE);
+      scene.add(mesh); tiles[y][x]=mesh;
+    }
+  }
+  scene.userData.mats=mats; scene.userData.gWall=gWall;
+}
+
+function applyZoneRect(rects, type){
+  rects.forEach(([x1,y1,x2,y2])=>{ for(let y=y1;y<=y2;y++) for(let x=x1;x<=x2;x++) map[y][x]=type; });
+}
+
+function rebuildLevel(levelIndex){
+  const cfg=levels[levelIndex-1];
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++) map[y][x]=(!x||!y||x===W-1||y===H-1)?1:0;
+  applyZoneRect(cfg.water,2); applyZoneRect(cfg.gaps,3); applyZoneRect(cfg.cliffs,4);
+  for(let x=4;x<24;x+=4){ map[9][x]=1; }
+  for(let y=4;y<18;y+=4){ map[y][15]=1; }
+  map[9][8]=0; map[9][12]=0; map[13][15]=0; map[5][15]=0;
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const t=map[y][x]; const mesh=tiles[y][x];
+    let mat=scene.userData.mats.grass, yPos=0, geo=mesh.geometry;
+    if(t===1){ mat=scene.userData.mats.wall; yPos=0.75; geo=scene.userData.gWall; }
+    if(t===2){ mat=scene.userData.mats.water; yPos=-0.08; geo=mesh.geometry; }
+    if(t===3){ mat=scene.userData.mats.gap; yPos=-0.3; geo=mesh.geometry; }
+    if(t===4){ mat=scene.userData.mats.cliff; yPos=0.25; geo=mesh.geometry; }
+    mesh.material=mat; mesh.geometry=geo; mesh.position.set((x-W/2)*TILE,yPos,(y-H/2)*TILE);
+    mesh.castShadow=t===1; mesh.receiveShadow=true;
+  }
+  friendMeshes.forEach(m=>scene.remove(m)); friendMeshes.length=0;
+  decoyMeshes.forEach(m=>scene.remove(m)); decoyMeshes.length=0;
+  friendPositions=cfg.friends.map(v=>({...v})); decoyPositions=cfg.decoys.map(v=>({...v})); found=friendPositions.map(()=>false); rescued=0;
+  friendPositions.forEach((p,i)=>{ const m=buildFriend(i); friendMeshes.push(m); scene.add(m); });
+  decoyPositions.forEach((p)=>{ const m=buildDecoy(); decoyMeshes.push(m); scene.add(m); });
+  heroPos.x=cfg.hero.x; heroPos.y=cfg.hero.y; heroVel.x=0; heroVel.y=0; heroGrid.x=cfg.hero.x; heroGrid.y=cfg.hero.y;
+  hp=100; currentLevel=levelIndex;
+  ui.found.textContent='Friends: 0 / 5'; ui.hp.textContent='HP: 100'; ui.level.textContent=`Level: ${currentLevel} / 3`;
+  ui.objectiveTitle.textContent=`Rescue ${5-rescued} friends in Level ${currentLevel}`;
+  ui.objectiveText.textContent=cfg.intro;
+  ui.objectiveHint.textContent='Bird crosses gaps, Fish swims, Goat climbs cliffs.';
+  ui.hint.textContent='Mission: Rescue your friends';
+}
+
+function buildFriend(seed){
+  const g=new THREE.Group();
+  const colors=[0xffb7c0,0xffe6eb,0xffd9de,0xffc1ca,0xffcad5];
+  const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.54,8,12), new THREE.MeshStandardMaterial({color:colors[seed%colors.length], roughness:0.62}));
+  body.position.y=0.62;
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.28,18,16), new THREE.MeshStandardMaterial({color:0xffe6e6, roughness:0.58}));
+  head.position.y=1.2;
+  const eyeL=new THREE.Mesh(new THREE.SphereGeometry(0.03,8,8), new THREE.MeshStandardMaterial({color:0x111111})); eyeL.position.set(-0.08,1.22,0.22);
+  const eyeR=eyeL.clone(); eyeR.position.x=0.08;
+  const glow=new THREE.Mesh(new THREE.TorusGeometry(0.48,0.03,8,20), new THREE.MeshStandardMaterial({color:0xfff1a6, emissive:0x664d10, roughness:0.3})); glow.rotation.x=Math.PI/2; glow.position.y=0.25;
+  g.add(body,head,eyeL,eyeR,glow); return g;
+}
 function buildDecoy(){
-  const g = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.4,6,10), new THREE.MeshStandardMaterial({color:0xe7bf5e, roughness:0.65}));
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,14,12), new THREE.MeshStandardMaterial({color:0xf3d67c, roughness:0.55})); head.position.y=0.42;
+  const g=new THREE.Group();
+  const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.38,6,10), new THREE.MeshStandardMaterial({color:0xe7bf5e, roughness:0.65})); body.position.y=0.45;
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.18,12,12), new THREE.MeshStandardMaterial({color:0xf3d67c, roughness:0.55})); head.position.y=0.9;
   g.add(body,head); g.userData.hitAt=0; return g;
 }
-function clearDecoys(){ while(decoyMeshes.length){ const d=decoyMeshes.pop(); scene.remove(d);} }
+function buildOtis(){
+  const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.7,10,16), new THREE.MeshStandardMaterial({color:0xc45f6c, roughness:0.56})); body.position.y=0.62;
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.36,24,20), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.62})); head.position.set(-0.02,1.36,0.02);
+  const eyePatch=new THREE.Mesh(new THREE.BoxGeometry(0.2,0.14,0.03), new THREE.MeshStandardMaterial({color:0x7a1f28, roughness:0.7})); eyePatch.position.set(0.16,1.38,0.29);
+  const armL=new THREE.Mesh(new THREE.CapsuleGeometry(0.05,0.62,6,12), new THREE.MeshStandardMaterial({color:0xf1d6b5, roughness:0.66})); armL.position.set(-0.42,0.72,0.0);
+  const armR=armL.clone(); armR.position.x=0.42;
+  const legL=new THREE.Mesh(new THREE.CapsuleGeometry(0.07,0.72,8,12), new THREE.MeshStandardMaterial({color:0x8b3340, roughness:0.6})); legL.position.set(-0.12,-0.04,0.0);
+  const legR=legL.clone(); legR.position.x=0.12;
+  const shoeL=new THREE.Mesh(new THREE.BoxGeometry(0.2,0.09,0.28), new THREE.MeshStandardMaterial({color:0x4a1b22, roughness:0.72})); shoeL.position.set(-0.12,-0.48,0.11);
+  const shoeR=shoeL.clone(); shoeR.position.x=0.12;
+  const hat=new THREE.Mesh(new THREE.CylinderGeometry(0.34,0.3,0.18,18), new THREE.MeshStandardMaterial({color:0xd94f63, roughness:0.42})); hat.position.set(-0.03,1.72,0.02);
+  avatarRoot.add(body,head,eyePatch,armL,armR,legL,legR,shoeL,shoeR,hat);
+  return {body,armL,armR,legL,legR,shoeL,shoeR};
+}
+function buildAnimal(color=0xd8d8d8){
+  const g=new THREE.Group();
+  const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.6,8,12), new THREE.MeshStandardMaterial({color, roughness:0.55})); body.rotation.z=Math.PI/2;
+  body.position.y=0.55; g.add(body); return g;
+}
+const otisRig=buildOtis();
+const bird=buildAnimal(0xb6b6d9), fish=buildAnimal(0x8fd3ff), goat=buildAnimal(0xcdb89b);
+animalRoot.add(bird,fish,goat); bird.visible=false; fish.visible=false; goat.visible=false;
+
+function setForm(next){
+  form=next;
+  ui.state.textContent='Form: '+next[0].toUpperCase()+next.slice(1);
+  avatarRoot.visible=(next==='otis'); animalRoot.visible=(next!=='otis');
+  bird.visible=(next==='bird'); fish.visible=(next==='fish'); goat.visible=(next==='goat');
+  ui.objectiveHint.textContent = next==='bird' ? 'Bird crosses gaps.' : next==='fish' ? 'Fish swims across water.' : next==='goat' ? 'Goat climbs cliffs.' : 'Switch forms when terrain blocks you.';
+}
+setForm('otis');
+
+function canStep(nx,ny){
+  const t=map[ny]?.[nx]; if(t==null) return false;
+  if(form==='fish') return t===0 || t===2;
+  if(form==='bird') return t===0 || t===3;
+  if(form==='goat') return t===0 || t===4;
+  return t===0;
+}
+function posFromGrid(g){ return new THREE.Vector3((g.x-W/2)*TILE,0.8,(g.y-H/2)*TILE); }
+function updateWorldPositions(){
+  hero.position.copy(posFromGrid({x:heroPos.x,y:heroPos.y}));
+  friendMeshes.forEach((m,i)=>{ const p=posFromGrid(friendPositions[i]); m.position.copy(p); m.visible=!found[i]; });
+  decoyMeshes.forEach((m,i)=>{ const p=posFromGrid(decoyPositions[i]); m.position.copy(p); });
+}
 function nearestFriendDistance(){
   const remaining=friendPositions.filter((_,i)=>!found[i]);
   if(!remaining.length) return 0;
   return Math.min(...remaining.map(fp=>Math.abs(heroGrid.x-fp.x)+Math.abs(heroGrid.y-fp.y)));
 }
 function updateObjective(){
-  const remaining = 5 - rescuedCount;
-  objectiveTitle.textContent = remaining>0 ? `Rescue ${remaining} friend${remaining===1?'':'s'} in Level ${currentLevel}` : `Level ${currentLevel} cleared`;
-  const near = nearestFriendDistance();
-  if(remaining<=0){
-    objectiveText.textContent = currentLevel<3 ? 'Nice. The next level will begin automatically.' : 'You found everyone. Otis and all friends are safe.';
-    objectiveHint.textContent = 'Great run.';
-    hintPill.textContent='Mission complete';
+  const remaining=5-rescued;
+  ui.objectiveTitle.textContent = remaining>0 ? `Rescue ${remaining} friend${remaining===1?'':'s'} in Level ${currentLevel}` : `Level ${currentLevel} complete`;
+  if(remaining===0){
+    ui.objectiveText.textContent = currentLevel<3 ? 'Nice work. Next level loading…' : 'Otis rescued everyone. Adventure complete.';
+    ui.objectiveHint.textContent = currentLevel<3 ? 'Get ready for the next rescue zone.' : 'Refresh to play again.';
+    ui.hint.textContent='Mission complete';
     return;
   }
+  const near=nearestFriendDistance();
   if(near<=2){
-    objectiveText.textContent = 'A friend is close. Hit Rescue Friend now.';
-    objectiveHint.textContent = 'Use Rescue when you are right next to a hidden friend.';
-    hintPill.textContent='Friend nearby';
+    ui.objectiveText.textContent='A friend is close. Hit Rescue Friend now.';
+    ui.objectiveHint.textContent='You need to stand right beside a friend to rescue them.';
+    ui.hint.textContent='Friend nearby';
   } else {
-    objectiveText.textContent = levels[currentLevel-1].intro;
-    const formHint = form==='otis' ? 'Switch forms when terrain blocks you.' : `Current form: ${form[0].toUpperCase()+form.slice(1)}.`;
-    objectiveHint.textContent = formHint;
-    hintPill.textContent='Keep exploring';
+    ui.objectiveText.textContent=levels[currentLevel-1].intro;
+    ui.hint.textContent='Keep exploring';
   }
 }
-function initLevel(level){
-  const cfg=levels[level-1];
-  currentLevel=level;
-  heroGrid={x:cfg.hero.x,y:cfg.hero.y};
-  heroPos.x=cfg.hero.x; heroPos.y=cfg.hero.y; heroVel.x=0; heroVel.y=0;
-  friendPositions=cfg.friends.map(v=>({...v}));
-  decoys=cfg.decoys.map(v=>({...v}));
-  found=[false,false,false,false,false];
-  rescuedCount=0;
-  friendModels.forEach(m=>m.visible=true);
-  foundEl.textContent='Friends: 0 / 5';
-  levelPill.textContent=`Level: ${currentLevel} / 3`;
-  hp=100; hpPill.textContent='HP: 100';
-  clearDecoys();
-  decoys.forEach((d)=>{ const m=buildDecoy(); const p=posFromGrid(d); m.position.set(p.x,0.55,p.z); scene.add(m); decoyMeshes.push(m); });
-  updateObjective();
-}
-function place(){
-  hero.position.copy(posFromGrid({x:heroPos.x,y:heroPos.y}));
-  friendModels.forEach((m,i)=>{ const p=posFromGrid(friendPositions[i]); m.position.copy(p); });
-  const tNow = performance.now()*0.001;
-  decoyMeshes.forEach((m,i)=>{ const p=posFromGrid(decoys[i]); m.position.set(p.x,0.55 + Math.sin(tNow*3+i)*0.02,p.z); m.rotation.y += 0.01; });
-}
-initLevel(1); place();
-
-function setForm(f){
-  form=f; stateEl.textContent='Form: '+f[0].toUpperCase()+f.slice(1);
-  avatarRoot.visible = (f==='otis');
-  animalRoot.visible = (f!=='otis');
-  birdModel.visible = (f==='bird');
-  fishModel.visible = (f==='fish');
-  goatModel.visible = (f==='goat');
-  birdModel.scale.setScalar(f==='bird'?1.05:0.95);
-  fishModel.scale.set(f==='fish'?1.1:0.95, f==='fish'?1.1:0.95, f==='fish'?1.1:0.95);
-  goatModel.scale.setScalar(f==='goat'?1.12:0.96);
-  updateObjective();
-}
-setForm('otis');
-
-function canStep(nx,ny){
-  const t=map[ny]?.[nx]; if(t==null) return false;
-  const nearWater = (x,y)=> [ [1,0],[-1,0],[0,1],[0,-1] ].some(([dx,dy])=>map[y+dy]?.[x+dx]===2);
-  if(form==='fish') return t===2 || (t===0 && nearWater(nx,ny));
-  if(t===1) return false;
-  if(t===2) return false;
-  if(t===3) return form==='bird';
-  if(t===4) return form==='goat';
-  return true;
-}
-
-addEventListener('keydown',e=>{keys[e.key]=true; if(e.key==='1')setForm('otis'); if(e.key==='2')setForm('bird'); if(e.key==='3')setForm('fish'); if(e.key==='4')setForm('goat'); if(e.key===' ')search();});
-addEventListener('keyup',e=>{keys[e.key]=false;});
-
-function search(){
-  let rescuedThisPress=false;
+function rescue(){
+  let gotOne=false;
   friendPositions.forEach((fp,i)=>{
-    if(!found[i] && Math.abs(heroGrid.x-fp.x)+Math.abs(heroGrid.y-fp.y)<=1){ found[i]=true; rescuedThisPress=true; }
+    if(!found[i] && Math.abs(heroGrid.x-fp.x)+Math.abs(heroGrid.y-fp.y)<=1){ found[i]=true; gotOne=true; }
   });
-  friendModels.forEach((m,i)=>{ if(found[i]) m.visible=false; });
-  rescuedCount = found.filter(Boolean).length;
-  foundEl.textContent=`Friends: ${rescuedCount} / 5`;
-  if(rescuedThisPress){
-    stateEl.textContent='Friend rescued!';
-    setTimeout(()=>{ if(playing) stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); },700);
+  if(gotOne){
+    rescued=found.filter(Boolean).length;
+    ui.found.textContent=`Friends: ${rescued} / 5`;
+    ui.state.textContent='Friend rescued!';
+    setTimeout(()=>{ if(playing) ui.state.textContent='Form: '+form[0].toUpperCase()+form.slice(1); },700);
   }
   updateObjective();
-  if(rescuedCount===5){
-    if(currentLevel<3){
-      stateEl.textContent='Level clear! Loading next level...';
-      setTimeout(()=>{ initLevel(currentLevel+1); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 1200);
-    } else {
-      stateEl.textContent='All friends rescued! 🎉';
-      objectiveTitle.textContent='Adventure complete';
-      objectiveText.textContent='Otis found every friend across all three levels.';
-      objectiveHint.textContent='You can keep exploring or refresh to play again.';
-      playing=false;
-    }
+  if(rescued===5){
+    if(currentLevel<3){ setTimeout(()=>rebuildLevel(currentLevel+1), 1100); }
+    else playing=false;
   }
 }
+
+addEventListener('keydown',e=>{ keys[e.key]=true; if(e.key==='1')setForm('otis'); if(e.key==='2')setForm('bird'); if(e.key==='3')setForm('fish'); if(e.key==='4')setForm('goat'); if(e.key===' ') rescue(); });
+addEventListener('keyup',e=>{ keys[e.key]=false; });
 ['f1','f2','f3','f4'].forEach((id,i)=>document.getElementById(id).onclick=()=>setForm(forms[i]));
-document.getElementById('search').onclick=search;
-document.getElementById('touchSearch').onclick=search;
-document.getElementById('mobileAction').onclick=search;
+document.getElementById('search').onclick=rescue; document.getElementById('touchSearch').onclick=rescue; document.getElementById('mobileAction').onclick=rescue;
 document.getElementById('touchForm').onclick=()=>setForm(forms[(forms.indexOf(form)+1)%forms.length]);
 
-function onTilt(e){ tiltState.gamma = e.gamma || 0; tiltState.beta = e.beta || 0; }
+function onTilt(e){ tilt.gamma=e.gamma||0; tilt.beta=e.beta||0; }
 async function enableTilt(){
   try{
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      const perm = await DeviceOrientationEvent.requestPermission();
-      if (perm !== 'granted') return false;
+    if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){
+      const perm=await DeviceOrientationEvent.requestPermission(); if(perm!=='granted') return false;
     }
-    addEventListener('deviceorientation', onTilt, {passive:true});
-    tiltState.enabled=true;
-    document.getElementById('tilt').textContent='Tilt: On';
-    return true;
-  } catch { return false; }
+    addEventListener('deviceorientation', onTilt, {passive:true}); tilt.enabled=true; document.getElementById('tilt').textContent='Tilt: On'; return true;
+  }catch{return false;}
 }
-function disableTilt(){ removeEventListener('deviceorientation', onTilt); tiltState.enabled=false; document.getElementById('tilt').textContent='Tilt: Off'; }
-document.getElementById('tilt').onclick=async()=>{
-  if(tiltState.enabled) disableTilt();
-  else {
-    const ok=await enableTilt();
-    if(!ok) alert('Tilt permission not granted or unsupported on this browser.');
-    else controlMode='accelerometer';
-  }
-};
+function disableTilt(){ removeEventListener('deviceorientation', onTilt); tilt.enabled=false; document.getElementById('tilt').textContent='Tilt: Off'; }
+document.getElementById('tilt').onclick=async()=>{ if(tilt.enabled) disableTilt(); else { const ok=await enableTilt(); if(ok) controlMode='accelerometer'; } };
+document.getElementById('fxBtn').onclick=()=>{ fxOn=!fxOn; fxEnabled=fxOn; document.getElementById('fxBtn').textContent=fxOn?'FX: On':'FX: Off'; document.getElementById('filmGrain').classList.toggle('off', !fxOn); };
 
-const touchHud=document.getElementById('touchHud');
-const joyWrap=document.getElementById('joyWrap');
-const joyKnob=document.getElementById('joyKnob');
-function resetJoy(){ joyState.active=false; joyState.x=0; joyState.y=0; joyKnob.style.left='50px'; joyKnob.style.top='50px'; }
+function resetJoy(){ joy.active=false; joy.x=0; joy.y=0; ui.joyKnob.style.left='50px'; ui.joyKnob.style.top='50px'; }
 function setJoyByPointer(e){
-  const r=joyWrap.getBoundingClientRect();
+  const r=ui.joyWrap.getBoundingClientRect();
   const nx=(e.clientX-(r.left+r.width/2))/((r.width/2)-24);
   const ny=(e.clientY-(r.top+r.height/2))/((r.height/2)-24);
-  const mag=Math.hypot(nx,ny)||1;
-  const c=Math.min(1,mag);
-  joyState.x=(nx/mag)*c; joyState.y=(ny/mag)*c; joyState.active=true;
-  joyKnob.style.left=`${50+joyState.x*34}px`; joyKnob.style.top=`${50+joyState.y*34}px`;
+  const mag=Math.hypot(nx,ny)||1; const c=Math.min(1,mag);
+  joy.x=(nx/mag)*c; joy.y=(ny/mag)*c; joy.active=true;
+  ui.joyKnob.style.left=`${50+joy.x*34}px`; ui.joyKnob.style.top=`${50+joy.y*34}px`;
 }
-if(joyWrap){
-  joyWrap.addEventListener('pointerdown',(e)=>{joyWrap.setPointerCapture(e.pointerId); setJoyByPointer(e);});
-  joyWrap.addEventListener('pointermove',(e)=>{if(joyState.active) setJoyByPointer(e);});
-  ['pointerup','pointercancel','lostpointercapture'].forEach(evt=>joyWrap.addEventListener(evt,resetJoy));
-}
+ui.joyWrap.addEventListener('pointerdown',e=>{ ui.joyWrap.setPointerCapture(e.pointerId); setJoyByPointer(e); });
+ui.joyWrap.addEventListener('pointermove',e=>{ if(joy.active) setJoyByPointer(e); });
+['pointerup','pointercancel','lostpointercapture'].forEach(evt=>ui.joyWrap.addEventListener(evt, resetJoy));
 
 async function startWithMode(mode){
   controlMode=mode;
-  if(mode==='accelerometer'){
-    const ok=await enableTilt();
-    if(!ok){ controlMode='joystick'; }
-  } else {
-    disableTilt();
-  }
-  touchHud.style.display = 'flex';
-  document.getElementById('mobileAction').classList.remove('hidden');
-  document.getElementById('controlOverlay').classList.add('hidden');
-  initLevel(1);
-  playing=true;
+  if(mode==='accelerometer'){ const ok=await enableTilt(); if(!ok) controlMode='joystick'; } else disableTilt();
+  ui.touchHud.style.display='flex'; ui.mobileAction.classList.remove('hidden'); document.getElementById('controlOverlay').classList.add('hidden');
+  rebuildLevel(1); playing=true;
 }
 document.getElementById('chooseJoystick').onclick=()=>startWithMode('joystick');
 document.getElementById('chooseTilt').onclick=()=>startWithMode('accelerometer');
-document.getElementById('fxBtn').onclick=()=>{
-  fxEnabled = !fxEnabled;
-  document.getElementById('fxBtn').textContent = fxEnabled ? 'FX: On' : 'FX: Off';
-  document.getElementById('filmGrain').classList.toggle('off', !fxEnabled);
-};
 
 const clock=new THREE.Clock();
 renderer.setAnimationLoop(()=>{
   const dt=Math.min(clock.getDelta(),0.05);
   if(playing){
     let ix=0, iy=0;
-    if(keys.ArrowUp||keys.w) iy -= 1;
-    if(keys.ArrowDown||keys.s) iy += 1;
-    if(keys.ArrowLeft||keys.a) ix -= 1;
-    if(keys.ArrowRight||keys.d) ix += 1;
-    if(controlMode==='joystick' && joyState.active){ ix = joyState.x; iy = joyState.y; }
-    else if(controlMode==='accelerometer' && tiltState.enabled){ ix = THREE.MathUtils.clamp(tiltState.gamma/24, -1, 1); iy = THREE.MathUtils.clamp(tiltState.beta/24, -1, 1); }
-    const mag=Math.hypot(ix,iy);
-    if(mag<0.12){ ix=0; iy=0; } else { ix/=mag; iy/=mag; }
-    const maxSpeed = 4.8;
-    const accel = 12.5;
-    const damping = 9.5;
-    const tx = ix*maxSpeed, ty = iy*maxSpeed;
-    const lerpA = Math.min(1, dt*accel);
-    heroVel.x += (tx-heroVel.x)*lerpA;
-    heroVel.y += (ty-heroVel.y)*lerpA;
-    if(ix===0) heroVel.x *= Math.max(0,1-dt*damping);
-    if(iy===0) heroVel.y *= Math.max(0,1-dt*damping);
-    const nx = heroPos.x + heroVel.x*dt;
-    const ny = heroPos.y + heroVel.y*dt;
-    if(canStep(Math.round(nx), Math.round(heroPos.y))) heroPos.x = nx; else heroVel.x = 0;
-    if(canStep(Math.round(heroPos.x), Math.round(ny))) heroPos.y = ny; else heroVel.y = 0;
-    heroPos.x = THREE.MathUtils.clamp(heroPos.x, 1, W-2);
-    heroPos.y = THREE.MathUtils.clamp(heroPos.y, 1, H-2);
-    heroGrid.x = Math.round(heroPos.x);
-    heroGrid.y = Math.round(heroPos.y);
+    if(keys.ArrowUp||keys.w) iy-=1; if(keys.ArrowDown||keys.s) iy+=1; if(keys.ArrowLeft||keys.a) ix-=1; if(keys.ArrowRight||keys.d) ix+=1;
+    if(controlMode==='joystick' && joy.active){ ix=joy.x; iy=joy.y; }
+    else if(controlMode==='accelerometer' && tilt.enabled){ ix=THREE.MathUtils.clamp(tilt.gamma/24,-1,1); iy=THREE.MathUtils.clamp(tilt.beta/24,-1,1); }
+    const mag=Math.hypot(ix,iy); if(mag<0.12){ ix=0; iy=0; } else { ix/=mag; iy/=mag; }
+    const maxSpeed=4.9, accel=12.5, damping=9.2;
+    const tx=ix*maxSpeed, ty=iy*maxSpeed;
+    const lerpA=Math.min(1,dt*accel);
+    heroVel.x += (tx-heroVel.x)*lerpA; heroVel.y += (ty-heroVel.y)*lerpA;
+    if(ix===0) heroVel.x*=Math.max(0,1-dt*damping); if(iy===0) heroVel.y*=Math.max(0,1-dt*damping);
+    const nx=heroPos.x+heroVel.x*dt, ny=heroPos.y+heroVel.y*dt;
+    if(canStep(Math.round(nx), Math.round(heroPos.y))) heroPos.x=nx; else heroVel.x=0;
+    if(canStep(Math.round(heroPos.x), Math.round(ny))) heroPos.y=ny; else heroVel.y=0;
+    heroPos.x=THREE.MathUtils.clamp(heroPos.x,1,W-2); heroPos.y=THREE.MathUtils.clamp(heroPos.y,1,H-2);
+    heroGrid.x=Math.round(heroPos.x); heroGrid.y=Math.round(heroPos.y);
   }
 
-  place();
-  const t = clock.elapsedTime;
-  const speed = Math.hypot(heroVel.x, heroVel.y);
-  const walkAmp = Math.min(0.3, speed*0.075);
-  if(speed > 0.03){
-    const targetYaw = Math.atan2(heroVel.x, heroVel.y);
-    let delta = targetYaw - hero.rotation.y;
-    while(delta > Math.PI) delta -= Math.PI*2;
-    while(delta < -Math.PI) delta += Math.PI*2;
-    hero.rotation.y += delta * Math.min(1, dt*12);
+  updateWorldPositions();
+  const t=clock.elapsedTime; const speed=Math.hypot(heroVel.x,heroVel.y); const walk=Math.sin(t*(12+speed*2))*Math.min(0.25,speed*0.08);
+  if(speed>0.03){
+    const targetYaw=Math.atan2(heroVel.x,heroVel.y); let delta=targetYaw-hero.rotation.y;
+    while(delta>Math.PI) delta-=Math.PI*2; while(delta<-Math.PI) delta+=Math.PI*2;
+    hero.rotation.y += delta*Math.min(1,dt*12);
   }
-  if(form==='otis'){
-    const moving = speed > 0.06;
-    const cycle = moving ? (14 + speed*2.6) : 2;
-    const stride = Math.sin(t*cycle);
-    const amp = moving ? Math.max(0.24, walkAmp*2.2) : 0.02;
-    otisRig.armL.rotation.x = stride*amp*0.95;
-    otisRig.armR.rotation.x = -stride*amp*0.95;
-    otisRig.legL.rotation.x = -stride*amp*2.6;
-    otisRig.legR.rotation.x = stride*amp*2.6;
-    otisRig.shoeL.rotation.x = -stride*amp*1.5;
-    otisRig.shoeR.rotation.x = stride*amp*1.5;
-    otisRig.body.position.y = 0.56 + Math.sin(t*cycle*2)*amp*0.09;
-  }
-  if(form==='bird'){ birdModel.rotation.y = Math.sin(t*(4+speed))*0.12; birdModel.position.y = Math.sin(t*(6+speed))*0.04; }
-  else if(form==='fish'){ fishModel.rotation.y = Math.sin(t*(5+speed))*0.14; fishModel.position.x = Math.sin(t*(7+speed))*0.03; }
-  else if(form==='goat'){ goatModel.rotation.y = Math.sin(t*(3+speed))*0.08; goatModel.position.y = Math.abs(Math.sin(t*(6+speed)))*0.03; }
-
-  const now=clock.elapsedTime;
-  decoys.forEach((d,i)=>{
-    const m=decoyMeshes[i]; if(!m) return;
-    const hit = Math.abs(heroGrid.x-d.x)+Math.abs(heroGrid.y-d.y) <= 1;
-    if(hit && (now-(m.userData.hitAt||0))>0.9){
-      m.userData.hitAt=now;
-      hp=Math.max(0,hp-8); hpPill.textContent=`HP: ${hp}`;
-      stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1)+' · Ouch!';
-      setTimeout(()=>{ if(playing) stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); },500);
-      if(hp<=0){
-        hp=100; hpPill.textContent='HP: 100';
-        stateEl.textContent='You fainted. Restarting level...';
-        setTimeout(()=>{ initLevel(currentLevel); stateEl.textContent='Form: '+form[0].toUpperCase()+form.slice(1); }, 900);
-      }
-    }
-  });
-
-  friendModels.forEach((fm,i)=>{
-    if(!fm.visible) return;
-    fm.position.y = 0.8 + Math.sin(t*(2.4+i*0.25) + i)*0.05;
-  });
+  otisRig.armL.rotation.x=walk; otisRig.armR.rotation.x=-walk; otisRig.legL.rotation.x=-walk*1.8; otisRig.legR.rotation.x=walk*1.8; otisRig.body.position.y=0.62+Math.abs(walk)*0.06;
+  bird.rotation.y=Math.sin(t*4)*0.12; fish.rotation.y=Math.sin(t*5)*0.15; goat.rotation.y=Math.sin(t*3)*0.08;
+  decoyMeshes.forEach((m,i)=>{ const p=posFromGrid(decoyPositions[i]); m.position.set(p.x,0.55+Math.sin(t*3+i)*0.02,p.z); if(Math.abs(heroGrid.x-decoyPositions[i].x)+Math.abs(heroGrid.y-decoyPositions[i].y)<=1 && (t-(m.userData.hitAt||0))>0.9){ m.userData.hitAt=t; hp=Math.max(0,hp-8); ui.hp.textContent=`HP: ${hp}`; if(hp<=0){ rebuildLevel(currentLevel); playing=true; } } });
+  friendMeshes.forEach((m,i)=>{ if(!m.visible) return; m.position.y=0.8+Math.sin(t*(2.4+i*0.25))*0.05; });
+  updateObjective();
   camera.position.x += (hero.position.x - camera.position.x)*Math.min(1,dt*4.5);
-  camera.position.y += (6.8 - camera.position.y)*Math.min(1,dt*3.2);
-  camera.position.z += (hero.position.z + 10.5 - camera.position.z)*Math.min(1,dt*4.5);
+  camera.position.y += (6.4 - camera.position.y)*Math.min(1,dt*3.2);
+  camera.position.z += (hero.position.z + 9.8 - camera.position.z)*Math.min(1,dt*4.5);
   camera.lookAt(hero.position.x,1.2,hero.position.z);
   if(fxEnabled) composer.render(); else renderer.render(scene,camera);
 });
-function onResize(){
-  camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  composer.setSize(innerWidth,innerHeight); bloomPass.setSize(innerWidth,innerHeight);
-}
+
+buildWorld(); rebuildLevel(1); updateWorldPositions();
+function onResize(){ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio,2)); composer.setSize(innerWidth,innerHeight); bloomPass.setSize(innerWidth,innerHeight); }
 addEventListener('resize', onResize);
 </script>
 </body>
