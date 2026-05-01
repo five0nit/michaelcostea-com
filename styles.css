@@ -896,9 +896,9 @@ body.public-preview::before{
     line-height:11px!important;
   }
 
-  /* Welcome is the foreground app on phones: high on page, fixed height, internal scroll. */
-  .public-preview #readerWindow.main-portfolio-window,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window{
+  /* Every foreground app on phones: high on page, fixed height, internal scroll. */
+  .public-preview .win-window.open,
+  body.mobile-mode.public-preview .win-window.open{
     position:absolute!important;
     z-index:20!important;
     left:8px!important;
@@ -916,22 +916,22 @@ body.public-preview::before{
     margin:0!important;
     overflow:hidden!important;
   }
-  .public-preview #readerWindow.main-portfolio-window:not(.open),
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window:not(.open){
+  .public-preview .win-window:not(.open),
+  body.mobile-mode.public-preview .win-window:not(.open){
     display:none!important;
   }
-  .public-preview #readerWindow.main-portfolio-window,
-  .public-preview #readerWindow.main-portfolio-window *,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window *{
+  .public-preview .win-window.open,
+  .public-preview .win-window.open *,
+  body.mobile-mode.public-preview .win-window.open,
+  body.mobile-mode.public-preview .win-window.open *{
     box-sizing:border-box!important;
   }
-  .public-preview #readerWindow.main-portfolio-window .win-title,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window .win-title{
+  .public-preview .win-window.open .win-title,
+  body.mobile-mode.public-preview .win-window.open .win-title{
     flex:0 0 auto!important;
   }
-  .public-preview #readerWindow.main-portfolio-window .win-body,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window .win-body{
+  .public-preview .win-window.open .win-body,
+  body.mobile-mode.public-preview .win-window.open .win-body{
     flex:1 1 auto!important;
     min-height:0!important;
     height:auto!important;
@@ -942,22 +942,43 @@ body.public-preview::before{
     overscroll-behavior:contain!important;
     touch-action:pan-y!important;
   }
-  .public-preview #readerWindow.main-portfolio-window .styleguide-welcome,
-  .public-preview #readerWindow.main-portfolio-window .welcome-copy,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window .styleguide-welcome,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window .welcome-copy{
+  .public-preview .win-window.open .styleguide-welcome,
+  .public-preview .win-window.open .welcome-copy,
+  .public-preview .win-window.open .document-body,
+  body.mobile-mode.public-preview .win-window.open .styleguide-welcome,
+  body.mobile-mode.public-preview .win-window.open .welcome-copy,
+  body.mobile-mode.public-preview .win-window.open .document-body{
     max-width:100%!important;
     min-width:0!important;
-    overflow:visible!important;
+    overflow-x:hidden!important;
   }
-  .public-preview #readerWindow.main-portfolio-window .terminal-line,
-  .public-preview #readerWindow.main-portfolio-window .welcome-copy h1,
-  .public-preview #readerWindow.main-portfolio-window .welcome-copy h3,
-  .public-preview #readerWindow.main-portfolio-window .welcome-copy p,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window .terminal-line,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window .welcome-copy h1,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window .welcome-copy h3,
-  body.mobile-mode.public-preview #readerWindow.main-portfolio-window .welcome-copy p{
+  .public-preview .win-window.open .document-body,
+  body.mobile-mode.public-preview .win-window.open .document-body{
+    padding:8px!important;
+  }
+  .public-preview .win-window.open .resume-doc,
+  body.mobile-mode.public-preview .win-window.open .resume-doc{
+    width:100%!important;
+    max-width:100%!important;
+    padding:6px!important;
+    margin:0!important;
+  }
+  .public-preview .win-window.open .resume-doc ul,
+  body.mobile-mode.public-preview .win-window.open .resume-doc ul{
+    margin-left:14px!important;
+  }
+  .public-preview .win-window.open .terminal-line,
+  .public-preview .win-window.open .welcome-copy h1,
+  .public-preview .win-window.open .welcome-copy h3,
+  .public-preview .win-window.open .welcome-copy p,
+  .public-preview .win-window.open .document-body,
+  .public-preview .win-window.open .document-body *,
+  body.mobile-mode.public-preview .win-window.open .terminal-line,
+  body.mobile-mode.public-preview .win-window.open .welcome-copy h1,
+  body.mobile-mode.public-preview .win-window.open .welcome-copy h3,
+  body.mobile-mode.public-preview .win-window.open .welcome-copy p,
+  body.mobile-mode.public-preview .win-window.open .document-body,
+  body.mobile-mode.public-preview .win-window.open .document-body *{
     max-width:100%!important;
     overflow-wrap:anywhere!important;
     word-break:normal!important;
