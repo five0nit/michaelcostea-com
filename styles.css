@@ -860,12 +860,14 @@ body.public-preview::before{
   body.mobile-mode.public-preview .desktop-icons{
     position:absolute!important;
     top:8px!important;
-    left:12px!important;
-    width:92px!important;
-    display:flex!important;
-    flex-direction:column!important;
-    grid-template-columns:none!important;
-    gap:14px!important;
+    left:10px!important;
+    width:184px!important;
+    max-height:none!important;
+    overflow:visible!important;
+    display:grid!important;
+    grid-template-columns:repeat(2,86px)!important;
+    grid-auto-rows:70px!important;
+    gap:8px!important;
     margin:0!important;
     order:0!important;
     z-index:2!important;
@@ -873,9 +875,21 @@ body.public-preview::before{
   }
   .public-preview .desk-icon,
   body.mobile-mode.public-preview .desk-icon{
-    width:88px!important;
-    height:74px!important;
-    padding:4px!important;
+    width:86px!important;
+    height:70px!important;
+    min-width:86px!important;
+    padding:3px!important;
+  }
+  .public-preview .desk-icon .icon-art,
+  body.mobile-mode.public-preview .desk-icon .icon-art{
+    font-size:26px!important;
+    line-height:28px!important;
+    margin-bottom:2px!important;
+  }
+  .public-preview .desk-icon span:last-child,
+  body.mobile-mode.public-preview .desk-icon span:last-child{
+    font-size:10px!important;
+    line-height:11px!important;
   }
   .public-preview .main-portfolio-window,
   body.mobile-mode.public-preview .main-portfolio-window{
