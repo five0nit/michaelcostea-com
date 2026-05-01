@@ -750,3 +750,36 @@ body.public-preview::before{
   .public-preview .task-btn::first-letter{font-size:12px!important;}
   .public-preview .tray-pill{min-width:48px!important;font-size:10px!important;padding:2px 4px!important;}
 }
+
+
+/* === 2026-05 initial popup top positioning === */
+@media (max-width:760px){
+  .public-preview .container{
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:flex-start!important;
+  }
+  .public-preview .main-portfolio-window{
+    order:1!important;
+    margin:0 auto 10px!important;
+  }
+  .public-preview .desktop-icons{
+    order:2!important;
+    margin-top:4px!important;
+    margin-bottom:52px!important;
+  }
+}
+@media (min-width:761px){
+  .public-preview .main-portfolio-window{
+    top:18px!important;
+    transform:translateX(-50%)!important;
+    margin:0!important;
+  }
+}
+
+
+/* === 2026-05 resume timeline leadership content === */
+.public-preview .timeline-list{display:grid;gap:8px;margin-top:8px;}
+.public-preview .timeline-list article{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;}
+.public-preview .timeline-list h4{margin:0 0 4px;color:#000080;font:900 13px/16px "Work Sans",Tahoma,sans-serif;}
+.public-preview .timeline-list p{margin:5px 0;line-height:16px;}
