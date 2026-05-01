@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260502-0035" />
+  <link rel="stylesheet" href="styles.css?v=20260502-0055" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -25,7 +25,7 @@
       <div class="win-title"><span>💾 Welcome.exe - Michael Costea Portfolio</span><button class="win-close" data-close="readerWindow">×</button></div>
       <div class="win-body welcome-body styleguide-welcome">
         <aside class="welcome-sidebar" aria-label="Profile controls">
-          <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0035" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
+          <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0055" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
           <button class="btn big-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
@@ -285,33 +285,33 @@
             <article data-checklist-product="hermes">
               <h4>Hermes required terminal flow</h4>
               <ol class="step-list">
-                <li><b>Run setup wizard:</b><pre class="guide-code">hermes setup</pre>Choose local/default workspace options unless you know you need something custom.</li>
-                <li><b>Select model/provider:</b> when prompted, choose <b>GPT / ChatGPT OAuth</b> if available. Log in through the browser window it opens. Start with ChatGPT Plus; upgrade to Pro once rate limits/token use genuinely block you.</li>
-                <li><b>Confirm model:</b><pre class="guide-code">hermes model</pre>Use this if you need to change provider/model later.</li>
-                <li><b>Configure Telegram/messaging gateway:</b><pre class="guide-code">hermes gateway setup</pre>Paste your BotFather token only into this local setup prompt. Authorise your own Telegram user/chat when prompted.</li>
-                <li><b>Install/start gateway service:</b><pre class="guide-code">hermes gateway install
+                <li><b>Run setup wizard:</b><p class="plain-summary"><b>In plain English:</b> this opens Hermes’ beginner questions. It asks where your agent should live, which model it should use, and what tools/channels it can access. Choose defaults unless you know why you need something custom.</p><pre class="guide-code">hermes setup</pre></li>
+                <li><b>Select model/provider:</b><p class="plain-summary"><b>In plain English:</b> the model is the “brain” your agent talks to. GPT / ChatGPT OAuth means you log in with your ChatGPT account instead of manually creating API keys. It is usually the easiest and cheapest beginner option for strong reasoning. Start with Plus, then move to Pro only when limits become annoying.</p></li>
+                <li><b>Confirm model:</b><p class="plain-summary"><b>In plain English:</b> this is the “which brain am I using?” screen. Use it later if your agent feels too slow, too expensive, or rate limited.</p><pre class="guide-code">hermes model</pre></li>
+                <li><b>Configure Telegram/messaging gateway:</b><p class="plain-summary"><b>In plain English:</b> the gateway is the bridge between Telegram and the agent on your computer. Your BotFather token is the password that lets Hermes control your Telegram bot. Paste it only into this local setup prompt.</p><pre class="guide-code">hermes gateway setup</pre></li>
+                <li><b>Install/start gateway service:</b><p class="plain-summary"><b>In plain English:</b> this makes the Telegram bridge run in the background, so your agent can keep listening even after setup. <code>status</code> is the “is it alive?” check. If background services are confusing, run it in the foreground first so you can see what is happening.</p><pre class="guide-code">hermes gateway install
 hermes gateway start
-hermes gateway status</pre>If you are on WSL/Docker/Termux, foreground mode may be easier for first testing:<pre class="guide-code">hermes gateway run</pre></li>
-                <li><b>Health check:</b><pre class="guide-code">hermes doctor
-hermes status</pre>Fix red errors before opening the dashboard.</li>
-                <li><b>Only after that, open Web UI:</b><pre class="guide-code">hermes dashboard</pre>For a server/WSL machine where you do not want auto-open:<pre class="guide-code">hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></li>
+hermes gateway status</pre><p>Foreground test mode:</p><pre class="guide-code">hermes gateway run</pre></li>
+                <li><b>Health check:</b><p class="plain-summary"><b>In plain English:</b> doctor checks whether Hermes, model login, tools, and gateway are wired correctly. Fix red errors before using the Web UI so you are not debugging blindly.</p><pre class="guide-code">hermes doctor
+hermes status</pre></li>
+                <li><b>Only after that, open Web UI:</b><p class="plain-summary"><b>In plain English:</b> the dashboard is the visual control panel. It is useful after the engine underneath is installed, logged in, and healthy.</p><pre class="guide-code">hermes dashboard</pre><p>Server/WSL no-auto-open mode:</p><pre class="guide-code">hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></li>
               </ol>
             </article>
             <article data-checklist-product="openclaw">
               <h4>OpenClaw required terminal flow</h4>
               <ol class="step-list">
-                <li><b>Run first setup:</b><pre class="guide-code">openclaw setup --wizard --mode local</pre>Choose a local workspace. Beginners should keep the default unless they have a reason to move it.</li>
-                <li><b>Configure model credentials:</b><pre class="guide-code">openclaw configure --section model</pre>When prompted, choose <b>GPT / ChatGPT OAuth</b> if available. If not, use the provider/API key option the wizard supports. Do not paste tokens into chats.</li>
-                <li><b>Configure workspace + safe defaults:</b><pre class="guide-code">openclaw configure --section workspace
-openclaw configure --section gateway</pre>Keep the gateway local/loopback for first testing unless you know how you want to expose it.</li>
-                <li><b>Configure Telegram channel:</b><pre class="guide-code">openclaw configure --section channels</pre>Select Telegram, paste your BotFather token, and authorise your test user/group/channel.</li>
-                <li><b>Start or install gateway:</b><pre class="guide-code">openclaw gateway run</pre>For a background service after it works:<pre class="guide-code">openclaw gateway install
+                <li><b>Run first setup:</b><p class="plain-summary"><b>In plain English:</b> this creates OpenClaw’s home base on your computer. “Local” means the agent runs on your machine first, not some mystery server. The workspace is the folder where it keeps working files, memory, sessions, and config.</p><pre class="guide-code">openclaw setup --wizard --mode local</pre></li>
+                <li><b>Configure model credentials:</b><p class="plain-summary"><b>In plain English:</b> this connects OpenClaw to the AI brain. Choose GPT / ChatGPT OAuth if it appears. OAuth is just “log in with your account” instead of copying secret keys around. If OAuth is not available, use the API key/provider option the wizard offers.</p><pre class="guide-code">openclaw configure --section model</pre></li>
+                <li><b>Configure workspace + safe defaults:</b><p class="plain-summary"><b>In plain English:</b> workspace controls where OpenClaw works. Gateway controls how messages reach the agent. Keep it local/loopback first so only your computer can access it while you learn.</p><pre class="guide-code">openclaw configure --section workspace
+openclaw configure --section gateway</pre></li>
+                <li><b>Configure Telegram channel:</b><p class="plain-summary"><b>In plain English:</b> channels are where you talk to the agent. Telegram is easiest for testing because it feels like texting. This step links your private bot to OpenClaw.</p><pre class="guide-code">openclaw configure --section channels</pre></li>
+                <li><b>Start or install gateway:</b><p class="plain-summary"><b>In plain English:</b> <code>run</code> starts the message bridge in the current terminal so you can watch it. Once that works, install/start makes it run in the background like a normal app/service.</p><pre class="guide-code">openclaw gateway run</pre><p>Background service after it works:</p><pre class="guide-code">openclaw gateway install
 openclaw gateway start
 openclaw gateway status</pre></li>
-                <li><b>Health checks before Web UI:</b><pre class="guide-code">openclaw doctor
+                <li><b>Health checks before Web UI:</b><p class="plain-summary"><b>In plain English:</b> these are your “is it installed, logged in, and reachable?” checks. Do not skip them. If they show red errors, the Web UI will not magically fix the underlying setup.</p><pre class="guide-code">openclaw doctor
 openclaw status
-openclaw gateway status</pre>Fix red errors before opening the dashboard.</li>
-                <li><b>Only after that, open Web UI:</b><pre class="guide-code">openclaw dashboard</pre>For terminal-only/server testing:<pre class="guide-code">openclaw dashboard --no-open</pre></li>
+openclaw gateway status</pre></li>
+                <li><b>Only after that, open Web UI:</b><p class="plain-summary"><b>In plain English:</b> the dashboard is the cockpit. Open it after setup, model login, Telegram, gateway, and health checks are working.</p><pre class="guide-code">openclaw dashboard</pre><p>Terminal-only/server testing:</p><pre class="guide-code">openclaw dashboard --no-open</pre></li>
               </ol>
             </article>
           </div>
@@ -319,9 +319,9 @@ openclaw gateway status</pre>Fix red errors before opening the dashboard.</li>
           <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac">
             <h3>Hermes Agent on Mac — complete beginner path</h3>
             <ol class="step-list">
-              <li><b>Prepare:</b> open <b>Terminal</b>. Install Apple command-line tools if macOS asks.</li>
-              <li><b>Install Hermes:</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
-              <li><b>Restart Terminal</b> so your shell sees the new <code>hermes</code> command.</li>
+              <li><b>Prepare:</b> open <b>Terminal</b>.<p class="plain-summary"><b>In plain English:</b> Terminal is the text-command app on Mac. Open it from Launchpad or Applications → Utilities. If macOS asks to install command-line tools, say yes — they are helper tools that let developer apps install properly.</p></li>
+              <li><b>Install Hermes:</b><p class="plain-summary"><b>In plain English:</b> this command downloads Hermes’ official installer and runs it. Copy it exactly, press Enter, and let it finish.</p><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
+              <li><b>Restart Terminal</b><p class="plain-summary"><b>In plain English:</b> closing and reopening Terminal refreshes its command list so it can find the new <code>hermes</code> app.</p></li>
               <li><b>Run local setup:</b><pre class="guide-code">hermes setup
 hermes doctor</pre></li>
               <li><b>Model login:</b> when setup asks for a model/provider, choose GPT / ChatGPT OAuth if available. Otherwise use a supported API key/provider you already have access to. Do not paste keys into public chats.</li>
@@ -334,10 +334,10 @@ hermes doctor</pre></li>
           <div class="guide-panel" data-panel-product="hermes" data-panel-os="windows">
             <h3>Hermes Agent on Windows — recommended WSL Ubuntu path</h3>
             <ol class="step-list">
-              <li><b>Open PowerShell as Administrator.</b></li>
-              <li><b>Install Ubuntu under WSL:</b><pre class="guide-code">wsl --install -d Ubuntu</pre></li>
-              <li><b>Restart</b> if Windows asks. Open <b>Ubuntu</b> from Start Menu and create a Linux username/password.</li>
-              <li><b>Update Ubuntu:</b><pre class="guide-code">sudo apt update && sudo apt upgrade -y</pre></li>
+              <li><b>Open PowerShell as Administrator.</b><p class="plain-summary"><b>In plain English:</b> PowerShell is Windows’ command tool. Click Start, search “PowerShell”, right-click it, choose <b>Run as administrator</b>, then click <b>Yes</b> on the confirmation window. Admin mode is needed because Windows is installing a Linux system component.</p></li>
+              <li><b>Install Ubuntu under WSL:</b><p class="plain-summary"><b>In plain English:</b> Ubuntu is Linux. WSL lets Windows run Linux safely inside Windows. Hermes/OpenClaw behave more reliably there because many AI/developer tools are built for Linux-style terminals.</p><pre class="guide-code">wsl --install -d Ubuntu</pre></li>
+              <li><b>Restart</b> if Windows asks. Open <b>Ubuntu</b> from Start Menu and create a Linux username/password.<p class="plain-summary"><b>In plain English:</b> this username is just for the Linux environment inside Windows. It can be different from your Windows login. When typing the password, Linux may show nothing on screen — that is normal.</p></li>
+              <li><b>Update Ubuntu:</b><p class="plain-summary"><b>In plain English:</b> this updates Ubuntu’s list of available software and installs security/compatibility updates before you add the agent.</p><pre class="guide-code">sudo apt update && sudo apt upgrade -y</pre></li>
               <li><b>Install Hermes inside Ubuntu:</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
               <li><b>Close and reopen Ubuntu</b>, then run:<pre class="guide-code">hermes setup
 hermes doctor</pre></li>
@@ -349,9 +349,9 @@ hermes doctor</pre></li>
           <div class="guide-panel" data-panel-product="hermes" data-panel-os="linux">
             <h3>Hermes Agent on Linux — local install</h3>
             <ol class="step-list">
-              <li><b>Open Terminal</b> and make sure curl exists:<pre class="guide-code">sudo apt update
+              <li><b>Open Terminal</b> and make sure curl exists:<p class="plain-summary"><b>In plain English:</b> <code>curl</code> downloads installer files, and <code>git</code> helps tools download/update code. These are standard building blocks for local AI tools.</p><pre class="guide-code">sudo apt update
 sudo apt install -y curl git</pre></li>
-              <li><b>Install Hermes:</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
+              <li><b>Install Hermes:</b><p class="plain-summary"><b>In plain English:</b> this command downloads Hermes’ official installer and runs it. Copy it exactly, press Enter, and let it finish.</p><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
               <li><b>Reload shell:</b><pre class="guide-code">exec $SHELL -l</pre></li>
               <li><b>Run setup and checks:</b><pre class="guide-code">hermes setup
 hermes doctor</pre></li>
@@ -363,10 +363,10 @@ hermes doctor</pre></li>
           <div class="guide-panel" data-panel-product="openclaw" data-panel-os="mac">
             <h3>OpenClaw on Mac — complete beginner path</h3>
             <ol class="step-list">
-              <li><b>Install Node.js 22+</b>. Easiest Mac path is Homebrew:<pre class="guide-code">brew install node</pre>If you do not have Homebrew, install Node.js from <code>nodejs.org</code>.</li>
-              <li><b>Check Node:</b><pre class="guide-code">node --version
-npm --version</pre>OpenClaw currently requires Node <b>22.14+</b>.</li>
-              <li><b>Install OpenClaw globally:</b><pre class="guide-code">npm install -g openclaw</pre></li>
+              <li><b>Install Node.js 22+</b>.<p class="plain-summary"><b>In plain English:</b> Node.js lets your computer run JavaScript command-line apps. OpenClaw is installed through npm, which comes with Node. Homebrew is the common Mac installer tool; if you do not have it, use nodejs.org.</p><pre class="guide-code">brew install node</pre></li>
+              <li><b>Check Node:</b><p class="plain-summary"><b>In plain English:</b> these commands print the installed versions. OpenClaw needs Node 22.14 or newer, so if the number is lower, update Node before continuing.</p><pre class="guide-code">node --version
+npm --version</pre></li>
+              <li><b>Install OpenClaw globally:</b><p class="plain-summary"><b>In plain English:</b> npm is Node’s app installer. <code>-g</code> means “global”, so you can type <code>openclaw</code> from any terminal folder.</p><pre class="guide-code">npm install -g openclaw</pre></li>
               <li><b>Run local onboarding/config:</b><pre class="guide-code">openclaw setup
 openclaw configure
 openclaw doctor</pre></li>
@@ -378,10 +378,10 @@ openclaw doctor</pre></li>
           <div class="guide-panel" data-panel-product="openclaw" data-panel-os="windows">
             <h3>OpenClaw on Windows — easiest WSL Ubuntu path</h3>
             <ol class="step-list">
-              <li><b>Open PowerShell as Administrator</b> and install Ubuntu:<pre class="guide-code">wsl --install -d Ubuntu</pre></li>
+              <li><b>Open PowerShell as Administrator</b> and install Ubuntu:<p class="plain-summary"><b>In plain English:</b> PowerShell is Windows’ command app. Right-click it, choose <b>Run as administrator</b>, click <b>Yes</b>. Ubuntu is Linux inside Windows; it gives OpenClaw a cleaner developer environment.</p><pre class="guide-code">wsl --install -d Ubuntu</pre></li>
               <li><b>Open Ubuntu</b> from Start Menu, create your Linux username/password, then update packages:<pre class="guide-code">sudo apt update && sudo apt upgrade -y
 sudo apt install -y curl git</pre></li>
-              <li><b>Install Node.js 22+ with nvm:</b><pre class="guide-code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+              <li><b>Install Node.js 22+ with nvm:</b><p class="plain-summary"><b>In plain English:</b> nvm is a Node version manager. It lets you install the exact Node version OpenClaw needs without fighting your system packages.</p><pre class="guide-code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 source ~/.bashrc
 nvm install 22
 nvm use 22</pre></li>
@@ -399,7 +399,7 @@ openclaw doctor</pre></li>
             <ol class="step-list">
               <li><b>Install base tools:</b><pre class="guide-code">sudo apt update
 sudo apt install -y curl git</pre></li>
-              <li><b>Install Node.js 22+ with nvm:</b><pre class="guide-code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+              <li><b>Install Node.js 22+ with nvm:</b><p class="plain-summary"><b>In plain English:</b> nvm is a Node version manager. It lets you install the exact Node version OpenClaw needs without fighting your system packages.</p><pre class="guide-code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 source ~/.bashrc
 nvm install 22
 nvm use 22</pre></li>
@@ -478,6 +478,6 @@ Help me create a beginner test plan for using an AI agent through Telegram for s
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260502-0035"></script>
+  <script src="script.js?v=20260502-0055"></script>
 </body>
 </html>
