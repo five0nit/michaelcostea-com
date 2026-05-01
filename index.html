@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260502-0935" />
+  <link rel="stylesheet" href="styles.css?v=20260502-0955" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -17,7 +17,7 @@
       <button class="desk-icon" data-open="resumeWindow" aria-label="Open Resume"><span class="icon-art">📄</span><span>Resume</span></button>
       <button class="desk-icon" data-open="projectsWindow" aria-label="Open Projects"><span class="icon-art">📁</span><span>Projects</span></button>
       <button class="desk-icon" data-open="agentsWindow" aria-label="Open AI Agents"><span class="icon-art">🤖</span><span>AI Agents</span></button>
-      <button class="desk-icon ai-cta-icon" data-open="aiHelpWindow" aria-label="Create an AI Agent"><span class="icon-art">⚡</span><span>Create Agent</span></button>
+      <button class="desk-icon ai-cta-icon" data-open="aiHelpWindow" aria-label="Open AI Help"><span class="icon-art">🎓</span><span>AI Help</span></button>
       <button id="recycleBin" class="desk-icon" data-open="recycleWindow" aria-label="Open Recycle Bin"><span class="icon-art">🗑️</span><span id="recycleLabel">Recycle Bin</span></button>
     </section>
 
@@ -29,7 +29,7 @@
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
           <button class="btn big-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
-          <button class="btn big-nav ai-cta-nav" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">CREATE AN AGENT</button>
+          <button class="btn big-nav ai-cta-nav" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">AI HELP</button>
           <button class="btn big-nav" type="button" data-open="contactWindow" onclick="openWindow('contactWindow')">CONTACT ME</button>
         </aside>
         <section class="welcome-copy">
@@ -41,7 +41,7 @@
           <p>The goal is not AI for AI’s sake. It is a connected, visible, and automated business where sales, ops, finance, admin, and field teams work together through clearer system architecture.</p>
           <div class="spec-grid" aria-label="Current system focus">
             <div><b>CURRENT ROLE</b><span>Head of Tech, AI & Systems · All Electric Homes</span></div>
-            <button class="welcome-agent-cta" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')"><b>CREATE AN AGENT</b><span>Beginner guide · Hermes/OpenClaw · Telegram setup</span></button>
+            <button class="welcome-agent-cta" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')"><b>INSTALL YOUR OWN AI AGENT</b><span>Beginner guide · Hermes/OpenClaw · Telegram setup</span></button>
           </div>
         </section>
       </div>
@@ -194,11 +194,11 @@
       </div>
     </section>
 
-    <section id="aiHelpWindow" class="win-window doc-window" aria-label="Create an AI Agent" style="left:185px;top:100px;width:min(900px,94vw);">
-      <div class="win-title"><span>Create an Agent - Start Here</span><button class="win-close" data-close="aiHelpWindow">×</button></div>
+    <section id="aiHelpWindow" class="win-window doc-window" aria-label="AI Help" style="left:185px;top:100px;width:min(900px,94vw);">
+      <div class="win-title"><span>AI Help - Start Here</span><button class="win-close" data-close="aiHelpWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc">
-          <h2>Create Your First AI Agent</h2>
+          <h2>AI Help: Everyday Starter Guides</h2>
           <p>This is the starting point for normal people who want a safe, simple first agent. No hype. No jargon wall. Learn what agents do, then follow the install path for Hermes or OpenClaw.</p>
           <div class="guide-card-grid">
             <button class="guide-card" type="button" data-open="agentGuideWindow" onclick="openWindow('agentGuideWindow')"><b>1. What is an AI agent?</b><span>Simple explanation, examples, safety limits, and visual workflow.</span></button>
@@ -548,6 +548,6 @@ Help me create a beginner test plan for using an AI agent through Telegram for s
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260502-0935"></script>
+  <script src="script.js?v=20260502-0955"></script>
 </body>
 </html>
