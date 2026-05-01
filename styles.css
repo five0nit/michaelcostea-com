@@ -804,6 +804,16 @@ body.public-preview::before{
 .public-preview .guide-code{background:#000!important;color:#39ff14!important;border:2px inset #808080!important;padding:10px!important;white-space:pre-wrap!important;overflow:auto!important;font:700 12px/16px "Courier New",monospace!important;margin:8px 0!important;}
 .public-preview .guide-note{background:#fff4c2;border:2px solid #808000;padding:8px!important;}
 .public-preview code{background:#eee;border:1px solid #999;padding:1px 3px;font-family:"Courier New",monospace;}
+.public-preview .install-guide{max-width:960px;}
+.public-preview .guide-toggle-block{background:#f3f3f4;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:10px;margin:12px 0;}
+.public-preview .toggle-label{font:900 12px/15px "Work Sans",Tahoma,sans-serif;margin:6px 0 5px!important;color:#000080;text-transform:uppercase;letter-spacing:.04em;}
+.public-preview .segmented{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.public-preview .seg-btn{background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;color:#000;cursor:pointer;padding:8px 12px;font:900 12px/14px "Work Sans",Tahoma,sans-serif;}
+.public-preview .seg-btn.active,.public-preview .seg-btn:hover{background:#000080;color:#fff;border-top-color:#000044;border-left-color:#000044;border-right-color:#fff;border-bottom-color:#fff;}
+.public-preview .guide-panel{display:none;background:#fff;border:2px inset #808080;padding:10px;margin:10px 0;}
+.public-preview .guide-panel.active{display:block;}
+.public-preview .step-list{padding-left:22px;}
+.public-preview .step-list li{margin:8px 0;}
 @media (max-width:760px){
   .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles{grid-template-columns:1fr!important;}
   .public-preview .visual-flow{grid-template-columns:1fr!important;}

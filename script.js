@@ -447,6 +447,23 @@ function initStartMenu(projects){
 
 
 
+function initGuideTabs(){
+  const root = document.getElementById('hermesGuideWindow');
+  if(!root) return;
+  const state = { product: 'hermes', os: 'mac' };
+  const paint = () => {
+    root.querySelectorAll('[data-guide-product]').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-guide-product') === state.product));
+    root.querySelectorAll('[data-guide-os]').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-guide-os') === state.os));
+    root.querySelectorAll('.guide-panel').forEach(panel => {
+      const on = panel.getAttribute('data-panel-product') === state.product && panel.getAttribute('data-panel-os') === state.os;
+      panel.classList.toggle('active', on);
+    });
+  };
+  root.querySelectorAll('[data-guide-product]').forEach(btn => btn.addEventListener('click', () => { state.product = btn.getAttribute('data-guide-product') || 'hermes'; paint(); }));
+  root.querySelectorAll('[data-guide-os]').forEach(btn => btn.addEventListener('click', () => { state.os = btn.getAttribute('data-guide-os') || 'mac'; paint(); }));
+  paint();
+}
+
 function themeIconKey(btn){
   const label=(btn.querySelector('span')?.textContent||'').toLowerCase();
   if(label.includes('read me')) return 'readme';
@@ -852,6 +869,7 @@ async function boot(){
   initEasterEggs();
   initLoreEggs();
   initSettingsPanel();
+  initGuideTabs();
   initQuirkyStartActions();
 
   document.addEventListener('click', (e)=>{

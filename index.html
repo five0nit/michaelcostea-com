@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260501-2345" />
+  <link rel="stylesheet" href="styles.css?v=20260502-0015" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -25,7 +25,7 @@
       <div class="win-title"><span>💾 Welcome.exe - Michael Costea Portfolio</span><button class="win-close" data-close="readerWindow">×</button></div>
       <div class="win-body welcome-body styleguide-welcome">
         <aside class="welcome-sidebar" aria-label="Profile controls">
-          <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260501-2345" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
+          <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0015" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
           <button class="btn big-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
@@ -198,10 +198,10 @@
           <p>This section is for normal people who are curious about AI agents and want a safe, simple first try. No hype. No jargon wall. Just what it is, what it can do, and how to install a first Hermes agent.</p>
           <div class="guide-card-grid">
             <button class="guide-card" type="button" data-open="agentGuideWindow" onclick="openWindow('agentGuideWindow')"><b>1. What is an AI agent?</b><span>Simple explanation, examples, safety limits, and visual workflow.</span></button>
-            <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>2. Install your first Hermes agent</b><span>Mac + PC paths, minimal commands, and copy/paste first prompts.</span></button>
+            <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>2. Install Hermes or OpenClaw</b><span>Hold-your-hand setup with Hermes/OpenClaw toggles, Mac/Windows/Linux paths, model tokens, local config, Telegram, and BotFather.</span></button>
           </div>
           <div class="visual-flow" aria-label="AI help learning path">
-            <div>Learn<br><b>what agents do</b></div><span>→</span><div>Install<br><b>Hermes</b></div><span>→</span><div>Run<br><b>first prompt</b></div><span>→</span><div>Use<br><b>safely</b></div>
+            <div>Learn<br><b>what agents do</b></div><span>→</span><div>Choose<br><b>Hermes/OpenClaw</b></div><span>→</span><div>Connect<br><b>Telegram</b></div><span>→</span><div>Use<br><b>safely</b></div>
           </div>
           <p class="guide-note"><b>Plain English version:</b> an AI agent is a helper that can use tools. It can read, write, search, run commands, and remember context — but it still needs clear instructions and human review.</p>
         </article>
@@ -243,49 +243,156 @@
       </div>
     </section>
 
-    <section id="hermesGuideWindow" class="win-window doc-window" aria-label="Install Hermes guide" style="left:225px;top:80px;width:min(960px,94vw);">
-      <div class="win-title"><span>Guide 2 - Install your first Hermes agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
+    <section id="hermesGuideWindow" class="win-window doc-window" aria-label="Install Hermes and OpenClaw guide" style="left:225px;top:70px;width:min(1040px,96vw);">
+      <div class="win-title"><span>Guide 2 - Install your first local AI agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
       <div class="win-body document-body">
-        <article class="resume-doc guide-doc">
-          <h2>Install Your First Hermes Agent</h2>
-          <p><b>Hermes Agent</b> is an open-source AI agent you run from your computer. It can chat, remember context, use tools, and help automate useful work.</p>
-          <div class="visual-flow large-flow">
-            <div>Install<br><b>Hermes</b></div><span>→</span><div>Run<br><b>setup</b></div><span>→</span><div>Check<br><b>doctor</b></div><span>→</span><div>Try<br><b>prompt</b></div>
+        <article class="resume-doc guide-doc install-guide">
+          <h2>Install Your First Local AI Agent</h2>
+          <p><b>Goal:</b> get a real agent running locally, connect it to a model, and talk to it through Telegram so testing feels like messaging a helpful assistant instead of operating a developer tool.</p>
+          <p class="guide-note"><b>Cost + tokens intro:</b> AI tools charge or limit you by <b>tokens</b> — chunks of text sent in and generated back. Long chats, big files, and repeated tool use burn tokens quickly. At the moment, <b>GPT / ChatGPT OAuth</b> is usually the cheapest beginner path for a good balance of reasoning and usability when the tool offers it. Start with a <b>ChatGPT Plus</b> account. Move to <b>Pro</b> only once you are actually hitting rate limits or using too many tokens for that plan. Pricing and limits change, so always check the provider page before relying on it for business-critical work.</p>
+
+          <div class="guide-toggle-block" aria-label="Choose agent">
+            <p class="toggle-label">1. Choose the agent guide</p>
+            <div class="segmented product-tabs" role="tablist" aria-label="Agent guide selector">
+              <button type="button" class="seg-btn active" data-guide-product="hermes">Hermes Agent</button>
+              <button type="button" class="seg-btn" data-guide-product="openclaw">OpenClaw</button>
+            </div>
+            <p class="toggle-label">2. Choose your computer</p>
+            <div class="segmented os-tabs" role="tablist" aria-label="Operating system selector">
+              <button type="button" class="seg-btn active" data-guide-os="mac">Mac</button>
+              <button type="button" class="seg-btn" data-guide-os="windows">Windows</button>
+              <button type="button" class="seg-btn" data-guide-os="linux">Linux</button>
+            </div>
           </div>
-          <h3>Before you start</h3>
+
+          <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac">
+            <h3>Hermes Agent on Mac — complete beginner path</h3>
+            <ol class="step-list">
+              <li><b>Prepare:</b> open <b>Terminal</b>. Install Apple command-line tools if macOS asks.</li>
+              <li><b>Install Hermes:</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
+              <li><b>Restart Terminal</b> so your shell sees the new <code>hermes</code> command.</li>
+              <li><b>Run local setup:</b><pre class="guide-code">hermes setup
+hermes doctor</pre></li>
+              <li><b>Model login:</b> when setup asks for a model/provider, choose GPT / ChatGPT OAuth if available. Otherwise use a supported API key/provider you already have access to. Do not paste keys into public chats.</li>
+              <li><b>Pick a safe working folder:</b> make a test folder on Desktop and ask Hermes to use that first, not your whole computer.</li>
+              <li><b>First local test:</b><pre class="guide-code">hermes chat -q "I am new to Hermes. Explain what you can do, then create a safe beginner checklist for me."</pre></li>
+              <li><b>Telegram path:</b> follow the BotFather section below, then run setup again if needed and enable the messaging gateway.</li>
+            </ol>
+          </div>
+
+          <div class="guide-panel" data-panel-product="hermes" data-panel-os="windows">
+            <h3>Hermes Agent on Windows — recommended WSL Ubuntu path</h3>
+            <ol class="step-list">
+              <li><b>Open PowerShell as Administrator.</b></li>
+              <li><b>Install Ubuntu under WSL:</b><pre class="guide-code">wsl --install -d Ubuntu</pre></li>
+              <li><b>Restart</b> if Windows asks. Open <b>Ubuntu</b> from Start Menu and create a Linux username/password.</li>
+              <li><b>Update Ubuntu:</b><pre class="guide-code">sudo apt update && sudo apt upgrade -y</pre></li>
+              <li><b>Install Hermes inside Ubuntu:</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
+              <li><b>Close and reopen Ubuntu</b>, then run:<pre class="guide-code">hermes setup
+hermes doctor</pre></li>
+              <li><b>Model login:</b> choose GPT / ChatGPT OAuth if offered for the cheapest beginner balance of reasoning. Start with Plus, move to Pro only after rate limits become a real blocker.</li>
+              <li><b>Working files:</b> your Windows Desktop is usually under <code>/mnt/c/Users/YOURNAME/Desktop</code>. For first tests, create a small folder and keep Hermes scoped there.</li>
+            </ol>
+          </div>
+
+          <div class="guide-panel" data-panel-product="hermes" data-panel-os="linux">
+            <h3>Hermes Agent on Linux — local install</h3>
+            <ol class="step-list">
+              <li><b>Open Terminal</b> and make sure curl exists:<pre class="guide-code">sudo apt update
+sudo apt install -y curl git</pre></li>
+              <li><b>Install Hermes:</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
+              <li><b>Reload shell:</b><pre class="guide-code">exec $SHELL -l</pre></li>
+              <li><b>Run setup and checks:</b><pre class="guide-code">hermes setup
+hermes doctor</pre></li>
+              <li><b>Model login:</b> choose GPT / ChatGPT OAuth if available, or a supported provider/API key. Keep keys in the setup/config flow, not in prompts.</li>
+              <li><b>First local test:</b><pre class="guide-code">hermes chat -q "Create a safe starter plan for learning local AI agents. Ask before touching files."</pre></li>
+            </ol>
+          </div>
+
+          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="mac">
+            <h3>OpenClaw on Mac — complete beginner path</h3>
+            <ol class="step-list">
+              <li><b>Install Node.js 22+</b>. Easiest Mac path is Homebrew:<pre class="guide-code">brew install node</pre>If you do not have Homebrew, install Node.js from <code>nodejs.org</code>.</li>
+              <li><b>Check Node:</b><pre class="guide-code">node --version
+npm --version</pre>OpenClaw currently requires Node <b>22.14+</b>.</li>
+              <li><b>Install OpenClaw globally:</b><pre class="guide-code">npm install -g openclaw</pre></li>
+              <li><b>Run local onboarding/config:</b><pre class="guide-code">openclaw setup
+openclaw configure
+openclaw doctor</pre></li>
+              <li><b>Model login:</b> choose GPT / ChatGPT OAuth if the wizard offers it. Otherwise add your provider/API key through the config wizard. Start with Plus; upgrade to Pro only when rate limits genuinely slow your work.</li>
+              <li><b>First local chat:</b><pre class="guide-code">openclaw chat</pre>Then ask: <code>Explain what you can safely do on this computer and ask before taking actions.</code></li>
+            </ol>
+          </div>
+
+          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="windows">
+            <h3>OpenClaw on Windows — easiest WSL Ubuntu path</h3>
+            <ol class="step-list">
+              <li><b>Open PowerShell as Administrator</b> and install Ubuntu:<pre class="guide-code">wsl --install -d Ubuntu</pre></li>
+              <li><b>Open Ubuntu</b> from Start Menu, create your Linux username/password, then update packages:<pre class="guide-code">sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl git</pre></li>
+              <li><b>Install Node.js 22+ with nvm:</b><pre class="guide-code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+nvm install 22
+nvm use 22</pre></li>
+              <li><b>Install OpenClaw:</b><pre class="guide-code">npm install -g openclaw
+openclaw --version</pre></li>
+              <li><b>Run setup:</b><pre class="guide-code">openclaw setup
+openclaw configure
+openclaw doctor</pre></li>
+              <li><b>Windows files:</b> WSL can see Windows files under <code>/mnt/c/Users/YOURNAME</code>. For beginners, create a test folder first and do not point the agent at sensitive folders.</li>
+            </ol>
+          </div>
+
+          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="linux">
+            <h3>OpenClaw on Linux — local install</h3>
+            <ol class="step-list">
+              <li><b>Install base tools:</b><pre class="guide-code">sudo apt update
+sudo apt install -y curl git</pre></li>
+              <li><b>Install Node.js 22+ with nvm:</b><pre class="guide-code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+nvm install 22
+nvm use 22</pre></li>
+              <li><b>Install OpenClaw:</b><pre class="guide-code">npm install -g openclaw</pre></li>
+              <li><b>Run local setup and health checks:</b><pre class="guide-code">openclaw setup
+openclaw configure
+openclaw doctor
+openclaw status</pre></li>
+              <li><b>Start a terminal chat:</b><pre class="guide-code">openclaw chat</pre></li>
+              <li><b>Begin safely:</b> ask it to explain before actions, stay inside a test folder, and request confirmation before edits, sends, purchases, deletes, or business-system changes.</li>
+            </ol>
+          </div>
+
+          <h3>Telegram + BotFather setup — main testing comms path</h3>
+          <ol class="step-list">
+            <li><b>Open Telegram</b> and search for <b>@BotFather</b>. Confirm it has Telegram’s verified checkmark.</li>
+            <li>Send <code>/newbot</code>.</li>
+            <li>Choose a friendly display name, e.g. <code>My First Agent</code>.</li>
+            <li>Choose a unique username ending in <code>bot</code>, e.g. <code>my_first_agent_123_bot</code>.</li>
+            <li>BotFather gives you an HTTP API token. <b>Copy it once and store it safely.</b> Treat it like a password.</li>
+            <li>Open your new bot in Telegram and press <b>Start</b>, or send <code>/start</code>.</li>
+            <li>For channel/group testing: create a private Telegram group or channel, add your bot, and make it admin only if it needs to post there. Keep beginner testing private.</li>
+            <li>Run your agent setup again and choose Telegram/messaging gateway when prompted:<pre class="guide-code">hermes setup
+# or
+openclaw configure</pre></li>
+            <li>Paste the BotFather token only into the official local setup/config prompt.</li>
+            <li>Start/enable the gateway when the tool asks. Then send a simple message to your bot: <code>Say hello and explain what you can do safely.</code></li>
+          </ol>
+
+          <h3>Beginner safety checklist</h3>
           <ul>
-            <li>You need internet access.</li>
-            <li>You need an AI provider login/API key during setup. If unsure, use the setup wizard and pick the easiest provider available to you.</li>
-            <li>Copy commands exactly. Run one line at a time.</li>
+            <li>Start in a test folder, not your whole Desktop/Documents drive.</li>
+            <li>Do not give access to money, customer systems, or private business data on day one.</li>
+            <li>Ask the agent to show a plan before edits or sends.</li>
+            <li>Keep Telegram groups private while testing.</li>
+            <li>If a command fails, run <code>hermes doctor</code> or <code>openclaw doctor</code> and read the red lines.</li>
           </ul>
-          <h3>Path A — Mac</h3>
-          <p>Open <b>Terminal</b>. Then run:</p>
-          <pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
-hermes setup
-hermes doctor</pre>
-          <p>If your terminal says <b>command not found: hermes</b>, close Terminal, reopen it, then run:</p>
-          <pre class="guide-code">hermes doctor</pre>
-          <h3>Path B — Windows PC</h3>
-          <p>Hermes runs best on Windows through <b>WSL Ubuntu</b>. Open <b>PowerShell as Administrator</b> and run:</p>
-          <pre class="guide-code">wsl --install -d Ubuntu</pre>
-          <p>Restart if Windows asks. Open <b>Ubuntu</b> from the Start Menu, create your Linux username/password, then run:</p>
-          <pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
-hermes setup
-hermes doctor</pre>
-          <h3>First exact prompts to test</h3>
-          <p>After setup, try these one at a time:</p>
-          <pre class="guide-code">hermes chat -q "Explain what an AI agent is to a beginner in 5 bullet points."
-hermes chat -q "Help me plan tomorrow. Ask me 3 questions first, then make a simple checklist."
-hermes chat -q "Create a polite follow-up email for a customer who asked for a quote but has not replied."</pre>
-          <h3>Safe first project prompt</h3>
-          <pre class="guide-code">I am new to Hermes. Be careful and explain before doing anything. Help me create a simple folder called ai-agent-test with a notes file that lists 5 safe ways I could use an AI agent at work.</pre>
-          <h3>Quick troubleshooting</h3>
-          <ul>
-            <li><b>Install finished but Hermes not found:</b> close and reopen the terminal.</li>
-            <li><b>Setup asks for a provider:</b> choose one you have access to, then follow the wizard.</li>
-            <li><b>Something looks broken:</b> run <code>hermes doctor</code> and read the red lines.</li>
-          </ul>
-          <p class="guide-note"><b>Rule for beginners:</b> do not give an agent access to sensitive files, money, customer systems, or business accounts until you understand what it is doing.</p>
+
+          <h3>First prompts to copy</h3>
+          <pre class="guide-code">I am brand new to local AI agents. Explain what you can do in plain English, then ask me one question before doing anything.
+
+Use a safe mode: do not edit, delete, send, purchase, or log into anything unless I explicitly approve it.
+
+Help me create a beginner test plan for using an AI agent through Telegram for simple admin tasks.</pre>
         </article>
       </div>
     </section>
@@ -320,6 +427,6 @@ hermes chat -q "Create a polite follow-up email for a customer who asked for a q
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260501-2345"></script>
+  <script src="script.js?v=20260502-0015"></script>
 </body>
 </html>
