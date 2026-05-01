@@ -562,9 +562,6 @@ body.public-preview::before{
 .public-preview .start-items::before{content:"MICHAEL OS 89";background:var(--title-blue);}
 .public-preview .start-item{font-size:12px;padding:7px 8px;}
 .public-preview .start-item:hover{background:var(--title-blue);color:#fff;}
-.public-preview .ai-cta-icon{background:#fff4c2!important;border:2px dotted #ffff00!important;color:#000!important;text-shadow:none!important;box-shadow:0 0 0 2px #000080,0 0 18px rgba(255,255,0,.75);animation:agentCtaPulse 1.25s steps(2,end) infinite;}
-.public-preview .ai-cta-icon .icon-art{filter:none!important;color:#ffcc00;text-shadow:1px 1px 0 #000;font-size:34px!important;}
-.public-preview .ai-cta-icon span:last-child{color:#000!important;text-shadow:none!important;font-weight:900!important;}
 .public-preview .ai-cta-nav,.public-preview .welcome-agent-cta,.public-preview .start-cta{background:#fff4c2!important;color:#000!important;border-top-color:#ffffee!important;border-left-color:#ffffee!important;border-right-color:#808000!important;border-bottom-color:#808000!important;box-shadow:0 0 0 2px #000080,0 0 16px rgba(255,230,0,.7)!important;}
 .public-preview .ai-cta-nav{min-height:50px!important;font-size:13px!important;letter-spacing:.04em;}
 .public-preview .welcome-agent-cta{appearance:none;text-align:left;cursor:pointer;width:100%;position:relative;overflow:hidden;}
@@ -572,7 +569,6 @@ body.public-preview::before{
 .public-preview .welcome-agent-cta b,.public-preview .start-cta b{color:#000080!important;}
 .public-preview .welcome-agent-cta:hover,.public-preview .ai-cta-nav:hover,.public-preview .start-cta:hover{background:#000080!important;color:#fff!important;}
 .public-preview .welcome-agent-cta:hover b,.public-preview .welcome-agent-cta:hover span,.public-preview .ai-cta-nav:hover,.public-preview .start-cta:hover b{color:#fff!important;}
-@keyframes agentCtaPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
 .public-preview .release-hold{border-top:2px solid var(--mid-shadow);border-left:2px solid var(--mid-shadow);border-right:2px solid #fff;border-bottom:2px solid #fff;background:#fff;padding:12px;font-family:"Space Grotesk",monospace;}
 .public-preview a.btn,.public-preview button.btn{border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);background:var(--window-gray);border-radius:0;color:#000;text-decoration:none;}
 .public-preview a.btn:active,.public-preview button.btn:active{border-top-color:var(--mid-shadow);border-left-color:var(--mid-shadow);border-right-color:#fff;border-bottom-color:#fff;}
@@ -607,6 +603,10 @@ body.public-preview::before{
 .public-preview .doc-grid>div,.public-preview .agent-grid>div{background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:8px;}
 .public-preview .doc-grid b,.public-preview .agent-grid b{display:block;color:#4b53bc;font:900 12px/16px "Work Sans",Tahoma,sans-serif;margin-bottom:4px;text-transform:uppercase;}
 .public-preview .doc-grid span,.public-preview .agent-grid span{display:block;line-height:16px;}
+.public-preview .agent-setup-diagram{margin:14px 0 10px;background:#0b1020;border:2px solid #000080;border-top-color:#33e8ff;border-left-color:#33e8ff;border-right-color:#00133d;border-bottom-color:#00133d;padding:8px;box-shadow:2px 2px 0 #000;}
+.public-preview .agent-setup-diagram img{display:block;width:100%;height:auto;max-width:100%;border:1px solid #33e8ff;background:#050713;image-rendering:auto;}
+.public-preview .agent-setup-diagram figcaption{margin:7px 2px 0;color:#e8fbff;font:700 11px/15px "Space Grotesk","Courier New",monospace;}
+.public-preview .agent-setup-diagram figcaption b{color:#7ffcff;text-transform:uppercase;}
 .public-preview .project-list-public{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px;}
 .public-preview .project-list-public article{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;min-height:132px;}
 .public-preview .project-list-public h3{margin:0 0 6px;color:#000080;font:900 13px/16px "Work Sans",Tahoma,sans-serif;}
