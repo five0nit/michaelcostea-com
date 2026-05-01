@@ -544,9 +544,9 @@ body.public-preview::before{
 .public-preview .welcome-copy p{max-width:580px;margin:14px 0 0;}
 .public-preview .accent{color:var(--accent-cyan);text-decoration:underline;}
 .public-preview .spec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:24px;}
-.public-preview .spec-grid>div{background:var(--panel-gray);border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);padding:10px;min-height:86px;}
-.public-preview .spec-grid b{display:block;color:var(--accent-purple);font:900 12px/16px "Work Sans",Tahoma,sans-serif;margin-bottom:6px;}
-.public-preview .spec-grid span{display:block;font:12px/16px "Space Grotesk",monospace;}
+.public-preview .spec-grid>div,.public-preview .welcome-agent-cta{background:var(--panel-gray);border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);padding:10px;min-height:86px;}
+.public-preview .spec-grid b,.public-preview .welcome-agent-cta b{display:block;color:var(--accent-purple);font:900 12px/16px "Work Sans",Tahoma,sans-serif;margin-bottom:6px;}
+.public-preview .spec-grid span,.public-preview .welcome-agent-cta span{display:block;font:12px/16px "Space Grotesk",monospace;}
 .public-preview .status-bar{display:grid;grid-template-columns:1fr 96px 110px;gap:3px;padding:3px;background:var(--window-gray);border-top:1px solid var(--mid-shadow);font:11px/16px "Space Grotesk",monospace;}
 .public-preview .status-bar span{display:block;padding:2px 6px;border-top:1px solid var(--mid-shadow);border-left:1px solid var(--mid-shadow);border-right:1px solid #fff;border-bottom:1px solid #fff;background:#d4d0c8;}
 .public-preview .taskbar{height:46px;padding:5px;background:var(--window-gray);border-top:2px solid #fff;box-shadow:0 -1px var(--mid-shadow);z-index:40;}
@@ -562,6 +562,17 @@ body.public-preview::before{
 .public-preview .start-items::before{content:"MICHAEL OS 89";background:var(--title-blue);}
 .public-preview .start-item{font-size:12px;padding:7px 8px;}
 .public-preview .start-item:hover{background:var(--title-blue);color:#fff;}
+.public-preview .ai-cta-icon{background:#fff4c2!important;border:2px dotted #ffff00!important;color:#000!important;text-shadow:none!important;box-shadow:0 0 0 2px #000080,0 0 18px rgba(255,255,0,.75);animation:agentCtaPulse 1.25s steps(2,end) infinite;}
+.public-preview .ai-cta-icon .icon-art{filter:none!important;color:#ffcc00;text-shadow:1px 1px 0 #000;font-size:34px!important;}
+.public-preview .ai-cta-icon span:last-child{color:#000!important;text-shadow:none!important;font-weight:900!important;}
+.public-preview .ai-cta-nav,.public-preview .welcome-agent-cta,.public-preview .start-cta{background:#fff4c2!important;color:#000!important;border-top-color:#ffffee!important;border-left-color:#ffffee!important;border-right-color:#808000!important;border-bottom-color:#808000!important;box-shadow:0 0 0 2px #000080,0 0 16px rgba(255,230,0,.7)!important;}
+.public-preview .ai-cta-nav{min-height:50px!important;font-size:13px!important;letter-spacing:.04em;}
+.public-preview .welcome-agent-cta{appearance:none;text-align:left;cursor:pointer;width:100%;position:relative;overflow:hidden;}
+.public-preview .welcome-agent-cta::after{content:'▶';position:absolute;right:10px;bottom:8px;color:#000080;font:900 16px/1 "Work Sans",Tahoma,sans-serif;}
+.public-preview .welcome-agent-cta b,.public-preview .start-cta b{color:#000080!important;}
+.public-preview .welcome-agent-cta:hover,.public-preview .ai-cta-nav:hover,.public-preview .start-cta:hover{background:#000080!important;color:#fff!important;}
+.public-preview .welcome-agent-cta:hover b,.public-preview .welcome-agent-cta:hover span,.public-preview .ai-cta-nav:hover,.public-preview .start-cta:hover b{color:#fff!important;}
+@keyframes agentCtaPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
 .public-preview .release-hold{border-top:2px solid var(--mid-shadow);border-left:2px solid var(--mid-shadow);border-right:2px solid #fff;border-bottom:2px solid #fff;background:#fff;padding:12px;font-family:"Space Grotesk",monospace;}
 .public-preview a.btn,.public-preview button.btn{border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);background:var(--window-gray);border-radius:0;color:#000;text-decoration:none;}
 .public-preview a.btn:active,.public-preview button.btn:active{border-top-color:var(--mid-shadow);border-left-color:var(--mid-shadow);border-right-color:#fff;border-bottom-color:#fff;}

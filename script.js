@@ -431,7 +431,7 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="resumeWindow"><span><b class="si">📄</b>Resume</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="projectsWindow"><span><b class="si">📁</b>Projects</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="agentsWindow"><span><b class="si">🤖</b>AI Agents</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="aiHelpWindow"><span><b class="si">🎓</b>AI Help</span></a>
+    <a class="start-item start-cta" role="menuitem" href="#" data-open-window="aiHelpWindow"><span><b class="si">⚡</b>Create an Agent</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span><b class="si">🗂️</b>Programs</span><small>hidden</small></a>
     <div class="start-sep"></div>
     <a class="start-item" role="menuitem" href="mailto:costra.michael@gmail.com"><span><b class="si">✉️</b>Email</span></a>
