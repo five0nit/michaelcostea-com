@@ -458,6 +458,9 @@ function initGuideTabs(){
       const on = panel.getAttribute('data-panel-product') === state.product && panel.getAttribute('data-panel-os') === state.os;
       panel.classList.toggle('active', on);
     });
+    root.querySelectorAll('[data-checklist-product]').forEach(panel => {
+      panel.classList.toggle('active', panel.getAttribute('data-checklist-product') === state.product);
+    });
   };
   root.querySelectorAll('[data-guide-product]').forEach(btn => btn.addEventListener('click', () => { state.product = btn.getAttribute('data-guide-product') || 'hermes'; paint(); }));
   root.querySelectorAll('[data-guide-os]').forEach(btn => btn.addEventListener('click', () => { state.os = btn.getAttribute('data-guide-os') || 'mac'; paint(); }));

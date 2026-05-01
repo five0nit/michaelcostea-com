@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260502-0015" />
+  <link rel="stylesheet" href="styles.css?v=20260502-0035" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -25,7 +25,7 @@
       <div class="win-title"><span>💾 Welcome.exe - Michael Costea Portfolio</span><button class="win-close" data-close="readerWindow">×</button></div>
       <div class="win-body welcome-body styleguide-welcome">
         <aside class="welcome-sidebar" aria-label="Profile controls">
-          <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0015" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
+          <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0035" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
           <button class="btn big-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
@@ -163,28 +163,32 @@
       <div class="win-body document-body">
         <article class="resume-doc">
           <h2>AI Agents & Workflow Automation</h2>
-          <p>The agent work is designed for business operating leverage: systems that can understand context, automate routine work, prepare decisions, surface exceptions, and keep humans focused on judgment, approvals, customer trust, and edge cases.</p>
+          <p><b>Ethos:</b> build AI agents the way you would build a serious operating system for your life or business: visible, measured, permissioned, reviewable, and useful every day. The win is not replacing people with a chatbot. The win is removing repetitive drag, keeping context alive, catching exceptions early, and giving humans more leverage.</p>
+          <p>Most stock agent installs are impressive demos but weak operating layers. They can answer, code, and use tools, but they often lack durable memory, shared visibility, scheduled follow-up, Telegram accountability, watchdogs, dashboards, and a review loop. Our current stack is designed to close that gap.</p>
           <div class="agent-grid">
-            <div><b>OpenClaw</b><span>AI-powered automation layer for business workflows, browser/control tasks, visible execution, and operational process support.</span></div>
-            <div><b>Hermes</b><span>Planning, coding, repo edits, scheduled tasks, memory retrieval, local APIs, research, Telegram updates, and verification loops.</span></div>
-            <div><b>Master Control</b><span>Unified cockpit for services, projects, scheduled tasks, sessions, memory, Obsidian notes, and agent engagement.</span></div>
-            <div><b>Human Review Layer</b><span>Fail-closed automation, escalation paths, evidence, approval gates, and measurable review loops.</span></div>
+            <div><b>OpenClaw</b><span>Local automation and control layer: terminal UI, gateway, Telegram channels, browser/control tasks, plugins, memory, sessions, and dashboard access.</span></div>
+            <div><b>Hermes</b><span>Planning and execution layer: coding, repo edits, scheduled jobs, memory retrieval, local APIs, research, Telegram updates, verification, and dashboard access.</span></div>
+            <div><b>Master Control</b><span>Visibility layer: projects, live services, scheduled tasks, all sessions, memory, Obsidian notes, and agent engagement from one cockpit.</span></div>
+            <div><b>Human Review Layer</b><span>Trust layer: approval gates, evidence, audit trails, fail-closed workflows, exception surfacing, and handoff back to a person.</span></div>
           </div>
-          <h3>Business Use Cases</h3>
+          <h3>Concerns and pitfalls to respect</h3>
           <ul>
-            <li>Reduce duplicate entry and fragmented sales/admin handoffs.</li>
-            <li>Automate follow-up, routine admin, and quoting preparation safely.</li>
-            <li>Unify business context across sales, ops, finance, admin, support, and field delivery.</li>
-            <li>Surface exceptions instead of burying them in disconnected tools.</li>
-            <li>Create operational dashboards for teams and managers.</li>
-            <li>Protect customer trust by keeping humans on judgment, approvals, and edge cases.</li>
+            <li><b>Silent failure:</b> agents can look busy while missing the real business outcome. Track inputs, outputs, receipts, and verification.</li>
+            <li><b>Tool overreach:</b> never let an agent delete, spend, message customers, or change systems without explicit permission and rollback paths.</li>
+            <li><b>Context rot:</b> long chats drift. Use memory deliberately, compact sessions, and keep source-of-truth docs clean.</li>
+            <li><b>Model cost and rate limits:</b> long tool loops burn tokens. Monitor usage and pick the cheapest model that can reason well enough for the job.</li>
+            <li><b>Browser automation fragility:</b> APIs first, browser automation second, desktop/manual fallback last.</li>
+            <li><b>Trust gap:</b> if a human cannot see what happened, why it happened, and what changed, the workflow is not production-ready.</li>
           </ul>
-          <h3>Technical Direction</h3>
+          <h3>Why this can become a cheat code</h3>
+          <p>When agents are tracked and monitored properly, they become a compounding leverage system: they remember decisions, chase loose ends, prepare work, run checks, produce evidence, and keep pushing while you sleep or focus elsewhere. That is the real cheat code — not one magic prompt, but a monitored agent stack that keeps life and business workflows moving.</p>
+          <h3>Build principles</h3>
           <ul>
-            <li>APIs first, browser automation second, desktop/manual work last resort.</li>
-            <li>Clear system boundaries between core platforms, orchestration, reporting, and review.</li>
-            <li>Automation designed to be reviewable, measurable, and auditable.</li>
-            <li>Dashboards used as operational control surfaces, not vanity reporting.</li>
+            <li>Start with one painful repeatable workflow, not a vague “automate everything” goal.</li>
+            <li>Give the agent bounded tools, test data, and a clear success definition.</li>
+            <li>Make every workflow observable: logs, Telegram updates, dashboard state, and final receipts.</li>
+            <li>Keep humans on judgment, customer trust, finance, safety, legal, quality, and edge cases.</li>
+            <li>Scale only after the workflow proves it saves time without creating hidden risk.</li>
           </ul>
         </article>
       </div>
@@ -231,6 +235,16 @@
             <div>🛠️ <b>Tools</b><span>Read files, create files, check websites, run safe commands.</span></div>
             <div>📊 <b>Business</b><span>Surface exceptions, reduce duplicate entry, help with reporting.</span></div>
           </div>
+          <h3>Real workflow examples</h3>
+          <div class="workflow-examples">
+            <article><b>Email → CRM → Welcome → Follow-up</b><span>Read a new enquiry email, extract name/contact/service/suburb, check for duplicates, enter the lead into a CRM, send an approved welcome email, schedule follow-ups until the customer replies, then hand the conversation to a human with a clean summary.</span></article>
+            <article><b>Quote prep assistant</b><span>Read job notes, photos, customer requirements, and pricing rules; prepare a draft quote pack; flag missing information; notify Telegram for approval; only send after human sign-off.</span></article>
+            <article><b>Operations exception radar</b><span>Check dashboards and inboxes each morning, find stale leads, overdue jobs, missing payments, or review risks, then post a ranked action list with links and evidence.</span></article>
+            <article><b>Knowledge-base maintainer</b><span>Watch repeated staff questions, draft SOP updates, link source documents, ask for approval, and publish a cleaner internal answer so the next person does not ask again.</span></article>
+            <article><b>Customer journey coordinator</b><span>Track first touch, booking, quote, job completion, invoice, review request, and warranty follow-up so nothing falls between sales, admin, and field teams.</span></article>
+            <article><b>Personal life admin</b><span>Summarise bills, renewals, travel plans, reminders, emails, and documents into one Telegram briefing with tasks and due dates.</span></article>
+          </div>
+          <p class="guide-note"><b>The power is the chain:</b> read context → update systems → communicate → schedule next action → monitor for reply → escalate to a human when judgment or trust matters.</p>
           <h3>What it should not do without you</h3>
           <ul>
             <li>Spend money, delete files, send public messages, or change business systems without approval.</li>
@@ -263,6 +277,43 @@
               <button type="button" class="seg-btn" data-guide-os="windows">Windows</button>
               <button type="button" class="seg-btn" data-guide-os="linux">Linux</button>
             </div>
+          </div>
+
+          <h3>Before the Web UI: terminal setup you must complete</h3>
+          <p>The Web UI/dashboard is the easy part. First you need the local agent configured in Terminal: model login, local workspace, safe permissions, messaging gateway, and health checks.</p>
+          <div class="terminal-checklists">
+            <article data-checklist-product="hermes">
+              <h4>Hermes required terminal flow</h4>
+              <ol class="step-list">
+                <li><b>Run setup wizard:</b><pre class="guide-code">hermes setup</pre>Choose local/default workspace options unless you know you need something custom.</li>
+                <li><b>Select model/provider:</b> when prompted, choose <b>GPT / ChatGPT OAuth</b> if available. Log in through the browser window it opens. Start with ChatGPT Plus; upgrade to Pro once rate limits/token use genuinely block you.</li>
+                <li><b>Confirm model:</b><pre class="guide-code">hermes model</pre>Use this if you need to change provider/model later.</li>
+                <li><b>Configure Telegram/messaging gateway:</b><pre class="guide-code">hermes gateway setup</pre>Paste your BotFather token only into this local setup prompt. Authorise your own Telegram user/chat when prompted.</li>
+                <li><b>Install/start gateway service:</b><pre class="guide-code">hermes gateway install
+hermes gateway start
+hermes gateway status</pre>If you are on WSL/Docker/Termux, foreground mode may be easier for first testing:<pre class="guide-code">hermes gateway run</pre></li>
+                <li><b>Health check:</b><pre class="guide-code">hermes doctor
+hermes status</pre>Fix red errors before opening the dashboard.</li>
+                <li><b>Only after that, open Web UI:</b><pre class="guide-code">hermes dashboard</pre>For a server/WSL machine where you do not want auto-open:<pre class="guide-code">hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></li>
+              </ol>
+            </article>
+            <article data-checklist-product="openclaw">
+              <h4>OpenClaw required terminal flow</h4>
+              <ol class="step-list">
+                <li><b>Run first setup:</b><pre class="guide-code">openclaw setup --wizard --mode local</pre>Choose a local workspace. Beginners should keep the default unless they have a reason to move it.</li>
+                <li><b>Configure model credentials:</b><pre class="guide-code">openclaw configure --section model</pre>When prompted, choose <b>GPT / ChatGPT OAuth</b> if available. If not, use the provider/API key option the wizard supports. Do not paste tokens into chats.</li>
+                <li><b>Configure workspace + safe defaults:</b><pre class="guide-code">openclaw configure --section workspace
+openclaw configure --section gateway</pre>Keep the gateway local/loopback for first testing unless you know how you want to expose it.</li>
+                <li><b>Configure Telegram channel:</b><pre class="guide-code">openclaw configure --section channels</pre>Select Telegram, paste your BotFather token, and authorise your test user/group/channel.</li>
+                <li><b>Start or install gateway:</b><pre class="guide-code">openclaw gateway run</pre>For a background service after it works:<pre class="guide-code">openclaw gateway install
+openclaw gateway start
+openclaw gateway status</pre></li>
+                <li><b>Health checks before Web UI:</b><pre class="guide-code">openclaw doctor
+openclaw status
+openclaw gateway status</pre>Fix red errors before opening the dashboard.</li>
+                <li><b>Only after that, open Web UI:</b><pre class="guide-code">openclaw dashboard</pre>For terminal-only/server testing:<pre class="guide-code">openclaw dashboard --no-open</pre></li>
+              </ol>
+            </article>
           </div>
 
           <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac">
@@ -427,6 +478,6 @@ Help me create a beginner test plan for using an AI agent through Telegram for s
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260502-0015"></script>
+  <script src="script.js?v=20260502-0035"></script>
 </body>
 </html>

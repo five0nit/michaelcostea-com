@@ -801,6 +801,14 @@ body.public-preview::before{
 .public-preview .guide-tiles>div{background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:8px;min-height:92px;}
 .public-preview .guide-tiles b{display:block;color:#000080;margin:4px 0;}
 .public-preview .guide-tiles span{display:block;font-size:11px;line-height:15px;}
+.public-preview .workflow-examples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
+.public-preview .workflow-examples article{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;min-height:110px;}
+.public-preview .workflow-examples b{display:block;color:#000080;margin-bottom:5px;}
+.public-preview .workflow-examples span{display:block;font-size:12px;line-height:16px;}
+.public-preview .terminal-checklists{margin:10px 0;}
+.public-preview .terminal-checklists article{display:none;background:#fff;border:2px inset #808080;padding:10px;margin:8px 0;}
+.public-preview .terminal-checklists article.active{display:block;}
+.public-preview .terminal-checklists h4{margin:0 0 8px;font:900 15px/18px "Work Sans",Tahoma,sans-serif;color:#000080;}
 .public-preview .guide-code{background:#000!important;color:#39ff14!important;border:2px inset #808080!important;padding:10px!important;white-space:pre-wrap!important;overflow:auto!important;font:700 12px/16px "Courier New",monospace!important;margin:8px 0!important;}
 .public-preview .guide-note{background:#fff4c2;border:2px solid #808000;padding:8px!important;}
 .public-preview code{background:#eee;border:1px solid #999;padding:1px 3px;font-family:"Courier New",monospace;}
@@ -815,7 +823,7 @@ body.public-preview::before{
 .public-preview .step-list{padding-left:22px;}
 .public-preview .step-list li{margin:8px 0;}
 @media (max-width:760px){
-  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles{grid-template-columns:1fr!important;}
+  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples{grid-template-columns:1fr!important;}
   .public-preview .visual-flow{grid-template-columns:1fr!important;}
   .public-preview .visual-flow span{transform:rotate(90deg);min-height:20px;}
   .public-preview .guide-code{font-size:11px!important;line-height:15px!important;}
