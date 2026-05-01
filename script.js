@@ -80,14 +80,25 @@ async function runBootScreen(){
 }
 
 function isMobileMode(){
-  return window.matchMedia('(max-width: 820px)').matches;
+  return window.matchMedia('(max-width: 820px), (orientation: portrait) and (max-width: 1100px), (hover: none) and (pointer: coarse)').matches;
+}
+
+function clearMobileWindowInlineStyles(win){
+  if(!win || !isMobileMode()) return;
+  win.style.left = '';
+  win.style.right = '';
+  win.style.top = '';
+  win.style.width = '';
+  win.style.height = '';
 }
 
 function applyLayoutMode(){
   document.body.classList.toggle('mobile-mode', isMobileMode());
+  if (isMobileMode()) document.querySelectorAll('.win-window').forEach(clearMobileWindowInlineStyles);
 }
 
 function clampWindowToViewport(win){
+  if (isMobileMode()) { clearMobileWindowInlineStyles(win); return; }
   const taskbarH = 38;
   const rect = win.getBoundingClientRect();
   const maxLeft = Math.max(8, window.innerWidth - rect.width - 8);
@@ -100,6 +111,7 @@ function clampWindowToViewport(win){
 
 function centerWindow(win){
   if(!win) return;
+  if (isMobileMode()) { clearMobileWindowInlineStyles(win); return; }
   const taskbarH = 38;
   const rect = win.getBoundingClientRect();
   const left = Math.max(8, Math.round((window.innerWidth - rect.width) / 2));
