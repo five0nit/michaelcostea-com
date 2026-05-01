@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Michael Costea — Projects & Webapps</title>
   <meta name="description" content="Michael Costea's live playground: projects, automations, and webapps." />
-  <link rel="stylesheet" href="styles.css?v=20260310-2042" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260501-2149" />
 </head>
 <body>
   <div id="bootScreen" class="boot-screen" aria-label="MichaelOS boot screen">
@@ -48,15 +51,26 @@
       <button id="recycleBin" class="desk-icon" data-open="recycleWindow">🗑️<span id="recycleLabel">Recycle Bin</span></button>
     </section>
 
-    <section id="readerWindow" class="win-window open" aria-label="Reader window" style="left:90px;top:110px;width:min(560px,92vw);">
-      <div class="win-title"><span>Reader — MichaelOS 1989</span><button class="win-close" data-close="readerWindow">×</button></div>
-      <div class="win-body">
-        <h3>Welcome to MichaelOS 1989</h3>
-        <p>This is the live desktop for Michael Costea’s projects. Use Start or desktop icons to open tools.</p>
-        <p><b>Main builds in active development (beta):</b> Weekend + Day Planner, 3D Business Card Builder, OZQuotes, and AI Prompt SEO Solution. Everything else here is fun/experimental sandbox content built with autonomous AI agents.</p>
-        <p><b>Email:</b> <a href="mailto:costra.michael@gmail.com">costra.michael@gmail.com</a></p>
-        <p><b>LinkedIn:</b> <a href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener">linkedin.com/in/michaelcostea</a></p>
-        <p id="loreNote" class="muted"></p>
+    <section id="readerWindow" class="win-window open workstation-welcome" aria-label="Reader window" style="left:90px;top:110px;width:min(720px,94vw);">
+      <div class="win-title"><span>Welcome.exe — Michael Costea Workstation</span><button class="win-close" data-close="readerWindow">×</button></div>
+      <div class="win-body welcome-body">
+        <aside class="welcome-sidebar" aria-label="Profile controls">
+          <div class="profile-tile" aria-hidden="true">MC</div>
+          <button class="btn" type="button" data-open="appsWindow">Open Programs</button>
+          <a class="btn" href="mailto:costra.michael@gmail.com">Email Michael</a>
+          <a class="btn" href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener">LinkedIn</a>
+        </aside>
+        <section class="welcome-copy">
+          <div class="terminal-line">C:\MICHAELOS&gt; load portfolio.sys</div>
+          <h3>HELLO WORLD!</h3>
+          <p>I am <strong>Michael Costea</strong>, building practical webapps, AI automation layers, and weird little interactive systems from a retro workstation.</p>
+          <p><b>Active builds:</b> Weekend + Day Planner, 3D Business Card Builder, OZQuotes, and AI Prompt SEO Solution.</p>
+          <div class="spec-grid" aria-label="Current system focus">
+            <div><b>Technical Core</b><span>Webapps · automation · ops dashboards</span></div>
+            <div><b>Active Research</b><span>Agent workflows · local tools · playful UX</span></div>
+          </div>
+          <p id="loreNote" class="muted"></p>
+        </section>
       </div>
     </section>
 
@@ -264,6 +278,6 @@ C:\\MICHAELOS> blackcell</pre>
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260310-2042"></script>
+  <script src="script.js?v=20260501-2149"></script>
 </body>
 </html>
