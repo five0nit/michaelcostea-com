@@ -893,18 +893,18 @@ body.public-preview::before{
   }
   .public-preview .main-portfolio-window,
   body.mobile-mode.public-preview .main-portfolio-window{
-    position:relative!important;
+    position:absolute!important;
     z-index:12!important;
-    left:auto!important;
+    left:8px!important;
     right:auto!important;
-    top:auto!important;
+    top:78px!important;
     bottom:auto!important;
     transform:none!important;
     width:calc(100vw - 16px)!important;
     max-width:calc(100vw - 16px)!important;
     min-height:0!important;
     max-height:none!important;
-    margin:0 auto calc(50px + env(safe-area-inset-bottom,0px))!important;
+    margin:0 0 calc(50px + env(safe-area-inset-bottom,0px)) 0!important;
   }
   .public-preview .main-portfolio-window:not(.open),
   body.mobile-mode.public-preview .main-portfolio-window:not(.open){
