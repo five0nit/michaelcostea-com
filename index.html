@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Michael Costea — MICHAEL OS 89</title>
-  <meta name="description" content="Michael Costea's retro workstation portfolio." />
+  <meta name="description" content="Michael Costea's retro workstation portfolio: agent systems, workflow automation, and business operations technology." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260501-2250" />
+  <link rel="stylesheet" href="styles.css?v=20260501-2220" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -16,7 +16,7 @@
       <button class="desk-icon" data-open="aboutWindow" aria-label="Open My Computer"><span class="icon-art">🖥️</span><span>My Computer</span></button>
       <button class="desk-icon" data-open="resumeWindow" aria-label="Open Resume"><span class="icon-art">📄</span><span>Resume</span></button>
       <button class="desk-icon" data-open="projectsWindow" aria-label="Open Projects"><span class="icon-art">📁</span><span>Projects</span></button>
-      <button class="desk-icon" data-open="automationWindow" aria-label="Open AI Automations"><span class="icon-art">⚙️</span><span>AI Automations</span></button>
+      <button class="desk-icon" data-open="agentsWindow" aria-label="Open AI Agents"><span class="icon-art">🤖</span><span>AI Agents</span></button>
       <button id="recycleBin" class="desk-icon" data-open="recycleWindow" aria-label="Open Recycle Bin"><span class="icon-art">🗑️</span><span id="recycleLabel">Recycle Bin</span></button>
     </section>
 
@@ -27,17 +27,18 @@
           <div class="profile-portrait" aria-hidden="true"><span>MC</span></div>
           <button class="btn big-nav" type="button" data-open="resumeWindow">VIEW RESUME</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow">PROJECTS</button>
+          <button class="btn big-nav" type="button" data-open="agentsWindow">AI AGENTS</button>
           <button class="btn big-nav" type="button" data-open="contactWindow">CONTACT ME</button>
         </aside>
         <section class="welcome-copy">
           <h1>HELLO WORLD!</h1>
           <div class="terminal-line">INITIALIZING CORE_SYSTEM... [OK]</div>
           <div class="terminal-line">LOADING IDENTITY_MODULE... [OK]</div>
-          <p>I am <strong class="accent">Michael Costea</strong>, a licensed electrician, business builder, software tinkerer, and AI automation obsessive building practical digital workstations and automated intelligence layers.</p>
-          <p>My approach combines legacy technical reliability with modern agent workflows: simple interfaces, strong systems, and tools that reduce admin friction instead of creating more of it.</p>
+          <p>I am <strong class="accent">Michael Costea</strong>, a licensed electrician, business builder, and AI systems operator building practical workflow layers over real businesses.</p>
+          <p>Current focus: scalable AI and workflow orchestration that connects sales, ops, finance, admin, and field work without replacing human judgment where quality, approvals, or customer trust matter.</p>
           <div class="spec-grid" aria-label="Current system focus">
-            <div><b>TECHNICAL CORE</b><span>Webapps · automation · ops dashboards · field workflows</span></div>
-            <div><b>ACTIVE RESEARCH</b><span>Autonomous agents · local tools · retro-UX design</span></div>
+            <div><b>TECHNICAL CORE</b><span>Workflow architecture · webapps · dashboards · business-system integration</span></div>
+            <div><b>ACTIVE RESEARCH</b><span>Autonomous agents · AI orchestration · human-in-the-loop operations</span></div>
           </div>
         </section>
       </div>
@@ -47,7 +48,7 @@
     <section id="appsWindow" class="win-window" aria-label="Programs window" style="left:300px;top:180px;width:min(760px,94vw);">
       <div class="win-title"><span>Programs</span><button class="win-close" data-close="appsWindow">×</button></div>
       <div class="win-body">
-        <div class="release-hold"><b>Applications hidden until release.</b><br />Public webapps and experiments are being refit to the MICHAEL OS 89 style guide before they return.</div>
+        <div class="release-hold"><b>Applications hidden until release.</b><br />Public webapps, games, demos, and internal tools are hidden until they are rebuilt to the MICHAEL OS 89 style guide and ready for public release.</div>
         <div id="apps" class="grid" hidden></div>
       </div>
     </section>
@@ -59,39 +60,111 @@
         <p><b>Owner:</b> Michael Costea</p>
         <p><b>Region:</b> Australia / New Zealand</p>
         <p><b>Mode:</b> Public portfolio preview</p>
+        <p><b>Mission:</b> Build connected operational systems that let businesses grow without unnecessary support-headcount drag.</p>
       </div>
     </section>
 
-    <section id="resumeWindow" class="win-window" aria-label="Resume" style="left:160px;top:160px;width:min(620px,92vw);">
-      <div class="win-title"><span>Resume</span><button class="win-close" data-close="resumeWindow">×</button></div>
-      <div class="win-body">
-        <p><b>Michael Costea</b></p>
-        <p>Licensed Electrician · Business Builder · Practical Webapps · AI Automation</p>
-        <hr />
-        <p><b>Current focus:</b> building useful workflow tools, automation layers, and portfolio-grade interactive systems.</p>
-        <p class="muted">Full resume module is being prepared for release.</p>
+    <section id="resumeWindow" class="win-window doc-window" aria-label="Resume" style="left:160px;top:105px;width:min(820px,94vw);">
+      <div class="win-title"><span>Resume.doc - Michael Costea</span><button class="win-close" data-close="resumeWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc">
+          <header class="doc-header">
+            <h2>Michael Costea</h2>
+            <p>Licensed Electrician · Business Builder · AI Workflow / Systems Operator</p>
+            <p>Australia / New Zealand · <a href="mailto:costra.michael@gmail.com">costra.michael@gmail.com</a> · <a href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener">LinkedIn</a></p>
+          </header>
+
+          <section>
+            <h3>Professional Summary</h3>
+            <p>I build practical systems at the intersection of electrical services, business operations, and AI-enabled workflow automation. My current work is focused on designing a central intelligence and workflow layer over existing business systems so teams can see more context, reduce duplicate entry, automate routine admin, and keep humans focused on judgment, approvals, and edge cases.</p>
+          </section>
+
+          <section>
+            <h3>Current Strategic Focus — AEH AI + Workflow Layer</h3>
+            <p>AEH is building a central intelligence and workflow layer over its core business systems. The aim is not AI for its own sake, and not replacing the business with AI. The aim is a more connected, visible, and automated operating model where sales, ops, finance, admin, and field teams work through clearer system boundaries.</p>
+            <ul>
+              <li>Unify knowledge and improve visibility across teams and tools.</li>
+              <li>Capture operational data more cleanly at the source.</li>
+              <li>Automate follow-up, routine admin, and fragmented handoffs.</li>
+              <li>Speed up quoting, sales preparation, reporting, and exception surfacing.</li>
+              <li>Preserve human review where risk, quality, or customer trust matters.</li>
+              <li>Make dashboards operational control surfaces, not vanity reporting.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Operating Principles</h3>
+            <ul>
+              <li>Core systems remain in place; overlapping tools are rationalised over time.</li>
+              <li>APIs first, browser automation second, desktop/manual work as last resort.</li>
+              <li>Automation should be fail-closed, reviewable, measurable, and auditable.</li>
+              <li>Humans stay responsible for approvals, exceptions, trust, and edge cases.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Capability Snapshot</h3>
+            <div class="doc-grid">
+              <div><b>Business Systems</b><span>workflow mapping, process architecture, quoting/admin improvement, operational visibility</span></div>
+              <div><b>Automation</b><span>AI agents, dashboards, local tools, follow-up systems, reporting loops</span></div>
+              <div><b>Technical Delivery</b><span>webapps, APIs, browser automation, data capture, integration planning</span></div>
+              <div><b>Field Context</b><span>licensed electrical background, customer-facing work, practical business constraints</span></div>
+            </div>
+          </section>
+        </article>
       </div>
     </section>
 
-    <section id="projectsWindow" class="win-window" aria-label="Projects" style="left:210px;top:190px;width:min(680px,92vw);">
-      <div class="win-title"><span>Projects</span><button class="win-close" data-close="projectsWindow">×</button></div>
-      <div class="win-body">
-        <p><b>Projects are under release lock.</b></p>
-        <p>The public demos have been hidden until they are rebuilt against the new Win98 Classic Desktop style guide.</p>
-        <ul>
-          <li>Weekend + Day Planner</li>
-          <li>Business Card 3D Webapp</li>
-          <li>OZQuotes Platform</li>
-          <li>AI Prompt SEO Solution</li>
-        </ul>
+    <section id="projectsWindow" class="win-window doc-window" aria-label="Projects" style="left:210px;top:120px;width:min(860px,94vw);">
+      <div class="win-title"><span>Projects - Hermes + OpenClaw Work Log</span><button class="win-close" data-close="projectsWindow">×</button></div>
+      <div class="win-body document-body">
+        <div class="release-hold"><b>Public apps are hidden until release.</b><br />This list shows project areas worked on with Hermes and OpenClaw. Links/demos stay private until each item is rebuilt, stable, and release-ready.</div>
+        <div class="project-list-public">
+          <article><h3>Agent Project Hub / Master Control</h3><p>Combined Hermes + OpenClaw local/Tailscale control centre: project catalog, runtime status, scheduled tasks, all sessions, Obsidian/memory, grouped recents, and modal chat readers.</p><span>Hermes · OpenClaw · Tailscale · local APIs</span></article>
+          <article><h3>Michael Costea Website / MICHAEL OS 89</h3><p>Retro workstation public portfolio shell, release-locked apps, cleaner Start menu, and Stitch-derived Win98 style system.</p><span>OpenClaw · Hermes · GitHub Pages</span></article>
+          <article><h3>AI Swarm / Telegram Bot Coordination</h3><p>Visible multi-bot teamwork between Hermes, Tony, and Backup with shared memory, handoffs, relay watchdogs, and Telegram accountability.</p><span>OpenClaw · Telegram · swarm relay</span></article>
+          <article><h3>AEH AI Workflow Layer</h3><p>Strategic architecture for central business intelligence, operational context, quoting/sales preparation, admin follow-up, and reviewable automation over existing systems.</p><span>Business systems · agents · dashboards</span></article>
+          <article><h3>OzQuotes Platform</h3><p>Quote/workflow platform experiments, property-twin logic, API health checks, regression matrices, and operational dashboard patterns.</p><span>OpenClaw · Node/API · workflow tooling</span></article>
+          <article><h3>Paper Goblin / Trading Research</h3><p>Paper-only crypto/memecoin research scaffold, live loops, historical backtesting, scam-casino probes, wallet radar, and strict no-bags risk gates.</p><span>Hermes · automation · research loops</span></article>
+          <article><h3>Paperclip / Autonomous Agent Runtime</h3><p>Local company/agent runtime setup, diagnostics, Hermes adapter investigation, and agent execution repair paths.</p><span>Hermes · Paperclip · agent ops</span></article>
+          <article><h3>Windows Chrome / Tailnet Control Bridge</h3><p>Tailscale bridge for controlling Windows Chrome/DevTools and local browser-dependent projects from WSL.</p><span>OpenClaw · Tailscale · browser control</span></article>
+          <article><h3>AionUI + Hermes WebUI</h3><p>Headless WebUI deployment and credential/configuration repair for local Hermes access.</p><span>Hermes · AionUI · systemd</span></article>
+          <article><h3>Insider Wallet Radar / Alfalabs Research</h3><p>Wallet radar, cluster/sell/stale alert concepts, and trading intelligence dashboards kept paper-first until hard-tested.</p><span>Hermes · research · dashboarding</span></article>
+        </div>
       </div>
     </section>
 
-    <section id="automationWindow" class="win-window" aria-label="AI Automations" style="left:240px;top:210px;width:min(640px,92vw);">
-      <div class="win-title"><span>AI Automations</span><button class="win-close" data-close="automationWindow">×</button></div>
-      <div class="win-body">
-        <p><b>Automation lab:</b> private until release.</p>
-        <p>Agent workflows, local dashboards, monitoring, and workflow tools are being consolidated behind a cleaner public surface.</p>
+    <section id="agentsWindow" class="win-window doc-window" aria-label="AI Agents" style="left:240px;top:130px;width:min(860px,94vw);">
+      <div class="win-title"><span>AI Agents - Capability Matrix</span><button class="win-close" data-close="agentsWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc">
+          <h2>AI Agents</h2>
+          <p>These agents are not just chatbots. They are operating layers that can inspect files, run commands, coordinate with other bots, build dashboards, maintain memory, verify services, and surface decisions back to humans.</p>
+          <div class="agent-grid">
+            <div><b>Hermes</b><span>Planning, coding, repo edits, cron jobs, memory retrieval, local APIs, scheduled research, Telegram updates, verification loops.</span></div>
+            <div><b>OpenClaw / Tony</b><span>Workspace execution, browser/control gateway, visible Telegram group coordination, hands-on project work, app/site edits.</span></div>
+            <div><b>Backup</b><span>Verifier role, second-pass review, swarm handoff checks, final summaries, and visible accountability.</span></div>
+            <div><b>Master Control</b><span>Unified cockpit for services, projects, scheduled tasks, sessions, memory, Obsidian notes, and agent engagement.</span></div>
+          </div>
+          <h3>Agent Upgrade Areas</h3>
+          <ul>
+            <li>Shared memory across sessions, notes, Obsidian views, and project histories.</li>
+            <li>Visible multi-agent handoffs with Telegram group receipts.</li>
+            <li>Background scheduled tasks and watchdogs for recurring research or health checks.</li>
+            <li>Local web dashboards that expose operational state instead of hiding it in logs.</li>
+            <li>Browser, API, and desktop automation pathways with API-first preference.</li>
+            <li>Human-in-the-loop review gates for risky actions, approvals, customer trust, and edge cases.</li>
+          </ul>
+          <h3>Business Use Cases</h3>
+          <ul>
+            <li>Reduce duplicate entry and fragmented handoffs.</li>
+            <li>Automate follow-up and routine admin safely.</li>
+            <li>Speed up quoting and sales preparation.</li>
+            <li>Surface exceptions instead of burying them in disconnected tools.</li>
+            <li>Create transparent dashboards for teams and operators.</li>
+            <li>Keep people focused on decisions, judgment, and customer outcomes.</li>
+          </ul>
+        </article>
       </div>
     </section>
 
@@ -125,6 +198,6 @@
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260501-2250"></script>
+  <script src="script.js?v=20260501-2220"></script>
 </body>
 </html>
