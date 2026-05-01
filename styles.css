@@ -842,3 +842,58 @@ body.public-preview::before{
   .public-preview .visual-flow span{transform:rotate(90deg);min-height:20px;}
   .public-preview .guide-code{font-size:11px!important;line-height:15px!important;}
 }
+
+/* === 2026-05 mobile desktop icons behind welcome window === */
+@media (max-width:760px){
+  html,body{overflow-x:hidden!important;}
+  body.public-preview{min-height:100dvh;}
+  .public-preview .container,
+  body.mobile-mode.public-preview .container{
+    position:relative!important;
+    display:block!important;
+    min-height:calc(100dvh - 44px)!important;
+    height:auto!important;
+    padding:8px 8px calc(58px + env(safe-area-inset-bottom,0px))!important;
+    overflow-x:hidden!important;
+  }
+  .public-preview .desktop-icons,
+  body.mobile-mode.public-preview .desktop-icons{
+    position:absolute!important;
+    top:18px!important;
+    left:12px!important;
+    width:92px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    grid-template-columns:none!important;
+    gap:14px!important;
+    margin:0!important;
+    order:0!important;
+    z-index:2!important;
+    pointer-events:auto!important;
+  }
+  .public-preview .desk-icon,
+  body.mobile-mode.public-preview .desk-icon{
+    width:88px!important;
+    height:74px!important;
+    padding:4px!important;
+  }
+  .public-preview .main-portfolio-window,
+  body.mobile-mode.public-preview .main-portfolio-window{
+    position:relative!important;
+    z-index:12!important;
+    left:auto!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+    width:calc(100vw - 16px)!important;
+    max-width:calc(100vw - 16px)!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0 auto calc(54px + env(safe-area-inset-bottom,0px))!important;
+  }
+  .public-preview .main-portfolio-window:not(.open),
+  body.mobile-mode.public-preview .main-portfolio-window:not(.open){
+    display:none!important;
+  }
+}
