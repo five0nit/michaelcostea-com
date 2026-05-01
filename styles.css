@@ -900,8 +900,8 @@ body.public-preview::before{
     top:78px!important;
     bottom:auto!important;
     transform:none!important;
-    width:calc(100vw - 16px)!important;
-    max-width:calc(100vw - 16px)!important;
+    width:calc(100vw - 24px)!important;
+    max-width:calc(100vw - 24px)!important;
     min-height:0!important;
     max-height:none!important;
     margin:0 0 calc(50px + env(safe-area-inset-bottom,0px)) 0!important;
@@ -909,5 +909,31 @@ body.public-preview::before{
   .public-preview .main-portfolio-window:not(.open),
   body.mobile-mode.public-preview .main-portfolio-window:not(.open){
     display:none!important;
+  }
+  .public-preview .main-portfolio-window,
+  .public-preview .main-portfolio-window *,
+  body.mobile-mode.public-preview .main-portfolio-window,
+  body.mobile-mode.public-preview .main-portfolio-window *{
+    box-sizing:border-box!important;
+  }
+  .public-preview .styleguide-welcome,
+  .public-preview .welcome-copy,
+  body.mobile-mode.public-preview .styleguide-welcome,
+  body.mobile-mode.public-preview .welcome-copy{
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:hidden!important;
+  }
+  .public-preview .terminal-line,
+  .public-preview .welcome-copy h1,
+  .public-preview .welcome-copy h3,
+  .public-preview .welcome-copy p,
+  body.mobile-mode.public-preview .terminal-line,
+  body.mobile-mode.public-preview .welcome-copy h1,
+  body.mobile-mode.public-preview .welcome-copy h3,
+  body.mobile-mode.public-preview .welcome-copy p{
+    max-width:100%!important;
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
   }
 }
