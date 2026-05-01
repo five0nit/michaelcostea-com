@@ -922,11 +922,11 @@ async function boot(){
     const rw = document.getElementById('readerWindow');
     if (rw) {
       rw.classList.add('open');
-      rw.style.left = '8px';
-      rw.style.right = '8px';
-      rw.style.top = '118px';
-      rw.style.width = 'auto';
-      rw.style.height = 'auto';
+      rw.style.left = '';
+      rw.style.right = '';
+      rw.style.top = '';
+      rw.style.width = '';
+      rw.style.height = '';
     }
   }
 

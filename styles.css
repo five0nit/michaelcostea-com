@@ -851,7 +851,7 @@ body.public-preview::before{
   body.mobile-mode.public-preview .container{
     position:relative!important;
     display:block!important;
-    min-height:calc(100dvh - 44px)!important;
+    min-height:max(calc(100dvh - 44px), 640px)!important;
     height:auto!important;
     padding:8px 8px calc(58px + env(safe-area-inset-bottom,0px))!important;
     overflow-x:hidden!important;
@@ -859,7 +859,7 @@ body.public-preview::before{
   .public-preview .desktop-icons,
   body.mobile-mode.public-preview .desktop-icons{
     position:absolute!important;
-    top:18px!important;
+    top:8px!important;
     left:12px!important;
     width:92px!important;
     display:flex!important;
@@ -890,7 +890,7 @@ body.public-preview::before{
     max-width:calc(100vw - 16px)!important;
     min-height:0!important;
     max-height:none!important;
-    margin:0 auto calc(54px + env(safe-area-inset-bottom,0px))!important;
+    margin:0 auto calc(50px + env(safe-area-inset-bottom,0px))!important;
   }
   .public-preview .main-portfolio-window:not(.open),
   body.mobile-mode.public-preview .main-portfolio-window:not(.open){
