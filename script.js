@@ -463,6 +463,10 @@ function initGuideTabs(){
   const root = document.getElementById('hermesGuideWindow');
   if(!root || root.dataset.guideTabsReady === '1') return;
   root.dataset.guideTabsReady = '1';
+  const labels = {
+    product: { hermes: 'Hermes Agent', openclaw: 'OpenClaw' },
+    os: { mac: 'Mac', windows: 'Windows', linux: 'Linux' }
+  };
   const state = { product: 'hermes', os: 'mac' };
   const paint = () => {
     root.querySelectorAll('[data-guide-product]').forEach(btn => {
@@ -485,20 +489,29 @@ function initGuideTabs(){
       panel.classList.toggle('active', on);
       panel.hidden = !on;
     });
+    const status = root.querySelector('[data-guide-selection-status]');
+    if(status){
+      status.innerHTML = `<b>Showing now:</b> ${labels.product[state.product] || state.product} on ${labels.os[state.os] || state.os}. Only this computer path is visible below.`;
+    }
+  };
+  window.setGuideTab = (kind, value) => {
+    if(kind === 'product' && labels.product[value]) state.product = value;
+    if(kind === 'os' && labels.os[value]) state.os = value;
+    paint();
   };
   root.addEventListener('click', (e) => {
     const productBtn = e.target.closest('[data-guide-product]');
     if(productBtn && root.contains(productBtn)){
-      state.product = productBtn.getAttribute('data-guide-product') || 'hermes';
-      paint();
+      e.preventDefault();
+      window.setGuideTab('product', productBtn.getAttribute('data-guide-product') || 'hermes');
       return;
     }
     const osBtn = e.target.closest('[data-guide-os]');
     if(osBtn && root.contains(osBtn)){
-      state.os = osBtn.getAttribute('data-guide-os') || 'mac';
-      paint();
+      e.preventDefault();
+      window.setGuideTab('os', osBtn.getAttribute('data-guide-os') || 'mac');
     }
-  });
+  }, true);
   paint();
 }
 

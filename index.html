@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260502-0705" />
+  <link rel="stylesheet" href="styles.css?v=20260502-0845" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -285,15 +285,16 @@
           <div class="guide-toggle-block" aria-label="Choose agent">
             <p class="toggle-label">1. Choose the agent guide</p>
             <div class="segmented product-tabs" role="tablist" aria-label="Agent guide selector">
-              <button type="button" class="seg-btn active" data-guide-product="hermes">Hermes Agent</button>
-              <button type="button" class="seg-btn" data-guide-product="openclaw">OpenClaw</button>
+              <button type="button" class="seg-btn active" data-guide-product="hermes" onclick="window.setGuideTab && window.setGuideTab('product','hermes')">Hermes Agent</button>
+              <button type="button" class="seg-btn" data-guide-product="openclaw" onclick="window.setGuideTab && window.setGuideTab('product','openclaw')">OpenClaw</button>
             </div>
             <p class="toggle-label">2. Choose your computer</p>
             <div class="segmented os-tabs" role="tablist" aria-label="Operating system selector">
-              <button type="button" class="seg-btn active" data-guide-os="mac">Mac</button>
-              <button type="button" class="seg-btn" data-guide-os="windows">Windows</button>
-              <button type="button" class="seg-btn" data-guide-os="linux">Linux</button>
+              <button type="button" class="seg-btn active" data-guide-os="mac" onclick="window.setGuideTab && window.setGuideTab('os','mac')">Mac</button>
+              <button type="button" class="seg-btn" data-guide-os="windows" onclick="window.setGuideTab && window.setGuideTab('os','windows')">Windows</button>
+              <button type="button" class="seg-btn" data-guide-os="linux" onclick="window.setGuideTab && window.setGuideTab('os','linux')">Linux</button>
             </div>
+            <p class="guide-selection-status" data-guide-selection-status><b>Showing now:</b> Hermes Agent on Mac. Only this computer path is visible below.</p>
           </div>
 
           <h3>Complete path: install → configure → connect → launch</h3>
@@ -305,8 +306,10 @@
             <article><b>4. Telegram gateway</b><span>Create a bot with BotFather, get your numeric Telegram user ID, paste token/user ID into setup, start the gateway, and test privately.</span></article>
             <article><b>5. Web UI/dashboard</b><span>Only after terminal install/setup checks pass, open the dashboard on localhost. The dashboard is the cockpit, not the installer.</span></article>
           </div>
-          <div class="terminal-checklists">
-            <article data-checklist-product="hermes">
+          <details class="terminal-checklists">
+            <summary>Before the Web UI: show the required terminal flow for the selected agent</summary>
+            <p class="guide-note compact"><b>Why this is collapsed:</b> pick your computer first, follow the one visible install panel, then open this checklist when you reach setup/gateway/dashboard. This avoids mixing two instruction sets at once.</p>
+            <article data-checklist-product="hermes" class="active">
               <h4>Hermes full first-run checklist</h4>
               <ol class="step-list">
                 <li><b>Install Hermes first.</b><p class="plain-summary"><b>In plain English:</b> this creates the <code>hermes</code> command on your computer. Use the Mac/Windows/Linux panel below for the exact install command for your machine. Make sure Git is available first.</p></li>
@@ -322,7 +325,7 @@ hermes status</pre></li>
                 <li><b>Open Web UI/dashboard last:</b><p class="plain-summary"><b>In plain English:</b> the dashboard is the visual control panel. It is useful after the engine underneath is installed, logged in, and healthy. Keep it on <code>127.0.0.1</code> unless you understand dashboard security, because dashboards can expose secrets.</p><pre class="guide-code">hermes dashboard</pre><p>Server/WSL no-auto-open mode:</p><pre class="guide-code">hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></li>
               </ol>
             </article>
-            <article data-checklist-product="openclaw">
+            <article data-checklist-product="openclaw" hidden>
               <h4>OpenClaw full first-run checklist</h4>
               <ol class="step-list">
                 <li><b>Install Node.js 22+ first.</b><p class="plain-summary"><b>In plain English:</b> OpenClaw is installed through npm, and npm comes with Node.js. Without Node 22.14+, OpenClaw cannot run properly. Use the Mac/Windows/Linux panel below for the exact method.</p></li>
@@ -342,9 +345,7 @@ openclaw gateway status</pre><p>Repair helper if config is damaged:</p><pre clas
                 <li><b>Open Web UI/dashboard last:</b><p class="plain-summary"><b>In plain English:</b> the dashboard is the cockpit. Open it after install, setup, model login, Telegram, gateway, and health checks are working. Keep it local/private unless you understand gateway authentication.</p><pre class="guide-code">openclaw dashboard</pre><p>Terminal-only/server testing:</p><pre class="guide-code">openclaw dashboard --no-open</pre></li>
               </ol>
             </article>
-          </div>
-
-          <p class="guide-note"><b>Now choose your computer above.</b> The panel below changes for Mac, Windows, and Linux. If you switch from Hermes to OpenClaw, the same computer buttons show the matching OpenClaw steps.</p>
+          </details>
 
           <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac">
             <h3>Hermes on Mac — from zero to first working agent</h3>
@@ -547,6 +548,6 @@ Help me create a beginner test plan for using an AI agent through Telegram for s
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260502-0705"></script>
+  <script src="script.js?v=20260502-0845"></script>
 </body>
 </html>
