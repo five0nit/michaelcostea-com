@@ -449,7 +449,8 @@ function initStartMenu(projects){
 
 function initGuideTabs(){
   const root = document.getElementById('hermesGuideWindow');
-  if(!root) return;
+  if(!root || root.dataset.guideTabsReady === '1') return;
+  root.dataset.guideTabsReady = '1';
   const state = { product: 'hermes', os: 'mac' };
   const paint = () => {
     root.querySelectorAll('[data-guide-product]').forEach(btn => {
@@ -487,6 +488,11 @@ function initGuideTabs(){
     }
   });
   paint();
+}
+
+initGuideTabs();
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', initGuideTabs, { once: true });
 }
 
 function themeIconKey(btn){
