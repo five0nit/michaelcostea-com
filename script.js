@@ -248,6 +248,15 @@ function initDesktopWindows(){
     });
   });
 
+  // Buttons inside the initial Welcome window also use data-open.
+  // They are not .desk-icon elements, so wire them explicitly.
+  document.querySelectorAll('button[data-open]:not(.desk-icon)').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-open');
+      if (id) openWindow(id);
+    });
+  });
+
   document.querySelectorAll('.win-window').forEach((win)=>{
     const titleBar = win.querySelector('.win-title');
     const closeBtn = titleBar?.querySelector('.win-close');
