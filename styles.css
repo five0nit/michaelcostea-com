@@ -802,6 +802,10 @@ body.public-preview::before{
 .public-preview .guide-tiles b{display:block;color:#000080;margin:4px 0;}
 .public-preview .guide-tiles span{display:block;font-size:11px;line-height:15px;}
 .public-preview .workflow-examples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
+.public-preview .beginner-box-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
+.public-preview .beginner-box-grid article{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;min-height:88px;}
+.public-preview .beginner-box-grid b{display:block;color:#000080;margin-bottom:5px;}
+.public-preview .beginner-box-grid span{display:block;font-size:12px;line-height:16px;}
 .public-preview .workflow-examples article{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;min-height:110px;}
 .public-preview .workflow-examples b{display:block;color:#000080;margin-bottom:5px;}
 .public-preview .workflow-examples span{display:block;font-size:12px;line-height:16px;}
@@ -825,7 +829,7 @@ body.public-preview::before{
 .public-preview .step-list{padding-left:22px;}
 .public-preview .step-list li{margin:8px 0;}
 @media (max-width:760px){
-  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples{grid-template-columns:1fr!important;}
+  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples,.public-preview .beginner-box-grid{grid-template-columns:1fr!important;}
   .public-preview .visual-flow{grid-template-columns:1fr!important;}
   .public-preview .visual-flow span{transform:rotate(90deg);min-height:20px;}
   .public-preview .guide-code{font-size:11px!important;line-height:15px!important;}

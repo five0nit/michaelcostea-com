@@ -452,18 +452,40 @@ function initGuideTabs(){
   if(!root) return;
   const state = { product: 'hermes', os: 'mac' };
   const paint = () => {
-    root.querySelectorAll('[data-guide-product]').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-guide-product') === state.product));
-    root.querySelectorAll('[data-guide-os]').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-guide-os') === state.os));
+    root.querySelectorAll('[data-guide-product]').forEach(btn => {
+      const active = btn.getAttribute('data-guide-product') === state.product;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    root.querySelectorAll('[data-guide-os]').forEach(btn => {
+      const active = btn.getAttribute('data-guide-os') === state.os;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
     root.querySelectorAll('.guide-panel').forEach(panel => {
       const on = panel.getAttribute('data-panel-product') === state.product && panel.getAttribute('data-panel-os') === state.os;
       panel.classList.toggle('active', on);
+      panel.hidden = !on;
     });
     root.querySelectorAll('[data-checklist-product]').forEach(panel => {
-      panel.classList.toggle('active', panel.getAttribute('data-checklist-product') === state.product);
+      const on = panel.getAttribute('data-checklist-product') === state.product;
+      panel.classList.toggle('active', on);
+      panel.hidden = !on;
     });
   };
-  root.querySelectorAll('[data-guide-product]').forEach(btn => btn.addEventListener('click', () => { state.product = btn.getAttribute('data-guide-product') || 'hermes'; paint(); }));
-  root.querySelectorAll('[data-guide-os]').forEach(btn => btn.addEventListener('click', () => { state.os = btn.getAttribute('data-guide-os') || 'mac'; paint(); }));
+  root.addEventListener('click', (e) => {
+    const productBtn = e.target.closest('[data-guide-product]');
+    if(productBtn && root.contains(productBtn)){
+      state.product = productBtn.getAttribute('data-guide-product') || 'hermes';
+      paint();
+      return;
+    }
+    const osBtn = e.target.closest('[data-guide-os]');
+    if(osBtn && root.contains(osBtn)){
+      state.os = osBtn.getAttribute('data-guide-os') || 'mac';
+      paint();
+    }
+  });
   paint();
 }
 
