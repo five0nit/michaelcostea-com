@@ -809,6 +809,10 @@ body.public-preview::before{
 .public-preview .workflow-examples article{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;min-height:110px;}
 .public-preview .workflow-examples b{display:block;color:#000080;margin-bottom:5px;}
 .public-preview .workflow-examples span{display:block;font-size:12px;line-height:16px;}
+.public-preview .install-roadmap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:10px 0;padding:8px;background:#f3f3f4;border:2px inset #808080;}
+.public-preview .install-roadmap article{background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:8px;min-height:105px;}
+.public-preview .install-roadmap b{display:block;color:#000080;margin-bottom:5px;}
+.public-preview .install-roadmap span{display:block;font-size:11px;line-height:15px;}
 .public-preview .terminal-checklists{margin:10px 0;}
 .public-preview .terminal-checklists article{display:none;background:#fff;border:2px inset #808080;padding:10px;margin:8px 0;}
 .public-preview .terminal-checklists article.active{display:block;}
@@ -829,7 +833,7 @@ body.public-preview::before{
 .public-preview .step-list{padding-left:22px;}
 .public-preview .step-list li{margin:8px 0;}
 @media (max-width:760px){
-  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples,.public-preview .beginner-box-grid{grid-template-columns:1fr!important;}
+  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples,.public-preview .beginner-box-grid,.public-preview .install-roadmap{grid-template-columns:1fr!important;}
   .public-preview .visual-flow{grid-template-columns:1fr!important;}
   .public-preview .visual-flow span{transform:rotate(90deg);min-height:20px;}
   .public-preview .guide-code{font-size:11px!important;line-height:15px!important;}
