@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260501-2320" />
+  <link rel="stylesheet" href="styles.css?v=20260501-2345" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -17,6 +17,7 @@
       <button class="desk-icon" data-open="resumeWindow" aria-label="Open Resume"><span class="icon-art">📄</span><span>Resume</span></button>
       <button class="desk-icon" data-open="projectsWindow" aria-label="Open Projects"><span class="icon-art">📁</span><span>Projects</span></button>
       <button class="desk-icon" data-open="agentsWindow" aria-label="Open AI Agents"><span class="icon-art">🤖</span><span>AI Agents</span></button>
+      <button class="desk-icon" data-open="aiHelpWindow" aria-label="Open AI Help"><span class="icon-art">🎓</span><span>AI Help</span></button>
       <button id="recycleBin" class="desk-icon" data-open="recycleWindow" aria-label="Open Recycle Bin"><span class="icon-art">🗑️</span><span id="recycleLabel">Recycle Bin</span></button>
     </section>
 
@@ -24,10 +25,11 @@
       <div class="win-title"><span>💾 Welcome.exe - Michael Costea Portfolio</span><button class="win-close" data-close="readerWindow">×</button></div>
       <div class="win-body welcome-body styleguide-welcome">
         <aside class="welcome-sidebar" aria-label="Profile controls">
-          <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260501-2320" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
+          <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260501-2345" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
           <button class="btn big-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
+          <button class="btn big-nav" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">AI HELP</button>
           <button class="btn big-nav" type="button" data-open="contactWindow" onclick="openWindow('contactWindow')">CONTACT ME</button>
         </aside>
         <section class="welcome-copy">
@@ -188,6 +190,106 @@
       </div>
     </section>
 
+    <section id="aiHelpWindow" class="win-window doc-window" aria-label="AI Help" style="left:185px;top:100px;width:min(900px,94vw);">
+      <div class="win-title"><span>AI Help - Start Here</span><button class="win-close" data-close="aiHelpWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc">
+          <h2>AI Help: Everyday Starter Guides</h2>
+          <p>This section is for normal people who are curious about AI agents and want a safe, simple first try. No hype. No jargon wall. Just what it is, what it can do, and how to install a first Hermes agent.</p>
+          <div class="guide-card-grid">
+            <button class="guide-card" type="button" data-open="agentGuideWindow" onclick="openWindow('agentGuideWindow')"><b>1. What is an AI agent?</b><span>Simple explanation, examples, safety limits, and visual workflow.</span></button>
+            <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>2. Install your first Hermes agent</b><span>Mac + PC paths, minimal commands, and copy/paste first prompts.</span></button>
+          </div>
+          <div class="visual-flow" aria-label="AI help learning path">
+            <div>Learn<br><b>what agents do</b></div><span>→</span><div>Install<br><b>Hermes</b></div><span>→</span><div>Run<br><b>first prompt</b></div><span>→</span><div>Use<br><b>safely</b></div>
+          </div>
+          <p class="guide-note"><b>Plain English version:</b> an AI agent is a helper that can use tools. It can read, write, search, run commands, and remember context — but it still needs clear instructions and human review.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="agentGuideWindow" class="win-window doc-window" aria-label="What is an AI agent guide" style="left:205px;top:90px;width:min(930px,94vw);">
+      <div class="win-title"><span>Guide 1 - What is an AI agent?</span><button class="win-close" data-close="agentGuideWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc">
+          <h2>What is an AI Agent?</h2>
+          <p><b>Short answer:</b> an AI agent is an AI assistant that can use tools to get work done, not just answer questions.</p>
+          <div class="visual-flow large-flow">
+            <div>You ask<br><b>a goal</b></div><span>→</span><div>Agent plans<br><b>steps</b></div><span>→</span><div>Agent uses<br><b>tools</b></div><span>→</span><div>You review<br><b>result</b></div>
+          </div>
+          <h3>Normal chatbot vs AI agent</h3>
+          <div class="comparison-grid">
+            <div><b>Chatbot</b><ul><li>Answers questions.</li><li>Mostly text in / text out.</li><li>You do the clicking, copying, saving, and checking.</li></ul></div>
+            <div><b>AI Agent</b><ul><li>Can break a goal into steps.</li><li>Can use tools like files, browser, terminal, search, memory, and calendars.</li><li>Can keep working until a task is complete, then show evidence.</li></ul></div>
+          </div>
+          <h3>What can an AI agent do?</h3>
+          <div class="guide-tiles">
+            <div>📄 <b>Documents</b><span>Summarise, rewrite, make checklists, create drafts.</span></div>
+            <div>🔎 <b>Research</b><span>Search, compare options, build a simple report.</span></div>
+            <div>🧾 <b>Admin</b><span>Prepare emails, follow-up lists, meeting notes, SOPs.</span></div>
+            <div>🧠 <b>Memory</b><span>Remember preferences, projects, and reusable workflows.</span></div>
+            <div>🛠️ <b>Tools</b><span>Read files, create files, check websites, run safe commands.</span></div>
+            <div>📊 <b>Business</b><span>Surface exceptions, reduce duplicate entry, help with reporting.</span></div>
+          </div>
+          <h3>What it should not do without you</h3>
+          <ul>
+            <li>Spend money, delete files, send public messages, or change business systems without approval.</li>
+            <li>Make legal, medical, financial, safety, or employment decisions on its own.</li>
+            <li>Replace human judgment where customer trust, risk, quality, or approvals matter.</li>
+          </ul>
+          <h3>First proven prompt to try</h3>
+          <pre class="guide-code">I am new to AI agents. Explain what you can do in 5 bullet points, then ask me one simple question so we can try a safe first task.</pre>
+        </article>
+      </div>
+    </section>
+
+    <section id="hermesGuideWindow" class="win-window doc-window" aria-label="Install Hermes guide" style="left:225px;top:80px;width:min(960px,94vw);">
+      <div class="win-title"><span>Guide 2 - Install your first Hermes agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc">
+          <h2>Install Your First Hermes Agent</h2>
+          <p><b>Hermes Agent</b> is an open-source AI agent you run from your computer. It can chat, remember context, use tools, and help automate useful work.</p>
+          <div class="visual-flow large-flow">
+            <div>Install<br><b>Hermes</b></div><span>→</span><div>Run<br><b>setup</b></div><span>→</span><div>Check<br><b>doctor</b></div><span>→</span><div>Try<br><b>prompt</b></div>
+          </div>
+          <h3>Before you start</h3>
+          <ul>
+            <li>You need internet access.</li>
+            <li>You need an AI provider login/API key during setup. If unsure, use the setup wizard and pick the easiest provider available to you.</li>
+            <li>Copy commands exactly. Run one line at a time.</li>
+          </ul>
+          <h3>Path A — Mac</h3>
+          <p>Open <b>Terminal</b>. Then run:</p>
+          <pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+hermes setup
+hermes doctor</pre>
+          <p>If your terminal says <b>command not found: hermes</b>, close Terminal, reopen it, then run:</p>
+          <pre class="guide-code">hermes doctor</pre>
+          <h3>Path B — Windows PC</h3>
+          <p>Hermes runs best on Windows through <b>WSL Ubuntu</b>. Open <b>PowerShell as Administrator</b> and run:</p>
+          <pre class="guide-code">wsl --install -d Ubuntu</pre>
+          <p>Restart if Windows asks. Open <b>Ubuntu</b> from the Start Menu, create your Linux username/password, then run:</p>
+          <pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+hermes setup
+hermes doctor</pre>
+          <h3>First exact prompts to test</h3>
+          <p>After setup, try these one at a time:</p>
+          <pre class="guide-code">hermes chat -q "Explain what an AI agent is to a beginner in 5 bullet points."
+hermes chat -q "Help me plan tomorrow. Ask me 3 questions first, then make a simple checklist."
+hermes chat -q "Create a polite follow-up email for a customer who asked for a quote but has not replied."</pre>
+          <h3>Safe first project prompt</h3>
+          <pre class="guide-code">I am new to Hermes. Be careful and explain before doing anything. Help me create a simple folder called ai-agent-test with a notes file that lists 5 safe ways I could use an AI agent at work.</pre>
+          <h3>Quick troubleshooting</h3>
+          <ul>
+            <li><b>Install finished but Hermes not found:</b> close and reopen the terminal.</li>
+            <li><b>Setup asks for a provider:</b> choose one you have access to, then follow the wizard.</li>
+            <li><b>Something looks broken:</b> run <code>hermes doctor</code> and read the red lines.</li>
+          </ul>
+          <p class="guide-note"><b>Rule for beginners:</b> do not give an agent access to sensitive files, money, customer systems, or business accounts until you understand what it is doing.</p>
+        </article>
+      </div>
+    </section>
+
     <section id="contactWindow" class="win-window" aria-label="Contact" style="left:260px;top:230px;width:min(440px,92vw);">
       <div class="win-title"><span>Contact</span><button class="win-close" data-close="contactWindow">×</button></div>
       <div class="win-body">
@@ -218,6 +320,6 @@
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260501-2320"></script>
+  <script src="script.js?v=20260501-2345"></script>
 </body>
 </html>

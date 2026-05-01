@@ -783,3 +783,30 @@ body.public-preview::before{
 .public-preview .timeline-list article{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;}
 .public-preview .timeline-list h4{margin:0 0 4px;color:#000080;font:900 13px/16px "Work Sans",Tahoma,sans-serif;}
 .public-preview .timeline-list p{margin:5px 0;line-height:16px;}
+
+
+/* === 2026-05 AI Help guide windows === */
+.public-preview .guide-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0;}
+.public-preview .guide-card{display:block;text-align:left;background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:12px;color:#000;cursor:pointer;font:12px/16px "Space Grotesk","Courier New",monospace;}
+.public-preview .guide-card:hover{background:#000080;color:#fff;}
+.public-preview .guide-card b{display:block;font:900 14px/17px "Work Sans",Tahoma,sans-serif;margin-bottom:5px;}
+.public-preview .guide-card span{display:block;}
+.public-preview .visual-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:stretch;gap:6px;margin:12px 0;padding:8px;background:#f3f3f4;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;text-align:center;}
+.public-preview .visual-flow div{background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:8px;min-height:54px;display:grid;place-items:center;}
+.public-preview .visual-flow span{display:grid;place-items:center;font-weight:900;color:#000080;}
+.public-preview .large-flow div{min-height:64px;}
+.public-preview .comparison-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:8px 0;}
+.public-preview .comparison-grid>div{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;}
+.public-preview .guide-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0;}
+.public-preview .guide-tiles>div{background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:8px;min-height:92px;}
+.public-preview .guide-tiles b{display:block;color:#000080;margin:4px 0;}
+.public-preview .guide-tiles span{display:block;font-size:11px;line-height:15px;}
+.public-preview .guide-code{background:#000!important;color:#39ff14!important;border:2px inset #808080!important;padding:10px!important;white-space:pre-wrap!important;overflow:auto!important;font:700 12px/16px "Courier New",monospace!important;margin:8px 0!important;}
+.public-preview .guide-note{background:#fff4c2;border:2px solid #808000;padding:8px!important;}
+.public-preview code{background:#eee;border:1px solid #999;padding:1px 3px;font-family:"Courier New",monospace;}
+@media (max-width:760px){
+  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles{grid-template-columns:1fr!important;}
+  .public-preview .visual-flow{grid-template-columns:1fr!important;}
+  .public-preview .visual-flow span{transform:rotate(90deg);min-height:20px;}
+  .public-preview .guide-code{font-size:11px!important;line-height:15px!important;}
+}
