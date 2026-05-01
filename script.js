@@ -8,7 +8,7 @@ async function runBootScreen(){
   const biosHint = document.getElementById('biosHint');
   const bsod = document.getElementById('bsodScreen');
   const bsodCountdown = document.getElementById('bsodCountdown');
-  if(!boot || !biosText) return;
+  if(!boot || !biosText){ document.body.classList.add('booted'); return; }
 
   document.body.classList.add('booting');
 
@@ -395,163 +395,43 @@ function initStartMenu(projects){
   const items = document.getElementById('startItems');
   if(!btn || !menu || !items) return;
 
-  const webapps = projects.filter(p => (p.category||'webapps') === 'webapps');
-  const games = projects.filter(p => p.category === 'games');
-  const appRow = (icon, p) => `<a class="start-item" role="menuitem" href="#" data-launch-app="${p.url}" data-app-title="${p.name}"><span><b class="si">${icon}</b>${p.name}</span><small>${p.status}</small></a>`;
-
+  // Public-release mode: keep navigation flat and reliable. No cascading app menus
+  // until each webapp is refit and explicitly released.
   items.innerHTML = `
-    <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="programs"><span><b class="si">🗂️</b>Programs</span><small>▶</small></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="favoritesWindow"><span><b class="si">⭐</b>Favorites</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="documentsWindow"><span><b class="si">📄</b>Documents</span></a>
-    <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="settings"><span><b class="si">⚙️</b>Settings</span><small>▶</small></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="findWindow"><span><b class="si">🔎</b>Find</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="helpWindow"><span><b class="si">❓</b>Help</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="runWindow"><span><b class="si">▶️</b>Run...</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span><b class="si">🖥️</b>My Computer</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="resumeWindow"><span><b class="si">📄</b>Resume</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="projectsWindow"><span><b class="si">📁</b>Projects</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="automationWindow"><span><b class="si">⚙️</b>AI Automations</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span><b class="si">🗂️</b>Programs</span><small>hidden</small></a>
     <div class="start-sep"></div>
-    <a class="start-item" role="menuitem" href="#" data-open-window="logoffWindow"><span><b class="si">👤</b>Log Off Michael...</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="shutdownWindow"><span><b class="si">⏻</b>Shut Down...</span></a>
-
-    <div class="start-submenu" id="startProgramsMenu" aria-hidden="true">
-      <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="webapps"><span><b class="si">🌐</b>Web Apps</span><small>▶</small></a>
-      <a class="start-item has-arrow" role="menuitem" href="#" data-submenu="games"><span><b class="si">🎮</b>Games</span><small>▶</small></a>
-    </div>
-    <div class="start-submenu" id="startWebAppsMenu" aria-hidden="true">${webapps.map(p=>appRow('🧩',p)).join('')}</div>
-    <div class="start-submenu" id="startGamesMenu" aria-hidden="true">${games.map(p=>appRow('🕹️',p)).join('')}</div>
-    <div class="start-submenu" id="startSettingsMenu" aria-hidden="true">
-      <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow" data-open-settings="1"><span><b class="si">⚙️</b>Control Panel</span></a>
-      <a class="start-item" role="menuitem" href="#" data-open-window="dialupWindow"><span><b class="si">📞</b>Dial-Up Networking</span></a>
-    </div>
+    <a class="start-item" role="menuitem" href="mailto:costra.michael@gmail.com"><span><b class="si">✉️</b>Email</span></a>
+    <a class="start-item" role="menuitem" href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener"><span><b class="si">🔗</b>LinkedIn</span></a>
+    <div class="start-sep"></div>
+    <a class="start-item" role="menuitem" href="#" data-open-window="recycleWindow"><span><b class="si">🗑️</b>Recycle Bin</span></a>
   `;
 
-  const subPrograms = document.getElementById('startProgramsMenu');
-  const subWebApps = document.getElementById('startWebAppsMenu');
-  const subGames = document.getElementById('startGamesMenu');
-  const subSettings = document.getElementById('startSettingsMenu');
-
-  const hideSubmenus = () => {
-    [subPrograms, subWebApps, subGames, subSettings].forEach(s => {
-      if(s){
-        s.classList.remove('open');
-        s.classList.remove('submenu-flip-left');
-        s.setAttribute('aria-hidden','true');
-      }
-    });
+  const closeMenu = () => {
+    menu.classList.remove('open');
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
+    menu.setAttribute('aria-hidden','true');
   };
-  const positionSubmenu = (triggerEl, submenuEl) => {
-    if(!triggerEl || !submenuEl || isMobileMode()) return;
-    submenuEl.classList.remove('submenu-flip-left');
-    const triggerRect = triggerEl.getBoundingClientRect();
-    const menuRect = menu.getBoundingClientRect();
-    const submenuRect = submenuEl.getBoundingClientRect();
-    const viewportW = window.innerWidth;
-    const viewportH = window.innerHeight;
-
-    const defaultLeft = triggerRect.right - menuRect.left;
-    const flippedLeft = triggerRect.left - menuRect.left - submenuRect.width;
-    const shouldFlipLeft = triggerRect.right + submenuRect.width > viewportW - 8 && flippedLeft >= 8 - menuRect.left;
-
-    submenuEl.style.left = `${shouldFlipLeft ? flippedLeft : defaultLeft}px`;
-    submenuEl.style.right = 'auto';
-
-    const topWithinMenu = triggerRect.top - menuRect.top;
-    const maxTop = Math.max(6, viewportH - menuRect.top - submenuRect.height - 12);
-    submenuEl.style.top = `${Math.max(6, Math.min(topWithinMenu, maxTop))}px`;
-    submenuEl.classList.toggle('submenu-flip-left', shouldFlipLeft);
+  const openMenu = () => {
+    menu.classList.add('open');
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded','true');
+    menu.setAttribute('aria-hidden','false');
   };
-  const openSub = (el, triggerEl) => {
-    if(el){
-      el.classList.add('open');
-      el.setAttribute('aria-hidden','false');
-      positionSubmenu(triggerEl, el);
-    }
-  };
-  const showSubmenu = (name, triggerEl = null) => {
-    const mobile = isMobileMode();
-
-    if(mobile){
-      const currentlyOpen = (
-        (name === 'programs' && subPrograms?.classList.contains('open')) ||
-        (name === 'settings' && subSettings?.classList.contains('open')) ||
-        (name === 'webapps' && subWebApps?.classList.contains('open')) ||
-        (name === 'games' && subGames?.classList.contains('open'))
-      );
-
-      // Re-tap same submenu: close the whole branch.
-      if(currentlyOpen){
-        hideSubmenus();
-        return;
-      }
-
-      // Mobile: close previous branch first, then open requested branch.
-      hideSubmenus();
-      if(name === 'programs') return openSub(subPrograms, triggerEl);
-      if(name === 'settings') return openSub(subSettings, triggerEl);
-      if(name === 'webapps'){ openSub(subPrograms, items.querySelector('[data-submenu="programs"]')); return openSub(subWebApps, triggerEl); }
-      if(name === 'games'){ openSub(subPrograms, items.querySelector('[data-submenu="programs"]')); return openSub(subGames, triggerEl); }
-      return;
-    }
-
-    // Desktop cascade behavior
-    hideSubmenus();
-    if(name === 'programs') return openSub(subPrograms, triggerEl);
-    if(name === 'settings') return openSub(subSettings, triggerEl);
-    if(name === 'webapps'){
-      openSub(subPrograms, items.querySelector('[data-submenu="programs"]'));
-      return openSub(subWebApps, triggerEl);
-    }
-    if(name === 'games'){
-      openSub(subPrograms, items.querySelector('[data-submenu="programs"]'));
-      return openSub(subGames, triggerEl);
-    }
-  };
-
-  let scrollHint = menu.querySelector('.start-scroll-hint');
-  if(!scrollHint){
-    scrollHint = document.createElement('div');
-    scrollHint.className = 'start-scroll-hint';
-    scrollHint.textContent = '↓ More apps below';
-    menu.appendChild(scrollHint);
-  }
-  const updateScrollHint = () => {
-    const canScroll = items.scrollHeight > items.clientHeight + 8;
-    const nearBottom = (items.scrollTop + items.clientHeight) >= (items.scrollHeight - 12);
-    scrollHint.classList.toggle('show', canScroll && !nearBottom);
-  };
-  items.addEventListener('scroll', updateScrollHint, {passive:true});
-
-  const closeMenu = () => { hideSubmenus(); menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); scrollHint.classList.remove('show'); };
-  const openMenu = () => { menu.classList.add('open'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); requestAnimationFrame(updateScrollHint); };
 
   btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
   document.addEventListener('click', (e) => { if(!menu.contains(e.target) && e.target !== btn) closeMenu(); });
-
-  menu.addEventListener('mouseover', (e) => {
-    if(isMobileMode()) return;
-    const link = e.target.closest('.start-item[data-submenu]');
-    if(!link) return;
-    showSubmenu(link.getAttribute('data-submenu'), link);
-  });
-
   menu.addEventListener('click', (e) => {
     const link = e.target.closest('.start-item');
     if(!link) return;
-    const sub = link.getAttribute('data-submenu');
-    if(sub){ e.preventDefault(); showSubmenu(sub, link); return; }
-
-    // Any non-submenu click should collapse previous submenu branch.
-    hideSubmenus();
-
     const openId = link.getAttribute('data-open-window');
-    const launchApp = link.getAttribute('data-launch-app');
-    const openSettings = link.getAttribute('data-open-settings');
-    if(openId){ e.preventDefault(); openWindow(openId); if(openSettings){ const d=document.querySelector('#aboutWindow details'); if(d) d.open=true; }}
-    if(launchApp){
-      e.preventDefault();
-      launchInMikeNet(launchApp, link.getAttribute('data-app-title') || 'Program');
-    }
-    if(openId || launchApp) closeMenu();
+    if(openId){ e.preventDefault(); openWindow(openId); closeMenu(); return; }
+    closeMenu();
   });
-
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeMenu(); });
 }
 
@@ -904,11 +784,15 @@ async function boot(){
   const res = await fetch('./apps.json');
   const data = await res.json();
 
-  document.getElementById('name').textContent = data.owner || 'Michael Costea';
-  document.getElementById('headline').textContent = data.bio?.headline || '';
-  document.getElementById('summary').textContent = data.bio?.summary || '';
+  const nameEl = document.getElementById('name');
+  const headlineEl = document.getElementById('headline');
+  const summaryEl = document.getElementById('summary');
+  if(nameEl) nameEl.textContent = data.owner || 'Michael Costea';
+  if(headlineEl) headlineEl.textContent = data.bio?.headline || '';
+  if(summaryEl) summaryEl.textContent = data.bio?.summary || '';
 
-  const projects = data.projects || [];
+  const allProjects = data.projects || [];
+  const projects = allProjects.filter(p => p.released === true);
   const statApps = document.getElementById('statApps');
   if (statApps) statApps.textContent = String(projects.length || 0);
 
@@ -919,8 +803,13 @@ async function boot(){
   };
   const categoryTitle = { webapps: 'Web Apps', games: 'Games' };
 
+  if(apps && !projects.length){
+    apps.innerHTML = '<div class="release-hold"><b>Applications hidden until release.</b><br />Public demos are being rebuilt to match MICHAEL OS 89 before they return.</div>';
+    apps.hidden = false;
+  }
+
   Object.entries(grouped).forEach(([cat,list]) => {
-    if(!list.length) return;
+    if(!apps || !list.length) return;
     const head = document.createElement('h3');
     head.className = 'programs-group-title';
     head.textContent = categoryTitle[cat] || cat;
@@ -940,7 +829,7 @@ async function boot(){
     });
   });
 
-  apps.querySelectorAll('[data-launch-inline]').forEach(a => {
+  if(apps) apps.querySelectorAll('[data-launch-inline]').forEach(a => {
     a.addEventListener('click', (e)=>{
       e.preventDefault();
       launchInMikeNet(a.getAttribute('data-launch-inline'), a.getAttribute('data-app-title') || 'Program');

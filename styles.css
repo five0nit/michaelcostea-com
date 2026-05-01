@@ -480,3 +480,96 @@ body.mobile-mode .welcome-sidebar .btn{display:block;width:100%;min-width:0;over
 body.mobile-mode .welcome-copy{display:block;width:100%;min-width:0;overflow-x:hidden;padding:12px;}
 body.mobile-mode .welcome-copy p{max-width:100%;overflow-wrap:anywhere;}
 body.mobile-mode .spec-grid{grid-template-columns:1fr;width:100%;}
+
+
+/* === 2026-05 Stitch style-guide public reset: MICHAEL OS 89 === */
+:root{
+  --desktop-teal:#008080;
+  --title-blue:#000080;
+  --window-gray:#c0c0c0;
+  --light-gray:#d4d0c8;
+  --panel-gray:#d8d8d8;
+  --white:#fff;
+  --black:#000;
+  --dark-shadow:#404040;
+  --mid-shadow:#808080;
+  --accent-cyan:#008b8b;
+  --accent-purple:#6677ff;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--desktop-teal)!important;}
+body.public-preview{
+  margin:0;
+  font-family:"Work Sans","MS Sans Serif",Tahoma,sans-serif;
+  font-size:12px;
+  line-height:16px;
+  color:#000;
+  -webkit-font-smoothing:none;
+  text-rendering:geometricPrecision;
+}
+body.public-preview::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.045) 0 1px,transparent 1px 3px);
+  mix-blend-mode:soft-light;
+}
+.public-preview .container{height:calc(100dvh - 46px);padding:0;position:relative;z-index:2;}
+.public-preview #desktopRoot{opacity:1!important;transform:none!important;filter:none!important;animation:none!important;}
+.public-preview .desktop-icons{position:absolute;top:38px;left:34px;display:flex;flex-direction:column;gap:24px;width:92px;z-index:3;}
+.public-preview .desk-icon{width:88px;height:78px;padding:4px;background:transparent;border:1px solid transparent;border-radius:0;color:#fff;text-align:center;font-weight:700;text-shadow:1px 1px #000;}
+.public-preview .desk-icon:hover,.public-preview .desk-icon:focus-visible{background:rgba(0,0,128,.72);border:1px dotted #fff;outline:none;transform:none;}
+.public-preview .desk-icon .icon-art{display:block;font-size:30px;line-height:34px;margin-bottom:4px;filter:grayscale(1) contrast(1.35);}
+.public-preview .desk-icon span:last-child{font-size:12px;line-height:13px;margin:0;text-shadow:1px 1px #000;}
+.public-preview .win-window{background:var(--window-gray);border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);box-shadow:inset 1px 1px #dfdfdf,inset -1px -1px var(--dark-shadow),2px 2px 0 #000;border-radius:0;}
+.public-preview .main-portfolio-window{left:50%!important;top:50%!important;transform:translate(-50%,-53%)!important;width:min(850px,calc(100vw - 170px));max-width:850px;min-height:540px;display:block;}
+.public-preview .win-title{height:30px;background:var(--title-blue)!important;color:#fff;font-size:12px;font-weight:900;letter-spacing:.2px;padding:4px 6px;border-bottom:1px solid #000;}
+.public-preview .win-body{font-size:12px;line-height:17px;max-height:calc(100dvh - 150px);padding:8px;background:var(--window-gray);}
+.public-preview .styleguide-welcome{display:grid;grid-template-columns:220px 1fr;gap:0;min-height:456px;padding:0;overflow:hidden;}
+.public-preview .welcome-sidebar{background:var(--window-gray);border-right:2px solid var(--mid-shadow);box-shadow:1px 0 #fff;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.public-preview .profile-portrait{width:154px;height:154px;background:#111;border-top:2px solid var(--mid-shadow);border-left:2px solid var(--mid-shadow);border-right:2px solid #fff;border-bottom:2px solid #fff;display:grid;place-items:center;color:#fff;font:900 42px/1 "Space Grotesk",monospace;letter-spacing:-2px;filter:grayscale(1);}
+.public-preview .profile-portrait span{display:grid;place-items:center;width:120px;height:120px;border:2px solid #fff;background:linear-gradient(135deg,#111 0 50%,#555 50% 100%);}
+.public-preview .big-nav{width:190px;min-height:42px;text-align:center;font-weight:900;font-size:12px;display:grid;place-items:center;}
+.public-preview .welcome-copy{background:#f3f3f4;padding:28px 30px 18px;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);font-family:"Space Grotesk","Courier New",monospace;}
+.public-preview .welcome-copy h1{margin:0 0 14px;color:var(--title-blue);font:900 italic 30px/1 "Work Sans",Tahoma,sans-serif;letter-spacing:.5px;}
+.public-preview .terminal-line{font:700 12px/18px "Space Grotesk","Courier New",monospace;color:#000;margin:0;}
+.public-preview .welcome-copy p{max-width:580px;margin:14px 0 0;}
+.public-preview .accent{color:var(--accent-cyan);text-decoration:underline;}
+.public-preview .spec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:24px;}
+.public-preview .spec-grid>div{background:var(--panel-gray);border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);padding:10px;min-height:86px;}
+.public-preview .spec-grid b{display:block;color:var(--accent-purple);font:900 12px/16px "Work Sans",Tahoma,sans-serif;margin-bottom:6px;}
+.public-preview .spec-grid span{display:block;font:12px/16px "Space Grotesk",monospace;}
+.public-preview .status-bar{display:grid;grid-template-columns:1fr 96px 110px;gap:3px;padding:3px;background:var(--window-gray);border-top:1px solid var(--mid-shadow);font:11px/16px "Space Grotesk",monospace;}
+.public-preview .status-bar span{display:block;padding:2px 6px;border-top:1px solid var(--mid-shadow);border-left:1px solid var(--mid-shadow);border-right:1px solid #fff;border-bottom:1px solid #fff;background:#d4d0c8;}
+.public-preview .taskbar{height:46px;padding:5px;background:var(--window-gray);border-top:2px solid #fff;box-shadow:0 -1px var(--mid-shadow);z-index:40;}
+.public-preview .start-btn{min-width:166px;height:34px;background:var(--window-gray);color:#000;text-shadow:none;font:900 italic 12px/16px "Work Sans",Tahoma,sans-serif;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);padding:4px 10px;}
+.public-preview .start-btn.open,.public-preview .start-btn:active{border-top:2px solid var(--mid-shadow);border-left:2px solid var(--mid-shadow);border-right:2px solid #fff;border-bottom:2px solid #fff;}
+.public-preview .taskbar-windows{gap:5px;}
+.public-preview .task-btn{height:34px;min-width:130px;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);background:var(--window-gray);font-weight:900;}
+.public-preview .tray{margin-left:auto;}
+.public-preview .tray-pill{height:32px;min-width:70px;border-top:2px solid var(--mid-shadow);border-left:2px solid var(--mid-shadow);border-right:2px solid #fff;border-bottom:2px solid #fff;background:#d4d0c8;font:700 11px/21px "Work Sans",Tahoma,sans-serif;}
+.public-preview .start-menu{left:5px;bottom:46px;width:275px;background:var(--window-gray);border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);box-shadow:2px 2px 0 #000;}
+.public-preview .start-head{background:var(--title-blue);color:#fff;font-weight:900;text-transform:uppercase;}
+.public-preview .start-items{padding:6px 6px 6px 32px;max-height:none;overflow:visible;}
+.public-preview .start-items::before{content:"MICHAEL OS 89";background:var(--title-blue);}
+.public-preview .start-item{font-size:12px;padding:7px 8px;}
+.public-preview .start-item:hover{background:var(--title-blue);color:#fff;}
+.public-preview .release-hold{border-top:2px solid var(--mid-shadow);border-left:2px solid var(--mid-shadow);border-right:2px solid #fff;border-bottom:2px solid #fff;background:#fff;padding:12px;font-family:"Space Grotesk",monospace;}
+.public-preview a.btn,.public-preview button.btn{border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);background:var(--window-gray);border-radius:0;color:#000;text-decoration:none;}
+.public-preview a.btn:active,.public-preview button.btn:active{border-top-color:var(--mid-shadow);border-left-color:var(--mid-shadow);border-right-color:#fff;border-bottom-color:#fff;}
+.public-preview hr{border:0;border-top:1px solid var(--mid-shadow);border-bottom:1px solid #fff;margin:10px 0;}
+@media (max-width:760px){
+  html,body{overflow:auto;}
+  .public-preview .container{height:auto;min-height:calc(100dvh - 46px);padding:8px 8px 96px;}
+  .public-preview .desktop-icons{position:relative;top:auto;left:auto;display:grid;grid-template-columns:repeat(3,minmax(72px,1fr));gap:8px;width:auto;margin-bottom:10px;}
+  .public-preview .main-portfolio-window{position:relative!important;left:auto!important;top:auto!important;transform:none!important;width:100%!important;min-height:0;}
+  .public-preview .styleguide-welcome{grid-template-columns:1fr;}
+  .public-preview .welcome-sidebar{border-right:0;border-bottom:2px solid var(--mid-shadow);}
+  .public-preview .welcome-copy{padding:18px 14px;}
+  .public-preview .spec-grid{grid-template-columns:1fr;}
+  .public-preview .status-bar{grid-template-columns:1fr;}
+  .public-preview .win-window:not(.main-portfolio-window){left:8px!important;right:8px!important;top:112px!important;width:auto!important;}
+  .public-preview .task-btn{min-width:90px;max-width:120px;}
+  .public-preview .start-btn{min-width:136px;}
+}
