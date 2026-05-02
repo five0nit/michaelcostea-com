@@ -853,12 +853,6 @@ body.public-preview::before{
 .public-preview .terminal-checklists h4{margin:0 0 8px;font:900 15px/18px "Work Sans",Tahoma,sans-serif;color:#000080;}
 .public-preview .guide-code{background:#000!important;color:#39ff14!important;border:2px inset #808080!important;padding:10px!important;white-space:pre-wrap!important;overflow:auto!important;font:700 12px/16px "Courier New",monospace!important;margin:8px 0!important;}
 .public-preview .guide-note{background:#fff4c2;border:2px solid #808000;padding:8px!important;}
-.public-preview .tutorial-image-map{background:#d4d0c8;border:2px inset #808080;padding:8px;margin:12px 0;}
-.public-preview .tutorial-image-map h3{margin-top:0!important;}
-.public-preview .tutorial-image-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px;}
-.public-preview .tutorial-image-grid figure{margin:0;background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:6px;}
-.public-preview .tutorial-image-grid img{display:block;width:100%;height:auto;border:1px solid #000;background:#050713;image-rendering:auto;}
-.public-preview .tutorial-image-grid figcaption{margin-top:5px;color:#000080;font:900 11px/14px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;}
 .public-preview .plain-summary{background:#eef6ff;border-left:4px solid #000080;padding:7px 8px!important;margin:6px 0!important;font-size:12px!important;line-height:16px!important;}
 .public-preview .plain-summary b{color:#000080;}
 .public-preview code{background:#eee;border:1px solid #999;padding:1px 3px;font-family:"Courier New",monospace;}
@@ -1108,10 +1102,6 @@ body.public-preview::before{
   .public-preview #hermesGuideWindow .zero-checklist{columns:1!important;}
   .public-preview #hermesGuideWindow .segmented{display:grid!important;grid-template-columns:1fr!important;}
   .public-preview #hermesGuideWindow .seg-btn{width:100%!important;min-width:0!important;}
-  .public-preview #hermesGuideWindow .tutorial-image-grid,
-  body.mobile-mode.public-preview #hermesGuideWindow .tutorial-image-grid{grid-template-columns:1fr!important;}
-  .public-preview #hermesGuideWindow .tutorial-image-grid figure,
-  body.mobile-mode.public-preview #hermesGuideWindow .tutorial-image-grid figure{padding:5px!important;}
   .public-preview #hermesGuideWindow .beginner-box-grid,
   .public-preview #hermesGuideWindow .prereq-grid,
   body.mobile-mode.public-preview #hermesGuideWindow .beginner-box-grid,
