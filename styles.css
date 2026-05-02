@@ -857,10 +857,10 @@ body.public-preview::before{
 .public-preview .tutorial-flow-map li::before{content:counter(tutorialStep);position:absolute;left:8px;top:8px;width:24px;height:24px;display:grid;place-items:center;background:#000080;color:#fff;border:1px solid #000;font:900 12px/1 "Work Sans",Tahoma,sans-serif;box-shadow:1px 1px 0 #808080;}
 .public-preview .tutorial-flow-map summary{cursor:pointer;list-style:none;}
 .public-preview .tutorial-flow-map summary::-webkit-details-marker{display:none;}
-.public-preview .tutorial-flow-map summary::after{content:"▸ tap to open";display:inline-block;margin-top:5px;color:#000;background:#d4d0c8;border:1px solid #808080;padding:2px 5px;font:700 10px/12px "Work Sans",Tahoma,sans-serif;}
-.public-preview .tutorial-flow-map details[open] summary::after{content:"▾ open";background:#fff4c2;}
 .public-preview .tutorial-flow-map b{display:block;color:#000080;font:900 12px/15px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;margin-bottom:3px;}
 .public-preview .tutorial-flow-map span{display:block;font-size:12px;line-height:15px;}
+.public-preview .tap-hint{display:inline-block;margin-top:6px;background:#d4d0c8;color:#000;border:1px solid #808080;padding:2px 6px;font:700 10px/12px "Work Sans",Tahoma,sans-serif;font-style:normal;}
+.public-preview details[open] > summary .tap-hint{background:#fff4c2;}
 .public-preview .tutorial-flow-detail{margin-top:7px;padding-top:7px;border-top:1px solid #808080;font-size:12px;line-height:15px;}
 .public-preview .tutorial-flow-detail p{margin:0!important;}
 .public-preview .guide-table{width:100%;border-collapse:collapse;margin:8px 0;background:#fff;font-size:12px;line-height:15px;}
@@ -888,8 +888,6 @@ body.public-preview::before{
 
 .public-preview .install-path-detail{background:#e8e8e8;border:2px inset #808080;padding:8px;margin:4px 0;}
 .public-preview .install-path-detail>summary{cursor:pointer;background:#fff4c2;color:#000080;border:2px outset #c0c0c0;padding:8px;font:900 13px/16px "Work Sans",Tahoma,sans-serif;}
-.public-preview .install-path-detail>summary::after{content:" ▸ tap to open";color:#000;font:700 10px/12px "Work Sans",Tahoma,sans-serif;}
-.public-preview .install-path-detail[open]>summary::after{content:" ▾ open";}
 .public-preview .install-path-detail>h3{margin-top:10px!important;}
 .public-preview .guide-selection-status{background:#e8f4ff;border:2px solid #000080;color:#000;padding:8px!important;margin:8px 0 0!important;font:700 12px/16px "Work Sans",Tahoma,sans-serif;}
 .public-preview .step-list{padding-left:22px;}
