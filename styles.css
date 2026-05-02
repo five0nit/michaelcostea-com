@@ -1009,3 +1009,22 @@ body.public-preview::before{
     word-break:normal!important;
   }
 }
+
+
+/* === 2026-05 Otis and Sully game window === */
+.public-preview .game-window .win-body{max-height:calc(100dvh - 150px);}
+.public-preview .otis-game-body{background:#101828;color:#eef6ff;padding:8px;font-family:"Space Grotesk","Courier New",monospace;}
+.public-preview .game-intro{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;background:#d4d0c8;color:#000;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:7px 9px;margin-bottom:8px;}
+.public-preview .game-intro b{color:#000080;text-transform:uppercase;font:900 13px/16px "Work Sans",Tahoma,sans-serif;}
+.public-preview .game-intro span{font-size:12px;line-height:15px;max-width:560px;}
+.public-preview .otis-game-canvas{display:block;width:100%;max-width:660px;aspect-ratio:12/7;height:auto;margin:0 auto;background:#79c8ff;border:3px solid #000;border-top-color:#fff;border-left-color:#fff;border-right-color:#4a4a4a;border-bottom-color:#4a4a4a;image-rendering:pixelated;outline:none;box-shadow:2px 2px 0 #000;}
+.public-preview .otis-hud{max-width:660px;margin:8px auto 0;padding:6px 8px;background:#000;color:#39ff14;border:1px solid #39ff14;font:700 12px/16px "Courier New",monospace;min-height:30px;}
+.public-preview .game-controls{max-width:660px;margin:8px auto 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;}
+.public-preview .game-controls span,.public-preview .game-note{background:#d4d0c8;color:#000;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:5px 6px;font-size:11px;line-height:14px;}
+.public-preview .game-note{max-width:660px;margin:8px auto 0;}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview .game-intro{display:block;}
+  .public-preview .game-intro span{display:block;margin-top:4px;}
+  .public-preview .game-controls{grid-template-columns:1fr 1fr;}
+  .public-preview .otis-game-canvas{max-height:46dvh;}
+}
