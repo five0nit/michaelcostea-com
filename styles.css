@@ -855,8 +855,14 @@ body.public-preview::before{
 .public-preview .tutorial-flow-map{counter-reset:tutorialStep;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:10px 0 14px!important;padding:0!important;list-style:none!important;}
 .public-preview .tutorial-flow-map li{counter-increment:tutorialStep;position:relative;background:#fff;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:8px 8px 8px 42px;min-height:62px;}
 .public-preview .tutorial-flow-map li::before{content:counter(tutorialStep);position:absolute;left:8px;top:8px;width:24px;height:24px;display:grid;place-items:center;background:#000080;color:#fff;border:1px solid #000;font:900 12px/1 "Work Sans",Tahoma,sans-serif;box-shadow:1px 1px 0 #808080;}
+.public-preview .tutorial-flow-map summary{cursor:pointer;list-style:none;}
+.public-preview .tutorial-flow-map summary::-webkit-details-marker{display:none;}
+.public-preview .tutorial-flow-map summary::after{content:"▸ tap to open";display:inline-block;margin-top:5px;color:#000;background:#d4d0c8;border:1px solid #808080;padding:2px 5px;font:700 10px/12px "Work Sans",Tahoma,sans-serif;}
+.public-preview .tutorial-flow-map details[open] summary::after{content:"▾ open";background:#fff4c2;}
 .public-preview .tutorial-flow-map b{display:block;color:#000080;font:900 12px/15px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;margin-bottom:3px;}
 .public-preview .tutorial-flow-map span{display:block;font-size:12px;line-height:15px;}
+.public-preview .tutorial-flow-detail{margin-top:7px;padding-top:7px;border-top:1px solid #808080;font-size:12px;line-height:15px;}
+.public-preview .tutorial-flow-detail p{margin:0!important;}
 .public-preview .guide-table{width:100%;border-collapse:collapse;margin:8px 0;background:#fff;font-size:12px;line-height:15px;}
 .public-preview .guide-table th,.public-preview .guide-table td{border:1px solid #808080;padding:6px;vertical-align:top;}
 .public-preview .guide-table th{background:#000080;color:#fff;text-align:left;}
@@ -1068,4 +1074,47 @@ body.public-preview::before{
   .public-preview .pad-swap-btn{grid-column:1;grid-row:2;font-size:10px!important;}
   .public-preview .pad-restart-btn{grid-column:2;grid-row:2;}
   .public-preview .mobile-gamepad button{min-height:36px;min-width:0!important;width:100%!important;padding:0 2px;overflow:hidden;}
+}
+
+
+/* === 2026-05 Guide 2 mobile no-crop guard === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+
+  .public-preview #hermesGuideWindow.win-window.open,
+  body.mobile-mode.public-preview #hermesGuideWindow.win-window.open{
+    left:4px!important;right:auto!important;width:calc(100vw - 40px)!important;max-width:calc(100vw - 40px)!important;
+  }
+  .public-preview #hermesGuideWindow .win-body,
+  body.mobile-mode.public-preview #hermesGuideWindow .win-body{
+    padding:4px!important;overflow-x:hidden!important;
+  }
+  .public-preview #hermesGuideWindow .install-guide,
+  body.mobile-mode.public-preview #hermesGuideWindow .install-guide{
+    width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;overflow-x:hidden!important;padding-right:18px!important;
+  }
+  .public-preview #hermesGuideWindow,
+  .public-preview #hermesGuideWindow *,
+  body.mobile-mode.public-preview #hermesGuideWindow,
+  body.mobile-mode.public-preview #hermesGuideWindow *{
+    box-sizing:border-box!important;max-width:100%!important;min-width:0!important;overflow-wrap:anywhere!important;word-break:normal!important;white-space:normal!important;
+  }
+  .public-preview #hermesGuideWindow .guide-subtitle,
+  .public-preview #hermesGuideWindow .guide-note,
+  .public-preview #hermesGuideWindow .plain-summary,
+  .public-preview #hermesGuideWindow .guide-toggle-block,
+  .public-preview #hermesGuideWindow .terminal-checklists,
+  .public-preview #hermesGuideWindow .step-card,
+  .public-preview #hermesGuideWindow .stop-box,
+  .public-preview #hermesGuideWindow .glossary-box,
+  .public-preview #hermesGuideWindow .advanced-box{
+    max-width:100%!important;min-width:0!important;overflow-wrap:anywhere!important;word-break:normal!important;
+  }
+  .public-preview #hermesGuideWindow .install-stage-bar{grid-template-columns:1fr!important;}
+  .public-preview #hermesGuideWindow .guide-table{display:block!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;}
+  .public-preview #hermesGuideWindow .zero-checklist{columns:1!important;}
+  .public-preview #hermesGuideWindow .segmented{display:grid!important;grid-template-columns:1fr!important;}
+  .public-preview #hermesGuideWindow .seg-btn{width:100%!important;min-width:0!important;}
+
+  .public-preview #hermesGuideWindow .guide-code,
+  body.mobile-mode.public-preview #hermesGuideWindow .guide-code{white-space:pre-wrap!important;}
 }
