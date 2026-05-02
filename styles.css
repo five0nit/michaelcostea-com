@@ -886,6 +886,18 @@ body.public-preview::before{
 .public-preview .guide-panel.active{display:block!important;}
 .public-preview .guide-panel:not(.active){display:none!important;}
 
+/* 2026-05 linear install-guide redesign */
+.public-preview .install-wizard-card{background:#fff;border:3px double #000080;padding:10px;margin:12px 0;}
+.public-preview .install-wizard-card h3{margin-top:0!important;}
+.public-preview .moving-parts-grid article{min-height:104px;}
+.public-preview .compact-prereqs article{min-height:112px;}
+.public-preview .selected-flow-summary{background:#d4d0c8;border:2px inset #808080;}
+.public-preview .selected-flow-summary article{margin:0!important;}
+.public-preview .linear-install-steps{counter-reset:linearStep;display:grid;gap:10px;margin:10px 0;}
+.public-preview .linear-install-steps article{counter-increment:linearStep;position:relative;background:#f8f8f8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:10px 10px 10px 44px;min-height:82px;}
+.public-preview .linear-install-steps article::before{content:counter(linearStep);position:absolute;left:10px;top:10px;width:24px;height:24px;display:grid;place-items:center;background:#000080;color:#fff;border:1px solid #000;box-shadow:1px 1px 0 #808080;font:900 12px/1 "Work Sans",Tahoma,sans-serif;}
+.public-preview .linear-install-steps article>b{display:block;color:#000080;font:900 14px/17px "Work Sans",Tahoma,sans-serif;margin:2px 0 6px;}
+.public-preview .linear-install-steps .plain-summary{margin-top:8px!important;}
 .public-preview .install-path-detail{background:#e8e8e8;border:2px inset #808080;padding:8px;margin:4px 0;}
 .public-preview .install-path-detail>summary{cursor:pointer;background:#fff4c2;color:#000080;border:2px outset #c0c0c0;padding:8px;font:900 13px/16px "Work Sans",Tahoma,sans-serif;}
 .public-preview .install-path-detail>h3{margin-top:10px!important;}
@@ -1086,7 +1098,7 @@ body.public-preview::before{
 
   .public-preview #hermesGuideWindow.win-window.open,
   body.mobile-mode.public-preview #hermesGuideWindow.win-window.open{
-    left:4px!important;right:auto!important;width:calc(100vw - 40px)!important;max-width:calc(100vw - 40px)!important;
+    left:4px!important;right:auto!important;width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;
   }
   .public-preview #hermesGuideWindow .win-body,
   body.mobile-mode.public-preview #hermesGuideWindow .win-body{
@@ -1094,7 +1106,7 @@ body.public-preview::before{
   }
   .public-preview #hermesGuideWindow .install-guide,
   body.mobile-mode.public-preview #hermesGuideWindow .install-guide{
-    width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;overflow-x:hidden!important;padding-right:18px!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;overflow-x:hidden!important;padding:4px!important;
   }
   .public-preview #hermesGuideWindow,
   .public-preview #hermesGuideWindow *,
@@ -1118,6 +1130,14 @@ body.public-preview::before{
   .public-preview #hermesGuideWindow .zero-checklist{columns:1!important;}
   .public-preview #hermesGuideWindow .segmented{display:grid!important;grid-template-columns:1fr!important;}
   .public-preview #hermesGuideWindow .seg-btn{width:100%!important;min-width:0!important;}
+  .public-preview #hermesGuideWindow .beginner-box-grid,
+  .public-preview #hermesGuideWindow .prereq-grid,
+  body.mobile-mode.public-preview #hermesGuideWindow .beginner-box-grid,
+  body.mobile-mode.public-preview #hermesGuideWindow .prereq-grid{grid-template-columns:1fr!important;}
+  .public-preview #hermesGuideWindow .linear-install-steps article,
+  body.mobile-mode.public-preview #hermesGuideWindow .linear-install-steps article{padding:8px 8px 8px 38px!important;}
+  .public-preview #hermesGuideWindow .linear-install-steps article::before,
+  body.mobile-mode.public-preview #hermesGuideWindow .linear-install-steps article::before{left:8px!important;top:8px!important;}
 
   .public-preview #hermesGuideWindow .guide-code,
   body.mobile-mode.public-preview #hermesGuideWindow .guide-code{white-space:pre-wrap!important;}
