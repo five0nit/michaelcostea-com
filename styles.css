@@ -1017,14 +1017,32 @@ body.public-preview::before{
 .public-preview .game-intro{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;background:#d4d0c8;color:#000;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:7px 9px;margin-bottom:8px;}
 .public-preview .game-intro b{color:#000080;text-transform:uppercase;font:900 13px/16px "Work Sans",Tahoma,sans-serif;}
 .public-preview .game-intro span{font-size:12px;line-height:15px;max-width:560px;}
-.public-preview .otis-game-canvas{display:block;width:100%;max-width:660px;aspect-ratio:12/7;height:auto;margin:0 auto;background:#79c8ff;border:3px solid #000;border-top-color:#fff;border-left-color:#fff;border-right-color:#4a4a4a;border-bottom-color:#4a4a4a;image-rendering:pixelated;outline:none;box-shadow:2px 2px 0 #000;}
+.public-preview .otis-game-canvas{display:block;width:100%;max-width:660px;aspect-ratio:12/7;height:auto;margin:0 auto;background:#79c8ff;border:3px solid #000;border-top-color:#fff;border-left-color:#fff;border-right-color:#4a4a4a;border-bottom-color:#4a4a4a;image-rendering:pixelated;outline:none;box-shadow:2px 2px 0 #000;touch-action:none;}
 .public-preview .otis-hud{max-width:660px;margin:8px auto 0;padding:6px 8px;background:#000;color:#39ff14;border:1px solid #39ff14;font:700 12px/16px "Courier New",monospace;min-height:30px;}
 .public-preview .game-controls{max-width:660px;margin:8px auto 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;}
 .public-preview .game-controls span,.public-preview .game-note{background:#d4d0c8;color:#000;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:5px 6px;font-size:11px;line-height:14px;}
 .public-preview .game-note{max-width:660px;margin:8px auto 0;}
+.public-preview .mobile-gamepad{display:none;}
+.public-preview .mobile-gamepad button{font:900 13px/1 "Work Sans",Tahoma,sans-serif;background:#d4d0c8;color:#000;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #606060;border-bottom:2px solid #606060;box-shadow:1px 1px 0 #000;touch-action:none;user-select:none;-webkit-user-select:none;}
+.public-preview .mobile-gamepad button:active,.public-preview .mobile-gamepad button.is-pressed{border-top-color:#606060;border-left-color:#606060;border-right-color:#fff;border-bottom-color:#fff;background:#fff4c2;transform:translate(1px,1px);}
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview .game-intro{display:block;}
-  .public-preview .game-intro span{display:block;margin-top:4px;}
-  .public-preview .game-controls{grid-template-columns:1fr 1fr;}
-  .public-preview .otis-game-canvas{max-height:46dvh;}
+  .public-preview #otisGameWindow.win-window.open,
+  body.mobile-mode.public-preview #otisGameWindow.win-window.open{top:4px!important;left:4px!important;right:auto!important;width:calc(100vw - 60px)!important;max-width:calc(100vw - 60px)!important;height:calc(100dvh - var(--taskbar-h,44px) - 8px)!important;max-height:calc(100dvh - var(--taskbar-h,44px) - 8px)!important;}
+  .public-preview #otisGameWindow .win-title{min-height:24px!important;padding:3px 5px!important;}
+  .public-preview #otisGameWindow .win-body{overflow:hidden!important;padding:4px!important;display:flex!important;flex-direction:column!important;gap:4px!important;touch-action:none!important;overscroll-behavior:none!important;}
+  .public-preview .game-intro{display:block;margin:0;padding:4px 6px;flex:0 0 auto;}
+  .public-preview .game-intro b{font-size:11px;line-height:13px;}
+  .public-preview .game-intro span{display:block;margin-top:2px;font-size:10px;line-height:12px;}
+  .public-preview .otis-game-canvas{flex:1 1 auto;width:100%!important;max-width:none!important;min-height:0;height:auto!important;max-height:none!important;margin:0 auto;object-fit:contain;}
+  .public-preview .otis-hud{flex:0 0 auto;width:100%;max-width:none;margin:0;padding:4px 5px;min-height:22px;font-size:10px;line-height:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .public-preview .game-controls,.public-preview .game-note{display:none!important;}
+  .public-preview .mobile-gamepad{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:1fr 1fr;gap:5px;width:100%;max-width:none;margin:0;flex:0 0 96px;touch-action:none;}
+  .public-preview .pad-left-btn{grid-column:1;grid-row:1;}
+  .public-preview .pad-right-btn{grid-column:2;grid-row:1;}
+  .public-preview .pad-up-btn{grid-column:4;grid-row:1;}
+  .public-preview .pad-down-btn{grid-column:4;grid-row:2;}
+  .public-preview .pad-jump-btn{grid-column:3;grid-row:1/3;}
+  .public-preview .pad-swap-btn{grid-column:1;grid-row:2;font-size:10px!important;}
+  .public-preview .pad-restart-btn{grid-column:2;grid-row:2;}
+  .public-preview .mobile-gamepad button{min-height:36px;min-width:0!important;width:100%!important;padding:0 2px;overflow:hidden;}
 }

@@ -158,7 +158,10 @@ function openWindow(id){
   win.classList.add('open');
   if(!win.classList.contains('maximized')) centerWindow(win);
   bringFront(win);
-  if(id === 'otisGameWindow') setTimeout(() => document.getElementById('otisGameCanvas')?.focus({preventScroll:true}), 40);
+  if(id === 'otisGameWindow') {
+    if (isMobileMode()) win.classList.add('maximized');
+    setTimeout(() => document.getElementById('otisGameCanvas')?.focus({preventScroll:true}), 40);
+  }
   syncImmersiveMode();
   uiBeep('open');
 }
@@ -980,18 +983,51 @@ function initOtisGame(){
     if(!won && !lost){ updatePlayer(heroes[active], true); updatePlayer(heroes[1-active], false); updateBarrels(); updateCollectibles(); }
     draw();
     const total = heroes[0].score + heroes[1].score;
-    if(hud) hud.textContent = `${heroes[active].name} active | treats ${total}/${world.treats.length} | lives ${lives} | ${world.treats.every(t=>t.got)?'Gate open: reach the green door!':'Collect all treats to open the gate.'}`;
+    if(hud) {
+      const gateOpen = world.treats.every(t=>t.got);
+      hud.textContent = isMobileMode()
+        ? `${heroes[active].name} | treats ${total}/${world.treats.length} | lives ${lives} | ${gateOpen ? 'Gate open!' : 'Get treats → gate'}`
+        : `${heroes[active].name} active | treats ${total}/${world.treats.length} | lives ${lives} | ${gateOpen ? 'Gate open: reach the green door!' : 'Collect all treats to open the gate.'}`;
+    }
     requestAnimationFrame(loop);
   }
+  const isGameOpen = () => document.getElementById('otisGameWindow')?.classList.contains('open');
+  const pressGameKey = (code) => {
+    if(!isGameOpen()) return;
+    keys.add(code);
+    if(code === 'Space' || code === 'ArrowUp') setTimeout(() => keys.delete(code), 170);
+  };
+  const releaseGameKey = (code) => keys.delete(code);
   window.addEventListener('keydown', (e)=>{
-    const gameOpen = document.getElementById('otisGameWindow')?.classList.contains('open');
-    if(!gameOpen) return;
+    if(!isGameOpen()) return;
     if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(e.code)) e.preventDefault();
     keys.add(e.code);
     if(!e.repeat && (e.code==='ShiftLeft'||e.code==='ShiftRight'||e.code==='Tab')) active = 1-active;
     if(e.code==='KeyR') reset();
   });
   window.addEventListener('keyup', (e)=> keys.delete(e.code));
+  document.querySelectorAll('[data-game-key],[data-game-action]').forEach((btn) => {
+    const key = btn.getAttribute('data-game-key');
+    const action = btn.getAttribute('data-game-action');
+    const down = (e) => {
+      if(!isGameOpen()) return;
+      e.preventDefault();
+      btn.classList.add('is-pressed');
+      if(key) pressGameKey(key);
+      if(action === 'swap') active = 1-active;
+      if(action === 'restart') reset();
+    };
+    const up = (e) => {
+      if(e) e.preventDefault();
+      btn.classList.remove('is-pressed');
+      if(key) releaseGameKey(key);
+    };
+    btn.addEventListener('pointerdown', down);
+    btn.addEventListener('pointerup', up);
+    btn.addEventListener('pointercancel', up);
+    btn.addEventListener('pointerleave', up);
+    btn.addEventListener('contextmenu', (e)=>e.preventDefault());
+  });
   reset(); loop();
 }
 

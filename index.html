@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260502-1125" />
+  <link rel="stylesheet" href="styles.css?v=20260502-1215" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -29,7 +29,6 @@
           <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0415" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
-          <button class="btn big-nav" type="button" data-open="otisGameWindow" onclick="openWindow('otisGameWindow')">PLAY OTIS &amp; SULLY</button>
           <button class="btn big-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
           <button class="btn big-nav ai-cta-nav" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">AI HELP</button>
           <button class="btn big-nav" type="button" data-open="contactWindow" onclick="openWindow('contactWindow')">CONTACT ME</button>
@@ -541,6 +540,15 @@ Help me create a beginner test plan for using an AI agent through Telegram for s
           <span><b>Swap:</b> Shift / Tab</span>
           <span><b>Restart:</b> R</span>
         </div>
+        <div class="mobile-gamepad" aria-label="Mobile game controls">
+          <button class="pad-left-btn" type="button" data-game-key="ArrowLeft" aria-label="Move left">◀</button>
+          <button class="pad-right-btn" type="button" data-game-key="ArrowRight" aria-label="Move right">▶</button>
+          <button class="pad-up-btn" type="button" data-game-key="ArrowUp" aria-label="Climb up">▲</button>
+          <button class="pad-down-btn" type="button" data-game-key="ArrowDown" aria-label="Climb down">▼</button>
+          <button class="pad-jump-btn" type="button" data-game-key="Space" aria-label="Jump">JMP</button>
+          <button class="pad-swap-btn" type="button" data-game-action="swap" aria-label="Swap character">SWAP</button>
+          <button class="pad-restart-btn" type="button" data-game-action="restart" aria-label="Restart level">R</button>
+        </div>
         <p class="game-note"><b>Dual-character style:</b> Otis is quick and jumps higher. Sully is heavier, steadier, and can clear cracked blocks by landing on them.</p>
       </div>
     </section>
@@ -575,6 +583,6 @@ Help me create a beginner test plan for using an AI agent through Telegram for s
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260502-1125"></script>
+  <script src="script.js?v=20260502-1215"></script>
 </body>
 </html>
