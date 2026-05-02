@@ -332,22 +332,22 @@
             <div data-checklist-product="openclaw" hidden><h4>OpenClaw narrow beginner route</h4><ol class="step-list"><li>Use the official installer first. It checks your system, installs what it needs, and starts onboarding.</li><li>OpenClaw recommends Node 24; Node 22.14+ is supported. Manual npm install is for users who already manage Node.</li><li>Run <code>openclaw onboard --install-daemon</code>.</li><li>Check <code>openclaw gateway status</code>; dashboard last.</li></ol></div>
           </details>
 
-          <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac"><h3>Hermes on Mac — beginner path</h3><div class="step-card"><b>1. Open Terminal</b><p>Command + Space → Terminal → Enter.</p></div><div class="stop-box"><b>Before install:</b><ol><li>Make sure Git works.</li><li>Do not add <code>sudo</code>.</li><li>Paste only the official install command.</li><li>Wait until it fully finishes.</li></ol></div><div class="step-card"><b>2. Check Git</b><pre class="guide-code">git --version</pre><p><b>Success:</b> Terminal prints a Git version.</p></div><div class="step-card"><b>3. Install Hermes</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre><pre class="guide-code">hermes --version</pre></div><div class="step-card"><b>4. Model and first chat</b><pre class="guide-code">hermes model
+          <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac"><details class="install-path-detail"><summary>Open selected install path</summary><h3>Hermes on Mac — beginner path</h3><div class="step-card"><b>1. Open Terminal</b><p>Command + Space → Terminal → Enter.</p></div><div class="stop-box"><b>Before install:</b><ol><li>Make sure Git works.</li><li>Do not add <code>sudo</code>.</li><li>Paste only the official install command.</li><li>Wait until it fully finishes.</li></ol></div><div class="step-card"><b>2. Check Git</b><pre class="guide-code">git --version</pre><p><b>Success:</b> Terminal prints a Git version.</p></div><div class="step-card"><b>3. Install Hermes</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre><pre class="guide-code">hermes --version</pre></div><div class="step-card"><b>4. Model and first chat</b><pre class="guide-code">hermes model
 hermes</pre><p>Ask: <code>Say hello in one sentence.</code></p></div><div class="step-card"><b>5. Telegram and dashboard</b><p>Start your Telegram bot first with <code>/start</code>.</p><pre class="guide-code">hermes gateway setup
 hermes gateway run
 hermes doctor
 hermes status
-hermes dashboard</pre></div></div>
+hermes dashboard</pre></div></details></div>
 
-          <div class="guide-panel" data-panel-product="hermes" data-panel-os="windows" hidden><h3>Hermes on Windows — WSL Ubuntu path</h3><div class="step-card"><b>1. PowerShell only for WSL install</b><p>Start → PowerShell → right-click → Run as administrator.</p><pre class="guide-code">wsl --install -d Ubuntu</pre></div><div class="step-card"><b>2. Open Ubuntu</b><p>Linux passwords show no dots or stars while typing. That is normal.</p><pre class="guide-code">sudo apt update
+          <div class="guide-panel" data-panel-product="hermes" data-panel-os="windows" hidden><details class="install-path-detail"><summary>Open selected install path</summary><h3>Hermes on Windows — WSL Ubuntu path</h3><div class="step-card"><b>1. PowerShell only for WSL install</b><p>Start → PowerShell → right-click → Run as administrator.</p><pre class="guide-code">wsl --install -d Ubuntu</pre></div><div class="step-card"><b>2. Open Ubuntu</b><p>Linux passwords show no dots or stars while typing. That is normal.</p><pre class="guide-code">sudo apt update
 sudo apt install -y curl git</pre></div><div class="step-card"><b>3. Install Hermes inside Ubuntu</b><p>Do not manually install Python or Node for Hermes unless the installer tells you to.</p><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre><pre class="guide-code">hermes --version</pre></div><div class="step-card"><b>4. Model, chat, gateway, dashboard</b><pre class="guide-code">hermes model
 hermes
 hermes gateway setup
 hermes gateway run
 hermes doctor
-hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></div></div>
+hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></div></details></div>
 
-          <div class="guide-panel" data-panel-product="hermes" data-panel-os="linux" hidden><h3>Hermes on Linux — Ubuntu/Debian style</h3><p class="plain-summary"><b>Note:</b> these commands assume Ubuntu/Debian-style Linux. Fedora, Arch, or another Linux: use official docs or ask for help.</p><div class="step-card"><b>1. Install Git/curl</b><pre class="guide-code">sudo apt update
+          <div class="guide-panel" data-panel-product="hermes" data-panel-os="linux" hidden><details class="install-path-detail"><summary>Open selected install path</summary><h3>Hermes on Linux — Ubuntu/Debian style</h3><p class="plain-summary"><b>Note:</b> these commands assume Ubuntu/Debian-style Linux. Fedora, Arch, or another Linux: use official docs or ask for help.</p><div class="step-card"><b>1. Install Git/curl</b><pre class="guide-code">sudo apt update
 sudo apt install -y curl git</pre></div><div class="step-card"><b>2. Install Hermes</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
 exec $SHELL -l
 hermes --version</pre></div><div class="step-card"><b>3. Model, chat, gateway, dashboard</b><pre class="guide-code">hermes model
@@ -356,25 +356,25 @@ hermes gateway setup
 hermes gateway run
 hermes doctor
 hermes status
-hermes dashboard --no-open</pre></div></div>
+hermes dashboard --no-open</pre></div></details></div>
 
-          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="mac" hidden><h3>OpenClaw on Mac — official installer path</h3><p class="plain-summary"><b>Source alignment:</b> OpenClaw now recommends the official installer. Node 24 is recommended; Node 22.14+ is supported.</p><div class="step-card"><b>1. Install OpenClaw</b><pre class="guide-code">curl -fsSL https://openclaw.ai/install.sh | bash</pre><pre class="guide-code">openclaw --version</pre></div><div class="step-card"><b>2. Guided onboarding</b><pre class="guide-code">openclaw onboard --install-daemon
+          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="mac" hidden><details class="install-path-detail"><summary>Open selected install path</summary><h3>OpenClaw on Mac — official installer path</h3><p class="plain-summary"><b>Source alignment:</b> OpenClaw now recommends the official installer. Node 24 is recommended; Node 22.14+ is supported.</p><div class="step-card"><b>1. Install OpenClaw</b><pre class="guide-code">curl -fsSL https://openclaw.ai/install.sh | bash</pre><pre class="guide-code">openclaw --version</pre></div><div class="step-card"><b>2. Guided onboarding</b><pre class="guide-code">openclaw onboard --install-daemon
 openclaw gateway status
 openclaw dashboard</pre></div><details class="advanced-box"><summary>Advanced/manual npm path</summary><pre class="guide-code">npm install -g openclaw
-openclaw --version</pre></details></div>
+openclaw --version</pre></details></details></div>
 
-          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="windows" hidden><h3>OpenClaw on Windows — simplest + stable paths</h3><div class="step-card"><b>Simplest PowerShell installer</b><pre class="guide-code">powershell -ExecutionPolicy Bypass -c "irm https://openclaw.ai/install.ps1 | iex"</pre></div><div class="step-card"><b>Stable WSL2 path</b><pre class="guide-code">wsl --install -d Ubuntu
+          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="windows" hidden><details class="install-path-detail"><summary>Open selected install path</summary><h3>OpenClaw on Windows — simplest + stable paths</h3><div class="step-card"><b>Simplest PowerShell installer</b><pre class="guide-code">powershell -ExecutionPolicy Bypass -c "irm https://openclaw.ai/install.ps1 | iex"</pre></div><div class="step-card"><b>Stable WSL2 path</b><pre class="guide-code">wsl --install -d Ubuntu
 # then inside Ubuntu:
 curl -fsSL https://openclaw.ai/install.sh | bash</pre></div><div class="step-card"><b>Guided onboarding</b><pre class="guide-code">openclaw onboard --install-daemon
 openclaw gateway status
 openclaw dashboard</pre></div><details class="advanced-box"><summary>Advanced/manual Node path</summary><p>Only if you manage Node yourself. Node 24 recommended, 22.14+ supported.</p><pre class="guide-code">node --version
 npm install -g openclaw
-openclaw --version</pre></details></div>
+openclaw --version</pre></details></details></div>
 
-          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="linux" hidden><h3>OpenClaw on Linux — official installer path</h3><p class="plain-summary"><b>Note:</b> assumes Ubuntu/Debian style Linux. Other Linux versions: check official docs or ask for help.</p><div class="step-card"><b>1. Install OpenClaw</b><pre class="guide-code">curl -fsSL https://openclaw.ai/install.sh | bash</pre><pre class="guide-code">openclaw --version</pre></div><div class="step-card"><b>2. Guided onboarding</b><pre class="guide-code">openclaw onboard --install-daemon
+          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="linux" hidden><details class="install-path-detail"><summary>Open selected install path</summary><h3>OpenClaw on Linux — official installer path</h3><p class="plain-summary"><b>Note:</b> assumes Ubuntu/Debian style Linux. Other Linux versions: check official docs or ask for help.</p><div class="step-card"><b>1. Install OpenClaw</b><pre class="guide-code">curl -fsSL https://openclaw.ai/install.sh | bash</pre><pre class="guide-code">openclaw --version</pre></div><div class="step-card"><b>2. Guided onboarding</b><pre class="guide-code">openclaw onboard --install-daemon
 openclaw gateway status
 openclaw dashboard</pre></div><details class="advanced-box"><summary>Advanced/manual npm path</summary><p>Node 24 recommended, 22.14+ supported.</p><pre class="guide-code">npm install -g openclaw
-openclaw --version</pre></details></div>
+openclaw --version</pre></details></details></div>
 
           <h3>Telegram + BotFather setup — keep it private</h3><ol class="step-list"><li>Search Telegram for verified <code>@BotFather</code>, send <code>/newbot</code>, choose a display name, then choose a username ending in <code>bot</code>.</li><li>Copy the BotFather token into a private note. <b>Stop:</b> this token is a password. Never paste it into public chat, screenshots, helper bots, or support requests.</li><li>Open your new bot and press <b>Start</b> or send <code>/start</code> before gateway testing.</li><li>For numeric user ID, message <code>@userinfobot</code> or <code>@get_id_bot</code>. These are helper bots, not BotFather. Only send a simple start/message; never send tokens, API keys, passwords, or private files.</li></ol>
           <details class="advanced-box"><summary>If you accidentally share your token: emergency rotation</summary><ol><li>Open BotFather.</li><li>Select your bot.</li><li>Revoke/regenerate the token.</li><li>Update the agent gateway config.</li><li>Restart the gateway.</li></ol></details>

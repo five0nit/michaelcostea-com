@@ -885,6 +885,12 @@ body.public-preview::before{
 .public-preview .guide-panel{display:none!important;background:#fff;border:2px inset #808080;padding:10px;margin:10px 0;}
 .public-preview .guide-panel.active{display:block!important;}
 .public-preview .guide-panel:not(.active){display:none!important;}
+
+.public-preview .install-path-detail{background:#e8e8e8;border:2px inset #808080;padding:8px;margin:4px 0;}
+.public-preview .install-path-detail>summary{cursor:pointer;background:#fff4c2;color:#000080;border:2px outset #c0c0c0;padding:8px;font:900 13px/16px "Work Sans",Tahoma,sans-serif;}
+.public-preview .install-path-detail>summary::after{content:" ▸ tap to open";color:#000;font:700 10px/12px "Work Sans",Tahoma,sans-serif;}
+.public-preview .install-path-detail[open]>summary::after{content:" ▾ open";}
+.public-preview .install-path-detail>h3{margin-top:10px!important;}
 .public-preview .guide-selection-status{background:#e8f4ff;border:2px solid #000080;color:#000;padding:8px!important;margin:8px 0 0!important;font:700 12px/16px "Work Sans",Tahoma,sans-serif;}
 .public-preview .step-list{padding-left:22px;}
 .public-preview .step-list li{margin:8px 0;}
