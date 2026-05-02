@@ -1,7 +1,7 @@
 # DO NOT TOUCH — 3D Resume Rebuild Plan
 
 ## Goal
-Rebuild `DO NOT TOUCH` from scratch as a standalone 3D resume adventure inspired by retro Pokémon world exploration and the interaction feel of `Otis & His Friends`, but with its **own original 3D assets, world, mechanics, and content structure**.
+Rebuild `DO NOT TOUCH` from scratch as a standalone 3D resume adventure inspired by retro Pokémon world exploration, with its **own original 3D assets, world, mechanics, and content structure**.
 
 ## Creative Direction
 - **Theme / world vibe:** retro Pokémon-inspired overworld exploration
@@ -81,7 +81,7 @@ Recommended section model:
 - downloadable CV generated from unlocked data
 
 ## Asset Direction
-This rebuild should use its **own 3D asset language**, not recycled Otis characters.
+This rebuild should use its **own 3D asset language** and original characters.
 
 ### Required original asset categories
 - player character

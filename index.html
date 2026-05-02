@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260502-1605" />
+  <link rel="stylesheet" href="styles.css?v=20260502-1715" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -18,7 +18,6 @@
       <button class="desk-icon" data-open="projectsWindow" aria-label="Open Projects"><span class="icon-art">📁</span><span>Projects</span></button>
       <button class="desk-icon" data-open="agentsWindow" aria-label="Open AI Agents"><span class="icon-art">🤖</span><span>AI Agents</span></button>
       <button class="desk-icon" data-open="aiHelpWindow" aria-label="Open AI Help"><span class="icon-art">🎓</span><span>AI Help</span></button>
-      <button class="desk-icon" data-open="otisGameWindow" aria-label="Open Otis and Sully's Adventures"><span class="icon-art">🎮</span><span>Otis &amp; Sully</span></button>
       <button id="recycleBin" class="desk-icon" data-open="recycleWindow" aria-label="Open Recycle Bin"><span class="icon-art">🗑️</span><span id="recycleLabel">Recycle Bin</span></button>
     </section>
 
@@ -539,35 +538,6 @@ openclaw doctor</pre></article>
       </div>
     </section>
 
-    <section id="otisGameWindow" class="win-window game-window" aria-label="Otis and Sully's Adventures" style="left:260px;top:90px;width:min(860px,96vw);">
-      <div class="win-title"><span>Otis and Sully's Adventures.exe</span><button class="win-close" data-close="otisGameWindow">×</button></div>
-      <div class="win-body otis-game-body">
-        <div class="game-intro">
-          <b>Otis and Sully's Adventures</b>
-          <span>Simple 2D retro platformer: swap between two mates, dodge barrels, climb ladders, collect treats, and reach the top gate.</span>
-        </div>
-        <canvas id="otisGameCanvas" class="otis-game-canvas" width="720" height="420" aria-label="2D platformer game canvas" tabindex="0"></canvas>
-        <div class="otis-hud" id="otisGameHud">Loading game...</div>
-        <div class="game-controls">
-          <span><b>Move:</b> ← → / A D</span>
-          <span><b>Jump:</b> Space / W / ↑</span>
-          <span><b>Climb:</b> ↑ ↓ on ladders</span>
-          <span><b>Swap:</b> Shift / Tab</span>
-          <span><b>Restart:</b> R</span>
-        </div>
-        <div class="mobile-gamepad" aria-label="Mobile game controls">
-          <button class="pad-left-btn" type="button" data-game-key="ArrowLeft" aria-label="Move left">◀</button>
-          <button class="pad-right-btn" type="button" data-game-key="ArrowRight" aria-label="Move right">▶</button>
-          <button class="pad-up-btn" type="button" data-game-key="ArrowUp" aria-label="Climb up">▲</button>
-          <button class="pad-down-btn" type="button" data-game-key="ArrowDown" aria-label="Climb down">▼</button>
-          <button class="pad-jump-btn" type="button" data-game-key="Space" aria-label="Jump">JMP</button>
-          <button class="pad-swap-btn" type="button" data-game-action="swap" aria-label="Swap character">SWAP</button>
-          <button class="pad-restart-btn" type="button" data-game-action="restart" aria-label="Restart level">R</button>
-        </div>
-        <p class="game-note"><b>Dual-character style:</b> Otis is quick and jumps higher. Sully is heavier, steadier, and can clear cracked blocks by landing on them.</p>
-      </div>
-    </section>
-
     <section id="contactWindow" class="win-window" aria-label="Contact" style="left:260px;top:230px;width:min(440px,92vw);">
       <div class="win-title"><span>Contact</span><button class="win-close" data-close="contactWindow">×</button></div>
       <div class="win-body">
@@ -598,6 +568,6 @@ openclaw doctor</pre></article>
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260502-1605"></script>
+  <script src="script.js?v=20260502-1715"></script>
 </body>
 </html>
