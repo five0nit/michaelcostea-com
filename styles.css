@@ -852,6 +852,11 @@ body.public-preview::before{
 .public-preview .guide-subtitle{font-size:16px;line-height:20px;color:#000080;background:#eef6ff;border:2px inset #808080;padding:8px!important;}
 .public-preview .install-stage-bar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:10px 0;background:#c0c0c0;border:2px inset #808080;padding:5px;}
 .public-preview .install-stage-bar span{display:block;text-align:center;background:#000080;color:#fff;font:900 11px/14px "Work Sans",Tahoma,sans-serif;padding:6px 4px;border-top:1px solid #6fb3ff;border-left:1px solid #6fb3ff;border-right:1px solid #000;border-bottom:1px solid #000;}
+.public-preview .tutorial-flow-map{counter-reset:tutorialStep;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:10px 0 14px!important;padding:0!important;list-style:none!important;}
+.public-preview .tutorial-flow-map li{counter-increment:tutorialStep;position:relative;background:#fff;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:8px 8px 8px 42px;min-height:62px;}
+.public-preview .tutorial-flow-map li::before{content:counter(tutorialStep);position:absolute;left:8px;top:8px;width:24px;height:24px;display:grid;place-items:center;background:#000080;color:#fff;border:1px solid #000;font:900 12px/1 "Work Sans",Tahoma,sans-serif;box-shadow:1px 1px 0 #808080;}
+.public-preview .tutorial-flow-map b{display:block;color:#000080;font:900 12px/15px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;margin-bottom:3px;}
+.public-preview .tutorial-flow-map span{display:block;font-size:12px;line-height:15px;}
 .public-preview .guide-table{width:100%;border-collapse:collapse;margin:8px 0;background:#fff;font-size:12px;line-height:15px;}
 .public-preview .guide-table th,.public-preview .guide-table td{border:1px solid #808080;padding:6px;vertical-align:top;}
 .public-preview .guide-table th{background:#000080;color:#fff;text-align:left;}
@@ -878,7 +883,7 @@ body.public-preview::before{
 .public-preview .step-list{padding-left:22px;}
 .public-preview .step-list li{margin:8px 0;}
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples,.public-preview .beginner-box-grid,.public-preview .prereq-grid,.public-preview .install-roadmap{grid-template-columns:1fr!important;}
+  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples,.public-preview .beginner-box-grid,.public-preview .prereq-grid,.public-preview .install-roadmap,.public-preview .tutorial-flow-map{grid-template-columns:1fr!important;}
   .public-preview .visual-flow{grid-template-columns:1fr!important;}
   .public-preview .visual-flow span{transform:rotate(90deg);min-height:20px;}
   .public-preview .guide-code{font-size:11px!important;line-height:15px!important;}

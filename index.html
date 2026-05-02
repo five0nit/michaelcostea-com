@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260502-1315" />
+  <link rel="stylesheet" href="styles.css?v=20260502-1345" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -274,6 +274,25 @@
 
           <div class="install-stage-bar" aria-label="Install guide stages"><span>1 Choose</span><span>2 Prepare</span><span>3 Install</span><span>4 Connect</span><span>5 Verify/use</span></div>
 
+          <h3>Full tutorial flow</h3>
+          <p class="plain-summary"><b>Use this as the map:</b> the cards below are the logic from the visual tutorial sequence. They are not extra style; they are the order a beginner should follow so the page feels like one clear journey instead of disconnected commands.</p>
+          <ol class="tutorial-flow-map" aria-label="Full AI agent tutorial sequence">
+            <li><b>See the whole journey</b><span>Read the map first so you know where the install is heading.</span></li>
+            <li><b>Install your first AI agent</b><span>Set the goal: one agent, one model, one private test bot.</span></li>
+            <li><b>Before Terminal</b><span>Prepare accounts, Telegram, BotFather, user ID, and a safe test folder.</span></li>
+            <li><b>Choose Hermes or OpenClaw</b><span>Pick the path that matches your setup confidence and goals.</span></li>
+            <li><b>Install in Terminal</b><span>Run only the selected command path for your computer.</span></li>
+            <li><b>Model sign-in and tokens</b><span>Connect the AI brain with OAuth or a private API key.</span></li>
+            <li><b>Safe workspace</b><span>Restrict early tests to one harmless folder before real files/tools.</span></li>
+            <li><b>Telegram and BotFather</b><span>Create the private bot, protect the token, and allow only yourself.</span></li>
+            <li><b>Gateway bridge</b><span>Start the bridge that lets Telegram talk to the local agent.</span></li>
+            <li><b>Doctor/status checks</b><span>Verify install, model, gateway, and dashboard readiness before moving on.</span></li>
+            <li><b>Dashboard last</b><span>Open the cockpit only after the terminal checks are healthy.</span></li>
+            <li><b>First safe prompt</b><span>Ask for a simple reply or test-folder read with no edits.</span></li>
+            <li><b>Troubleshooting</b><span>Fix by symptom: command missing, auth failed, bot silent, dashboard blank.</span></li>
+            <li><b>Beginner safety checklist</b><span>Review permissions, secrets, customer data, money, messages, and stop/reset.</span></li>
+          </ol>
+
           <h3>Should I use Hermes or OpenClaw?</h3>
           <table class="guide-table decision-table"><thead><tr><th>Choose this</th><th>Best for</th><th>Why</th></tr></thead><tbody>
             <tr><td><b>Hermes</b></td><td>First-time solo setup</td><td>Fewer moving parts, direct first chat, good first smoke test.</td></tr>
@@ -282,6 +301,7 @@
           </tbody></table>
 
           <h3>Before you start</h3>
+          <p class="plain-summary"><b>Matches tutorial steps 3, 7, and 14:</b> prepare before Terminal, keep the workspace safe, and check safety before you begin.</p>
           <ul class="zero-checklist">
             <li>□ I know whether I am on Mac, Windows, or Linux.</li><li>□ I have 30–60 minutes and stable internet.</li><li>□ I have a ChatGPT/provider account ready.</li><li>□ I have Telegram installed and logged in.</li><li>□ I created a private Telegram bot with BotFather.</li><li>□ I copied my bot token into a private note.</li><li>□ I copied my numeric Telegram user ID.</li><li>□ I created a test folder named <b>AI Agent Test</b>.</li><li>□ I understand API keys and bot tokens are passwords.</li><li>□ I know <b>Ctrl + C</b> stops a foreground gateway.</li>
           </ul>
@@ -304,6 +324,7 @@
           </div>
 
           <h3>Complete path: choose → prepare → install → connect → verify</h3>
+          <p class="plain-summary"><b>Matches tutorial steps 5–11:</b> install in Terminal, sign in to the model, connect Telegram, start the gateway, run doctor/status, then open the dashboard last.</p>
           <div class="install-roadmap" aria-label="Complete install and setup roadmap"><div><b>1. Choose path</b><span>Hermes/OpenClaw and Mac/Windows/Linux.</span></div><div><b>2. Prepare safely</b><span>Accounts, Telegram, test folder, glossary, permissions.</span></div><div><b>3. Install one path only</b><span>Only one selected command panel is visible.</span></div><div><b>4. Connect</b><span>Model first, local chat second, Telegram third.</span></div><div><b>5. Verify/use</b><span>Doctor/status, safe prompt, dashboard last.</span></div></div>
 
           <details class="terminal-checklists"><summary>Before the Web UI: required terminal flow for the selected agent</summary>
@@ -358,7 +379,8 @@ openclaw --version</pre></details></div>
           <h3>Telegram + BotFather setup — keep it private</h3><ol class="step-list"><li>Search Telegram for verified <code>@BotFather</code>, send <code>/newbot</code>, choose a display name, then choose a username ending in <code>bot</code>.</li><li>Copy the BotFather token into a private note. <b>Stop:</b> this token is a password. Never paste it into public chat, screenshots, helper bots, or support requests.</li><li>Open your new bot and press <b>Start</b> or send <code>/start</code> before gateway testing.</li><li>For numeric user ID, message <code>@userinfobot</code> or <code>@get_id_bot</code>. These are helper bots, not BotFather. Only send a simple start/message; never send tokens, API keys, passwords, or private files.</li></ol>
           <details class="advanced-box"><summary>If you accidentally share your token: emergency rotation</summary><ol><li>Open BotFather.</li><li>Select your bot.</li><li>Revoke/regenerate the token.</li><li>Update the agent gateway config.</li><li>Restart the gateway.</li></ol></details>
 
-          <h3>First 3 safe tests</h3><div class="beginner-box-grid"><div><b>Test 1: Can it reply?</b><pre class="guide-code">Say hello in one sentence.</pre></div><div><b>Test 2: Can it explain itself?</b><pre class="guide-code">Explain what you can do safely. Do not use tools yet.</pre></div><div><b>Test 3: Can it use the test folder safely?</b><pre class="guide-code">Look only inside my AI Agent Test folder. Tell me what files you see. Do not edit anything.</pre></div></div>
+          <h3>First 3 safe tests</h3>
+          <p class="plain-summary"><b>Matches tutorial step 12:</b> the first prompt should prove the agent can reply and respect boundaries before it touches anything useful.</p><div class="beginner-box-grid"><div><b>Test 1: Can it reply?</b><pre class="guide-code">Say hello in one sentence.</pre></div><div><b>Test 2: Can it explain itself?</b><pre class="guide-code">Explain what you can do safely. Do not use tools yet.</pre></div><div><b>Test 3: Can it use the test folder safely?</b><pre class="guide-code">Look only inside my AI Agent Test folder. Tell me what files you see. Do not edit anything.</pre></div></div>
 
           <h3>Beginner troubleshooting by symptom</h3><table class="guide-table troubleshoot-table"><thead><tr><th>What you see</th><th>Probably means</th><th>Try this</th></tr></thead><tbody><tr><td><code>command not found</code></td><td>Terminal cannot find the app.</td><td>Close/reopen Terminal, then check version.</td></tr><tr><td><code>permission denied</code></td><td>Command lacks permission.</td><td>Stop; do not randomly add admin/sudo.</td></tr><tr><td>Bot does not reply</td><td>Gateway off, token wrong, user ID wrong, or bot not started.</td><td>Send <code>/start</code>, check gateway status, token, and user ID.</td></tr><tr><td>Dashboard opens blank</td><td>UI dependency or service not running.</td><td>Run doctor/status first.</td></tr><tr><td>Model says no auth</td><td>Provider login/key not connected.</td><td>Re-run model setup.</td></tr><tr><td>Node version too old</td><td>OpenClaw runtime issue.</td><td>Use official installer or update Node.</td></tr><tr><td>WSL install fails</td><td>Windows feature/virtualization issue.</td><td>Restart, run WSL update, confirm Windows version.</td></tr></tbody></table>
 
@@ -431,6 +453,6 @@ openclaw doctor</pre></div><div><b>If you want to remove this later</b><span>Sto
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260502-1315"></script>
+  <script src="script.js?v=20260502-1345"></script>
 </body>
 </html>
