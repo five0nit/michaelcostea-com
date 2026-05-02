@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260502-1215" />
+  <link rel="stylesheet" href="styles.css?v=20260502-1315" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -263,266 +263,114 @@
     </section>
 
     <section id="hermesGuideWindow" class="win-window doc-window" aria-label="Install Hermes and OpenClaw guide" style="left:225px;top:70px;width:min(1040px,96vw);">
-      <div class="win-title"><span>Guide 2 - Install your first local AI agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
+      <div class="win-title"><span>Guide 2 - Install your first AI agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc install-guide">
-          <h2>Install Your First Local AI Agent</h2>
-          <p><b>Goal:</b> get a real agent running locally, connect it to a model, and talk to it through Telegram so testing feels like messaging a helpful assistant instead of operating a developer tool.</p>
-          <p class="guide-note"><b>Cost + tokens intro:</b> AI tools charge or limit you by <b>tokens</b> — chunks of text sent in and generated back. Long chats, big files, and repeated tool use burn tokens quickly. At the moment, <b>GPT / ChatGPT OAuth</b> is usually the cheapest beginner path for a good balance of reasoning and usability when the tool offers it. Start with a <b>ChatGPT Plus</b> account. Move to <b>Pro</b> only once you are actually hitting rate limits or using too many tokens for that plan. Pricing and limits change, so always check the provider page before relying on it for business-critical work.</p>
-          <h3>Before touching Terminal: get these ready</h3>
-          <div class="prereq-grid">
-            <article><b>ChatGPT Plus account</b><span>Create or confirm a ChatGPT account first. Plus is the best starting point for most beginners. Pro comes later if rate limits become a real blocker.</span></article>
-            <article><b>Telegram on your phone</b><span>Install Telegram on mobile and log in. Your phone is the easiest place to create/test the bot and confirm messages are flowing.</span></article>
-            <article><b>BotFather token ready</b><span>Use Telegram’s official <code>@BotFather</code> to create your bot before setup. Copy the token and keep it private. You will paste it when Hermes/OpenClaw asks for Telegram.</span></article>
-            <article><b>Computer dependency ready</b><span>Mac/Linux need Terminal basics. Windows needs Ubuntu through WSL. OpenClaw also needs Node.js 22.14+ before the <code>openclaw</code> command will work.</span></article>
-            <article><b>Git ready for Hermes</b><span>Hermes’ official docs list Git as the key manual prerequisite. Windows/Ubuntu and Linux commands below install it. On Mac, install Apple command-line tools if prompted.</span></article>
-            <article><b>Telegram user ID ready</b><span>After BotFather, message <code>@userinfobot</code> or <code>@get_id_bot</code> and copy your numeric Telegram ID. Use it as the allowed user so strangers cannot talk to your bot.</span></article>
-          </div>
-          <p class="guide-note"><b>Best-practice order:</b> install locally → run one local chat test → connect Telegram → run gateway → open dashboard. Do not start with the Web UI if the terminal checks are failing.</p>
-          <h3>What you are about to install</h3>
-          <div class="beginner-box-grid">
-            <article><b>Agent app</b><span>Hermes or OpenClaw is the local program. It runs on your computer and coordinates tools, chats, memory, sessions, and model calls.</span></article>
-            <article><b>Model login</b><span>The model is the AI brain. OAuth means you log in with your account. API keys are secret passwords for providers. Keep both private.</span></article>
-            <article><b>Gateway</b><span>The gateway is the bridge between Telegram and the agent. If the gateway is off, Telegram messages will not reach the agent.</span></article>
-            <article><b>Dashboard</b><span>The Web UI is the cockpit. Open it after terminal setup is healthy, not before.</span></article>
-          </div>
+          <h2>Install Your First AI Agent</h2>
+          <p class="guide-subtitle"><b>A safe beginner setup for Mac, Windows, or Linux.</b></p>
+          <p class="guide-note"><b>You are not trying to understand every technical detail today.</b><br />Your goal is only to: install one agent, connect one AI model, test one private Telegram bot, run one safe prompt, and learn how to stop it. Do not connect real business systems, private customer data, payments, or your full Documents/Desktop folder on day one.</p>
+          <p><b>What you will do:</b> install an AI helper, connect it to an AI model, create a private Telegram bot, test it safely, and learn how to stop or fix it.</p>
+          <p class="guide-note compact"><b>Cost + tokens intro, checked May 2026:</b> Tokens are chunks of text sent in and generated back. Long chats, big files, and repeated tool use burn tokens quickly. <b>GPT / ChatGPT OAuth</b> is often the easiest beginner path when offered. Start with <b>ChatGPT Plus</b>; move to Pro only after real rate-limit pain. Pricing changes, so check the provider page today before relying on it.</p>
+
+          <div class="install-stage-bar" aria-label="Install guide stages"><span>1 Choose</span><span>2 Prepare</span><span>3 Install</span><span>4 Connect</span><span>5 Verify/use</span></div>
+
+          <h3>Should I use Hermes or OpenClaw?</h3>
+          <table class="guide-table decision-table"><thead><tr><th>Choose this</th><th>Best for</th><th>Why</th></tr></thead><tbody>
+            <tr><td><b>Hermes</b></td><td>First-time solo setup</td><td>Fewer moving parts, direct first chat, good first smoke test.</td></tr>
+            <tr><td><b>OpenClaw</b></td><td>Messaging/dashboard-first setup</td><td>Strong gateway/channel focus and guided onboarding.</td></tr>
+            <tr><td><b>Not sure?</b></td><td>Most beginners</td><td>Start with Hermes first, then try OpenClaw later.</td></tr>
+          </tbody></table>
+
+          <h3>Before you start</h3>
+          <ul class="zero-checklist">
+            <li>□ I know whether I am on Mac, Windows, or Linux.</li><li>□ I have 30–60 minutes and stable internet.</li><li>□ I have a ChatGPT/provider account ready.</li><li>□ I have Telegram installed and logged in.</li><li>□ I created a private Telegram bot with BotFather.</li><li>□ I copied my bot token into a private note.</li><li>□ I copied my numeric Telegram user ID.</li><li>□ I created a test folder named <b>AI Agent Test</b>.</li><li>□ I understand API keys and bot tokens are passwords.</li><li>□ I know <b>Ctrl + C</b> stops a foreground gateway.</li>
+          </ul>
+
+          <details class="glossary-box" open><summary>Words you’ll see during setup</summary>
+            <table class="guide-table"><tbody>
+              <tr><td><b>Terminal</b></td><td>The app where you paste setup commands.</td></tr><tr><td><b>PowerShell</b></td><td>Windows’ command app.</td></tr><tr><td><b>Ubuntu / WSL</b></td><td>A Linux environment inside Windows.</td></tr><tr><td><b>Git</b></td><td>A tool installers use to download code.</td></tr><tr><td><b>Node / npm</b></td><td>Tools OpenClaw uses when using manual install.</td></tr><tr><td><b>Model</b></td><td>The AI brain the agent talks to.</td></tr><tr><td><b>OAuth</b></td><td>Logging in with your account instead of pasting a secret key.</td></tr><tr><td><b>API key</b></td><td>A secret password for an AI provider.</td></tr><tr><td><b>BotFather token</b></td><td>A secret password for your Telegram bot.</td></tr><tr><td><b>Gateway</b></td><td>The bridge between Telegram and the agent.</td></tr><tr><td><b>Dashboard</b></td><td>A browser control screen. Open it last.</td></tr><tr><td><b>Doctor</b></td><td>A health-check command.</td></tr>
+            </tbody></table>
+          </details>
+
+          <h3>Prepare safely</h3>
+          <div class="step-card"><b>Safe test folder first</b><p>Create <code>AI Agent Test</code>. Inside it, create <code>test-note.txt</code> with one harmless sentence.</p><pre class="guide-code">Look only inside my AI Agent Test folder. Read test-note.txt and summarize it. Do not edit anything.</pre></div>
+          <div class="stop-box"><b>Beginner permission rules — copy these into your first prompt:</b><ul><li>The agent may read the test folder, answer questions, and draft text.</li><li>The agent may not delete files, send messages, spend money, or access customer/business/banking/private data.</li><li>The agent must show a plan before taking action.</li></ul></div>
+          <h3>How to copy and paste commands safely</h3><ol class="step-list"><li>Copy the whole command.</li><li>Paste it into Terminal.</li><li>Press Enter.</li><li>Wait until Terminal stops moving.</li><li>Do not paste the next command until the previous one finishes.</li><li>If Terminal asks a yes/no question and you are unsure, type <code>N</code> and stop.</li></ol>
 
           <div class="guide-toggle-block" aria-label="Choose agent">
-            <p class="toggle-label">1. Choose the agent guide</p>
-            <div class="segmented product-tabs" role="tablist" aria-label="Agent guide selector">
-              <button type="button" class="seg-btn active" data-guide-product="hermes" onclick="window.setGuideTab && window.setGuideTab('product','hermes')">Hermes Agent</button>
-              <button type="button" class="seg-btn" data-guide-product="openclaw" onclick="window.setGuideTab && window.setGuideTab('product','openclaw')">OpenClaw</button>
-            </div>
-            <p class="toggle-label">2. Choose your computer</p>
-            <div class="segmented os-tabs" role="tablist" aria-label="Operating system selector">
-              <button type="button" class="seg-btn active" data-guide-os="mac" onclick="window.setGuideTab && window.setGuideTab('os','mac')">Mac</button>
-              <button type="button" class="seg-btn" data-guide-os="windows" onclick="window.setGuideTab && window.setGuideTab('os','windows')">Windows</button>
-              <button type="button" class="seg-btn" data-guide-os="linux" onclick="window.setGuideTab && window.setGuideTab('os','linux')">Linux</button>
-            </div>
+            <p class="toggle-label">1. Choose the agent guide</p><div class="segmented product-tabs" role="tablist" aria-label="Agent guide selector"><button type="button" class="seg-btn active" data-guide-product="hermes" onclick="window.setGuideTab && window.setGuideTab('product','hermes')">Hermes Agent</button><button type="button" class="seg-btn" data-guide-product="openclaw" onclick="window.setGuideTab && window.setGuideTab('product','openclaw')">OpenClaw</button></div>
+            <p class="toggle-label">2. Choose your computer</p><div class="segmented os-tabs" role="tablist" aria-label="Computer selector"><button type="button" class="seg-btn active" data-guide-os="mac" onclick="window.setGuideTab && window.setGuideTab('os','mac')">Mac</button><button type="button" class="seg-btn" data-guide-os="windows" onclick="window.setGuideTab && window.setGuideTab('os','windows')">Windows</button><button type="button" class="seg-btn" data-guide-os="linux" onclick="window.setGuideTab && window.setGuideTab('os','linux')">Linux</button></div>
             <p class="guide-selection-status" data-guide-selection-status><b>Showing now:</b> Hermes Agent on Mac. Only this computer path is visible below.</p>
           </div>
 
-          <h3>Complete path: install → configure → connect → launch</h3>
-          <p>This guide covers the whole first run, not just setup. A working local agent needs five things in order: install the program, connect a model, create a safe workspace, connect Telegram, then open the dashboard/Web UI.</p>
-          <div class="install-roadmap" aria-label="Complete install and setup roadmap">
-            <article><b>1. Install prerequisites</b><span>Hermes needs Git/Terminal basics. Windows users install Ubuntu through WSL first. OpenClaw needs Node.js 22.14+.</span></article>
-            <article><b>2. Install the agent</b><span>Hermes installs with its official script. OpenClaw installs with npm. This is what creates the command you type in Terminal.</span></article>
-            <article><b>3. Initial local setup</b><span>Run the setup wizard, pick local workspace/defaults, choose GPT / ChatGPT OAuth or another provider, then run doctor/status checks.</span></article>
-            <article><b>4. Telegram gateway</b><span>Create a bot with BotFather, get your numeric Telegram user ID, paste token/user ID into setup, start the gateway, and test privately.</span></article>
-            <article><b>5. Web UI/dashboard</b><span>Only after terminal install/setup checks pass, open the dashboard on localhost. The dashboard is the cockpit, not the installer.</span></article>
-          </div>
-          <details class="terminal-checklists">
-            <summary>Before the Web UI: show the required terminal flow for the selected agent</summary>
-            <p class="guide-note compact"><b>Why this is collapsed:</b> pick your computer first, follow the one visible install panel, then open this checklist when you reach setup/gateway/dashboard. This avoids mixing two instruction sets at once.</p>
-            <article data-checklist-product="hermes" class="active">
-              <h4>Hermes full first-run checklist</h4>
-              <ol class="step-list">
-                <li><b>Install Hermes first.</b><p class="plain-summary"><b>In plain English:</b> this creates the <code>hermes</code> command on your computer. Use the Mac/Windows/Linux panel below for the exact install command for your machine. Make sure Git is available first.</p></li>
-                <li><b>Run setup wizard:</b><p class="plain-summary"><b>In plain English:</b> this opens Hermes’ beginner questions. It asks where your agent should live, which model it should use, and what tools/channels it can access. Choose defaults unless you know why you need something custom.</p><pre class="guide-code">hermes setup</pre></li>
-                <li><b>Select model/provider:</b><p class="plain-summary"><b>In plain English:</b> the model is the “brain” your agent talks to. GPT / ChatGPT OAuth means you log in with your ChatGPT account instead of manually creating API keys. It is usually the easiest and cheapest beginner option for strong reasoning. Start with Plus, then move to Pro only when limits become annoying.</p></li>
-                <li><b>Confirm model:</b><p class="plain-summary"><b>In plain English:</b> this is the “which brain am I using?” screen. Use it later if your agent feels too slow, too expensive, or rate limited.</p><pre class="guide-code">hermes model</pre></li>
-                <li><b>Configure Telegram/messaging gateway:</b><p class="plain-summary"><b>In plain English:</b> the gateway is the bridge between Telegram and the agent on your computer. Your BotFather token is the password that lets Hermes control your Telegram bot. Your numeric Telegram user ID is the allowlist so only you can use it.</p><pre class="guide-code">hermes gateway setup</pre></li>
-                <li><b>Install/start gateway service:</b><p class="plain-summary"><b>In plain English:</b> this makes the Telegram bridge run in the background, so your agent can keep listening even after setup. <code>status</code> is the “is it alive?” check. On WSL, foreground mode is usually easier and more reliable for beginners.</p><pre class="guide-code">hermes gateway install
-hermes gateway start
-hermes gateway status</pre><p>WSL / beginner foreground test mode:</p><pre class="guide-code">hermes gateway run</pre><p>Optional keep-it-running helper:</p><pre class="guide-code">tmux new -s hermes 'hermes gateway run'</pre></li>
-                <li><b>Health check:</b><p class="plain-summary"><b>In plain English:</b> doctor checks whether Hermes, model login, tools, and gateway are wired correctly. Fix red errors before using the Web UI so you are not debugging blindly.</p><pre class="guide-code">hermes doctor
-hermes status</pre></li>
-                <li><b>Open Web UI/dashboard last:</b><p class="plain-summary"><b>In plain English:</b> the dashboard is the visual control panel. It is useful after the engine underneath is installed, logged in, and healthy. Keep it on <code>127.0.0.1</code> unless you understand dashboard security, because dashboards can expose secrets.</p><pre class="guide-code">hermes dashboard</pre><p>Server/WSL no-auto-open mode:</p><pre class="guide-code">hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></li>
-              </ol>
-            </article>
-            <article data-checklist-product="openclaw" hidden>
-              <h4>OpenClaw full first-run checklist</h4>
-              <ol class="step-list">
-                <li><b>Install Node.js 22+ first.</b><p class="plain-summary"><b>In plain English:</b> OpenClaw is installed through npm, and npm comes with Node.js. Without Node 22.14+, OpenClaw cannot run properly. Use the Mac/Windows/Linux panel below for the exact method.</p></li>
-                <li><b>Install OpenClaw:</b><p class="plain-summary"><b>In plain English:</b> this downloads OpenClaw from npm and creates the <code>openclaw</code> command.</p><pre class="guide-code">npm install -g openclaw
-openclaw --version</pre></li>
-                <li><b>Run first setup:</b><p class="plain-summary"><b>In plain English:</b> this creates OpenClaw’s home base on your computer. “Local” means the agent runs on your machine first, not some mystery server. The workspace is the folder where it keeps working files, memory, sessions, and config.</p><pre class="guide-code">openclaw setup --wizard --mode local</pre></li>
-                <li><b>Configure model credentials:</b><p class="plain-summary"><b>In plain English:</b> this connects OpenClaw to the AI brain. Choose GPT / ChatGPT OAuth if it appears. OAuth is just “log in with your account” instead of copying secret keys around. If OAuth is not available, use the API key/provider option the wizard offers.</p><pre class="guide-code">openclaw configure --section model</pre></li>
-                <li><b>Configure workspace + safe defaults:</b><p class="plain-summary"><b>In plain English:</b> workspace controls where OpenClaw works. Gateway controls how messages reach the agent. Keep it local/loopback first so only your computer can access it while you learn.</p><pre class="guide-code">openclaw configure --section workspace
-openclaw configure --section gateway</pre></li>
-                <li><b>Configure Telegram channel:</b><p class="plain-summary"><b>In plain English:</b> channels are where you talk to the agent. Telegram is easiest for testing because it feels like texting. This step links your private bot to OpenClaw. Keep it private and allow only your own user/group while testing.</p><pre class="guide-code">openclaw configure --section channels</pre><p>Alternative direct Telegram add if the wizard asks for it:</p><pre class="guide-code">openclaw channels add --channel telegram --token YOUR_BOTFATHER_TOKEN</pre></li>
-                <li><b>Start or install gateway:</b><p class="plain-summary"><b>In plain English:</b> <code>run</code> starts the message bridge in the current terminal so you can watch it. Once that works, install/start makes it run in the background like a normal app/service.</p><pre class="guide-code">openclaw gateway run</pre><p>Background service after it works:</p><pre class="guide-code">openclaw gateway install
-openclaw gateway start
-openclaw gateway status</pre></li>
-                <li><b>Health checks before Web UI:</b><p class="plain-summary"><b>In plain English:</b> these are your “is it installed, logged in, and reachable?” checks. Do not skip them. If they show red errors, the Web UI will not magically fix the underlying setup. If config looks broken, use doctor repair carefully.</p><pre class="guide-code">openclaw doctor
-openclaw status
-openclaw gateway status</pre><p>Repair helper if config is damaged:</p><pre class="guide-code">openclaw doctor --fix</pre></li>
-                <li><b>Open Web UI/dashboard last:</b><p class="plain-summary"><b>In plain English:</b> the dashboard is the cockpit. Open it after install, setup, model login, Telegram, gateway, and health checks are working. Keep it local/private unless you understand gateway authentication.</p><pre class="guide-code">openclaw dashboard</pre><p>Terminal-only/server testing:</p><pre class="guide-code">openclaw dashboard --no-open</pre></li>
-              </ol>
-            </article>
+          <h3>Complete path: choose → prepare → install → connect → verify</h3>
+          <div class="install-roadmap" aria-label="Complete install and setup roadmap"><div><b>1. Choose path</b><span>Hermes/OpenClaw and Mac/Windows/Linux.</span></div><div><b>2. Prepare safely</b><span>Accounts, Telegram, test folder, glossary, permissions.</span></div><div><b>3. Install one path only</b><span>Only one selected command panel is visible.</span></div><div><b>4. Connect</b><span>Model first, local chat second, Telegram third.</span></div><div><b>5. Verify/use</b><span>Doctor/status, safe prompt, dashboard last.</span></div></div>
+
+          <details class="terminal-checklists"><summary>Before the Web UI: required terminal flow for the selected agent</summary>
+            <div data-checklist-product="hermes" class="active"><h4>Hermes narrow beginner route</h4><ol class="step-list"><li>Hermes official docs say Git is the key manual prerequisite; the installer handles Python, Node, ripgrep, ffmpeg, repo clone, virtual environment, global command, and provider configuration. <b>Do not manually install Python or Node for Hermes unless the official installer tells you to.</b></li><li>Run <code>hermes model</code>, choose provider/OAuth, then run one local chat before Telegram.</li><li>Beginner gateway mode: <code>hermes gateway run</code>. Keep that Terminal open.</li><li>Run <code>hermes doctor</code> and <code>hermes status</code> before dashboard.</li></ol></div>
+            <div data-checklist-product="openclaw" hidden><h4>OpenClaw narrow beginner route</h4><ol class="step-list"><li>Use the official installer first. It checks your system, installs what it needs, and starts onboarding.</li><li>OpenClaw recommends Node 24; Node 22.14+ is supported. Manual npm install is for users who already manage Node.</li><li>Run <code>openclaw onboard --install-daemon</code>.</li><li>Check <code>openclaw gateway status</code>; dashboard last.</li></ol></div>
           </details>
 
-          <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac">
-            <h3>Hermes on Mac — from zero to first working agent</h3>
-            <ol class="step-list">
-              <li><b>Open Terminal.</b><p class="plain-summary"><b>In plain English:</b> Terminal is the command app on Mac. Press <b>Command + Space</b>, type <b>Terminal</b>, then press Enter. You paste commands here one at a time.</p></li>
-              <li><b>Install Apple command-line tools if macOS asks.</b><p class="plain-summary"><b>Why:</b> these are basic helper tools that let installers build and download developer software properly.</p></li>
-              <li><b>Install Hermes.</b><p class="plain-summary"><b>What happens:</b> your Mac downloads the official Hermes installer, installs required dependencies, and creates the <code>hermes</code> command.</p><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
-              <li><b>Close Terminal and reopen it.</b><p class="plain-summary"><b>Why:</b> reopening refreshes the command list so Terminal can find Hermes. If needed, run <code>source ~/.zshrc</code> or <code>source ~/.bashrc</code>.</p></li>
-              <li><b>Run the setup wizard.</b><p class="plain-summary"><b>What to choose:</b> use defaults for local workspace, choose GPT / ChatGPT OAuth if offered, and enable Telegram/messaging if you already created your BotFather bot.</p><pre class="guide-code">hermes setup</pre></li>
-              <li><b>Run checks.</b><p class="plain-summary"><b>Why:</b> this catches missing model login, broken gateway config, or missing tools before you open the dashboard.</p><pre class="guide-code">hermes doctor
-hermes status</pre></li>
-              <li><b>Test one local chat before Telegram.</b><p class="plain-summary"><b>Why:</b> if local chat works, you know the model/login is healthy before adding Telegram.</p><pre class="guide-code">hermes chat -q "Say hello in one sentence."</pre></li>
-              <li><b>Start Telegram gateway.</b><p class="plain-summary"><b>What happens:</b> this makes Hermes listen for messages from your Telegram bot.</p><pre class="guide-code">hermes gateway setup
-hermes gateway run</pre></li>
-              <li><b>Open the Web UI after Terminal is healthy.</b><pre class="guide-code">hermes dashboard</pre></li>
-              <li><b>First safe prompt.</b><pre class="guide-code">hermes chat -q "I am brand new. Explain what you can do safely, then ask before taking any action."</pre></li>
-            </ol>
-          </div>
-
-          <div class="guide-panel" data-panel-product="hermes" data-panel-os="windows" hidden>
-            <h3>Hermes on Windows — WSL Ubuntu path</h3>
-            <ol class="step-list">
-              <li><b>Open PowerShell as Administrator.</b><p class="plain-summary"><b>In plain English:</b> PowerShell is Windows’ command tool. Click Start, search <b>PowerShell</b>, right-click it, choose <b>Run as administrator</b>, then click <b>Yes</b>. Admin mode is needed because Windows is about to install Linux support.</p></li>
-              <li><b>Install Ubuntu inside Windows.</b><p class="plain-summary"><b>What Ubuntu is:</b> Ubuntu is Linux. WSL lets Windows run Linux safely inside Windows. Hermes works better there because AI/dev tools are usually built for Linux-style terminals.</p><pre class="guide-code">wsl --install -d Ubuntu</pre></li>
-              <li><b>Restart if Windows asks.</b><p class="plain-summary"><b>Why:</b> Windows may need to turn on virtualization/Linux features before Ubuntu can launch.</p></li>
-              <li><b>Open Ubuntu from the Start Menu.</b><p class="plain-summary"><b>What happens:</b> Ubuntu will ask for a Linux username/password. The password may show no characters while you type — that is normal.</p></li>
-              <li><b>Update Ubuntu.</b><p class="plain-summary"><b>Why:</b> this updates software lists and security packages before installing Hermes.</p><pre class="guide-code">sudo apt update && sudo apt upgrade -y
-sudo apt install -y curl git tmux</pre></li>
-              <li><b>Install Hermes inside Ubuntu.</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
-              <li><b>Close Ubuntu and reopen it.</b><p class="plain-summary"><b>Why:</b> this refreshes the terminal so the <code>hermes</code> command appears.</p></li>
-              <li><b>Run setup and pick your model.</b><p class="plain-summary"><b>What to choose:</b> select GPT / ChatGPT OAuth if offered. Start with ChatGPT Plus; upgrade to Pro only when you are actually rate limited.</p><pre class="guide-code">hermes setup
-hermes model
-hermes doctor
-hermes chat -q "Say hello in one sentence."</pre></li>
-              <li><b>Know where your Windows files are.</b><p class="plain-summary"><b>Important:</b> Windows files are under <code>/mnt/c/Users/YOURNAME</code>. Start with a small test folder, not your whole Documents/Desktop.</p></li>
-              <li><b>Set up Telegram, then open dashboard.</b><pre class="guide-code">hermes gateway setup
+          <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac"><h3>Hermes on Mac — beginner path</h3><div class="step-card"><b>1. Open Terminal</b><p>Command + Space → Terminal → Enter.</p></div><div class="stop-box"><b>Before install:</b><ol><li>Make sure Git works.</li><li>Do not add <code>sudo</code>.</li><li>Paste only the official install command.</li><li>Wait until it fully finishes.</li></ol></div><div class="step-card"><b>2. Check Git</b><pre class="guide-code">git --version</pre><p><b>Success:</b> Terminal prints a Git version.</p></div><div class="step-card"><b>3. Install Hermes</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre><pre class="guide-code">hermes --version</pre></div><div class="step-card"><b>4. Model and first chat</b><pre class="guide-code">hermes model
+hermes</pre><p>Ask: <code>Say hello in one sentence.</code></p></div><div class="step-card"><b>5. Telegram and dashboard</b><p>Start your Telegram bot first with <code>/start</code>.</p><pre class="guide-code">hermes gateway setup
 hermes gateway run
-hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></li>
-            </ol>
-          </div>
-
-          <div class="guide-panel" data-panel-product="hermes" data-panel-os="linux" hidden>
-            <h3>Hermes on Linux — local install</h3>
-            <ol class="step-list">
-              <li><b>Open Terminal.</b><p class="plain-summary"><b>In plain English:</b> Terminal is where you paste install commands and read setup messages.</p></li>
-              <li><b>Install basic tools.</b><p class="plain-summary"><b>Why:</b> <code>curl</code> downloads installers and <code>git</code> helps tools download/update code.</p><pre class="guide-code">sudo apt update
-sudo apt install -y curl git</pre></li>
-              <li><b>Install Hermes.</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre></li>
-              <li><b>Reload Terminal.</b><p class="plain-summary"><b>Why:</b> this refreshes your shell without making you close the window.</p><pre class="guide-code">exec $SHELL -l</pre></li>
-              <li><b>Run setup, choose model, check health.</b><pre class="guide-code">hermes setup
-hermes model
 hermes doctor
 hermes status
-hermes chat -q "Say hello in one sentence."</pre></li>
-              <li><b>Configure Telegram and dashboard.</b><pre class="guide-code">hermes gateway setup
+hermes dashboard</pre></div></div>
+
+          <div class="guide-panel" data-panel-product="hermes" data-panel-os="windows" hidden><h3>Hermes on Windows — WSL Ubuntu path</h3><div class="step-card"><b>1. PowerShell only for WSL install</b><p>Start → PowerShell → right-click → Run as administrator.</p><pre class="guide-code">wsl --install -d Ubuntu</pre></div><div class="step-card"><b>2. Open Ubuntu</b><p>Linux passwords show no dots or stars while typing. That is normal.</p><pre class="guide-code">sudo apt update
+sudo apt install -y curl git</pre></div><div class="step-card"><b>3. Install Hermes inside Ubuntu</b><p>Do not manually install Python or Node for Hermes unless the installer tells you to.</p><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre><pre class="guide-code">hermes --version</pre></div><div class="step-card"><b>4. Model, chat, gateway, dashboard</b><pre class="guide-code">hermes model
+hermes
+hermes gateway setup
 hermes gateway run
-hermes dashboard --no-open</pre></li>
-            </ol>
-          </div>
+hermes doctor
+hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></div></div>
 
-          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="mac" hidden>
-            <h3>OpenClaw on Mac — from zero to dashboard</h3>
-            <ol class="step-list">
-              <li><b>Open Terminal.</b><p class="plain-summary"><b>In plain English:</b> Terminal is the command app. Press <b>Command + Space</b>, type <b>Terminal</b>, then press Enter.</p></li>
-              <li><b>Install Node.js 22+.</b><p class="plain-summary"><b>Why:</b> OpenClaw is a JavaScript command-line app. Node.js runs it, and npm installs it. If you use Homebrew, run this. Otherwise install Node from <code>nodejs.org</code>.</p><pre class="guide-code">brew install node</pre></li>
-              <li><b>Check versions.</b><p class="plain-summary"><b>What you want:</b> Node should be <b>22.14+</b>. If the number is lower, update Node before continuing.</p><pre class="guide-code">node --version
-npm --version</pre></li>
-              <li><b>Install OpenClaw.</b><p class="plain-summary"><b>What happens:</b> npm downloads OpenClaw and makes the <code>openclaw</code> command available everywhere.</p><pre class="guide-code">npm install -g openclaw
-openclaw --version</pre></li>
-              <li><b>Run local setup.</b><p class="plain-summary"><b>What to choose:</b> local mode, default workspace, GPT / ChatGPT OAuth if offered, Telegram channel if ready.</p><pre class="guide-code">openclaw setup --wizard --mode local
-openclaw configure --section model
-openclaw configure --section workspace
-openclaw configure --section gateway
-openclaw configure --section channels</pre></li>
-              <li><b>Start gateway and check health.</b><pre class="guide-code">openclaw gateway run
-openclaw doctor
-openclaw status</pre></li>
-              <li><b>Open dashboard.</b><pre class="guide-code">openclaw dashboard</pre></li>
-            </ol>
-          </div>
+          <div class="guide-panel" data-panel-product="hermes" data-panel-os="linux" hidden><h3>Hermes on Linux — Ubuntu/Debian style</h3><p class="plain-summary"><b>Note:</b> these commands assume Ubuntu/Debian-style Linux. Fedora, Arch, or another Linux: use official docs or ask for help.</p><div class="step-card"><b>1. Install Git/curl</b><pre class="guide-code">sudo apt update
+sudo apt install -y curl git</pre></div><div class="step-card"><b>2. Install Hermes</b><pre class="guide-code">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+exec $SHELL -l
+hermes --version</pre></div><div class="step-card"><b>3. Model, chat, gateway, dashboard</b><pre class="guide-code">hermes model
+hermes
+hermes gateway setup
+hermes gateway run
+hermes doctor
+hermes status
+hermes dashboard --no-open</pre></div></div>
 
-          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="windows" hidden>
-            <h3>OpenClaw on Windows — WSL Ubuntu path</h3>
-            <ol class="step-list">
-              <li><b>Open PowerShell as Administrator.</b><p class="plain-summary"><b>In plain English:</b> search PowerShell, right-click, choose <b>Run as administrator</b>, then click <b>Yes</b>. You need admin permission to install Ubuntu/WSL.</p></li>
-              <li><b>Install Ubuntu.</b><p class="plain-summary"><b>Why:</b> Ubuntu is Linux inside Windows. OpenClaw and Node developer tools are usually cleaner inside Linux than raw Windows Command Prompt.</p><pre class="guide-code">wsl --install -d Ubuntu</pre></li>
-              <li><b>Open Ubuntu and update it.</b><p class="plain-summary"><b>What happens:</b> this creates your Linux user, updates packages, and installs download/code tools.</p><pre class="guide-code">sudo apt update && sudo apt upgrade -y
-sudo apt install -y curl git</pre></li>
-              <li><b>Install Node 22 with nvm.</b><p class="plain-summary"><b>Why:</b> nvm manages Node versions so you can use the exact version OpenClaw needs.</p><pre class="guide-code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-source ~/.bashrc
-nvm install 22
-nvm use 22</pre></li>
-              <li><b>Install OpenClaw.</b><pre class="guide-code">npm install -g openclaw
-openclaw --version</pre></li>
-              <li><b>Run setup in order.</b><p class="plain-summary"><b>What to choose:</b> local mode, default workspace, GPT / ChatGPT OAuth if offered, then Telegram channel.</p><pre class="guide-code">openclaw setup --wizard --mode local
-openclaw configure --section model
-openclaw configure --section workspace
-openclaw configure --section gateway
-openclaw configure --section channels
-openclaw doctor</pre></li>
-              <li><b>Start gateway, then dashboard.</b><pre class="guide-code">openclaw gateway run
-openclaw dashboard --no-open</pre></li>
-              <li><b>Windows files note.</b><p class="plain-summary"><b>Important:</b> WSL sees Windows files at <code>/mnt/c/Users/YOURNAME</code>. Start with a test folder only.</p></li>
-            </ol>
-          </div>
+          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="mac" hidden><h3>OpenClaw on Mac — official installer path</h3><p class="plain-summary"><b>Source alignment:</b> OpenClaw now recommends the official installer. Node 24 is recommended; Node 22.14+ is supported.</p><div class="step-card"><b>1. Install OpenClaw</b><pre class="guide-code">curl -fsSL https://openclaw.ai/install.sh | bash</pre><pre class="guide-code">openclaw --version</pre></div><div class="step-card"><b>2. Guided onboarding</b><pre class="guide-code">openclaw onboard --install-daemon
+openclaw gateway status
+openclaw dashboard</pre></div><details class="advanced-box"><summary>Advanced/manual npm path</summary><pre class="guide-code">npm install -g openclaw
+openclaw --version</pre></details></div>
 
-          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="linux" hidden>
-            <h3>OpenClaw on Linux — local install</h3>
-            <ol class="step-list">
-              <li><b>Install base tools.</b><p class="plain-summary"><b>Why:</b> you need curl/git to download installers and code, then nvm to install a compatible Node version.</p><pre class="guide-code">sudo apt update
-sudo apt install -y curl git</pre></li>
-              <li><b>Install Node 22 with nvm.</b><pre class="guide-code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-source ~/.bashrc
-nvm install 22
-nvm use 22</pre></li>
-              <li><b>Install OpenClaw.</b><pre class="guide-code">npm install -g openclaw
-openclaw --version</pre></li>
-              <li><b>Configure local agent.</b><pre class="guide-code">openclaw setup --wizard --mode local
-openclaw configure --section model
-openclaw configure --section workspace
-openclaw configure --section gateway
-openclaw configure --section channels</pre></li>
-              <li><b>Health checks.</b><p class="plain-summary"><b>Why:</b> verify model login, gateway, config, and local workspace before trusting the dashboard.</p><pre class="guide-code">openclaw doctor
-openclaw status
-openclaw gateway status</pre></li>
-              <li><b>Start chat/dashboard.</b><pre class="guide-code">openclaw chat
-openclaw dashboard --no-open</pre></li>
-            </ol>
-          </div>
+          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="windows" hidden><h3>OpenClaw on Windows — simplest + stable paths</h3><div class="step-card"><b>Simplest PowerShell installer</b><pre class="guide-code">powershell -ExecutionPolicy Bypass -c "irm https://openclaw.ai/install.ps1 | iex"</pre></div><div class="step-card"><b>Stable WSL2 path</b><pre class="guide-code">wsl --install -d Ubuntu
+# then inside Ubuntu:
+curl -fsSL https://openclaw.ai/install.sh | bash</pre></div><div class="step-card"><b>Guided onboarding</b><pre class="guide-code">openclaw onboard --install-daemon
+openclaw gateway status
+openclaw dashboard</pre></div><details class="advanced-box"><summary>Advanced/manual Node path</summary><p>Only if you manage Node yourself. Node 24 recommended, 22.14+ supported.</p><pre class="guide-code">node --version
+npm install -g openclaw
+openclaw --version</pre></details></div>
 
-          <h3>Telegram + BotFather setup — main testing comms path</h3>
-          <p class="plain-summary"><b>In plain English:</b> Telegram is the chat app you will use to message your agent. BotFather is Telegram’s official bot-creation account. It gives you a bot token, which is the secret password your local Hermes/OpenClaw gateway uses to control your bot.</p>
-          <ol class="step-list">
-            <li><b>Open Telegram and find BotFather.</b><p class="plain-summary"><b>How:</b> search for <code>@BotFather</code>. Use the official verified Telegram account, not a random lookalike.</p></li>
-            <li><b>Create a new bot.</b><p class="plain-summary"><b>What to type:</b> send <code>/newbot</code>. BotFather will ask for a display name first. This can be friendly, like <code>My First Agent</code>.</p></li>
-            <li><b>Choose the bot username.</b><p class="plain-summary"><b>Important:</b> Telegram bot usernames must be unique and end in <code>bot</code>, for example <code>my_first_agent_123_bot</code>.</p></li>
-            <li><b>Copy the token.</b><p class="plain-summary"><b>Safety:</b> the token is a secret password. Do not post it online, send it to friends, or paste it into an AI chat. Paste it only into your local Hermes/OpenClaw setup prompt.</p></li>
-            <li><b>Get your numeric Telegram user ID.</b><p class="plain-summary"><b>How:</b> message <code>@userinfobot</code> or <code>@get_id_bot</code>. Copy the number it gives you. This lets the gateway allow you and block strangers.</p></li>
-            <li><b>Start your bot.</b><p class="plain-summary"><b>How:</b> open your new bot in Telegram and press <b>Start</b>, or send <code>/start</code>. This creates the first chat connection.</p></li>
-            <li><b>Optional private test group/channel.</b><p class="plain-summary"><b>Why:</b> private groups keep testing safe. Add your bot, make it admin only if it needs to post, and do not test in a public channel first.</p></li>
-            <li><b>Connect token to your local agent.</b><pre class="guide-code">hermes gateway setup
+          <div class="guide-panel" data-panel-product="openclaw" data-panel-os="linux" hidden><h3>OpenClaw on Linux — official installer path</h3><p class="plain-summary"><b>Note:</b> assumes Ubuntu/Debian style Linux. Other Linux versions: check official docs or ask for help.</p><div class="step-card"><b>1. Install OpenClaw</b><pre class="guide-code">curl -fsSL https://openclaw.ai/install.sh | bash</pre><pre class="guide-code">openclaw --version</pre></div><div class="step-card"><b>2. Guided onboarding</b><pre class="guide-code">openclaw onboard --install-daemon
+openclaw gateway status
+openclaw dashboard</pre></div><details class="advanced-box"><summary>Advanced/manual npm path</summary><p>Node 24 recommended, 22.14+ supported.</p><pre class="guide-code">npm install -g openclaw
+openclaw --version</pre></details></div>
+
+          <h3>Telegram + BotFather setup — keep it private</h3><ol class="step-list"><li>Search Telegram for verified <code>@BotFather</code>, send <code>/newbot</code>, choose a display name, then choose a username ending in <code>bot</code>.</li><li>Copy the BotFather token into a private note. <b>Stop:</b> this token is a password. Never paste it into public chat, screenshots, helper bots, or support requests.</li><li>Open your new bot and press <b>Start</b> or send <code>/start</code> before gateway testing.</li><li>For numeric user ID, message <code>@userinfobot</code> or <code>@get_id_bot</code>. These are helper bots, not BotFather. Only send a simple start/message; never send tokens, API keys, passwords, or private files.</li></ol>
+          <details class="advanced-box"><summary>If you accidentally share your token: emergency rotation</summary><ol><li>Open BotFather.</li><li>Select your bot.</li><li>Revoke/regenerate the token.</li><li>Update the agent gateway config.</li><li>Restart the gateway.</li></ol></details>
+
+          <h3>First 3 safe tests</h3><div class="beginner-box-grid"><div><b>Test 1: Can it reply?</b><pre class="guide-code">Say hello in one sentence.</pre></div><div><b>Test 2: Can it explain itself?</b><pre class="guide-code">Explain what you can do safely. Do not use tools yet.</pre></div><div><b>Test 3: Can it use the test folder safely?</b><pre class="guide-code">Look only inside my AI Agent Test folder. Tell me what files you see. Do not edit anything.</pre></div></div>
+
+          <h3>Beginner troubleshooting by symptom</h3><table class="guide-table troubleshoot-table"><thead><tr><th>What you see</th><th>Probably means</th><th>Try this</th></tr></thead><tbody><tr><td><code>command not found</code></td><td>Terminal cannot find the app.</td><td>Close/reopen Terminal, then check version.</td></tr><tr><td><code>permission denied</code></td><td>Command lacks permission.</td><td>Stop; do not randomly add admin/sudo.</td></tr><tr><td>Bot does not reply</td><td>Gateway off, token wrong, user ID wrong, or bot not started.</td><td>Send <code>/start</code>, check gateway status, token, and user ID.</td></tr><tr><td>Dashboard opens blank</td><td>UI dependency or service not running.</td><td>Run doctor/status first.</td></tr><tr><td>Model says no auth</td><td>Provider login/key not connected.</td><td>Re-run model setup.</td></tr><tr><td>Node version too old</td><td>OpenClaw runtime issue.</td><td>Use official installer or update Node.</td></tr><tr><td>WSL install fails</td><td>Windows feature/virtualization issue.</td><td>Restart, run WSL update, confirm Windows version.</td></tr></tbody></table>
+
+          <h3>How to stop safely</h3><ul><li>Foreground gateway: press <b>Ctrl + C</b> in the Terminal running it.</li><li>Background gateway: use the tool’s official gateway stop/service command.</li><li>If unsure: close the test bot, revoke the token, and ask for help before reconnecting.</li></ul>
+          <h3>Maintenance and reset</h3><div class="beginner-box-grid"><div><b>Monthly maintenance</b><span>Run update, doctor/status, one safe prompt, and check provider usage.</span><pre class="guide-code">hermes update
+hermes doctor
 # or
-openclaw configure --section channels</pre></li>
-            <li><b>Start the gateway and test.</b><p class="plain-summary"><b>Test message:</b> send your bot: <code>Say hello and explain what you can do safely.</code> If nothing replies, check gateway status and logs.</p><pre class="guide-code">hermes gateway status
-# or
-openclaw gateway status</pre></li>
-          </ol>
-
-          <h3>If the dashboard will not open</h3>
-          <p class="plain-summary"><b>Hermes note:</b> some installs may need optional dashboard extras. If <code>hermes dashboard</code> says web/PTY dependencies are missing, run the helper it suggests, or try:</p>
-          <pre class="guide-code">pip install 'hermes-agent[web,pty]'</pre>
-          <p class="plain-summary"><b>Security note:</b> keep dashboards on <code>127.0.0.1</code> while learning. Do not use public/tailnet/LAN exposure until you understand tokens, auth, and who can reach it.</p>
-
-          <h3>Beginner safety checklist</h3>
-          <ul>
-            <li>Start in a test folder, not your whole Desktop/Documents drive.</li>
-            <li>Do not give access to money, customer systems, or private business data on day one.</li>
-            <li>Ask the agent to show a plan before edits or sends.</li>
-            <li>Keep Telegram groups private while testing.</li>
-            <li>If a command fails, run <code>hermes doctor</code> or <code>openclaw doctor</code> and read the red lines.</li>
-          </ul>
-
-          <h3>First prompts to copy</h3>
-          <pre class="guide-code">I am brand new to local AI agents. Explain what you can do in plain English, then ask me one question before doing anything.
-
-Use a safe mode: do not edit, delete, send, purchase, or log into anything unless I explicitly approve it.
-
-Help me create a beginner test plan for using an AI agent through Telegram for simple admin tasks.</pre>
+openclaw update
+openclaw doctor</pre></div><div><b>If you want to remove this later</b><span>Stop the gateway, revoke the Telegram token, archive/remove the test workspace, then follow official uninstall/reset instructions. Avoid destructive commands unless verified and tool-specific.</span></div></div>
         </article>
       </div>
     </section>
-
 
     <section id="otisGameWindow" class="win-window game-window" aria-label="Otis and Sully's Adventures" style="left:260px;top:90px;width:min(860px,96vw);">
       <div class="win-title"><span>Otis and Sully's Adventures.exe</span><button class="win-close" data-close="otisGameWindow">×</button></div>
@@ -583,6 +431,6 @@ Help me create a beginner test plan for using an AI agent through Telegram for s
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260502-1215"></script>
+  <script src="script.js?v=20260502-1315"></script>
 </body>
 </html>
