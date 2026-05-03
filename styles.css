@@ -1807,6 +1807,8 @@ body.public-preview::before{
   }
   .public-preview #resumeWindow .timeline-list article,
   body.mobile-mode.public-preview #resumeWindow .timeline-list article{
+    display:flex!important;
+    flex-direction:column!important;
     padding:8px!important;
     min-height:0!important;
     overflow:hidden!important;
@@ -1815,9 +1817,11 @@ body.public-preview::before{
   body.mobile-mode.public-preview #resumeWindow .timeline-list .mini-card-figure{
     float:none!important;
     display:block!important;
-    width:clamp(36px,12vw,44px)!important;
-    height:clamp(40px,13vw,48px)!important;
-    margin:0 0 2px auto!important;
+    order:99!important;
+    align-self:flex-end!important;
+    width:clamp(34px,11vw,42px)!important;
+    height:clamp(38px,12vw,46px)!important;
+    margin:3px 0 0 auto!important;
     clear:none!important;
   }
   .public-preview #resumeWindow .timeline-list h4,
@@ -1833,14 +1837,15 @@ body.public-preview::before{
   }
   .public-preview #resumeWindow .timeline-list h4,
   body.mobile-mode.public-preview #resumeWindow .timeline-list h4{
+    order:1!important;
     font-size:12px!important;
     line-height:15px!important;
     margin-bottom:3px!important;
   }
   .public-preview #resumeWindow .timeline-list p,
   body.mobile-mode.public-preview #resumeWindow .timeline-list p{
+    order:2!important;
     margin:4px 0!important;
     line-height:15px!important;
   }
 }
-
