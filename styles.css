@@ -1650,5 +1650,31 @@ body.public-preview::before{
     max-width:70px!important;
     max-height:74px!important;
   }
+
+  /* Page/header minime scenes should not reserve a blank full-width row on phones. */
+  .public-preview .doc-header .section-mini-scene.doc-header-scene,
+  .public-preview .resume-doc > .section-mini-scene,
+  .public-preview .build-doc > .section-mini-scene.compact-scene{
+    float:right!important;
+    display:block!important;
+    width:clamp(58px,18vw,72px)!important;
+    max-width:clamp(58px,18vw,72px)!important;
+    margin:-6px 0 3px 8px!important;
+    clear:none!important;
+  }
+  .public-preview .doc-header .section-mini-scene.doc-header-scene .mini-me,
+  .public-preview .resume-doc > .section-mini-scene .mini-me,
+  .public-preview .build-doc > .section-mini-scene.compact-scene .mini-me{
+    display:block!important;
+    max-width:100%!important;
+    max-height:74px!important;
+    margin:0!important;
+  }
+  .public-preview .doc-header::after,
+  .public-preview .resume-doc > section::before{
+    content:"";
+    display:table;
+    clear:both;
+  }
 }
 
