@@ -1749,3 +1749,98 @@ body.public-preview::before{
   }
 }
 
+/* === 2026-05 mobile card text-width cleanup === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #agentsWindow .win-body,
+  .public-preview #resumeWindow .win-body,
+  body.mobile-mode.public-preview #agentsWindow .win-body,
+  body.mobile-mode.public-preview #resumeWindow .win-body{
+    padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))!important;
+    scroll-padding-bottom:calc(42px + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  .public-preview #agentsWindow .agent-grid,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  .public-preview #agentsWindow .agent-grid>div,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid>div{
+    padding:8px!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .public-preview #agentsWindow .agent-grid .mini-card-figure,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid .mini-card-figure{
+    float:none!important;
+    display:block!important;
+    width:clamp(38px,12vw,46px)!important;
+    height:clamp(42px,13vw,50px)!important;
+    margin:0 0 2px auto!important;
+    clear:none!important;
+  }
+  .public-preview #agentsWindow .agent-grid>div>b,
+  .public-preview #agentsWindow .agent-grid>div>span,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid>div>b,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid>div>span{
+    clear:both!important;
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    padding-right:0!important;
+    overflow-wrap:anywhere!important;
+  }
+  .public-preview #agentsWindow .agent-grid>div>b,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid>div>b{
+    margin-bottom:3px!important;
+    line-height:15px!important;
+  }
+  .public-preview #agentsWindow .agent-grid>div>span,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid>div>span{
+    line-height:15px!important;
+  }
+
+  .public-preview #resumeWindow .timeline-list,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list{
+    gap:7px!important;
+  }
+  .public-preview #resumeWindow .timeline-list article,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list article{
+    padding:8px!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .public-preview #resumeWindow .timeline-list .mini-card-figure,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list .mini-card-figure{
+    float:none!important;
+    display:block!important;
+    width:clamp(36px,12vw,44px)!important;
+    height:clamp(40px,13vw,48px)!important;
+    margin:0 0 2px auto!important;
+    clear:none!important;
+  }
+  .public-preview #resumeWindow .timeline-list h4,
+  .public-preview #resumeWindow .timeline-list p,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list h4,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list p{
+    clear:both!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    padding-right:0!important;
+    overflow-wrap:anywhere!important;
+  }
+  .public-preview #resumeWindow .timeline-list h4,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list h4{
+    font-size:12px!important;
+    line-height:15px!important;
+    margin-bottom:3px!important;
+  }
+  .public-preview #resumeWindow .timeline-list p,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list p{
+    margin:4px 0!important;
+    line-height:15px!important;
+  }
+}
+
