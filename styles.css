@@ -1119,8 +1119,8 @@ body.public-preview::before{
 /* === 2026-05 site-wide pixel image pack integration === */
 .public-preview .desk-icon .icon-art{filter:none!important;}
 .public-preview .desk-icon .icon-art img{display:block;width:34px;height:34px;margin:0 auto 4px;object-fit:contain;image-rendering:pixelated;}
-.public-preview .pixel-hero-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 0;}
-.public-preview .pixel-hero-strip img{height:118px;object-fit:cover;object-position:center;}
+.public-preview .pixel-hero-strip{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0 0;max-width:440px;}
+.public-preview .pixel-hero-strip img{height:132px;object-fit:cover;object-position:center;}
 .public-preview .pixel-hero-strip img,.public-preview .pixel-section-card img,.public-preview .pixel-banner img,.public-preview .project-pixel-card{display:block;width:100%;max-width:100%;image-rendering:pixelated;background:#050713;}
 .public-preview .pixel-section-card,.public-preview .pixel-banner{margin:10px 0;background:#0b1020;border:2px solid #000080;border-top-color:#33e8ff;border-left-color:#33e8ff;border-right-color:#00133d;border-bottom-color:#00133d;padding:6px;box-shadow:2px 2px 0 #000;}
 .public-preview .pixel-section-card{max-width:720px;}
@@ -1139,4 +1139,126 @@ body.public-preview::before{
   .public-preview .pixel-hero-strip img{height:auto!important;object-fit:contain!important;}
   .public-preview .pixel-section-card,.public-preview .pixel-banner{padding:4px;margin:8px 0;}
   .public-preview .desk-icon .icon-art img{width:30px;height:30px;margin-bottom:3px;}
+}
+
+
+/* === 2026-05 high-quality section art integration === */
+.public-preview .site-art-card{margin:10px 0 14px;background:#0b1020;border:2px solid #000080;border-top-color:#33e8ff;border-left-color:#33e8ff;border-right-color:#00133d;border-bottom-color:#00133d;padding:5px;box-shadow:2px 2px 0 #000;max-width:860px;}
+.public-preview .site-art-card img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;object-position:center;image-rendering:auto;background:#050713;}
+.public-preview .compact-art{max-width:560px;}
+.public-preview .contact-window .site-art-card{max-width:420px;}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview .site-art-card{padding:4px;margin:8px 0 12px;max-width:100%;}
+  .public-preview .site-art-card img{width:100%;height:auto;object-fit:contain;}
+}
+
+
+/* === 2026-05 final mobile welcome no horizontal crop guard === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #readerWindow.win-window.open,
+  body.mobile-mode.public-preview #readerWindow.win-window.open{
+    left:6px!important;
+    width:calc(100vw - 36px)!important;
+    max-width:calc(100vw - 36px)!important;
+  }
+  .public-preview #readerWindow .win-body,
+  body.mobile-mode.public-preview #readerWindow .win-body{
+    padding:4px!important;
+    overflow-x:hidden!important;
+  }
+  .public-preview #readerWindow .styleguide-welcome,
+  body.mobile-mode.public-preview #readerWindow .styleguide-welcome{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:hidden!important;
+  }
+  .public-preview #readerWindow .welcome-copy,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    padding:12px 8px!important;
+    overflow-x:hidden!important;
+  }
+  .public-preview #readerWindow .welcome-copy h1,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy h1{
+    font-size:20px!important;
+    line-height:22px!important;
+    letter-spacing:0!important;
+  }
+  .public-preview #readerWindow .terminal-line,
+  body.mobile-mode.public-preview #readerWindow .terminal-line{
+    font-size:10px!important;
+    line-height:14px!important;
+    white-space:normal!important;
+  }
+  .public-preview #readerWindow .welcome-copy p,
+  .public-preview #readerWindow .welcome-copy strong,
+  .public-preview #readerWindow .welcome-copy b,
+  .public-preview #readerWindow .spec-grid,
+  .public-preview #readerWindow .spec-grid>div,
+  .public-preview #readerWindow .welcome-agent-cta,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy p,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy strong,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy b,
+  body.mobile-mode.public-preview #readerWindow .spec-grid,
+  body.mobile-mode.public-preview #readerWindow .spec-grid>div,
+  body.mobile-mode.public-preview #readerWindow .welcome-agent-cta{
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #readerWindow .welcome-copy p,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy p{
+    font-size:11px!important;
+    line-height:15px!important;
+    white-space:normal!important;
+  }
+}
+
+/* === 2026-05 emergency mobile narrow-fit Welcome guard === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #readerWindow.win-window.open,
+  body.mobile-mode.public-preview #readerWindow.win-window.open{
+    left:4px!important;
+    width:min(330px,calc(100vw - 40px))!important;
+    max-width:min(330px,calc(100vw - 40px))!important;
+  }
+  .public-preview #readerWindow,
+  .public-preview #readerWindow *,
+  body.mobile-mode.public-preview #readerWindow,
+  body.mobile-mode.public-preview #readerWindow *{
+    max-width:100%!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+  }
+  .public-preview #readerWindow .welcome-sidebar,
+  body.mobile-mode.public-preview #readerWindow .welcome-sidebar{
+    width:100%!important;
+    padding:8px!important;
+  }
+  .public-preview #readerWindow .big-nav,
+  body.mobile-mode.public-preview #readerWindow .big-nav{
+    width:100%!important;
+    max-width:260px!important;
+  }
+  .public-preview #readerWindow .welcome-copy,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy{
+    display:block!important;
+    width:100%!important;
+    padding:10px 6px!important;
+  }
+  .public-preview #readerWindow .welcome-copy p,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy p{
+    display:block!important;
+    width:100%!important;
+    font-size:10.5px!important;
+    line-height:14px!important;
+    overflow-wrap:anywhere!important;
+  }
 }
