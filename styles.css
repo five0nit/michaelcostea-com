@@ -1577,5 +1577,48 @@ body.public-preview::before{
     max-width:76px!important;
     max-height:78px!important;
   }
+
+  /* Resume screenshots: long role titles need full-width reading space on phones. */
+  .public-preview #resumeWindow .timeline-list article{
+    padding:8px!important;
+  }
+  .public-preview #resumeWindow .timeline-list .mini-card-figure{
+    float:none!important;
+    display:block!important;
+    width:clamp(48px,15vw,54px)!important;
+    height:clamp(52px,16vw,58px)!important;
+    margin:0 0 3px auto!important;
+  }
+  .public-preview #resumeWindow .timeline-list h4,
+  .public-preview #resumeWindow .timeline-list p{
+    clear:both!important;
+    width:100%!important;
+    max-width:none!important;
+    padding-right:0!important;
+  }
+  .public-preview #resumeWindow .timeline-list h4{
+    font-size:12px!important;
+    line-height:15px!important;
+    overflow-wrap:anywhere!important;
+  }
+  .public-preview #resumeWindow .timeline-list p{
+    line-height:16px!important;
+  }
+  .public-preview #resumeWindow .capability-grid .mini-card-figure{
+    width:clamp(44px,14vw,52px)!important;
+    height:clamp(48px,15vw,56px)!important;
+    margin:0 0 4px 6px!important;
+  }
+  .public-preview #resumeWindow .section-mini-scene.compact-scene{
+    float:none!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    width:100%!important;
+    margin:0 0 6px 0!important;
+  }
+  .public-preview #resumeWindow .section-mini-scene.compact-scene .mini-me{
+    max-width:70px!important;
+    max-height:74px!important;
+  }
 }
 
