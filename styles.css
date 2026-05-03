@@ -2039,3 +2039,192 @@ body.public-preview::before{
     object-position:left center!important;
   }
 }
+
+/* === 2026-05 card text-wrap and banner visibility fix === */
+.public-preview #resumeWindow .site-art-card img{
+  width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+.public-preview #resumeWindow .timeline-list article,
+.public-preview #resumeWindow .capability-grid .mini-content-card,
+.public-preview #agentsWindow .agent-grid .mini-content-card,
+.public-preview #hermesGuideWindow .beginner-box-grid .mini-content-card,
+.public-preview #agentGuideWindow .guide-tiles .mini-content-card,
+.public-preview #agentGuideWindow .workflow-examples .mini-content-card,
+.public-preview #buildWindow .build-grid .mini-content-card{
+  display:block!important;
+  min-width:0!important;
+  overflow:visible!important;
+}
+.public-preview #resumeWindow .timeline-list article::after,
+.public-preview #resumeWindow .capability-grid .mini-content-card::after,
+.public-preview #agentsWindow .agent-grid .mini-content-card::after,
+.public-preview #hermesGuideWindow .beginner-box-grid .mini-content-card::after,
+.public-preview #agentGuideWindow .guide-tiles .mini-content-card::after,
+.public-preview #agentGuideWindow .workflow-examples .mini-content-card::after,
+.public-preview #buildWindow .build-grid .mini-content-card::after{
+  content:"";
+  display:table;
+  clear:both;
+}
+.public-preview #resumeWindow .timeline-list .mini-card-figure,
+.public-preview #resumeWindow .capability-grid .mini-card-figure,
+.public-preview #agentsWindow .agent-grid .mini-card-figure,
+.public-preview #hermesGuideWindow .beginner-box-grid .mini-card-figure,
+.public-preview #agentGuideWindow .guide-tiles .mini-card-figure,
+.public-preview #agentGuideWindow .workflow-examples .mini-card-figure,
+.public-preview #buildWindow .build-grid .mini-card-figure{
+  float:right!important;
+  display:block!important;
+  clear:none!important;
+  order:initial!important;
+  align-self:auto!important;
+  width:clamp(46px,12vw,64px)!important;
+  height:clamp(50px,13vw,68px)!important;
+  margin:0 0 5px 8px!important;
+  shape-outside:inset(0)!important;
+}
+.public-preview #resumeWindow .timeline-list h4,
+.public-preview #resumeWindow .timeline-list p,
+.public-preview #resumeWindow .capability-grid b,
+.public-preview #resumeWindow .capability-grid span,
+.public-preview #agentsWindow .agent-grid b,
+.public-preview #agentsWindow .agent-grid span,
+.public-preview #hermesGuideWindow .beginner-box-grid b,
+.public-preview #hermesGuideWindow .beginner-box-grid span,
+.public-preview #agentGuideWindow .guide-tiles b,
+.public-preview #agentGuideWindow .guide-tiles span,
+.public-preview #agentGuideWindow .workflow-examples b,
+.public-preview #agentGuideWindow .workflow-examples span,
+.public-preview #buildWindow .build-grid b,
+.public-preview #buildWindow .build-grid span{
+  display:block!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  padding-right:0!important;
+  clear:none!important;
+  order:initial!important;
+  overflow-wrap:anywhere!important;
+}
+.public-preview #resumeWindow .timeline-list h4,
+.public-preview #resumeWindow .timeline-list p:first-of-type,
+.public-preview #resumeWindow .capability-grid b,
+.public-preview #agentsWindow .agent-grid b,
+.public-preview #hermesGuideWindow .beginner-box-grid b,
+.public-preview #agentGuideWindow .guide-tiles b,
+.public-preview #agentGuideWindow .workflow-examples b,
+.public-preview #buildWindow .build-grid b{
+  clear:both!important;
+}
+
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #resumeWindow .site-art-card img,
+  body.mobile-mode.public-preview #resumeWindow .site-art-card img{
+    height:auto!important;
+    max-height:none!important;
+    object-fit:contain!important;
+    object-position:center!important;
+  }
+  .public-preview #resumeWindow .timeline-list article,
+  .public-preview #resumeWindow .capability-grid .mini-content-card,
+  .public-preview #agentsWindow .agent-grid .mini-content-card,
+  .public-preview #hermesGuideWindow .beginner-box-grid .mini-content-card,
+  .public-preview #agentGuideWindow .guide-tiles .mini-content-card,
+  .public-preview #agentGuideWindow .workflow-examples .mini-content-card,
+  .public-preview #buildWindow .build-grid .mini-content-card,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list article,
+  body.mobile-mode.public-preview #resumeWindow .capability-grid .mini-content-card,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid .mini-content-card,
+  body.mobile-mode.public-preview #hermesGuideWindow .beginner-box-grid .mini-content-card,
+  body.mobile-mode.public-preview #agentGuideWindow .guide-tiles .mini-content-card,
+  body.mobile-mode.public-preview #agentGuideWindow .workflow-examples .mini-content-card,
+  body.mobile-mode.public-preview #buildWindow .build-grid .mini-content-card{
+    display:block!important;
+    overflow:visible!important;
+    padding:8px!important;
+  }
+  .public-preview #resumeWindow .timeline-list .mini-card-figure,
+  .public-preview #resumeWindow .capability-grid .mini-card-figure,
+  .public-preview #agentsWindow .agent-grid .mini-card-figure,
+  .public-preview #hermesGuideWindow .beginner-box-grid .mini-card-figure,
+  .public-preview #agentGuideWindow .guide-tiles .mini-card-figure,
+  .public-preview #agentGuideWindow .workflow-examples .mini-card-figure,
+  .public-preview #buildWindow .build-grid .mini-card-figure,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list .mini-card-figure,
+  body.mobile-mode.public-preview #resumeWindow .capability-grid .mini-card-figure,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid .mini-card-figure,
+  body.mobile-mode.public-preview #hermesGuideWindow .beginner-box-grid .mini-card-figure,
+  body.mobile-mode.public-preview #agentGuideWindow .guide-tiles .mini-card-figure,
+  body.mobile-mode.public-preview #agentGuideWindow .workflow-examples .mini-card-figure,
+  body.mobile-mode.public-preview #buildWindow .build-grid .mini-card-figure{
+    float:right!important;
+    display:block!important;
+    width:clamp(44px,14vw,56px)!important;
+    height:clamp(48px,15vw,60px)!important;
+    margin:0 0 5px 7px!important;
+    clear:none!important;
+    order:initial!important;
+    align-self:auto!important;
+  }
+}
+
+/* Strong final wrap overrides: body copy must flow beside floated art. */
+.public-preview #resumeWindow .capability-grid > .mini-content-card > span,
+.public-preview #agentsWindow .agent-grid > .mini-content-card > span,
+.public-preview #hermesGuideWindow .beginner-box-grid > .mini-content-card > span,
+.public-preview #hermesGuideWindow .moving-parts-grid > .mini-content-card > span,
+.public-preview #agentGuideWindow .guide-tiles > .mini-content-card > span,
+.public-preview #agentGuideWindow .workflow-examples > .mini-content-card > span,
+.public-preview #buildWindow .build-grid > .mini-content-card > span,
+.public-preview #resumeWindow .timeline-list > article > p:last-of-type{
+  clear:none!important;
+  display:block!important;
+  float:none!important;
+  width:auto!important;
+  max-width:none!important;
+  padding-right:0!important;
+  overflow-wrap:anywhere!important;
+}
+.public-preview #resumeWindow .capability-grid > .mini-content-card > b,
+.public-preview #agentsWindow .agent-grid > .mini-content-card > b,
+.public-preview #hermesGuideWindow .beginner-box-grid > .mini-content-card > b,
+.public-preview #hermesGuideWindow .moving-parts-grid > .mini-content-card > b,
+.public-preview #agentGuideWindow .guide-tiles > .mini-content-card > b,
+.public-preview #agentGuideWindow .workflow-examples > .mini-content-card > b,
+.public-preview #buildWindow .build-grid > .mini-content-card > b,
+.public-preview #resumeWindow .timeline-list > article > h4,
+.public-preview #resumeWindow .timeline-list > article > p:first-of-type{
+  clear:both!important;
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #resumeWindow .capability-grid > .mini-content-card > span,
+  .public-preview #agentsWindow .agent-grid > .mini-content-card > span,
+  .public-preview #hermesGuideWindow .beginner-box-grid > .mini-content-card > span,
+  .public-preview #hermesGuideWindow .moving-parts-grid > .mini-content-card > span,
+  .public-preview #agentGuideWindow .guide-tiles > .mini-content-card > span,
+  .public-preview #agentGuideWindow .workflow-examples > .mini-content-card > span,
+  .public-preview #buildWindow .build-grid > .mini-content-card > span,
+  .public-preview #resumeWindow .timeline-list > article > p:last-of-type,
+  body.mobile-mode.public-preview #resumeWindow .capability-grid > .mini-content-card > span,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid > .mini-content-card > span,
+  body.mobile-mode.public-preview #hermesGuideWindow .beginner-box-grid > .mini-content-card > span,
+  body.mobile-mode.public-preview #hermesGuideWindow .moving-parts-grid > .mini-content-card > span,
+  body.mobile-mode.public-preview #agentGuideWindow .guide-tiles > .mini-content-card > span,
+  body.mobile-mode.public-preview #agentGuideWindow .workflow-examples > .mini-content-card > span,
+  body.mobile-mode.public-preview #buildWindow .build-grid > .mini-content-card > span,
+  body.mobile-mode.public-preview #resumeWindow .timeline-list > article > p:last-of-type{
+    clear:none!important;
+    display:block!important;
+    width:auto!important;
+    max-width:none!important;
+    min-width:0!important;
+    padding-right:0!important;
+  }
+}
