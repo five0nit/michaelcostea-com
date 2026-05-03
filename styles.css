@@ -1670,11 +1670,82 @@ body.public-preview::before{
     max-height:74px!important;
     margin:0!important;
   }
-  .public-preview .doc-header::after,
-  .public-preview .resume-doc > section::before{
+.public-preview .doc-header::after,
+.public-preview .resume-doc > section::before{
     content:"";
     display:table;
     clear:both;
+  }
+}
+
+/* === 2026-05 AI Agents mobile composition cleanup === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #agentsWindow .document-body,
+  body.mobile-mode.public-preview #agentsWindow .document-body{
+    padding:7px!important;
+  }
+  .public-preview #agentsWindow .resume-doc,
+  body.mobile-mode.public-preview #agentsWindow .resume-doc{
+    padding:7px!important;
+  }
+  .public-preview #agentsWindow .mini-heading,
+  body.mobile-mode.public-preview #agentsWindow .mini-heading{
+    margin:2px 0 7px!important;
+  }
+  .public-preview #agentsWindow .resume-doc h2,
+  body.mobile-mode.public-preview #agentsWindow .resume-doc h2{
+    font-size:18px!important;
+    line-height:22px!important;
+    margin:0!important;
+    letter-spacing:-.2px!important;
+  }
+  /* The standalone agents character was colliding with the hero art on phones. */
+  .public-preview #agentsWindow .resume-doc > .section-mini-scene,
+  body.mobile-mode.public-preview #agentsWindow .resume-doc > .section-mini-scene{
+    display:none!important;
+  }
+  .public-preview #agentsWindow .site-art-card,
+  body.mobile-mode.public-preview #agentsWindow .site-art-card{
+    clear:both!important;
+    width:94%!important;
+    max-width:305px!important;
+    margin:9px auto 15px!important;
+    padding:3px!important;
+    border-width:1px!important;
+    box-shadow:1px 1px 0 #000!important;
+  }
+  .public-preview #agentsWindow .site-art-card img,
+  body.mobile-mode.public-preview #agentsWindow .site-art-card img{
+    width:100%!important;
+    max-height:172px!important;
+    object-fit:contain!important;
+  }
+  .public-preview #agentsWindow .resume-doc p,
+  body.mobile-mode.public-preview #agentsWindow .resume-doc p{
+    margin:10px 0!important;
+    line-height:17px!important;
+  }
+  .public-preview #agentsWindow .agent-grid,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid{
+    gap:9px!important;
+    margin-top:10px!important;
+  }
+  .public-preview #agentsWindow .agent-grid>div,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid>div{
+    padding:10px!important;
+  }
+  .public-preview #agentsWindow .agent-grid .mini-card-figure,
+  body.mobile-mode.public-preview #agentsWindow .agent-grid .mini-card-figure{
+    width:clamp(42px,14vw,52px)!important;
+    height:clamp(46px,15vw,56px)!important;
+    margin:0 0 5px 8px!important;
+  }
+  .public-preview #agentsWindow .agent-setup-diagram,
+  body.mobile-mode.public-preview #agentsWindow .agent-setup-diagram{
+    margin:12px 0 10px!important;
+    padding:5px!important;
+    border-width:1px!important;
+    box-shadow:1px 1px 0 #000!important;
   }
 }
 
