@@ -144,9 +144,42 @@ function syncImmersiveMode(){
   document.body.classList.toggle('immersive-app', immersive);
 }
 
+function cacheWindowDefaultStyles(){
+  document.querySelectorAll('.win-window').forEach(win => {
+    if (win.dataset.defaultStyle === undefined) {
+      win.dataset.defaultStyle = win.getAttribute('style') || '';
+    }
+  });
+}
+
+function restoreWindowDefaultStyle(win){
+  if(!win) return;
+  const defaultStyle = win.dataset.defaultStyle;
+  if (defaultStyle === undefined) return;
+  if (defaultStyle.trim()) {
+    win.setAttribute('style', defaultStyle);
+  } else {
+    win.removeAttribute('style');
+  }
+}
+
+function restoreWindowScroll(win, reset=false){
+  const body = win?.querySelector('.win-body');
+  if(!body) return;
+  body.style.pointerEvents = '';
+  body.style.overflow = '';
+  body.style.overflowY = '';
+  body.style.touchAction = '';
+  if(reset){
+    body.scrollTop = 0;
+    requestAnimationFrame(() => { body.scrollTop = 0; });
+  }
+}
+
 function openWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
+  const wasOpen = win.classList.contains('open');
 
   if (isMobileMode()) {
     document.querySelectorAll('.win-window.open').forEach(w => {
@@ -156,6 +189,7 @@ function openWindow(id){
 
   win.classList.remove('minimized');
   win.classList.add('open');
+  restoreWindowScroll(win, !wasOpen);
   if(!win.classList.contains('maximized')) centerWindow(win);
   bringFront(win);
   syncImmersiveMode();
@@ -173,7 +207,7 @@ function closeWindow(id){
   }
 
   win.classList.remove('open','minimized','maximized','active');
-  ['left','top','width','height','right','bottom'].forEach(k=> win.style[k]='');
+  restoreWindowDefaultStyle(win);
   delete win.dataset.prevLeft;
   delete win.dataset.prevTop;
   delete win.dataset.prevWidth;
@@ -249,6 +283,7 @@ function launchInMikeNet(url, title='Program'){
 }
 
 function initDesktopWindows(){
+  cacheWindowDefaultStyles();
   document.querySelectorAll('.desk-icon').forEach((btn) => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-open');
