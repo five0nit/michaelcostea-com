@@ -1453,6 +1453,7 @@ body.public-preview::before{
 }
 .public-preview .mini-callout span{display:block;min-width:0;}
 .public-preview #readerWindow.workstation-welcome .win-body{
+  max-height:none;
   overflow-y:auto;
   overflow-x:hidden;
 }
