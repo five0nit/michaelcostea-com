@@ -1567,6 +1567,36 @@ body.public-preview::before{
     min-width:0!important;
     overflow-wrap:anywhere!important;
   }
+
+  /* Card headers must not wrap beside minime art on phones. */
+  .public-preview .mini-content-card > b,
+  .public-preview .mini-content-card > h3,
+  .public-preview .mini-content-card > h4,
+  .public-preview .build-grid article > b,
+  .public-preview .doc-grid > div > b,
+  .public-preview .agent-grid > div > b,
+  .public-preview .project-list-public article > h3,
+  .public-preview .workflow-examples article > h3,
+  .public-preview .guide-card > h3,
+  .public-preview .guide-tiles article > h3,
+  .public-preview .beginner-box-grid article > h3{
+    clear:both!important;
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    padding-right:0!important;
+    overflow-wrap:anywhere!important;
+  }
+  .public-preview #resumeWindow .capability-grid > .mini-content-card > b{
+    font-size:12px!important;
+    line-height:15px!important;
+  }
+  .public-preview .project-list-public article > h3,
+  .public-preview .workflow-examples article > h3{
+    font-size:13px!important;
+    line-height:16px!important;
+  }
   .public-preview .build-doc>.section-mini-scene.compact-scene{
     float:right!important;
     width:76px!important;
