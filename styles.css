@@ -1505,3 +1505,23 @@ body.public-preview::before{
   .public-preview .mini-callout .mini-me-inline{max-width:62px!important;max-height:70px!important;}
 }
 
+/* === 2026-05 desktop welcome short-viewport cap === */
+@media (min-width:761px){
+  .public-preview #readerWindow.workstation-welcome.open{
+    max-height:calc(100dvh - 64px)!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    display:flex!important;
+    flex-direction:column!important;
+  }
+  .public-preview #readerWindow.workstation-welcome.open .win-title{flex:0 0 auto!important;}
+  .public-preview #readerWindow.workstation-welcome.open .win-body{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+  }
+  .public-preview #readerWindow.workstation-welcome.open .styleguide-welcome{min-height:0!important;}
+}
+
