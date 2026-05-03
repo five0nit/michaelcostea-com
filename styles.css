@@ -1387,65 +1387,82 @@ body.public-preview::before{
 }
 
 
-/* === 2026-05 minime-pack character integration v2: balanced no-overlap placement === */
+/* === 2026-05 minime-pack content/card placement v3: no title stickers === */
 .public-preview .mini-heading{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) clamp(118px,16vw,168px);
-  align-items:end;
-  gap:12px;
-  margin:4px 0 12px;
-  min-height:112px;
+  display:block;
+  margin:4px 0 8px;
+  min-height:0;
   overflow:visible;
 }
 .public-preview .mini-heading h1,
 .public-preview .mini-heading h2,
-.public-preview .mini-heading h3{
-  margin:0;
-  min-width:0;
-  align-self:center;
+.public-preview .mini-heading h3{margin:0;min-width:0;}
+.public-preview .welcome-mini-scene,
+.public-preview .section-mini-scene{
+  margin:6px 0 12px;
+  display:flex;
+  justify-content:flex-end;
+  align-items:flex-end;
+  min-height:0;
+  pointer-events:none;
 }
-.public-preview .mini-heading .mini-me{
+.public-preview .welcome-mini-scene .mini-me,
+.public-preview .section-mini-scene .mini-me{
   display:block;
-  width:100%;
-  max-width:168px;
+  width:auto;
+  max-width:clamp(118px,16vw,172px);
   max-height:156px;
   object-fit:contain;
   object-position:center bottom;
   image-rendering:auto;
-  justify-self:end;
-  align-self:end;
-  pointer-events:none;
   filter:drop-shadow(2px 3px 0 rgba(0,0,0,.30));
 }
-.public-preview .mini-heading.compact-mini{
-  grid-template-columns:minmax(0,1fr) clamp(96px,12vw,132px);
-  min-height:92px;
-  margin-top:14px;
+.public-preview .welcome-mini-scene{margin-top:-4px;margin-bottom:8px;}
+.public-preview .welcome-mini-scene .mini-me{max-width:156px;max-height:148px;}
+.public-preview .section-mini-scene.compact-scene .mini-me{max-width:132px;max-height:118px;}
+.public-preview .section-mini-scene.doc-header-scene{justify-content:center;margin:4px 0 6px;}
+.public-preview .section-mini-scene.doc-header-scene .mini-me{max-width:178px;max-height:150px;}
+.public-preview .mini-content-card{position:relative;overflow:hidden;}
+.public-preview .mini-card-figure{
+  float:right;
+  width:clamp(54px,9vw,86px);
+  height:clamp(58px,9vw,92px);
+  margin:0 0 6px 10px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  pointer-events:none;
 }
-.public-preview .mini-heading.compact-mini .mini-me{max-width:132px;max-height:118px;}
-.public-preview .doc-header-mini{
-  grid-template-columns:minmax(0,1fr) clamp(124px,17vw,178px);
-  min-height:118px;
-  margin-bottom:4px;
+.public-preview .timeline-list .mini-card-figure{width:clamp(58px,8vw,82px);height:clamp(62px,8vw,88px);}
+.public-preview .capability-grid .mini-card-figure,
+.public-preview .build-grid .mini-card-figure,
+.public-preview .agent-grid .mini-card-figure,
+.public-preview .guide-tiles .mini-card-figure,
+.public-preview .beginner-box-grid .mini-card-figure{width:62px;height:66px;margin-left:8px;}
+.public-preview .project-list-public .mini-card-figure,
+.public-preview .workflow-examples .mini-card-figure{width:76px;height:80px;}
+.public-preview .mini-card-figure img{
+  display:block;
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  object-position:center top;
+  image-rendering:auto;
+  filter:drop-shadow(1px 2px 0 rgba(0,0,0,.28));
 }
-.public-preview .doc-header-mini .mini-me{max-width:178px;max-height:150px;}
-.public-preview .welcome-mini{
-  grid-template-columns:minmax(0,1fr) clamp(112px,15vw,156px);
-  min-height:102px;
-  margin-bottom:8px;
-}
-.public-preview .welcome-mini .mini-me{max-width:156px;max-height:148px;}
 .public-preview .mini-callout{
   display:grid!important;
-  grid-template-columns:clamp(96px,13vw,142px) minmax(0,1fr);
+  grid-template-columns:clamp(86px,12vw,126px) minmax(0,1fr);
   gap:12px;
   align-items:center;
 }
 .public-preview .mini-callout .mini-me-inline{
   display:block;
   width:100%;
-  max-width:142px;
-  max-height:142px;
+  max-width:126px;
+  max-height:126px;
   object-fit:contain;
   object-position:center;
   image-rendering:auto;
@@ -1463,26 +1480,28 @@ body.public-preview::before{
 .public-preview .guide-card,
 .public-preview .doc-grid>div,
 .public-preview .agent-grid>div{position:relative;}
+.public-preview .mini-content-card::after{content:"";display:block;clear:both;}
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview .mini-heading,
-  .public-preview .mini-heading.compact-mini,
-  .public-preview .doc-header-mini,
-  .public-preview .welcome-mini{
-    grid-template-columns:minmax(0,1fr) 72px!important;
-    gap:7px!important;
-    min-height:68px!important;
-    margin:2px 0 8px!important;
+  .public-preview .welcome-mini-scene,
+  .public-preview .section-mini-scene{margin:4px 0 8px!important;justify-content:flex-end!important;}
+  .public-preview .welcome-mini-scene .mini-me,
+  .public-preview .section-mini-scene .mini-me,
+  .public-preview .section-mini-scene.compact-scene .mini-me,
+  .public-preview .section-mini-scene.doc-header-scene .mini-me{max-width:82px!important;max-height:84px!important;}
+  .public-preview .mini-card-figure,
+  .public-preview .timeline-list .mini-card-figure,
+  .public-preview .capability-grid .mini-card-figure,
+  .public-preview .build-grid .mini-card-figure,
+  .public-preview .agent-grid .mini-card-figure,
+  .public-preview .guide-tiles .mini-card-figure,
+  .public-preview .beginner-box-grid .mini-card-figure,
+  .public-preview .project-list-public .mini-card-figure,
+  .public-preview .workflow-examples .mini-card-figure{
+    width:64px!important;
+    height:70px!important;
+    margin:0 0 7px 9px!important;
   }
-  .public-preview .mini-heading .mini-me,
-  .public-preview .mini-heading.compact-mini .mini-me,
-  .public-preview .doc-header-mini .mini-me,
-  .public-preview .welcome-mini .mini-me{
-    max-width:72px!important;
-    max-height:74px!important;
-  }
-  .public-preview .mini-callout{
-    grid-template-columns:64px minmax(0,1fr)!important;
-    gap:8px!important;
-  }
-  .public-preview .mini-callout .mini-me-inline{max-width:64px!important;max-height:72px!important;}
+  .public-preview .mini-callout{grid-template-columns:62px minmax(0,1fr)!important;gap:8px!important;}
+  .public-preview .mini-callout .mini-me-inline{max-width:62px!important;max-height:70px!important;}
 }
+
