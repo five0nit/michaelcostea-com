@@ -1157,9 +1157,10 @@ body.public-preview::before{
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
   .public-preview #readerWindow.win-window.open,
   body.mobile-mode.public-preview #readerWindow.win-window.open{
-    left:6px!important;
-    width:calc(100vw - 36px)!important;
-    max-width:calc(100vw - 36px)!important;
+    left:8px!important;
+    right:auto!important;
+    width:calc(100vw - 16px)!important;
+    max-width:calc(100vw - 16px)!important;
   }
   .public-preview #readerWindow .win-body,
   body.mobile-mode.public-preview #readerWindow .win-body{
@@ -1221,49 +1222,6 @@ body.public-preview::before{
   }
 }
 
-/* === 2026-05 emergency mobile narrow-fit Welcome guard === */
-@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview #readerWindow.win-window.open,
-  body.mobile-mode.public-preview #readerWindow.win-window.open{
-    left:4px!important;
-    width:min(330px,calc(100vw - 40px))!important;
-    max-width:min(330px,calc(100vw - 40px))!important;
-  }
-  .public-preview #readerWindow,
-  .public-preview #readerWindow *,
-  body.mobile-mode.public-preview #readerWindow,
-  body.mobile-mode.public-preview #readerWindow *{
-    max-width:100%!important;
-    min-width:0!important;
-    box-sizing:border-box!important;
-  }
-  .public-preview #readerWindow .welcome-sidebar,
-  body.mobile-mode.public-preview #readerWindow .welcome-sidebar{
-    width:100%!important;
-    padding:8px!important;
-  }
-  .public-preview #readerWindow .big-nav,
-  body.mobile-mode.public-preview #readerWindow .big-nav{
-    width:100%!important;
-    max-width:260px!important;
-  }
-  .public-preview #readerWindow .welcome-copy,
-  body.mobile-mode.public-preview #readerWindow .welcome-copy{
-    display:block!important;
-    width:100%!important;
-    padding:10px 6px!important;
-  }
-  .public-preview #readerWindow .welcome-copy p,
-  body.mobile-mode.public-preview #readerWindow .welcome-copy p{
-    display:block!important;
-    width:100%!important;
-    font-size:10.5px!important;
-    line-height:14px!important;
-    overflow-wrap:anywhere!important;
-  }
-}
-
-
 /* === 2026-05 brand positioning and build window === */
 .public-preview .brand-promise{background:#e8f4ff;border:2px solid #000080;padding:9px!important;color:#000;box-shadow:1px 1px 0 #808080;}
 .public-preview .brand-promise b{color:#000080!important;font:900 13px/17px "Work Sans",Tahoma,sans-serif;}
@@ -1278,4 +1236,152 @@ body.public-preview::before{
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
   .public-preview .build-grid{grid-template-columns:1fr!important;}
   .public-preview .proof-strip span,.public-preview .principle-strip span,.public-preview .contact-reasons span{font-size:10px!important;line-height:12px!important;}
+}
+
+
+/* === 2026-05 real-phone centered Welcome width fix === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  html,body,body.public-preview,.public-preview .container{overflow-x:hidden!important;}
+  .public-preview #readerWindow.win-window.open,
+  body.mobile-mode.public-preview #readerWindow.win-window.open{
+    position:absolute!important;
+    left:50%!important;
+    right:auto!important;
+    transform:translateX(-50%)!important;
+    width:min(340px, calc(100vw - 24px))!important;
+    max-width:min(340px, calc(100vw - 24px))!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+  }
+  .public-preview #readerWindow .win-body,
+  .public-preview #readerWindow .styleguide-welcome,
+  .public-preview #readerWindow .welcome-sidebar,
+  .public-preview #readerWindow .welcome-copy,
+  body.mobile-mode.public-preview #readerWindow .win-body,
+  body.mobile-mode.public-preview #readerWindow .styleguide-welcome,
+  body.mobile-mode.public-preview #readerWindow .welcome-sidebar,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+    overflow-x:hidden!important;
+  }
+  .public-preview #readerWindow .welcome-copy p,
+  .public-preview #readerWindow .brand-promise,
+  .public-preview #readerWindow .proof-strip,
+  .public-preview #readerWindow .spec-grid,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy p,
+  body.mobile-mode.public-preview #readerWindow .brand-promise,
+  body.mobile-mode.public-preview #readerWindow .proof-strip,
+  body.mobile-mode.public-preview #readerWindow .spec-grid{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+
+
+/* === 2026-05 real-phone centered Welcome width fix v2 === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #readerWindow.win-window.open,
+  body.mobile-mode.public-preview #readerWindow.win-window.open{
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:min(340px, calc(100vw - 24px))!important;
+    max-width:min(340px, calc(100vw - 24px))!important;
+  }
+  .public-preview #readerWindow .big-nav,
+  .public-preview #readerWindow .welcome-agent-cta,
+  body.mobile-mode.public-preview #readerWindow .big-nav,
+  body.mobile-mode.public-preview #readerWindow .welcome-agent-cta{
+    max-width:100%!important;
+    min-width:0!important;
+    width:100%!important;
+  }
+  .public-preview #readerWindow .brand-promise,
+  body.mobile-mode.public-preview #readerWindow .brand-promise{
+    font-size:10.5px!important;
+    line-height:14px!important;
+  }
+}
+
+
+/* === 2026-05 real-phone fixed viewport Welcome width fix v3 === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #readerWindow.win-window.open,
+  body.mobile-mode.public-preview #readerWindow.win-window.open{
+    position:fixed!important;
+    left:8px!important;
+    right:auto!important;
+    top:8px!important;
+    transform:none!important;
+    width:calc(100vw - 16px)!important;
+    max-width:calc(100vw - 16px)!important;
+    height:calc(100dvh - 58px - env(safe-area-inset-bottom,0px))!important;
+    max-height:calc(100dvh - 58px - env(safe-area-inset-bottom,0px))!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+  .public-preview #readerWindow .win-body,
+  body.mobile-mode.public-preview #readerWindow .win-body{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+  }
+}
+
+
+/* === 2026-05 mobile brand-promise hard wrap fix === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #readerWindow .brand-promise,
+  .public-preview #readerWindow .brand-promise b,
+  body.mobile-mode.public-preview #readerWindow .brand-promise,
+  body.mobile-mode.public-preview #readerWindow .brand-promise b{
+    display:block!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    overflow-wrap:anywhere!important;
+    word-break:break-word!important;
+    max-width:100%!important;
+  }
+}
+
+
+/* === 2026-05 mobile short brand promise swap === */
+.public-preview .mobile-promise{display:none;}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #readerWindow .desktop-promise{display:none!important;}
+  .public-preview #readerWindow .mobile-promise{display:block!important;white-space:normal!important;overflow-wrap:anywhere!important;}
+}
+
+
+/* === 2026-05 real-phone visible right-edge gutter fix v4 === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #readerWindow.win-window.open,
+  body.mobile-mode.public-preview #readerWindow.win-window.open{
+    position:fixed!important;
+    left:50%!important;
+    right:auto!important;
+    transform:translateX(-50%)!important;
+    width:calc(100vw - 40px)!important;
+    max-width:340px!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+  }
+}
+
+
+/* === 2026-05 mobile short headline swap === */
+.public-preview .mobile-headline{display:none;}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #readerWindow .desktop-headline{display:none!important;}
+  .public-preview #readerWindow .mobile-headline{display:inline!important;white-space:normal!important;}
+  .public-preview #readerWindow .welcome-copy h1{font-size:18px!important;line-height:20px!important;white-space:normal!important;}
+  .public-preview:has(#readerWindow.open) .desktop-icons{display:none!important;}
 }
