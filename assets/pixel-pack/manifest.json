@@ -1,0 +1,385 @@
+{
+  "pack": "michaelcostea_sitewide_pixel_image_pack",
+  "created_for": "michaelcostea.com",
+  "style": "High-legibility retro pixel art, MICHAEL OS 89 inspired",
+  "counts": {
+    "cards_1600x900": 30,
+    "banners_1600x600": 8,
+    "icons_512": 20
+  },
+  "cards": [
+    {
+      "file": "cards_1600x900/00_site_hero_os89.png",
+      "title": "MICHAEL OS 89",
+      "section": "Home",
+      "alt": "Pixel art card for MICHAEL OS 89: Head of Tech, AI & Systems"
+    },
+    {
+      "file": "cards_1600x900/01_business_operating_layer.png",
+      "title": "BUSINESS OPERATING LAYER",
+      "section": "Home",
+      "alt": "Pixel art card for BUSINESS OPERATING LAYER: Sales \u2022 Ops \u2022 Finance \u2022 Admin \u2022 Field"
+    },
+    {
+      "file": "cards_1600x900/02_current_operating_profile.png",
+      "title": "CURRENT OPERATING PROFILE",
+      "section": "Profile",
+      "alt": "Pixel art card for CURRENT OPERATING PROFILE: CTO-track systems leadership"
+    },
+    {
+      "file": "cards_1600x900/03_connected_business_map.png",
+      "title": "CONNECTED BUSINESS MAP",
+      "section": "Profile",
+      "alt": "Pixel art system map for CONNECTED BUSINESS MAP"
+    },
+    {
+      "file": "cards_1600x900/04_programs_coming_soon.png",
+      "title": "PROGRAMS COMING SOON",
+      "section": "Programs",
+      "alt": "Pixel art card for PROGRAMS COMING SOON: Apps rebuilt in the OS 89 style guide"
+    },
+    {
+      "file": "cards_1600x900/05_resume_timeline.png",
+      "title": "CAREER TIMELINE",
+      "section": "Resume",
+      "alt": "Pixel art career timeline for CAREER TIMELINE"
+    },
+    {
+      "file": "cards_1600x900/06_core_capabilities.png",
+      "title": "CORE CAPABILITIES",
+      "section": "Resume",
+      "alt": "Pixel art grid card for CORE CAPABILITIES"
+    },
+    {
+      "file": "cards_1600x900/07_field_to_systems_bridge.png",
+      "title": "FIELD + SYSTEMS",
+      "section": "Resume",
+      "alt": "Pixel art card for FIELD + SYSTEMS: Trade context meets technical strategy"
+    },
+    {
+      "file": "cards_1600x900/08_ai_project_portfolio_overview.png",
+      "title": "AI PROJECT PORTFOLIO",
+      "section": "Projects",
+      "alt": "Pixel art grid card for AI PROJECT PORTFOLIO"
+    },
+    {
+      "file": "cards_1600x900/09_aeh_operating_layer.png",
+      "title": "AEH OPERATING LAYER",
+      "section": "Projects",
+      "alt": "Pixel art card for AEH OPERATING LAYER: Workflow loops with approval gates"
+    },
+    {
+      "file": "cards_1600x900/10_customer_journey_automation.png",
+      "title": "CUSTOMER JOURNEY AUTOMATION",
+      "section": "Projects",
+      "alt": "Pixel art card for CUSTOMER JOURNEY AUTOMATION: Lead \u2192 Quote \u2192 Job \u2192 Review"
+    },
+    {
+      "file": "cards_1600x900/11_agent_infrastructure_context.png",
+      "title": "AGENT INFRASTRUCTURE",
+      "section": "Projects",
+      "alt": "Pixel art card for AGENT INFRASTRUCTURE: Shared context, dashboards and receipts"
+    },
+    {
+      "file": "cards_1600x900/12_data_visibility_exception_radar.png",
+      "title": "EXCEPTION RADAR",
+      "section": "Projects",
+      "alt": "Pixel art card for EXCEPTION RADAR: Find stale leads, risks and bottlenecks"
+    },
+    {
+      "file": "cards_1600x900/13_multi_brand_growth_systems.png",
+      "title": "MULTI-BRAND GROWTH SYSTEMS",
+      "section": "Projects",
+      "alt": "Pixel art card for MULTI-BRAND GROWTH SYSTEMS: Websites, funnels and analytics"
+    },
+    {
+      "file": "cards_1600x900/14_knowledge_systems.png",
+      "title": "KNOWLEDGE SYSTEMS",
+      "section": "Projects",
+      "alt": "Pixel art card for KNOWLEDGE SYSTEMS: SOPs, training and reusable answers"
+    },
+    {
+      "file": "cards_1600x900/15_ai_agents_workflow_automation.png",
+      "title": "AI AGENTS + WORKFLOW",
+      "section": "AI Agents",
+      "alt": "Pixel art card for AI AGENTS + WORKFLOW: Visible \u2022 measured \u2022 permissioned"
+    },
+    {
+      "file": "cards_1600x900/16_master_control_cockpit.png",
+      "title": "MASTER CONTROL COCKPIT",
+      "section": "AI Agents",
+      "alt": "Pixel art card for MASTER CONTROL COCKPIT: Projects, sessions, services and memory"
+    },
+    {
+      "file": "cards_1600x900/17_human_review_layer.png",
+      "title": "HUMAN REVIEW LAYER",
+      "section": "AI Agents",
+      "alt": "Pixel art card for HUMAN REVIEW LAYER: Approval gates before customer impact"
+    },
+    {
+      "file": "cards_1600x900/18_agent_pitfalls_guardrails.png",
+      "title": "AGENT PITFALLS",
+      "section": "AI Agents",
+      "alt": "Pixel art card for AGENT PITFALLS: Silent failure \u2022 overreach \u2022 context rot"
+    },
+    {
+      "file": "cards_1600x900/19_build_principles.png",
+      "title": "BUILD PRINCIPLES",
+      "section": "AI Agents",
+      "alt": "Pixel art card for BUILD PRINCIPLES: Bounded tools, evidence, clear success"
+    },
+    {
+      "file": "cards_1600x900/20_ai_help_start_here.png",
+      "title": "AI HELP: START HERE",
+      "section": "AI Help",
+      "alt": "Pixel art card for AI HELP: START HERE: Plain English starter guides"
+    },
+    {
+      "file": "cards_1600x900/21_what_is_ai_agent.png",
+      "title": "WHAT IS AN AI AGENT?",
+      "section": "AI Help",
+      "alt": "Pixel art card for WHAT IS AN AI AGENT?: Goal \u2192 Plan \u2192 Tools \u2192 Review"
+    },
+    {
+      "file": "cards_1600x900/22_chatbot_vs_agent.png",
+      "title": "CHATBOT VS AGENT",
+      "section": "AI Help",
+      "alt": "Pixel art comparison card: CHATBOT VS AGENT"
+    },
+    {
+      "file": "cards_1600x900/23_agent_tools_library.png",
+      "title": "AGENT TOOLS LIBRARY",
+      "section": "AI Help",
+      "alt": "Pixel art card for AGENT TOOLS LIBRARY: Files \u2022 Browser \u2022 Search \u2022 Memory"
+    },
+    {
+      "file": "cards_1600x900/24_real_workflow_examples.png",
+      "title": "REAL WORKFLOW EXAMPLES",
+      "section": "AI Help",
+      "alt": "Pixel art card for REAL WORKFLOW EXAMPLES: Email \u2022 CRM \u2022 Quote \u2022 Follow-up"
+    },
+    {
+      "file": "cards_1600x900/25_safe_first_task.png",
+      "title": "SAFE FIRST TASK",
+      "section": "AI Help",
+      "alt": "Pixel art card for SAFE FIRST TASK: Read, draft, summarize \u2014 no risky actions"
+    },
+    {
+      "file": "cards_1600x900/26_install_guide_transition.png",
+      "title": "INSTALL GUIDE",
+      "section": "AI Help",
+      "alt": "Pixel art card for INSTALL GUIDE: Choose one path and follow one checklist"
+    },
+    {
+      "file": "cards_1600x900/27_contact_card.png",
+      "title": "CONTACT MICHAEL",
+      "section": "Contact",
+      "alt": "Pixel art card for CONTACT MICHAEL: Email \u2022 LinkedIn \u2022 collaboration"
+    },
+    {
+      "file": "cards_1600x900/28_recycle_bin_old_workflows.png",
+      "title": "RECYCLE BIN",
+      "section": "Recycle Bin",
+      "alt": "Pixel art card for RECYCLE BIN: Old workflows, duplicate entry, manual drag"
+    },
+    {
+      "file": "cards_1600x900/29_desktop_navigation.png",
+      "title": "DESKTOP NAVIGATION",
+      "section": "Home",
+      "alt": "Pixel art card for DESKTOP NAVIGATION: Resume \u2022 Projects \u2022 AI Agents \u2022 AI Help"
+    }
+  ],
+  "banners": [
+    {
+      "file": "banners_1600x600/00_welcome_banner.png",
+      "title": "WELCOME.EXE",
+      "section": "Home",
+      "alt": "Pixel art banner for WELCOME.EXE"
+    },
+    {
+      "file": "banners_1600x600/01_resume_banner.png",
+      "title": "RESUME.DOC",
+      "section": "Resume",
+      "alt": "Pixel art banner for RESUME.DOC"
+    },
+    {
+      "file": "banners_1600x600/02_projects_banner.png",
+      "title": "PROJECTS",
+      "section": "Projects",
+      "alt": "Pixel art banner for PROJECTS"
+    },
+    {
+      "file": "banners_1600x600/03_ai_agents_banner.png",
+      "title": "AI AGENTS",
+      "section": "AI Agents",
+      "alt": "Pixel art banner for AI AGENTS"
+    },
+    {
+      "file": "banners_1600x600/04_ai_help_banner.png",
+      "title": "AI HELP",
+      "section": "AI Help",
+      "alt": "Pixel art banner for AI HELP"
+    },
+    {
+      "file": "banners_1600x600/05_dashboard_banner.png",
+      "title": "DASHBOARD VIEW",
+      "section": "AI Agents",
+      "alt": "Pixel art banner for DASHBOARD VIEW"
+    },
+    {
+      "file": "banners_1600x600/06_safety_banner.png",
+      "title": "SAFE BY DESIGN",
+      "section": "AI Help",
+      "alt": "Pixel art banner for SAFE BY DESIGN"
+    },
+    {
+      "file": "banners_1600x600/07_contact_banner.png",
+      "title": "CONTACT",
+      "section": "Contact",
+      "alt": "Pixel art banner for CONTACT"
+    }
+  ],
+  "icons": [
+    {
+      "file": "icons_512/icon_welcome.png",
+      "title": "WELCOME",
+      "section": "Icons",
+      "alt": "Pixel icon for WELCOME"
+    },
+    {
+      "file": "icons_512/icon_resume.png",
+      "title": "RESUME",
+      "section": "Icons",
+      "alt": "Pixel icon for RESUME"
+    },
+    {
+      "file": "icons_512/icon_projects.png",
+      "title": "PROJECTS",
+      "section": "Icons",
+      "alt": "Pixel icon for PROJECTS"
+    },
+    {
+      "file": "icons_512/icon_ai_agents.png",
+      "title": "AI AGENTS",
+      "section": "Icons",
+      "alt": "Pixel icon for AI AGENTS"
+    },
+    {
+      "file": "icons_512/icon_ai_help.png",
+      "title": "AI HELP",
+      "section": "Icons",
+      "alt": "Pixel icon for AI HELP"
+    },
+    {
+      "file": "icons_512/icon_contact.png",
+      "title": "CONTACT",
+      "section": "Icons",
+      "alt": "Pixel icon for CONTACT"
+    },
+    {
+      "file": "icons_512/icon_dashboard.png",
+      "title": "DASHBOARD",
+      "section": "Icons",
+      "alt": "Pixel icon for DASHBOARD"
+    },
+    {
+      "file": "icons_512/icon_review_gate.png",
+      "title": "REVIEW",
+      "section": "Icons",
+      "alt": "Pixel icon for REVIEW"
+    },
+    {
+      "file": "icons_512/icon_workflow.png",
+      "title": "WORKFLOW",
+      "section": "Icons",
+      "alt": "Pixel icon for WORKFLOW"
+    },
+    {
+      "file": "icons_512/icon_exception_radar.png",
+      "title": "RADAR",
+      "section": "Icons",
+      "alt": "Pixel icon for RADAR"
+    },
+    {
+      "file": "icons_512/icon_reporting.png",
+      "title": "REPORTS",
+      "section": "Icons",
+      "alt": "Pixel icon for REPORTS"
+    },
+    {
+      "file": "icons_512/icon_knowledge.png",
+      "title": "KNOWLEDGE",
+      "section": "Icons",
+      "alt": "Pixel icon for KNOWLEDGE"
+    },
+    {
+      "file": "icons_512/icon_automation_loop.png",
+      "title": "AUTOMATE",
+      "section": "Icons",
+      "alt": "Pixel icon for AUTOMATE"
+    },
+    {
+      "file": "icons_512/icon_customer_journey.png",
+      "title": "JOURNEY",
+      "section": "Icons",
+      "alt": "Pixel icon for JOURNEY"
+    },
+    {
+      "file": "icons_512/icon_safe_prompt.png",
+      "title": "SAFE TASK",
+      "section": "Icons",
+      "alt": "Pixel icon for SAFE TASK"
+    },
+    {
+      "file": "icons_512/icon_strategy.png",
+      "title": "STRATEGY",
+      "section": "Icons",
+      "alt": "Pixel icon for STRATEGY"
+    },
+    {
+      "file": "icons_512/icon_terminal.png",
+      "title": "TERMINAL",
+      "section": "Icons",
+      "alt": "Pixel icon for TERMINAL"
+    },
+    {
+      "file": "icons_512/icon_field_systems.png",
+      "title": "FIELD+TECH",
+      "section": "Icons",
+      "alt": "Pixel icon for FIELD+TECH"
+    },
+    {
+      "file": "icons_512/icon_files.png",
+      "title": "FILES",
+      "section": "Icons",
+      "alt": "Pixel icon for FILES"
+    },
+    {
+      "file": "icons_512/icon_recycle_bin.png",
+      "title": "RECYCLE",
+      "section": "Icons",
+      "alt": "Pixel icon for RECYCLE"
+    }
+  ],
+  "palette": {
+    "bg": "#04090e",
+    "bg2": "#06111b",
+    "panel": "#081926",
+    "panel2": "#0d2435",
+    "panel3": "#123044",
+    "cyan": "#19d7e8",
+    "cyan2": "#0c86af",
+    "blue": "#237ebe",
+    "green": "#73e24c",
+    "green2": "#2d8f2f",
+    "yellow": "#ffd140",
+    "orange": "#f08724",
+    "red": "#ff4d36",
+    "purple": "#a074ff",
+    "white": "#f5f2e6",
+    "muted": "#86a0aa",
+    "grey": "#525c64",
+    "dark": "#010408",
+    "black": "#000000"
+  }
+}
