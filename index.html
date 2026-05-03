@@ -4,17 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Michael Costea — MICHAEL OS 89</title>
-  <meta name="description" content="Michael Costea — Head of Tech, AI & Systems building scalable AI workflow layers, business automation, digital infrastructure, and operational systems across electrical and energy services." />
+  <meta name="description" content="Michael Costea — Head of Tech, AI & Systems building AI-powered business operating systems that turn messy workflows into visible, scalable, human-reviewed systems." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260503-1034" />
+  <link rel="stylesheet" href="styles.css?v=20260503-1115" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
     <section class="desktop desktop-icons" aria-label="MICHAEL OS 89 desktop">
       <button class="desk-icon" data-open="aboutWindow" aria-label="Open My Computer"><span class="icon-art">🖥️</span><span>My Computer</span></button>
       <button class="desk-icon" data-open="resumeWindow" aria-label="Open Resume"><span class="icon-art">📄</span><span>Resume</span></button>
+      <button class="desk-icon" data-open="buildWindow" aria-label="Open What I Build"><span class="icon-art">🧩</span><span>What I Build</span></button>
       <button class="desk-icon" data-open="projectsWindow" aria-label="Open Projects"><span class="icon-art">📁</span><span>Projects</span></button>
       <button class="desk-icon" data-open="agentsWindow" aria-label="Open AI Agents"><span class="icon-art">🤖</span><span>AI Agents</span></button>
       <button class="desk-icon" data-open="aiHelpWindow" aria-label="Open AI Help"><span class="icon-art">🎓</span><span>AI Help</span></button>
@@ -27,6 +28,7 @@
         <aside class="welcome-sidebar" aria-label="Profile controls">
           <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0415" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
+          <button class="btn big-nav" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')">WHAT I BUILD</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
           <button class="btn big-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
           <button class="btn big-nav ai-cta-nav" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">AI HELP</button>
@@ -36,12 +38,14 @@
           <h1>HEAD OF TECH, AI & SYSTEMS</h1>
           <div class="terminal-line">LOADING BUSINESS_OPERATING_LAYER... [OK]</div>
 
+          <p class="brand-promise"><b>I build AI-powered business operating systems that turn messy workflows into visible, scalable, human-reviewed systems.</b></p>
           <p>I am <strong class="accent">Michael Costea</strong>, currently leading technology, automation, AI, digital infrastructure, and growth systems across a multi-brand electrical and energy services group.</p>
-          <p>My current mission is building a scalable AI and workflow layer on top of core business systems so the company can grow faster, operate more efficiently, and deliver a better customer experience without unnecessary headcount growth in support functions.</p>
-          <p>The goal is not AI for AI’s sake. It is a connected, visible, and automated business where sales, ops, finance, admin, and field teams work together through clearer system architecture.</p>
+          <p>My current mission is building a practical AI and workflow layer on top of core business systems so the company can grow faster, operate more efficiently, and deliver a better customer experience without unnecessary support-function headcount growth.</p>
+          <p>The goal is not AI for AI’s sake. It is a connected, visible business where sales, ops, finance, admin, and field teams work through clearer system architecture, review gates, and measurable operating loops.</p>
+          <div class="proof-strip" aria-label="Brand proof points"><span>Faster lead response</span><span>Less duplicate admin</span><span>Visible handoffs</span><span>Human-reviewed automation</span></div>
           <div class="spec-grid" aria-label="Current system focus">
             <div><b>CURRENT ROLE</b><span>Head of Tech, AI & Systems · All Electric Homes</span></div>
-            <button class="welcome-agent-cta" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')"><b>INSTALL YOUR OWN AI AGENT</b><span>Beginner guide · Hermes/OpenClaw · Telegram setup</span></button>
+            <button class="welcome-agent-cta" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')"><b>WHAT I BUILD</b><span>AI operating layers · dashboards · workflow systems</span></button>
           </div>
         </section>
       </div>
@@ -145,15 +149,37 @@
       </div>
     </section>
 
+    <section id="buildWindow" class="win-window doc-window" aria-label="What I Build" style="left:150px;top:70px;width:min(960px,94vw);height:min(730px,calc(100dvh - 90px));">
+      <div class="win-title"><span>What I Build - AI Business Operating Systems</span><button class="win-close" data-close="buildWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc build-doc">
+          <h2>What I Build</h2>
+          <figure class="site-art-card"><img src="assets/site-art/workflow-systems.jpg" alt="Pixel art workflow systems graphic showing CRM, automation, dashboards, operations, validation, and visibility" loading="lazy" /></figure>
+          <p class="brand-promise"><b>I build practical AI-powered operating layers for growing service businesses: lead flow, customer journey, operations, reporting, knowledge, and admin work made visible and reviewable.</b></p>
+          <div class="build-grid">
+            <article><b>Lead Response & Customer Journey</b><span>Lead intake, qualification, quote prep, follow-up, review requests, warranty loops, and handoff summaries so fewer opportunities go stale.</span></article>
+            <article><b>AI Agent Workflows</b><span>OpenClaw/Hermes-style agents with bounded tools, Telegram accountability, logs, receipts, review gates, and fail-closed permission rules.</span></article>
+            <article><b>Dashboards & Exception Radar</b><span>Operational views that surface overdue jobs, stale leads, missing payments, review gaps, bottlenecks, and evidence links — not vanity charts.</span></article>
+            <article><b>CRM / Ops / Admin Integration</b><span>Clear workflow boundaries between sales, marketing, admin, finance, field teams, reporting, and customer communications.</span></article>
+            <article><b>Knowledge & Process Systems</b><span>SOPs, repeated-question capture, training packs, internal answers, source-of-truth cleanup, and process simplification before automation.</span></article>
+            <article><b>Multi-Brand Digital Infrastructure</b><span>Websites, landing paths, lead capture, analytics, content systems, release gates, and technical vendor/tool rationalisation across brands.</span></article>
+          </div>
+          <h3>Operating Principles</h3>
+          <div class="principle-strip"><span>Clarity before automation</span><span>APIs first</span><span>Humans keep judgment</span><span>Every workflow needs receipts</span><span>Small proven loops first</span></div>
+        </article>
+      </div>
+    </section>
+
     <section id="projectsWindow" class="win-window doc-window" aria-label="Projects" style="left:180px;top:45px;width:min(980px,94vw);height:min(760px,calc(100dvh - 85px));">
       <div class="win-title"><span>Projects - AI Systems Portfolio</span><button class="win-close" data-close="projectsWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc projects-doc">
           <h2>Project Portfolio</h2>
           <figure class="site-art-card"><img src="assets/site-art/projects.jpg" alt="Pixel art projects graphic for builds, experiments, systems, and impact" loading="lazy" /></figure>
-          <p><b>Positioning:</b> this is not a list of random apps. It is a grouped showcase of AI, automation, data visibility, and business-system work — framed around leverage, reliability, and human review.</p>
-          <div class="release-hold"><b>Public demos remain hidden until release.</b><br />The showcase below explains the systems being built or led behind the scenes without duplicating every agent, bot, or prototype as a separate weak card. Scroll inside this window to see all grouped buckets.</div>
+          <p><b>Positioning:</b> this is a case-study style portfolio, not a random app list. Each bucket is framed around the business problem, the system being built, and the operating result it is designed to create.</p>
+          <div class="release-hold"><b>Public demos remain hidden until release.</b><br />The showcase explains the systems being built or led behind the scenes without exposing internal tools, customer data, or fragile prototypes. Scroll inside this window to see the case-study buckets.</div>
           <div class="project-focus-strip" aria-label="Project grouping principles"><span>AI-first</span><span>No duplicate agent buckets</span><span>Business outcome led</span><span>Human-reviewed automation</span></div>
+          <p class="guide-note"><b>Case-study lens:</b> messy workflow → designed operating loop → visible owner/status/evidence → human review where trust, money, quality, or customers are involved.</p>
           <div class="project-list-public ai-project-showcase">
             <article>
               <h3>1. AEH AI Operating Layer</h3>
@@ -584,7 +610,12 @@ openclaw doctor</pre></article>
       <div class="win-title"><span>Contact</span><button class="win-close" data-close="contactWindow">×</button></div>
       <div class="win-body">
         <figure class="site-art-card compact-art"><img src="assets/site-art/contact.jpg" alt="Pixel art contact graphic inviting visitors to connect and build something great" loading="lazy" /></figure>
-        <p><a class="btn" href="mailto:costra.michael@gmail.com">Email Michael</a></p>
+        <h2>Send me the messy workflow.</h2>
+        <p>I am most useful where a business has scattered systems, repeated admin, slow handoffs, unclear reporting, or AI ideas that need safe review gates before they touch customers, money, or operations.</p>
+        <div class="contact-reasons">
+          <span>AI workflow strategy</span><span>Service-business automation</span><span>Operational visibility</span><span>Agent review systems</span><span>CRM / ops handoffs</span><span>Digital infrastructure</span>
+        </div>
+        <p><a class="btn" href="mailto:costra.michael@gmail.com?subject=Messy workflow / AI systems chat">Email Michael</a></p>
         <p><a class="btn" href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener">LinkedIn</a></p>
       </div>
     </section>
@@ -611,6 +642,6 @@ openclaw doctor</pre></article>
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260503-1011"></script>
+  <script src="script.js?v=20260503-1115"></script>
 </body>
 </html>

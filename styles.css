@@ -1262,3 +1262,20 @@ body.public-preview::before{
     overflow-wrap:anywhere!important;
   }
 }
+
+
+/* === 2026-05 brand positioning and build window === */
+.public-preview .brand-promise{background:#e8f4ff;border:2px solid #000080;padding:9px!important;color:#000;box-shadow:1px 1px 0 #808080;}
+.public-preview .brand-promise b{color:#000080!important;font:900 13px/17px "Work Sans",Tahoma,sans-serif;}
+.public-preview .proof-strip,.public-preview .principle-strip,.public-preview .contact-reasons{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;background:#c0c0c0;border:2px inset #808080;padding:7px;}
+.public-preview .proof-strip span,.public-preview .principle-strip span,.public-preview .contact-reasons span{background:#000080;color:#fff;border-top:1px solid #6fb3ff;border-left:1px solid #6fb3ff;border-right:1px solid #000;border-bottom:1px solid #000;padding:4px 7px;font:900 11px/13px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;}
+.public-preview .build-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
+.public-preview .build-grid article{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;min-height:126px;}
+.public-preview .build-grid b{display:block;color:#000080;font:900 13px/16px "Work Sans",Tahoma,sans-serif;margin-bottom:5px;text-transform:uppercase;}
+.public-preview .build-grid span{display:block;font:12px/16px "Space Grotesk","Courier New",monospace;}
+.public-preview #buildWindow.win-window.open{display:flex!important;flex-direction:column!important;}
+.public-preview #buildWindow .win-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;overflow:auto!important;}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview .build-grid{grid-template-columns:1fr!important;}
+  .public-preview .proof-strip span,.public-preview .principle-strip span,.public-preview .contact-reasons span{font-size:10px!important;line-height:12px!important;}
+}

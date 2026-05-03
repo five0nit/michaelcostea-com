@@ -429,6 +429,7 @@ function initStartMenu(projects){
   items.innerHTML = `
     <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span><b class="si">🖥️</b>My Computer</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="resumeWindow"><span><b class="si">📄</b>Resume</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="buildWindow"><span><b class="si">🧩</b>What I Build</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="projectsWindow"><span><b class="si">📁</b>Projects</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="agentsWindow"><span><b class="si">🤖</b>AI Agents</span></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="aiHelpWindow"><span><b class="si">🎓</b>AI Help</span></a>
