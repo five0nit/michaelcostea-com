@@ -1525,3 +1525,57 @@ body.public-preview::before{
   .public-preview #readerWindow.workstation-welcome.open .styleguide-welcome{min-height:0!important;}
 }
 
+/* === 2026-05 mobile minime text-wrap fix === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview .mini-content-card,
+  .public-preview .build-grid article,
+  .public-preview .doc-grid>div,
+  .public-preview .agent-grid>div,
+  .public-preview .project-list-public article,
+  .public-preview .workflow-examples article,
+  .public-preview .guide-card,
+  .public-preview .guide-tiles article,
+  .public-preview .beginner-box-grid article{
+    display:block!important;
+    overflow:visible!important;
+    min-width:0!important;
+  }
+  .public-preview .mini-card-figure,
+  .public-preview .timeline-list .mini-card-figure,
+  .public-preview .capability-grid .mini-card-figure,
+  .public-preview .build-grid .mini-card-figure,
+  .public-preview .agent-grid .mini-card-figure,
+  .public-preview .guide-tiles .mini-card-figure,
+  .public-preview .beginner-box-grid .mini-card-figure,
+  .public-preview .project-list-public .mini-card-figure,
+  .public-preview .workflow-examples .mini-card-figure{
+    float:right!important;
+    width:clamp(46px,16vw,58px)!important;
+    height:clamp(50px,17vw,62px)!important;
+    margin:0 0 5px 7px!important;
+    shape-outside:inset(0 round 0)!important;
+  }
+  .public-preview .build-grid b,
+  .public-preview .build-grid span,
+  .public-preview .doc-grid b,
+  .public-preview .doc-grid span,
+  .public-preview .agent-grid b,
+  .public-preview .agent-grid span,
+  .public-preview .guide-card b,
+  .public-preview .guide-card span{
+    max-width:none!important;
+    min-width:0!important;
+    overflow-wrap:anywhere!important;
+  }
+  .public-preview .build-doc>.section-mini-scene.compact-scene{
+    float:right!important;
+    width:76px!important;
+    margin:0 0 4px 8px!important;
+    justify-content:flex-end!important;
+  }
+  .public-preview .build-doc>.section-mini-scene.compact-scene .mini-me{
+    max-width:76px!important;
+    max-height:78px!important;
+  }
+}
+
