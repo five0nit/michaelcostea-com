@@ -1849,3 +1849,193 @@ body.public-preview::before{
     line-height:15px!important;
   }
 }
+
+/* === 2026-05 responsive positive art sweep === */
+.public-preview .mini-heading + .section-mini-scene{
+  display:none!important;
+}
+.public-preview #resumeWindow .doc-header{
+  padding:8px 10px!important;
+  margin-bottom:7px!important;
+}
+.public-preview #resumeWindow .doc-header p{
+  margin:4px 0!important;
+  line-height:15px!important;
+}
+.public-preview #resumeWindow .doc-header .mini-heading{
+  margin:0 0 2px!important;
+}
+.public-preview #resumeWindow .site-art-card{
+  max-width:640px!important;
+  margin:7px auto 10px!important;
+}
+.public-preview #resumeWindow .site-art-card img{
+  max-height:190px!important;
+  object-fit:cover!important;
+  object-position:center!important;
+}
+.public-preview #resumeWindow .resume-doc section{
+  clear:both!important;
+}
+.public-preview #resumeWindow .capability-grid{
+  margin-top:6px!important;
+}
+.public-preview #resumeWindow .capability-grid .mini-content-card,
+.public-preview #agentsWindow .agent-grid .mini-content-card,
+.public-preview #resumeWindow .timeline-list article{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+}
+.public-preview #resumeWindow .capability-grid .mini-card-figure,
+.public-preview #agentsWindow .agent-grid .mini-card-figure,
+.public-preview #resumeWindow .timeline-list .mini-card-figure{
+  order:99!important;
+  align-self:flex-end!important;
+  float:none!important;
+  clear:none!important;
+  margin:5px 0 0 auto!important;
+}
+.public-preview #resumeWindow .capability-grid b,
+.public-preview #resumeWindow .capability-grid span,
+.public-preview #agentsWindow .agent-grid b,
+.public-preview #agentsWindow .agent-grid span,
+.public-preview #resumeWindow .timeline-list h4,
+.public-preview #resumeWindow .timeline-list p{
+  order:1!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  padding-right:0!important;
+  overflow-wrap:anywhere!important;
+}
+.public-preview #resumeWindow .capability-grid span,
+.public-preview #agentsWindow .agent-grid span,
+.public-preview #resumeWindow .timeline-list p{
+  order:2!important;
+}
+.public-preview .release-hold{
+  background:#d4f4d4;
+  border:2px inset #808080;
+  color:#031403;
+  margin:8px 0 10px;
+  padding:7px 8px;
+}
+
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview .document-body,
+  body.mobile-mode.public-preview .document-body{
+    padding-bottom:calc(58px + env(safe-area-inset-bottom,0px))!important;
+    scroll-padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))!important;
+  }
+  .public-preview .resume-doc,
+  body.mobile-mode.public-preview .resume-doc{
+    padding:7px!important;
+  }
+  .public-preview .mini-heading,
+  body.mobile-mode.public-preview .mini-heading{
+    margin:2px 0 6px!important;
+    clear:both!important;
+  }
+  .public-preview .mini-heading + .section-mini-scene,
+  body.mobile-mode.public-preview .mini-heading + .section-mini-scene{
+    display:none!important;
+  }
+  .public-preview .brand-promise.mini-callout,
+  body.mobile-mode.public-preview .brand-promise.mini-callout{
+    display:block!important;
+    padding:7px 8px!important;
+    margin:7px 0 9px!important;
+  }
+  .public-preview .brand-promise.mini-callout .mini-me-inline,
+  body.mobile-mode.public-preview .brand-promise.mini-callout .mini-me-inline{
+    float:right!important;
+    width:clamp(38px,12vw,46px)!important;
+    height:auto!important;
+    margin:2px 0 3px 8px!important;
+  }
+  .public-preview .brand-promise.mini-callout span,
+  body.mobile-mode.public-preview .brand-promise.mini-callout span{
+    display:block!important;
+    min-width:0!important;
+    overflow-wrap:anywhere!important;
+  }
+  .public-preview #resumeWindow .doc-header,
+  body.mobile-mode.public-preview #resumeWindow .doc-header{
+    padding:7px 8px!important;
+    margin-bottom:6px!important;
+  }
+  .public-preview #resumeWindow .doc-header p,
+  body.mobile-mode.public-preview #resumeWindow .doc-header p{
+    margin:3px 0!important;
+    line-height:15px!important;
+  }
+  .public-preview #resumeWindow .site-art-card,
+  body.mobile-mode.public-preview #resumeWindow .site-art-card{
+    max-width:100%!important;
+    margin:6px 0 8px!important;
+    padding:3px!important;
+  }
+  .public-preview #resumeWindow .site-art-card img,
+  body.mobile-mode.public-preview #resumeWindow .site-art-card img{
+    height:118px!important;
+    max-height:118px!important;
+    object-fit:cover!important;
+    object-position:center!important;
+  }
+  .public-preview #resumeWindow .resume-doc h3,
+  body.mobile-mode.public-preview #resumeWindow .resume-doc h3{
+    margin:10px 0 5px!important;
+    line-height:15px!important;
+  }
+  .public-preview #resumeWindow .capability-grid,
+  body.mobile-mode.public-preview #resumeWindow .capability-grid{
+    gap:7px!important;
+    margin-top:5px!important;
+  }
+  .public-preview .doc-grid .mini-content-card,
+  .public-preview .agent-grid .mini-content-card,
+  body.mobile-mode.public-preview .doc-grid .mini-content-card,
+  body.mobile-mode.public-preview .agent-grid .mini-content-card{
+    display:flex!important;
+    flex-direction:column!important;
+    padding:8px!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .public-preview .doc-grid .mini-card-figure,
+  .public-preview .agent-grid .mini-card-figure,
+  body.mobile-mode.public-preview .doc-grid .mini-card-figure,
+  body.mobile-mode.public-preview .agent-grid .mini-card-figure{
+    order:99!important;
+    align-self:flex-end!important;
+    float:none!important;
+    display:block!important;
+    width:clamp(34px,11vw,44px)!important;
+    height:clamp(38px,12vw,48px)!important;
+    margin:4px 0 0 auto!important;
+    clear:none!important;
+  }
+  .public-preview .doc-grid .mini-content-card>b,
+  .public-preview .doc-grid .mini-content-card>span,
+  .public-preview .agent-grid .mini-content-card>b,
+  .public-preview .agent-grid .mini-content-card>span,
+  body.mobile-mode.public-preview .doc-grid .mini-content-card>b,
+  body.mobile-mode.public-preview .doc-grid .mini-content-card>span,
+  body.mobile-mode.public-preview .agent-grid .mini-content-card>b,
+  body.mobile-mode.public-preview .agent-grid .mini-content-card>span{
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    padding-right:0!important;
+    overflow-wrap:anywhere!important;
+  }
+  .public-preview .site-art-card img[src$="my-computer.jpg"],
+  .public-preview .site-art-card img[src$="projects.jpg"],
+  body.mobile-mode.public-preview .site-art-card img[src$="my-computer.jpg"],
+  body.mobile-mode.public-preview .site-art-card img[src$="projects.jpg"]{
+    height:132px!important;
+    object-fit:cover!important;
+    object-position:left center!important;
+  }
+}
