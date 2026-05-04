@@ -282,9 +282,10 @@
           <div class="guide-card-grid">
             <button class="guide-card" type="button" data-open="agentGuideWindow" onclick="openWindow('agentGuideWindow')"><b>1. What is an AI agent?</b><span>Simple explanation, examples, safety limits, and visual workflow.</span></button>
             <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>2. Install Hermes or OpenClaw</b><span>Hold-your-hand setup with Hermes/OpenClaw toggles, Mac/Windows/Linux paths, model tokens, local config, Telegram, and BotFather.</span></button>
+            <button class="guide-card" type="button" data-open="firstWorkflowGuideWindow" onclick="openWindow('firstWorkflowGuideWindow')"><b>3. Your first safe AI workflow</b><span>A practical 30-minute tutorial: pick one task, write the prompt, test it, add approval gates, and save the repeatable playbook.</span></button>
           </div>
           <div class="visual-flow" aria-label="AI help learning path">
-            <div>Learn<br><b>what agents do</b></div><span>→</span><div>Choose<br><b>Hermes/OpenClaw</b></div><span>→</span><div>Connect<br><b>Telegram</b></div><span>→</span><div>Use<br><b>safely</b></div>
+            <div>Learn<br><b>what agents do</b></div><span>→</span><div>Choose<br><b>Hermes/OpenClaw</b></div><span>→</span><div>Build<br><b>one workflow</b></div><span>→</span><div>Use<br><b>safely</b></div>
           </div>
           <p class="guide-note"><b>Plain English version:</b> an AI agent is a helper that can use tools. It can read, write, search, run commands, and remember context — but it still needs clear instructions and human review.</p>
         </article>
@@ -332,6 +333,72 @@
           </ul>
           <h3>First proven prompt to try</h3>
           <pre class="guide-code">I am new to AI agents. Explain what you can do in 5 bullet points, then ask me one simple question so we can try a safe first task.</pre>
+        </article>
+      </div>
+    </section>
+
+    <section id="firstWorkflowGuideWindow" class="win-window doc-window" aria-label="First safe AI workflow tutorial" style="left:245px;top:82px;width:min(980px,96vw);">
+      <div class="win-title"><span>Guide 3 - Your first safe AI workflow</span><button class="win-close" data-close="firstWorkflowGuideWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc">
+          <div class="mini-heading lift-heading"><h2>Your First Safe AI Workflow</h2></div>
+          <p class="guide-subtitle"><b>A beginner tutorial for turning one annoying repeat task into a reusable AI playbook.</b></p>
+          <figure class="site-art-card compact-art"><img src="assets/mini-gallery/006_modern_life_meme_ai_wizard_prompt_spell.png" alt="Mini Michael casting a prompt spell for a first AI workflow tutorial" loading="lazy" /></figure>
+          <p class="guide-note"><b>Goal:</b> do one useful workflow in about 30 minutes without giving the AI dangerous access. You will pick a low-risk task, give it examples, check the answer, then save the final prompt so you can reuse it.</p>
+
+          <h3>Step 1 — choose a boring, safe task</h3>
+          <div class="beginner-box-grid">
+            <article class="mini-content-card"><b>Good first tasks</b><figure class="mini-card-figure"><img src="assets/mini-gallery/003_modern_life_meme_touching_grass_laptop.png" alt="Mini Michael working calmly on a laptop for safe first AI tasks" loading="lazy" /></figure><span>Summarise meeting notes, rewrite an email draft, turn messy notes into a checklist, compare options, or make a simple SOP.</span></article>
+            <article><b>Avoid on day one</b><span>Customer databases, payments, deleting files, public posting, medical/legal/financial decisions, or anything that can hurt trust if wrong.</span></article>
+            <article><b>Use fake or copied data</b><span>Paste a small sample into the chat. Remove passwords, private customer details, and anything you would not put in a training document.</span></article>
+            <article><b>Define success</b><span>Write one sentence: “I want a clean checklist I can follow tomorrow” or “I want a polite email draft I can edit before sending.”</span></article>
+          </div>
+
+          <h3>Step 2 — use this starter prompt</h3>
+          <pre class="guide-code">You are helping me build one safe repeatable workflow.
+Task: [describe the boring task]
+Input: [paste notes, transcript, email draft, or requirements]
+Output format: [checklist / email draft / table / SOP]
+Rules:
+- Ask questions only if something critical is missing.
+- Do not invent facts.
+- Mark uncertain items as [check].
+- Do not send, delete, buy, publish, or change systems.
+- Give me a short final review checklist.</pre>
+
+          <h3>Step 3 — review like an operator, not a spectator</h3>
+          <div class="workflow-examples">
+            <article class="mini-content-card"><b>Accuracy pass</b><span>Check names, dates, numbers, promises, and any claim the AI may have guessed.</span></article>
+            <article class="mini-content-card"><b>Tone pass</b><span>Make it sound like you. Remove corporate sludge, hype, over-promising, or fake confidence.</span></article>
+            <article class="mini-content-card"><b>Risk pass</b><figure class="mini-card-figure"><img src="assets/mini-gallery/020_digital_overload_meme_keyboard_vs_robot_captcha.png" alt="Mini Michael facing a robot captcha as a reminder to check AI output" loading="lazy" /></figure><span>Anything involving money, customers, safety, privacy, or reputation needs a human approval step before action.</span></article>
+            <article class="mini-content-card"><b>Evidence pass</b><span>Ask: “What source line supports each important point?” If it cannot point back to the input, mark it as [check].</span></article>
+          </div>
+
+          <h3>Step 4 — turn the good version into a reusable playbook</h3>
+          <p>Once the result is useful, save the prompt plus the expected output format. That is your first workflow, not just one lucky chat.</p>
+          <pre class="guide-code">Workflow name: [Example: Weekly meeting notes to action list]
+When to use it: [Every Friday after team meeting]
+Inputs needed: [Transcript, decisions, open questions]
+Output wanted: [Owner / task / due date / risk / next action]
+Human approval required before: [sending to team, updating CRM, promising dates]
+Final prompt: [paste the cleaned prompt here]</pre>
+
+          <h3>Step 5 — add the smallest automation later</h3>
+          <div class="beginner-box-grid">
+            <article><b>Manual first</b><span>Run it by copy/paste 3 times. Fix the prompt each time. Manual repetition exposes the weird edge cases.</span></article>
+            <article><b>Then semi-automatic</b><span>Let an agent read one safe folder or draft one message, but keep approval before it changes anything.</span></article>
+            <article class="mini-content-card"><b>Approval gate</b><figure class="mini-card-figure"><img src="assets/mini-gallery/035_bureaucracy_meme_basic_common_sense_approved.png" alt="Mini Michael holding an approval stamp for human review gates" loading="lazy" /></figure><span>The magic words are: “draft only, wait for my approval.” Keep that rule until the workflow is boring and proven.</span></article>
+            <article><b>Evidence rule</b><span>For every completed run, keep the input, output, review notes, and what changed. No evidence, no trust.</span></article>
+          </div>
+
+          <h3>First workflow ideas</h3>
+          <ul>
+            <li><b>Inbox triage:</b> paste 10 emails → get urgency, owner, next action, and draft replies.</li>
+            <li><b>Quote prep:</b> paste job notes → get missing info, risks, and a customer-friendly summary.</li>
+            <li><b>Meeting cleanup:</b> paste transcript → get decisions, tasks, blockers, and follow-up message.</li>
+            <li><b>Research brief:</b> paste links/notes → get pros, cons, unknowns, and recommendation.</li>
+          </ul>
+          <p class="guide-note"><b>Rule of thumb:</b> if you would trust a careful junior assistant to draft it but still want to review before sending, it is a good first AI workflow.</p>
         </article>
       </div>
     </section>
