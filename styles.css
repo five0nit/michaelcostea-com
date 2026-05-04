@@ -619,6 +619,9 @@ body.public-preview::before{
 .public-preview #projectsWindow .win-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;overflow:auto!important;}
 .public-preview .project-focus-strip{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 10px;background:#c0c0c0;border:2px inset #808080;padding:7px;}
 .public-preview .project-focus-strip span{background:#000080;color:#fff;border-top:1px solid #6fb3ff;border-left:1px solid #6fb3ff;border-right:1px solid #000;border-bottom:1px solid #000;padding:4px 7px;font:900 11px/13px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;}
+.public-preview .recent-builds-showcase{margin:10px 0 14px;padding:8px;background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;}
+.public-preview .recent-builds-showcase .mini-content-card{background:#fffff3;}
+.public-preview .recent-builds-showcase h3{color:#800000;}
 .public-preview .ai-project-showcase article{min-height:220px;display:flex;flex-direction:column;}
 .public-preview .ai-project-showcase article>span{margin-top:auto;}
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
