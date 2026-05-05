@@ -899,7 +899,7 @@ async function initIntroDeckPreview(){
   let current = 1;
   const update = () => {
     const num = String(current).padStart(2, '0');
-    slide.src = `assets/decks/intro-to-ai/slide-${num}.png`;
+    slide.src = `assets/decks/intro-to-ai/slide-${num}.png?v=20260506-hd1`;
     slide.alt = `Intro to AI slide ${current} of ${total}`;
     counter.textContent = `Slide ${current}/${total}`;
     prev.disabled = current === 1;
