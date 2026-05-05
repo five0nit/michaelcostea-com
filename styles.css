@@ -817,7 +817,7 @@ body.public-preview::before{
 
 /* === 2026-05 AI Help guide windows === */
 .public-preview .guide-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0;}
-.public-preview .guide-card{display:block;text-align:left;background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:12px;color:#000;cursor:pointer;font:12px/16px "Space Grotesk","Courier New",monospace;}
+.public-preview .guide-card{display:block;text-align:left;background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:12px;color:#000;cursor:pointer;font:12px/16px "Space Grotesk","Courier New",monospace;text-decoration:none;}
 .public-preview .guide-card:hover{background:#000080;color:#fff;}
 .public-preview .guide-card b{display:block;font:900 14px/17px "Work Sans",Tahoma,sans-serif;margin-bottom:5px;}
 .public-preview .guide-card span{display:block;}
