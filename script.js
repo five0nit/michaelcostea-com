@@ -889,6 +889,30 @@ function initQuirkyStartActions(){
 
 
 
+async function initIntroDeckPreview(){
+  const slide = document.getElementById('introDeckSlide');
+  const counter = document.getElementById('introDeckCounter');
+  const prev = document.querySelector('[data-intro-deck-prev]');
+  const next = document.querySelector('[data-intro-deck-next]');
+  if(!slide || !counter || !prev || !next) return;
+  const total = 19;
+  let current = 1;
+  const update = () => {
+    const num = String(current).padStart(2, '0');
+    slide.src = `assets/decks/intro-to-ai/slide-${num}.png`;
+    slide.alt = `Intro to AI slide ${current} of ${total}`;
+    counter.textContent = `Slide ${current}/${total}`;
+    prev.disabled = current === 1;
+    next.disabled = current === total;
+  };
+  prev.addEventListener('click', () => { current = Math.max(1, current - 1); update(); });
+  next.addEventListener('click', () => { current = Math.min(total, current + 1); update(); });
+  document.querySelectorAll('[data-open="introDeckWindow"]').forEach((btn) => {
+    btn.addEventListener('click', () => { current = 1; window.setTimeout(update, 0); });
+  });
+  update();
+}
+
 async function boot(){
   loadPrefs();
   applyPrefs();
@@ -969,6 +993,7 @@ async function boot(){
   initLoreEggs();
   initSettingsPanel();
   initGuideTabs();
+  initIntroDeckPreview();
   initQuirkyStartActions();
 
   document.addEventListener('click', (e)=>{

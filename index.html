@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260506-ai-help-deck-1" />
+  <link rel="stylesheet" href="styles.css?v=20260506-intro-ai-preview-1" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -299,7 +299,7 @@
           <p class="guide-note mini-callout ai-help-intro-callout"><img class="mini-me-inline" src="assets/minime-pack/ai_help_robot_highfive.png" alt="Pixel mini Michael high-fiving a robot for the AI Help starter path" loading="lazy" /><span><b>Start simple:</b> pick one guide, test in private, and keep humans approving anything risky.</span></p>
           <div class="guide-card-grid">
             <button class="guide-card" type="button" data-open="agentGuideWindow" onclick="openWindow('agentGuideWindow')"><b>1. What is an AI agent?</b><span>Simple explanation, examples, safety limits, and visual workflow.</span></button>
-            <a class="guide-card" href="assets/downloads/intro-to-ai-ai-help.pptx" download><b>2. Download Intro to AI deck</b><span>A public starter PowerPoint covering AI basics, access options, safety, prompting, and simple workflow ideas.</span></a>
+            <button class="guide-card" type="button" data-open="introDeckWindow" onclick="openWindow('introDeckWindow')"><b>2. Intro to AI deck</b><span>Open a slide preview in the website, then download the PDF or PowerPoint copy.</span></button>
             <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>3. Install Hermes or OpenClaw</b><span>Hold-your-hand setup with Hermes/OpenClaw toggles, Mac/Windows/Linux paths, model tokens, local config, Telegram, and BotFather.</span></button>
             <button class="guide-card" type="button" data-open="firstWorkflowGuideWindow" onclick="openWindow('firstWorkflowGuideWindow')"><b>4. Your first safe AI workflow</b><span>A practical 30-minute tutorial: pick one task, write the prompt, test it, add approval gates, and save the repeatable playbook.</span></button>
           </div>
@@ -307,6 +307,27 @@
             <div>Learn<br><b>what agents do</b></div><span>→</span><div>Choose<br><b>Hermes/OpenClaw</b></div><span>→</span><div>Build<br><b>one workflow</b></div><span>→</span><div>Use<br><b>safely</b></div>
           </div>
           <p class="guide-note"><b>Plain English version:</b> an AI agent is a helper that can use tools. It can read, write, search, run commands, and remember context — but it still needs clear instructions and human review.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="introDeckWindow" class="win-window doc-window deck-preview-window" aria-label="Intro to AI presentation preview" style="left:80px;top:70px;width:min(1040px,calc(100vw - 120px));">
+      <div class="win-title"><span>IntroToAI.ppt - Website Preview</span><button class="win-close" data-close="introDeckWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc intro-deck-doc">
+          <div class="mini-heading lean-heading"><h2>Intro to AI: slide preview</h2></div>
+          <p>Preview the public AI Help starter deck inside the website. Use the arrows to move through the slides, or download the PDF for easy sharing.</p>
+          <div class="deck-toolbar" aria-label="Intro to AI deck controls">
+            <button class="btn" type="button" data-intro-deck-prev>◀ Previous</button>
+            <strong id="introDeckCounter">Slide 1/19</strong>
+            <button class="btn" type="button" data-intro-deck-next>Next ▶</button>
+            <a class="btn" href="assets/downloads/intro-to-ai-ai-help.pdf" download>Download PDF</a>
+            <a class="btn secondary" href="assets/downloads/intro-to-ai-ai-help.pptx" download>Download PowerPoint</a>
+          </div>
+          <figure class="deck-preview-frame">
+            <img id="introDeckSlide" src="assets/decks/intro-to-ai/slide-01.png" alt="Intro to AI slide 1 of 19" loading="eager" />
+          </figure>
+          <p class="guide-note"><b>Tip:</b> keep this as a safe starter guide: learn the basics, test one boring repeat task, and keep human review on anything that affects real people.</p>
         </article>
       </div>
     </section>
@@ -735,6 +756,6 @@ openclaw doctor</pre></article>
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260503-1230"></script>
+  <script src="script.js?v=20260506-intro-ai-preview-1"></script>
 </body>
 </html>
