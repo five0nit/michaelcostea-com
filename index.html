@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=20260506-intro-ai-dynamic-1" />
+  <link rel="stylesheet" href="assets/pixel-pack/button-kit.css?v=20260513-ui-btn-wire" />
 </head>
 <body class="public-preview">
   <main class="container" id="desktopRoot">
@@ -27,12 +28,12 @@
       <div class="win-body welcome-body styleguide-welcome">
         <aside class="welcome-sidebar" aria-label="Profile controls">
           <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0415" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
-          <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
-          <button class="btn big-nav" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')">WHAT I BUILD</button>
-          <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
-          <button class="btn big-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
-          <button class="btn big-nav ai-cta-nav" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">AI HELP</button>
-          <button class="btn big-nav" type="button" data-open="contactWindow" onclick="openWindow('contactWindow')">CONTACT ME</button>
+        <button class="ui-btn btn big-nav icon-resume" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
+        <button class="ui-btn btn big-nav icon-workflow" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')">WHAT I BUILD</button>
+        <button class="ui-btn btn big-nav icon-projects" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
+        <button class="ui-btn btn big-nav icon-ai-agents" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
+        <button class="ui-btn btn big-nav ai-cta-nav icon-ai-help" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">AI HELP</button>
+        <button class="ui-btn btn big-nav icon-contact" type="button" data-open="contactWindow" onclick="openWindow('contactWindow')">CONTACT ME</button>
         </aside>
         <section class="welcome-copy">
           <div class="mini-heading welcome-mini lift-heading"><h1><span class="desktop-headline">HEAD OF TECH, AI & SYSTEMS</span><span class="mobile-headline">AI, SYSTEMS & OPS</span></h1></div>
@@ -45,7 +46,7 @@
           <div class="proof-strip" aria-label="Brand proof points"><span>Faster lead response</span><span>Less duplicate admin</span><span>Visible handoffs</span><span>Human-reviewed automation</span></div>
           <div class="spec-grid" aria-label="Current system focus">
             <div><b>CURRENT ROLE</b><span>Head of Tech, AI & Systems · All Electric Homes</span></div>
-            <button class="welcome-agent-cta" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')"><b>WHAT I BUILD</b><span>AI operating layers · dashboards · workflow systems</span></button>
+            <button class="ui-btn welcome-agent-cta icon-workflow" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')"><b>WHAT I BUILD</b><span>AI operating layers · dashboards · workflow systems</span></button>
           </div>
         </section>
       </div>
@@ -183,6 +184,11 @@
           <div class="mini-heading compact-mini lean-heading"><h3>Latest Build Notes — updated from project memory</h3></div>
           <div class="project-list-public ai-project-showcase recent-builds-showcase" aria-label="Recent project and build updates">
             <article class="mini-content-card">
+              <h3>UseAIForMe.com Early-Access Matching Marketplace</h3>
+              <p>Current build: an early-access do-it-for-me AI marketplace where buyers post one real outcome, operators show proof and pricing, and paid work only starts after scope, fit, and approvals are confirmed. The live flow now covers free task posting, manual operator matching, verified operator profiles, fixed-scope packages with Stripe-backed checkout, and custom-job intake that stays human-reviewed instead of forcing blind auto-payment.</p>
+              <span>current build · AI operator marketplace · manual matching · approval-first checkout · Stripe</span>
+            </article>
+            <article class="mini-content-card">
               <h3>Remote Autonomy Reliability Pass</h3>
               <p>Cleaned up noisy health warnings in the agent operations layer: long Telegram reports now split safely, memory/task bridge calls accept the current automation format, and stale repeated error logs were archived instead of polluting live health checks.</p>
               <span>agent ops · health checks · Telegram updates · observability</span>
@@ -302,6 +308,8 @@
             <button class="guide-card" type="button" data-open="introDeckWindow" onclick="openWindow('introDeckWindow')"><b>2. Intro to AI deck</b><span>Open a slide preview in the website, then download the PDF or PowerPoint copy.</span></button>
             <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>3. Install Hermes or OpenClaw</b><span>Hold-your-hand setup with Hermes/OpenClaw toggles, Mac/Windows/Linux paths, model tokens, local config, Telegram, and BotFather.</span></button>
             <button class="guide-card" type="button" data-open="firstWorkflowGuideWindow" onclick="openWindow('firstWorkflowGuideWindow')"><b>4. Your first safe AI workflow</b><span>A practical 30-minute tutorial: pick one task, write the prompt, test it, add approval gates, and save the repeatable playbook.</span></button>
+            <button class="guide-card" type="button" data-open="buyAiHelpGuideWindow" onclick="openWindow('buyAiHelpGuideWindow')"><b>5. How to hire AI help safely</b><span>How to brief an operator, compare offers, avoid vaporware, and keep approval gates when paying for AI-assisted work.</span></button>
+            <button class="guide-card" type="button" data-open="operatorVsChatGuideWindow" onclick="openWindow('operatorVsChatGuideWindow')"><b>6. Chatbot or operator?</b><span>How to decide whether you need prompts, a scoped operator, or a done-for-you AI marketplace for the result you want.</span></button>
           </div>
           <div class="visual-flow" aria-label="AI help learning path">
             <div>Learn<br><b>what agents do</b></div><span>→</span><div>Choose<br><b>Hermes/OpenClaw</b></div><span>→</span><div>Build<br><b>one workflow</b></div><span>→</span><div>Use<br><b>safely</b></div>
@@ -318,11 +326,11 @@
           <div class="mini-heading lean-heading"><h2>Intro to AI: slide preview</h2></div>
           <p>Preview the public AI Help starter deck inside the website. Use the arrows to move through the slides, or download the PDF for easy sharing.</p>
           <div class="deck-toolbar" aria-label="Intro to AI deck controls">
-            <button class="btn" type="button" data-intro-deck-prev>◀ Previous</button>
+            <button class="ui-btn btn icon-review" type="button" data-intro-deck-prev>◀ Previous</button>
             <strong id="introDeckCounter">Slide 1/19</strong>
-            <button class="btn" type="button" data-intro-deck-next>Next ▶</button>
-            <a class="btn" href="assets/downloads/intro-to-ai-ai-help.pdf" download>Download PDF</a>
-            <a class="btn secondary" href="assets/downloads/intro-to-ai-ai-help.pptx" download>Download PowerPoint</a>
+            <button class="ui-btn btn icon-journey" type="button" data-intro-deck-next>Next ▶</button>
+            <a class="ui-btn btn icon-files" href="assets/downloads/intro-to-ai-ai-help.pdf" download>Download PDF</a>
+            <a class="ui-btn btn secondary icon-files" href="assets/downloads/intro-to-ai-ai-help.pptx" download>Download PowerPoint</a>
           </div>
           <figure class="deck-preview-frame">
             <img id="introDeckSlide" src="assets/decks/intro-to-ai/slide-01.png?v=20260506-hd1" alt="Intro to AI slide 1 of 19" loading="eager" />
@@ -439,6 +447,136 @@ Final prompt: [paste the cleaned prompt here]</pre>
             <li><b>Research brief:</b> paste links/notes → get pros, cons, unknowns, and recommendation.</li>
           </ul>
           <p class="guide-note"><b>Rule of thumb:</b> if you would trust a careful junior assistant to draft it but still want to review before sending, it is a good first AI workflow.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="buyAiHelpGuideWindow" class="win-window doc-window" aria-label="How to hire AI help safely" style="left:215px;top:88px;width:min(980px,96vw);">
+      <div class="win-title"><span>Guide 5 - How to hire AI help safely</span><button class="win-close" data-close="buyAiHelpGuideWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc">
+          <div class="mini-heading lift-heading"><h2>How to Hire AI Help Safely</h2></div>
+          <p class="guide-subtitle"><b>A practical buyer guide for when you want results done for you, not another chatbot tab to babysit.</b></p>
+          <p class="guide-note"><b>Short version:</b> good AI help still needs a human operator, a clear brief, visible scope, approval rules, and proof. If someone promises “fully autonomous magic” before they understand the job, slow down.</p>
+
+          <h3>When done-for-you AI makes sense</h3>
+          <div class="beginner-box-grid">
+            <article><b>Good fit</b><span>You have one annoying repeat task, a small workflow, a website change, inbox/admin cleanup, research pack, CRM tidy-up, or a prototype that needs building.</span></article>
+            <article><b>Still keep a human</b><span>Customer messages, pricing, operations, files, and payments should stay reviewable by a real person even if AI does most of the draft work.</span></article>
+            <article><b>Bad first buy</b><span>“Automate my whole business” with no owner, no source data, no workflow map, and no approval rule. That is how vague AI projects eat time and money.</span></article>
+            <article><b>Best first win</b><span>Pick one narrow outcome: better lead response, faster quote prep, a cleaned-up website section, or a weekly admin/reporting loop.</span></article>
+          </div>
+
+          <h3>What a solid AI service should show you</h3>
+          <div class="workflow-examples">
+            <article class="mini-content-card"><b>Clear scope</b><span>What is being delivered, what is not included, what inputs are needed from you, and what “done” means.</span></article>
+            <article class="mini-content-card"><b>Real operator</b><span>The work may use AI tools, but a named human should still own the output, communication, fixes, and review loop.</span></article>
+            <article class="mini-content-card"><b>Proof and examples</b><span>Ask for previous work, screenshots, sample outputs, or a visible process. “Trust me bro” is not a portfolio.</span></article>
+            <article class="mini-content-card"><b>Safe payment logic</b><span>Fixed packages can go to checkout fast. Messier custom jobs should confirm scope, fit, and price before money moves.</span></article>
+          </div>
+
+          <h3>Questions to ask before you pay</h3>
+          <table class="guide-table"><thead><tr><th>Ask this</th><th>Why it matters</th></tr></thead><tbody>
+            <tr><td>What exactly will I receive?</td><td>Stops vague deliverables and “strategy” fluff.</td></tr>
+            <tr><td>What do you need from me to start?</td><td>Shows whether the operator knows the real dependencies.</td></tr>
+            <tr><td>Which parts are AI-generated vs human-reviewed?</td><td>Helps you judge risk, quality, and how much checking you still need to do.</td></tr>
+            <tr><td>What happens if the first version misses?</td><td>Clarifies revision flow instead of surprise conflict later.</td></tr>
+            <tr><td>Will this touch customer data, payments, or live systems?</td><td>If yes, the workflow needs explicit approvals and safer rollout steps.</td></tr>
+          </tbody></table>
+
+          <h3>Red flags</h3>
+          <ul>
+            <li>No one can explain the workflow in plain English.</li>
+            <li>The seller jumps straight to “full automation” without asking about your current process.</li>
+            <li>They want broad account access before agreeing scope.</li>
+            <li>They cannot show sample outputs, checkpoints, or a revision plan.</li>
+            <li>They promise zero mistakes, zero review, or “set and forget” on risky tasks.</li>
+          </ul>
+
+          <h3>Simple buyer brief template</h3>
+          <pre class="guide-code">Task:
+I need help with [one workflow or deliverable].
+
+Outcome I want:
+[what success looks like in plain English]
+
+Inputs I can provide:
+[notes, screenshots, links, files, examples]
+
+What must not happen:
+- no public posting
+- no customer sends
+- no deleting data
+- no spending money
+
+Approval rule:
+Draft first. Wait for my review before anything goes live.</pre>
+
+          <p class="guide-note"><b>UseAIForMe-style rule of thumb:</b> fixed packages can be priced fast, but custom AI work is healthier when the platform confirms scope, operator fit, and review gates before charging like it is a commodity.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="operatorVsChatGuideWindow" class="win-window doc-window" aria-label="Chatbot or operator guide" style="left:230px;top:96px;width:min(980px,96vw);">
+      <div class="win-title"><span>Guide 6 - Chatbot or operator?</span><button class="win-close" data-close="operatorVsChatGuideWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc">
+          <div class="mini-heading lift-heading"><h2>Chatbot or Operator?</h2></div>
+          <p class="guide-subtitle"><b>Use a chatbot when you need ideas or drafts. Use an operator when you need an actual outcome finished.</b></p>
+          <p class="guide-note"><b>Simple rule:</b> if the task touches tools, files, formatting, handoffs, website edits, research cleanup, or review loops, you usually want a human operator using AI, not just a chatbot tab.</p>
+
+          <h3>Fast decision table</h3>
+          <table class="guide-table"><thead><tr><th>If you need...</th><th>Best first move</th><th>Why</th></tr></thead><tbody>
+            <tr><td>Ideas, wording, rough planning, or a first draft</td><td>Use a chatbot</td><td>Fast, cheap, and good for low-risk thinking work.</td></tr>
+            <tr><td>A landing page, web app, workflow, spreadsheet cleanup, or finished deliverable</td><td>Use an operator</td><td>Someone still has to check quality, connect tools, and own the output.</td></tr>
+            <tr><td>A messy task but you do not know who should do it</td><td>Use a matching marketplace</td><td>You need help scoping, fitting the operator, and keeping payment gated until the job is clear.</td></tr>
+            <tr><td>Anything touching customers, payments, or private systems</td><td>Use human-reviewed delivery</td><td>Trust, safety, and approval checkpoints matter more than speed.</td></tr>
+          </tbody></table>
+
+          <h3>What a done-for-you AI operator actually does</h3>
+          <div class="workflow-examples">
+            <article class="mini-content-card"><b>Translates the messy ask</b><span>Takes your vague goal and turns it into scope, deliverables, and a sensible first step.</span></article>
+            <article class="mini-content-card"><b>Uses the right tools</b><span>Prompts, code, websites, spreadsheets, docs, automation tools, or design tools instead of pretending one chat box does everything.</span></article>
+            <article class="mini-content-card"><b>Checks the output</b><span>Fixes formatting, tests logic, catches obvious breakage, and shows proof before calling it done.</span></article>
+            <article class="mini-content-card"><b>Keeps risky work gated</b><span>Scope, pricing, approvals, and access stay visible before anything live or expensive happens.</span></article>
+          </div>
+
+          <h3>Good tasks for a marketplace like UseAIForMe</h3>
+          <div class="beginner-box-grid">
+            <article><b>Website cleanup</b><span>Landing pages, copy refreshes, mobile fixes, new sections, and lightweight web builds.</span></article>
+            <article><b>Admin + inbox cleanup</b><span>Spreadsheet tidy-ups, summaries, recurring reports, and repeatable office work.</span></article>
+            <article><b>CRM or workflow setup</b><span>Lead tracking, follow-up loops, dashboards, SOPs, and operating docs.</span></article>
+            <article><b>Agent or automation builds</b><span>Scoped AI helpers, research loops, content systems, and practical internal tools.</span></article>
+          </div>
+
+          <h3>Bad expectations to avoid</h3>
+          <ul>
+            <li>“AI will run my whole business with no human involved.”</li>
+            <li>“Custom work should be one-click checkout before scope is reviewed.”</li>
+            <li>“I can paste passwords or API keys into a public job card.”</li>
+            <li>“If the tool sounds smart, the finished output must be right.”</li>
+          </ul>
+
+          <h3>Best way to brief the work</h3>
+          <pre class="guide-code">Task:
+I need this outcome finished:
+
+Success looks like:
+
+Useful links / examples:
+
+Budget range:
+
+Deadline:
+
+Rules:
+- no public posting
+- no spending money
+- no customer sends
+- no secrets in chat
+- draft / scope first</pre>
+
+          <p class="guide-note"><b>Why this matters:</b> the gap between “AI can answer” and “AI can deliver” is where most people lose time. A marketplace flow works best when it protects scope, shows operator proof, and keeps money gated until both sides agree on the real job.</p>
         </article>
       </div>
     </section>
@@ -729,8 +867,8 @@ openclaw doctor</pre></article>
         <div class="contact-reasons">
           <span>AI workflow strategy</span><span>Service-business automation</span><span>Operational visibility</span><span>Agent review systems</span><span>CRM / ops handoffs</span><span>Digital infrastructure</span>
         </div>
-        <p><a class="btn" href="mailto:costea.michael@gmail.com?subject=Messy workflow / AI systems chat">Email Michael</a></p>
-        <p><a class="btn" href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener">LinkedIn</a></p>
+        <p><a class="ui-btn btn icon-contact" href="mailto:costea.michael@gmail.com?subject=Messy workflow / AI systems chat">Email Michael</a></p>
+        <p><a class="ui-btn btn icon-ai-help" href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener">LinkedIn</a></p>
       </div>
     </section>
 

@@ -1,0 +1,108 @@
+.ui-btn{
+  --btn-icon:none;
+  --btn-icon-size:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  line-height:1.05;
+  white-space:nowrap;
+  box-sizing:border-box;
+  image-rendering:pixelated;
+}
+
+.ui-btn::before{
+  content:'';
+  display:none;
+  width:var(--btn-icon-size);
+  height:var(--btn-icon-size);
+  background-image:var(--btn-icon);
+  background-size:contain;
+  background-position:center;
+  background-repeat:no-repeat;
+  flex:0 0 var(--btn-icon-size);
+}
+
+.ui-btn[class*='icon-']::before{
+  display:inline-block;
+}
+
+.ui-btn,
+a.ui-btn,
+button.ui-btn{
+  text-decoration:none;
+  color:#000;
+  background:#cfcfcf;
+  border-top:2px solid var(--hi);
+  border-left:2px solid var(--hi);
+  border-right:2px solid var(--lo);
+  border-bottom:2px solid var(--lo);
+  padding:7px 12px;
+  font-size:11px;
+  font-weight:700;
+  min-height:30px;
+  cursor:pointer;
+}
+
+.ui-btn.uniform,
+.ui-btn.full,
+.ui-btn.btn-full{
+  width:100%;
+  justify-content:center;
+}
+
+a.ui-btn:hover,
+button.ui-btn:hover,
+.ui-btn:hover{filter:brightness(1.05)}
+
+a.ui-btn:active,
+button.ui-btn:active,
+.ui-btn:active{
+  border-top:2px solid var(--lo);
+  border-left:2px solid var(--lo);
+  border-right:2px solid var(--hi);
+  border-bottom:2px solid var(--hi);
+  background:#ddd;
+  transform:translate(1px,1px);
+}
+
+.ui-btn.icon-only,
+button.ui-btn.icon-only,
+a.ui-btn.icon-only{
+  padding:4px 7px;
+}
+
+.ui-btn.icon-only::before,
+button.ui-btn.icon-only::before,
+a.ui-btn.icon-only::before{
+  width:16px;
+  height:16px;
+  margin:0;
+}
+
+.ui-btn .btn-label,
+a.ui-btn .btn-label,
+button.ui-btn .btn-label{
+  white-space:nowrap;
+}
+
+.ui-btn.icon-welcome{--btn-icon:url('./icons_512/icon_welcome.png')}
+.ui-btn.icon-resume{--btn-icon:url('./icons_512/icon_resume.png')}
+.ui-btn.icon-projects{--btn-icon:url('./icons_512/icon_projects.png')}
+.ui-btn.icon-ai-agents{--btn-icon:url('./icons_512/icon_ai_agents.png')}
+.ui-btn.icon-ai-help{--btn-icon:url('./icons_512/icon_ai_help.png')}
+.ui-btn.icon-contact{--btn-icon:url('./icons_512/icon_contact.png')}
+.ui-btn.icon-dashboard{--btn-icon:url('./icons_512/icon_dashboard.png')}
+.ui-btn.icon-review{--btn-icon:url('./icons_512/icon_review_gate.png')}
+.ui-btn.icon-workflow{--btn-icon:url('./icons_512/icon_workflow.png')}
+.ui-btn.icon-radar{--btn-icon:url('./icons_512/icon_exception_radar.png')}
+.ui-btn.icon-reports{--btn-icon:url('./icons_512/icon_reporting.png')}
+.ui-btn.icon-knowledge{--btn-icon:url('./icons_512/icon_knowledge.png')}
+.ui-btn.icon-automation{--btn-icon:url('./icons_512/icon_automation_loop.png')}
+.ui-btn.icon-journey{--btn-icon:url('./icons_512/icon_customer_journey.png')}
+.ui-btn.icon-safe{--btn-icon:url('./icons_512/icon_safe_prompt.png')}
+.ui-btn.icon-strategy{--btn-icon:url('./icons_512/icon_strategy.png')}
+.ui-btn.icon-terminal{--btn-icon:url('./icons_512/icon_terminal.png')}
+.ui-btn.icon-fields{--btn-icon:url('./icons_512/icon_field_systems.png')}
+.ui-btn.icon-files{--btn-icon:url('./icons_512/icon_files.png')}
+.ui-btn.icon-recycle{--btn-icon:url('./icons_512/icon_recycle_bin.png')}

@@ -973,7 +973,7 @@ async function boot(){
       card.innerHTML = `
         <div class="row"><h3>${p.name}</h3><span><span class="badge ${p.status}">${badgeText}</span>${primaryTag}</span></div>
         <p class="desc">${p.description || ''}</p>
-        <div class="row"><small class="muted">${p.slug || 'project'}</small><a class="btn" href="#" data-launch-inline="${p.url}" data-app-title="${p.name}">Open</a></div>
+        <div class="row"><small class="muted">${p.slug || 'project'}</small><a class="btn ui-btn icon-terminal" href="#" data-launch-inline="${p.url}" data-app-title="${p.name}">Open</a></div>
       `;
       apps.appendChild(card);
     });
