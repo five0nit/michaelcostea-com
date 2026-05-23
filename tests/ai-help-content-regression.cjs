@@ -22,10 +22,11 @@ assertIncludes('AI Help start card grid', start, '7. Five AI tutorials to try');
 assertIncludes('AI Help start card grid', start, 'copy/paste lessons');
 
 const tutorials = text('#aiTutorialsGuideWindow');
-assertIncludes('tutorial guide', tutorials, 'Five AI Tutorials To Try');
-assertIncludes('tutorial guide', tutorials, 'Tutorial 1 — clean up messy notes');
-assertIncludes('tutorial guide', tutorials, 'Tutorial 5 — make a small weekly report');
-assertIncludes('tutorial guide', tutorials, 'Keep it draft-only');
+assertIncludes('tutorial guide', tutorials, 'Practical AI Tutorials That Actually Help');
+assertIncludes('tutorial guide', tutorials, 'quality bar');
+assertIncludes('tutorial guide', tutorials, 'Tutorial 1 — turn messy notes into an action plan');
+assertIncludes('tutorial guide', tutorials, 'Tutorial 5 — create a weekly exception report');
+assertIncludes('tutorial guide', tutorials, 'Turn a good tutorial into an agent workflow');
 
 const install = text('#hermesGuideWindow');
 assertIncludes('install guide', install, 'Simple install rule');

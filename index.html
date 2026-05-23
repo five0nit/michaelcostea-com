@@ -595,65 +595,128 @@ Rules:
     </section>
 
 
-    <section id="aiTutorialsGuideWindow" class="win-window doc-window" aria-label="Five AI tutorials to try" style="left:235px;top:92px;width:min(980px,96vw);">
-      <div class="win-title"><span>Guide 7 - Five AI tutorials to try</span><button class="win-close" data-close="aiTutorialsGuideWindow">×</button></div>
+    <section id="aiTutorialsGuideWindow" class="win-window doc-window" aria-label="Practical AI tutorials" style="left:235px;top:92px;width:min(1040px,96vw);">
+      <div class="win-title"><span>Guide 7 - Practical AI tutorials</span><button class="win-close" data-close="aiTutorialsGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc">
-          <div class="mini-heading lift-heading"><h2>Five AI Tutorials To Try</h2></div>
-          <p class="guide-subtitle"><b>Simple copy/paste lessons for people who want useful output before installing anything.</b></p>
-          <p class="guide-note"><b>Keep it draft-only:</b> these tutorials are safe practice. Use copied or fake data, remove private details, and review the answer before sending, publishing, buying, deleting, or changing any system.</p>
+          <div class="mini-heading lift-heading"><h2>Practical AI Tutorials That Actually Help</h2></div>
+          <p class="guide-subtitle"><b>Five real beginner workflows with a useful input, a better prompt, a quality bar, and the next automation step.</b></p>
+          <p class="guide-note"><b>How to use this page:</b> do not just paste a magic prompt and hope. Pick one workflow, use the sample structure, run it on harmless data, then judge the output against the quality bar. If it passes three times, turn it into a repeatable agent task later.</p>
 
-          <h3>Tutorial 1 — clean up messy notes</h3>
-          <pre class="guide-code">Turn these messy notes into:
-1. a short summary
-2. decisions made
-3. action items with owners
-4. questions still open
+          <h3>Tutorial 1 — turn messy notes into an action plan</h3>
+          <p><b>Use when:</b> you have meeting notes, voice-dump notes, job notes, or a messy brain dump and need a usable plan.</p>
+          <pre class="guide-code">Act as an operations assistant.
+Turn the notes below into an action plan I can use today.
 
-Rules: do not invent missing facts. Mark uncertain items as [check].
+Output exactly this structure:
+1. One-sentence summary
+2. Decisions already made
+3. Action table: task | owner | due date | dependency | risk
+4. Missing information I must confirm
+5. Two-minute message I can send to the team
+
+Rules:
+- Do not invent owners, dates, prices, or promises.
+- If the notes do not say something, write [check].
+- Put urgent/customer-impacting items first.
 
 Notes:
-[paste notes here]</pre>
+[paste notes]</pre>
+          <p class="guide-note"><b>Quality bar:</b> a busy person should know what to do next without reading the original notes.</p>
 
-          <h3>Tutorial 2 — rewrite an email without sounding fake</h3>
-          <pre class="guide-code">Rewrite this email so it is clear, polite, and direct.
-Keep my meaning. Remove waffle. Do not add promises I did not make.
-Give me three versions: friendly, concise, and firm.
+          <h3>Tutorial 2 — build a customer-safe email from rough context</h3>
+          <p><b>Use when:</b> you need a reply that is clear, honest, and not full of AI fluff.</p>
+          <pre class="guide-code">Write a customer-safe email draft from this context.
 
-Draft:
-[paste draft here]</pre>
+Context:
+[paste situation, customer question, facts, constraints]
 
-          <h3>Tutorial 3 — compare options in plain English</h3>
-          <pre class="guide-code">Compare these options for me in a simple table.
-Columns: option, what it is, pros, cons, best for, risk, my next step.
-If information is missing, write [check] instead of guessing.
+Output:
+- Subject line
+- Email draft
+- Internal notes: what I should verify before sending
 
-Options / notes:
-[paste options here]</pre>
+Style:
+- Plain English, Australian tone, no corporate waffle.
+- Be helpful but do not overpromise.
+- If we need to check something, say we will confirm it instead of pretending.
+- Do not mention AI.</pre>
+          <p class="guide-note"><b>Quality bar:</b> you should only need light editing, not a full rewrite. Check names, dates, prices, and promises before sending.</p>
 
-          <h3>Tutorial 4 — turn a repeat task into a checklist</h3>
-          <pre class="guide-code">Turn this repeat task into a checklist a new person could follow.
-Include: prep, steps, quality check, common mistakes, and when to ask a human.
-Keep it practical and short.
+          <h3>Tutorial 3 — make a decision brief, not a vague comparison</h3>
+          <p><b>Use when:</b> you are comparing tools, suppliers, software, quotes, workflows, or strategy options.</p>
+          <pre class="guide-code">Create a decision brief from the options below.
+
+Decision to make:
+[what are we choosing?]
+
+Options:
+[paste options, notes, links, prices, concerns]
+
+Output exactly:
+1. Recommendation in one sentence
+2. Comparison table: option | cost/effort | upside | downside | hidden risk | best fit
+3. What I would choose if speed matters
+4. What I would choose if quality/risk matters
+5. Questions to answer before committing
+
+Rules:
+- Separate facts from assumptions.
+- Mark anything not proven as [check].
+- Do not choose the fanciest option by default.</pre>
+          <p class="guide-note"><b>Quality bar:</b> the answer should help someone make a decision, not just describe the options.</p>
+
+          <h3>Tutorial 4 — turn one repeat task into an SOP</h3>
+          <p><b>Use when:</b> a task keeps living in someone’s head and needs to become teachable.</p>
+          <pre class="guide-code">Turn this repeat task into a simple SOP.
 
 Task:
-[paste task here]</pre>
+[paste what happens now]
 
-          <h3>Tutorial 5 — make a small weekly report</h3>
-          <pre class="guide-code">Create a weekly report from this raw update.
-Use sections: wins, problems, numbers, risks, decisions needed, next actions.
-Make it readable for a busy manager.
-Do not hide bad news.
+Output:
+- Purpose: why this task exists
+- Trigger: when to do it
+- Inputs needed
+- Step-by-step process
+- Quality check before calling it done
+- Common mistakes
+- Escalate to a human when...
+- Simple checklist version
+
+Rules:
+- Write for a new person on their first week.
+- Keep steps concrete.
+- Do not add software/tools unless I named them.</pre>
+          <p class="guide-note"><b>Quality bar:</b> someone else could follow it without asking you five basic questions.</p>
+
+          <h3>Tutorial 5 — create a weekly exception report</h3>
+          <p><b>Use when:</b> you need a manager/operator view of what needs attention, not a vanity summary.</p>
+          <pre class="guide-code">Create a weekly exception report from this raw update.
 
 Raw update:
-[paste update here]</pre>
+[paste notes, numbers, job list, CRM export, inbox notes]
 
-          <h3>After each tutorial, ask these three checks</h3>
+Output:
+1. Executive summary: 5 bullets max
+2. Red flags: what needs action now
+3. Stale items: leads/jobs/tasks waiting too long
+4. Numbers that changed
+5. Decisions needed from me
+6. Next actions ranked by impact
+7. Follow-up message drafts if useful
+
+Rules:
+- Surface bad news clearly.
+- Rank by customer impact, revenue impact, and operational risk.
+- Mark uncertain numbers as [check].</pre>
+          <p class="guide-note"><b>Quality bar:</b> the report should make the next action obvious within 30 seconds.</p>
+
+          <h3>Turn a good tutorial into an agent workflow</h3>
           <div class="beginner-box-grid">
-            <article><b>Is it true?</b><span>Check names, numbers, dates, links, and claims against the original input.</span></article>
-            <article><b>Is it useful?</b><span>If the result is vague, ask for a table, checklist, examples, or a shorter version.</span></article>
-            <article><b>Is it safe?</b><span>Keep customer data, passwords, payments, public posting, and live system changes out of beginner practice.</span></article>
-            <article><b>Can I reuse it?</b><span>Save the best prompt as a small playbook so you do not start from scratch next time.</span></article>
+            <article><b>Run it manually 3 times</b><span>If the prompt only works once, it is not a workflow yet. Fix the input format and output format until it is repeatable.</span></article>
+            <article><b>Add a safe source</b><span>Let an agent read one folder, one pasted note, or one exported CSV. Do not give it your whole business system first.</span></article>
+            <article><b>Add an approval gate</b><span>The agent can draft, rank, summarise, and prepare. A human approves sending, spending, deleting, publishing, or customer-impacting changes.</span></article>
+            <article><b>Keep evidence</b><span>Save input, output, what changed, and what was approved. Evidence is what turns AI from a toy into an operating layer.</span></article>
           </div>
         </article>
       </div>
