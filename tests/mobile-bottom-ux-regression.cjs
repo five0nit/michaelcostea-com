@@ -22,8 +22,12 @@ assertMatch(
   /\.public-preview\.ux-preview-page \.ux-tray-status\{[^}]*display:none!important/s
 );
 assertMatch(
-  'mobile start menu should become bounded bottom sheet above taskbar',
-  /\.public-preview\.ux-preview-page \.start-menu\{[^}]*left:8px!important[^}]*right:8px!important[^}]*bottom:calc\(72px \+ env\(safe-area-inset-bottom,0px\)\)!important[^}]*max-height:calc\(100dvh - 190px\)/s
+  'mobile start menu should dock to the taskbar instead of floating as a loose window',
+  /\.public-preview\.ux-preview-page \.start-menu\{[^}]*left:0!important[^}]*right:0!important[^}]*bottom:calc\(54px \+ env\(safe-area-inset-bottom,0px\)\)!important[^}]*border-bottom:0!important/s
+);
+assertMatch(
+  'UX preview Start button should not show the extra pseudo logo beside Start',
+  /\.public-preview\.ux-preview-page \.start-btn::before\{[^}]*content:none!important[^}]*display:none!important/s
 );
 assertMatch(
   'mobile start menu items should scroll instead of cutting off recycle bin',
