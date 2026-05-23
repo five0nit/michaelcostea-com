@@ -2369,14 +2369,18 @@ body.public-preview::before{
 .public-preview.ux-preview-page .ux-tray-status{color:#005b1f;background:#bdf3c8;border-right:1px solid #808080;}
 .public-preview.ux-preview-page #trayClock{min-width:74px;border-left:1px solid #fff;}
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview.ux-preview-page .container{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px));}
+  .public-preview.ux-preview-page .container{padding-bottom:calc(136px + env(safe-area-inset-bottom,0px));}
   .public-preview.ux-preview-page .status-bar{grid-template-columns:1fr;gap:4px;}
   .public-preview.ux-preview-page .status-bar span{min-height:26px;justify-content:flex-start;font-size:10px;}
-  .public-preview.ux-preview-page .taskbar{height:auto;min-height:64px;flex-wrap:wrap;align-content:center;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));}
-  .public-preview.ux-preview-page .start-btn{height:34px;min-width:78px;font-size:12px;padding:0 10px;}
-  .public-preview.ux-preview-page .ux-taskbar-brand{min-width:112px;height:34px;font-size:10px;padding:0 9px;}
-  .public-preview.ux-preview-page .ux-taskbar-app{min-width:128px;max-width:calc(100vw - 220px);height:34px;font-size:10px;padding:0 8px;overflow:hidden;text-overflow:ellipsis;}
-  .public-preview.ux-preview-page .tray{height:34px;gap:2px;margin-left:0;}
+  .public-preview.ux-preview-page .taskbar{height:54px;min-height:54px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;align-content:center;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));scrollbar-width:none;}
+  .public-preview.ux-preview-page .taskbar::-webkit-scrollbar{display:none;}
+  .public-preview.ux-preview-page .start-btn{height:34px;min-width:78px;font-size:12px;padding:0 10px;flex:0 0 auto;}
+  .public-preview.ux-preview-page .ux-taskbar-brand{display:none!important;}
+  .public-preview.ux-preview-page .ux-taskbar-app{min-width:118px;max-width:128px;height:34px;font-size:10px;padding:0 7px;overflow:hidden;text-overflow:ellipsis;flex:0 0 auto;}
+  .public-preview.ux-preview-page .tray{height:34px;gap:2px;margin-left:auto;flex:0 0 auto;}
+  .public-preview.ux-preview-page .ux-tray-status{display:none!important;}
   .public-preview.ux-preview-page .tray-pill{height:24px;min-width:34px;font-size:10px;padding:0 6px;}
   .public-preview.ux-preview-page #trayClock{min-width:54px;}
+  .public-preview.ux-preview-page .start-menu{left:8px!important;right:8px!important;bottom:calc(72px + env(safe-area-inset-bottom,0px))!important;top:auto!important;width:auto!important;max-height:calc(100dvh - 190px);overflow:hidden;z-index:90;}
+  .public-preview.ux-preview-page .start-items{max-height:calc(100dvh - 260px);overflow-y:auto;overscroll-behavior:contain;padding-bottom:12px;}
 }

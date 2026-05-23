@@ -43,7 +43,7 @@ if (!/\.public-preview\.ux-preview-page \.taskbar\{[^}]*height:56px/.test(css)) 
 if (!/\.public-preview\.ux-preview-page \.status-bar span::before/.test(css)) {
   throw new Error('status bar should add LED-style before markers');
 }
-if (!/padding-bottom:calc\(112px \+ env\(safe-area-inset-bottom,0px\)\)/.test(css)) {
+if (!/padding-bottom:calc\(136px \+ env\(safe-area-inset-bottom,0px\)\)/.test(css)) {
   throw new Error('mobile preview should include safe bottom padding for phone nav');
 }
 
