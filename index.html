@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Michael Costea — MICHAEL OS 89</title>
   <meta name="description" content="Michael Costea — Head of Tech, AI & Systems building AI-powered business operating systems that turn messy workflows into visible, scalable, human-reviewed systems." />
+  <link rel="canonical" href="https://michaelcostea.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Michael Costea" />
+  <meta property="og:title" content="Michael Costea — AI, Systems & Operations" />
+  <meta property="og:description" content="AI-powered business operating systems that turn messy workflows into visible, scalable, human-reviewed systems." />
+  <meta property="og:url" content="https://michaelcostea.com/" />
+  <meta property="og:image" content="https://michaelcostea.com/assets/profile-michael-pixel.jpg" />
+  <meta property="og:image:alt" content="Pixel portrait of Michael Costea" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Michael Costea — AI, Systems & Operations" />
+  <meta name="twitter:description" content="AI-powered business operating systems that turn messy workflows into visible, scalable, human-reviewed systems." />
+  <meta name="twitter:image" content="https://michaelcostea.com/assets/profile-michael-pixel.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
@@ -310,9 +322,10 @@
             <button class="guide-card" type="button" data-open="firstWorkflowGuideWindow" onclick="openWindow('firstWorkflowGuideWindow')"><b>4. Your first safe AI workflow</b><span>A practical 30-minute tutorial: pick one task, write the prompt, test it, add approval gates, and save the repeatable playbook.</span></button>
             <button class="guide-card" type="button" data-open="buyAiHelpGuideWindow" onclick="openWindow('buyAiHelpGuideWindow')"><b>5. How to hire AI help safely</b><span>How to brief an operator, compare offers, avoid vaporware, and keep approval gates when paying for AI-assisted work.</span></button>
             <button class="guide-card" type="button" data-open="operatorVsChatGuideWindow" onclick="openWindow('operatorVsChatGuideWindow')"><b>6. Chatbot or operator?</b><span>How to decide whether you need prompts, a scoped operator, or a done-for-you AI marketplace for the result you want.</span></button>
+            <button class="guide-card" type="button" data-open="aiTutorialsGuideWindow" onclick="openWindow('aiTutorialsGuideWindow')"><b>7. Five AI tutorials to try</b><span>copy/paste lessons for notes, email, research, checklists, and a simple weekly report.</span></button>
           </div>
           <div class="visual-flow" aria-label="AI help learning path">
-            <div>Learn<br><b>what agents do</b></div><span>→</span><div>Choose<br><b>Hermes/OpenClaw</b></div><span>→</span><div>Build<br><b>one workflow</b></div><span>→</span><div>Use<br><b>safely</b></div>
+            <div>Learn<br><b>what agents do</b></div><span>→</span><div>Try<br><b>copy/paste tutorials</b></div><span>→</span><div>Install<br><b>one agent</b></div><span>→</span><div>Use<br><b>safely</b></div>
           </div>
           <p class="guide-note"><b>Plain English version:</b> an AI agent is a helper that can use tools. It can read, write, search, run commands, and remember context — but it still needs clear instructions and human review.</p>
         </article>
@@ -581,25 +594,94 @@ Rules:
       </div>
     </section>
 
+
+    <section id="aiTutorialsGuideWindow" class="win-window doc-window" aria-label="Five AI tutorials to try" style="left:235px;top:92px;width:min(980px,96vw);">
+      <div class="win-title"><span>Guide 7 - Five AI tutorials to try</span><button class="win-close" data-close="aiTutorialsGuideWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc">
+          <div class="mini-heading lift-heading"><h2>Five AI Tutorials To Try</h2></div>
+          <p class="guide-subtitle"><b>Simple copy/paste lessons for people who want useful output before installing anything.</b></p>
+          <p class="guide-note"><b>Keep it draft-only:</b> these tutorials are safe practice. Use copied or fake data, remove private details, and review the answer before sending, publishing, buying, deleting, or changing any system.</p>
+
+          <h3>Tutorial 1 — clean up messy notes</h3>
+          <pre class="guide-code">Turn these messy notes into:
+1. a short summary
+2. decisions made
+3. action items with owners
+4. questions still open
+
+Rules: do not invent missing facts. Mark uncertain items as [check].
+
+Notes:
+[paste notes here]</pre>
+
+          <h3>Tutorial 2 — rewrite an email without sounding fake</h3>
+          <pre class="guide-code">Rewrite this email so it is clear, polite, and direct.
+Keep my meaning. Remove waffle. Do not add promises I did not make.
+Give me three versions: friendly, concise, and firm.
+
+Draft:
+[paste draft here]</pre>
+
+          <h3>Tutorial 3 — compare options in plain English</h3>
+          <pre class="guide-code">Compare these options for me in a simple table.
+Columns: option, what it is, pros, cons, best for, risk, my next step.
+If information is missing, write [check] instead of guessing.
+
+Options / notes:
+[paste options here]</pre>
+
+          <h3>Tutorial 4 — turn a repeat task into a checklist</h3>
+          <pre class="guide-code">Turn this repeat task into a checklist a new person could follow.
+Include: prep, steps, quality check, common mistakes, and when to ask a human.
+Keep it practical and short.
+
+Task:
+[paste task here]</pre>
+
+          <h3>Tutorial 5 — make a small weekly report</h3>
+          <pre class="guide-code">Create a weekly report from this raw update.
+Use sections: wins, problems, numbers, risks, decisions needed, next actions.
+Make it readable for a busy manager.
+Do not hide bad news.
+
+Raw update:
+[paste update here]</pre>
+
+          <h3>After each tutorial, ask these three checks</h3>
+          <div class="beginner-box-grid">
+            <article><b>Is it true?</b><span>Check names, numbers, dates, links, and claims against the original input.</span></article>
+            <article><b>Is it useful?</b><span>If the result is vague, ask for a table, checklist, examples, or a shorter version.</span></article>
+            <article><b>Is it safe?</b><span>Keep customer data, passwords, payments, public posting, and live system changes out of beginner practice.</span></article>
+            <article><b>Can I reuse it?</b><span>Save the best prompt as a small playbook so you do not start from scratch next time.</span></article>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <section id="hermesGuideWindow" class="win-window doc-window" aria-label="Install Hermes and OpenClaw guide" style="left:225px;top:70px;width:min(1040px,96vw);">
       <div class="win-title"><span>Guide 2 - Install your first AI agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc install-guide">
           <div class="mini-heading lean-heading"><h2>Install Your First AI Agent</h2></div>
-          <p class="guide-subtitle"><b>A complete beginner install path for Mac, Windows, or Linux.</b></p>
-          <p class="guide-note"><b>This page is now a walkthrough, not a reference dump.</b><br />Pick one agent, pick one computer, then follow the visible path from Step 1 to Step 8. Do not mix Mac, Windows, Linux, Hermes, and OpenClaw commands. If a step fails, stop at that step and use the symptom table near the bottom.</p>
-          <p class="guide-note compact"><b>Cost + tokens intro, checked May 2026:</b> Tokens are chunks of text sent in and generated back. Long chats, big files, screenshots, and repeated tool use burn tokens quickly. <b>GPT / ChatGPT OAuth</b> is usually the easiest beginner option when a wizard offers it. Start with <b>ChatGPT Plus</b>; move to Pro only after real rate-limit pain. Provider prices and limits change, so check the provider page before relying on this for business-critical work.</p>
+          <p class="guide-subtitle"><b>A simplified beginner install path: choose one agent, one computer, one private test.</b></p>
+          <p class="guide-note"><b>Simple install rule:</b> install the app, connect one model login, test locally, then add Telegram. Do not connect real business systems on day one. If a step fails, stop there — do not stack random fixes.</p>
+          <div class="beginner-box-grid">
+            <article><b>Hermes: easiest first choice</b><span>Best when you want a friendly agent that can chat, edit files, run checks, use skills, remember context, and report back through Telegram.</span></article>
+            <article><b>OpenClaw: choose when you want a bigger local control plane</b><span>Best when you want a broader cockpit for agents, plugins, dashboards, gateways, workspaces, and local automation.</span></article>
+            <article><b>Beginner token rule</b><span>Use GPT / ChatGPT OAuth if the wizard offers it. Avoid juggling API keys until the simple path works.</span></article>
+            <article><b>Safety rule</b><span>Use a harmless test folder first. No customer data, money, deleting, public posting, or live business tools.</span></article>
+          </div>
 
           <section class="install-wizard-card" aria-label="Install guide promise">
             <h3>What success looks like</h3>
             <ol class="step-list">
               <li>The command works in your Terminal.</li>
-              <li>You connect one model login, preferably GPT / ChatGPT OAuth if offered.</li>
-              <li>You run one local hello test before Telegram.</li>
-              <li>You create one private Telegram bot with BotFather.</li>
-              <li>The gateway runs and your bot replies to one safe test prompt.</li>
-              <li>You run doctor/status checks.</li>
-              <li>You open the dashboard/Web UI last.</li>
+              <li>You can run <code>hermes --version</code> or <code>openclaw --version</code>.</li>
+              <li>You connect one model login.</li>
+              <li>You get one local hello reply.</li>
+              <li>Your private Telegram bot replies to one safe test.</li>
+              <li>Doctor/status checks look healthy.</li>
             </ol>
           </section>
 
@@ -643,8 +725,8 @@ Rules:
           <p class="plain-summary"><b>Follow only the selected panel below.</b> Each panel is a complete install + initial setup path. The dashboard/Web UI appears at the end on purpose.</p>
 
           <div class="terminal-checklists selected-flow-summary" aria-label="Selected agent command order">
-            <article data-checklist-product="hermes" class="active"><h4>Hermes required terminal flow</h4><p>Install prerequisite Git/curl if needed → run the official installer → reopen shell → <code>hermes setup</code> → choose model/OAuth → local hello test → <code>hermes gateway setup</code> → <code>hermes gateway run</code> → <code>hermes doctor</code> / <code>hermes status</code> → dashboard last.</p></article>
-            <article data-checklist-product="openclaw" hidden><h4>OpenClaw required terminal flow</h4><p>Run the official installer → <code>openclaw setup --wizard --mode local</code> or installer onboarding → configure model/workspace/channels → foreground gateway test → doctor/status/gateway status → dashboard last. Manual <code>npm install -g openclaw</code> is only an advanced fallback.</p></article>
+            <article data-checklist-product="hermes" class="active"><h4>Hermes simple flow</h4><p>Install → <code>hermes setup</code> → <code>hermes model</code> → local hello → <code>hermes gateway setup</code> → <code>hermes gateway run</code> → <code>hermes doctor</code>.</p></article>
+            <article data-checklist-product="openclaw" hidden><h4>OpenClaw simple flow</h4><p>Install → setup wizard → model/workspace/channel config → foreground gateway test → doctor/status. Dashboard and background service come last.</p></article>
           </div>
 
           <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac">
