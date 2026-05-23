@@ -2420,26 +2420,3 @@ body.public-preview::before{
   body.mobile-mode.public-preview.ux-preview-page .workflow-scan-card,
   body.mobile-mode.public-preview.ux-preview-page .spec-grid{display:none!important;}
 }
-
-
-/* === UX preview phone-first layout: hide fake desktop on phones === */
-.mobile-retro-landing{display:none;}
-.mobile-retro-landing *{box-sizing:border-box;}
-@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  body.public-preview.ux-preview-page.mobile-mode{background:linear-gradient(180deg,#064f58,#032d44)!important;min-height:100dvh!important;overflow:auto!important;color:#101010;}
-  body.public-preview.ux-preview-page.mobile-mode #desktopRoot{display:none!important;}
-  body.public-preview.ux-preview-page.mobile-mode .taskbar{display:none!important;}
-  body.public-preview.ux-preview-page.mobile-mode #startMenu{display:none!important;}
-  body.public-preview.ux-preview-page.mobile-mode .mobile-retro-landing{display:block!important;min-height:100dvh;padding:16px 12px calc(28px + env(safe-area-inset-bottom,0px));}
-  .mobile-retro-card{max-width:430px;margin:0 auto;background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #404040;border-bottom:2px solid #404040;box-shadow:4px 4px 0 rgba(0,0,0,.55);padding:14px;}
-  .mobile-kicker{margin:0 0 10px;padding:7px 9px;background:#000080;color:#fff;font:900 11px/1.2 "Work Sans",Tahoma,sans-serif;letter-spacing:.08em;text-transform:uppercase;}
-  .mobile-retro-card h1{margin:0;color:#000080;font:900 30px/1.05 "Work Sans",Tahoma,sans-serif;letter-spacing:-.02em;}
-  .mobile-role{margin:8px 0 0;color:#111;font:900 15px/1.35 "Space Grotesk","Courier New",monospace;}
-  .mobile-promise{margin:10px 0 0;color:#222;font:13px/1.5 "Space Grotesk","Courier New",monospace;}
-  .mobile-cta-stack{display:grid;gap:9px;margin:14px 0;}
-  .mobile-cta-stack a{display:flex;align-items:center;justify-content:center;min-height:52px;padding:12px 10px;text-align:center;text-decoration:none;color:#000;background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;font:900 13px/1.2 "Work Sans",Tahoma,sans-serif;}
-  .mobile-cta-stack a.primary{background:#fff4c2;color:#000080;border-right-color:#808000;border-bottom-color:#808000;box-shadow:0 0 0 2px #000080;}
-  .mobile-outcome-grid{display:grid;gap:8px;margin-top:12px;}
-  .mobile-outcome-grid span{display:block;background:#fff;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:10px;font:12px/1.45 "Space Grotesk","Courier New",monospace;}
-  .mobile-outcome-grid b{display:block;margin-bottom:2px;color:#800000;font:900 12px/1.2 "Work Sans",Tahoma,sans-serif;text-transform:uppercase;}
-}
