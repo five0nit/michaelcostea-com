@@ -2384,39 +2384,3 @@ body.public-preview::before{
   .public-preview.ux-preview-page .start-menu{left:8px!important;right:8px!important;bottom:calc(72px + env(safe-area-inset-bottom,0px))!important;top:auto!important;width:auto!important;max-height:calc(100dvh - 190px);overflow:hidden;z-index:90;}
   .public-preview.ux-preview-page .start-items{max-height:calc(100dvh - 260px);overflow-y:auto;overscroll-behavior:contain;padding-bottom:12px;}
 }
-
-
-/* === UX preview mobile content polish: stop shrinking full desktop UI === */
-@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview.ux-preview-page .welcome-sidebar{display:none!important;}
-  .public-preview.ux-preview-page .styleguide-welcome{display:block!important;min-height:0!important;}
-  .public-preview.ux-preview-page .welcome-copy{padding:14px 12px 12px!important;background:#f3f3f4!important;border:0!important;box-shadow:none!important;}
-  .public-preview.ux-preview-page .welcome-copy p{margin-top:10px!important;line-height:1.45!important;}
-  .public-preview.ux-preview-page .proof-strip{display:none!important;}
-  .public-preview.ux-preview-page .hero-outcomes{gap:8px!important;margin-top:10px!important;}
-  .public-preview.ux-preview-page .hero-outcomes span{padding:10px!important;box-shadow:none!important;}
-  .public-preview.ux-preview-page .hero-action-panel{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;margin:12px 0!important;gap:8px!important;}
-  .public-preview.ux-preview-page .hero-action-panel .ui-btn{min-height:52px!important;width:100%!important;justify-content:center!important;padding:12px 10px!important;font-size:12px!important;white-space:normal!important;line-height:1.2!important;}
-  .public-preview.ux-preview-page .hero-action-panel .ui-btn::before{display:none!important;}
-  .public-preview.ux-preview-page .hero-proof-steps{gap:8px!important;margin-top:10px!important;}
-  .public-preview.ux-preview-page .hero-proof-steps li{padding:10px!important;box-shadow:none!important;}
-  .public-preview.ux-preview-page .fit-panel,.public-preview.ux-preview-page .workflow-scan-card{display:none!important;}
-  .public-preview.ux-preview-page .reference-ui-panel,
-  .public-preview.ux-preview-page .workflow-output-demo{display:none!important;}
-  .public-preview.ux-preview-page .spec-grid{display:none!important;}
-}
-
-
-/* === UX preview mobile override hardening: beat legacy mobile desktop rules === */
-@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  body.mobile-mode.public-preview.ux-preview-page .welcome-sidebar{display:none!important;}
-  body.mobile-mode.public-preview.ux-preview-page .styleguide-welcome{display:block!important;min-height:0!important;}
-  body.mobile-mode.public-preview.ux-preview-page .welcome-copy{padding:14px 12px 12px!important;background:#f3f3f4!important;border:0!important;box-shadow:none!important;}
-  body.mobile-mode.public-preview.ux-preview-page .hero-action-panel .ui-btn::before{display:none!important;}
-  body.mobile-mode.public-preview.ux-preview-page .hero-action-panel{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;}
-  body.mobile-mode.public-preview.ux-preview-page .reference-ui-panel,
-  body.mobile-mode.public-preview.ux-preview-page .workflow-output-demo{display:none!important;}
-  body.mobile-mode.public-preview.ux-preview-page .fit-panel,
-  body.mobile-mode.public-preview.ux-preview-page .workflow-scan-card,
-  body.mobile-mode.public-preview.ux-preview-page .spec-grid{display:none!important;}
-}
