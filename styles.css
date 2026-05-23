@@ -1262,20 +1262,6 @@ body.public-preview::before{
 .public-preview .contact-fit-box ul{margin:4px 0 0 18px;padding:0;}
 .public-preview .contact-fit-box li{margin:3px 0;}
 .public-preview .contact-next-step{background:#fff4c2;border:2px solid #000080;padding:8px;box-shadow:1px 1px 0 #808080;}
-.public-preview .reference-ui-panel{margin:14px 0;background:#c0c0c0;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #404040;border-bottom:2px solid #404040;box-shadow:inset 1px 1px #d8d8d8,inset -1px -1px #808080,2px 2px 0 #000;overflow:hidden;font-family:Tahoma,"MS Sans Serif",Arial,sans-serif;}
-.public-preview .reference-address-bar{display:flex;align-items:center;gap:8px;margin:6px;background:#02006d;color:#fff;border-top:2px solid #404040;border-left:2px solid #404040;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:5px 8px;font:900 16px/1 "Space Grotesk","Courier New",monospace;letter-spacing:.03em;}
-.public-preview .reference-address-bar .ie-glyph{display:inline-grid;place-items:center;width:22px;height:22px;background:#0b7ed9;color:#fff;border:1px solid #fff;border-radius:50%;font:900 italic 18px/1 Georgia,serif;text-shadow:1px 1px #001044;}
-.public-preview .reference-ui-main{display:grid;grid-template-columns:150px 1fr;gap:20px;min-height:230px;padding:22px 20px;background:#001b66;background-image:radial-gradient(rgba(66,223,240,.14) 1px,transparent 1px),linear-gradient(180deg,#002b8c 0%,#000b35 100%);background-size:4px 4px,100% 100%;}
-.public-preview .reference-nav{display:flex;flex-direction:column;gap:16px;justify-content:center;}
-.public-preview .reference-nav>span{display:grid;grid-template-columns:42px 1fr;align-items:center;gap:12px;color:#42dff0;text-shadow:2px 2px 0 #001044;}
-.public-preview .reference-nav>span>span{font-size:30px;line-height:1;filter:saturate(1.25) contrast(1.1);image-rendering:pixelated;}
-.public-preview .reference-nav b{font:900 15px/1 "Space Grotesk","Courier New",monospace;letter-spacing:.15em;color:#42dff0;}
-.public-preview .reference-hud-card{align-self:center;min-height:178px;padding:3px;background:#42dff0;clip-path:polygon(24px 0,100% 0,100% 100%,24px 100%,0 calc(100% - 24px),0 24px);}
-.public-preview .reference-hud-card::before{content:"";display:block;height:100%;min-height:172px;background:#000f42;background-image:linear-gradient(180deg,#001b66,#000b35);clip-path:polygon(22px 0,100% 0,100% 100%,22px 100%,0 calc(100% - 22px),0 22px);}
-.public-preview .reference-hud-card h2{position:relative;margin:-146px 26px 0;color:#fff;font:900 26px/1.22 "Work Sans",Impact,Tahoma,sans-serif;letter-spacing:.06em;text-transform:uppercase;text-shadow:4px 4px 0 #000;}
-.public-preview .reference-hud-card p{position:relative;margin:16px 26px 0;padding-top:10px;border-top:3px solid #42dff0;color:#fff;font:700 13px/17px "Space Grotesk","Courier New",monospace;text-shadow:1px 1px #001044;}
-.public-preview .reference-taskbar{height:38px;display:flex;align-items:center;gap:6px;padding:4px 6px;background:#c0c0c0;border-top:2px solid #fff;}
-.public-preview .reference-taskbar b,.public-preview .reference-taskbar span{display:inline-grid;place-items:center;height:28px;min-width:34px;padding:0 8px;background:#c0c0c0;color:#000;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;font:900 12px/1 Tahoma,"MS Sans Serif",Arial,sans-serif;}
 .public-preview .build-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
 .public-preview .build-grid article{background:#f3f3f4;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:9px;min-height:126px;}
 .public-preview .engagement-blueprint{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 2px;}
@@ -1290,10 +1276,6 @@ body.public-preview::before{
   .public-preview .build-grid{grid-template-columns:1fr!important;}
   .public-preview .engagement-blueprint{grid-template-columns:1fr!important;}
   .public-preview .hero-outcomes,.public-preview .hero-action-panel,.public-preview .hero-proof-steps,.public-preview .fit-panel,.public-preview .workflow-scan-card{grid-template-columns:1fr!important;}
-  .public-preview .reference-ui-main{grid-template-columns:1fr!important;gap:14px;padding:16px 14px;}
-  .public-preview .reference-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
-  .public-preview .reference-hud-card h2{font-size:20px;line-height:1.25;margin-top:-140px;}
-  .public-preview .reference-address-bar{font-size:12px;overflow-wrap:anywhere;}
   .public-preview .proof-strip span,.public-preview .principle-strip span,.public-preview .contact-reasons span{font-size:10px!important;line-height:12px!important;}
 }
 

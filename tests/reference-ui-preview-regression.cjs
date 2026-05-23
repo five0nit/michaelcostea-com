@@ -9,37 +9,36 @@ const css = fs.readFileSync(path.join(rootDir, 'styles.css'), 'utf8');
 const dom = new JSDOM(html);
 const { document } = dom.window;
 
-function text(selector) {
-  const el = document.querySelector(selector);
-  if (!el) throw new Error(`missing ${selector}`);
-  return el.textContent.replace(/\s+/g, ' ').trim();
-}
-function assertIncludes(name, value, expected) {
-  if (!value.includes(expected)) {
-    throw new Error(`${name} should include ${JSON.stringify(expected)}, got ${JSON.stringify(value.slice(0, 320))}`);
+const removedSelectors = [
+  '.reference-ui-panel',
+  '.reference-address-bar',
+  '.reference-ui-main',
+  '.reference-nav',
+  '.reference-hud-card',
+  '.reference-taskbar',
+];
+
+for (const selector of removedSelectors) {
+  if (document.querySelector(selector)) {
+    throw new Error(`${selector} should be removed from ux-preview.html`);
   }
 }
 
-const panel = document.querySelector('.reference-ui-panel');
-if (!panel) throw new Error('missing reference-ui-panel');
-
-const panelText = text('.reference-ui-panel');
-for (const label of ['SALES', 'OPS', 'FINANCE', 'ADMIN', 'FIELD']) {
-  assertIncludes('reference nav labels', panelText, label);
-}
-assertIncludes('reference headline', panelText, 'SCALABLE WORKFLOW SYSTEMS');
-assertIncludes('reference subtitle', panelText, 'Connected systems for leads, ops, finance, admin, and field delivery.');
-assertIncludes('reference taskbar', panelText, 'Start');
-assertIncludes('reference address bar', panelText, 'michaelcostea.com/ux-preview');
-
-if (!/\.public-preview \.reference-ui-panel\{[^}]*background:#c0c0c0/.test(css)) {
-  throw new Error('reference ui panel should use Windows gray outer chrome');
-}
-if (!/\.public-preview \.reference-ui-main\{[^}]*#001b66/.test(css)) {
-  throw new Error('reference ui main should use deep blue dashboard background');
-}
-if (!/clip-path:polygon\(24px 0,100% 0,100% 100%,24px 100%,0 calc\(100% - 24px\),0 24px\)/.test(css)) {
-  throw new Error('reference hud panel should use chamfered clipped corners');
+const removedCopy = [
+  'SCALABLE WORKFLOW SYSTEMS',
+  'Connected systems for leads, ops, finance, admin, and field delivery.',
+];
+for (const copy of removedCopy) {
+  if (html.includes(copy)) {
+    throw new Error(`removed reference panel copy still appears: ${copy}`);
+  }
 }
 
-console.log('reference-ui-preview-regression ok');
+for (const selector of removedSelectors) {
+  const escaped = selector.replace('.', '\\.');
+  if (new RegExp(escaped).test(css)) {
+    throw new Error(`${selector} styles should be removed from styles.css`);
+  }
+}
+
+console.log('reference-ui-preview-removal-regression ok');
