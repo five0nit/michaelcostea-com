@@ -2388,3 +2388,15 @@ body.public-preview::before{
   .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card > ul{clear:both!important;width:100%!important;margin-top:7px!important;}
   .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card > span{clear:both!important;margin-top:2px!important;}
 }
+
+/* === Resume experience: mobile text wraps beside mini images cleanly === */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview #resumeWindow .timeline-list article{display:block!important;overflow:visible!important;min-width:0!important;padding:8px!important;}
+  .public-preview #resumeWindow .timeline-list h4{clear:both!important;display:block!important;width:100%!important;margin-bottom:4px!important;}
+  .public-preview #resumeWindow .timeline-list p:first-of-type{clear:both!important;width:100%!important;margin-bottom:5px!important;}
+  .public-preview #resumeWindow .timeline-list .mini-card-figure{float:right!important;display:flex!important;width:70px!important;height:76px!important;margin:0 0 6px 10px!important;clear:none!important;}
+  .public-preview #resumeWindow .timeline-list p{clear:none!important;width:auto!important;max-width:none!important;padding-right:0!important;}
+  .public-preview #resumeWindow .timeline-list p:nth-of-type(2),
+  body.mobile-mode.public-preview #resumeWindow .timeline-list p:nth-of-type(2){clear:none!important;width:auto!important;max-width:none!important;}
+  .public-preview #resumeWindow .timeline-list p:nth-of-type(n+3){clear:both!important;width:100%!important;}
+}
