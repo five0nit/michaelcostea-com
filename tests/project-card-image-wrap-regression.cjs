@@ -20,11 +20,13 @@ for (const card of cards) {
 }
 
 const expectations = [
-  [/\.public-preview #projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-content-card\{[^}]*display:grid/, 'project cards should use grid layout'],
-  [/\.public-preview #projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-card-figure\{[^}]*float:none!important/, 'project card figures should not float/wrap text'],
-  [/\.public-preview #projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-content-card > p\{[^}]*grid-area:body/, 'project body should have its own grid area beside image'],
-  [/\.public-preview #projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-content-card > ul\{[^}]*grid-area:list/, 'project bullets should clear below the image/body row'],
-  [/@media \(max-width:760px\)[\s\S]*#projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-content-card\{[^}]*grid-template-columns:1fr!important/, 'mobile project cards should collapse to one column'],
+  [/\.public-preview #projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-content-card\{[^}]*display:grid/, 'desktop project cards should use a controlled grid layout'],
+  [/\.public-preview #projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-card-figure\{[^}]*float:none!important/, 'desktop project card figures should not use legacy floats'],
+  [/\.public-preview #projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-content-card > p\{[^}]*grid-area:body/, 'desktop project body should have its own grid area beside image'],
+  [/\/\* === Projects window: mobile text wraps beside mini images cleanly === \*\/[\s\S]*#projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-content-card\{[^}]*display:block!important/, 'mobile project cards should switch back to block layout for real text wrap'],
+  [/\/\* === Projects window: mobile text wraps beside mini images cleanly === \*\/[\s\S]*#projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-card-figure\{[^}]*float:right!important/, 'mobile project figures should float so text wraps beside them'],
+  [/\/\* === Projects window: mobile text wraps beside mini images cleanly === \*\/[\s\S]*#projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-content-card > p\{[^}]*clear:none!important/, 'mobile project body text should not clear the floated image'],
+  [/\/\* === Projects window: mobile text wraps beside mini images cleanly === \*\/[\s\S]*#projectsWindow \.ai-project-showcase:not\(\.recent-builds-showcase\) \.mini-content-card > ul\{[^}]*clear:both!important/, 'mobile bullets should clear after wrapped intro text'],
 ];
 for (const [regex, message] of expectations) {
   if (!regex.test(css)) throw new Error(message);

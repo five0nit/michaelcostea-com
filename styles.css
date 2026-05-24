@@ -2379,10 +2379,12 @@ body.public-preview::before{
 /* UX preview exact Start cleanup */
 .public-preview.ux-preview-page .start-btn::before{content:none!important;display:none!important;}
 
-/* === Projects window: stop mini images from forcing awkward text wrap === */
+/* === Projects window: mobile text wraps beside mini images cleanly === */
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card{display:grid!important;grid-template-columns:1fr!important;grid-template-areas:"title" "art" "body" "list" "tag"!important;row-gap:6px!important;}
-  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-card-figure{grid-area:art!important;float:none!important;justify-self:start!important;width:68px!important;height:74px!important;margin:0 0 2px 0!important;}
-  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card > p{grid-area:body!important;clear:both!important;width:100%!important;}
-  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card > ul{grid-area:list!important;clear:both!important;width:100%!important;}
+  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card{display:block!important;overflow:visible!important;}
+  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card > h3{clear:both!important;display:block!important;width:100%!important;margin-bottom:7px!important;}
+  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-card-figure{float:right!important;display:flex!important;width:72px!important;height:78px!important;margin:0 0 6px 10px!important;}
+  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card > p{clear:none!important;display:block!important;width:auto!important;margin-top:0!important;}
+  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card > ul{clear:both!important;width:100%!important;margin-top:7px!important;}
+  .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card > span{clear:both!important;margin-top:2px!important;}
 }
