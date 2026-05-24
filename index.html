@@ -20,10 +20,29 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Michael Costea",
+    "url": "https://michaelcostea.com/",
+    "image": "https://michaelcostea.com/assets/profile-michael-pixel.jpg",
+    "jobTitle": "Head of Tech, AI & Systems",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Melbourne",
+      "addressRegion": "VIC",
+      "addressCountry": "AU"
+    },
+    "sameAs": ["https://www.linkedin.com/in/michaelcostea"],
+    "description": "Michael Costea builds AI-powered business operating systems, workflow automation, dashboards, and human-reviewed operating loops for growing service businesses."
+  }
+  </script>
   <link rel="stylesheet" href="styles.css?v=20260506-intro-ai-dynamic-1" />
   <link rel="stylesheet" href="assets/pixel-pack/button-kit.css?v=20260513-ui-btn-wire" />
 </head>
-<body class="public-preview">
+<body class="public-preview ux-preview-page">
+  <a class="skip-link" href="#readerWindow">Skip to portfolio content</a>
   <main class="container" id="desktopRoot">
     <section class="desktop desktop-icons" aria-label="MICHAEL OS 89 desktop">
       <button class="desk-icon" data-open="aboutWindow" aria-label="Open My Computer"><span class="icon-art">🖥️</span><span>My Computer</span></button>
@@ -35,8 +54,8 @@
       <button id="recycleBin" class="desk-icon" data-open="recycleWindow" aria-label="Open Recycle Bin"><span class="icon-art">🗑️</span><span id="recycleLabel">Recycle Bin</span></button>
     </section>
 
-    <section id="readerWindow" class="win-window open workstation-welcome main-portfolio-window" aria-label="Welcome window">
-      <div class="win-title"><span>💾 Welcome.exe - Michael Costea Portfolio</span><button class="win-close" data-close="readerWindow">×</button></div>
+    <section id="readerWindow" class="win-window open workstation-welcome main-portfolio-window" aria-label="Welcome window" tabindex="-1">
+      <div class="win-title"><span>💾 UXPreview.exe - Michael Costea Portfolio</span><button class="win-close" data-close="readerWindow">×</button></div>
       <div class="win-body welcome-body styleguide-welcome">
         <aside class="welcome-sidebar" aria-label="Profile controls">
           <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0415" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
@@ -56,6 +75,57 @@
           <p>My current mission is building a practical AI and workflow layer on top of core business systems so the company can grow faster, operate more efficiently, and deliver a better customer experience without unnecessary support-function headcount growth.</p>
           <p>The goal is not AI for AI’s sake. It is a connected, visible business where sales, ops, finance, admin, and field teams work through clearer system architecture, review gates, and measurable operating loops.</p>
           <div class="proof-strip" aria-label="Brand proof points"><span>Faster lead response</span><span>Less duplicate admin</span><span>Visible handoffs</span><span>Human-reviewed automation</span></div>
+          <div class="hero-outcomes" aria-label="High impact operating outcomes">
+            <span><b>Lead response</b> tighter first-touch and follow-up loops</span>
+            <span><b>Admin reduction</b> less duplicate entry and manual chasing</span>
+            <span><b>Exception visibility</b> earlier surfacing of stale work and risk</span>
+          </div>
+          <div class="hero-action-panel" aria-label="Primary portfolio actions">
+            <a class="ui-btn btn icon-contact primary-hero-cta" href="mailto:costea.michael@gmail.com?subject=AI systems chat&body=Hi Michael,%0A%0AThe workflow or system that feels messy:%0A%0AWhat better would look like:%0A%0AWhat tools/data are involved:%0A">Book an AI systems chat</a>
+            <button class="ui-btn btn icon-files" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">See case-study buckets</button>
+            <button class="ui-btn btn icon-ai-help" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">Start with AI Help</button>
+          </div>
+          <ol class="hero-proof-steps" aria-label="How Michael approaches AI system work">
+            <li><b>Map the workflow</b><span>owners, handoffs, data, risk, and current friction.</span></li>
+            <li><b>Build the review loop</b><span>bounded automation with evidence and human approval where it matters.</span></li>
+            <li><b>Measure the operating result</b><span>response speed, admin load, visibility, conversion, and customer experience.</span></li>
+          </ol>
+          <div class="workflow-output-demo" aria-label="AI workflows to outputs reference mockup">
+            <div class="workflow-demo-titlebar"><span>AI Workflow Console</span><i>—</i><i>□</i><i>×</i></div>
+            <div class="workflow-demo-stage">
+              <section class="workflow-mini-window" aria-label="AI workflow input panel">
+                <div class="mini-window-title"><span>Workflows</span><i>—</i><i>×</i></div>
+                <div class="ai-chip" aria-hidden="true"><span>AI</span></div>
+                <div class="workflow-nodes" aria-hidden="true"><b>✓</b><em>→</em><b>✓</b></div>
+                <strong>AI + Workflows</strong>
+              </section>
+              <div class="connector-arrow" aria-hidden="true"></div>
+              <section class="outputs-mini-window" aria-label="Workflow output panel">
+                <div class="mini-window-title"><span>4. Outputs</span><i>—</i><i>×</i></div>
+                <div class="output-row"><span class="growth-icon">↗</span><b>Faster Growth</b></div>
+                <div class="output-row"><span class="efficiency-icon">⚙</span><b>Efficiency</b></div>
+                <div class="output-row"><span class="cx-icon">☺</span><b>Better CX</b></div>
+                <div class="output-row"><span class="visibility-icon">▥</span><b>Clear Visibility</b></div>
+              </section>
+            </div>
+            <section class="workflow-message-window" aria-label="Workflow output message">
+              <div class="mini-window-title"><span>Output message</span><i>×</i></div>
+              <h3>Scale smarter, not heavier</h3>
+              <p>More output, less overhead.</p>
+            </section>
+            <div class="workflow-demo-status"><div class="workflow-status-meter" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><span class="speaker-icon" aria-hidden="true">🔊</span><time>10:30 AM</time></div>
+          </div>
+          <div class="fit-panel" aria-label="Best fit and not fit for Michael's AI systems work">
+            <div><b>Best fit</b><span>service business workflows with messy handoffs, slow response, duplicate admin, unclear ownership, or reporting gaps.</span></div>
+            <div><b>Not a fit</b><span>black-box automation, fake authority, scraped spam, or unsupervised customer-impacting AI without review gates.</span></div>
+          </div>
+          <div class="workflow-scan-card" aria-label="90-second workflow scan">
+            <div>
+              <b>90-second workflow scan</b>
+              <p>If you are not sure where to start, answer three questions: <span>Where does the request start?</span> <span>Who owns the next action?</span> <span>What evidence proves it happened?</span></p>
+            </div>
+            <a class="ui-btn btn icon-workflow" href="mailto:costea.michael@gmail.com?subject=90-second workflow scan&body=Hi Michael,%0A%0AWhere the request starts:%0A%0AWho owns the next action:%0A%0AWhat evidence proves it happened:%0A%0AWhere it gets stuck today:%0A">Open the workflow scan</a>
+          </div>
           <div class="spec-grid" aria-label="Current system focus">
             <div><b>CURRENT ROLE</b><span>Head of Tech, AI & Systems · All Electric Homes</span></div>
             <button class="welcome-agent-cta" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')"><b>WHAT I BUILD</b><span>AI operating layers · dashboards · workflow systems</span></button>
@@ -179,6 +249,12 @@
           </div>
           <div class="mini-heading compact-mini lean-heading"><h3>Operating Principles</h3></div>
           <div class="principle-strip"><span>Clarity before automation</span><span>APIs first</span><span>Humans keep judgment</span><span>Every workflow needs receipts</span><span>Small proven loops first</span></div>
+          <div class="mini-heading compact-mini lean-heading"><h3>How the first useful loop starts</h3></div>
+          <div class="engagement-blueprint" aria-label="First safe AI operating loop blueprint">
+            <article><b>1. Workflow map</b><span>Pick one contained workflow before scaling: where the request starts, who owns each handoff, what data is trusted, and where the work currently stalls.</span></article>
+            <article><b>2. Safe first loop</b><span>Build the smallest useful path with bounded tools, clear success criteria, and no customer, money, or quality impact without review.</span></article>
+            <article><b>3. Evidence dashboard</b><span>Show status, owner, source links, exceptions, and results. Human approval stays in the path until the loop earns trust.</span></article>
+          </div>
         </article>
       </div>
     </section>
@@ -1012,7 +1088,34 @@ openclaw doctor</pre></article>
         <div class="contact-reasons">
           <span>AI workflow strategy</span><span>Service-business automation</span><span>Operational visibility</span><span>Agent review systems</span><span>CRM / ops handoffs</span><span>Digital infrastructure</span>
         </div>
-        <p><a class="ui-btn btn icon-contact" href="mailto:costea.michael@gmail.com?subject=Messy workflow / AI systems chat">Email Michael</a></p>
+        <div class="contact-brief-box" aria-label="What to send Michael">
+          <b>What to send</b>
+          <ul>
+            <li>the workflow or system that feels messy</li>
+            <li>what “better” would look like</li>
+            <li>which tools, inboxes, CRM, files, or handoffs are involved</li>
+          </ul>
+        </div>
+        <div class="contact-fit-box" aria-label="Contact fit guidance">
+          <div>
+            <b>Good reasons to reach out</b>
+            <ul>
+              <li>you need a workflow mapped before automation</li>
+              <li>you want dashboards, review gates, or clearer handoffs</li>
+              <li>your AI idea needs practical operator judgment</li>
+            </ul>
+          </div>
+          <div>
+            <b>Not the right fit</b>
+            <ul>
+              <li>no unsupervised customer messages</li>
+              <li>no spam, scraped outreach, or fake authority</li>
+              <li>no black-box systems without evidence or rollback</li>
+            </ul>
+          </div>
+        </div>
+        <p class="contact-next-step"><b>Next step:</b> send the workflow in plain English. I can usually spot the safest first operating loop from the handoffs, risks, and tools involved.</p>
+        <p><a class="ui-btn btn icon-contact" href="mailto:costea.michael@gmail.com?subject=Messy workflow / AI systems chat&body=Hi Michael,%0A%0AThe workflow or system that feels messy:%0A%0AWhat better would look like:%0A%0ATools/data/handoffs involved:%0A%0ABest fit / not sure because:%0A%0ARisk or approval needed:%0A">Email Michael</a></p>
         <p><a class="ui-btn btn icon-ai-help" href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener">LinkedIn</a></p>
       </div>
     </section>
@@ -1024,10 +1127,13 @@ openclaw doctor</pre></article>
   </main>
 
   <div class="taskbar" aria-label="Windows style taskbar">
-    <button id="startBtn" class="start-btn" aria-expanded="false" aria-controls="startMenu">MICHAEL OS 89 🖥️</button>
+    <button id="startBtn" class="start-btn" aria-expanded="false" aria-controls="startMenu">Start</button>
+    <span class="ux-taskbar-brand">MICHAEL OS 89</span>
+    <span class="ux-taskbar-app">💾 UXPreview.exe</span>
     <div id="taskButtons" class="taskbar-windows" aria-label="Open windows"></div>
     <div class="taskbar-spacer"></div>
     <div class="tray" id="tray">
+      <span class="tray-pill ux-tray-status" title="System status">SYS</span>
       <span class="tray-pill" title="Sound">🔊</span>
       <span id="trayClock" class="tray-pill" title="Time">--:-- --</span>
     </div>
