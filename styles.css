@@ -35,7 +35,7 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .container{position:relative;height:calc(100dvh - var(--taskbar-h,46px));padding:10px}
 .hero,.stats{display:none}
 .desktop{display:grid;grid-template-columns:repeat(auto-fill,92px);grid-auto-rows:92px;gap:12px;align-content:start;z-index:1;position:relative}
-.desk-icon{width:92px;height:92px;background:transparent;border:0;color:#fff;text-align:center;cursor:pointer;padding:4px;border-radius:2px}
+.desk-icon{width:92px;height:92px;background:transparent;border:0;color:#fff;text-align:center;cursor:pointer;padding:4px;border-radius:2px;text-decoration:none;font-family:inherit}
 .desk-icon span{display:block;font-size:12px;line-height:1.15;text-shadow:1px 1px 0 #000;margin-top:2px}
 .desk-img{width:32px;height:32px;display:block;margin:2px auto 4px;image-rendering:pixelated}
 .desk-icon:hover,.desk-icon:focus-visible{background:rgba(255,255,255,.16);outline:none;transform:translateY(-1px);transition:transform .12s ease, background .12s ease}
@@ -74,6 +74,10 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px}.desc{margin:0;font-size:.86rem;line-height:1.35;min-height:40px}.muted{font-size:.78rem}
 .badge{font-size:.68rem;padding:3px 6px;border:1px solid #000;background:#e5e5e5}.badge.live{background:#0a9b4b;color:#fff}.badge.beta{background:#d47f00;color:#fff}.badge.private{background:#7a2cff;color:#fff}
 a.btn,button.btn{text-decoration:none;color:#000;background:#cfcfcf;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo);padding:5px 9px;font-weight:700;font-size:.8rem;cursor:pointer}
+.page-link-bar,.page-permalink{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:12px 0;padding:8px 10px;background:#f2f2f2;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid var(--lo);border-bottom:2px solid var(--lo)}
+.page-link-bar span,.page-permalink b{font-weight:700;color:#17376b}
+.page-link-bar a,.page-permalink a{color:#000080;font-weight:700;text-decoration:underline}
+.page-link-bar a:hover,.page-link-bar a:focus-visible,.page-permalink a:hover,.page-permalink a:focus-visible{color:#0f5bd3}
 .dos-box{background:#000;color:#2dff2d;border:2px inset #7f7f7f;padding:8px;border-radius:0;font:700 12px/1.45 "Courier New",monospace;white-space:pre-wrap}
 
 .taskbar{position:fixed;left:0;right:0;bottom:0;height:38px;padding:5px 8px;background:var(--panel);border-top:2px solid var(--hi);box-shadow:0 -2px 0 #000;z-index:30;display:flex;align-items:center;gap:8px}

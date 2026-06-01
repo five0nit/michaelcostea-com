@@ -1,3 +1,30 @@
+const pageWindowRoutes = {
+  readerWindow: 'home',
+  aboutWindow: 'about',
+  resumeWindow: 'resume',
+  buildWindow: 'what-i-build',
+  projectsWindow: 'projects',
+  agentsWindow: 'ai-agents',
+  aiHelpWindow: 'ai-help',
+  contactWindow: 'contact',
+};
+const routeAliases = {
+  '': 'home',
+  home: 'home',
+  about: 'about',
+  resume: 'resume',
+  build: 'what-i-build',
+  'what-i-build': 'what-i-build',
+  projects: 'projects',
+  'ai-agents': 'ai-agents',
+  agents: 'ai-agents',
+  'ai-help': 'ai-help',
+  aihelp: 'ai-help',
+  contact: 'contact',
+};
+const routeWindowLookup = Object.fromEntries(Object.entries(pageWindowRoutes).map(([id, route]) => [route, id]));
+let syncingPageRoute = false;
+let pageRoutesReady = false;
 let zTop = 20;
 const prefsKey = "michaelos_prefs_v1";
 let prefs = { animations:true, singleMobile:true, theme:"default", bootSpeed:3450, premiumUI:true, uiSound:true };
@@ -136,6 +163,7 @@ function bringFront(win){
   win.style.zIndex = String(zTop);
   win.classList.add('active');
   refreshTaskbar();
+  if(win.classList.contains('open')) syncPageRouteFromWindows();
 }
 
 function syncImmersiveMode(){
@@ -174,6 +202,51 @@ function restoreWindowScroll(win, reset=false){
     body.scrollTop = 0;
     requestAnimationFrame(() => { body.scrollTop = 0; });
   }
+}
+
+function normalizePageRoute(hash = window.location.hash){
+  const raw = String(hash || '').replace(/^#/, '').trim().toLowerCase();
+  return routeAliases[raw] || 'home';
+}
+
+function activePrimaryWindowId(){
+  const openWindows = Array.from(document.querySelectorAll('.win-window.open'));
+  if(!openWindows.length) return 'readerWindow';
+  const ranked = openWindows
+    .filter((win) => pageWindowRoutes[win.id])
+    .sort((a, b) => (Number(b.style.zIndex || 0) - Number(a.style.zIndex || 0)));
+  return ranked[0]?.id || 'readerWindow';
+}
+
+function updatePageRoute(route){
+  const normalized = routeAliases[route] || 'home';
+  const nextHash = normalized === 'home' ? '' : `#${normalized}`;
+  if(window.location.hash === nextHash) return;
+  syncingPageRoute = true;
+  if(nextHash){
+    window.location.hash = nextHash;
+  }else if(window.history?.replaceState){
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  }else{
+    window.location.hash = '';
+  }
+  setTimeout(() => { syncingPageRoute = false; }, 0);
+}
+
+function syncPageRouteFromWindows(){
+  if(!pageRoutesReady) return;
+  const activeId = activePrimaryWindowId();
+  updatePageRoute(pageWindowRoutes[activeId] || 'home');
+}
+
+function applyPageRouteFromLocation(){
+  const route = normalizePageRoute();
+  const targetId = routeWindowLookup[route] || 'readerWindow';
+  if(targetId === 'readerWindow'){
+    bringFront(document.getElementById('readerWindow'));
+    return;
+  }
+  openWindow(targetId);
 }
 
 function openWindow(id){
@@ -216,6 +289,7 @@ function closeWindow(id){
   delete win.dataset.prevBottom;
   syncImmersiveMode();
   refreshTaskbar();
+  syncPageRouteFromWindows();
 }
 
 function minimizeWindow(id){
@@ -225,6 +299,7 @@ function minimizeWindow(id){
   win.classList.add('minimized');
   syncImmersiveMode();
   refreshTaskbar();
+  syncPageRouteFromWindows();
 }
 
 function toggleMaximizeWindow(id){
@@ -467,6 +542,7 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="buildWindow"><span><b class="si">🧩</b>What I Build</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="projectsWindow"><span><b class="si">📁</b>Projects</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="agentsWindow"><span><b class="si">🤖</b>AI Agents</span></a>
+    <a class="start-item start-cta" role="menuitem" href="agenttown/"><span><b class="si">🏢</b>Agent Office</span><small>live</small></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="aiHelpWindow"><span><b class="si">🎓</b>AI Help</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span><b class="si">🗂️</b>Programs</span><small>hidden</small></a>
     <div class="start-sep"></div>
@@ -1010,6 +1086,12 @@ async function boot(){
   document.querySelectorAll('.win-window.open').forEach(centerWindow);
   refreshTaskbar();
   bringFront(document.getElementById('readerWindow'));
+  pageRoutesReady = true;
+  window.addEventListener('hashchange', () => {
+    if(syncingPageRoute) return;
+    applyPageRouteFromLocation();
+  });
+  applyPageRouteFromLocation();
 
   if (isMobileMode()) {
     const rw = document.getElementById('readerWindow');
