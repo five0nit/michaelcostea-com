@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "mode": "static-export",
+  "builtAt": "2026-06-01T21:22:11.249Z",
+  "service": "telegram-agent-office",
+  "version": "0.5.51",
+  "branch": "feat/office-topology-monitoring",
+  "commit": "b7d1da6",
+  "basePath": "/agenttown",
+  "canonicalPath": "/agenttown/api/telegram-webhook/:rosterKey",
+  "publicUrl": "https://michaelcostea.com/agenttown/",
+  "receiptPath": "/agenttown/runtime-info.json"
+}
