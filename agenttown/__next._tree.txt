@@ -1,4 +1,4 @@
 :HL["/agenttown/_next/static/chunks/fed3f664faf012f3.css","style"]
 :HL["/agenttown/_next/static/media/de161955856a921d-s.p.25da2b95.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/agenttown/_next/static/chunks/107d145377c0cec6.css","style"]
-0:{"buildId":"Vc6uYiI5ET5_kBPHT8OKi","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+:HL["/agenttown/_next/static/chunks/33f6343bfe9ec22e.css","style"]
+0:{"buildId":"BkmxmJUM_nJgyL9pEsX21","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
