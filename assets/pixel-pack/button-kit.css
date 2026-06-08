@@ -1,6 +1,6 @@
 .ui-btn{
   --btn-icon:none;
-  --btn-icon-size:18px;
+  --btn-icon-size:24px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -21,6 +21,8 @@
   background-position:center;
   background-repeat:no-repeat;
   flex:0 0 var(--btn-icon-size);
+  image-rendering:auto;
+  filter:contrast(1.16) saturate(1.22) brightness(1.08);
 }
 
 .ui-btn[class*='icon-']::before{

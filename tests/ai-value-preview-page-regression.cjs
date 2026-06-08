@@ -59,11 +59,18 @@ for (const phrase of [
 
 const indexDom = new JSDOM(indexHtml);
 const indexText = pageText(indexDom.window.document);
-if (indexText.includes('HELPING PEOPLE GET MORE FROM AI')) {
-  throw new Error('main index.html should not contain the preview hero headline yet');
+if (!indexText.includes('HELPING PEOPLE GET MORE FROM AI')) {
+  throw new Error('main index.html should now contain the approved AI value hero headline');
 }
 if (indexDom.window.document.querySelector('meta[name="robots"]')?.getAttribute('content')?.includes('noindex')) {
   throw new Error('main index.html must not receive preview robots noindex');
+}
+const indexCanonical = indexDom.window.document.querySelector('link[rel="canonical"]')?.getAttribute('href') || '';
+if (indexCanonical === 'https://michaelcostea.com/ai-value-preview.html' || indexCanonical !== 'https://michaelcostea.com/') {
+  throw new Error(`main index.html canonical should point at homepage, got ${indexCanonical}`);
+}
+if (!indexHtml.includes('https://telegram-office.michaelcostea.com/agenttown/')) {
+  throw new Error('main index.html should preserve the live Agent Office link');
 }
 
 console.log('ai-value-preview-page-regression ok');
