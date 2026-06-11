@@ -6,6 +6,7 @@ const pageWindowRoutes = {
   projectsWindow: 'projects',
   agentsWindow: 'ai-agents',
   aiHelpWindow: 'ai-help',
+  intakeWindow: 'ai-intake',
   contactWindow: 'contact',
 };
 const routeAliases = {
@@ -20,6 +21,9 @@ const routeAliases = {
   agents: 'ai-agents',
   'ai-help': 'ai-help',
   aihelp: 'ai-help',
+  'ai-intake': 'ai-intake',
+  intake: 'ai-intake',
+  aiintake: 'ai-intake',
   contact: 'contact',
 };
 const routeWindowLookup = Object.fromEntries(Object.entries(pageWindowRoutes).map(([id, route]) => [route, id]));
@@ -263,7 +267,7 @@ function openWindow(id){
   win.classList.remove('minimized');
   win.classList.add('open');
   restoreWindowScroll(win, !wasOpen);
-  if(!win.classList.contains('maximized')) centerWindow(win);
+  if(!wasOpen && !win.classList.contains('maximized') && win.dataset.userMoved !== '1' && win.dataset.userSized !== '1') centerWindow(win);
   bringFront(win);
   syncImmersiveMode();
   uiBeep('open');
@@ -396,6 +400,12 @@ function initDesktopWindows(){
     controls.innerHTML = `<button class="win-btn win-min" title="Minimize" aria-label="Minimize" data-minimize="${win.id}"></button><button class="win-btn win-max" title="Maximize" aria-label="Maximize" data-maximize="${win.id}" aria-pressed="false"></button>`;
     controls.appendChild(closeBtn);
     titleBar.appendChild(controls);
+    if(!win.querySelector('.win-resize-grip')){
+      const grip = document.createElement('span');
+      grip.className = 'win-resize-grip';
+      grip.setAttribute('aria-hidden','true');
+      win.appendChild(grip);
+    }
     titleBar.addEventListener('dblclick', (e)=>{ if(!e.target.closest('button')) toggleMaximizeWindow(win.id); });
   });
 
@@ -423,6 +433,23 @@ function initDesktopWindows(){
   });
 
   initDrag();
+  initResizeWindows();
+}
+
+function setImportantStyle(el, prop, value){
+  if(!el) return;
+  el.style.setProperty(prop, value, 'important');
+}
+
+function unlockWindowForManualLayout(win){
+  if(!win || isMobileMode()) return;
+  const rect = win.getBoundingClientRect();
+  setImportantStyle(win, 'left', `${Math.round(rect.left)}px`);
+  setImportantStyle(win, 'top', `${Math.round(rect.top)}px`);
+  setImportantStyle(win, 'right', 'auto');
+  setImportantStyle(win, 'bottom', 'auto');
+  setImportantStyle(win, 'transform', 'none');
+  setImportantStyle(win, 'max-width', 'none');
 }
 
 function initDrag(){
@@ -434,12 +461,19 @@ function initDrag(){
     const onMove = (clientX, clientY) => {
       if(!dragging) return;
       const rect = win.getBoundingClientRect();
-      const maxX = Math.max(8, window.innerWidth - rect.width - 8);
-      const maxY = Math.max(8, window.innerHeight - 38 - rect.height - 8);
-      const left = Math.min(Math.max(8, clientX - ox), maxX);
-      const top = Math.min(Math.max(8, clientY - oy), maxY);
-      win.style.left = `${left}px`;
-      win.style.top = `${top}px`;
+      const taskbarH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--taskbar-h')) || 46;
+      const minX = Math.min(8, window.innerWidth - rect.width - 80);
+      const maxX = Math.max(8, window.innerWidth - 80);
+      const minY = 0;
+      const maxY = Math.max(0, window.innerHeight - taskbarH - 28);
+      const left = Math.min(Math.max(minX, clientX - ox), maxX);
+      const top = Math.min(Math.max(minY, clientY - oy), maxY);
+      setImportantStyle(win, 'left', `${left}px`);
+      setImportantStyle(win, 'top', `${top}px`);
+      setImportantStyle(win, 'right', 'auto');
+      setImportantStyle(win, 'bottom', 'auto');
+      setImportantStyle(win, 'transform', 'none');
+      win.dataset.userMoved = '1';
     };
 
     const stopDrag = () => {
@@ -456,6 +490,7 @@ function initDrag(){
       if(e.button !== undefined && e.button !== 0) return;
       dragging=true;
       bringFront(win);
+      unlockWindowForManualLayout(win);
       const rect = win.getBoundingClientRect();
       ox = e.clientX - rect.left;
       oy = e.clientY - rect.top;
@@ -468,6 +503,62 @@ function initDrag(){
     bar.addEventListener('pointermove', (e)=> onMove(e.clientX, e.clientY));
     bar.addEventListener('pointerup', stopDrag);
     bar.addEventListener('pointercancel', stopDrag);
+  });
+}
+
+function initResizeWindows(){
+  document.querySelectorAll('.win-window').forEach(win => {
+    const grip = win.querySelector('.win-resize-grip');
+    if(!grip || grip.dataset.resizeReady === '1') return;
+    grip.dataset.resizeReady = '1';
+    let resizing=false, startX=0, startY=0, startW=0, startH=0, pid=null;
+
+    const stopResize = () => {
+      resizing=false;
+      document.body.style.userSelect='';
+      if(pid!==null){ try{ grip.releasePointerCapture(pid); }catch{} }
+      pid=null;
+    };
+
+    grip.addEventListener('pointerdown', (e) => {
+      if(isMobileMode() || win.classList.contains('maximized')) return;
+      if(e.button !== undefined && e.button !== 0) return;
+      const rect = win.getBoundingClientRect();
+      unlockWindowForManualLayout(win);
+      const unlockedRect = win.getBoundingClientRect();
+      resizing=true;
+      startX=e.clientX;
+      startY=e.clientY;
+      startW=unlockedRect.width;
+      startH=unlockedRect.height;
+      bringFront(win);
+      win.classList.add('user-sized');
+      win.dataset.userSized = '1';
+      document.body.style.userSelect='none';
+      pid=e.pointerId;
+      try{ grip.setPointerCapture(pid); }catch{}
+      e.preventDefault();
+    });
+
+    grip.addEventListener('pointermove', (e) => {
+      if(!resizing) return;
+      const rect = win.getBoundingClientRect();
+      const taskbarH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--taskbar-h')) || 46;
+      const minW = Math.min(320, Math.max(260, window.innerWidth - 24));
+      const minH = 220;
+      const maxW = Math.max(minW, window.innerWidth - rect.left - 8);
+      const maxH = Math.max(minH, window.innerHeight - taskbarH - rect.top - 8);
+      const nextW = Math.min(Math.max(minW, startW + (e.clientX - startX)), maxW);
+      const nextH = Math.min(Math.max(minH, startH + (e.clientY - startY)), maxH);
+      setImportantStyle(win, 'width', `${Math.round(nextW)}px`);
+      setImportantStyle(win, 'height', `${Math.round(nextH)}px`);
+      setImportantStyle(win, 'max-width', 'none');
+      setImportantStyle(win, 'right', 'auto');
+      setImportantStyle(win, 'bottom', 'auto');
+    });
+
+    grip.addEventListener('pointerup', stopResize);
+    grip.addEventListener('pointercancel', stopResize);
   });
 }
 
@@ -544,6 +635,7 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="agentsWindow"><span><b class="si">🤖</b>AI Agents</span></a>
     <a class="start-item start-cta" role="menuitem" href="https://telegram-office.michaelcostea.com/agenttown/"><span><b class="si">🏢</b>Agent Office</span><small>live</small></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="aiHelpWindow"><span><b class="si">🎓</b>AI Help</span></a>
+    <a class="start-item start-cta" role="menuitem" href="#" data-open-window="intakeWindow"><span><b class="si">📝</b>AI Intake</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span><b class="si">🗂️</b>Programs</span><small>hidden</small></a>
     <div class="start-sep"></div>
     <a class="start-item" role="menuitem" href="mailto:costea.michael@gmail.com"><span><b class="si">✉️</b>Email</span></a>
@@ -965,6 +1057,44 @@ function initQuirkyStartActions(){
 
 
 
+function initClientIntakeForm(){
+  const form = document.getElementById('aiIntakeForm');
+  const sendBtn = document.querySelector('[data-intake-email]');
+  if(!form || !sendBtn || form.dataset.intakeReady === '1') return;
+  form.dataset.intakeReady = '1';
+
+  const labels = {
+    business: 'Business / name',
+    contact: 'Best contact',
+    website: 'Website / social',
+    industry: 'Industry',
+    keeps_up: 'What keeps you up at night?',
+    magic_wand: 'What would you make easier tomorrow?',
+    repeated_work: 'Repeated work',
+    missed_opportunities: 'Missed opportunities',
+    tools: 'Core tools used today',
+    devices: 'Devices / operating systems',
+    integration_wish: 'Systems that should talk to each other',
+    safe_drafts: 'What an assistant could safely draft or prepare',
+    boundaries: 'What AI should never do without approval',
+    pilot_win: 'What would make a small pilot a clear win'
+  };
+
+  sendBtn.addEventListener('click', () => {
+    const data = new FormData(form);
+    const lines = ['AI & Automation Opportunity Intake', ''];
+    Object.entries(labels).forEach(([key, label]) => {
+      const value = String(data.get(key) || '').trim();
+      if(value) lines.push(`${label}:\n${value}\n`);
+    });
+    lines.push('Privacy reminder: no passwords, API keys, private customer records, payment details, or sensitive employee information were requested.');
+    const subjectBusiness = String(data.get('business') || '').trim();
+    const subject = subjectBusiness ? `AI intake notes - ${subjectBusiness}` : 'AI intake notes';
+    const body = encodeURIComponent(lines.join('\n'));
+    window.location.href = `mailto:costea.michael@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+  });
+}
+
 async function initIntroDeckPreview(){
   const slide = document.getElementById('introDeckSlide');
   const counter = document.getElementById('introDeckCounter');
@@ -1070,6 +1200,7 @@ async function boot(){
   initSettingsPanel();
   initGuideTabs();
   initIntroDeckPreview();
+  initClientIntakeForm();
   initQuirkyStartActions();
 
   document.addEventListener('click', (e)=>{
