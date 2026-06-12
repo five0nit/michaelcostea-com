@@ -793,6 +793,9 @@ body.public-preview::before{
 .public-preview .welcome-sidebar{background:var(--window-gray);border-right:2px solid var(--mid-shadow);box-shadow:1px 0 #fff;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;}
 .public-preview .profile-portrait{width:154px;height:154px;background:#111;border-top:2px solid var(--mid-shadow);border-left:2px solid var(--mid-shadow);border-right:2px solid #fff;border-bottom:2px solid #fff;display:grid;place-items:center;color:#fff;font:900 42px/1 "Space Grotesk",monospace;letter-spacing:-2px;filter:grayscale(1);}
 .public-preview .profile-portrait span{display:grid;place-items:center;width:120px;height:120px;border:2px solid #fff;background:linear-gradient(135deg,#111 0 50%,#555 50% 100%);}
+.public-preview .profile-status-card{width:190px;min-height:74px;background:#fff;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);box-shadow:inset 1px 1px #f8f8f8;padding:12px 10px;display:grid;align-content:center;gap:6px;text-align:center;color:#000;}
+.public-preview .profile-status-card b{display:block;color:var(--title-blue);font:900 italic 18px/20px "Work Sans",Tahoma,sans-serif;letter-spacing:.04em;}
+.public-preview .profile-status-card span{display:block;font:800 11px/14px "Space Grotesk",monospace;text-transform:uppercase;}
 .public-preview .big-nav{width:190px;min-height:42px;text-align:center;font-weight:900;font-size:12px;display:grid;place-items:center;}
 .public-preview .welcome-copy{background:#f3f3f4;padding:28px 30px 18px;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);font-family:"Space Grotesk","Courier New",monospace;}
 .public-preview .welcome-copy h1{margin:0 0 14px;color:var(--title-blue);font:900 italic 30px/1 "Work Sans",Tahoma,sans-serif;letter-spacing:.5px;}
