@@ -899,6 +899,7 @@ function savePrefs(){
 let audioCtx;
 function uiBeep(kind='tap'){
   if(!prefs.uiSound) return;
+  if(!navigator.userActivation?.hasBeenActive) return;
   try{
     audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
     const o=audioCtx.createOscillator();

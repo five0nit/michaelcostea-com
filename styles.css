@@ -744,6 +744,13 @@ body.mobile-mode .welcome-copy{display:block;width:100%;min-width:0;overflow-x:h
 body.mobile-mode .welcome-copy p{max-width:100%;overflow-wrap:anywhere;}
 body.mobile-mode .spec-grid{grid-template-columns:1fr;width:100%;}
 
+body.mobile-mode .doc-header a{
+  display:inline-flex;
+  align-items:center;
+  min-height:32px;
+  padding:4px 2px;
+}
+
 
 /* === 2026-05 Stitch style-guide public reset: MICHAEL OS 89 === */
 :root{
