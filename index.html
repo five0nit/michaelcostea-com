@@ -38,7 +38,7 @@
     "description": "Michael Costea helps people and businesses get the most out of AI by turning scattered tools and experiments into practical workflows, agents, automations, and human-reviewed systems."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260612-wsl-welcome-clean-1" />
+  <link rel="stylesheet" href="styles.css?v=20260612-ai-kb-1" />
   <link rel="stylesheet" href="assets/pixel-pack/button-kit.css?v=20260609-readable-icons-1" />
 </head>
 <body class="public-preview ux-preview-page">
@@ -60,7 +60,7 @@
       <div class="win-title"><span>💾 Welcome.exe - Michael Costea Portfolio</span><button class="win-close" data-close="readerWindow">×</button></div>
       <div class="win-body welcome-body styleguide-welcome">
         <aside class="welcome-sidebar" aria-label="Profile controls">
-          <div class="profile-status-card" aria-label="Michael OS status"><b>MICHAEL OS</b><span>Practical AI systems</span></div>
+          <div class="profile-portrait" aria-hidden="true" style="width:154px;height:154px;min-width:154px;max-width:154px;overflow:hidden;padding:0;display:block;position:relative;line-height:0;box-sizing:content-box;"><img src="assets/profile-michael-pixel.jpg?v=20260502-0415" alt="Pixel portrait of Michael Costea" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;display:block;" /></div>
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RESUME</button>
           <button class="btn big-nav" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')">WHAT I BUILD</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
@@ -77,22 +77,54 @@
           <p>I am <strong class="accent">Michael Costea</strong>. I help people cut through AI noise, find the use cases worth pursuing, and turn useful ideas into safe, repeatable systems.</p>
           <p>My work spans beginner-friendly AI guidance, workflow design, agentic automation, dashboards, and business operating layers — always focused on practical value, not hype.</p>
           <p>The goal is simple: use AI to save time, reduce admin, improve visibility, support better decisions, and keep humans in control where trust, money, customers, or quality are involved.</p>
-          <div class="proof-strip compact-proof-strip" aria-label="Brand proof points"><span>Understand AI</span><span>Pick one useful workflow</span><span>Visible, reviewed AI systems</span><span>Measure real value</span></div>
-          <div class="hero-action-panel compact-hero-actions" aria-label="Primary portfolio actions">
-            <a class="ui-btn btn icon-contact primary-hero-cta" href="mailto:costea.michael@gmail.com?subject=AI systems chat&body=Hi Michael,%0A%0AThe workflow or system that feels messy:%0A%0AWhat better would look like:%0A%0AWhat tools/data are involved:%0A">Get help using AI better</a>
-            <button class="ui-btn btn icon-ai-help" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">Start with AI Help</button>
-            <button class="ui-btn btn icon-files" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">See examples</button>
+          <div class="proof-strip" aria-label="Brand proof points"><span>Understand AI</span><span>Find useful workflows</span><span>Visible, reviewed AI systems</span><span>Measure real value</span></div>
+          <div class="hero-outcomes" aria-label="High impact operating outcomes">
+            <span><b>For people</b> clearer tools, better prompts, safer first workflows</span>
+            <span><b>For teams</b> less repeated admin and clearer handoffs</span>
+            <span><b>For businesses</b> practical AI systems with owners, evidence, and review gates</span>
           </div>
-          <nav class="page-link-bar compact-page-links" aria-label="Direct page links">
-            <span>More:</span>
+          <div class="hero-action-panel" aria-label="Primary portfolio actions">
+            <a class="ui-btn btn icon-contact primary-hero-cta" href="mailto:costea.michael@gmail.com?subject=AI systems chat&body=Hi Michael,%0A%0AThe workflow or system that feels messy:%0A%0AWhat better would look like:%0A%0AWhat tools/data are involved:%0A">Get help using AI better</a>
+            <a class="ui-btn btn icon-dashboard agent-office-launch" href="https://telegram-office.michaelcostea.com/agenttown/">Open live Agent Office</a>
+            <button class="ui-btn btn icon-workflow" type="button" data-open="intakeWindow" onclick="openWindow('intakeWindow')">Start business intake</button>
+            <button class="ui-btn btn icon-files" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">See practical AI examples</button>
+            <button class="ui-btn btn icon-ai-help" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">Start with AI Help</button>
+          </div>
+          <nav class="page-link-bar" aria-label="Direct page links">
+            <span>Direct page links:</span>
             <a href="#resume">Resume</a>
             <a href="#what-i-build">What I Build</a>
             <a href="#projects">Projects</a>
             <a href="#ai-agents">AI Agents</a>
+            <a href="https://telegram-office.michaelcostea.com/agenttown/">Agent Office Preview</a>
             <a href="#ai-help">AI Help</a>
-            <a href="#agentic-knowledgebase">Knowledgebase</a>
+            <a href="#ai-intake">AI Intake</a>
             <a href="#contact">Contact</a>
           </nav>
+          <ol class="hero-proof-steps" aria-label="How Michael helps people get more out of AI">
+            <li><b>Understand what AI can actually do</b><span>clear guidance without jargon, hype, or unsafe shortcuts.</span></li>
+            <li><b>Find the right use case</b><span>the repeated task, messy handoff, admin bottleneck, or decision loop where AI can help.</span></li>
+            <li><b>Build the practical system</b><span>workflow, agent, dashboard, automation, and review gate — measured against real value.</span></li>
+          </ol>
+          <div class="mini-heading compact-mini lean-heading ai-value-preview-heading"><h2>How I help you get more out of AI</h2></div>
+          <div class="build-grid ai-value-help-grid" aria-label="How Michael helps people get more out of AI">
+            <article class="mini-content-card"><b>1. Cut through the noise</b><span>Understand which AI tools are useful, which are risky, and which are not worth your time.</span></article>
+            <article class="mini-content-card"><b>2. Find the right workflow</b><span>Spot repeated tasks, slow handoffs, manual admin, and information gaps where AI can create value.</span></article>
+            <article class="mini-content-card"><b>3. Build repeatable systems</b><span>Move from one-off prompts to workflows, automations, dashboards, and agents you can reuse.</span></article>
+            <article class="mini-content-card"><b>4. Keep humans in control</b><span>Add owners, evidence, approval gates, and escalation rules where trust, money, quality, or customers matter.</span></article>
+            <article class="mini-content-card"><b>5. Measure the result</b><span>Prove the value through time saved, less duplicate admin, faster response, clearer ownership, or better decisions.</span></article>
+          </div>
+          <div class="fit-panel" aria-label="Best fit and not fit for Michael's AI systems work">
+            <div><b>Best fit</b><span>people, teams, and service businesses that know AI matters but need help turning it into useful, safe, everyday workflows.</span></div>
+            <div><b>Not a fit</b><span>AI for AI’s sake, black-box automation, fake authority, scraped spam, or unsupervised customer-impacting AI without review gates.</span></div>
+          </div>
+          <div class="workflow-scan-card" aria-label="90-second workflow scan">
+            <div>
+              <b>90-second AI value scan</b>
+              <p>If you are not sure where to start, answer three questions: <span>What do you repeat?</span> <span>Where do you lose time?</span> <span>What would better look like?</span></p>
+            </div>
+            <a class="ui-btn btn icon-workflow" href="mailto:costea.michael@gmail.com?subject=90-second workflow scan&body=Hi Michael,%0A%0AWhere the request starts:%0A%0AWho owns the next action:%0A%0AWhat evidence proves it happened:%0A%0AWhere it gets stuck today:%0A">Open the AI value scan</a>
+          </div>
           <div class="spec-grid" aria-label="Current system focus">
             <div><b>CURRENT ROLE</b><span>HEAD OF TECH, AI & SYSTEMS · AI-powered business operating systems</span></div>
             <button class="welcome-agent-cta" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')"><b>WHAT I BUILD</b><span>Practical AI workflows · agents · dashboards</span></button>
@@ -216,6 +248,31 @@
           </div>
           <div class="mini-heading compact-mini lean-heading"><h3>Useful AI Principles</h3></div>
           <div class="principle-strip"><span>Useful before impressive</span><span>Clarity before automation</span><span>Humans keep judgment</span><span>Every workflow needs receipts</span><span>Small proven loops first</span></div>
+          <div class="workflow-output-demo" aria-label="AI workflows to outputs reference mockup">
+            <div class="workflow-demo-titlebar"><span>AI Workflow Console</span><i>—</i><i>□</i><i>×</i></div>
+            <div class="workflow-demo-stage">
+              <section class="workflow-mini-window" aria-label="AI workflow input panel">
+                <div class="mini-window-title"><span>Workflows</span><i>—</i><i>×</i></div>
+                <div class="ai-chip" aria-hidden="true"><span>AI</span></div>
+                <div class="workflow-nodes" aria-hidden="true"><b>✓</b><em>→</em><b>✓</b></div>
+                <strong>AI + Workflows</strong>
+              </section>
+              <div class="connector-arrow" aria-hidden="true"></div>
+              <section class="outputs-mini-window" aria-label="Workflow output panel">
+                <div class="mini-window-title"><span>4. Outputs</span><i>—</i><i>×</i></div>
+                <div class="output-row"><span class="growth-icon">↗</span><b>Faster Growth</b></div>
+                <div class="output-row"><span class="efficiency-icon">⚙</span><b>Efficiency</b></div>
+                <div class="output-row"><span class="cx-icon">☺</span><b>Better CX</b></div>
+                <div class="output-row"><span class="visibility-icon">▥</span><b>Clear Visibility</b></div>
+              </section>
+            </div>
+            <section class="workflow-message-window" aria-label="Workflow output message">
+              <div class="mini-window-title"><span>Output message</span><i>×</i></div>
+              <h3>Scale smarter, not heavier</h3>
+              <p>More output, less overhead.</p>
+            </section>
+            <div class="workflow-demo-status"><div class="workflow-status-meter" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><span class="speaker-icon" aria-hidden="true">🔊</span><time>10:30 AM</time></div>
+          </div>
           <div class="mini-heading compact-mini lean-heading"><h3>How the first useful loop starts</h3></div>
           <div class="engagement-blueprint" aria-label="First safe AI operating loop blueprint">
             <article><b>1. Workflow map</b><span>Pick one contained workflow before scaling: where the request starts, who owns each handoff, what data is trusted, and where the work currently stalls.</span></article>
@@ -898,9 +955,9 @@ Rules:
       <div class="win-body document-body">
         <article class="resume-doc guide-doc install-guide">
           <div class="mini-heading lean-heading"><h2>Install Your First AI Agent</h2></div>
-          <p class="guide-subtitle"><b>A simplified beginner install path: choose one agent, one computer path, one private test. Windows users should plan for WSL Ubuntu unless using a packaged Desktop app.</b></p>
+          <p class="guide-subtitle"><b>A simplified beginner install path: choose one agent, one computer, one private test.</b></p>
           <figure class="generated-art-card"><img src="assets/minime-generated/install-prereq-checklist.png" alt="Pixel Mini Michael pointing to an AI agent install prerequisite checklist" loading="lazy" /></figure>
-          <p class="guide-note"><b>Simple install rule:</b> on Windows, install WSL Ubuntu first for the command-line route; on Mac/Linux use Terminal directly; if a Desktop installer exists, that can be easier. Get one local reply before Telegram. Do not connect real business systems on day one.</p>
+          <p class="guide-note"><b>Simple install rule:</b> install the app, complete the guided setup, get one local reply, then add Telegram. Do not connect real business systems on day one. If a step fails, stop there — do not stack random fixes.</p>
           <div class="beginner-box-grid">
             <article><b>Hermes: easiest first choice</b><span>Best when you want a friendly agent that can chat, edit files, run checks, use skills, remember context, and connect to Telegram later.</span></article>
             <article><b>OpenClaw: choose when you want a bigger local control plane</b><span>Best when you want a broader cockpit for agents, gateway status, dashboard chat, channels, skills, workspaces, and local automation.</span></article>
@@ -948,9 +1005,8 @@ Rules:
 
           <h3>Step 1 — before touching Terminal: get these ready</h3>
           <div class="prereq-grid compact-prereqs">
-            <article><b>Computer access</b><span>Use your own Mac, Linux machine, or Windows PC with WSL2 Ubuntu for the command-line path. You need permission to install apps and run Terminal/PowerShell.</span></article>
+            <article><b>Computer access</b><span>Use your own Mac, Windows PC, Linux machine, or WSL2 Ubuntu. You need permission to install apps and run Terminal/PowerShell.</span></article>
             <article><b>Model/provider login</b><span>Have ChatGPT/Nous Portal or an API key ready. The guided setup will tell you which one it needs.</span></article>
-            <article><b>WSL for Windows</b><span>If you are on Windows and not using a Desktop installer, install WSL Ubuntu first. Most agent CLI/gateway steps in this guide happen inside Ubuntu, not normal PowerShell.</span></article>
             <article><b>Git</b><span>Hermes command-line installs need Git. On Mac, <code>git --version</code> may prompt Apple command-line tools. On Linux/WSL, install <code>git</code> with your package manager.</span></article>
             <article><b>Node for OpenClaw</b><span>OpenClaw recommends Node 24, with Node 22.19+ also supported. The installer can help, but checking <code>node --version</code> first prevents confusion.</span></article>
             <article><b>Telegram on phone</b><span>Optional for first day. Install Telegram and log in only if you want phone chat after the local dashboard test works.</span></article>
@@ -996,32 +1052,35 @@ hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre><p>Open the shown l
           </div>
 
           <div class="guide-panel" data-panel-product="hermes" data-panel-os="windows" hidden>
-            <h3>Hermes Agent on Windows — WSL Ubuntu recommended for CLI/gateway</h3>
-            <p class="plain-summary"><b>In plain English:</b> if you are following command-line install steps on Windows, use WSL Ubuntu. Native Windows/Desktop can be easiest when available, but WSL is the reliable path for Linux-style agent commands, gateways, logs, and services.</p>
+            <h3>Hermes Agent on Windows — native first, WSL fallback</h3>
+            <p class="plain-summary"><b>In plain English:</b> use the native Windows installer first unless you already know you prefer WSL. WSL Ubuntu is the fallback when you want a Linux-like agent environment inside Windows.</p>
             <div class="linear-install-steps">
-              <article><b>1A. Easiest option if available: Hermes Desktop</b><p>Use the packaged Desktop installer if the official Hermes site offers one for Windows. This avoids most Terminal setup.</p></article>
-              <article><b>1B. Required for this CLI guide: install WSL Ubuntu</b><p>Open PowerShell as administrator, install Ubuntu, restart if Windows asks, then open the new Ubuntu app.</p><pre class="guide-code">wsl --install -d Ubuntu</pre></article>
-              <article><b>2. In Ubuntu: install basics and Hermes</b><pre class="guide-code">sudo apt update
-sudo apt install -y curl git
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
-exec $SHELL -l
-hermes --version</pre><p><b>Success:</b> Ubuntu prints a Hermes version. If PowerShell prints <code>command not found</code>, you are in the wrong shell — open Ubuntu.</p></article>
-              <article><b>3. Run first setup inside Ubuntu</b><pre class="guide-code">hermes setup --portal
+              <article><b>1A. Easiest option: use Hermes Desktop</b><p>Download and run the Hermes Desktop installer from the official Hermes Agent website. After it finishes, open PowerShell and run setup.</p></article>
+              <article><b>1B. Native PowerShell install</b><p>Start → PowerShell → right-click → Run as administrator only if Windows asks for installer permission.</p><pre class="guide-code">iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+hermes --version</pre></article>
+              <article><b>2. Run first setup</b><pre class="guide-code">hermes setup --portal
 # If your version does not support portal setup yet:
 hermes setup
 hermes model</pre><p>Use the guided browser login/provider setup. Keep the workspace small and safe.</p></article>
-              <article><b>4. Run one local chat before Telegram</b><pre class="guide-code">hermes chat -q "Say hello in one sentence."
+              <article><b>3. Run one local chat before Telegram</b><pre class="guide-code">hermes chat -q "Say hello in one sentence."
 # If needed, use interactive mode:
 hermes</pre></article>
-              <article><b>5. Optional: connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
+              <article><b>4. Optional: connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
 hermes gateway run</pre><p>Use foreground <code>gateway run</code> first so you can see logs and stop with Ctrl + C.</p></article>
-              <article><b>6. Verify, then dashboard last</b><pre class="guide-code">hermes doctor
+              <article><b>5. Verify, then dashboard last</b><pre class="guide-code">hermes doctor
 hermes status
 hermes gateway status
 hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></article>
-              <article><b>7. Optional background service later</b><pre class="guide-code">hermes gateway install
+              <article><b>6. WSL Ubuntu fallback</b><p>If native Windows setup gets messy, install Ubuntu in WSL and repeat the Linux install path inside Ubuntu.</p><pre class="guide-code">wsl --install -d Ubuntu
+# restart if Windows asks, then open Ubuntu:
+sudo apt update
+sudo apt install -y curl git</pre></article>
+              <article><b>7. Install Hermes inside Ubuntu</b><pre class="guide-code">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+exec $SHELL -l
+hermes --version</pre></article>
+              <article><b>8. If you want it running in the background later</b><pre class="guide-code">hermes gateway install
 hermes gateway start
-hermes gateway status</pre><p>Do this only after foreground gateway mode works in Ubuntu.</p></article>
+hermes gateway status</pre><p>Do this only after foreground mode works.</p></article>
             </div>
           </div>
 
@@ -1077,13 +1136,13 @@ openclaw --version</pre></article>
           </div>
 
           <div class="guide-panel" data-panel-product="openclaw" data-panel-os="windows" hidden>
-            <h3>OpenClaw on Windows — Desktop or WSL Ubuntu</h3>
-            <p class="plain-summary"><b>Choose one Windows route:</b> use the Windows Hub/Desktop installer if you want the simplest packaged app. Use WSL Ubuntu for the stable command-line/Gateway path.</p>
+            <h3>OpenClaw on Windows — simplest path + stable WSL path</h3>
+            <p class="plain-summary"><b>Choose one Windows route:</b> try the PowerShell installer first if you want simplest. Use WSL Ubuntu if Windows shell setup gets messy.</p>
             <div class="linear-install-steps">
               <article><b>1A. Easiest Windows option</b><p>If you prefer a desktop-style setup, use the native OpenClaw Windows Hub installer from the official OpenClaw releases. Use PowerShell only if you want the CLI/Gateway directly.</p></article>
               <article><b>1B. PowerShell installer</b><p>Start → PowerShell → right-click → Run as administrator only if Windows asks.</p><pre class="guide-code">iwr -useb https://openclaw.ai/install.ps1 | iex
 openclaw --version</pre></article>
-              <article><b>1C. Stable WSL Ubuntu command-line path</b><pre class="guide-code">wsl --install -d Ubuntu
+              <article><b>1C. Stable WSL Ubuntu alternative</b><pre class="guide-code">wsl --install -d Ubuntu
 # restart if asked, then open Ubuntu:
 sudo apt update
 sudo apt install -y curl git
