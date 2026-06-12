@@ -29,4 +29,29 @@ assertMatch(
   html
 );
 
+assertMatch(
+  'above-the-fold profile portrait should be preloaded with high fetch priority',
+  /<link rel="preload" as="image" href="assets\/profile-michael-pixel\.jpg\?v=20260502-0415" fetchpriority="high" \/>/,
+  html
+);
+
+assertMatch(
+  'profile portrait should expose intrinsic dimensions to reduce layout shift',
+  /<img src="assets\/profile-michael-pixel\.jpg\?v=20260502-0415"[^>]*width="1254"[^>]*height="1254"[^>]*fetchpriority="high"/,
+  html
+);
+
+for (const [src, width, height] of [
+  ['assets/minime-pack/ai_help_robot_highfive.png', 336, 291],
+  ['assets/minime-pack/build_workflow_engineer.png', 331, 284],
+  ['assets/minime-pack/contact_approval.png', 338, 378],
+  ['assets/minime-pack/guide_documents.png', 289, 333],
+]) {
+  assertMatch(
+    `${src} should expose intrinsic dimensions`,
+    new RegExp(`<img src="${src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*width="${width}"[^>]*height="${height}"`),
+    html
+  );
+}
+
 console.log('self-improvement-polish-regression ok');
