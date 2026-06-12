@@ -2867,15 +2867,26 @@ body.public-preview::before{
     padding:0!important;
     height:calc(100% - 28px)!important;
     max-height:none!important;
-    overflow-y:auto!important;
+    overflow:auto!important;
+    overflow-y:scroll!important;
     overflow-x:hidden!important;
+    touch-action:pan-y!important;
+    overscroll-behavior:contain!important;
     -webkit-overflow-scrolling:touch!important;
   }
-  .public-preview #readerWindow .styleguide-welcome,
-  body.mobile-mode.public-preview #readerWindow .styleguide-welcome{
+  .public-preview #readerWindow .styleguide-welcome:not(.win-body),
+  body.mobile-mode.public-preview #readerWindow .styleguide-welcome:not(.win-body){
     display:block!important;
     width:100%!important;
     overflow:visible!important;
+  }
+  .public-preview #readerWindow .win-body.styleguide-welcome,
+  body.mobile-mode.public-preview #readerWindow .win-body.styleguide-welcome{
+    display:block!important;
+    width:100%!important;
+    overflow:auto!important;
+    overflow-y:scroll!important;
+    overflow-x:hidden!important;
   }
   .public-preview #readerWindow .welcome-sidebar,
   body.mobile-mode.public-preview #readerWindow .welcome-sidebar{
