@@ -896,30 +896,29 @@ body.public-preview::before{
 
 /* === 2026-05 profile portrait asset === */
 .public-preview .profile-portrait{
-  width:154px!important;
-  height:154px!important;
-  min-width:154px!important;
-  max-width:154px!important;
-  aspect-ratio:1/1;
-  overflow:hidden;
+  width:100%!important;
+  height:auto!important;
+  min-width:0!important;
+  max-width:188px!important;
+  aspect-ratio:auto;
+  overflow:visible;
   background:#008080;
   padding:0!important;
   display:block!important;
-  position:relative;
+  position:static;
   line-height:0;
   filter:none!important;
   box-sizing:content-box;
 }
 .public-preview .profile-portrait img{
-  position:absolute;
-  inset:0;
+  position:static;
   display:block;
   width:100%!important;
-  height:100%!important;
-  max-width:none!important;
-  object-fit:cover;
+  height:auto!important;
+  max-width:100%!important;
+  object-fit:contain;
   object-position:center center;
-  image-rendering:pixelated;
+  image-rendering:auto;
   filter:none!important;
 }
 .public-preview .profile-portrait span{display:none!important;}
@@ -991,14 +990,14 @@ body.public-preview::before{
   }
   .public-preview .profile-portrait,
   body.mobile-mode.public-preview .profile-portrait{
-    width:132px!important;
-    height:132px!important;
-    min-width:132px!important;
-    max-width:132px!important;
-    flex:0 0 132px!important;
+    width:100%!important;
+    height:auto!important;
+    min-width:0!important;
+    max-width:260px!important;
+    flex:0 0 auto!important;
     margin:0 auto 4px!important;
   }
-  .public-preview .profile-portrait img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important;}
+  .public-preview .profile-portrait img{width:100%!important;height:auto!important;object-fit:contain!important;object-position:center center!important;}
   .public-preview .big-nav,
   body.mobile-mode.public-preview .welcome-sidebar .btn{
     width:100%!important;
