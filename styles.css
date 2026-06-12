@@ -56,8 +56,8 @@ body.booted #desktopRoot{animation:desktopIn .55s ease forwards}
 .win-window.maximized .win-body{flex:1 1 auto !important;min-height:0 !important;height:auto !important;max-height:none !important;overflow:auto !important}
 .win-title{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,var(--title1),var(--title2));color:#fff;padding:4px 6px;font-size:12px;font-weight:700;cursor:grab;user-select:none;transition:filter .12s ease}
 .win-title:active{cursor:grabbing}
-.win-resize-grip{position:absolute;right:66px;top:2px;width:24px;height:18px;z-index:99;cursor:nwse-resize;background:#fff4a3;border-top:2px solid var(--hi);border-left:2px solid var(--hi);border-right:2px solid #000;border-bottom:2px solid #000;box-shadow:1px 1px 0 rgba(0,0,0,.35)}
-.win-resize-grip::before{content:"↘";position:absolute;inset:0;display:grid;place-items:center;color:#000;font:900 15px/1 Tahoma,sans-serif;text-shadow:1px 1px 0 #fff}
+.win-resize-grip{position:absolute;right:0;bottom:0;width:18px;height:18px;z-index:99;cursor:nwse-resize;background:transparent;border:0;box-shadow:none}
+.win-resize-grip::before{content:"";display:none}
 .win-window.maximized .win-resize-grip{display:none}
 .win-controls{display:flex;gap:2px;align-items:center}
 .win-btn,.win-close{position:relative;width:18px;height:16px;min-width:18px;border-top:1px solid var(--hi);border-left:1px solid var(--hi);border-right:1px solid var(--lo);border-bottom:1px solid var(--lo);background:#c0c0c0;color:#000;cursor:pointer;line-height:1;padding:0;display:grid;place-items:center}
