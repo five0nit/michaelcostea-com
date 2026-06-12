@@ -39,7 +39,7 @@ for (const selector of ['#readerWindow', '#resumeWindow', '#projectsWindow', '#a
 const homepageText = text('body');
 for (const phrase of [
   'HEAD OF TECH, AI & SYSTEMS',
-  'Visible, reviewed AI systems',
+  'Human-reviewed automation',
   'Projects - AI Systems Portfolio',
   'Resume.doc - Michael Costea',
   'AI Agents - Business Operating Leverage',

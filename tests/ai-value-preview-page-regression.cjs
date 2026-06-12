@@ -59,8 +59,8 @@ for (const phrase of [
 
 const indexDom = new JSDOM(indexHtml);
 const indexText = pageText(indexDom.window.document);
-if (!indexText.includes('HELPING PEOPLE GET MORE FROM AI')) {
-  throw new Error('main index.html should now contain the approved AI value hero headline');
+if (!indexText.includes('AI EDUCATION & ENABLEMENT')) {
+  throw new Error('main index.html should contain the concise AI education and enablement hero headline');
 }
 if (indexDom.window.document.querySelector('meta[name="robots"]')?.getAttribute('content')?.includes('noindex')) {
   throw new Error('main index.html must not receive preview robots noindex');
