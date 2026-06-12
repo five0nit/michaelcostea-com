@@ -6,6 +6,7 @@ const pageWindowRoutes = {
   projectsWindow: 'projects',
   agentsWindow: 'ai-agents',
   aiHelpWindow: 'ai-help',
+  agenticKnowledgebaseWindow: 'agentic-knowledgebase',
   intakeWindow: 'ai-intake',
   contactWindow: 'contact',
 };
@@ -21,6 +22,9 @@ const routeAliases = {
   agents: 'ai-agents',
   'ai-help': 'ai-help',
   aihelp: 'ai-help',
+  'agentic-knowledgebase': 'agentic-knowledgebase',
+  knowledgebase: 'agentic-knowledgebase',
+  'ai-knowledgebase': 'agentic-knowledgebase',
   'ai-intake': 'ai-intake',
   intake: 'ai-intake',
   aiintake: 'ai-intake',
@@ -635,6 +639,7 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="agentsWindow"><span><b class="si">🤖</b>AI Agents</span></a>
     <a class="start-item start-cta" role="menuitem" href="https://telegram-office.michaelcostea.com/agenttown/"><span><b class="si">🏢</b>Agent Office</span><small>live</small></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="aiHelpWindow"><span><b class="si">🎓</b>AI Help</span></a>
+    <a class="start-item start-cta" role="menuitem" href="#" data-open-window="agenticKnowledgebaseWindow"><span><b class="si">📚</b>AI Knowledgebase</span></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="intakeWindow"><span><b class="si">📝</b>AI Intake</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span><b class="si">🗂️</b>Programs</span><small>hidden</small></a>
     <div class="start-sep"></div>

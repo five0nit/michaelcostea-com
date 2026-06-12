@@ -127,6 +127,245 @@ body.mobile-mode .desktop{
   overflow-y:auto;
   overflow-x:hidden;
 }
+
+/* === 2026-06 generated Mini Michael section art === */
+.public-preview .generated-art-card{
+  margin:12px 0;
+  padding:6px;
+  background:#0b1020;
+  border-top:2px solid #33e8ff;
+  border-left:2px solid #33e8ff;
+  border-right:2px solid #00133d;
+  border-bottom:2px solid #00133d;
+  box-shadow:2px 2px 0 #000;
+}
+.public-preview .generated-art-card img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:360px;
+  object-fit:cover;
+  object-position:center;
+  background:#07101d;
+  image-rendering:auto;
+}
+.public-preview .compact-generated-art img{max-height:280px;}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview .generated-art-card{padding:4px;margin:10px 0;}
+  .public-preview .generated-art-card img{max-height:220px;}
+}
+
+/* === 2026-06 AI Help knowledgebase upgrade === */
+.public-preview .ui-btn.icon-knowledge::before{content:"K";color:#5a2a91;}
+.public-preview .kb-command-panel{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 150px;
+  gap:12px;
+  align-items:center;
+  margin:12px 0;
+  padding:12px;
+  background:#e8f6f6;
+  border-top:2px solid #fff;
+  border-left:2px solid #fff;
+  border-right:2px solid #486070;
+  border-bottom:2px solid #486070;
+  box-shadow:2px 2px 0 #000;
+}
+.public-preview .kb-kicker{
+  display:inline-block;
+  margin:0 0 6px;
+  padding:3px 7px;
+  background:#000080;
+  color:#fff;
+  border:1px solid #000;
+  font:900 10px/12px "Work Sans",Tahoma,sans-serif;
+  letter-spacing:.06em;
+}
+.public-preview .kb-command-copy h3,
+.public-preview .kb-hero-strip h3{
+  margin:0 0 6px;
+  color:#000080;
+  font:900 18px/22px "Work Sans",Tahoma,sans-serif;
+}
+.public-preview .kb-command-copy p,
+.public-preview .kb-hero-strip p{
+  margin:0;
+  font:12px/17px "Space Grotesk","Courier New",monospace;
+}
+.public-preview .kb-command-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+.public-preview .kb-command-art{
+  margin:0;
+  width:150px;
+  height:132px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f6f6f6;
+  border-top:2px solid #808080;
+  border-left:2px solid #808080;
+  border-right:2px solid #fff;
+  border-bottom:2px solid #fff;
+  overflow:hidden;
+}
+.public-preview .kb-command-art img{display:block;max-width:100%;max-height:100%;object-fit:contain;image-rendering:auto;}
+.public-preview .kb-path-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin:10px 0 12px;
+}
+.public-preview .kb-path-grid article{
+  min-height:104px;
+  padding:9px;
+  background:#f7f0ff;
+  border-top:2px solid #fff;
+  border-left:2px solid #fff;
+  border-right:2px solid #7a5a91;
+  border-bottom:2px solid #7a5a91;
+}
+.public-preview .kb-path-grid b,
+.public-preview .kb-maturity-grid b,
+.public-preview .kb-anatomy-grid b,
+.public-preview .kb-recipe-grid b,
+.public-preview .kb-glossary-grid b{
+  display:block;
+  margin-bottom:5px;
+  color:#000080;
+  font:900 12px/16px "Work Sans",Tahoma,sans-serif;
+  text-transform:uppercase;
+}
+.public-preview .kb-path-grid span,
+.public-preview .kb-maturity-grid span,
+.public-preview .kb-anatomy-grid span,
+.public-preview .kb-recipe-grid span,
+.public-preview .kb-glossary-grid span{
+  display:block;
+  font:12px/16px "Space Grotesk","Courier New",monospace;
+}
+.public-preview .guide-card.knowledge-card{
+  background:#fff4c2;
+  border-right-color:#808000;
+  border-bottom-color:#808000;
+  box-shadow:inset 0 0 0 1px #fff,2px 2px 0 #000080;
+}
+.public-preview .guide-card.knowledge-card:hover{background:#000080;color:#fff;}
+.public-preview .agentic-kb-doc{max-width:1000px;}
+.public-preview .kb-hero-strip{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 170px;
+  gap:12px;
+  align-items:center;
+  margin:12px 0 14px;
+  padding:12px;
+  background:#dfe8ff;
+  border-top:2px solid #fff;
+  border-left:2px solid #fff;
+  border-right:2px solid #405380;
+  border-bottom:2px solid #405380;
+  box-shadow:1px 1px 0 #000;
+}
+.public-preview .kb-hero-strip figure{
+  margin:0;
+  width:170px;
+  height:132px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  border-top:2px solid #808080;
+  border-left:2px solid #808080;
+  border-right:2px solid #fff;
+  border-bottom:2px solid #fff;
+  overflow:hidden;
+}
+.public-preview .kb-hero-strip img{display:block;max-width:100%;max-height:100%;object-fit:contain;}
+.public-preview .kb-maturity-grid,
+.public-preview .kb-recipe-grid,
+.public-preview .kb-glossary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin:8px 0 14px;
+}
+.public-preview .kb-maturity-grid article,
+.public-preview .kb-recipe-grid article,
+.public-preview .kb-glossary-grid article{
+  padding:9px;
+  background:#f6f6f6;
+  border-top:2px solid #fff;
+  border-left:2px solid #fff;
+  border-right:2px solid #808080;
+  border-bottom:2px solid #808080;
+}
+.public-preview .kb-maturity-grid small,
+.public-preview .kb-recipe-grid em{
+  display:block;
+  margin-top:7px;
+  padding-top:6px;
+  border-top:1px dashed #808080;
+  color:#111;
+  font:900 11px/14px "Work Sans",Tahoma,sans-serif;
+  font-style:normal;
+}
+.public-preview .kb-anatomy-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin:8px 0 14px;
+}
+.public-preview .kb-anatomy-grid .mini-content-card{
+  min-height:168px;
+  padding:9px;
+  background:#f3f8ff;
+  border-top:2px solid #fff;
+  border-left:2px solid #fff;
+  border-right:2px solid #668099;
+  border-bottom:2px solid #668099;
+}
+.public-preview .kb-anatomy-grid .mini-card-figure{
+  width:74px;
+  height:78px;
+}
+.public-preview .kb-safety-table td:first-child{
+  font:900 12px/15px "Work Sans",Tahoma,sans-serif;
+  color:#000080;
+}
+.public-preview .kb-scorecard{
+  margin:8px 0 12px;
+  padding:10px;
+  background:#fff4c2;
+  border:2px solid #808000;
+  box-shadow:1px 1px 0 #000;
+}
+.public-preview .kb-scorecard p{
+  margin:0 0 8px;
+  font:12px/17px "Space Grotesk","Courier New",monospace;
+}
+.public-preview .kb-scorecard p:last-child{margin-bottom:0;}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview .kb-command-panel,
+  .public-preview .kb-hero-strip,
+  .public-preview .kb-path-grid,
+  .public-preview .kb-maturity-grid,
+  .public-preview .kb-anatomy-grid,
+  .public-preview .kb-recipe-grid,
+  .public-preview .kb-glossary-grid{
+    grid-template-columns:1fr!important;
+  }
+  .public-preview .kb-command-art,
+  .public-preview .kb-hero-strip figure{
+    width:100%;
+    height:138px;
+  }
+  .public-preview .kb-command-actions .btn{width:100%;justify-content:center;}
+  .public-preview .kb-path-grid article,
+  .public-preview .kb-anatomy-grid .mini-content-card{min-height:0;}
+}
 body.mobile-mode .desk-icon{
   width:100%;
   height:92px;
