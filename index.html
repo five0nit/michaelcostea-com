@@ -378,7 +378,7 @@
           <div class="guide-card-grid">
             <button class="guide-card" type="button" data-open="agentGuideWindow" onclick="openWindow('agentGuideWindow')"><b>1. What is an AI agent?</b><span>Simple explanation, examples, safety limits, and visual workflow.</span></button>
             <button class="guide-card" type="button" data-open="introDeckWindow" onclick="openWindow('introDeckWindow')"><b>2. Intro to AI deck</b><span>Open a slide preview in the website, then download the PDF or PowerPoint copy.</span></button>
-            <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>3. Install Hermes or OpenClaw</b><span>Hold-your-hand setup with Hermes/OpenClaw toggles, Mac/Windows/Linux paths, model tokens, local config, Telegram, and BotFather.</span></button>
+            <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>3. Install Hermes or OpenClaw</b><span>Native local setup first: Mac, Windows, Linux/WSL paths, model login, safe local test, then optional Telegram/BotFather.</span></button>
             <button class="guide-card" type="button" data-open="firstWorkflowGuideWindow" onclick="openWindow('firstWorkflowGuideWindow')"><b>4. Your first safe AI workflow</b><span>A practical 30-minute tutorial: pick one task, write the prompt, test it, add approval gates, and save the repeatable playbook.</span></button>
             <button class="guide-card" type="button" data-open="buyAiHelpGuideWindow" onclick="openWindow('buyAiHelpGuideWindow')"><b>5. How to hire AI help safely</b><span>How to brief an operator, compare offers, avoid vaporware, and keep approval gates when paying for AI-assisted work.</span></button>
             <button class="guide-card" type="button" data-open="operatorVsChatGuideWindow" onclick="openWindow('operatorVsChatGuideWindow')"><b>6. Chatbot or operator?</b><span>How to decide whether you need prompts, a scoped operator, or a done-for-you AI marketplace for the result you want.</span></button>
@@ -898,9 +898,9 @@ Rules:
       <div class="win-body document-body">
         <article class="resume-doc guide-doc install-guide">
           <div class="mini-heading lean-heading"><h2>Install Your First AI Agent</h2></div>
-          <p class="guide-subtitle"><b>A simplified beginner install path: choose one agent, one computer, one private test.</b></p>
+          <p class="guide-subtitle"><b>A simplified native-local install path: choose one agent, one computer, one private test.</b></p>
           <figure class="generated-art-card"><img src="assets/minime-generated/install-prereq-checklist.png" alt="Pixel Mini Michael pointing to an AI agent install prerequisite checklist" loading="lazy" /></figure>
-          <p class="guide-note"><b>Simple install rule:</b> install the app, complete the guided setup, get one local reply, then add Telegram. Do not connect real business systems on day one. If a step fails, stop there — do not stack random fixes.</p>
+          <p class="guide-note"><b>Simple install rule:</b> start with the normal local installer for your computer — not Docker. Install the app/CLI, complete the guided setup, get one local reply, then add Telegram. Do not connect real business systems on day one. If a step fails, stop there — do not stack random fixes.</p>
           <div class="beginner-box-grid">
             <article><b>Hermes: easiest first choice</b><span>Best when you want a friendly agent that can chat, edit files, run checks, use skills, remember context, and connect to Telegram later.</span></article>
             <article><b>OpenClaw: choose when you want a bigger local control plane</b><span>Best when you want a broader cockpit for agents, gateway status, dashboard chat, channels, skills, workspaces, and local automation.</span></article>
@@ -948,10 +948,10 @@ Rules:
 
           <h3>Step 1 — before touching Terminal: get these ready</h3>
           <div class="prereq-grid compact-prereqs">
-            <article><b>Computer access</b><span>Use your own Mac, Windows PC, Linux machine, or WSL2 Ubuntu. You need permission to install apps and run Terminal/PowerShell.</span></article>
-            <article><b>Model/provider login</b><span>Have ChatGPT/Nous Portal or an API key ready. The guided setup will tell you which one it needs.</span></article>
-            <article><b>Git</b><span>Hermes command-line installs need Git. On Mac, <code>git --version</code> may prompt Apple command-line tools. On Linux/WSL, install <code>git</code> with your package manager.</span></article>
-            <article><b>Node for OpenClaw</b><span>OpenClaw recommends Node 24, with Node 22.19+ also supported. The installer can help, but checking <code>node --version</code> first prevents confusion.</span></article>
+            <article><b>Computer access</b><span>Use your own Mac, Windows PC, Linux machine, or WSL2 Ubuntu. You need permission to install apps and run Terminal/PowerShell. Docker is not the beginner path here.</span></article>
+            <article><b>Model/provider login</b><span>Have Nous Portal, OpenRouter, Anthropic, OpenAI, Gemini, or another supported provider ready. The guided setup will tell you what it needs.</span></article>
+            <article><b>Git for CLI installs</b><span>Hermes CLI installs need Git on non-Windows platforms. On Mac, <code>git --version</code> may prompt Apple command-line tools. On Linux/WSL, install <code>git</code> with your package manager.</span></article>
+            <article><b>Node for OpenClaw</b><span>OpenClaw is Node-based. The official installer checks this and can help; Node 24 is the clean target, and Node 22.19+ is the minimum supported line.</span></article>
             <article><b>Telegram on phone</b><span>Optional for first day. Install Telegram and log in only if you want phone chat after the local dashboard test works.</span></article>
             <article><b>BotFather token</b><span>Use verified <code>@BotFather</code>, send <code>/newbot</code>, choose a display name, then choose a username ending in <code>bot</code>. Copy the token privately.</span></article>
             <article><b>Telegram user ID</b><span>Message <code>@userinfobot</code> or <code>@get_id_bot</code> and copy your numeric ID. This lets you allow only yourself.</span></article>
@@ -965,14 +965,14 @@ Rules:
 
           <figure class="generated-art-card compact-generated-art"><img src="assets/minime-generated/install-dashboard-success.png" alt="Pixel Mini Michael beside a successful local AI agent dashboard chat" loading="lazy" /></figure>
           <div class="terminal-checklists selected-flow-summary" aria-label="Selected agent command order">
-            <article data-checklist-product="hermes" class="active"><h4>Hermes simple flow</h4><p>Install Desktop or CLI → <code>hermes setup --portal</code> if available → local hello → optional Telegram gateway → <code>hermes doctor</code> / <code>hermes gateway status</code>.</p></article>
-            <article data-checklist-product="openclaw" hidden><h4>OpenClaw simple flow</h4><p>Install → <code>openclaw onboard --install-daemon</code> → <code>openclaw gateway status</code> → <code>openclaw dashboard</code> → first browser chat → optional Telegram.</p></article>
+            <article data-checklist-product="hermes" class="active"><h4>Hermes native-local flow</h4><p>Run the Desktop/native installer or CLI installer → <code>hermes setup</code> or <code>hermes setup --portal</code> → <code>hermes model</code> if needed → one local chat → optional Telegram gateway → <code>hermes doctor</code> / <code>hermes status</code>.</p></article>
+            <article data-checklist-product="openclaw" hidden><h4>OpenClaw native-local flow</h4><p>Run the official Mac/Linux/Windows installer → complete <code>openclaw onboard</code> when prompted → check <code>openclaw --version</code> and gateway/status commands → open the local dashboard/control UI → optional Telegram.</p></article>
           </div>
 
           <div class="guide-panel active" data-panel-product="hermes" data-panel-os="mac">
             <h3>Hermes Agent on Mac — complete beginner path</h3>
             <div class="linear-install-steps">
-              <article><b>1. Easiest option: use Hermes Desktop</b><p>Download and run the Hermes Desktop installer from the official Hermes Agent website. This is the recommended Mac path because it installs the desktop app and command-line tool together.</p></article>
+              <article><b>1. Easiest native option: use Hermes Desktop</b><p>Download and run the Hermes Desktop installer from the official Hermes Agent website. This is the recommended Mac path because it installs the desktop app and command-line tool together.</p></article>
               <article><b>2. Command-line option: open Terminal</b><p>Press Command + Space, type <b>Terminal</b>, press Enter.</p><p class="plain-summary"><b>In plain English:</b> Terminal is where you paste setup commands if you are not using the desktop installer.</p></article>
               <article><b>3. Check Git</b><pre class="guide-code">git --version</pre><p>If Mac asks to install command-line tools, allow it, then run the command again. The Hermes installer handles the other common dependencies.</p></article>
               <article><b>4. Install Hermes CLI</b><pre class="guide-code">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
@@ -987,19 +987,19 @@ hermes setup</pre><p>Use the guided login/provider flow. If it offers one browse
 hermes</pre><p>Do not continue until you get a local reply.</p></article>
               <article><b>8. Optional: connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
 hermes gateway run</pre><p>Paste your BotFather token and numeric Telegram user ID only into the local setup prompt. Keep this Terminal open for the first test. Stop with Ctrl + C.</p></article>
-              <article><b>9. Verify, then dashboard last</b><pre class="guide-code">hermes doctor
+              <article><b>9. Verify, then open Desktop/dashboard last</b><pre class="guide-code">hermes doctor
 hermes status
 hermes gateway status
-hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre><p>Open the shown local dashboard URL only after doctor/status look healthy.</p></article>
+hermes desktop</pre><p>Use <code>hermes desktop</code> or the installed Desktop app after the command-line setup and status checks are healthy.</p></article>
             </div>
           </div>
 
           <div class="guide-panel" data-panel-product="hermes" data-panel-os="windows" hidden>
-            <h3>Hermes Agent on Windows — native first, WSL fallback</h3>
-            <p class="plain-summary"><b>In plain English:</b> use the native Windows installer first unless you already know you prefer WSL. WSL Ubuntu is the fallback when you want a Linux-like agent environment inside Windows.</p>
+            <h3>Hermes Agent on Windows — native first, WSL only if you choose it</h3>
+            <p class="plain-summary"><b>In plain English:</b> use the native Windows installer first. WSL Ubuntu is an optional Linux-style path for technical users, not the default. Docker is not part of this beginner setup.</p>
             <div class="linear-install-steps">
-              <article><b>1A. Easiest option: use Hermes Desktop</b><p>Download and run the Hermes Desktop installer from the official Hermes Agent website. After it finishes, open PowerShell and run setup.</p></article>
-              <article><b>1B. Native PowerShell install</b><p>Start → PowerShell → right-click → Run as administrator only if Windows asks for installer permission.</p><pre class="guide-code">iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+              <article><b>1A. Easiest native option: use Hermes Desktop</b><p>Download and run the Hermes Desktop installer from the official Hermes Agent website. After it finishes, open PowerShell only if you want to verify the command-line tool.</p></article>
+              <article><b>1B. Native PowerShell CLI install</b><p>Start → PowerShell. Run as administrator only if Windows asks for installer permission.</p><pre class="guide-code">iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 hermes --version</pre></article>
               <article><b>2. Run first setup</b><pre class="guide-code">hermes setup --portal
 # If your version does not support portal setup yet:
@@ -1010,10 +1010,10 @@ hermes model</pre><p>Use the guided browser login/provider setup. Keep the works
 hermes</pre></article>
               <article><b>4. Optional: connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
 hermes gateway run</pre><p>Use foreground <code>gateway run</code> first so you can see logs and stop with Ctrl + C.</p></article>
-              <article><b>5. Verify, then dashboard last</b><pre class="guide-code">hermes doctor
+              <article><b>5. Verify, then open Desktop/dashboard last</b><pre class="guide-code">hermes doctor
 hermes status
 hermes gateway status
-hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></article>
+hermes desktop</pre><p>Use the Desktop app or <code>hermes desktop</code> after local chat and health checks work.</p></article>
               <article><b>6. WSL Ubuntu fallback</b><p>If native Windows setup gets messy, install Ubuntu in WSL and repeat the Linux install path inside Ubuntu.</p><pre class="guide-code">wsl --install -d Ubuntu
 # restart if Windows asks, then open Ubuntu:
 sudo apt update
@@ -1021,7 +1021,7 @@ sudo apt install -y curl git</pre></article>
               <article><b>7. Install Hermes inside Ubuntu</b><pre class="guide-code">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 exec $SHELL -l
 hermes --version</pre></article>
-              <article><b>8. If you want it running in the background later</b><pre class="guide-code">hermes gateway install
+              <article><b>8. If you want Telegram running in the background later</b><pre class="guide-code">hermes gateway install
 hermes gateway start
 hermes gateway status</pre><p>Do this only after foreground mode works.</p></article>
             </div>
@@ -1044,10 +1044,10 @@ hermes model</pre><p>Choose GPT / ChatGPT OAuth if offered. Do not manually inst
 hermes</pre></article>
               <article><b>5. Connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
 hermes gateway run</pre></article>
-              <article><b>6. Verify, then dashboard last</b><pre class="guide-code">hermes doctor
+              <article><b>6. Verify, then open Desktop/dashboard last</b><pre class="guide-code">hermes doctor
 hermes status
 hermes gateway status
-hermes dashboard --host 127.0.0.1 --port 9119 --no-open</pre></article>
+hermes desktop</pre><p>Use <code>hermes desktop</code> or the Desktop app only after local chat and health checks work.</p></article>
               <article><b>7. Optional background service after foreground works</b><pre class="guide-code">hermes gateway install
 hermes gateway start
 hermes gateway status</pre></article>
@@ -1055,16 +1055,18 @@ hermes gateway status</pre></article>
           </div>
 
           <div class="guide-panel" data-panel-product="openclaw" data-panel-os="mac" hidden>
-            <h3>OpenClaw on Mac — complete beginner path</h3>
+            <h3>OpenClaw on Mac — native local path</h3>
+            <p class="plain-summary"><b>In plain English:</b> use the official Mac/Linux shell installer. It installs OpenClaw locally and can start onboarding. Do not start with Docker.</p>
             <div class="linear-install-steps">
               <article><b>1. Open Terminal</b><p>Command + Space → Terminal → Enter.</p></article>
               <article><b>2. Check Node if you already have it</b><pre class="guide-code">node --version</pre><p>OpenClaw recommends Node 24. Node 22.19+ is also supported. If this command fails, use the installer anyway; it can handle Node setup.</p></article>
               <article><b>3. Run official installer</b><pre class="guide-code">curl -fsSL https://openclaw.ai/install.sh | bash
 exec $SHELL -l
 openclaw --version</pre><p>The installer may launch onboarding automatically. If it does, complete it and choose a safe workspace.</p></article>
-              <article><b>4. Run onboarding</b><pre class="guide-code">openclaw onboard --install-daemon</pre><p>The wizard configures the local Gateway, provider/API key, channels, skills, and workspace defaults.</p></article>
-              <article><b>5. Verify the Gateway</b><pre class="guide-code">openclaw gateway status</pre><p><b>Success:</b> you see the Gateway running locally, usually on port <code>18789</code>.</p></article>
-              <article><b>6. Open dashboard and chat locally</b><pre class="guide-code">openclaw dashboard</pre><p>This opens the Control UI in your browser. Send one safe hello message there before adding Telegram.</p></article>
+              <article><b>4. Run onboarding if it did not launch</b><pre class="guide-code">openclaw onboard</pre><p>The wizard configures the local gateway, provider/API key, channels, skills, and workspace defaults.</p></article>
+              <article><b>5. Verify the local install</b><pre class="guide-code">openclaw --version
+openclaw gateway status</pre><p><b>Success:</b> you see the CLI version and a healthy local gateway/status check.</p></article>
+              <article><b>6. Open the local dashboard/control UI</b><pre class="guide-code">openclaw dashboard</pre><p>Open the local browser UI and send one safe hello message before adding Telegram.</p></article>
               <article><b>7. Optional: configure Telegram later</b><pre class="guide-code">openclaw configure
 # choose channels / Telegram when prompted</pre><p>Do not paste your real token into public pages. Only add Telegram after browser chat works.</p></article>
               <article><b>8. If gateway is not running</b><pre class="guide-code">openclaw gateway run
@@ -1079,10 +1081,10 @@ openclaw --version</pre></article>
           </div>
 
           <div class="guide-panel" data-panel-product="openclaw" data-panel-os="windows" hidden>
-            <h3>OpenClaw on Windows — simplest path + stable WSL path</h3>
-            <p class="plain-summary"><b>Choose one Windows route:</b> try the PowerShell installer first if you want simplest. Use WSL Ubuntu if Windows shell setup gets messy.</p>
+            <h3>OpenClaw on Windows — native PowerShell first</h3>
+            <p class="plain-summary"><b>Choose one Windows route:</b> use the native PowerShell installer first. WSL Ubuntu is an optional fallback for people who specifically want Linux tooling. Docker is not the beginner path.</p>
             <div class="linear-install-steps">
-              <article><b>1A. Easiest Windows option</b><p>If you prefer a desktop-style setup, use the native OpenClaw Windows Hub installer from the official OpenClaw releases. Use PowerShell only if you want the CLI/Gateway directly.</p></article>
+              <article><b>1A. Easiest Windows option</b><p>Use the official native OpenClaw Windows installer when available. Use PowerShell when you want the CLI/gateway directly.</p></article>
               <article><b>1B. PowerShell installer</b><p>Start → PowerShell → right-click → Run as administrator only if Windows asks.</p><pre class="guide-code">iwr -useb https://openclaw.ai/install.ps1 | iex
 openclaw --version</pre></article>
               <article><b>1C. Stable WSL Ubuntu alternative</b><pre class="guide-code">wsl --install -d Ubuntu
@@ -1092,8 +1094,9 @@ sudo apt install -y curl git
 curl -fsSL https://openclaw.ai/install.sh | bash
 exec $SHELL -l
 openclaw --version</pre></article>
-              <article><b>2. Run onboarding</b><pre class="guide-code">openclaw onboard --install-daemon</pre><p>Choose provider/API key, safe workspace, and local Gateway. Skip Telegram until dashboard chat works.</p></article>
-              <article><b>3. Verify Gateway</b><pre class="guide-code">openclaw gateway status</pre></article>
+              <article><b>2. Run onboarding if it did not launch</b><pre class="guide-code">openclaw onboard</pre><p>Choose provider/API key, safe workspace, and local gateway. Skip Telegram until dashboard chat works.</p></article>
+              <article><b>3. Verify local install and gateway</b><pre class="guide-code">openclaw --version
+openclaw gateway status</pre></article>
               <article><b>4. Open dashboard and send first message</b><pre class="guide-code">openclaw dashboard</pre><p>If the browser opens and chat replies, the basic install is working.</p></article>
               <article><b>5. Optional: add Telegram</b><pre class="guide-code">openclaw configure
 # choose channels / Telegram when prompted</pre></article>
@@ -1112,15 +1115,17 @@ openclaw --version</pre><p>Node 24 recommended; Node 22.19+ supported.</p></arti
           </div>
 
           <div class="guide-panel" data-panel-product="openclaw" data-panel-os="linux" hidden>
-            <h3>OpenClaw on Linux — Ubuntu/Debian path</h3>
+            <h3>OpenClaw on Linux/WSL — native local path</h3>
+            <p class="plain-summary"><b>In plain English:</b> install directly inside Ubuntu/Debian/WSL. Keep Docker out of the base path unless you are deliberately building an isolated advanced environment.</p>
             <div class="linear-install-steps">
               <article><b>1. Install basics</b><pre class="guide-code">sudo apt update
 sudo apt install -y curl git</pre></article>
               <article><b>2. Run official installer</b><pre class="guide-code">curl -fsSL https://openclaw.ai/install.sh | bash
 exec $SHELL -l
 openclaw --version</pre></article>
-              <article><b>3. Run onboarding</b><pre class="guide-code">openclaw onboard --install-daemon</pre><p>Choose provider/API key, safe workspace, and local Gateway.</p></article>
-              <article><b>4. Verify Gateway</b><pre class="guide-code">openclaw gateway status</pre></article>
+              <article><b>3. Run onboarding if it did not launch</b><pre class="guide-code">openclaw onboard</pre><p>Choose provider/API key, safe workspace, and local gateway.</p></article>
+              <article><b>4. Verify local install and gateway</b><pre class="guide-code">openclaw --version
+openclaw gateway status</pre></article>
               <article><b>5. Open dashboard and send first message</b><pre class="guide-code">openclaw dashboard</pre></article>
               <article><b>6. Optional: add Telegram later</b><pre class="guide-code">openclaw configure
 # choose channels / Telegram when prompted</pre></article>
@@ -1163,7 +1168,7 @@ openclaw --version</pre></article>
           <table class="guide-table troubleshoot-table"><thead><tr><th>What you see</th><th>Probably means</th><th>Try this</th></tr></thead><tbody>
             <tr><td><code>command not found</code></td><td>Terminal cannot find the app yet.</td><td>Close/reopen Terminal, run <code>exec $SHELL -l</code>, then check version.</td></tr>
             <tr><td><code>permission denied</code></td><td>The command lacks permission or wrong folder.</td><td>Stop. Do not randomly add <code>sudo</code>. Re-read that step.</td></tr>
-            <tr><td>Model says no auth</td><td>Provider login/API key not connected.</td><td>Re-run <code>hermes setup --portal</code>, <code>hermes model</code>, or <code>openclaw onboard --install-daemon</code>.</td></tr>
+            <tr><td>Model says no auth</td><td>Provider login/API key not connected.</td><td>Re-run <code>hermes setup</code> / <code>hermes setup --portal</code>, <code>hermes model</code>, or <code>openclaw onboard</code>.</td></tr>
             <tr><td>Telegram bot silent</td><td>Gateway off, token wrong, bot not started, or user ID not allowed.</td><td>Send <code>/start</code>, check token/user ID, then run gateway foreground again.</td></tr>
             <tr><td>Dashboard blank or useless</td><td>Dashboard opened before setup/gateway/doctor was healthy.</td><td>Go back to doctor/status checks. Dashboard is last.</td></tr>
             <tr><td>Windows path feels broken</td><td>PowerShell route hit Windows-specific issues.</td><td>Use the WSL Ubuntu route in the selected panel.</td></tr>
