@@ -23,6 +23,13 @@ assertIncludes('AI Help start card grid', start, 'copy/paste lessons');
 assertIncludes('AI Help start card grid', start, '9. Build a memory layer');
 assertIncludes('AI Help start card grid', start, 'Byterover-style agent memory');
 
+const agentGuide = text('#agentGuideWindow');
+assertIncludes('agent guide capabilities', agentGuide, 'What can an AI agent do?');
+assertIncludes('agent guide capabilities', agentGuide, 'Summarise notes, rewrite rough drafts');
+assertIncludes('agent guide capabilities', agentGuide, 'bring back evidence instead of guesses');
+assertIncludes('agent guide capabilities', agentGuide, 'flag work that needs human approval');
+if (/[📄🔎🧾🧠🛠️📊]/u.test(agentGuide)) throw new Error('agent guide capabilities should not use emoji labels');
+
 const memoryGuide = text('#memoryLayerGuideWindow');
 assertIncludes('memory layer tutorial', memoryGuide, 'Build a memory layer for your agent');
 assertIncludes('memory layer tutorial', memoryGuide, 'Don’t forget who you are');

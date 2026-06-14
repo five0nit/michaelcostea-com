@@ -1112,6 +1112,28 @@ body.public-preview::before{
 .public-preview .guide-tiles>div{background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:8px;min-height:92px;}
 .public-preview .guide-tiles b{display:block;color:#000080;margin:4px 0;}
 .public-preview .guide-tiles span{display:block;font-size:11px;line-height:15px;}
+.public-preview .agent-capability-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.public-preview .agent-capability-tiles .mini-content-card{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 86px;
+  grid-template-areas:"title art" "body art";
+  column-gap:12px;
+  align-items:start;
+  min-height:112px;
+  padding:10px;
+  overflow:hidden;
+}
+.public-preview .agent-capability-tiles .mini-card-figure{
+  grid-area:art;
+  float:none!important;
+  width:78px!important;
+  height:82px!important;
+  margin:0!important;
+  justify-self:end;
+  align-self:start;
+}
+.public-preview .agent-capability-tiles b{grid-area:title;margin:2px 0 4px;font-size:13px;line-height:16px;}
+.public-preview .agent-capability-tiles span{grid-area:body;font-size:12px;line-height:16px;min-width:0;overflow-wrap:normal;}
 .public-preview .workflow-examples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
 .public-preview .beginner-box-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
 .public-preview .memory-benefit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
@@ -1202,10 +1224,12 @@ body.public-preview::before{
 .public-preview .step-list{padding-left:22px;}
 .public-preview .step-list li{margin:8px 0;}
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples,.public-preview .beginner-box-grid,.public-preview .memory-benefit-grid,.public-preview .prereq-grid,.public-preview .install-roadmap,.public-preview .tutorial-flow-map{grid-template-columns:1fr!important;}
+  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .agent-capability-tiles,.public-preview .workflow-examples,.public-preview .beginner-box-grid,.public-preview .memory-benefit-grid,.public-preview .prereq-grid,.public-preview .install-roadmap,.public-preview .tutorial-flow-map{grid-template-columns:1fr!important;}
   .public-preview .visual-flow{grid-template-columns:1fr!important;}
   .public-preview .visual-flow span{transform:rotate(90deg);min-height:20px;}
   .public-preview .guide-code{font-size:11px!important;line-height:15px!important;}
+  .public-preview .agent-capability-tiles .mini-content-card{grid-template-columns:minmax(0,1fr) 64px!important;min-height:96px!important;column-gap:8px!important;}
+  .public-preview .agent-capability-tiles .mini-card-figure{width:58px!important;height:62px!important;}
 }
 
 /* === 2026-05 authoritative mobile Welcome layout === */
