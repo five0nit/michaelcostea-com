@@ -959,18 +959,69 @@ Rules:
           </div>
 
           <h3>Step 1 — before touching Terminal: get these ready</h3>
-          <div class="prereq-grid compact-prereqs">
-            <article><b>Computer access</b><span>Use your own Mac, Windows PC, Linux machine, or WSL2 Ubuntu. You need permission to install apps and run Terminal/PowerShell. Docker is not the beginner path here.</span></article>
-            <article><b>Model/provider login</b><span>Have Nous Portal, OpenRouter, Anthropic, OpenAI, Gemini, or another supported provider ready. The guided setup will tell you what it needs.</span></article>
-            <article><b>Git for CLI installs</b><span>Hermes CLI installs need Git on non-Windows platforms. On Mac, <code>git --version</code> may prompt Apple command-line tools. On Linux/WSL, install <code>git</code> with your package manager.</span></article>
-            <article><b>Node for OpenClaw</b><span>OpenClaw is Node-based. The official installer checks this and can help; Node 24 is the clean target, and Node 22.19+ is the minimum supported line.</span></article>
-            <article><b>Telegram on phone</b><span>Optional for first day. Install Telegram and log in only if you want phone chat after the local dashboard test works.</span></article>
-            <article><b>BotFather token</b><span>Use verified <code>@BotFather</code>, send <code>/newbot</code>, choose a display name, then choose a username ending in <code>bot</code>. Copy the token privately.</span></article>
-            <article><b>Telegram user ID</b><span>Message <code>@userinfobot</code> or <code>@get_id_bot</code> and copy your numeric ID. This lets you allow only yourself.</span></article>
-            <article><b>Safe test folder</b><span>Create a folder called <code>AI Agent Test</code>. Put one harmless file inside called <code>test-note.txt</code>.</span></article>
+          <p class="plain-summary"><b>This checklist changes with Step 0.</b> Pick Hermes/OpenClaw and Mac/Windows/Linux above, then install only the prerequisites shown here before running the installer.</p>
+
+          <div class="prereq-grid compact-prereqs active" data-prereq-product="hermes" data-prereq-os="mac">
+            <article><b>Mac admin access</b><span>Use your own Mac account with permission to install developer tools and Homebrew. Keep Docker out of the beginner path.</span></article>
+            <article><b>Xcode Command Line Tools</b><span>Install Apple’s build tools first. Run <code>xcode-select --install</code>, finish the Apple prompt, then confirm <code>git --version</code> works.</span></article>
+            <article><b>Homebrew</b><span>Install Homebrew before the one-line Hermes installer. It gives the Mac a predictable local package path if Hermes or its dependencies need it.</span></article>
+            <article><b>Terminal ready</b><span>Open Terminal from Spotlight. After installing tools, close and reopen Terminal so your shell can see new commands.</span></article>
+            <article><b>Model/provider login</b><span>Have Nous Portal or another supported model provider ready for <code>hermes setup --portal</code> / <code>hermes setup</code>.</span></article>
+            <article><b>Safe test folder</b><span>Create <code>AI Agent Test</code> with one harmless <code>test-note.txt</code>. Do not point Hermes at Desktop/Documents yet.</span></article>
+          </div>
+
+          <div class="prereq-grid compact-prereqs" data-prereq-product="hermes" data-prereq-os="windows" hidden>
+            <article><b>Windows admin access</b><span>Use your own Windows account. Run PowerShell as administrator only if the installer asks.</span></article>
+            <article><b>PowerShell ready</b><span>Open Start → PowerShell. The beginner route is native Windows first, not Docker and not WSL by default.</span></article>
+            <article><b>Execution/network permission</b><span>Corporate antivirus may block install scripts. If PowerShell blocks the installer, stop and read the error instead of stacking random fixes.</span></article>
+            <article><b>Model/provider login</b><span>Have Nous Portal or another supported provider ready for guided setup.</span></article>
+            <article><b>Optional WSL fallback only</b><span>If native Windows gets messy, install Ubuntu in WSL and use the Linux checklist below. Do not mix both paths halfway through.</span></article>
+            <article><b>Safe test folder</b><span>Create a harmless folder such as <code>C:\AI Agent Test</code>. Avoid business folders until local chat works.</span></article>
+          </div>
+
+          <div class="prereq-grid compact-prereqs" data-prereq-product="hermes" data-prereq-os="linux" hidden>
+            <article><b>Ubuntu/Debian shell</b><span>Use a normal Linux machine or WSL Ubuntu with permission to run <code>sudo apt</code>.</span></article>
+            <article><b>Core CLI tools</b><span>Install <code>curl</code> and <code>git</code> first: <code>sudo apt update && sudo apt install -y curl git</code>.</span></article>
+            <article><b>Shell reload ready</b><span>After the installer, you will run <code>exec $SHELL -l</code> or open a fresh terminal so <code>hermes</code> is on PATH.</span></article>
+            <article><b>Model/provider login</b><span>Have Nous Portal or another supported provider ready for <code>hermes setup</code>.</span></article>
+            <article><b>WSL note</b><span>If you are inside WSL, keep files in your Linux home folder while learning, not deep under <code>/mnt/c</code>.</span></article>
+            <article><b>Safe test folder</b><span>Create <code>~/AI Agent Test</code> with harmless notes only.</span></article>
+          </div>
+
+          <div class="prereq-grid compact-prereqs" data-prereq-product="openclaw" data-prereq-os="mac" hidden>
+            <article><b>Mac admin access</b><span>Use your own Mac account and Terminal. Docker is not the beginner path.</span></article>
+            <article><b>Xcode Command Line Tools</b><span>Run <code>xcode-select --install</code> if <code>git --version</code> triggers Apple’s developer tools prompt.</span></article>
+            <article><b>Homebrew helpful</b><span>Install Homebrew if you do not already have it. It makes Node and CLI dependency fixes much less painful.</span></article>
+            <article><b>Node target</b><span>OpenClaw is Node-based. Aim for Node 24; Node 22.19+ is the minimum supported line if you use npm/manual fallback.</span></article>
+            <article><b>Provider/API key</b><span>Have the provider login or API key you want OpenClaw to use. Keep API keys private.</span></article>
+            <article><b>Safe workspace</b><span>Create a small test workspace before onboarding asks where agents may work.</span></article>
+          </div>
+
+          <div class="prereq-grid compact-prereqs" data-prereq-product="openclaw" data-prereq-os="windows" hidden>
+            <article><b>Windows admin access</b><span>Use native PowerShell first. Run as administrator only if Windows asks.</span></article>
+            <article><b>PowerShell ready</b><span>Start → PowerShell. Do not begin with Docker. WSL is a separate optional route, not the default.</span></article>
+            <article><b>Node target</b><span>OpenClaw is Node-based. The official installer should guide setup; if using npm fallback, use Node 24 or at least Node 22.19+.</span></article>
+            <article><b>Provider/API key</b><span>Have your model provider login or API key ready for onboarding. Never paste it into public chats or pages.</span></article>
+            <article><b>Optional WSL fallback only</b><span>If Windows native setup fails, switch cleanly to WSL Ubuntu and use the Linux/OpenClaw checklist.</span></article>
+            <article><b>Safe workspace</b><span>Create <code>C:\AI Agent Test</code> or a similar harmless folder before connecting real files.</span></article>
+          </div>
+
+          <div class="prereq-grid compact-prereqs" data-prereq-product="openclaw" data-prereq-os="linux" hidden>
+            <article><b>Ubuntu/Debian shell</b><span>Use Linux or WSL Ubuntu with <code>sudo apt</code> access.</span></article>
+            <article><b>Core CLI tools</b><span>Install <code>curl</code> and <code>git</code> first: <code>sudo apt update && sudo apt install -y curl git</code>.</span></article>
+            <article><b>Node target</b><span>OpenClaw is Node-based. Prefer Node 24; Node 22.19+ is the minimum supported line for manual/npm fallback.</span></article>
+            <article><b>Provider/API key</b><span>Have the model provider login or API key ready, stored privately.</span></article>
+            <article><b>WSL note</b><span>On WSL, keep the beginner workspace in your Linux home folder while learning.</span></article>
+            <article><b>Safe workspace</b><span>Create <code>~/AI Agent Test</code> and use that for first onboarding/tests.</span></article>
+          </div>
+
+          <div class="prereq-grid compact-prereqs shared-prereqs">
+            <article><b>Telegram on phone</b><span>Optional for first day. Install Telegram only if you want phone chat after the local test works.</span></article>
+            <article><b>BotFather token</b><span>Optional after local chat works. Use verified <code>@BotFather</code>, create a bot, and keep the token private.</span></article>
+            <article><b>Telegram user ID</b><span>Optional after local chat works. Use <code>@userinfobot</code> or <code>@get_id_bot</code> to allow only yourself.</span></article>
             <article><b>Permission rule</b><span>Day one: no customer data, money, deleting files, public messages, business systems, or full Desktop/Documents access.</span></article>
           </div>
-          <p class="plain-summary"><b>In plain English:</b> you are preparing the account, minimum computer tools, optional private message channel, and a harmless sandbox before any installer touches your real work.</p>
+          <p class="plain-summary"><b>In plain English:</b> Step 1 is now a dependency checklist for the selected agent and computer. If any required item above is missing, fix that first or the installer/setup is likely to fail.</p>
 
           <h3>Step 2 — selected install path</h3>
           <p class="plain-summary"><b>Follow only the selected panel below.</b> Each panel is a complete install + initial setup path. The dashboard/Web UI appears at the end on purpose.</p>
@@ -986,7 +1037,10 @@ Rules:
             <div class="linear-install-steps">
               <article><b>1. Easiest native option: use Hermes Desktop</b><p>Download and run the Hermes Desktop installer from the official Hermes Agent website. This is the recommended Mac path because it installs the desktop app and command-line tool together.</p></article>
               <article><b>2. Command-line option: open Terminal</b><p>Press Command + Space, type <b>Terminal</b>, press Enter.</p><p class="plain-summary"><b>In plain English:</b> Terminal is where you paste setup commands if you are not using the desktop installer.</p></article>
-              <article><b>3. Check Git</b><pre class="guide-code">git --version</pre><p>If Mac asks to install command-line tools, allow it, then run the command again. The Hermes installer handles the other common dependencies.</p></article>
+              <article><b>3. Confirm Xcode tools + Homebrew first</b><pre class="guide-code">xcode-select --install
+# after the Apple prompt finishes:
+git --version
+brew --version</pre><p>If <code>brew</code> is missing, install Homebrew from <code>brew.sh</code>, then open a fresh Terminal before running the Hermes installer.</p></article>
               <article><b>4. Install Hermes CLI</b><pre class="guide-code">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 exec $SHELL -l
 hermes --version</pre><p><b>Success:</b> you see a Hermes version instead of <code>command not found</code>.</p></article>

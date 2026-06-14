@@ -40,5 +40,19 @@ assertIncludes('install guide', install, 'Simple install rule');
 assertIncludes('install guide', install, 'Hermes: easiest first choice');
 assertIncludes('install guide', install, 'OpenClaw: choose when you want a bigger local control plane');
 assertIncludes('install guide', install, 'Do not connect real business systems on day one');
+assertIncludes('install guide dynamic prereqs', install, 'This checklist changes with Step 0');
+assertIncludes('install guide Hermes Mac prereqs', install, 'Xcode Command Line Tools');
+assertIncludes('install guide Hermes Mac prereqs', install, 'Homebrew before the one-line Hermes installer');
+assertIncludes('install guide OpenClaw prereqs', install, 'Node 24');
+assertIncludes('install guide dependency warning', install, 'If any required item above is missing, fix that first');
+
+const prereqPanels = document.querySelectorAll('#hermesGuideWindow [data-prereq-product][data-prereq-os]');
+if (prereqPanels.length !== 6) throw new Error(`expected 6 dynamic prereq panels, got ${prereqPanels.length}`);
+for (const product of ['hermes', 'openclaw']) {
+  for (const os of ['mac', 'windows', 'linux']) {
+    const panel = document.querySelector(`#hermesGuideWindow [data-prereq-product="${product}"][data-prereq-os="${os}"]`);
+    if (!panel) throw new Error(`missing prereq panel for ${product}/${os}`);
+  }
+}
 
 console.log('ai-help-content-regression ok');

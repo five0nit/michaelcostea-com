@@ -701,6 +701,11 @@ function initGuideTabs(){
       panel.classList.toggle('active', on);
       panel.hidden = !on;
     });
+    root.querySelectorAll('[data-prereq-product][data-prereq-os]').forEach(panel => {
+      const on = panel.getAttribute('data-prereq-product') === state.product && panel.getAttribute('data-prereq-os') === state.os;
+      panel.classList.toggle('active', on);
+      panel.hidden = !on;
+    });
     root.querySelectorAll('[data-checklist-product]').forEach(panel => {
       const on = panel.getAttribute('data-checklist-product') === state.product;
       panel.classList.toggle('active', on);
