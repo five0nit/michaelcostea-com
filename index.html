@@ -375,18 +375,6 @@
             <article><b>For business owners</b><span>Find repeated admin, missed follow-ups, and safe pilots before buying tools or access.</span></article>
             <article><b>For builders</b><span>Design workflows with sources, tools, logs, approval gates, and rollback plans from day one.</span></article>
           </div>
-          <section class="memory-layer-section mini-content-card" aria-label="Memory layer for agent context and accuracy">
-            <span class="kb-kicker">Don’t forget who you are</span>
-            <h3>Memory layer</h3>
-            <figure class="mini-card-figure"><img src="assets/minime-pack/build_knowledge.png" alt="Pixel mini Michael organising memory layers for AI agents" loading="lazy" /></figure>
-            <p><b>Memory is not a nice-to-have for agents:</b> it is the difference between a helper that restarts from zero every chat and an operating layer that keeps identity, decisions, preferences, project state, sources, and lessons in context.</p>
-            <p>Good memory improves accuracy because the agent can ground answers in what has already been decided, avoid repeating mistakes, preserve user preferences, and know when a current request conflicts with past context. Bad or missing memory creates confident but stale answers.</p>
-            <ul>
-              <li><b>Agent context:</b> stable identity, role, boundaries, live project state, owners, approvals, and known risks.</li>
-              <li><b>Accuracy:</b> retrieved facts and source notes beat guessing from a long drifting chat.</li>
-              <li><b>My setup:</b> I use <b>Byterover</b> as the agent-to-agent memory layer so agents can share operating context, and <b>Obsidian local</b> as the human layer so I can inspect, edit, and trust the knowledge base myself.</li>
-            </ul>
-          </section>
           <div class="guide-card-grid">
             <button class="guide-card" type="button" data-open="agentGuideWindow" onclick="openWindow('agentGuideWindow')"><b>1. What is an AI agent?</b><span>Simple explanation, examples, safety limits, and visual workflow.</span></button>
             <button class="guide-card" type="button" data-open="introDeckWindow" onclick="openWindow('introDeckWindow')"><b>2. Intro to AI deck</b><span>Open a slide preview in the website, then download the PDF or PowerPoint copy.</span></button>
@@ -396,6 +384,7 @@
             <button class="guide-card" type="button" data-open="operatorVsChatGuideWindow" onclick="openWindow('operatorVsChatGuideWindow')"><b>6. Chatbot or operator?</b><span>How to decide whether you need prompts, a scoped operator, or a done-for-you AI marketplace for the result you want.</span></button>
             <button class="guide-card" type="button" data-open="aiTutorialsGuideWindow" onclick="openWindow('aiTutorialsGuideWindow')"><b>7. Five AI tutorials to try</b><span>copy/paste lessons for notes, email, research, checklists, and a simple weekly report.</span></button>
             <button class="guide-card knowledge-card" type="button" data-open="agenticKnowledgebaseWindow" onclick="openWindow('agenticKnowledgebaseWindow')"><b>8. Agentic workflow knowledgebase</b><span>Learning paths, workflow recipes, safety gates, glossary, templates, and readiness scoring.</span></button>
+            <button class="guide-card knowledge-card" type="button" data-open="memoryLayerGuideWindow" onclick="openWindow('memoryLayerGuideWindow')"><b>9. Build a memory layer</b><span>Byterover-style agent memory, Obsidian human notes, and a copy/paste prompt to give your agent.</span></button>
           </div>
           <div class="visual-flow" aria-label="AI help learning path">
             <div>Learn<br><b>what agents do</b></div><span>→</span><div>Try<br><b>copy/paste tutorials</b></div><span>→</span><div>Install<br><b>one agent</b></div><span>→</span><div>Use<br><b>safely</b></div>
@@ -901,6 +890,78 @@ Rules:
             <article><b>Add an approval gate</b><span>The agent can draft, rank, summarise, and prepare. A human approves sending, spending, deleting, publishing, or customer-impacting changes.</span></article>
             <article><b>Keep evidence</b><span>Save input, output, what changed, and what was approved. Evidence is what turns AI from a toy into an operating layer.</span></article>
           </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="memoryLayerGuideWindow" class="win-window doc-window" aria-label="Memory layer tutorial" style="left:205px;top:78px;width:min(1040px,96vw);">
+      <div class="win-title"><span>Guide 9 - Build a memory layer</span><button class="win-close" data-close="memoryLayerGuideWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc">
+          <div class="mini-heading lift-heading"><h2>Build a memory layer for your agent</h2></div>
+          <p class="guide-subtitle"><b>Don’t forget who you are. The agent becomes useful when it can load identity, project state, decisions, receipts, and human notes before it acts.</b></p>
+          <figure class="generated-art-card"><img src="assets/minime-pack/build_knowledge.png" alt="Pixel mini Michael organising a memory layer for AI agents" loading="lazy" /></figure>
+
+          <h3>Why memory matters</h3>
+          <p><b>Memory is not a nice-to-have for agents:</b> it is the difference between a helper that restarts from zero every chat and an operating layer that keeps identity, decisions, preferences, project state, sources, and lessons in context.</p>
+          <p>Good memory improves accuracy because the agent can ground answers in what has already been decided, avoid repeating mistakes, preserve user preferences, and know when a current request conflicts with past context. Bad or missing memory creates confident but stale answers.</p>
+
+          <h3>The simple architecture</h3>
+          <div class="beginner-box-grid">
+            <article><b>1. Startup identity</b><span>A short “who you are, who you help, how to behave” file. This stops the agent from acting like a random new chatbot every session.</span></article>
+            <article><b>2. Current project state</b><span>Small status files or logs that say what changed, what is blocked, what was verified, and what should happen next.</span></article>
+            <article><b>3. Byterover-style agent-to-agent memory layer</b><span>A compact shared layer agents can read/write so one agent’s work is visible to the next agent without dumping every transcript into context.</span></article>
+            <article><b>4. Obsidian local human layer</b><span>A readable local vault for the human: decisions, dashboards, notes, links, project pages, and the “why” behind the automation.</span></article>
+            <article><b>5. Receipts after work</b><span>Every meaningful run should leave a short durable receipt: done, files changed, checks run, blocked items, and next action.</span></article>
+            <article><b>6. Retrieval before action</b><span>The agent should read the right memory first, then act. Memory that is never loaded is just a dusty folder.</span></article>
+          </div>
+
+          <h3>Copy/paste prompt to give your agent</h3>
+          <p class="guide-note"><b>Use this when setting up a local agent.</b> Replace the bracketed names and folder paths, then paste it into your agent’s system instructions, project instructions, or first message.</p>
+          <pre class="guide-code">You are my long-running local AI operator, not a one-off chatbot.
+
+Your job is to help me get real work done while preserving context between sessions. Act with high autonomy on safe local work, but stop and ask before public posts, customer messages, spending money, deleting data, changing production systems, or exposing secrets.
+
+Before meaningful work, load memory in this order:
+1. Identity file: who you are, who you help, communication style, safety rules.
+2. User preferences: tone, timezone, tools, approval rules, recurring dislikes.
+3. Current project state: active goals, blockers, last verified result, next action.
+4. Shared agent memory: recent receipts from other agents, handoffs, decisions, and warnings.
+5. Human notes: Obsidian/local notes that explain the why, not just the latest task.
+
+Mimic this setup:
+- Startup identity: a short durable file like SOUL.md or AGENT.md.
+- User/profile memory: a compact file for stable preferences only.
+- Project receipts: append-only status/change/test/blocker notes per project.
+- Byterover-style agent-to-agent memory layer: compact shared context so agents can see each other’s work.
+- Obsidian local human layer: readable notes and dashboards the human can inspect and edit.
+- Source links: when possible, cite the file, note, URL, or command output used.
+
+Operating rules:
+- Do not rely on memory alone for current facts. Check live files, git state, docs, or the web when accuracy matters.
+- If memory conflicts with the current user request, follow the current request and record the updated decision.
+- Keep memory small. Save durable preferences, project conventions, decisions, and reusable lessons. Do not save stale task noise.
+- Prefer evidence over vibes. Run checks, read files, verify outputs, then report what actually happened.
+- Never paste secrets into memory, logs, public docs, or chat.
+
+After meaningful work, write a short durable receipt with:
+- Project:
+- Done:
+- Files changed:
+- Commands/checks run:
+- Verified result:
+- Blocked/pending:
+- Next suggested action:
+
+When you answer me, be brief and clear. Separate DONE, VERIFIED, PENDING, and BLOCKED. If you are missing access or context, say exactly what is missing.</pre>
+
+          <h3>Quality check</h3>
+          <ul>
+            <li>The agent should know who it is, what it is allowed to do, and what it must never do without approval.</li>
+            <li>The next agent should be able to read the latest receipt and continue without asking the human to repeat the whole story.</li>
+            <li>The human should be able to open Obsidian/local notes and understand what the agents believe is true.</li>
+            <li>The memory layer should improve accuracy, not become a junk drawer of stale guesses.</li>
+          </ul>
         </article>
       </div>
     </section>

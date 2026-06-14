@@ -20,13 +20,19 @@ function assertIncludes(name, value, expected) {
 const start = text('#aiHelpWindow');
 assertIncludes('AI Help start card grid', start, '7. Five AI tutorials to try');
 assertIncludes('AI Help start card grid', start, 'copy/paste lessons');
-assertIncludes('AI Help memory layer section', start, 'Memory layer');
-assertIncludes('AI Help memory layer section', start, 'Don\u2019t forget who you are');
-assertIncludes('AI Help memory layer section', start, 'Memory is not a nice-to-have for agents');
-assertIncludes('AI Help memory layer section', start, 'Byterover');
-assertIncludes('AI Help memory layer section', start, 'agent-to-agent memory layer');
-assertIncludes('AI Help memory layer section', start, 'Obsidian local');
-assertIncludes('AI Help memory layer section', start, 'human layer');
+assertIncludes('AI Help start card grid', start, '9. Build a memory layer');
+assertIncludes('AI Help start card grid', start, 'Byterover-style agent memory');
+
+const memoryGuide = text('#memoryLayerGuideWindow');
+assertIncludes('memory layer tutorial', memoryGuide, 'Build a memory layer for your agent');
+assertIncludes('memory layer tutorial', memoryGuide, 'Don’t forget who you are');
+assertIncludes('memory layer tutorial', memoryGuide, 'Memory is not a nice-to-have for agents');
+assertIncludes('memory layer tutorial', memoryGuide, 'Byterover-style agent-to-agent memory layer');
+assertIncludes('memory layer tutorial', memoryGuide, 'Obsidian local human layer');
+assertIncludes('memory layer tutorial prompt', memoryGuide, 'Copy/paste prompt to give your agent');
+assertIncludes('memory layer tutorial prompt', memoryGuide, 'You are my long-running local AI operator');
+assertIncludes('memory layer tutorial prompt', memoryGuide, 'Before meaningful work, load memory in this order');
+assertIncludes('memory layer tutorial prompt', memoryGuide, 'After meaningful work, write a short durable receipt');
 
 const tutorials = text('#aiTutorialsGuideWindow');
 assertIncludes('tutorial guide', tutorials, 'Practical AI Tutorials That Actually Help');
