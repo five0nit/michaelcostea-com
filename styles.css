@@ -150,6 +150,17 @@ body.mobile-mode .desktop{
   image-rendering:auto;
 }
 .public-preview .compact-generated-art img{max-height:280px;}
+.public-preview .memory-hero-art{
+  max-width:620px;
+  margin:12px auto 14px;
+  background:#f8fbff;
+}
+.public-preview .memory-hero-art img{
+  max-height:230px;
+  object-fit:contain;
+  object-position:center;
+  background:#f8fbff;
+}
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
   .public-preview .generated-art-card{padding:4px;margin:10px 0;}
   .public-preview .generated-art-card img{max-height:220px;}
@@ -1103,6 +1114,10 @@ body.public-preview::before{
 .public-preview .guide-tiles span{display:block;font-size:11px;line-height:15px;}
 .public-preview .workflow-examples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
 .public-preview .beginner-box-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
+.public-preview .memory-benefit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
+.public-preview .memory-benefit-grid article{background:#eef6ff;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #000080;border-bottom:2px solid #000080;padding:10px;min-height:112px;}
+.public-preview .memory-benefit-grid b{display:block;color:#000080;margin-bottom:5px;font:900 13px/16px "Work Sans",Tahoma,sans-serif;}
+.public-preview .memory-benefit-grid span{display:block;font-size:12px;line-height:16px;}
 .public-preview .prereq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;}
 .public-preview .prereq-grid article{background:#fff4c2;border:2px solid #808000;padding:9px;min-height:92px;}
 .public-preview .prereq-grid b{display:block;color:#000080;margin-bottom:5px;}
@@ -1187,7 +1202,7 @@ body.public-preview::before{
 .public-preview .step-list{padding-left:22px;}
 .public-preview .step-list li{margin:8px 0;}
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples,.public-preview .beginner-box-grid,.public-preview .prereq-grid,.public-preview .install-roadmap,.public-preview .tutorial-flow-map{grid-template-columns:1fr!important;}
+  .public-preview .guide-card-grid,.public-preview .comparison-grid,.public-preview .guide-tiles,.public-preview .workflow-examples,.public-preview .beginner-box-grid,.public-preview .memory-benefit-grid,.public-preview .prereq-grid,.public-preview .install-roadmap,.public-preview .tutorial-flow-map{grid-template-columns:1fr!important;}
   .public-preview .visual-flow{grid-template-columns:1fr!important;}
   .public-preview .visual-flow span{transform:rotate(90deg);min-height:20px;}
   .public-preview .guide-code{font-size:11px!important;line-height:15px!important;}

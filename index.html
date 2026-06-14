@@ -900,23 +900,31 @@ Rules:
         <article class="resume-doc guide-doc">
           <div class="mini-heading lift-heading"><h2>Build a memory layer for your agent</h2></div>
           <p class="guide-subtitle"><b>Don’t forget who you are. The agent becomes useful when it can load identity, project state, decisions, receipts, and human notes before it acts.</b></p>
-          <figure class="generated-art-card"><img src="assets/minime-pack/build_knowledge.png" alt="Pixel mini Michael organising a memory layer for AI agents" loading="lazy" /></figure>
+          <figure class="generated-art-card compact-generated-art memory-hero-art"><img src="assets/minime-pack/build_knowledge.png" alt="Pixel mini Michael organising a memory layer for AI agents" loading="lazy" /></figure>
 
           <h3>Why memory matters</h3>
           <p><b>Memory is not a nice-to-have for agents:</b> it is the difference between a helper that restarts from zero every chat and an operating layer that keeps identity, decisions, preferences, project state, sources, and lessons in context.</p>
           <p>Good memory improves accuracy because the agent can ground answers in what has already been decided, avoid repeating mistakes, preserve user preferences, and know when a current request conflicts with past context. Bad or missing memory creates confident but stale answers.</p>
 
+          <h3>Why install Byterover and Obsidian?</h3>
+          <div class="memory-benefit-grid">
+            <article><b>Byterover: shared agent memory</b><span>Use Byterover, or a Byterover-style shared layer, when more than one agent or session touches the same work. It gives agents a compact place to read decisions, handoffs, blockers, and verified receipts before acting.</span></article>
+            <article><b>Why it is worth it</b><span>It reduces repeated explanations, prevents two agents from solving the same problem differently, and lets a new session continue from the last trustworthy checkpoint instead of guessing from stale chat context.</span></article>
+            <article><b>Obsidian: human-readable memory</b><span>Install Obsidian so the human has a local vault for project pages, decisions, notes, links, and “why we did this” context. It is editable, searchable, private, and easy to audit.</span></article>
+            <article><b>Why both together work</b><span>Byterover is the machine layer: compact, current, and operational. Obsidian is the human layer: readable, explainable, and long-lived. Together they make the agent stack easier to trust.</span></article>
+          </div>
+
           <h3>The simple architecture</h3>
           <div class="beginner-box-grid">
             <article><b>1. Startup identity</b><span>A short “who you are, who you help, how to behave” file. This stops the agent from acting like a random new chatbot every session.</span></article>
             <article><b>2. Current project state</b><span>Small status files or logs that say what changed, what is blocked, what was verified, and what should happen next.</span></article>
-            <article><b>3. Byterover-style agent-to-agent memory layer</b><span>A compact shared layer agents can read/write so one agent’s work is visible to the next agent without dumping every transcript into context.</span></article>
-            <article><b>4. Obsidian local human layer</b><span>A readable local vault for the human: decisions, dashboards, notes, links, project pages, and the “why” behind the automation.</span></article>
+            <article><b>3. Byterover shared layer</b><span>Recent agent receipts, handoffs, decisions, and warnings in a compact format agents can load quickly before work.</span></article>
+            <article><b>4. Obsidian local vault</b><span>Readable human notes: project home pages, decisions, diagrams, links, research, dashboards, and manual review notes.</span></article>
             <article><b>5. Receipts after work</b><span>Every meaningful run should leave a short durable receipt: done, files changed, checks run, blocked items, and next action.</span></article>
             <article><b>6. Retrieval before action</b><span>The agent should read the right memory first, then act. Memory that is never loaded is just a dusty folder.</span></article>
           </div>
 
-          <h3>Copy/paste prompt to give your agent</h3>
+          <h3>Copy/paste prompt 1 — give your agent memory rules</h3>
           <p class="guide-note"><b>Use this when setting up a local agent.</b> Replace the bracketed names and folder paths, then paste it into your agent’s system instructions, project instructions, or first message.</p>
           <pre class="guide-code">You are my long-running local AI operator, not a one-off chatbot.
 
@@ -954,6 +962,32 @@ After meaningful work, write a short durable receipt with:
 - Next suggested action:
 
 When you answer me, be brief and clear. Separate DONE, VERIFIED, PENDING, and BLOCKED. If you are missing access or context, say exactly what is missing.</pre>
+
+          <h3>Copy/paste prompt 2 — ask the agent to set up the memory files</h3>
+          <pre class="guide-code">Set up a local memory layer for this workspace.
+
+Create or update these files/folders if they do not exist:
+- AGENT.md: who you are, what you help with, communication style, approval rules, and hard safety limits.
+- memory/USER.md: durable user preferences only. Keep it short. Do not save temporary task progress.
+- memory/PROJECT_STATE.md: active goals, known blockers, last verified result, and next action.
+- memory/receipts/YYYY-MM-DD.md: append-only work receipts after meaningful tasks.
+- obsidian/ or notes/: human-readable project notes, decisions, diagrams, and links.
+
+Before each task, read AGENT.md, memory/USER.md, memory/PROJECT_STATE.md, and the latest receipts. After each meaningful task, append a receipt with done, files changed, commands run, verification, blockers, and next action.
+
+If Byterover or a shared memory tool is available, connect it as the compact agent-to-agent memory layer. If not, mimic it with append-only markdown/jsonl receipts that every agent can read.</pre>
+
+          <h3>Copy/paste prompt 3 — ask the agent to prepare Obsidian notes</h3>
+          <pre class="guide-code">Create an Obsidian-friendly project vault for me.
+
+Make these notes:
+- 00 Home.md: links to the active projects, current priorities, and latest receipts.
+- Projects/[project-name].md: goal, owner, source links, current status, decisions, open questions, and next action.
+- Decisions.md: date, decision, reason, source/evidence, and what would make us revisit it.
+- Agent Receipts.md: short summaries of verified agent work with links to files or commands.
+- Prompt Library.md: reusable prompts that actually worked, with when to use them and failure warnings.
+
+Use simple Markdown and wiki links. Keep it readable for a human, not just optimized for an AI. Do not store secrets. When you finish, tell me exactly where the vault is and what notes you created.</pre>
 
           <h3>Quality check</h3>
           <ul>
