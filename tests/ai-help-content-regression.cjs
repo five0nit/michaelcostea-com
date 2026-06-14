@@ -20,6 +20,13 @@ function assertIncludes(name, value, expected) {
 const start = text('#aiHelpWindow');
 assertIncludes('AI Help start card grid', start, '7. Five AI tutorials to try');
 assertIncludes('AI Help start card grid', start, 'copy/paste lessons');
+assertIncludes('AI Help memory layer section', start, 'Memory layer');
+assertIncludes('AI Help memory layer section', start, 'Don\u2019t forget who you are');
+assertIncludes('AI Help memory layer section', start, 'Memory is not a nice-to-have for agents');
+assertIncludes('AI Help memory layer section', start, 'Byterover');
+assertIncludes('AI Help memory layer section', start, 'agent-to-agent memory layer');
+assertIncludes('AI Help memory layer section', start, 'Obsidian local');
+assertIncludes('AI Help memory layer section', start, 'human layer');
 
 const tutorials = text('#aiTutorialsGuideWindow');
 assertIncludes('tutorial guide', tutorials, 'Practical AI Tutorials That Actually Help');
