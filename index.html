@@ -1000,8 +1000,8 @@ Use simple Markdown and wiki links. Keep it readable for a human, not just optim
       </div>
     </section>
 
-    <section id="hermesGuideWindow" class="win-window doc-window" aria-label="Install Hermes and OpenClaw guide" style="left:225px;top:70px;width:min(1040px,96vw);">
-      <div class="win-title"><span>Guide 2 - Install your first AI agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
+    <section id="hermesGuideWindow" class="win-window doc-window" aria-label="Install Hermes and OpenClaw guide" style="left:96px;top:70px;width:min(1040px,96vw);">
+      <div class="win-title"><span>Guide 3 - Install your first AI agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc install-guide">
           <div class="mini-heading lean-heading"><h2>Install Your First AI Agent</h2></div>
@@ -1015,6 +1015,49 @@ Use simple Markdown and wiki links. Keep it readable for a human, not just optim
             <article><b>Safety rule</b><span>Use a harmless test folder first. No customer data, money, deleting, public posting, or live business tools until you understand approvals.</span></article>
           </div>
           <p class="guide-note"><b>Official docs to check if anything changes:</b> <a href="https://hermes-agent.nousresearch.com/docs/getting-started/installation" target="_blank" rel="noopener">Hermes installation</a>, <a href="https://hermes-agent.nousresearch.com/docs/getting-started/quickstart" target="_blank" rel="noopener">Hermes quickstart</a>, <a href="https://docs.openclaw.ai/start/getting-started" target="_blank" rel="noopener">OpenClaw getting started</a>, and <a href="https://docs.openclaw.ai/install" target="_blank" rel="noopener">OpenClaw install</a>.</p>
+
+          <section class="install-wizard-card hermes-depth-panel" aria-label="Hermes beginner install map">
+            <h3>Hermes beginner map</h3>
+            <p class="plain-summary"><b>Follow this order:</b> Install → reload shell → version check → setup/provider → local chat → doctor/status → optional Telegram. If one stage fails, fix that exact stage before adding the next feature.</p>
+            <div class="beginner-box-grid">
+              <article><b>1. Install the program</b><span>Use Hermes Desktop on Mac/Windows if you want the easiest app path, or the official CLI installer if you are comfortable pasting one command.</span></article>
+              <article><b>2. Connect a model</b><span>Run <code>hermes setup</code> or <code>hermes model</code>. The model/provider is the AI brain; Hermes is the operator shell around it.</span></article>
+              <article><b>3. Prove local chat works</b><span>Run one safe local prompt before Telegram, web tools, memory, cron, or agents. A gateway will not fix a broken model setup.</span></article>
+              <article><b>4. Add phone access last</b><span>Only after local chat and <code>hermes doctor</code> pass, run <code>hermes gateway setup</code> for Telegram/Discord/Slack.</span></article>
+            </div>
+          </section>
+
+          <h3>Where Hermes stores things</h3>
+          <p class="plain-summary">These locations make the install less mysterious. Do not edit secrets in a public doc or paste them into chat.</p>
+          <div class="beginner-box-grid">
+            <article><b><code>~/.hermes/config.yaml</code></b><span>Main settings: model/provider choice, toolsets, gateway, memory, terminal, display, approvals.</span></article>
+            <article><b><code>~/.hermes/.env</code></b><span>Private API keys and tokens. Treat it like a password file. Do not screenshot or share it.</span></article>
+            <article><b><code>~/.hermes/sessions</code> / <code>~/.hermes/state.db</code></b><span>Session history and searchable past conversations.</span></article>
+            <article><b><code>~/.hermes/skills</code></b><span>Reusable procedures Hermes can load later so it does not relearn the same workflow every session.</span></article>
+            <article><b><code>~/.hermes/logs</code></b><span>Gateway/runtime logs. Check here when Telegram or background services are silent.</span></article>
+            <article><b><code>~/.hermes/hermes-agent</code></b><span>The source checkout when installed by the git installer path.</span></article>
+          </div>
+
+          <h3>Provider setup choices</h3>
+          <div class="terminal-checklists">
+            <article><h4>Beginner path: guided setup</h4><pre class="guide-code">hermes setup
+hermes model</pre><p>Use this when you are unsure. It walks you through provider/model selection and writes the config for you.</p></article>
+            <article><h4>OAuth path when available</h4><pre class="guide-code">hermes auth add openai-codex
+# or use the provider login offered by hermes model/setup</pre><p>OAuth opens a browser login so you avoid copying secret API keys by hand.</p></article>
+            <article><h4>API key path</h4><pre class="guide-code"># example private env var names
+OPENROUTER_API_KEY=...
+ANTHROPIC_API_KEY=...
+OPENAI_API_KEY=...</pre><p>Put keys only in the local Hermes env/config flow, never into a website, prompt, GitHub issue, or shared chat.</p></article>
+          </div>
+
+          <h3>First safe Hermes workspace test</h3>
+          <p class="plain-summary">This proves Hermes can see a harmless folder, answer from evidence, and respect boundaries before you trust it with real files.</p>
+          <pre class="guide-code">mkdir -p ~/ai-agent-test
+cd ~/ai-agent-test
+printf "Buy milk\nEmail Sam tomorrow\nDo not edit this file yet\n" > test-note.txt
+hermes chat -q "Look only in this folder. Summarise test-note.txt. Do not edit files."
+hermes doctor
+hermes status</pre>
 
           <section class="install-wizard-card" aria-label="Install guide promise">
             <h3>What success looks like</h3>
@@ -1139,19 +1182,27 @@ brew --version</pre><p>If <code>brew</code> is missing, install Homebrew from <c
               <article><b>4. Install Hermes CLI</b><pre class="guide-code">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 exec $SHELL -l
 hermes --version</pre><p><b>Success:</b> you see a Hermes version instead of <code>command not found</code>.</p></article>
-              <article><b>5. Run first setup</b><pre class="guide-code">hermes setup --portal
-# If your version does not support portal setup yet:
-hermes setup</pre><p>Use the guided login/provider flow. If it offers one browser login for model and tools, choose that beginner path.</p></article>
-              <article><b>6. Confirm or change model</b><pre class="guide-code">hermes model</pre><p class="plain-summary"><b>In plain English:</b> the model is the brain. OAuth is easier because you log in through a browser instead of copying secret API keys.</p></article>
-              <article><b>7. Run one local chat before Telegram</b><pre class="guide-code">hermes chat -q "Say hello in one sentence."
+              <article><b>5. Run first setup</b><pre class="guide-code">hermes setup
+# optional provider/model picker any time:
+hermes model</pre><p>Use the guided login/provider flow. Choose a browser/OAuth option when offered; use API keys only if you already understand where they are stored.</p></article>
+              <article><b>6. Confirm the config landed</b><pre class="guide-code">hermes config path
+hermes config check
+hermes auth list</pre><p class="plain-summary"><b>In plain English:</b> this confirms Hermes knows where its config lives and whether a provider login/key is available.</p></article>
+              <article><b>7. Run one local chat before Telegram</b><pre class="guide-code">mkdir -p ~/ai-agent-test
+cd ~/ai-agent-test
+printf "One safe test note\n" > test-note.txt
+hermes chat -q "Look only in this folder. Summarise test-note.txt. Do not edit files."
 # If that command is not available, open interactive Hermes:
-hermes</pre><p>Do not continue until you get a local reply.</p></article>
-              <article><b>8. Optional: connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
-hermes gateway run</pre><p>Paste your BotFather token and numeric Telegram user ID only into the local setup prompt. Keep this Terminal open for the first test. Stop with Ctrl + C.</p></article>
-              <article><b>9. Verify, then open Desktop/dashboard last</b><pre class="guide-code">hermes doctor
+hermes</pre><p>Do not continue until you get a local reply based on the harmless test file.</p></article>
+              <article><b>8. Health check before adding channels</b><pre class="guide-code">hermes doctor
 hermes status
+hermes tools list</pre><p>Fix obvious missing dependencies/provider errors now. Do not add Telegram while local chat is failing.</p></article>
+              <article><b>9. Optional: connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
+hermes gateway run</pre><p>Paste your BotFather token and numeric Telegram user ID only into the local setup prompt. Keep this Terminal open for the first test. Stop with Ctrl + C.</p></article>
+              <article><b>10. Background service only after foreground works</b><pre class="guide-code">hermes gateway install
+hermes gateway start
 hermes gateway status
-hermes desktop</pre><p>Use <code>hermes desktop</code> or the installed Desktop app after the command-line setup and status checks are healthy.</p></article>
+hermes desktop</pre><p>Use <code>hermes desktop</code> or the installed Desktop app after command-line setup, local chat, and gateway foreground tests are healthy.</p></article>
             </div>
           </div>
 
@@ -1162,20 +1213,26 @@ hermes desktop</pre><p>Use <code>hermes desktop</code> or the installed Desktop 
               <article><b>1A. Easiest native option: use Hermes Desktop</b><p>Download and run the Hermes Desktop installer from the official Hermes Agent website. After it finishes, open PowerShell only if you want to verify the command-line tool.</p></article>
               <article><b>1B. Native PowerShell CLI install</b><p>Start → PowerShell. Run as administrator only if Windows asks for installer permission.</p><pre class="guide-code">iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 hermes --version</pre></article>
-              <article><b>2. Run first setup</b><pre class="guide-code">hermes setup --portal
-# If your version does not support portal setup yet:
-hermes setup
-hermes model</pre><p>Use the guided browser login/provider setup. Keep the workspace small and safe.</p></article>
-              <article><b>3. Run one local chat before Telegram</b><pre class="guide-code">hermes chat -q "Say hello in one sentence."
+              <article><b>2. Run first setup</b><pre class="guide-code">hermes setup
+hermes model
+hermes config check</pre><p>Use the guided browser login/provider setup. Keep the workspace small and safe.</p></article>
+              <article><b>3. Run one local chat before Telegram</b><pre class="guide-code">mkdir $HOME\ai-agent-test
+cd $HOME\ai-agent-test
+'one safe Windows test note' | Out-File test-note.txt -Encoding utf8
+hermes chat -q "Look only in this folder. Summarise test-note.txt. Do not edit files."
 # If needed, use interactive mode:
 hermes</pre></article>
-              <article><b>4. Optional: connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
-hermes gateway run</pre><p>Use foreground <code>gateway run</code> first so you can see logs and stop with Ctrl + C.</p></article>
-              <article><b>5. Verify, then open Desktop/dashboard last</b><pre class="guide-code">hermes doctor
+              <article><b>4. Check health and tools</b><pre class="guide-code">hermes doctor
 hermes status
+hermes tools list
+hermes config path</pre><p>Do this before Telegram. If PowerShell says <code>hermes</code> is not recognised, close and reopen PowerShell.</p></article>
+              <article><b>5. Optional: connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
+hermes gateway run</pre><p>Use foreground <code>gateway run</code> first so you can see logs and stop with Ctrl + C.</p></article>
+              <article><b>6. Background service only after foreground works</b><pre class="guide-code">hermes gateway install
+hermes gateway start
 hermes gateway status
 hermes desktop</pre><p>Use the Desktop app or <code>hermes desktop</code> after local chat and health checks work.</p></article>
-              <article><b>6. WSL Ubuntu fallback</b><p>If native Windows setup gets messy, install Ubuntu in WSL and repeat the Linux install path inside Ubuntu.</p><pre class="guide-code">wsl --install -d Ubuntu
+              <article><b>7. WSL Ubuntu fallback</b><p>If native Windows setup gets messy, install Ubuntu in WSL and repeat the Linux install path inside Ubuntu.</p><pre class="guide-code">wsl --install -d Ubuntu
 # restart if Windows asks, then open Ubuntu:
 sudo apt update
 sudo apt install -y curl git</pre></article>
@@ -1196,20 +1253,23 @@ sudo apt install -y curl git</pre></article>
               <article><b>2. Install Hermes</b><pre class="guide-code">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 exec $SHELL -l
 hermes --version</pre></article>
-              <article><b>3. Run first setup and model login</b><pre class="guide-code">hermes setup --portal
-# If your version does not support portal setup yet:
-hermes setup
-hermes model</pre><p>Choose GPT / ChatGPT OAuth if offered. Do not manually install Python or Node unless the official installer says to.</p></article>
-              <article><b>4. Run one local chat before Telegram</b><pre class="guide-code">hermes chat -q "Say hello in one sentence."
+              <article><b>3. Run first setup and model login</b><pre class="guide-code">hermes setup
+hermes model
+hermes config check</pre><p>Choose the guided provider/login flow. Do not manually install Python or Node unless the official installer says to.</p></article>
+              <article><b>4. Run one local chat before Telegram</b><pre class="guide-code">mkdir -p ~/ai-agent-test
+cd ~/ai-agent-test
+printf "One safe Linux test note\n" > test-note.txt
+hermes chat -q "Look only in this folder. Summarise test-note.txt. Do not edit files."
 # If needed, use interactive mode:
 hermes</pre></article>
-              <article><b>5. Connect Telegram gateway</b><pre class="guide-code">hermes gateway setup
-hermes gateway run</pre></article>
-              <article><b>6. Verify, then open Desktop/dashboard last</b><pre class="guide-code">hermes doctor
+              <article><b>5. Check health and tools</b><pre class="guide-code">hermes doctor
 hermes status
-hermes gateway status
-hermes desktop</pre><p>Use <code>hermes desktop</code> or the Desktop app only after local chat and health checks work.</p></article>
-              <article><b>7. Optional background service after foreground works</b><pre class="guide-code">hermes gateway install
+hermes tools list
+hermes config path</pre><p>Fix missing dependencies/provider config before adding Telegram.</p></article>
+              <article><b>6. Connect Telegram gateway only after local chat works</b><pre class="guide-code">hermes gateway setup
+hermes gateway run</pre></article>
+              <article><b>7. Desktop/dashboard last</b><pre class="guide-code">hermes desktop</pre><p>Use <code>hermes desktop</code> or the Desktop app only after local chat and health checks work.</p></article>
+              <article><b>8. Optional background service after foreground works</b><pre class="guide-code">hermes gateway install
 hermes gateway start
 hermes gateway status</pre></article>
             </div>
@@ -1326,6 +1386,7 @@ openclaw --version</pre></article>
           </div>
 
           <h3>Step 5 — troubleshooting by symptom</h3>
+          <p class="plain-summary"><b>If Hermes still fails after setup:</b> do not reinstall three times. Run <code>hermes doctor</code>, check the exact error, confirm the model/provider is configured with <code>hermes model</code>, and only then retry the smallest failing command.</p>
           <table class="guide-table troubleshoot-table"><thead><tr><th>What you see</th><th>Probably means</th><th>Try this</th></tr></thead><tbody>
             <tr><td><code>command not found</code></td><td>Terminal cannot find the app yet.</td><td>Close/reopen Terminal, run <code>exec $SHELL -l</code>, then check version.</td></tr>
             <tr><td><code>permission denied</code></td><td>The command lacks permission or wrong folder.</td><td>Stop. Do not randomly add <code>sudo</code>. Re-read that step.</td></tr>

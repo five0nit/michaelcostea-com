@@ -66,6 +66,19 @@ assertIncludes('install guide Hermes Mac prereqs', install, 'Xcode Command Line 
 assertIncludes('install guide Hermes Mac prereqs', install, 'Homebrew before the one-line Hermes installer');
 assertIncludes('install guide OpenClaw prereqs', install, 'Node 24');
 assertIncludes('install guide dependency warning', install, 'If any required item above is missing, fix that first');
+assertIncludes('install guide title number', install, 'Install Your First AI Agent');
+assertIncludes('install guide Hermes detail', install, 'Hermes beginner map');
+assertIncludes('install guide Hermes detail', install, 'Install → reload shell → version check → setup/provider → local chat → doctor/status → optional Telegram');
+assertIncludes('install guide Hermes detail', install, 'Where Hermes stores things');
+assertIncludes('install guide Hermes detail', install, '~/.hermes/config.yaml');
+assertIncludes('install guide Hermes detail', install, '~/.hermes/.env');
+assertIncludes('install guide Hermes detail', install, '~/.hermes/sessions');
+assertIncludes('install guide Hermes provider', install, 'Provider setup choices');
+assertIncludes('install guide Hermes provider', install, 'hermes auth add openai-codex');
+assertIncludes('install guide Hermes provider', install, 'OPENROUTER_API_KEY');
+assertIncludes('install guide Hermes first commands', install, 'mkdir -p ~/ai-agent-test');
+assertIncludes('install guide Hermes first commands', install, 'hermes chat -q "Look only in this folder. Summarise test-note.txt. Do not edit files."');
+assertIncludes('install guide Hermes troubleshooting', install, 'If Hermes still fails after setup');
 
 const prereqPanels = document.querySelectorAll('#hermesGuideWindow [data-prereq-product][data-prereq-os]');
 if (prereqPanels.length !== 6) throw new Error(`expected 6 dynamic prereq panels, got ${prereqPanels.length}`);
