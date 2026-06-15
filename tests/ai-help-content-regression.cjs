@@ -45,6 +45,22 @@ assertIncludes('agent guide capabilities', agentGuide, 'bring back evidence inst
 assertIncludes('agent guide capabilities', agentGuide, 'flag work that needs human approval');
 if (/[📄🔎🧾🧠🛠️📊]/u.test(agentGuide)) throw new Error('agent guide capabilities should not use emoji labels');
 
+const knowledgebaseGuide = text('#agenticKnowledgebaseWindow');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Command bank: copy/paste agent instructions');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Dropdown copy/paste commands');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'High-autonomy operator upgrade');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Install the memory layer habit');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'WSL-first local setup');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Shared-agent handoff receipt');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Best modifications to add to any agent');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Rules and guidelines that stop agents going sideways');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Do the work end-to-end, then report done, verified, pending, blocked');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Never put secrets in memory, prompts, receipts, screenshots, or logs');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Agent-to-agent memory');
+assertIncludes('agentic workflow knowledgebase', knowledgebaseGuide, 'Human memory layer');
+const kbDropdowns = document.querySelectorAll('#agenticKnowledgebaseWindow details.kb-command-dropdown');
+if (kbDropdowns.length < 6) throw new Error(`expected at least 6 command dropdowns, got ${kbDropdowns.length}`);
+
 const memoryGuide = text('#memoryLayerGuideWindow');
 assertIncludes('memory layer tutorial', memoryGuide, 'Build a memory layer for your agent');
 assertIncludes('memory layer tutorial', memoryGuide, 'Don’t forget who you are');

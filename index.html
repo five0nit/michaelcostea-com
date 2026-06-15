@@ -410,6 +410,144 @@
             <figure><img src="assets/minime-generated/maturity-ladder.png" alt="Pixel Mini Michael moving through an agentic workflow maturity ladder" loading="lazy" /></figure>
           </section>
 
+          <h3>Command bank: copy/paste agent instructions</h3>
+          <p class="guide-note"><b>Dropdown copy/paste commands:</b> open the pattern you need, copy the block, then paste it into your agent before it starts work. These are the strongest operating modifications and rules from the live agent stack: memory first, WSL-first local work where it fits, end-to-end verification, handoff receipts, and safety gates.</p>
+          <div class="kb-command-bank" aria-label="Dropdown copy/paste commands for agentic workflows">
+            <details class="kb-command-dropdown" open>
+              <summary><b>High-autonomy operator upgrade</b><span>Make the agent finish the job, not just suggest steps.</span></summary>
+              <pre class="guide-code">You are my high-autonomy AI operator.
+
+Default behavior:
+- Inspect the current state before acting.
+- Make a short plan, then do the work end-to-end.
+- Use tools when they improve accuracy.
+- Verify the result with real checks, not guesses.
+- Do not stop at a stub, outline, or "next steps" if you can safely complete it now.
+- Do the work end-to-end, then report done, verified, pending, blocked.
+
+Before risky actions, ask first. Risky means: public posting, sending messages, deleting files, spending money, changing customer records, rotating secrets, or touching production systems.</pre>
+            </details>
+            <details class="kb-command-dropdown">
+              <summary><b>Install the memory layer habit</b><span>Stop the agent forgetting identity, preferences, decisions, and project state.</span></summary>
+              <pre class="guide-code">Before meaningful work, load memory in this order:
+1. Startup identity: who you are, operating style, and safety rules.
+2. User preferences: tone, approval rules, tools, and recurring constraints.
+3. Project memory: current state, known pitfalls, decisions, and open blockers.
+4. Shared-agent memory: recent handoffs, receipts, and changes from other agents.
+5. Human notes: Obsidian/local notes that explain the why behind the work.
+
+After meaningful work, write a durable receipt:
+- what changed
+- files/settings touched
+- commands/checks run
+- verified result
+- blockers or risks
+- next action
+
+Use Agent-to-agent memory for machine handoffs and a Human memory layer for readable notes.</pre>
+            </details>
+            <details class="kb-command-dropdown">
+              <summary><b>WSL-first local setup</b><span>Preferred Windows path for serious local agent work.</span></summary>
+              <pre class="guide-code">For Windows development, prefer WSL Ubuntu unless the tool specifically requires native Windows.
+
+Rules:
+- Keep repos in the Linux home directory, not inside OneDrive or random Desktop folders.
+- Install basics first: curl, git, python3, python3-venv, python3-pip, Node LTS if the workflow needs it.
+- Run agent commands from the project folder inside WSL.
+- Treat /mnt/c paths as Windows interop paths, useful for reading files but slower for heavy repo work.
+- Verify with version checks before installing extra packages.
+
+Starter commands:
+wsl --install -d Ubuntu
+sudo apt update
+sudo apt install -y curl git python3 python3-venv python3-pip
+node --version
+python3 --version</pre>
+            </details>
+            <details class="kb-command-dropdown">
+              <summary><b>Shared-agent handoff receipt</b><span>Make multi-agent work visible instead of chaotic.</span></summary>
+              <pre class="guide-code">When multiple agents touch the same project, use this handoff format:
+
+Project:
+Goal:
+Current status: done / in progress / blocked
+Files changed:
+Commands/checks run:
+Decisions made:
+Open risks:
+What the next agent should do:
+What the next agent should not touch:
+
+Rules:
+- Read recent handoffs before editing.
+- Do not overwrite another agent's unstaged work.
+- Verify the live/current state instead of trusting old notes.
+- Keep public-facing or destructive actions behind human approval.</pre>
+            </details>
+            <details class="kb-command-dropdown">
+              <summary><b>Safe workflow builder</b><span>Turn one repeated task into a supervised agent workflow.</span></summary>
+              <pre class="guide-code">Build one supervised workflow for this repeated task:
+
+Task:
+Business goal:
+Trigger:
+Approved source of truth:
+Allowed tools:
+Forbidden actions:
+Output format:
+Human approval required before:
+Evidence to save:
+Escalate when:
+Success metric:
+Rollback plan:
+
+Start with a dry run on harmless data. If it works three times manually, convert only the boring proven parts into a monitored workflow.</pre>
+            </details>
+            <details class="kb-command-dropdown">
+              <summary><b>Customer journey exception radar</b><span>Find missed follow-ups without letting AI make promises.</span></summary>
+              <pre class="guide-code">Review the customer journey and produce an exception report.
+
+Look for:
+- new enquiries without reply
+- quotes waiting too long
+- stale follow-ups
+- overdue jobs or handovers
+- invoices/payment reminders needing review
+- review requests not sent
+- upset or high-risk customer language
+
+Return:
+1. ranked issues
+2. evidence/source for each issue
+3. suggested next action
+4. owner
+5. draft message only if useful
+6. items requiring human approval
+
+Do not send messages, change records, promise pricing/timing, or publish anything.</pre>
+            </details>
+          </div>
+
+          <h3>Best modifications to add to any agent</h3>
+          <div class="kb-mod-grid">
+            <article><b>Memory before work</b><span>Load identity, preferences, project state, shared-agent handoffs, and human notes before editing or deciding.</span></article>
+            <article><b>Tool-backed accuracy</b><span>Check files, dates, versions, live pages, dashboards, or docs instead of answering from vibes.</span></article>
+            <article><b>Receipts after work</b><span>Every meaningful run ends with changed files, commands, checks, verified state, blockers, and next action.</span></article>
+            <article><b>Approval gates</b><span>Draft freely; ask before sending, deleting, publishing, spending, customer promises, or production changes.</span></article>
+            <article><b>Agent-to-agent memory</b><span>Use Byterover-style/shared memory so agents see decisions, handoffs, and recent changes without asking the human again.</span></article>
+            <article><b>Human memory layer</b><span>Use Obsidian/local notes for the readable why: goals, decisions, SOPs, diagrams, and human-friendly project history.</span></article>
+          </div>
+
+          <h3>Rules and guidelines that stop agents going sideways</h3>
+          <ul class="kb-rule-list">
+            <li><b>Use the source of truth:</b> if current facts matter, check the live system, docs, file, repo, calendar, or dashboard.</li>
+            <li><b>Prefer narrow scopes:</b> one workflow, one safe folder, one owner, one approval gate, one success metric.</li>
+            <li><b>Keep secrets out:</b> Never put secrets in memory, prompts, receipts, screenshots, or logs.</li>
+            <li><b>Fail closed:</b> if data is missing, facts conflict, confidence is low, or the action affects trust/money/safety, stop and escalate.</li>
+            <li><b>Verify before claiming done:</b> run the check, open the page, read the output, or produce the artifact.</li>
+            <li><b>Make memory useful:</b> save durable preferences and procedures, not stale one-off task progress.</li>
+          </ul>
+
           <h3>1. Agentic workflow maturity ladder</h3>
           <div class="kb-maturity-grid">
             <article><b>Level 0: ad hoc chat</b><span>You ask questions and copy answers manually. Useful for thinking, weak for repeatable work.</span><small>Proof: none required.</small></article>
