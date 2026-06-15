@@ -64,6 +64,14 @@ assertIncludes('install guide', install, 'Do not connect real business systems o
 assertIncludes('install guide dynamic prereqs', install, 'This checklist changes with Step 0');
 assertIncludes('install guide Hermes Mac prereqs', install, 'Xcode Command Line Tools');
 assertIncludes('install guide Hermes Mac prereqs', install, 'Homebrew before the one-line Hermes installer');
+assertIncludes('install guide dependency prerequisites', install, 'Dependency prerequisites by platform');
+assertIncludes('install guide dependency prerequisites', install, 'macOS');
+assertIncludes('install guide dependency prerequisites', install, 'Windows native');
+assertIncludes('install guide dependency prerequisites', install, 'Windows WSL Ubuntu');
+assertIncludes('install guide dependency prerequisites', install, 'python3 python3-venv python3-pip');
+assertIncludes('install guide dependency prerequisites', install, 'Node.js 24 LTS');
+assertIncludes('install guide dependency prerequisites', install, 'node --version');
+assertIncludes('install guide dependency prerequisites', install, 'python --version');
 assertIncludes('install guide OpenClaw prereqs', install, 'Node 24');
 assertIncludes('install guide dependency warning', install, 'If any required item above is missing, fix that first');
 assertIncludes('install guide title number', install, 'Install Your First AI Agent');
