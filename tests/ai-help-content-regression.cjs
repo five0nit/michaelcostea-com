@@ -18,10 +18,25 @@ function assertIncludes(name, value, expected) {
 }
 
 const start = text('#aiHelpWindow');
-assertIncludes('AI Help start card grid', start, '7. Five AI tutorials to try');
+assertIncludes('AI Help start card grid', start, '3. Prerequisites before install');
+assertIncludes('AI Help start card grid', start, 'The guide before the guide');
+assertIncludes('AI Help start card grid', start, '4. Install Hermes or OpenClaw');
+assertIncludes('AI Help start card grid', start, '8. Five AI tutorials to try');
 assertIncludes('AI Help start card grid', start, 'copy/paste lessons');
-assertIncludes('AI Help start card grid', start, '9. Build a memory layer');
+assertIncludes('AI Help start card grid', start, '10. Build a memory layer');
 assertIncludes('AI Help start card grid', start, 'Byterover-style agent memory');
+
+const prereqGuide = text('#prerequisitesGuideWindow');
+assertIncludes('prerequisites guide title', prereqGuide, 'Prerequisites Before You Install an AI Agent');
+assertIncludes('prerequisites guide framing', prereqGuide, 'The guide before the guide');
+assertIncludes('prerequisites guide platform table', prereqGuide, 'Dependency prerequisites by platform');
+assertIncludes('prerequisites guide platform table', prereqGuide, 'macOS');
+assertIncludes('prerequisites guide platform table', prereqGuide, 'Windows native');
+assertIncludes('prerequisites guide platform table', prereqGuide, 'Windows WSL Ubuntu');
+assertIncludes('prerequisites guide platform table', prereqGuide, 'python3 python3-venv python3-pip');
+assertIncludes('prerequisites guide platform table', prereqGuide, 'Node.js 24 LTS');
+assertIncludes('prerequisites guide safe folder', prereqGuide, 'Do not skip the safe folder');
+assertIncludes('prerequisites guide next step', prereqGuide, 'Guide 4 - Install Hermes or OpenClaw');
 
 const agentGuide = text('#agentGuideWindow');
 assertIncludes('agent guide capabilities', agentGuide, 'What can an AI agent do?');

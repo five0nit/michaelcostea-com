@@ -378,13 +378,14 @@
           <div class="guide-card-grid">
             <button class="guide-card" type="button" data-open="agentGuideWindow" onclick="openWindow('agentGuideWindow')"><b>1. What is an AI agent?</b><span>Simple explanation, examples, safety limits, and visual workflow.</span></button>
             <button class="guide-card" type="button" data-open="introDeckWindow" onclick="openWindow('introDeckWindow')"><b>2. Intro to AI deck</b><span>Open a slide preview in the website, then download the PDF or PowerPoint copy.</span></button>
-            <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>3. Install Hermes or OpenClaw</b><span>Native local setup first: Mac, Windows, Linux/WSL paths, model login, safe local test, then optional Telegram/BotFather.</span></button>
-            <button class="guide-card" type="button" data-open="firstWorkflowGuideWindow" onclick="openWindow('firstWorkflowGuideWindow')"><b>4. Your first safe AI workflow</b><span>A practical 30-minute tutorial: pick one task, write the prompt, test it, add approval gates, and save the repeatable playbook.</span></button>
-            <button class="guide-card" type="button" data-open="buyAiHelpGuideWindow" onclick="openWindow('buyAiHelpGuideWindow')"><b>5. How to hire AI help safely</b><span>How to brief an operator, compare offers, avoid vaporware, and keep approval gates when paying for AI-assisted work.</span></button>
-            <button class="guide-card" type="button" data-open="operatorVsChatGuideWindow" onclick="openWindow('operatorVsChatGuideWindow')"><b>6. Chatbot or operator?</b><span>How to decide whether you need prompts, a scoped operator, or a done-for-you AI marketplace for the result you want.</span></button>
-            <button class="guide-card" type="button" data-open="aiTutorialsGuideWindow" onclick="openWindow('aiTutorialsGuideWindow')"><b>7. Five AI tutorials to try</b><span>copy/paste lessons for notes, email, research, checklists, and a simple weekly report.</span></button>
-            <button class="guide-card knowledge-card" type="button" data-open="agenticKnowledgebaseWindow" onclick="openWindow('agenticKnowledgebaseWindow')"><b>8. Agentic workflow knowledgebase</b><span>Learning paths, workflow recipes, safety gates, glossary, templates, and readiness scoring.</span></button>
-            <button class="guide-card knowledge-card" type="button" data-open="memoryLayerGuideWindow" onclick="openWindow('memoryLayerGuideWindow')"><b>9. Build a memory layer</b><span>Byterover-style agent memory, Obsidian human notes, and a copy/paste prompt to give your agent.</span></button>
+            <button class="guide-card" type="button" data-open="prerequisitesGuideWindow" onclick="openWindow('prerequisitesGuideWindow')"><b>3. Prerequisites before install</b><span>The guide before the guide: Mac Xcode/Homebrew, Windows/WSL, Python, Node, and safe first-folder checks.</span></button>
+            <button class="guide-card" type="button" data-open="hermesGuideWindow" onclick="openWindow('hermesGuideWindow')"><b>4. Install Hermes or OpenClaw</b><span>Native local setup after prerequisites: model login, safe local test, then optional Telegram/BotFather.</span></button>
+            <button class="guide-card" type="button" data-open="firstWorkflowGuideWindow" onclick="openWindow('firstWorkflowGuideWindow')"><b>5. Your first safe AI workflow</b><span>A practical 30-minute tutorial: pick one task, write the prompt, test it, add approval gates, and save the repeatable playbook.</span></button>
+            <button class="guide-card" type="button" data-open="buyAiHelpGuideWindow" onclick="openWindow('buyAiHelpGuideWindow')"><b>6. How to hire AI help safely</b><span>How to brief an operator, compare offers, avoid vaporware, and keep approval gates when paying for AI-assisted work.</span></button>
+            <button class="guide-card" type="button" data-open="operatorVsChatGuideWindow" onclick="openWindow('operatorVsChatGuideWindow')"><b>7. Chatbot or operator?</b><span>How to decide whether you need prompts, a scoped operator, or a done-for-you AI marketplace for the result you want.</span></button>
+            <button class="guide-card" type="button" data-open="aiTutorialsGuideWindow" onclick="openWindow('aiTutorialsGuideWindow')"><b>8. Five AI tutorials to try</b><span>copy/paste lessons for notes, email, research, checklists, and a simple weekly report.</span></button>
+            <button class="guide-card knowledge-card" type="button" data-open="agenticKnowledgebaseWindow" onclick="openWindow('agenticKnowledgebaseWindow')"><b>9. Agentic workflow knowledgebase</b><span>Learning paths, workflow recipes, safety gates, glossary, templates, and readiness scoring.</span></button>
+            <button class="guide-card knowledge-card" type="button" data-open="memoryLayerGuideWindow" onclick="openWindow('memoryLayerGuideWindow')"><b>10. Build a memory layer</b><span>Byterover-style agent memory, Obsidian human notes, and a copy/paste prompt to give your agent.</span></button>
           </div>
           <div class="visual-flow" aria-label="AI help learning path">
             <div>Learn<br><b>what agents do</b></div><span>→</span><div>Try<br><b>copy/paste tutorials</b></div><span>→</span><div>Install<br><b>one agent</b></div><span>→</span><div>Use<br><b>safely</b></div>
@@ -569,7 +570,7 @@ Escalate when:
     </section>
 
     <section id="firstWorkflowGuideWindow" class="win-window doc-window" aria-label="First safe AI workflow tutorial" style="left:245px;top:82px;width:min(980px,96vw);">
-      <div class="win-title"><span>Guide 3 - Your first safe AI workflow</span><button class="win-close" data-close="firstWorkflowGuideWindow">×</button></div>
+      <div class="win-title"><span>Guide 5 - Your first safe AI workflow</span><button class="win-close" data-close="firstWorkflowGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc">
           <div class="mini-heading lift-heading"><h2>Your First Safe AI Workflow</h2></div>
@@ -635,7 +636,7 @@ Final prompt: [paste the cleaned prompt here]</pre>
     </section>
 
     <section id="buyAiHelpGuideWindow" class="win-window doc-window" aria-label="How to hire AI help safely" style="left:215px;top:88px;width:min(980px,96vw);">
-      <div class="win-title"><span>Guide 5 - How to hire AI help safely</span><button class="win-close" data-close="buyAiHelpGuideWindow">×</button></div>
+      <div class="win-title"><span>Guide 6 - How to hire AI help safely</span><button class="win-close" data-close="buyAiHelpGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc">
           <div class="mini-heading lift-heading"><h2>How to Hire AI Help Safely</h2></div>
@@ -702,7 +703,7 @@ Draft first. Wait for my review before anything goes live.</pre>
     </section>
 
     <section id="operatorVsChatGuideWindow" class="win-window doc-window" aria-label="Chatbot or operator guide" style="left:230px;top:96px;width:min(980px,96vw);">
-      <div class="win-title"><span>Guide 6 - Chatbot or operator?</span><button class="win-close" data-close="operatorVsChatGuideWindow">×</button></div>
+      <div class="win-title"><span>Guide 7 - Chatbot or operator?</span><button class="win-close" data-close="operatorVsChatGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc">
           <div class="mini-heading lift-heading"><h2>Chatbot or Operator?</h2></div>
@@ -767,7 +768,7 @@ Rules:
 
 
     <section id="aiTutorialsGuideWindow" class="win-window doc-window" aria-label="Practical AI tutorials" style="left:235px;top:92px;width:min(1040px,96vw);">
-      <div class="win-title"><span>Guide 7 - Practical AI tutorials</span><button class="win-close" data-close="aiTutorialsGuideWindow">×</button></div>
+      <div class="win-title"><span>Guide 8 - Practical AI tutorials</span><button class="win-close" data-close="aiTutorialsGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc">
           <div class="mini-heading lift-heading"><h2>Practical AI Tutorials That Actually Help</h2></div>
@@ -895,7 +896,7 @@ Rules:
     </section>
 
     <section id="memoryLayerGuideWindow" class="win-window doc-window" aria-label="Memory layer tutorial" style="left:205px;top:78px;width:min(1040px,96vw);">
-      <div class="win-title"><span>Guide 9 - Build a memory layer</span><button class="win-close" data-close="memoryLayerGuideWindow">×</button></div>
+      <div class="win-title"><span>Guide 10 - Build a memory layer</span><button class="win-close" data-close="memoryLayerGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc">
           <div class="mini-heading lift-heading"><h2>Build a memory layer for your agent</h2></div>
@@ -1000,8 +1001,39 @@ Use simple Markdown and wiki links. Keep it readable for a human, not just optim
       </div>
     </section>
 
+    <section id="prerequisitesGuideWindow" class="win-window doc-window" aria-label="AI agent install prerequisites guide" style="left:120px;top:58px;width:min(1040px,92vw);">
+      <div class="win-title"><span>Guide 3 - Prerequisites before install</span><button class="win-close" data-close="prerequisitesGuideWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc install-guide">
+          <div class="mini-heading lean-heading"><h2>Prerequisites Before You Install an AI Agent</h2></div>
+          <p class="guide-subtitle"><b>The guide before the guide: get the boring local tools right before blaming Hermes, OpenClaw, or the model.</b></p>
+          <figure class="generated-art-card"><img src="assets/minime-generated/install-prereq-checklist.png" alt="Pixel Mini Michael pointing to an AI agent install prerequisite checklist" loading="lazy" /></figure>
+          <p class="guide-note"><b>Plain English rule:</b> prerequisites are not busywork. They decide whether the installer can download files, compile small dependencies, find Python, run Node tools, and write config safely. If the base machine is wrong, agent context and accuracy suffer because the agent wastes time guessing around broken tools instead of doing the actual job.</p>
+          <section class="guide-callout dependency-prereq-checklist" aria-label="Dependency prerequisites by platform">
+            <h3>Dependency prerequisites by platform</h3>
+            <p class="plain-summary"><b>Use this as the pre-flight check before the install guide.</b> Finish the row for your computer, then move to Guide 4.</p>
+            <div class="table-wrap"><table class="guide-table dependency-table"><thead><tr><th>Computer</th><th>Install or verify first</th><th>Check commands</th><th>Beginner note</th></tr></thead><tbody>
+              <tr><td><b>macOS</b></td><td>Xcode Command Line Tools, Homebrew, Git, Terminal restart.</td><td><code>xcode-select --install</code><br><code>git --version</code><br><code>brew --version</code></td><td>Install Xcode tools and Homebrew before CLI installs. If <code>brew</code> is missing, use <code>brew.sh</code>, then reopen Terminal.</td></tr>
+              <tr><td><b>Windows native</b></td><td>Windows admin access, PowerShell, execution/network permission. Hermes Desktop/PowerShell installer does not require beginners to manually install Node or Python first unless <code>hermes doctor</code> says so.</td><td><code>powershell</code><br><code>hermes --version</code><br><code>hermes doctor</code><br><code>python --version</code></td><td>Start native first. Do not mix native Windows and WSL halfway through one install. If later tools ask for Python, use the official Python 3 installer or Windows Store Python and rerun <code>hermes doctor</code>.</td></tr>
+              <tr><td><b>Windows WSL Ubuntu</b></td><td>WSL Ubuntu, <code>sudo apt</code>, Curl, Git, Python basics for Linux tooling: <code>python3 python3-venv python3-pip</code>. Node.js 24 LTS only if you choose OpenClaw or Node-based tools.</td><td><code>wsl --install -d Ubuntu</code><br><code>sudo apt update</code><br><code>sudo apt install -y curl git python3 python3-venv python3-pip</code><br><code>python3 --version</code></td><td>Keep first work under <code>~/ai-agent-test</code>, not <code>/mnt/c/Users/.../Documents</code>.</td></tr>
+              <tr><td><b>Linux / Ubuntu</b></td><td>Curl, Git, Python basics: <code>python3 python3-venv python3-pip</code>. Node.js 24 LTS only for OpenClaw/manual Node workflows.</td><td><code>sudo apt install -y curl git python3 python3-venv python3-pip</code><br><code>python3 --version</code><br><code>node --version</code></td><td>If <code>node --version</code> fails, that is fine for basic Hermes; install Node before OpenClaw or Node tools.</td></tr>
+              <tr><td><b>OpenClaw any OS</b></td><td>Node.js 24 LTS preferred; Node 22.19+ minimum for npm/manual fallback. Provider API key/login.</td><td><code>node --version</code><br><code>npm --version</code></td><td>OpenClaw is Node-based, so Node is a real prerequisite there.</td></tr>
+            </tbody></table></div>
+          </section>
+          <h3>Do not skip the safe folder</h3>
+          <div class="beginner-box-grid">
+            <article><b>Make one harmless workspace</b><span>Use <code>~/ai-agent-test</code>, <code>C:\AI Agent Test</code>, or a small Desktop folder with one test note. Do not point a new agent at all Documents, customer files, money, or live systems.</span></article>
+            <article><b>Reload the shell</b><span>After installing Xcode tools, Homebrew, Python, Node, Hermes, or OpenClaw, close and reopen Terminal/PowerShell so version checks use the new PATH.</span></article>
+            <article><b>Check before proceeding</b><span>If a required command is missing, fix that first. Randomly repeating installers usually creates a messier machine.</span></article>
+            <article><b>Then install the agent</b><span>When the prerequisite row passes, open Guide 4 and follow the selected Hermes/OpenClaw install path from top to bottom.</span></article>
+          </div>
+          <p class="guide-note"><b>Next:</b> open <button class="inline-action" type="button" onclick="openWindow('hermesGuideWindow')">Guide 4 - Install Hermes or OpenClaw</button> only after this prerequisite check is done.</p>
+        </article>
+      </div>
+    </section>
+
     <section id="hermesGuideWindow" class="win-window doc-window" data-user-moved="1" aria-label="Install Hermes and OpenClaw guide" style="left:96px;top:70px;width:min(1040px,92vw);">
-      <div class="win-title"><span>Guide 3 - Install your first AI agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
+      <div class="win-title"><span>Guide 4 - Install your first AI agent</span><button class="win-close" data-close="hermesGuideWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc guide-doc install-guide">
           <div class="mini-heading lean-heading"><h2>Install Your First AI Agent</h2></div>
