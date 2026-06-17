@@ -5,7 +5,7 @@ const { JSDOM } = require('jsdom');
 
 const rootDir = path.resolve(__dirname, '..');
 const pages = ['index.html', 'ux-preview.html'];
-const expectedImage = 'assets/diagrams/current-ai-setup-structure.jpg?v=20260617-agent-setup';
+const expectedImage = 'assets/diagrams/current-ai-setup-structure.jpg?v=20260617-machines-agents';
 
 function assertIncludes(name, value, expected) {
   if (!value.includes(expected)) {
@@ -23,7 +23,7 @@ for (const page of pages) {
   if (agentsImg.getAttribute('src') !== expectedImage) {
     throw new Error(`${page}: AI Agents setup diagram should use updated cache-busted image, got ${agentsImg.getAttribute('src')}`);
   }
-  assertIncludes(`${page}: AI Agents alt`, agentsImg.getAttribute('alt') || '', 'multiple work Mac Minis');
+  assertIncludes(`${page}: AI Agents alt`, agentsImg.getAttribute('alt') || '', 'four Work Mac Minis');
   assertIncludes(`${page}: AI Agents caption`, document.querySelector('#agentsWindow .agent-setup-diagram figcaption')?.textContent.replace(/\s+/g, ' ').trim() || '', '25 visible agents');
 
   const buildWindow = document.querySelector('#buildWindow');
