@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>InvoicePipe — Australian invoice automation pilot</title>
+  <meta name="description" content="InvoicePipe test site: Australian invoice PDFs to accounting-ready data through a 14-day AP automation pilot." />
+  <link rel="canonical" href="https://michaelcostea.com/invoicepipe.html" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Michael Costea" />
+  <meta property="og:title" content="InvoicePipe — Australian invoice automation pilot" />
+  <meta property="og:description" content="Turn supplier invoice PDFs into structured accounting-ready data for Excel, SharePoint, JSON, or API workflows." />
+  <meta property="og:url" content="https://michaelcostea.com/invoicepipe.html" />
+  <meta property="og:image" content="https://michaelcostea.com/assets/profile-michael-pixel.jpg" />
+  <meta property="og:image:alt" content="Pixel portrait of Michael Costea" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="InvoicePipe — Australian invoice automation pilot" />
+  <meta name="twitter:description" content="Australian invoice PDFs to accounting-ready data through a 14-day AP automation pilot." />
+  <meta name="twitter:image" content="https://michaelcostea.com/assets/profile-michael-pixel.jpg" />
+  <style>
+    :root{--bg:#07110e;--panel:#0d1d18;--panel2:#10271f;--text:#eafff8;--muted:#a7c3ba;--green:#22e28a;--green2:#75ffba;--line:#1f3b32;--warn:#ffd166;--danger:#ff8f8f;--shadow:0 30px 80px rgba(0,0,0,.25)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body.invoicepipe-test-site{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 16% 0%,#123b2c 0,#07110e 35%,#050806 100%);color:var(--text);line-height:1.5;overflow-x:hidden}a{color:inherit}.ip-wrap{max-width:1160px;margin:0 auto;padding:28px}.ip-nav{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:64px}.ip-logo{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:-.04em}.ip-logo-mark{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,var(--green),#e147ff);box-shadow:0 0 0 1px rgba(255,255,255,.16),0 0 34px rgba(34,226,138,.28)}.ip-status{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:14px;background:rgba(13,29,24,.6)}.ip-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:42px;align-items:center}.ip-eyebrow{color:var(--green2);font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-size:13px}.ip-hero h1{font-size:clamp(42px,7vw,76px);line-height:.92;margin:14px 0 18px;letter-spacing:-.075em}.ip-hero h1 span{color:var(--green)}.ip-lede{font-size:20px;color:var(--muted);max-width:700px}.ip-cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.ip-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:13px;padding:14px 18px;text-decoration:none;font-weight:900;border:1px solid var(--line)}.ip-primary-cta{background:var(--green);color:#03100b;border-color:var(--green);box-shadow:0 15px 35px rgba(34,226,138,.22)}.ip-secondary-cta{background:rgba(13,29,24,.72);color:var(--text)}.ip-note{margin-top:16px;color:var(--warn);font-size:14px}.ip-card{background:linear-gradient(180deg,rgba(16,39,31,.92),rgba(13,29,24,.92));border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}.ip-flow{display:grid;gap:12px}.ip-step{padding:15px;border:1px solid var(--line);border-radius:16px;background:#091712}.ip-step b{display:block;color:var(--text);font-size:16px}.ip-step span{color:var(--muted)}.ip-arrow{text-align:center;color:var(--green);font-size:22px;line-height:1}section{margin-top:84px}.ip-section-head{max-width:780px}.ip-section-head h2{font-size:clamp(30px,4vw,44px);line-height:1;margin:0 0 14px;letter-spacing:-.05em}.ip-section-head p,.ip-muted{color:var(--muted)}.ip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px}.ip-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}.ip-mini{min-height:160px}.ip-mini strong{display:block;font-size:18px;margin-bottom:8px}.ip-mini p{color:var(--muted);margin:0}.ip-field{display:flex;gap:10px;align-items:flex-start}.ip-field::before{content:"✓";display:grid;place-items:center;flex:0 0 24px;height:24px;border-radius:999px;background:rgba(34,226,138,.14);color:var(--green);font-weight:900}.ip-problem{border-left:4px solid var(--danger)}.ip-process-map{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}.ip-process-map .ip-card{position:relative}.ip-process-map .ip-card:not(:last-child)::after{content:"→";position:absolute;right:-17px;top:50%;transform:translateY(-50%);color:var(--green);font-size:24px;font-weight:900;z-index:2}.ip-price{font-size:38px;font-weight:1000;color:var(--green);letter-spacing:-.05em}.ip-list{margin:12px 0 0;padding-left:20px;color:var(--muted)}.ip-list li{margin:7px 0}.ip-table{width:100%;border-collapse:collapse;margin-top:20px;overflow:hidden;border-radius:18px;border:1px solid var(--line)}.ip-table th,.ip-table td{text-align:left;padding:14px;border-bottom:1px solid var(--line);vertical-align:top}.ip-table th{background:#10271f;color:var(--green2)}.ip-table tr:last-child td{border-bottom:0}.ip-footer{margin:84px 0 24px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.ip-risk{background:rgba(255,209,102,.08);border-color:rgba(255,209,102,.35)}.ip-risk strong{color:var(--warn)}
+    @media (max-width:900px){.ip-hero,.ip-grid,.ip-grid3,.ip-process-map{grid-template-columns:1fr}.ip-nav{align-items:flex-start;flex-direction:column;margin-bottom:42px}.ip-wrap{padding:20px}.ip-process-map .ip-card:not(:last-child)::after{content:"↓";right:auto;left:24px;top:auto;bottom:-24px}.ip-card{padding:20px}.ip-hero h1{font-size:44px}.ip-lede{font-size:18px}.ip-table{display:block;overflow-x:auto}.ip-status{border-radius:14px}}
+  </style>
+</head>
+<body class="invoicepipe-test-site">
+  <div class="ip-wrap">
+    <nav class="ip-nav" aria-label="InvoicePipe test site navigation">
+      <a class="ip-logo" href="/invoicepipe.html" aria-label="InvoicePipe test site home"><span class="ip-logo-mark" aria-hidden="true"></span><span>InvoicePipe</span></a>
+      <div class="ip-status">Private test page on michaelcostea.com · noindex</div>
+    </nav>
+
+    <main>
+      <section class="ip-hero" aria-labelledby="ipHeroTitle">
+        <div>
+          <div class="ip-eyebrow">For AP teams that hate manual entry</div>
+          <h1 id="ipHeroTitle">Australian invoice PDFs → <span>accounting-ready data</span>.</h1>
+          <p class="ip-lede">InvoicePipe extracts vendor, ABN, invoice number, PO, GST, due dates, totals, and key fields from supplier invoices — then sends clean structured data into Excel, SharePoint, JSON, or your accounting workflow.</p>
+          <div class="ip-cta-row">
+            <a class="ip-btn ip-primary-cta" href="mailto:costea.michael@gmail.com?subject=InvoicePipe%20pilot&body=Hi%20Michael,%0A%0AInvoice%20volume:%0A%0AWhere%20invoices%20arrive:%0A%0AOutput%20needed:%0A%0ASample%20batch%20available:%0A%0AAnything%20sensitive%20or%20approval-related:%0A">Book a pilot</a>
+            <a class="ip-btn ip-secondary-cta" href="#pilot">See the 14-day pilot</a>
+          </div>
+          <p class="ip-note">Commercial/IP rights are being documented before public selling. This is a packaging/test page, not a public launch.</p>
+        </div>
+        <div class="ip-card ip-flow" aria-label="InvoicePipe workflow summary">
+          <div class="ip-step"><b>1. Invoice arrives</b><span>Upload PDFs or forward from a shared mailbox.</span></div>
+          <div class="ip-arrow" aria-hidden="true">↓</div>
+          <div class="ip-step"><b>2. Fields are extracted</b><span>Vendor, ABN, PO, GST, due dates, totals.</span></div>
+          <div class="ip-arrow" aria-hidden="true">↓</div>
+          <div class="ip-step"><b>3. Exceptions are flagged</b><span>Missing or suspicious fields get surfaced for review.</span></div>
+          <div class="ip-arrow" aria-hidden="true">↓</div>
+          <div class="ip-step"><b>4. Data is exported</b><span>CSV, Excel, SharePoint, JSON, Power Automate, or API.</span></div>
+        </div>
+      </section>
+
+      <section aria-labelledby="problemTitle">
+        <div class="ip-section-head">
+          <h2 id="problemTitle">Your invoice data is already in the PDF. Your team is still typing it out.</h2>
+          <p>Invoices hit the accounts inbox. Someone downloads attachments. Someone checks the supplier. Someone keys the ABN, invoice number, PO, GST, due date, subtotal, and total. Then someone fixes the mistakes.</p>
+        </div>
+        <div class="ip-grid3">
+          <article class="ip-card ip-mini ip-problem"><strong>Manual entry tax</strong><p>Finance time disappears into copy/paste instead of review, analysis, or cashflow control.</p></article>
+          <article class="ip-card ip-mini ip-problem"><strong>Messy handoffs</strong><p>Invoices arrive through email, uploads, forwarded PDFs, and ad-hoc folders.</p></article>
+          <article class="ip-card ip-mini ip-problem"><strong>Bad data risk</strong><p>Small field mistakes become reporting, payment, GST, or supplier reconciliation problems.</p></article>
+        </div>
+      </section>
+
+      <section aria-labelledby="fieldsTitle">
+        <div class="ip-section-head">
+          <h2 id="fieldsTitle">Core fields for Australian invoice workflows</h2>
+          <p>Start narrow: extract the fields finance teams actually need before data can move downstream.</p>
+        </div>
+        <div class="ip-grid">
+          <div class="ip-card ip-field"><div><strong>Vendor + ABN</strong><p class="ip-muted">Supplier identity and tax identifiers.</p></div></div>
+          <div class="ip-card ip-field"><div><strong>Invoice number + dates</strong><p class="ip-muted">Invoice ID, invoice date, due date.</p></div></div>
+          <div class="ip-card ip-field"><div><strong>PO + document type</strong><p class="ip-muted">Purchase order, tax invoice, credit note, statement.</p></div></div>
+          <div class="ip-card ip-field"><div><strong>Subtotal + GST + total</strong><p class="ip-muted">Amount due and tax breakdown.</p></div></div>
+        </div>
+      </section>
+
+      <section aria-labelledby="processTitle">
+        <div class="ip-section-head">
+          <h2 id="processTitle">Simple process map</h2>
+          <p>Package the product as an AP workflow pilot, not a generic OCR demo.</p>
+        </div>
+        <div class="ip-process-map" aria-label="InvoicePipe process map">
+          <article class="ip-card"><strong>Shared mailbox / upload</strong><p class="ip-muted">Use the customer’s current invoice intake path.</p></article>
+          <article class="ip-card"><strong>Document AI extraction</strong><p class="ip-muted">Extract and normalize agreed invoice fields.</p></article>
+          <article class="ip-card"><strong>Exception report</strong><p class="ip-muted">Show fields that need human review.</p></article>
+          <article class="ip-card"><strong>Accounting-ready export</strong><p class="ip-muted">Send clean records to CSV, Excel, SharePoint, JSON, or API.</p></article>
+        </div>
+      </section>
+
+      <section id="pilot" aria-labelledby="pilotTitle">
+        <div class="ip-section-head">
+          <h2 id="pilotTitle">14-Day AP Automation Pilot</h2>
+          <p>A paid, controlled test using the customer’s real supplier invoices.</p>
+        </div>
+        <div class="ip-grid3">
+          <article class="ip-card">
+            <div class="ip-price">from AUD $750</div>
+            <p class="ip-muted">For a constrained sample batch and one output format. Quote higher for mailbox routing, Power Automate, custom fields, or multi-client workflows.</p>
+          </article>
+          <article class="ip-card">
+            <strong>You get</strong>
+            <ul class="ip-list">
+              <li>Upload or shared mailbox intake path</li>
+              <li>Structured invoice output</li>
+              <li>Exception report</li>
+              <li>Field-level accuracy summary</li>
+              <li>Time-saved estimate</li>
+            </ul>
+          </article>
+          <article class="ip-card">
+            <strong>Best fit</strong>
+            <ul class="ip-list">
+              <li>100+ supplier invoices/month</li>
+              <li>Australian invoice/GST workflows</li>
+              <li>Bookkeeping firms or AP teams</li>
+              <li>Excel, SharePoint, Microsoft 365, or API output</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="pricingTitle">
+        <div class="ip-section-head">
+          <h2 id="pricingTitle">Packaging path after the pilot</h2>
+          <p>Start done-with-you. Turn repeated customer workflows into SaaS packaging only after pilots prove demand.</p>
+        </div>
+        <table class="ip-table">
+          <thead><tr><th>Package</th><th>Target</th><th>Indicative price</th><th>Includes</th></tr></thead>
+          <tbody>
+            <tr><td>Paid Pilot</td><td>First validation customers</td><td>AUD $750–$2,500 one-off</td><td>30–100 invoices, one output path, exception report, accuracy summary.</td></tr>
+            <tr><td>Team</td><td>SMB finance team</td><td>AUD $499–$999/mo</td><td>Monthly invoice allowance, dashboard/upload, CSV/JSON export, support.</td></tr>
+            <tr><td>Automation</td><td>Microsoft 365-heavy teams</td><td>AUD $1,500–$3,000/mo</td><td>Shared mailbox, Power Automate/SharePoint, custom fields, monitoring.</td></tr>
+            <tr><td>Partner</td><td>Bookkeeping/accounting firms</td><td>Custom</td><td>Multi-client workflow, pooled volume, repeatable onboarding, white-label reports.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section aria-labelledby="diligenceTitle">
+        <div class="ip-card ip-risk">
+          <h2 id="diligenceTitle">Launch gate</h2>
+          <p><strong>Commercial/IP rights are being documented before public selling.</strong> This test page intentionally avoids unverified claims like active users, processed invoice counts, and guaranteed accuracy. Public launch waits until dev consent, license/assignment, security posture, and first real pilot results are clean.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="ip-footer">
+      <span>InvoicePipe test package · michaelcostea.com/invoicepipe.html</span>
+      <a href="mailto:costea.michael@gmail.com?subject=InvoicePipe%20pilot">Contact Michael</a>
+    </footer>
+  </div>
+</body>
+</html>
