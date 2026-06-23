@@ -68,4 +68,29 @@ for (const prompt of ['Invoice volume', 'Where invoices arrive', 'Output needed'
   if (!decoded.includes(prompt)) throw new Error(`mailto brief missing ${prompt}`);
 }
 
+
+const aliasPath = path.join(rootDir, 'billpilot.html');
+if (!fs.existsSync(aliasPath)) {
+  throw new Error('missing billpilot.html clean alias page');
+}
+const aliasHtml = fs.readFileSync(aliasPath, 'utf8');
+const aliasDom = new JSDOM(aliasHtml);
+const aliasDocument = aliasDom.window.document;
+const aliasText = aliasDocument.body.textContent.replace(/\s+/g, ' ').trim();
+if (aliasDocument.title !== 'BillPilot — Australian invoice automation pilot') {
+  throw new Error(`unexpected BillPilot alias title: ${aliasDocument.title}`);
+}
+if ((aliasDocument.querySelector('link[rel="canonical"]')?.getAttribute('href') || '') !== 'https://michaelcostea.com/billpilot.html') {
+  throw new Error('BillPilot alias canonical must point at /billpilot.html');
+}
+if (!aliasHtml.includes('href="/billpilot.html"')) {
+  throw new Error('BillPilot alias logo should link to /billpilot.html');
+}
+if (!aliasText.includes('BillPilot test package · michaelcostea.com/billpilot.html')) {
+  throw new Error('BillPilot alias footer should show clean /billpilot.html URL');
+}
+if (!aliasText.includes('Australian invoice PDFs → accounting-ready data')) {
+  throw new Error('BillPilot alias missing main positioning');
+}
+
 console.log('invoicepipe-test-site-regression ok');
