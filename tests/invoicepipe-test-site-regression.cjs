@@ -48,7 +48,7 @@ for (const phrase of [
   'Exception report',
   'from AUD $750',
   'Book a pilot',
-  'Commercial/IP rights are being documented before public selling',
+  'Owner/developer access is confirmed for commercial use and selling',
 ]) {
   if (!bodyText.includes(phrase)) throw new Error(`missing launch phrase: ${phrase}`);
 }
