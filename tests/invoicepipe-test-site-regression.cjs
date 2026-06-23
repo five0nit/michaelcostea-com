@@ -23,7 +23,7 @@ function attr(selector, name) {
   return value;
 }
 
-if (document.title !== 'InvoicePipe — Australian invoice automation pilot') {
+if (document.title !== 'BillPilot — Australian invoice automation pilot') {
   throw new Error(`unexpected title: ${document.title}`);
 }
 if (attr('link[rel="canonical"]', 'href') !== 'https://michaelcostea.com/invoicepipe.html') {
@@ -38,6 +38,7 @@ if (!document.body.classList.contains('invoicepipe-test-site')) {
 
 const bodyText = text();
 for (const phrase of [
+  'BillPilot',
   'Australian invoice PDFs → accounting-ready data',
   '14-Day AP Automation Pilot',
   'shared mailbox',
