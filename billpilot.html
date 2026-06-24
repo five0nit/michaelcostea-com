@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BillPilot — invoice intake to review-ready AP data</title>
-  <meta name="description" content="BillPilot turns Australian supplier invoice PDFs into review-ready AP data with exception flags, GST fields, and Excel, SharePoint, JSON, or API exports." />
+  <title>BillPilot — cloud AP workflow pilot for Australian invoices</title>
+  <meta name="description" content="BillPilot is a cloud-based 14-day AP workflow pilot that turns messy supplier invoice inboxes into reviewed exception reports and Excel, SharePoint, Xero/MYOB-ready exports." />
   <link rel="canonical" href="https://michaelcostea.com/billpilot.html" />
   <meta name="robots" content="noindex, nofollow" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Michael Costea" />
-  <meta property="og:title" content="BillPilot — invoice intake to review-ready AP data" />
-  <meta property="og:description" content="Turn Australian supplier invoice PDFs into structured AP data, exception reports, and accounting-ready exports." />
+  <meta property="og:title" content="BillPilot — cloud AP workflow pilot" />
+  <meta property="og:description" content="A 14-day done-with-you AP pilot for Australian SMBs: invoice intake, exception review, clean exports, and workflow proof." />
   <meta property="og:url" content="https://michaelcostea.com/billpilot.html" />
   <meta property="og:image" content="https://michaelcostea.com/assets/profile-michael-pixel.jpg" />
   <meta property="og:image:alt" content="Pixel portrait of Michael Costea" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="BillPilot — invoice intake to review-ready AP data" />
-  <meta name="twitter:description" content="Australian invoice PDFs to reviewed AP data through a controlled 14-day pilot." />
+  <meta name="twitter:title" content="BillPilot — cloud AP workflow pilot" />
+  <meta name="twitter:description" content="Messy invoice inboxes to reviewed AP exports through a controlled 14-day cloud pilot." />
   <meta name="twitter:image" content="https://michaelcostea.com/assets/profile-michael-pixel.jpg" />
   <style>
     /* BillPilot AP Exception Desk redesign. Visual base: finance/product restraint inspired by midday-ai/midday; no Midday code copied. */
@@ -50,7 +50,7 @@
     a{color:inherit}.bp-shell{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:24px}.bp-topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0 58px}.bp-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;letter-spacing:-.035em}.bp-mark{width:32px;height:32px;border:1px solid var(--line-dark);border-radius:10px;background:linear-gradient(135deg,#fffdf8,#e8e3d8);display:grid;place-items:center;box-shadow:inset 0 -1px 0 rgba(0,0,0,.05)}.bp-mark:before{content:"";width:14px;height:18px;border:2px solid var(--green-dark);border-radius:3px;background:linear-gradient(#fff 0 22%,transparent 22% 100%)}.bp-status{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:13px;border:1px solid var(--line);background:rgba(255,253,248,.68);padding:8px 12px;border-radius:999px;backdrop-filter:blur(12px)}.bp-status-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(179,122,34,.12)}
     .bp-hero{display:grid;grid-template-columns:minmax(0,.98fr) minmax(430px,1.02fr);gap:38px;align-items:center;min-height:620px}.bp-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700;margin:0 0 20px}.bp-hero h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(58px,7vw,104px);line-height:.9;letter-spacing:-.075em;margin:0;max-width:780px}.bp-hero h1 .bp-break{display:block}.bp-lede{font-size:19px;color:var(--muted);max-width:610px;margin:24px 0 0}.bp-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.bp-btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border-radius:999px;padding:0 18px;text-decoration:none;font-size:14px;font-weight:750;border:1px solid var(--line-dark);transition:transform .18s ease,box-shadow .18s ease,background .18s ease}.bp-btn:hover{transform:translateY(-1px)}.bp-btn-primary{background:var(--ink);color:#fffdf8;border-color:var(--ink);box-shadow:var(--small-shadow)}.bp-btn-secondary{background:rgba(255,253,248,.72);color:var(--ink)}.bp-microproof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:30px;max-width:590px}.bp-proof{border-top:1px solid var(--line);padding-top:12px}.bp-proof b{display:block;font-size:14px}.bp-proof span{display:block;color:var(--muted);font-size:13px;margin-top:2px}.bp-disclaimer{margin-top:18px;color:var(--soft);font-size:12px;max-width:640px}
     .bp-product{position:relative}.bp-product:before{content:"";position:absolute;inset:22px -24px -24px 46px;border-radius:32px;background:rgba(32,32,29,.06);filter:blur(2px)}.bp-workspace{position:relative;background:var(--card);border:1px solid var(--line-dark);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}.bp-windowbar{height:42px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:linear-gradient(180deg,#fffefb,#f1eee5)}.bp-dots{display:flex;gap:6px}.bp-dots i{width:9px;height:9px;border-radius:50%;background:var(--line-dark)}.bp-dots i:nth-child(1){background:#cf6c5b}.bp-dots i:nth-child(2){background:#d6a643}.bp-dots i:nth-child(3){background:#5c9a6f}.bp-window-title{font-size:12px;color:var(--muted);font-weight:700}.bp-app{display:grid;grid-template-columns:170px 1fr;min-height:456px}.bp-side{background:#f3f0e8;border-right:1px solid var(--line);padding:16px 12px}.bp-side-label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--soft);margin:0 0 12px}.bp-navitem{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:12px;color:var(--muted);font-size:13px}.bp-navitem.active{background:#fffdf8;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}.bp-count{color:var(--soft)}.bp-main{padding:16px}.bp-main-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}.bp-main-head h2{font-family:Georgia,"Times New Roman",serif;font-size:26px;line-height:1;margin:0;font-weight:500;letter-spacing:-.04em}.bp-main-head p{margin:5px 0 0;color:var(--muted);font-size:13px}.bp-export{font-size:12px;border:1px solid var(--line-dark);background:#f8f6ef;border-radius:999px;padding:8px 10px;white-space:nowrap}.bp-invoice-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.bp-doc{border:1px solid var(--line);border-radius:18px;background:#fff;min-height:260px;padding:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}.bp-doc-top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #ebe7dd;padding-bottom:14px}.bp-doc-logo{font-weight:850;letter-spacing:-.04em}.bp-doc-small{font-size:11px;color:var(--muted);text-align:right}.bp-doc-lines{display:grid;gap:8px;margin-top:16px}.bp-doc-line{height:9px;background:#ebe7dd;border-radius:99px}.bp-doc-line.short{width:64%}.bp-doc-line.med{width:82%}.bp-doc-total{display:flex;justify-content:space-between;align-items:center;margin-top:24px;border-top:1px solid #ebe7dd;padding-top:14px;font-size:13px}.bp-doc-total b{font-size:22px}.bp-review{display:grid;gap:10px}.bp-field{border:1px solid var(--line);border-radius:14px;background:#fffefb;padding:10px}.bp-field-row{display:flex;justify-content:space-between;gap:8px;align-items:center}.bp-field label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:800}.bp-field strong{font-size:14px}.bp-badge{font-size:11px;border-radius:999px;padding:4px 7px;border:1px solid var(--line-dark);white-space:nowrap}.bp-ok{background:#ebf4ee;color:var(--green-dark);border-color:#c7decf}.bp-warn{background:#fff5df;color:#7b5518;border-color:#ebd3a8}.bp-risk{background:#faece9;color:#81352d;border-color:#ebc9c3}.bp-queue{margin-top:14px;border:1px solid var(--line);border-radius:16px;overflow:hidden}.bp-queue-row{display:grid;grid-template-columns:1.2fr .9fr .7fr;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);font-size:12px;align-items:center}.bp-queue-row:last-child{border-bottom:0}.bp-queue-row.head{background:#f4f1e9;color:var(--soft);text-transform:uppercase;letter-spacing:.08em;font-size:10px;font-weight:800}.bp-pill{border-radius:999px;padding:4px 8px;background:#f3f0e8;color:var(--muted);justify-self:start}.bp-pill.red{background:#faece9;color:var(--red)}.bp-pill.green{background:#ebf4ee;color:var(--green-dark)}
-    section{padding:96px 0}.bp-section-head{max-width:760px;margin-bottom:32px}.bp-section-head.center{margin-left:auto;margin-right:auto;text-align:center}.bp-section-head .bp-kicker{margin-bottom:12px}.bp-section-head h2{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(36px,4.5vw,64px);line-height:.98;letter-spacing:-.055em;margin:0}.bp-section-head p{color:var(--muted);font-size:18px;margin:18px 0 0}.bp-panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--small-shadow)}.bp-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.bp-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.bp-card{padding:22px}.bp-card h3,.bp-card strong{font-size:17px;margin:0 0 8px;display:block;letter-spacing:-.02em}.bp-card p{color:var(--muted);margin:0;font-size:15px}.bp-process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.bp-step{position:relative;padding:20px;min-height:180px}.bp-step span{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:white;font-size:13px;margin-bottom:36px}.bp-step:not(:last-child):after{content:"";position:absolute;right:-10px;top:36px;width:20px;height:1px;background:var(--line-dark)}.bp-table-wrap{overflow:hidden}.bp-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--small-shadow)}.bp-table th,.bp-table td{text-align:left;padding:17px 16px;border-bottom:1px solid var(--line);vertical-align:top}.bp-table th{font-size:11px;color:var(--soft);text-transform:uppercase;letter-spacing:.12em;background:#f3f0e8}.bp-table tr:last-child td{border-bottom:0}.bp-table td{font-size:14px;color:var(--muted)}.bp-table td:first-child{font-weight:800;color:var(--ink)}.bp-price{font-family:Georgia,"Times New Roman",serif;font-size:40px;letter-spacing:-.045em;line-height:1}.bp-list{padding-left:18px;color:var(--muted);margin:12px 0 0}.bp-list li{margin:7px 0}.bp-launch{background:var(--coal);color:#fffdf8;border-radius:30px;padding:36px;display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;box-shadow:var(--shadow)}.bp-launch h2{font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.05em;font-size:clamp(34px,4.5vw,58px);line-height:1;margin:0}.bp-launch p{color:#c9c5bb;font-size:16px;margin:16px 0 0}.bp-launch .bp-btn-primary{background:#fffdf8;color:var(--ink);border-color:#fffdf8}.bp-launch-note{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:20px;padding:18px;color:#d8d3c8;font-size:14px}.bp-footer{display:flex;justify-content:space-between;gap:18px;padding:28px 0 42px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+    section{padding:96px 0}.bp-section-head{max-width:760px;margin-bottom:32px}.bp-section-head.center{margin-left:auto;margin-right:auto;text-align:center}.bp-section-head .bp-kicker{margin-bottom:12px}.bp-section-head h2{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(36px,4.5vw,64px);line-height:.98;letter-spacing:-.055em;margin:0}.bp-section-head p{color:var(--muted);font-size:18px;margin:18px 0 0}.bp-panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--small-shadow)}.bp-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.bp-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.bp-card{padding:22px}.bp-card h3,.bp-card strong{font-size:17px;margin:0 0 8px;display:block;letter-spacing:-.02em}.bp-card p{color:var(--muted);margin:0;font-size:15px}.bp-process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.bp-step{position:relative;padding:20px;min-height:180px}.bp-step span{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:white;font-size:13px;margin:0 8px 28px 0;vertical-align:middle}.bp-step strong{vertical-align:middle}.bp-step:not(:last-child):after{content:"";position:absolute;right:-10px;top:36px;width:20px;height:1px;background:var(--line-dark)}.bp-table-wrap{overflow:hidden}.bp-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--small-shadow)}.bp-table th,.bp-table td{text-align:left;padding:17px 16px;border-bottom:1px solid var(--line);vertical-align:top}.bp-table th{font-size:11px;color:var(--soft);text-transform:uppercase;letter-spacing:.12em;background:#f3f0e8}.bp-table tr:last-child td{border-bottom:0}.bp-table td{font-size:14px;color:var(--muted)}.bp-table td:first-child{font-weight:800;color:var(--ink)}.bp-price{font-family:Georgia,"Times New Roman",serif;font-size:40px;letter-spacing:-.045em;line-height:1}.bp-list{padding-left:18px;color:var(--muted);margin:12px 0 0}.bp-list li{margin:7px 0}.bp-launch{background:var(--coal);color:#fffdf8;border-radius:30px;padding:36px;display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;box-shadow:var(--shadow)}.bp-launch h2{font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.05em;font-size:clamp(34px,4.5vw,58px);line-height:1;margin:0}.bp-launch p{color:#c9c5bb;font-size:16px;margin:16px 0 0}.bp-launch .bp-btn-primary{background:#fffdf8;color:var(--ink);border-color:#fffdf8}.bp-launch-note{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:20px;padding:18px;color:#d8d3c8;font-size:14px}.bp-footer{display:flex;justify-content:space-between;gap:18px;padding:28px 0 42px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
     @media (max-width:980px){.bp-shell{padding:18px}.bp-topbar{padding-bottom:34px}.bp-hero{grid-template-columns:1fr;min-height:0;gap:30px}.bp-hero h1{font-size:clamp(44px,14vw,68px);letter-spacing:-.065em}.bp-lede{font-size:17px}.bp-product{order:2}.bp-product:before{display:none}.bp-microproof{grid-template-columns:1fr}.bp-app{grid-template-columns:1fr}.bp-side{display:none}.bp-main{padding:12px}.bp-main-head{align-items:flex-start}.bp-invoice-grid{grid-template-columns:1fr}.bp-doc{min-height:220px}.bp-grid3,.bp-grid2,.bp-process{grid-template-columns:1fr}.bp-step:not(:last-child):after{display:none}.bp-launch{grid-template-columns:1fr;padding:24px}section{padding:60px 0}.bp-table-wrap{overflow:visible}.bp-table,.bp-table thead,.bp-table tbody,.bp-table tr,.bp-table th,.bp-table td{display:block;width:100%}.bp-table thead{display:none}.bp-table tr{padding:14px 16px;border-bottom:1px solid var(--line)}.bp-table tr:last-child{border-bottom:0}.bp-table td{border:0;padding:6px 0}.bp-table td:before{content:attr(data-label);display:block;font-size:10px;color:var(--soft);text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-bottom:2px}.bp-status{border-radius:14px;align-items:flex-start}.bp-status span:last-child{min-width:0;overflow-wrap:anywhere}.bp-footer{flex-direction:column}.bp-queue-row{grid-template-columns:1fr .8fr}.bp-queue-row span:nth-child(2){display:none}}
     @media (max-width:520px){.bp-topbar{align-items:flex-start;flex-direction:column}.bp-hero h1{font-size:45px;line-height:.94}.bp-actions{display:grid;grid-template-columns:1fr}.bp-btn{width:100%}.bp-windowbar{height:38px}.bp-window-title{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bp-main-head{display:grid}.bp-export{justify-self:start}.bp-field-row{align-items:flex-start}.bp-badge{margin-top:2px}.bp-doc-total b{font-size:20px}}
   </style>
@@ -59,32 +59,32 @@
   <div class="bp-shell">
     <nav class="bp-topbar" aria-label="BillPilot navigation">
       <a class="bp-brand" href="/billpilot.html" aria-label="BillPilot home"><span class="bp-mark" aria-hidden="true"></span><span>BillPilot</span></a>
-      <div class="bp-status"><span class="bp-status-dot" aria-hidden="true"></span><span>Private noindex pilot page · built for Australian AP workflows</span></div>
+      <div class="bp-status"><span class="bp-status-dot" aria-hidden="true"></span><span>Private noindex offer test · cloud AP workflow pilot</span></div>
     </nav>
 
     <main>
       <section class="bp-hero" aria-labelledby="bpHeroTitle">
         <div>
-          <p class="bp-kicker">AP exception desk for supplier invoices</p>
-          <h1 id="bpHeroTitle">Invoice PDFs into <span class="bp-break">review-ready data.</span></h1>
-          <p class="bp-lede">BillPilot takes Australian supplier invoices from email, upload, or folder intake and prepares the fields finance teams need before posting: vendor, ABN, GST, PO, totals, due dates, and exceptions.</p>
+          <p class="bp-kicker">Cloud AP workflow pilot for Australian SMBs</p>
+          <h1 id="bpHeroTitle">Messy invoice inboxes into <span class="bp-break">review-ready AP.</span></h1>
+          <p class="bp-lede">BillPilot is a 14-day done-with-you cloud pilot: we connect a sample invoice intake path, extract the fields, flag the exceptions, and hand back a working AP review/export flow your team can actually use.</p>
           <div class="bp-actions">
-            <a class="bp-btn bp-btn-primary" href="mailto:costea.michael@gmail.com?subject=BillPilot%20pilot&body=Hi%20Michael,%0A%0AInvoice%20volume:%0A%0AWhere%20invoices%20arrive:%0A%0AOutput%20needed:%0A%0ASample%20batch%20available:%0A%0AAnything%20sensitive%20or%20approval-related:%0A">Book a 14-day pilot</a>
-            <a class="bp-btn bp-btn-secondary" href="#pilot">See pilot scope</a>
+            <a class="bp-btn bp-btn-primary" href="mailto:costea.michael@gmail.com?subject=BillPilot%2014-day%20AP%20workflow%20pilot&body=Hi%20Michael,%0A%0AInvoice%20volume%20per%20month:%0A%0AWhere%20invoices%20arrive%20today:%0A%0AAccounting/bookkeeping%20tool:%0A%0AOutput%20needed%20(Excel,%20SharePoint,%20Xero,%20MYOB,%20API):%0A%0ASample%20batch%20available:%0A%0AApproval%20or%20privacy%20requirements:%0A">Book a 14-day pilot</a>
+            <a class="bp-btn bp-btn-secondary" href="#pilot">See what you get</a>
           </div>
           <div class="bp-microproof" aria-label="BillPilot proof points">
-            <div class="bp-proof"><b>Fields first</b><span>ABN, GST, PO, totals, due dates.</span></div>
-            <div class="bp-proof"><b>Review before export</b><span>Suspicious or missing fields are flagged.</span></div>
-            <div class="bp-proof"><b>Plain outputs</b><span>Excel, SharePoint, JSON, API-ready data.</span></div>
+            <div class="bp-proof"><b>Cloud-first setup</b><span>Azure/Power Automate/Microsoft 365 friendly.</span></div>
+            <div class="bp-proof"><b>Human review built in</b><span>Missing PO, GST, ABN, duplicate risks surfaced.</span></div>
+            <div class="bp-proof"><b>Useful outputs</b><span>Excel, SharePoint, Xero/MYOB-ready exports.</span></div>
           </div>
-          <p class="bp-disclaimer">Owner/developer access is confirmed for commercial use and selling. This remains a noindex packaging/test page until Mike approves public outreach.</p>
+          <p class="bp-disclaimer">This is intentionally packaged as a pilot/implementation offer, not another generic OCR subscription. The page remains noindex until Mike approves outreach.</p>
         </div>
 
         <div class="bp-product" aria-label="BillPilot product preview">
           <div class="bp-workspace">
             <div class="bp-windowbar">
               <div class="bp-dots" aria-hidden="true"><i></i><i></i><i></i></div>
-              <div class="bp-window-title">billpilot.ap / exception-desk</div>
+              <div class="bp-window-title">billpilot.cloud / ap-exception-desk</div>
               <div aria-hidden="true"></div>
             </div>
             <div class="bp-app">
@@ -97,14 +97,15 @@
                 <p class="bp-side-label" style="margin-top:24px">Output</p>
                 <div class="bp-navitem"><span>Excel</span><span class="bp-count">.xlsx</span></div>
                 <div class="bp-navitem"><span>SharePoint</span><span class="bp-count">sync</span></div>
+                <div class="bp-navitem"><span>Xero/MYOB</span><span class="bp-count">ready</span></div>
               </aside>
               <div class="bp-main">
                 <div class="bp-main-head">
                   <div>
-                    <h2>Invoice review</h2>
-                    <p>Supplier: Metro Electrical Wholesale · INV-10482</p>
+                    <h2>AP pilot review</h2>
+                    <p>Sample batch: Metro Electrical Wholesale · INV-10482</p>
                   </div>
-                  <div class="bp-export">Export ready: 86%</div>
+                  <div class="bp-export">Pilot proof: 86%</div>
                 </div>
                 <div class="bp-invoice-grid">
                   <div class="bp-doc" aria-label="Supplier invoice preview">
@@ -133,57 +134,57 @@
 
       <section aria-labelledby="problemTitle">
         <div class="bp-section-head">
-          <p class="bp-kicker">The AP bottleneck</p>
-          <h2 id="problemTitle">Your invoice data is already there. Your team still has to trust it.</h2>
-          <p>Manual entry is only part of the problem. Finance teams need a reliable review layer that makes the obvious fields fast and the risky fields visible.</p>
+          <p class="bp-kicker">The business wedge</p>
+          <h2 id="problemTitle">Invoice extraction is becoming a feature. AP outcomes are still messy.</h2>
+          <p>Cloud AI can read invoices. The business problem is wiring that into intake, validation, review, approvals, and exports without creating another tool staff ignore.</p>
         </div>
         <div class="bp-grid3">
-          <article class="bp-panel bp-card"><h3>Manual entry tax</h3><p>ABNs, invoice numbers, PO references, GST, due dates, subtotals, and totals get re-keyed across systems.</p></article>
-          <article class="bp-panel bp-card"><h3>Messy intake</h3><p>Invoices arrive through shared mailboxes, uploads, forwarded PDFs, folders, and ad-hoc supplier emails.</p></article>
-          <article class="bp-panel bp-card"><h3>Exception blindness</h3><p>A bad PO, missing GST split, duplicate invoice, or wrong supplier can slip through if the workflow only extracts text.</p></article>
+          <article class="bp-panel bp-card"><h3>Tools already extract</h3><p>Azure, AWS, Google, and accounting apps can parse fields. That alone is not a defensible product.</p></article>
+          <article class="bp-panel bp-card"><h3>Workflow is the pain</h3><p>Invoices arrive across shared mailboxes, folders, forwarded PDFs, and supplier quirks that need rules and review.</p></article>
+          <article class="bp-panel bp-card"><h3>Exceptions decide value</h3><p>Missing POs, GST splits, duplicate invoices, ABN/vendor checks, and approval handoffs are where teams lose time.</p></article>
         </div>
       </section>
 
       <section aria-labelledby="processTitle">
         <div class="bp-section-head center">
-          <p class="bp-kicker">How the pilot works</p>
-          <h2 id="processTitle">A controlled AP workflow, not a generic OCR demo.</h2>
-          <p>Start with a real batch, agree the fields, review exceptions, then export in the format the customer can actually use.</p>
+          <p class="bp-kicker">Cloud pilot path</p>
+          <h2 id="processTitle">A working AP workflow first. SaaS later, only if the pattern repeats.</h2>
+          <p>We use cloud extraction and automation where it sells best, then prove the last-mile process on real invoices before promising a platform.</p>
         </div>
         <div class="bp-process">
-          <article class="bp-panel bp-step"><span>1</span><strong>Collect invoices</strong><p>Email, upload, shared folder, or a sample batch from the customer’s current process.</p></article>
-          <article class="bp-panel bp-step"><span>2</span><strong>Extract fields</strong><p>Vendor, ABN, invoice number, PO, dates, GST, subtotal, total, and document type.</p></article>
-          <article class="bp-panel bp-step"><span>3</span><strong>Flag exceptions</strong><p>Missing PO, suspicious GST, duplicate-looking invoices, blank ABNs, and low-confidence fields.</p></article>
-          <article class="bp-panel bp-step"><span>4</span><strong>Export clean data</strong><p>Excel, CSV, SharePoint, JSON, Power Automate handoff, or API-ready records.</p></article>
+          <article class="bp-panel bp-step"><span>1</span><strong>Map the current mess</strong><p>Shared mailbox, folders, bookkeeper handoff, approvals, and where invoices currently get re-keyed.</p></article>
+          <article class="bp-panel bp-step"><span>2</span><strong>Run a real cloud batch</strong><p>Use Azure/Power Automate-friendly extraction on real supplier invoices, not a polished demo set.</p></article>
+          <article class="bp-panel bp-step"><span>3</span><strong>Build exception rules</strong><p>Missing PO, GST mismatch, duplicate risk, ABN/vendor checks, low-confidence fields, and manual review status.</p></article>
+          <article class="bp-panel bp-step"><span>4</span><strong>Deliver the workflow</strong><p>Export to Excel/SharePoint or accounting-ready CSV/API handoff with accuracy, savings, and next-step report.</p></article>
         </div>
       </section>
 
       <section id="pilot" aria-labelledby="pilotTitle">
         <div class="bp-section-head">
-          <p class="bp-kicker">14-day AP automation pilot</p>
-          <h2 id="pilotTitle">Small enough to buy. Real enough to prove.</h2>
-          <p>A paid, controlled test using the customer’s real supplier invoices and one agreed output path.</p>
+          <p class="bp-kicker">14-day cloud AP workflow pilot</p>
+          <h2 id="pilotTitle">Sell the implementation. Prove the recurring workflow.</h2>
+          <p>A paid, controlled pilot for SMBs/bookkeepers that want invoice intake cleaned up without signing up for another generic OCR tool.</p>
         </div>
         <div class="bp-grid3">
-          <article class="bp-panel bp-card"><div class="bp-price">from AUD $750</div><p>For a constrained sample batch and one output format. Quote higher for mailbox routing, Power Automate, custom fields, or multi-client workflows.</p></article>
-          <article class="bp-panel bp-card"><strong>You get</strong><ul class="bp-list"><li>Upload or shared mailbox intake path</li><li>Structured invoice output</li><li>Exception report</li><li>Field-level accuracy summary</li><li>Time-saved estimate</li></ul></article>
-          <article class="bp-panel bp-card"><strong>Best fit</strong><ul class="bp-list"><li>100+ supplier invoices/month</li><li>Australian invoice/GST workflows</li><li>Bookkeeping firms or AP teams</li><li>Excel, SharePoint, Microsoft 365, or API output</li></ul></article>
+          <article class="bp-panel bp-card"><div class="bp-price">from AUD $750</div><p>For a constrained cloud pilot: sample batch, one intake path, one export path, and a practical recommendation on whether monthly automation is worth it.</p></article>
+          <article class="bp-panel bp-card"><strong>You get</strong><ul class="bp-list"><li>Cloud invoice extraction test on real documents</li><li>Exception report and review queue design</li><li>Excel/SharePoint or accounting-ready export</li><li>Field-level accuracy and failure notes</li><li>Time-saved and next-step recommendation</li></ul></article>
+          <article class="bp-panel bp-card"><strong>Best fit</strong><ul class="bp-list"><li>100+ supplier invoices/month</li><li>Australian GST/ABN/PO workflows</li><li>Bookkeepers, trades, service businesses</li><li>Microsoft 365, Excel, SharePoint, Xero/MYOB handoff</li></ul></article>
         </div>
       </section>
 
       <section aria-labelledby="packagingTitle">
         <div class="bp-section-head">
-          <p class="bp-kicker">Packaging path</p>
-          <h2 id="packagingTitle">Start done-with-you. Productise only what repeats.</h2>
+          <p class="bp-kicker">Commercial model</p>
+          <h2 id="packagingTitle">Cloud implementation first. Recurring workflow second.</h2>
         </div>
         <div class="bp-table-wrap">
           <table class="bp-table">
             <thead><tr><th>Package</th><th>Target</th><th>Indicative price</th><th>Includes</th></tr></thead>
             <tbody>
-              <tr><td data-label="Package">Paid Pilot</td><td data-label="Target">First validation customers</td><td data-label="Indicative price">AUD $750–$2,500 one-off</td><td data-label="Includes">30–100 invoices, one output path, exception report, accuracy summary.</td></tr>
-              <tr><td data-label="Package">Team</td><td data-label="Target">SMB finance team</td><td data-label="Indicative price">AUD $499–$999/mo</td><td data-label="Includes">Monthly invoice allowance, dashboard/upload, CSV/JSON export, support.</td></tr>
-              <tr><td data-label="Package">Automation</td><td data-label="Target">Microsoft 365-heavy teams</td><td data-label="Indicative price">AUD $1,500–$3,000/mo</td><td data-label="Includes">Shared mailbox, Power Automate/SharePoint, custom fields, monitoring.</td></tr>
-              <tr><td data-label="Package">Partner</td><td data-label="Target">Bookkeeping/accounting firms</td><td data-label="Indicative price">Custom</td><td data-label="Includes">Multi-client workflow, pooled volume, repeatable onboarding, white-label reports.</td></tr>
+              <tr><td data-label="Package">Cloud AP Pilot</td><td data-label="Target">First validation customers</td><td data-label="Indicative price">AUD $750–$2,500 one-off</td><td data-label="Includes">30–100 invoices, one intake path, one export path, exception report, accuracy summary.</td></tr>
+              <tr><td data-label="Package">Managed AP Workflow</td><td data-label="Target">SMB finance/admin team</td><td data-label="Indicative price">AUD $499–$1,500/mo</td><td data-label="Includes">Monthly invoice allowance, mailbox/upload workflow, exception reporting, support, fixes.</td></tr>
+              <tr><td data-label="Package">Microsoft 365 Automation</td><td data-label="Target">SharePoint/Excel-heavy teams</td><td data-label="Indicative price">AUD $1,500–$3,000/mo</td><td data-label="Includes">Power Automate routing, SharePoint storage, custom fields, monitoring, approval handoff.</td></tr>
+              <tr><td data-label="Package">Bookkeeper Partner</td><td data-label="Target">Firms with repeat client workflows</td><td data-label="Indicative price">Custom</td><td data-label="Includes">Multi-client template, pooled volume, repeatable onboarding, white-label exception reports.</td></tr>
             </tbody>
           </table>
         </div>
@@ -192,17 +193,17 @@
       <section aria-labelledby="launchTitle">
         <div class="bp-launch">
           <div>
-            <h2 id="launchTitle">Launch gate stays honest.</h2>
-            <p>This page intentionally avoids unverified claims like active users, processed invoice counts, and guaranteed accuracy. The public push waits on Mike’s go-ahead, security posture, and first real pilot results.</p>
+            <h2 id="launchTitle">The claim stays honest.</h2>
+            <p>BillPilot does not claim to own the extraction layer forever. The bet is on cloud implementation, exception handling, review design, and last-mile AP workflow that generic AI services do not install for the customer.</p>
           </div>
-          <div class="bp-launch-note"><strong>Current next step:</strong><br>Run a constrained sample batch, record field-level accuracy, then package the result into a sharper first-customer offer.</div>
+          <div class="bp-launch-note"><strong>Current next step:</strong><br>Sell one cloud AP pilot, process a real batch, measure accuracy/time saved, then decide whether the workflow deserves a monthly managed package.</div>
         </div>
       </section>
     </main>
 
     <footer class="bp-footer">
-      <span>BillPilot test package · michaelcostea.com/billpilot.html</span>
-      <a href="mailto:costea.michael@gmail.com?subject=BillPilot%20pilot">Contact Michael</a>
+      <span>BillPilot cloud AP pilot · michaelcostea.com/billpilot.html</span>
+      <a href="mailto:costea.michael@gmail.com?subject=BillPilot%2014-day%20AP%20workflow%20pilot">Contact Michael</a>
     </footer>
   </div>
 </body>
