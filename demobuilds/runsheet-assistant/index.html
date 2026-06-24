@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fiona Runsheet Assistant MVP</title>
+  <meta name="description" content="A practical childcare daily runsheet generator demo for absences, breaks, planning blocks, excursions and ratio checks." />
+  <style>
+    :root{
+      --ink:#172033; --muted:#5b6578; --line:#d9e1ee; --paper:#fbfcff; --panel:#fff;
+      --blue:#2857e8; --blue2:#153bb0; --green:#0f8f63; --amber:#b26b00; --red:#c8352d;
+      --mint:#e9fff6; --sky:#eef5ff; --cream:#fff8e8; --pink:#fff0f4; --shadow:0 18px 55px rgba(20,37,70,.14);
+      --radius:22px;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(135deg,#f8fbff 0%,#eef7ff 45%,#fff9ed 100%);min-height:100vh}
+    button,input,textarea,select{font:inherit} a{color:inherit}.wrap{max-width:1280px;margin:0 auto;padding:24px}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch;margin-bottom:20px}.card{background:rgba(255,255,255,.88);border:1px solid rgba(190,205,230,.86);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.hero-main{padding:30px}.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #c6d4ff;background:#eef3ff;color:#19378d;border-radius:999px;padding:7px 12px;font-weight:800;font-size:13px;letter-spacing:.03em;text-transform:uppercase}h1{font-size:clamp(32px,5vw,62px);line-height:.96;margin:18px 0 14px;letter-spacing:-.055em}.lead{font-size:18px;line-height:1.55;color:#33415c;max-width:760px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{border:0;border-radius:14px;padding:12px 16px;font-weight:850;cursor:pointer;background:#edf2fb;color:#15213a;border:1px solid #cfdbef;transition:.16s transform,.16s box-shadow}.btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(29,55,95,.13)}.btn.primary{background:linear-gradient(135deg,var(--blue),#42a5ff);color:white;border-color:#1c51d5}.btn.danger{background:#fff1f1;color:#9a1d17;border-color:#ffd0ce}.btn.good{background:#e8fff5;color:#08704d;border-color:#b6efd9}.hero-side{padding:22px;display:grid;gap:12px}.status-tile{padding:18px;border-radius:18px;border:1px solid #dbe4f2;background:var(--paper)}.status-tile strong{display:block;font-size:28px}.status-tile span{color:var(--muted);font-weight:700}.grid{display:grid;grid-template-columns:420px 1fr;gap:18px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#f7faff)}.panel-head h2{margin:0;font-size:18px}.panel-body{padding:18px}.stack{display:grid;gap:14px}.label{display:block;font-weight:850;font-size:13px;margin-bottom:7px;color:#24324b}.hint{font-size:12px;color:var(--muted);line-height:1.35;margin-top:6px}textarea,input,select{width:100%;border:1px solid #cfd9e8;border-radius:14px;background:white;padding:11px 12px;color:var(--ink);outline:none}textarea:focus,input:focus,select:focus{border-color:#6183ff;box-shadow:0 0 0 3px rgba(67,105,255,.13)}textarea{min-height:140px;resize:vertical;line-height:1.45}.row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mini-row{display:grid;grid-template-columns:1.15fr .8fr .8fr .85fr;gap:8px;align-items:center}.mini-row.staff{grid-template-columns:1.05fr .85fr .64fr .64fr .55fr 34px}.mini-row.room{grid-template-columns:1.2fr .6fr .62fr 34px}.mini-row input,.mini-row select{padding:9px 10px;border-radius:12px}.x{border:0;background:#fff0f0;color:#a22;border-radius:10px;width:34px;height:34px;font-weight:900;cursor:pointer}.section-title{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed #d9e1ee;padding-top:14px;margin-top:6px}pre{white-space:pre-wrap;background:#0f172a;color:#e7f1ff;padding:16px;border-radius:16px;overflow:auto;line-height:1.45}.output-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.room-card{border:1px solid #d9e3f2;border-radius:18px;overflow:hidden;background:white;margin-bottom:12px}.room-card h3{margin:0;padding:13px 15px;background:#f5f8ff;border-bottom:1px solid #d9e3f2}.entry{display:grid;grid-template-columns:124px 1fr;gap:10px;padding:11px 14px;border-bottom:1px solid #edf2f8}.entry:last-child{border-bottom:0}.time{font-weight:900;color:#173c9a}.tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:850;margin:2px 4px 2px 0}.ok{background:#e8fff4;color:#08704d}.warn{background:#fff6df;color:#8a5700}.bad{background:#fff0f0;color:#a1251e}.unknown{background:#eef2f8;color:#536071}.side-list{display:grid;gap:10px}.alert{border:1px solid #e2e9f4;border-radius:15px;padding:12px;background:#fbfdff}.alert strong{display:block;margin-bottom:4px}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:1px solid #ccd8ea;background:#f5f8ff;border-radius:999px;padding:8px 11px;font-weight:850;cursor:pointer}.tab.active{background:#173c9a;color:white}.small{font-size:12px;color:var(--muted)}.copybox{min-height:260px}.footer-note{margin:18px 0 0;color:#59657a;font-size:13px;line-height:1.45}.mobile-only{display:none}
+    @media(max-width:980px){.wrap{padding:14px}.hero,.grid,.output-grid{grid-template-columns:1fr}.hero-main{padding:22px}.mini-row,.mini-row.staff,.mini-row.room{grid-template-columns:1fr 1fr}.mini-row .x{width:100%;grid-column:1/-1}.entry{grid-template-columns:1fr}.desktop-only{display:none}.mobile-only{display:inline}.row{grid-template-columns:1fr}h1{font-size:40px}.panel-head{align-items:flex-start;flex-direction:column}.toolbar{width:100%}.toolbar .btn{flex:1}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="card hero-main">
+        <span class="eyebrow">🧸 Childcare ops MVP · ratio-safe draft runsheets</span>
+        <h1>Fiona Runsheet Assistant</h1>
+        <p class="lead">Paste the weekly roster, type today’s messy changes in plain English, then generate a room-by-room daily runsheet with tea breaks, lunches, planning blocks, excursions, extra-support notes and coverage warnings.</p>
+        <div class="hero-actions">
+          <button class="btn primary" id="generateTop">Generate runsheet</button>
+          <button class="btn" id="loadScenario">Load toddler absence demo</button>
+          <button class="btn good" id="copyMessageTop">Copy messageboard text</button>
+        </div>
+        <p class="footer-note"><b>Safety stance:</b> this MVP drafts and checks. It deliberately flags uncertainty/shortages instead of pretending a non-compliant day is covered.</p>
+      </div>
+      <div class="card hero-side" aria-label="coverage summary">
+        <div class="status-tile"><span>Coverage status</span><strong id="statusMain">Not generated</strong></div>
+        <div class="status-tile"><span>Rooms checked</span><strong id="roomsChecked">0</strong></div>
+        <div class="status-tile"><span>Warnings / gaps</span><strong id="warningCount">0</strong></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <div class="panel-head"><h2>1. Inputs</h2><div class="tabs"><button class="tab active" data-tab="quick">Quick</button><button class="tab" data-tab="setup">Setup</button></div></div>
+        <div class="panel-body stack" id="quickTab">
+          <div>
+            <label class="label" for="dailyNotes">Today’s changes</label>
+            <textarea id="dailyNotes" spellcheck="true">Lynette away in toddler room.
+Chantelle needs 2 hours planning today.
+Toddlers excursion 10-11 requiring 1:4 ratio.
+Murphy needs additional support 10:30-12.</textarea>
+            <div class="hint">Understands: “Name away/sick”, “Name needs 2 hours planning”, “Room excursion 10-11 ratio 1:4”, “additional support 10:30-12”. You can still edit the roster below.</div>
+          </div>
+          <div class="row">
+            <div><label class="label">Day starts</label><input id="dayStart" value="09:00"></div>
+            <div><label class="label">Day ends</label><input id="dayEnd" value="16:00"></div>
+          </div>
+          <div class="row">
+            <div><label class="label">Tea break minutes</label><input id="teaMins" type="number" value="20"></div>
+            <div><label class="label">Lunch minutes</label><input id="lunchMins" type="number" value="30"></div>
+          </div>
+          <button class="btn primary" id="generate">Generate safe draft</button>
+        </div>
+        <div class="panel-body stack" id="setupTab" hidden>
+          <div class="section-title"><b>Rooms and ratios</b><button class="btn" id="addRoom">Add room</button></div>
+          <div id="roomsList" class="stack"></div>
+          <div class="section-title"><b>Staff roster</b><button class="btn" id="addStaff">Add staff</button></div>
+          <div id="staffList" class="stack"></div>
+          <div class="toolbar"><button class="btn" id="saveData">Save to this browser</button><button class="btn danger" id="resetData">Reset demo data</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head"><h2>2. Generated daily runsheet</h2><div class="toolbar"><button class="btn good" id="copyMessage">Copy text</button><button class="btn" id="printPage">Print</button></div></div>
+        <div class="panel-body output-grid">
+          <main>
+            <div id="roomOutput"></div>
+            <h3>Messageboard-ready text</h3>
+            <pre id="messageText" class="copybox">Click “Generate runsheet”.</pre>
+          </main>
+          <aside>
+            <h3>Coverage check</h3>
+            <div id="alerts" class="side-list"></div>
+            <h3>Parsed notes</h3>
+            <div id="parsed" class="side-list"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<script>
+const STORAGE_KEY='fiona-runsheet-mvp-v1';
+const defaultData={
+  rooms:[
+    {name:'Nursery',children:8,ratio:4},{name:'Toddler',children:12,ratio:4},{name:'3YO Kinder',children:0,ratio:11},{name:'4YO Kinder',children:0,ratio:11}
+  ],
+  staff:[
+    {name:'Chantelle',room:'Toddler',start:'08:00',end:'16:00',floater:false,rooms:'Toddler,3YO Kinder'},
+    {name:'Lynette',room:'Toddler',start:'07:30',end:'15:30',floater:false,rooms:'Toddler,Nursery'},
+    {name:'Taylah',room:'Toddler',start:'09:00',end:'17:00',floater:false,rooms:'Toddler,3YO Kinder'},
+    {name:'Mitzi',room:'Toddler',start:'08:30',end:'16:30',floater:false,rooms:'Toddler,Nursery'},
+    {name:'Eliza',room:'Nursery',start:'08:00',end:'16:00',floater:false,rooms:'Nursery'},
+    {name:'Lisa',room:'Nursery',start:'09:15',end:'15:00',floater:false,rooms:'Nursery'},
+    {name:'Rachael',room:'Nursery',start:'08:30',end:'16:30',floater:false,rooms:'Nursery,Toddler'},
+    {name:'Grace',room:'Nursery',start:'09:00',end:'17:00',floater:false,rooms:'Nursery'},
+    {name:'Nettie',room:'Float',start:'08:30',end:'16:30',floater:true,rooms:'Toddler,Nursery,3YO Kinder,4YO Kinder'},
+    {name:'Fiona',room:'Float',start:'09:00',end:'17:00',floater:true,rooms:'Toddler,Nursery,3YO Kinder,4YO Kinder'}
+  ]
+};
+let data=loadData(); let latestText='';
+function loadData(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||structuredClone(defaultData)}catch{return structuredClone(defaultData)}}
+function persist(){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
+const $=id=>document.getElementById(id);
+function toMin(t){ if(!t) return 0; const s=String(t).trim().toLowerCase().replace(/\s/g,''); let m=s.match(/^(\d{1,2})(?::?(\d{2}))?(am|pm)?$/); if(!m) return 0; let h=+m[1], min=+(m[2]||0); if(m[3]==='pm'&&h<12)h+=12; if(m[3]==='am'&&h===12)h=0; if(!m[3]&&h<7)h+=12; return h*60+min; }
+function fmt(min){let h=Math.floor(min/60),m=min%60,ap=h>=12?'pm':'am',hh=h%12||12;return `${hh}:${String(m).padStart(2,'0')}${ap}`}
+function durLabel(mins){return mins>=60?`${mins/60%1?mins/60:mins/60} hour${mins===60?'':'s'}`:`${mins} min`}
+function roomAliases(name){const n=name.toLowerCase(); return [n,n.replace(' room',''),n+' room',n+'s',n.replace('toddler','toddlers')];}
+function findRoom(text){const low=text.toLowerCase(); return data.rooms.find(r=>roomAliases(r.name).some(a=>low.includes(a)))?.name || null;}
+function findStaff(text){const low=text.toLowerCase(); return data.staff.find(s=>low.includes(s.name.toLowerCase()))?.name || null;}
+function parseRange(text){const cleaned=text.toLowerCase().replace(/[–—]/g,'-'); let m=cleaned.match(/(\d{1,2}(?::?\d{2})?\s*(?:am|pm)?)\s*-\s*(\d{1,2}(?::?\d{2})?\s*(?:am|pm)?)/); if(!m) return null; return {start:toMin(m[1]),end:toMin(m[2])};}
+function parseNotes(notes){const lines=notes.split(/\n|\./).map(s=>s.trim()).filter(Boolean); const out={absences:[],planning:[],events:[],support:[],raw:lines};
+  for(const line of lines){const low=line.toLowerCase(); const staff=findStaff(line), room=findRoom(line);
+    if((/\baway\b|\bsick\b|called in/.test(low))&&staff) out.absences.push({staff,room:room||data.staff.find(s=>s.name===staff)?.room,reason:line});
+    if(/planning/.test(low)&&staff){let hm=low.match(/(\d+(?:\.\d+)?)\s*(hour|hr|h|minute|min)/); let mins=hm?(hm[2].startsWith('h')?Math.round(+hm[1]*60):+hm[1]):120; out.planning.push({staff,room:data.staff.find(s=>s.name===staff)?.room,mins,reason:line});}
+    if(/excursion|outing|walk/.test(low)){let rr=parseRange(line)||{start:toMin('10:00'),end:toMin('11:00')}; let ratio=(low.match(/1\s*:\s*(\d+)/)||[])[1]; out.events.push({room:room||'Toddler',name:line,start:rr.start,end:rr.end,ratio:ratio?+ratio:null});}
+    if(/additional support|extra support|additional ratio|support/.test(low)&&!(/planning/.test(low))){let rr=parseRange(line)||{start:toMin('10:30'),end:toMin('12:00')}; out.support.push({room:room||'Toddler',name:line,start:rr.start,end:rr.end,extra:1});}
+  }
+  return out;
+}
+function renderSetup(){ $('roomsList').innerHTML=data.rooms.map((r,i)=>`<div class="mini-row room"><input aria-label="room name" value="${r.name}" data-room-i="${i}" data-k="name"><input type="number" aria-label="children" value="${r.children}" data-room-i="${i}" data-k="children"><input type="number" aria-label="ratio" value="${r.ratio}" data-room-i="${i}" data-k="ratio"><button class="x" data-del-room="${i}">×</button></div>`).join('');
+  $('staffList').innerHTML=data.staff.map((s,i)=>`<div class="mini-row staff"><input aria-label="staff name" value="${s.name}" data-staff-i="${i}" data-k="name"><input aria-label="home room" value="${s.room}" data-staff-i="${i}" data-k="room"><input aria-label="start" value="${s.start}" data-staff-i="${i}" data-k="start"><input aria-label="end" value="${s.end}" data-staff-i="${i}" data-k="end"><select aria-label="floater" data-staff-i="${i}" data-k="floater"><option ${s.floater?'selected':''} value="true">Float</option><option ${!s.floater?'selected':''} value="false">Room</option></select><button class="x" data-del-staff="${i}">×</button><input style="grid-column:1/-1" aria-label="qualified rooms" value="${s.rooms||''}" data-staff-i="${i}" data-k="rooms"></div>`).join('');
+}
+function bindSetup(){document.addEventListener('input',e=>{const t=e.target;if(t.dataset.roomI!==undefined){let v=t.type==='number'?+t.value:t.value;data.rooms[+t.dataset.roomI][t.dataset.k]=v;persist()} if(t.dataset.staffI!==undefined){let v=t.dataset.k==='floater'?t.value==='true':t.value;data.staff[+t.dataset.staffI][t.dataset.k]=v;persist()}});document.addEventListener('click',e=>{if(e.target.dataset.delRoom!==undefined){data.rooms.splice(+e.target.dataset.delRoom,1);persist();renderSetup()} if(e.target.dataset.delStaff!==undefined){data.staff.splice(+e.target.dataset.delStaff,1);persist();renderSetup()}})}
+function presentStaff(parsed){const absent=new Set(parsed.absences.map(a=>a.staff));return data.staff.filter(s=>!absent.has(s.name));}
+function canWork(s,room){return s.floater || s.room===room || String(s.rooms||'').split(',').map(x=>x.trim().toLowerCase()).includes(room.toLowerCase())}
+function generate(){persist(); const parsed=parseNotes($('dailyNotes').value); const start=toMin($('dayStart').value), end=toMin($('dayEnd').value), step=10; const slots=[]; for(let t=start;t<end;t+=step)slots.push(t);
+ const present=presentStaff(parsed); const busy={}; const coverRoom={}; present.forEach(s=>{busy[s.name]=new Set(); coverRoom[s.name]={};}); const entries={}; data.rooms.forEach(r=>entries[r.name]=[]); const alerts=[];
+ function reqFor(room,t){let r=data.rooms.find(x=>x.name===room); let ratio=r?.ratio||4; parsed.events.filter(e=>e.room===room&&t>=e.start&&t<e.end&&e.ratio).forEach(e=>ratio=e.ratio); let base=Math.ceil((r?.children||0)/ratio); let extra=parsed.support.filter(e=>e.room===room&&t>=e.start&&t<e.end).reduce((a,e)=>a+e.extra,0); return base+extra;}
+ function assignedInRoom(room,t,ignoreStaff=null){const home=present.filter(s=>s.room===room && s.name!==ignoreStaff && t>=toMin(s.start)&&t<toMin(s.end) && !busy[s.name]?.has(t)).length; const covering=present.filter(s=>s.name!==ignoreStaff && coverRoom[s.name]?.[t]===room).length; return home+covering;}
+ function freeCover(room,t){return present.filter(s=>canWork(s,room)&& t>=toMin(s.start)&&t<toMin(s.end)&& !busy[s.name]?.has(t) && !coverRoom[s.name]?.[t] && s.room!==room).sort((a,b)=>(b.floater-a.floater)||a.name.localeCompare(b.name));}
+ function mark(staff,s,e,label,room=null){for(let t=s;t<e;t+=step){ busy[staff]?.add(t); if(room && coverRoom[staff]) coverRoom[staff][t]=room; }}
+ function roomGap(room,t,ignore){return Math.max(0,reqFor(room,t)-assignedInRoom(room,t,ignore));}
+ function chooseTaskSlot(staffName,mins,kind){const s=present.find(x=>x.name===staffName); if(!s)return null; const home=s.room; const windows=kind==='lunch'?[[toMin('11:30'),toMin('14:30')]]:kind==='planning'?[[toMin('09:30'),toMin('15:30')]]:[[toMin('09:00'),toMin('11:40')],[toMin('14:00'),toMin('15:40')]]; let need=Math.ceil(mins/step); let best=null;
+   for(const [ws,we] of windows){for(let st=Math.max(start,ws,toMin(s.start)); st+mins<=Math.min(end,we,toMin(s.end)); st+=step){let ok=true,score=0,covers=new Set(); for(let t=st;t<st+mins;t+=step){if(busy[s.name].has(t)){ok=false;break} if(s.floater){for(const roomDef of data.rooms){const have=assignedInRoom(roomDef.name,t); const cover=freeCover(roomDef.name,t).filter(c=>c.name!==s.name).length; if(have+cover<reqFor(roomDef.name,t)){ok=false;break}} if(!ok)break;} const gap=roomGap(home,t,s.name); const free=freeCover(home,t).filter(c=>!busy[c.name].has(t)); if(free.length<gap){ok=false;break} if(gap>0)covers.add(free[0].name); score+=gap*8 + Math.abs((st+mins/2)-toMin('12:30'))/60; } if(ok && (!best||score<best.score)) best={start:st,end:st+mins,covers:[...covers],score};}}
+   return best;
+ }
+ function addEntry(room,s,e,text,type='ok'){const target=data.rooms.some(r=>r.name===room)?room:'Floating / leadership'; entries[target] ||= []; entries[target].push({start:s,end:e,text,type});}
+ parsed.events.forEach(ev=>addEntry(ev.room,ev.start,ev.end,`${ev.name} — maintain ${ev.ratio?'1:'+ev.ratio:'configured'} ratio`,'warn'));
+ parsed.support.forEach(ev=>addEntry(ev.room,ev.start,ev.end,`${ev.name} — +${ev.extra} educator coverage required`,'warn'));
+ for(const a of parsed.absences){alerts.push({type:'warn',title:`${a.staff} away`,text:`Removed from ${a.room||'their room'} for today's draft.`});}
+ const tasks=[]; present.forEach(s=>{tasks.push({staff:s.name,mins:+$('teaMins').value||20,kind:'tea',label:`${s.name}’s tea break`}); tasks.push({staff:s.name,mins:+$('lunchMins').value||30,kind:'lunch',label:`${s.name}’s lunch break`});}); parsed.planning.forEach(p=>tasks.push({staff:p.staff,mins:p.mins,kind:'planning',label:`${p.staff} planning time`}));
+ tasks.sort((a,b)=>({planning:0,lunch:1,tea:2}[a.kind]-{planning:0,lunch:1,tea:2}[b.kind]));
+ for(const task of tasks){const staff=present.find(s=>s.name===task.staff); if(!staff){alerts.push({type:'bad',title:`Cannot schedule ${task.label}`,text:`${task.staff} is absent or not on the roster.`}); continue} const slot=chooseTaskSlot(task.staff,task.mins,task.kind); if(!slot){alerts.push({type:'bad',title:`No safe slot for ${task.label}`,text:`Could not place ${durLabel(task.mins)} without breaking ${staff.room} coverage. Add a floater or move another task.`}); continue} mark(task.staff,slot.start,slot.end,task.kind); slot.covers.forEach(c=>mark(c,slot.start,slot.end,`cover ${task.staff}`,staff.room)); addEntry(staff.room,slot.start,slot.end,`${task.label}${slot.covers.length?' — covered by '+slot.covers.join(' / '):' — room ratio remains covered'}`,task.kind==='planning'?'warn':'ok');}
+ for(const r of data.rooms){for(const t of slots){const have=assignedInRoom(r.name,t); const need=reqFor(r.name,t); const cover=freeCover(r.name,t).length; if(have+cover<need){alerts.push({type:'bad',title:`${r.name} ratio gap ${fmt(t)}–${fmt(t+step)}`,text:`Needs ${need}, has ${have} in-room plus ${cover} possible cover. Short by ${need-have-cover}.`});}}}
+ renderResults(entries,alerts,parsed);}
+function renderResults(entries,alerts,parsed){let bad=alerts.filter(a=>a.type==='bad').length,warn=alerts.length-bad; $('statusMain').textContent=bad?'Needs review':warn?'Covered with warnings':'Covered'; $('statusMain').style.color=bad?'var(--red)':warn?'var(--amber)':'var(--green)'; $('roomsChecked').textContent=data.rooms.length; $('warningCount').textContent=alerts.length;
+ $('roomOutput').innerHTML=Object.entries(entries).map(([room,items])=>{items.sort((a,b)=>a.start-b.start||a.end-b.end); return `<section class="room-card"><h3>${room}</h3>${items.length?items.map(it=>`<div class="entry"><div class="time">${fmt(it.start)}–${fmt(it.end)}</div><div>${it.text} <span class="tag ${it.type}">${it.type==='ok'?'covered':it.type==='warn'?'check':'gap'}</span></div></div>`).join(''):'<div class="entry"><div class="time">Today</div><div>No special movements generated.</div></div>'}</section>`}).join('');
+ $('alerts').innerHTML=alerts.length?alerts.slice(0,18).map(a=>`<div class="alert"><span class="tag ${a.type}">${a.type==='bad'?'red':'review'}</span><strong>${a.title}</strong><span>${a.text}</span></div>`).join(''):'<div class="alert"><span class="tag ok">green</span><strong>No ratio gaps found</strong><span>All generated tasks were placed without detected coverage gaps.</span></div>';
+ $('parsed').innerHTML=[...parsed.absences.map(x=>['Absence',x.reason]),...parsed.planning.map(x=>['Planning',x.reason]),...parsed.events.map(x=>['Event',x.name]),...parsed.support.map(x=>['Support',x.name])].map(x=>`<div class="alert"><strong>${x[0]}</strong><span>${x[1]}</span></div>`).join('')||'<div class="alert">No special notes parsed.</div>';
+ let text=`Daily Runsheet Draft\n\nCoverage status: ${bad?'NEEDS REVIEW':warn?'COVERED WITH WARNINGS':'COVERED'}\n`;
+ for(const [room,items] of Object.entries(entries)){text+=`\n${room}\n`; items.sort((a,b)=>a.start-b.start||a.end-b.end); if(!items.length) text+='- No special movements generated.\n'; else items.forEach(it=>text+=`${fmt(it.start)}–${fmt(it.end)}: ${it.text}\n`)}
+ if(alerts.length){text+='\nWarnings / review items\n';alerts.forEach(a=>text+=`- ${a.title}: ${a.text}\n`)} text+='\nDraft only — confirm actual child numbers, educator qualifications and centre policy before posting.'; latestText=text; $('messageText').textContent=text;}
+function copyText(){navigator.clipboard.writeText(latestText||$('messageText').textContent);}
+function loadScenario(){ $('dailyNotes').value='Lynette is away in toddler room.\nChantelle needs 2 hours planning today.\nToddlers excursion 10-11 requiring 1:4 ratio.\nMurphy needs additional support 10:30-12.'; generate(); }
+function wire(){renderSetup();bindSetup();['generate','generateTop'].forEach(id=>$(id).onclick=generate);['copyMessage','copyMessageTop'].forEach(id=>$(id).onclick=copyText);$('printPage').onclick=()=>print();$('loadScenario').onclick=loadScenario;$('addRoom').onclick=()=>{data.rooms.push({name:'New Room',children:8,ratio:4});persist();renderSetup()};$('addStaff').onclick=()=>{data.staff.push({name:'New Staff',room:'Float',start:'09:00',end:'17:00',floater:true,rooms:'Toddler,Nursery'});persist();renderSetup()};$('saveData').onclick=()=>{persist();alert('Saved to this browser.')};$('resetData').onclick=()=>{data=structuredClone(defaultData);persist();renderSetup();generate()};document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');$('quickTab').hidden=btn.dataset.tab!=='quick';$('setupTab').hidden=btn.dataset.tab!=='setup';}); generate();}
+wire();
+</script>
+</body>
+</html>
