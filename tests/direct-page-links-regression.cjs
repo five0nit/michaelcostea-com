@@ -7,7 +7,7 @@ const rootDir = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
 const script = fs.readFileSync(path.join(rootDir, 'script.js'), 'utf8');
 
-const expectedLinks = ['#resume', '#what-i-build', '#projects', '#ai-agents', '#ai-help', '#contact'];
+const expectedLinks = ['#resume', '#what-i-build', '#projects', '#ai-agents', '#new-repo', '#ai-help', '#contact'];
 for (const href of expectedLinks) {
   if (!html.includes(`href="${href}"`)) {
     throw new Error(`missing direct page link ${href} in index.html`);
@@ -42,6 +42,12 @@ async function run() {
   }
   if (window.location.hash !== '#projects') {
     throw new Error(`expected hash to stay on #projects, got ${window.location.hash}`);
+  }
+
+  window.openWindow('newRepoWindow');
+  await flush();
+  if (window.location.hash !== '#new-repo') {
+    throw new Error(`opening New Repo should sync hash to #new-repo, got ${window.location.hash}`);
   }
 
   window.openWindow('aiHelpWindow');
