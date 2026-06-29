@@ -50,6 +50,12 @@ async function run() {
     throw new Error(`opening New Repo should sync hash to #new-repo, got ${window.location.hash}`);
   }
 
+  window.openWindow('brief2shipExplainerWindow');
+  await flush();
+  if (window.location.hash !== '#brief2ship-explainer') {
+    throw new Error(`opening Brief2Ship explainer should sync hash to #brief2ship-explainer, got ${window.location.hash}`);
+  }
+
   window.openWindow('aiHelpWindow');
   await flush();
   if (window.location.hash !== '#ai-help') {

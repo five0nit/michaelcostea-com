@@ -329,7 +329,7 @@
           <div class="project-focus-strip" aria-label="Brief2Ship repo principles"><span>one-shot brief</span><span>repo-first</span><span>maintainability gate</span><span>anti-slop UI</span><span>proof receipts</span></div>
           <div class="repo-action-row" aria-label="Brief2Ship actions">
             <a class="ui-btn btn" href="https://github.com/five0nit/brief2ship" target="_blank" rel="noopener">Open github.com/five0nit/brief2ship</a>
-            <button class="ui-btn btn" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">See project context</button>
+            <button class="ui-btn btn" type="button" data-open="brief2shipExplainerWindow" onclick="openWindow('brief2shipExplainerWindow')">See project context</button>
           </div>
           <div class="doc-grid new-repo-grid">
             <article class="mini-content-card"><b>Simple outside</b><p>The user gives one strong brief. The agent asks up to five follow-up questions only if they materially change the build.</p><span>less babysitting · clearer start</span></article>
@@ -343,6 +343,48 @@
         </article>
       </div>
       <div class="status-bar"><span>Brief2Ship repo card loaded.</span><span>PROOF &gt; VIBES</span></div>
+    </section>
+
+    <section id="brief2shipExplainerWindow" class="win-window doc-window" aria-label="Brief2Ship explainer" style="left:245px;top:60px;width:min(980px,94vw);height:min(780px,calc(100dvh - 85px));">
+      <div class="win-title"><span>Brief2Ship - Detailed Explainer</span><button class="win-close" data-close="brief2shipExplainerWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc brief2ship-explainer-doc">
+          <div class="mini-heading lean-heading"><h2>Brief2Ship: what the repo does and why it helps</h2></div>
+          <p class="brand-promise"><b>Brief2Ship helps turn a rough AI build request into better first-pass AI builds with proof instead of vibes.</b></p>
+          <p>The repo packages a small operating standard for AI-assisted product work. It is not a giant framework and it does not force a stack. It gives an agent or operator a repeatable path from brief → base choice → maintainable build → polished UX → proof receipts.</p>
+
+          <div class="doc-grid brief2ship-explainer-grid">
+            <article class="mini-content-card"><b>What the repo does</b><p>It gives builders a reusable way to run AI builds: start from a one-shot prompt, ask no more than five useful follow-up questions, choose the best existing base before writing greenfield code, then ship a verified artifact.</p><span>one-shot prompt · repo-first base selection · verified output</span></article>
+            <article class="mini-content-card"><b>Why it helps</b><p>Most AI coding loops look productive but hide risk: too many clarification loops, random greenfield code, generic UI, weak tests, and no evidence. Brief2Ship makes the agent prove the work before calling it done.</p><span>less rework · fewer mystery boxes · more trust</span></article>
+            <article class="mini-content-card"><b>What is inside the repo</b><p>The public repo includes the Brief2Ship skill, workflow docs, lane examples, a kickoff template, receipt template, and install script for loading the standard into Hermes/OpenClaw-style agent workflows.</p><span>skill · docs · templates · examples</span></article>
+          </div>
+
+          <div class="mini-heading compact-mini lean-heading"><h3>The operating loop</h3></div>
+          <ol class="brief2ship-steps">
+            <li><b>1. Brief:</b> capture the thing to build, user, main job, references, constraints, and proof requirements.</li>
+            <li><b>2. Base:</b> run repo-first base selection so the agent does not default to unnecessary greenfield code.</li>
+            <li><b>3. Build:</b> pass the maintainability gate: clear naming, visible logic, justified dependencies, and debuggable seams.</li>
+            <li><b>4. Finish:</b> apply the anti-slop UI finish so the output does not look like a generic component demo.</li>
+            <li><b>5. Prove:</b> return proof receipts: files changed, commands run, tests, screenshots/logs, and known compromises.</li>
+          </ol>
+
+          <div class="doc-grid brief2ship-explainer-grid use-it-when-grid">
+            <article class="mini-content-card"><b>Use it when</b><p>You want an app prototype, dashboard, internal tool, landing page, product page, or agent workflow to move quickly without losing judgment.</p><span>apps · dashboards · landing pages · workflow builds</span></article>
+            <article class="mini-content-card"><b>It protects against</b><p>Vague prompts, brittle generated code, unnecessary abstraction, dependency bloat, generic AI slop, and “done” claims that lack receipts.</p><span>bad first passes · hidden risk · fake done</span></article>
+            <article class="mini-content-card"><b>Why it belongs here</b><p>It shows the kind of AI operating layer Michael builds: practical, visible, human-reviewed, and designed around useful outcomes rather than hype.</p><span>useful AI · evidence · human review</span></article>
+          </div>
+
+          <div class="brief-template-card" aria-label="Brief2Ship proof receipt example">
+            <b>Receipt shape:</b>
+            <code>chosen base + why · changed files · commands/tests run · preview/screenshot/proof · known compromises</code>
+          </div>
+          <div class="repo-action-row" aria-label="Brief2Ship explainer actions">
+            <a class="ui-btn btn" href="https://github.com/five0nit/brief2ship" target="_blank" rel="noopener">Open the Brief2Ship repo</a>
+            <button class="ui-btn btn" type="button" data-open="newRepoWindow" onclick="openWindow('newRepoWindow')">Back to New Repo card</button>
+          </div>
+        </article>
+      </div>
+      <div class="status-bar"><span>Detailed explainer loaded.</span><span>BETTER FIRST PASS</span></div>
     </section>
 
     <section id="agentsWindow" class="win-window doc-window" aria-label="AI Agents" style="left:240px;top:130px;width:min(860px,94vw);">
