@@ -37,6 +37,7 @@ for (const expected of [
   'maintainability gate',
   'anti-slop',
   'proof receipts',
+  'report formatting',
   'github.com/five0nit/brief2ship',
 ]) {
   must(copy.includes(expected), `New Repo section missing ${expected}`);
@@ -64,6 +65,13 @@ for (const expected of [
   'anti-slop UI finish',
   'proof receipts',
   'better first-pass AI builds',
+  'Report / Document lane',
+  'executive summary',
+  'QA report',
+  'sources are listed',
+  'evidence is separated from assumptions',
+  'formatting is skimmable',
+  'source-first',
 ]) {
   must(explainerCopy.includes(expected), `Brief2Ship explainer missing ${expected}`);
 }

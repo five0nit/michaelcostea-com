@@ -324,9 +324,9 @@
         <article class="resume-doc new-repo-doc">
           <div class="mini-heading lean-heading"><h2>New Repo: Brief2Ship</h2></div>
           <p class="brand-promise"><b>One brief. Better build. Proof included.</b></p>
-          <p><b>Brief2Ship</b> is a lightweight operating standard for AI-assisted builds: start from one strong brief, choose the best base, keep the code maintainable, polish the UX, and prove it works.</p>
-          <div class="release-hold repo-release-card"><span><b>Why it exists:</b><br />Most AI build loops create a polished mystery box. Brief2Ship forces the useful discipline between a prompt and a shippable first pass: repo-first selection, maintainability gate, anti-slop finish, and proof receipts.</span></div>
-          <div class="project-focus-strip" aria-label="Brief2Ship repo principles"><span>one-shot brief</span><span>repo-first</span><span>maintainability gate</span><span>anti-slop UI</span><span>proof receipts</span></div>
+          <p><b>Brief2Ship</b> is a lightweight operating standard for AI-assisted builds and reports: start from one strong brief, choose the best base, keep the code or document maintainable, polish the UX or formatting, and prove it works.</p>
+          <div class="release-hold repo-release-card"><span><b>Why it exists:</b><br />Most AI build loops create a polished mystery box. Brief2Ship forces the useful discipline between a prompt and a shippable first pass: repo-first selection, maintainability gate, anti-slop finish, report/document formatting, and proof receipts.</span></div>
+          <div class="project-focus-strip" aria-label="Brief2Ship repo principles"><span>one-shot brief</span><span>repo-first</span><span>maintainability gate</span><span>anti-slop UI</span><span>report formatting</span><span>proof receipts</span></div>
           <div class="repo-action-row" aria-label="Brief2Ship actions">
             <a class="ui-btn btn" href="https://github.com/five0nit/brief2ship" target="_blank" rel="noopener">Open github.com/five0nit/brief2ship</a>
             <button class="ui-btn btn" type="button" data-open="brief2shipExplainerWindow" onclick="openWindow('brief2shipExplainerWindow')">See project context</button>
@@ -334,7 +334,7 @@
           <div class="doc-grid new-repo-grid">
             <article class="mini-content-card"><b>Simple outside</b><p>The user gives one strong brief. The agent asks up to five follow-up questions only if they materially change the build.</p><span>less babysitting · clearer start</span></article>
             <article class="mini-content-card"><b>Strict inside</b><p>The workflow checks for an existing base before greenfield, rejects brittle code, and finishes the UX instead of shipping generic AI slop.</p><span>better judgment · better first pass</span></article>
-            <article class="mini-content-card"><b>Receipts included</b><p>Every build ends with changed files, commands run, verification output, screenshots or logs, and known compromises.</p><span>trust through evidence</span></article>
+            <article class="mini-content-card"><b>Receipts included</b><p>Every build or report ends with changed files, sources used, commands/checks run, verification output, screenshots/logs, and known compromises.</p><span>trust through evidence</span></article>
           </div>
           <div class="brief-template-card" aria-label="Brief2Ship template shape">
             <b>Copy the shape:</b>
@@ -351,12 +351,12 @@
         <article class="resume-doc brief2ship-explainer-doc">
           <div class="mini-heading lean-heading"><h2>Brief2Ship: what the repo does and why it helps</h2></div>
           <p class="brand-promise"><b>Brief2Ship helps turn a rough AI build request into better first-pass AI builds with proof instead of vibes.</b></p>
-          <p>The repo packages a small operating standard for AI-assisted product work. It is not a giant framework and it does not force a stack. It gives an agent or operator a repeatable path from brief → base choice → maintainable build → polished UX → proof receipts.</p>
+          <p>The repo packages a small operating standard for AI-assisted product work. It is not a giant framework and it does not force a stack. It gives an agent or operator a repeatable path from brief → base choice → maintainable build or report → polished UX/formatting → proof receipts.</p>
 
           <div class="doc-grid brief2ship-explainer-grid">
-            <article class="mini-content-card"><b>What the repo does</b><p>It gives builders a reusable way to run AI builds: start from a one-shot prompt, ask no more than five useful follow-up questions, choose the best existing base before writing greenfield code, then ship a verified artifact.</p><span>one-shot prompt · repo-first base selection · verified output</span></article>
+            <article class="mini-content-card"><b>What the repo does</b><p>It gives builders a reusable way to run AI builds and decision-ready reports: start from a one-shot prompt, ask no more than five useful follow-up questions, choose the best existing base or source set, then ship a verified artifact.</p><span>one-shot prompt · repo-first/source-first selection · verified output</span></article>
             <article class="mini-content-card"><b>Why it helps</b><p>Most AI coding loops look productive but hide risk: too many clarification loops, random greenfield code, generic UI, weak tests, and no evidence. Brief2Ship makes the agent prove the work before calling it done.</p><span>less rework · fewer mystery boxes · more trust</span></article>
-            <article class="mini-content-card"><b>What is inside the repo</b><p>The public repo includes the Brief2Ship skill, workflow docs, lane examples, a kickoff template, receipt template, and install script for loading the standard into Hermes/OpenClaw-style agent workflows.</p><span>skill · docs · templates · examples</span></article>
+            <article class="mini-content-card"><b>What is inside the repo</b><p>The public repo includes the Brief2Ship skill, workflow docs, four lane examples, build/report kickoff templates, receipt templates, and an install script for loading the standard into Hermes/OpenClaw-style agent workflows.</p><span>skill · docs · report templates · examples</span></article>
           </div>
 
           <div class="mini-heading compact-mini lean-heading"><h3>The operating loop</h3></div>
@@ -364,19 +364,23 @@
             <li><b>1. Brief:</b> capture the thing to build, user, main job, references, constraints, and proof requirements.</li>
             <li><b>2. Base:</b> run repo-first base selection so the agent does not default to unnecessary greenfield code.</li>
             <li><b>3. Build:</b> pass the maintainability gate: clear naming, visible logic, justified dependencies, and debuggable seams.</li>
-            <li><b>4. Finish:</b> apply the anti-slop UI finish so the output does not look like a generic component demo.</li>
-            <li><b>5. Prove:</b> return proof receipts: files changed, commands run, tests, screenshots/logs, and known compromises.</li>
+            <li><b>4. Finish:</b> apply the anti-slop UI finish for apps, and reader-first structure and formatting for reports.</li>
+            <li><b>5. Prove:</b> return proof receipts: files changed, sources used, commands/checks run, tests, screenshots/logs, and known compromises.</li>
           </ol>
 
           <div class="doc-grid brief2ship-explainer-grid use-it-when-grid">
-            <article class="mini-content-card"><b>Use it when</b><p>You want an app prototype, dashboard, internal tool, landing page, product page, or agent workflow to move quickly without losing judgment.</p><span>apps · dashboards · landing pages · workflow builds</span></article>
-            <article class="mini-content-card"><b>It protects against</b><p>Vague prompts, brittle generated code, unnecessary abstraction, dependency bloat, generic AI slop, and “done” claims that lack receipts.</p><span>bad first passes · hidden risk · fake done</span></article>
+            <article class="mini-content-card"><b>Use it when</b><p>You want an app prototype, dashboard, internal tool, landing page, product page, agent workflow, executive summary, QA report, audit, handoff, or research report to move quickly without losing judgment.</p><span>apps · dashboards · landing pages · reports · workflow builds</span></article>
+            <article class="mini-content-card"><b>It protects against</b><p>Vague prompts, brittle generated code, unsupported claims, weak source handling, dependency bloat, generic AI slop, and “done” claims that lack receipts.</p><span>bad first passes · hidden risk · fake done</span></article>
             <article class="mini-content-card"><b>Why it belongs here</b><p>It shows the kind of AI operating layer Michael builds: practical, visible, human-reviewed, and designed around useful outcomes rather than hype.</p><span>useful AI · evidence · human review</span></article>
           </div>
 
           <div class="brief-template-card" aria-label="Brief2Ship proof receipt example">
             <b>Receipt shape:</b>
-            <code>chosen base + why · changed files · commands/tests run · preview/screenshot/proof · known compromises</code>
+            <code>chosen base/source set + why · changed files/report artifact · sources used · commands/checks run · preview/screenshot/proof · known compromises</code>
+          </div>
+          <div class="doc-grid brief2ship-explainer-grid report-lane-grid" aria-label="Brief2Ship report lane details">
+            <article class="mini-content-card"><b>New: Report / Document lane</b><p>Brief2Ship now covers executive summaries, QA reports, audits, handoffs, research reports, Markdown/PDF/client docs, and decision briefs.</p><span>reports · audits · handoffs · decision docs</span></article>
+            <article class="mini-content-card"><b>Report ship gate</b><p>Reader and decision are clear, sources are listed, evidence is separated from assumptions/opinion, recommendations are concrete, formatting is skimmable, and the final artifact is rendered or checked.</p><span>reader-first · source-first · format-checked</span></article>
           </div>
           <div class="repo-action-row" aria-label="Brief2Ship explainer actions">
             <a class="ui-btn btn" href="https://github.com/five0nit/brief2ship" target="_blank" rel="noopener">Open the Brief2Ship repo</a>
