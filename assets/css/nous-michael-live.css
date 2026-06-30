@@ -297,8 +297,144 @@ body.public-preview::before{
 }
 
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  .public-preview .welcome-sidebar{margin:10px!important;}
-  .public-preview .welcome-copy{margin:10px!important;padding:16px!important;}
-  .public-preview .styleguide-welcome{border-width:3px!important;}
-  .public-preview .welcome-resource-cta{grid-template-columns:1fr!important;}
+  html,body{
+    overflow:auto!important;
+    background:#0a4f8f!important;
+  }
+  .public-preview .container{
+    height:auto!important;
+    min-height:100dvh!important;
+    padding:6px!important;
+  }
+  .public-preview .desktop-icons{
+    display:none!important;
+  }
+  .public-preview .main-portfolio-window{
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+    width:100%!important;
+    max-width:none!important;
+    min-height:0!important;
+    margin:0!important;
+    box-shadow:4px 5px 0 rgba(0,0,0,.72)!important;
+  }
+  .public-preview .win-title{
+    min-height:28px!important;
+    height:auto!important;
+    padding:5px 6px!important;
+    font-size:11px!important;
+    line-height:15px!important;
+    letter-spacing:.01em!important;
+  }
+  .public-preview .win-close{
+    width:26px!important;
+    min-width:26px!important;
+    height:22px!important;
+  }
+  .public-preview .win-body{
+    max-height:none!important;
+    overflow:visible!important;
+    padding:5px!important;
+  }
+  .public-preview .styleguide-welcome{
+    display:block!important;
+    overflow:visible!important;
+    min-height:0!important;
+    border-width:3px!important;
+  }
+  .public-preview .welcome-sidebar{
+    margin:8px!important;
+    padding:10px!important;
+    display:grid!important;
+    grid-template-columns:88px minmax(0,1fr) minmax(0,1fr)!important;
+    gap:8px!important;
+    align-items:stretch!important;
+  }
+  .public-preview .profile-portrait{
+    width:88px!important;
+    height:88px!important;
+    grid-row:span 4!important;
+    align-self:start!important;
+  }
+  .public-preview .big-nav{
+    width:auto!important;
+    min-width:0!important;
+    min-height:34px!important;
+    padding:6px!important;
+    font-size:10px!important;
+    line-height:12px!important;
+  }
+  .public-preview .welcome-copy{
+    margin:8px!important;
+    padding:12px!important;
+    box-shadow:3px 3px 0 #111!important;
+  }
+  .public-preview .welcome-copy h1{
+    font-size:28px!important;
+    line-height:.95!important;
+    letter-spacing:-.04em!important;
+    margin-bottom:8px!important;
+  }
+  .public-preview .mini-heading,
+  .public-preview .lift-heading{
+    border-bottom-width:3px!important;
+    padding-bottom:7px!important;
+  }
+  .public-preview .terminal-line{
+    font-size:10px!important;
+    line-height:15px!important;
+    overflow-wrap:anywhere!important;
+  }
+  .public-preview .brand-promise,
+  .public-preview .mini-callout{
+    padding:9px 10px!important;
+    font-size:15px!important;
+    line-height:20px!important;
+    box-shadow:3px 3px 0 #111!important;
+  }
+  .public-preview .welcome-copy p{
+    font-size:15px!important;
+    line-height:21px!important;
+  }
+  .public-preview .welcome-resource-cta{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+    padding:9px!important;
+    box-shadow:3px 3px 0 #111!important;
+  }
+  .public-preview .welcome-resource-cta .primary-hero-cta{
+    width:100%!important;
+    min-height:38px!important;
+  }
+  .public-preview .hero-action-panel{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+  .public-preview .hero-image-cta{
+    min-height:126px!important;
+    font-size:10px!important;
+    line-height:12px!important;
+  }
+  .public-preview .hero-image-cta img{
+    max-height:78px!important;
+    object-fit:contain!important;
+  }
+  .public-preview .proof-strip,
+  .public-preview .spec-grid{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .public-preview .status-bar,
+  .public-preview .taskbar,
+  .public-preview .start-menu{
+    display:none!important;
+  }
+  .public-preview .doc-window .win-body{
+    max-height:none!important;
+  }
 }
+
