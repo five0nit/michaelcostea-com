@@ -40,7 +40,7 @@
     "description": "Michael Costea helps people and businesses get the most out of AI by turning scattered tools and experiments into practical workflows, agents, automations, and human-reviewed systems."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-agentic-preview-only" />
+  <link rel="stylesheet" href="styles.css?v=20260701-vic-rebate-api" />
   <link rel="stylesheet" href="assets/pixel-pack/button-kit.css?v=20260609-readable-icons-1" />
   <link rel="stylesheet" href="assets/css/nous-michael-live.css?v=20260630-mobile-inner-center" />
   <link rel="stylesheet" href="assets/css/hyperframes-live.css?v=20260701-agentic-preview-only" />
@@ -55,6 +55,7 @@
       <button class="desk-icon" data-open="projectsWindow" aria-label="Open Projects"><span class="icon-art">📁</span><span>Projects</span></button>
       <button class="desk-icon" data-open="agentsWindow" aria-label="Open AI Agents"><span class="icon-art">🤖</span><span>AI Agents</span></button>
       <button class="desk-icon" data-open="newRepoWindow" aria-label="Open New Repo"><span class="icon-art">📦</span><span>New Repo</span></button>
+      <button class="desk-icon" data-open="vicRebateApiWindow" aria-label="Open Victoria Rebate API"><span class="icon-art">⚡</span><span>VIC Rebate API</span></button>
       <a class="desk-icon" href="https://telegram-office.michaelcostea.com/agenttown/" aria-label="Open live Agent Office"><span class="icon-art">🏢</span><span>Agent Office</span></a>
       <button class="desk-icon" data-open="aiHelpWindow" aria-label="Open AI Help"><span class="icon-art">🎓</span><span>AI Help</span></button>
       <button class="desk-icon" data-open="intakeWindow" aria-label="Open AI Intake"><span class="icon-art">📝</span><span>AI Intake</span></button>
@@ -71,6 +72,7 @@
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
           <button class="btn big-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AI AGENTS</button>
           <button class="btn big-nav" type="button" data-open="newRepoWindow" onclick="openWindow('newRepoWindow')">NEW REPO</button>
+          <button class="btn big-nav" type="button" data-open="vicRebateApiWindow" onclick="openWindow('vicRebateApiWindow')">VIC REBATE API</button>
           <button class="btn big-nav ai-cta-nav" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">AI HELP</button>
           <button class="btn big-nav ai-cta-nav" type="button" data-open="intakeWindow" onclick="openWindow('intakeWindow')">AI INTAKE</button>
           <button class="btn big-nav" type="button" data-open="contactWindow" onclick="openWindow('contactWindow')">CONTACT ME</button>
@@ -101,6 +103,7 @@
             <a href="#projects">Projects</a>
             <a href="#ai-agents">AI Agents</a>
             <a href="#new-repo">New Repo</a>
+            <a href="#vic-rebate-api">VIC Rebate API</a>
             <a href="#ai-help">AI Help</a>
             <a href="#contact">Contact</a>
           </nav>
@@ -257,6 +260,12 @@
           <div class="mini-heading compact-mini lean-heading"><h3>Latest Build Notes — updated from project memory</h3></div>
           <div class="project-list-public ai-project-showcase recent-builds-showcase" aria-label="Recent project and build updates">
             <article class="mini-content-card">
+              <h3>Victoria Rebate API</h3>
+              <p>New Victoria-first API service draft for quoting energy upgrade rebate payout ranges across VEU/VEEC, STC, and Solar Victoria. The live draft tester shows line-item estimates, decommissioning evidence checks, payout ranges, source-version posture, and the sample_logic status while the real official calculator rules are being implemented.</p>
+              <div class="repo-action-row"><button class="ui-btn btn" type="button" data-open="vicRebateApiWindow" onclick="openWindow('vicRebateApiWindow')">Open project window</button><a class="ui-btn btn secondary" href="vic-rebate-api.html">Open live draft tester</a></div>
+              <span>rebate intelligence · VEU/VEEC · STC · Solar Victoria · rules engine</span>
+            </article>
+            <article class="mini-content-card">
               <h3>UseAIForMe.com Early-Access Matching Marketplace</h3>
               <p>Current build: an early-access do-it-for-me AI marketplace where buyers post one real outcome, operators show proof and pricing, and paid work only starts after scope, fit, and approvals are confirmed. The live flow now covers free task posting, manual operator matching, verified operator profiles, fixed-scope packages with Stripe-backed checkout, and custom-job intake that stays human-reviewed instead of forcing blind auto-payment.</p>
               <span>current build · AI operator marketplace · manual matching · approval-first checkout · Stripe</span>
@@ -396,6 +405,40 @@
         </article>
       </div>
       <div class="status-bar"><span>Detailed explainer loaded.</span><span>BETTER FIRST PASS</span></div>
+    </section>
+
+    <section id="vicRebateApiWindow" class="win-window doc-window" aria-label="Victoria Rebate API project" style="left:225px;top:72px;width:min(980px,94vw);height:min(760px,calc(100dvh - 85px));">
+      <div class="win-title"><span>Victoria Rebate API - Draft Project</span><button class="win-close" data-close="vicRebateApiWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc vic-rebate-api-doc">
+          <div class="mini-heading lean-heading"><h2>Victoria Rebate API</h2></div>
+          <p class="brand-promise"><b>A Victoria-first rebate intelligence API for VEU / VEEC, STC, and Solar Victoria payout ranges.</b></p>
+          <p>This project turns messy rebate calculators, certificate price feeds, decommissioning rules, approved-product checks, and state/federal scheme conditions into one line-item quote response that installers and marketplaces can test before a job is submitted.</p>
+          <div class="release-hold repo-release-card"><span><b>Draft status:</b><br />The public tester is live for review, but certificate counts are still marked <code>sample_logic</code>. The next build step is replacing placeholders with official VEU calculator and STC calculator rule packs, starting with heat pump hot water decommissioning.</span></div>
+          <div class="project-focus-strip" aria-label="Victoria Rebate API coverage"><span>VEU / VEEC</span><span>STC</span><span>Solar Victoria</span><span>decommissioning evidence</span><span>payout range</span><span>rules engine</span></div>
+          <div class="repo-action-row" aria-label="Victoria Rebate API actions">
+            <a class="ui-btn btn" href="vic-rebate-api.html">Open live draft tester</a>
+            <a class="ui-btn btn secondary" href="https://www.esc.vic.gov.au/victorian-energy-upgrades/participating-veu-program/working-veu-registry-system" target="_blank" rel="noopener">Official VEU Registry/API source</a>
+          </div>
+          <div class="doc-grid vic-rebate-grid">
+            <article class="mini-content-card"><b>Quote endpoint</b><p>Shape the production <code>POST /v1/quotes</code> response: eligibility, line-item scheme estimates, payout low/high, blockers, warnings, evidence checklist, and source versions.</p><span>API contract · deterministic response</span></article>
+            <article class="mini-content-card"><b>Rule packs</b><p>House the VEC/VEEC calculator resources, VEU activity requirements, STC calculator resources, approved-product logic, and effective-date versions in reviewable rules.</p><span>calculator parity · versioned rules</span></article>
+            <article class="mini-content-card"><b>Market payouts</b><p>Keep certificate prices and trader payout amounts separate from eligibility logic, with provider, timestamp, and confidence so old quotes remain auditable.</p><span>VEEC price · STC price · trader terms</span></article>
+          </div>
+          <div class="mini-heading compact-mini lean-heading"><h3>First activity pack</h3></div>
+          <ol class="brief2ship-steps">
+            <li><b>1. Heat pump hot water:</b> model replacement/decommissioning inputs, approved product status, activity date, postcode, and required evidence.</li>
+            <li><b>2. VEU / VEEC:</b> match the official calculator output with golden tests before showing confidence above sample_logic.</li>
+            <li><b>3. STC:</b> calculate the federal certificate line item separately so the API can show stacked value without hiding assumptions.</li>
+            <li><b>4. Solar Victoria:</b> add grant/rebate/loan eligibility as a separate program line where relevant, not as certificate value.</li>
+          </ol>
+          <div class="brief-template-card" aria-label="Victoria Rebate API sample response shape">
+            <b>Response shape:</b>
+            <code>eligible · scheme line items · estimated certificates · payout_low/high · blockers · warnings · evidence_required · source_versions · confidence: sample_logic/indicative/verified</code>
+          </div>
+        </article>
+      </div>
+      <div class="status-bar"><span>Victoria Rebate API draft loaded.</span><span>RULES BEFORE HYPE</span></div>
     </section>
 
     <section id="agentsWindow" class="win-window doc-window" aria-label="AI Agents" style="left:240px;top:130px;width:min(860px,94vw);">
@@ -1886,6 +1929,6 @@ openclaw doctor</pre></article>
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260701-agentic-preview-only"></script>
+  <script src="script.js?v=20260701-vic-rebate-api"></script>
 </body>
 </html>
