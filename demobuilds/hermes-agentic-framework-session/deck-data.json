@@ -1,0 +1,135 @@
+{
+  "slide_count": 26,
+  "slides": [
+    {
+      "code": "BOOT",
+      "title": "Our AI agent setup, explained simply",
+      "diagram": "hub"
+    },
+    {
+      "code": "AGENDA",
+      "title": "What we will cover in 1 hour",
+      "diagram": "ladder"
+    },
+    {
+      "code": "DEF",
+      "title": "Chatbot vs agent",
+      "diagram": "compare"
+    },
+    {
+      "code": "HERMES",
+      "title": "Hermes is our main agent framework now",
+      "diagram": "hub"
+    },
+    {
+      "code": "HERMES-FIRST",
+      "title": "OpenClaw was the busy road; Hermes is the highway",
+      "diagram": "beforeafter"
+    },
+    {
+      "code": "PRIVATE-SETUP",
+      "title": "Private setup, with personal details removed",
+      "diagram": "privacy"
+    },
+    {
+      "code": "SERVICES",
+      "title": "Background helpers that keep things awake",
+      "diagram": "grid"
+    },
+    {
+      "code": "LOCAL-ROSTER",
+      "title": "Local agent seats, generic names",
+      "diagram": "seats"
+    },
+    {
+      "code": "REMOTE-ROSTER",
+      "title": "Remote agent seats, generic names",
+      "diagram": "seats"
+    },
+    {
+      "code": "GROUP",
+      "title": "Public group behaviour, explained safely",
+      "diagram": "flow"
+    },
+    {
+      "code": "DISCORD-HUB",
+      "title": "Discord unlocks the team operating room",
+      "diagram": "matrix"
+    },
+    {
+      "code": "DISCORD-SERVER",
+      "title": "Suggested Discord server layout",
+      "diagram": "grid"
+    },
+    {
+      "code": "DISCORD-BENEFITS",
+      "title": "Why a server beats private comms for teams",
+      "diagram": "flow"
+    },
+    {
+      "code": "VISIBILITY",
+      "title": "How the agents remember what happened",
+      "diagram": "memory"
+    },
+    {
+      "code": "EXAMPLE-WEB",
+      "title": "Real example: website or product work",
+      "diagram": "ladder"
+    },
+    {
+      "code": "EXAMPLE-SWARM",
+      "title": "Real example: multi-agent work",
+      "diagram": "flow"
+    },
+    {
+      "code": "EXAMPLE-MON",
+      "title": "Real example: monitoring agents",
+      "diagram": "monitor"
+    },
+    {
+      "code": "CLIENT-OVERVIEW",
+      "title": "Conservative setup for a business",
+      "diagram": "business"
+    },
+    {
+      "code": "CLIENT-USERS",
+      "title": "Multiple users in one business",
+      "diagram": "matrix"
+    },
+    {
+      "code": "CLIENT-PERMISSIONS",
+      "title": "Business permissions: small keyrings",
+      "diagram": "keys"
+    },
+    {
+      "code": "CLIENT-MONITOR",
+      "title": "Monitoring for business agents",
+      "diagram": "monitor"
+    },
+    {
+      "code": "CLIENT-REPORTING",
+      "title": "What a client should see each day",
+      "diagram": "report"
+    },
+    {
+      "code": "CLIENT-ROLLOUT",
+      "title": "Client rollout ladder: small steps first",
+      "diagram": "ladder"
+    },
+    {
+      "code": "GUARD",
+      "title": "Safety rules in kid-simple words",
+      "diagram": "guard"
+    },
+    {
+      "code": "DEMO",
+      "title": "Safe demo prompts for the session",
+      "diagram": "terminal"
+    },
+    {
+      "code": "CLOSE",
+      "title": "The simple takeaway",
+      "diagram": "close"
+    }
+  ]
+}

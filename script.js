@@ -8,6 +8,7 @@ const pageWindowRoutes = {
   newRepoWindow: 'new-repo',
   brief2shipExplainerWindow: 'brief2ship-explainer',
   aiHelpWindow: 'ai-help',
+  agenticFrameworkDeckWindow: 'agentic-framework-session',
   agenticKnowledgebaseWindow: 'agentic-knowledgebase',
   intakeWindow: 'ai-intake',
   contactWindow: 'contact',
@@ -31,6 +32,10 @@ const routeAliases = {
   'brief2ship-context': 'brief2ship-explainer',
   'ai-help': 'ai-help',
   aihelp: 'ai-help',
+  'agentic-framework-session': 'agentic-framework-session',
+  agenticframework: 'agentic-framework-session',
+  'agentic-deck': 'agentic-framework-session',
+  'hermes-deck': 'agentic-framework-session',
   'agentic-knowledgebase': 'agentic-knowledgebase',
   knowledgebase: 'agentic-knowledgebase',
   'ai-knowledgebase': 'agentic-knowledgebase',
@@ -1139,6 +1144,30 @@ async function initIntroDeckPreview(){
   update();
 }
 
+async function initAgenticFrameworkDeckPreview(){
+  const slide = document.getElementById('agenticDeckSlide');
+  const counter = document.getElementById('agenticDeckCounter');
+  const prev = document.querySelector('[data-agentic-deck-prev]');
+  const next = document.querySelector('[data-agentic-deck-next]');
+  if(!slide || !counter || !prev || !next) return;
+  const total = 26;
+  let current = 1;
+  const update = () => {
+    const num = String(current).padStart(2, '0');
+    slide.src = `assets/decks/hermes-agentic-framework-session/slide-${num}.png?v=20260630-discord`;
+    slide.alt = `Agentic framework session slide ${current} of ${total}`;
+    counter.textContent = `Slide ${current}/${total}`;
+    prev.disabled = current === 1;
+    next.disabled = current === total;
+  };
+  prev.addEventListener('click', () => { current = Math.max(1, current - 1); update(); });
+  next.addEventListener('click', () => { current = Math.min(total, current + 1); update(); });
+  document.querySelectorAll('[data-open="agenticFrameworkDeckWindow"]').forEach((btn) => {
+    btn.addEventListener('click', () => { current = 1; window.setTimeout(update, 0); });
+  });
+  update();
+}
+
 async function boot(){
   loadPrefs();
   applyPrefs();
@@ -1220,6 +1249,7 @@ async function boot(){
   initSettingsPanel();
   initGuideTabs();
   initIntroDeckPreview();
+  initAgenticFrameworkDeckPreview();
   initClientIntakeForm();
   initQuirkyStartActions();
 

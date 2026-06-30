@@ -80,6 +80,11 @@
           <p class="brand-promise mini-callout"><span><b><span class="desktop-promise">I’m Michael Costea. I help people understand AI, choose useful workflows, and build practical systems that keep humans in control.</span><span class="mobile-promise">I help people use AI clearly and safely.</span></b></span></p>
           <p>My current role is <strong class="accent">Head of Tech, AI & Systems</strong>, where I turn messy tools, handoffs, data, and daily operations into clearer business systems.</p>
           <p>I’m especially passionate about <strong>AI education and enablement</strong>: making AI easier to understand, safer to adopt, and more useful for real people and teams — without the hype.</p>
+          <section class="welcome-resource-cta" aria-label="New AI resource">
+            <span class="resource-badge">NEW RESOURCE</span>
+            <div><b>Agentic Framework Session</b><small>Hermes, safe agent setup, shared memory, and Discord as a team operating room.</small></div>
+            <button class="ui-btn btn primary-hero-cta" type="button" data-open="agenticFrameworkDeckWindow" onclick="openWindow('agenticFrameworkDeckWindow')">Open deck</button>
+          </section>
           <div class="proof-strip" aria-label="Michael Costea focus points"><span>Current role: Head of Tech, AI & Systems</span><span>AI education</span><span>Workflow enablement</span><span>Human-reviewed automation</span></div>
           <div class="hero-action-panel" aria-label="Primary portfolio actions">
             <button class="ui-btn btn hero-image-cta primary-hero-cta" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')"><img src="assets/minime-pack/ai_help_robot_highfive.png" alt="" aria-hidden="true" loading="lazy" width="336" height="291" />Start with AI Help</button>
@@ -442,6 +447,18 @@
           <figure class="site-art-card"><img src="assets/site-art/ai-help.jpg" alt="Pixel art AI Help graphic for beginner-friendly guides and tutorials" loading="eager" fetchpriority="high" /></figure>
           <p>This is the starting point for people who want to get more out of AI without drowning in jargon, hype, or unsafe shortcuts. Start with one useful workflow, learn the limits, then build confidence safely.</p>
           <p class="guide-note mini-callout ai-help-intro-callout"><img class="mini-me-inline" src="assets/minime-pack/ai_help_robot_highfive.png" alt="Pixel mini Michael high-fiving a robot for the AI Help starter path" loading="lazy" /><span><b>Start useful:</b> pick one repeated task, test with harmless data, and keep humans approving anything risky.</span></p>
+          <section class="kb-command-panel featured-deck-panel" aria-label="Featured agentic framework presentation">
+            <div class="kb-command-copy">
+              <span class="kb-kicker">NEW RESOURCE</span>
+              <h3>Agentic Framework Session</h3>
+              <p>A MichaelOS × Nous-zine presentation explaining Hermes, safe agent setup, shared memory, client rollout, monitoring, and Discord server comms for teams.</p>
+              <div class="kb-command-actions">
+                <button class="ui-btn btn icon-files" type="button" data-open="agenticFrameworkDeckWindow" onclick="openWindow('agenticFrameworkDeckWindow')">Open Deck Preview</button>
+                <a class="ui-btn btn secondary icon-files" href="assets/downloads/hermes-agentic-framework-session-michaelos-nous-style.pdf" download>Download PDF</a>
+              </div>
+            </div>
+            <figure class="kb-command-art"><img src="assets/decks/hermes-agentic-framework-session/slide-11.png?v=20260630-discord" alt="Preview slide showing Discord as a team operating room for agentic workflows" loading="lazy" /></figure>
+          </section>
           <section class="kb-command-panel" aria-label="Agentic workflow knowledgebase">
             <div class="kb-command-copy">
               <span class="kb-kicker">NEW START HERE</span>
@@ -460,6 +477,7 @@
             <article><b>For builders</b><span>Design workflows with sources, tools, logs, approval gates, and rollback plans from day one.</span></article>
           </div>
           <div class="guide-card-grid">
+            <button class="guide-card featured-resource-card" type="button" data-open="agenticFrameworkDeckWindow" onclick="openWindow('agenticFrameworkDeckWindow')"><b>New resource: Agentic Framework Session</b><span>MichaelOS × Nous-zine deck explaining Hermes, safe agent setup, shared memory, client rollout, and Discord server comms for multi-person agent work.</span></button>
             <button class="guide-card" type="button" data-open="agentGuideWindow" onclick="openWindow('agentGuideWindow')"><b>1. What is an AI agent?</b><span>Simple explanation, examples, safety limits, and visual workflow.</span></button>
             <button class="guide-card" type="button" data-open="introDeckWindow" onclick="openWindow('introDeckWindow')"><b>2. Intro to AI deck</b><span>Open a slide preview in the website, then download the PDF or PowerPoint copy.</span></button>
             <button class="guide-card" type="button" data-open="prerequisitesGuideWindow" onclick="openWindow('prerequisitesGuideWindow')"><b>3. Prerequisites before install</b><span>The guide before the guide: Mac Xcode/Homebrew, Windows/WSL, Python, Node, and safe first-folder checks.</span></button>
@@ -721,6 +739,28 @@ Escalate when:
             <p><b>Red light:</b> "automate everything", broad account access, no approval gate, public/customer actions, money movement, or no way to prove what happened.</p>
           </div>
           <p class="guide-note"><b>Best first move:</b> choose one Level 1 reusable prompt, run it manually three times, then convert only the boring proven parts into a supervised workflow.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="agenticFrameworkDeckWindow" class="win-window doc-window deck-preview-window" aria-label="Agentic framework presentation preview" style="left:72px;top:58px;width:min(1080px,calc(100vw - 96px));">
+      <div class="win-title"><span>AgenticFrameworkSession.ppt - Website Preview</span><button class="win-close" data-close="agenticFrameworkDeckWindow">×</button></div>
+      <div class="win-body document-body">
+        <article class="resume-doc guide-doc intro-deck-doc">
+          <div class="mini-heading lean-heading"><h2>Agentic Framework Session: Hermes + Discord-ready team comms</h2></div>
+          <p>New MichaelOS × Nous-zine resource for explaining how agentic systems work in plain English: Hermes profiles, safe tool boundaries, shared memory, client rollout, monitoring, and why a Discord server unlocks better multi-person visibility.</p>
+          <div class="deck-toolbar" aria-label="Agentic framework deck controls">
+            <button class="ui-btn btn icon-review" type="button" data-agentic-deck-prev>◀ Previous</button>
+            <strong id="agenticDeckCounter">Slide 1/26</strong>
+            <button class="ui-btn btn icon-journey" type="button" data-agentic-deck-next>Next ▶</button>
+            <a class="ui-btn btn icon-files" href="assets/downloads/hermes-agentic-framework-session-michaelos-nous-style.pdf" download>Download PDF</a>
+            <a class="ui-btn btn secondary icon-files" href="assets/downloads/hermes-agentic-framework-session-michaelos-nous-style.pptx" download>Download PowerPoint</a>
+            <a class="ui-btn btn secondary icon-workflow" href="demobuilds/hermes-agentic-framework-session/" target="_blank" rel="noopener">Open full HTML</a>
+          </div>
+          <figure class="deck-preview-frame agentic-framework-frame">
+            <img id="agenticDeckSlide" src="assets/decks/hermes-agentic-framework-session/slide-01.png?v=20260630-discord" alt="Agentic framework session slide 1 of 26" loading="eager" />
+          </figure>
+          <p class="guide-note"><b>Use this when:</b> someone needs to understand agentic workflows as a real operating layer, not a magic chatbot. The Discord section shows how shared server channels let multiple people openly engage the same agents with visible approvals and receipts.</p>
         </article>
       </div>
     </section>

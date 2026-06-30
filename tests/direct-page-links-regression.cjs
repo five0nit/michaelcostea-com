@@ -62,6 +62,12 @@ async function run() {
     throw new Error(`opening AI Help should sync hash to #ai-help, got ${window.location.hash}`);
   }
 
+  window.openWindow('agenticFrameworkDeckWindow');
+  await flush();
+  if (window.location.hash !== '#agentic-framework-session') {
+    throw new Error(`opening Agentic Framework deck should sync hash to #agentic-framework-session, got ${window.location.hash}`);
+  }
+
   window.location.hash = '#resume';
   window.dispatchEvent(new window.HashChangeEvent('hashchange'));
   await flush();
@@ -78,7 +84,7 @@ async function run() {
 
   window.closeWindow('resumeWindow');
   await flush();
-  if (window.location.hash !== '#ai-help') {
+  if (window.location.hash !== '#agentic-framework-session') {
     throw new Error(`closing the active page window should return to the next visible page route, got ${window.location.hash}`);
   }
 

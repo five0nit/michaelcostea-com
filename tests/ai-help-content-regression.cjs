@@ -25,6 +25,14 @@ assertIncludes('AI Help start card grid', start, '8. Five AI tutorials to try');
 assertIncludes('AI Help start card grid', start, 'copy/paste lessons');
 assertIncludes('AI Help start card grid', start, '10. Build a memory layer');
 assertIncludes('AI Help start card grid', start, 'Byterover-style agent memory');
+assertIncludes('AI Help new resource card', start, 'New resource: Agentic Framework Session');
+assertIncludes('AI Help new resource card', start, 'Discord server comms for multi-person agent work');
+
+const agenticDeck = text('#agenticFrameworkDeckWindow');
+assertIncludes('agentic framework deck resource', agenticDeck, 'Agentic Framework Session: Hermes + Discord-ready team comms');
+assertIncludes('agentic framework deck resource', agenticDeck, 'Download PDF');
+assertIncludes('agentic framework deck resource', agenticDeck, 'Download PowerPoint');
+assertIncludes('agentic framework deck resource', agenticDeck, 'Discord section shows how shared server channels let multiple people openly engage the same agents');
 
 const prereqGuide = text('#prerequisitesGuideWindow');
 assertIncludes('prerequisites guide title', prereqGuide, 'Prerequisites Before You Install an AI Agent');
