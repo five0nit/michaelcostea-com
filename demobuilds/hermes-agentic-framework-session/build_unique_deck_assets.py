@@ -195,6 +195,12 @@ def patch_html() -> None:
 .premium-svg text,.premium-svg .small,.premium-svg .diagram-note,.premium-svg .prompt{fill:#050505!important;color:#050505!important;stroke:none!important}.premium-svg .slab-text{fill:#fff!important;stroke:none!important}.premium-svg .main-mark text,.premium-svg .main-mark .small{fill:#050505!important;paint-order:stroke!important;stroke:#fff7e8!important;stroke-width:3px!important;stroke-linejoin:round!important}.premium-svg .micro-label,.premium-svg .tiny{fill:#050505!important;stroke:none!important}.premium-svg .side-label{text-anchor:start!important;font-size:8px!important;letter-spacing:.03em!important}.premium-svg .proof-chip text{fill:#fff!important;stroke:none!important}.panel.blue,.panel{color:#050505!important}.panel p,.panel li,.panel h2{color:#050505!important}
 """
         src = src.replace("</style>", contrast_css + "</style>")
+    if "agenda-font-20260630a" not in src:
+        agenda_css = """
+/* agenda-font-20260630a: make agenda slide readable for viewers in room / screen-share */
+#slide-2 .bodygrid{grid-template-columns:.95fr 1.05fr!important;gap:18px!important}#slide-2 .panel{padding:16px!important}#slide-2 .label{font-size:11px!important;padding:5px 8px!important}#slide-2 .panel h2{font-size:40px!important;line-height:.92!important;margin:11px 0 10px!important}#slide-2 .panel ul{padding-left:22px!important;margin:4px 0 0!important}#slide-2 .panel li{font-size:18.5px!important;line-height:1.16!important;margin:5px 0!important;font-weight:850!important}#slide-2 .sys-svg{min-height:310px!important}
+"""
+        src = src.replace("</style>", agenda_css + "</style>")
     for n, slug, title, labels, note in SLIDES:
         pattern = re.compile(rf'(<section class="slide" id="slide-{n}" data-diagram=")([^"]+)(".*?<aside>)(<div class="diagram-card[^>]*">.*?</svg></div>)(<div class="receipt">)', re.S)
         svg = diagram(n, slug, title, labels, note)
