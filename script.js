@@ -1160,7 +1160,7 @@ async function initAgenticFrameworkDeckPreview(){
   let current = 1;
   const update = () => {
     const num = String(current).padStart(2, '0');
-    const src = `assets/decks/hermes-agentic-framework-session/slide-${num}.png?v=20260630-discord`;
+    const src = `assets/decks/hermes-agentic-framework-session/slide-${num}.png?v=20260630-unique-nous`;
     slide.src = src;
     slide.alt = `Agentic framework session slide ${current} of ${total}`;
     counter.textContent = `Slide ${current}/${total}`;
