@@ -304,7 +304,8 @@ body.public-preview::before{
   .public-preview .container{
     height:auto!important;
     min-height:100dvh!important;
-    padding:6px!important;
+    padding:8px 9px 58px!important;
+    display:block!important;
   }
   .public-preview .desktop-icons{
     display:none!important;
@@ -316,11 +317,22 @@ body.public-preview::before{
     top:auto!important;
     bottom:auto!important;
     transform:none!important;
-    width:100%!important;
-    max-width:none!important;
+    width:min(100%,430px)!important;
+    max-width:430px!important;
     min-height:0!important;
-    margin:0!important;
+    margin:0 auto 12px!important;
     box-shadow:4px 5px 0 rgba(0,0,0,.72)!important;
+  }
+  .public-preview .win-window:not(.main-portfolio-window){
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+    width:min(100%,430px)!important;
+    max-width:430px!important;
+    margin:0 auto 12px!important;
   }
   .public-preview .win-title{
     min-height:28px!important;
@@ -440,9 +452,48 @@ body.public-preview::before{
     grid-template-columns:1fr!important;
     gap:8px!important;
   }
-  .public-preview .status-bar,
-  .public-preview .taskbar,
+  .public-preview .status-bar{
+    display:none!important;
+  }
+  .public-preview .taskbar{
+    display:flex!important;
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    bottom:0!important;
+    height:46px!important;
+    z-index:9999!important;
+    padding:5px!important;
+    background:var(--window-gray)!important;
+    border-top:2px solid #fff!important;
+    box-shadow:0 -2px 0 var(--mid-shadow)!important;
+  }
+  .public-preview .start-btn{
+    min-width:118px!important;
+    height:34px!important;
+  }
+  .public-preview .taskbar-windows{
+    display:none!important;
+  }
+  .public-preview .tray{
+    margin-left:auto!important;
+  }
+  .public-preview .tray-pill{
+    min-width:64px!important;
+    height:32px!important;
+    font-size:10px!important;
+  }
   .public-preview .start-menu{
+    display:block!important;
+    position:fixed!important;
+    left:8px!important;
+    bottom:46px!important;
+    width:min(310px,calc(100vw - 16px))!important;
+    max-height:calc(100dvh - 84px)!important;
+    overflow:auto!important;
+    z-index:10000!important;
+  }
+  .public-preview .start-menu:not(.open){
     display:none!important;
   }
   .public-preview .doc-window .win-body{
