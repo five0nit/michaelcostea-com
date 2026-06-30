@@ -31,7 +31,9 @@ assertIncludes('AI Help new resource card', start, 'Discord server comms for mul
 const agenticDeck = text('#agenticFrameworkDeckWindow');
 assertIncludes('agentic framework deck resource', agenticDeck, 'Agentic Framework Session: Hermes + Discord-ready team comms');
 assertIncludes('agentic framework deck resource', agenticDeck, 'Download PDF');
-assertIncludes('agentic framework deck resource', agenticDeck, 'Download PowerPoint');
+if (agenticDeck.includes('Download PowerPoint')) throw new Error('agentic framework deck preview should only expose Download PDF as an action');
+if (agenticDeck.includes('Fullscreen')) throw new Error('agentic framework deck preview should not expose fullscreen controls');
+if (agenticDeck.includes('Open full HTML')) throw new Error('agentic framework deck preview should not expose full HTML controls');
 assertIncludes('agentic framework deck resource', agenticDeck, 'Discord section shows how shared server channels let multiple people openly engage the same agents');
 
 const prereqGuide = text('#prerequisitesGuideWindow');

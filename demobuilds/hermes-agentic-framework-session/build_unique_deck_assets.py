@@ -207,6 +207,12 @@ def patch_html() -> None:
 .bodygrid{grid-template-columns:.92fr 1.08fr!important;gap:18px!important}.panel{padding:14px!important}.label{font-size:10.5px!important;padding:5px 8px!important}.panel h2{font-size:34px!important;line-height:.94!important;margin:10px 0 9px!important}.panel ul{padding-left:21px!important;margin:4px 0 0!important}.panel li,.panel p{font-size:18.5px!important;line-height:1.13!important;margin:4px 0!important;font-weight:850!important}.sys-svg{min-height:306px!important}.receipt div{font-size:8px!important}
 """
         src = src.replace("</style>", min_text_css + "</style>")
+    if "preview-only-controls-hidden-20260701a" not in src:
+        preview_only_css = """
+/* preview-only-controls-hidden-20260701a: exported deck assets are clean previews; site exposes only the PDF download action */
+.controls{display:none!important}
+"""
+        src = src.replace("</style>", preview_only_css + "</style>")
     for n, slug, title, labels, note in SLIDES:
         pattern = re.compile(rf'(<section class="slide" id="slide-{n}" data-diagram=")([^"]+)(".*?<aside>)(<div class="diagram-card[^>]*">.*?</svg></div>)(<div class="receipt">)', re.S)
         svg = diagram(n, slug, title, labels, note)
