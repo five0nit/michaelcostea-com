@@ -236,7 +236,8 @@ def render_assets() -> None:
     run([chromium, "--headless", "--no-sandbox", "--disable-gpu", "--run-all-compositor-stages-before-draw", f"--print-to-pdf={PDF}", "--print-to-pdf-no-header", file_url])
     for n, *_ in SLIDES:
         out = SHOTS / f"slide-{n:02d}.png"
-        run([chromium, "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=1", "--window-size=1600,900", f"--screenshot={out}", f"{file_url}#slide-{n}"])
+        # Capture at the original 1600x900 CSS viewport but 2x device scale for sharper website previews.
+        run([chromium, "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=2", "--window-size=1600,900", f"--screenshot={out}", f"{file_url}#slide-{n}"])
 
 
 def write_xml(z: zipfile.ZipFile, name: str, content: str) -> None:
@@ -257,11 +258,6 @@ def build_pptx() -> None:
         write_xml(z, "ppt/slideLayouts/_rels/slideLayout1.xml.rels", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="../slideMasters/slideMaster1.xml"/></Relationships>')
         for i in range(1,27):
             img = SHOTS / f"slide-{i:02d}.png"
-            # normalize to exact 1600x900 if chromium oddities appear
-            im = Image.open(img)
-            if im.size != (1600,900):
-                im = im.resize((1600,900))
-                im.save(img)
             z.write(img, f"ppt/media/image{i}.png")
             slide_xml = f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr/><p:pic><p:nvPicPr><p:cNvPr id="2" name="Slide {i}"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr><p:blipFill><a:blip r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch></p:blipFill><p:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic></p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>'''
             write_xml(z, f"ppt/slides/slide{i}.xml", slide_xml)

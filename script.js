@@ -1148,9 +1148,9 @@ async function initAgenticFrameworkDeckPreview(){
   const fullOverlay = document.getElementById('agenticDeckFullscreen');
   if(!slide) return;
   const update = () => {
-    const src = 'assets/decks/hermes-agentic-framework-session/slide-01.png?v=20260701-preview-only';
+    const src = 'assets/decks/hermes-agentic-framework-session/slide-01.png?v=20260701-presentation-preview-hd';
     slide.src = src;
-    slide.alt = 'Agentic framework session website preview slide';
+    slide.alt = 'Agentic framework session presentation preview slide';
   };
   if(fullOverlay) fullOverlay.remove();
   document.querySelectorAll('[data-open="agenticFrameworkDeckWindow"]').forEach((btn) => {
