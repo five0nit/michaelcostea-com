@@ -58,6 +58,48 @@ def rect(x, y, w, h, label, sub="", cls=""):
     return f'<g class="node {cls}"><rect x="{x}" y="{y}" width="{w}" height="{h}"/><text x="{x+w/2}" y="{y+30}">{esc(label)}</text>{sub_text}</g>'
 
 
+def premium_backdrop(n: int, slug: str, title: str, labels: list[str]) -> str:
+    """High-detail art-direction layer so each diagram feels like a designed artifact, not a wireframe."""
+    accent = ["#000080", "#008080", "#d23232", "#111111", "#b88900"][(n - 1) % 5]
+    alt = ["#fff4c2", "#e8f7ff", "#f1dfbf", "#d8f3dc", "#ffe1e1"][(n + 1) % 5]
+    stripes = ''.join(f'<line class="micro-line" x1="{28+i*26}" y1="318" x2="{42+i*26}" y2="338"/>' for i in range(22))
+    ticks = ''.join(f'<rect class="tick" x="{38+i*31}" y="48" width="18" height="5"/>' for i in range(17))
+    lab = esc(slug.replace('-', ' / ').upper())
+    return f'''
+<defs>
+  <pattern id="dots-{n}" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="1.2" cy="1.2" r="1.1" fill="#111" opacity=".18"/></pattern>
+  <pattern id="hatch-{n}" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M-2 8 L8 -2 M2 10 L10 2" stroke="#000080" stroke-width="1" opacity=".18"/></pattern>
+  <filter id="hardShadow-{n}" x="-8%" y="-8%" width="120%" height="120%"><feDropShadow dx="5" dy="5" stdDeviation="0" flood-color="#050505" flood-opacity="1"/></filter>
+</defs>
+<rect class="paper-bg" x="10" y="10" width="600" height="340"/>
+<rect class="tone-field" x="22" y="48" width="576" height="274" fill="url(#dots-{n})"/>
+<path class="blueprint" d="M32 96 H590 M32 148 H590 M32 200 H590 M32 252 H590 M104 56 V316 M210 56 V316 M316 56 V316 M422 56 V316 M528 56 V316"/>
+<rect class="accent-slab" x="36" y="58" width="156" height="42" fill="{accent}"/>
+<text class="slab-text" x="48" y="84">{esc(title)}</text>
+<rect class="cream-slab" x="410" y="50" width="154" height="54" fill="{alt}"/>
+<text class="micro-label" x="487" y="73">MIKE × NOUS</text><text class="micro-label" x="487" y="91">FIELD ARTIFACT {n:02d}</text>
+<rect class="side-rail" x="34" y="116" width="34" height="184"/>
+<text class="vertical-code" transform="translate(56 286) rotate(-90)">{lab}</text>
+<path class="corner-cut" d="M572 284 L594 284 L594 306 L548 306 Z" fill="{accent}"/>
+{ticks}{stripes}
+'''
+
+
+def premium_foreground(n: int, slug: str, labels: list[str]) -> str:
+    """Small proof/interface details layered above the main diagram for production polish."""
+    status = ''.join(f'<g class="status-dot"><circle cx="{474+i*26}" cy="300" r="7"/><text class="tiny" x="{474+i*26}" y="322">{i+1}</text></g>' for i in range(min(4, len(labels))))
+    tapes = [
+        '<path class="tape" d="M84 42 L162 36 L166 56 L88 62 Z"/>',
+        '<path class="tape" d="M450 316 L552 306 L556 326 L454 336 Z"/>',
+    ]
+    return f'''
+<g class="proof-chip"><rect x="78" y="304" width="230" height="30"/><text x="193" y="324">PROOF-FIRST / NO SECRETS / HUMAN GATE</text></g>
+{status}
+{''.join(tapes)}
+<path class="zine" d="M26 36 H182 M438 324 H592 M34 324 L76 290 M542 34 L586 78"/>
+'''
+
+
 def diagram(n: int, slug: str, title: str, labels: list[str], note: str) -> str:
     # All diagrams share a Mike × Nous visual grammar: hard black lines, paper fill, blue title chips,
     # slight zine marks. Geometry changes per slide so no visual loops repeat.
@@ -128,7 +170,9 @@ def diagram(n: int, slug: str, title: str, labels: list[str], note: str) -> str:
     else:
         pts=[(310,72),(466,132),(430,270),(190,270),(154,132)]
         body=''.join(f'<circle cx="{x}" cy="{y}" r="42"/><text class="small" x="{x}" y="{y+5}">{esc(labels[i])}</text>' for i,(x,y) in enumerate(pts)) + '<path class="wire" d="M310 72 L466 132 L430 270 L190 270 L154 132 Z"/><circle cx="310" cy="180" r="54"/><text x="310" y="185">HUMAN</text>'
-    return f'<div class="diagram-card unique-diagram {slug}"><svg viewBox="0 0 620 360" class="sys-svg" role="img" aria-label="{esc(title)}"><rect class="paper-bg" x="10" y="10" width="600" height="340"/><path class="zine" d="M26 36 H182 M438 324 H592 M34 324 L76 290 M542 34 L586 78"/><text class="diagram-title" x="32" y="34">{esc(title)}</text>{body}<text class="diagram-note" x="310" y="346">{esc(note)}</text></svg></div>'
+    backdrop = premium_backdrop(n, slug, title, labels)
+    foreground = premium_foreground(n, slug, labels)
+    return f'<div class="diagram-card unique-diagram {slug}"><svg viewBox="0 0 620 360" class="sys-svg premium-svg" role="img" aria-label="{esc(title)}">{backdrop}<g class="main-mark" filter="url(#hardShadow-{n})">{body}</g>{foreground}<text class="diagram-note" x="310" y="346">{esc(note)}</text></svg></div>'
 
 
 def patch_html() -> None:
@@ -140,6 +184,12 @@ def patch_html() -> None:
 .unique-diagram::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(#111 .72px,transparent .8px);background-size:7px 7px;opacity:.055;mix-blend-mode:multiply}.sys-svg .paper-bg{fill:#f5ead7;stroke:#050505;stroke-width:0}.sys-svg .zine{stroke:#000080;stroke-width:4;fill:none}.sys-svg .diagram-title{font:900 18px 'IBM Plex Mono',monospace;fill:#000080;letter-spacing:.08em}.sys-svg .diagram-note{font:900 12px 'IBM Plex Mono',monospace;fill:#090909;text-anchor:middle;letter-spacing:.02em}.sys-svg rect,.sys-svg circle{fill:#fff7e8;stroke:#090909;stroke-width:4}.sys-svg .node rect{fill:#f1dfbf}.sys-svg .step rect,.sys-svg .tile rect{fill:#fff4c2}.sys-svg .wire,.sys-svg line{stroke:#090909;stroke-width:3;fill:none}.sys-svg .thick{stroke:#000080;stroke-width:7;fill:none}.sys-svg text{font:900 18px 'IBM Plex Mono',monospace;fill:#090909;text-anchor:middle}.sys-svg .small{font-size:12px}.sys-svg .prompt{font:900 18px 'IBM Plex Mono',monospace;text-anchor:start;fill:#000080}.sys-svg .outline{fill:none;stroke:#000080;stroke-width:5}.mast h1{letter-spacing:-.055em}.stamp span{font-family:'IBM Plex Mono',monospace}.receipt{font-family:'IBM Plex Mono',monospace}.receipt div:nth-child(2){font-weight:900;color:#000080}.tag{box-shadow:3px 3px 0 #090909}
 """
         src = src.replace("</style>", extra_css + "</style>")
+    if "premium-deck-refresh-20260630b" not in src:
+        premium_css = """
+/* premium-deck-refresh-20260630b: stronger generated-art quality pass */
+.unique-diagram{box-shadow:7px 7px 0 #050505, inset 0 0 0 3px rgba(255,255,255,.55)!important;background:#f5ead7!important}.bodygrid{grid-template-columns:.78fr 1.22fr!important;gap:22px!important}.panel h2{font-size:28px!important}.panel li{font-size:16px!important;line-height:1.18!important;margin:4px 0!important}.diagram-card{padding:10px!important}.sys-svg{height:338px!important}.receipt{margin-top:8px!important}.premium-svg .paper-bg{fill:#f5ead7!important;stroke:#050505!important;stroke-width:4!important}.premium-svg .tone-field{stroke:#050505!important;stroke-width:2!important;opacity:.64!important}.premium-svg .blueprint{stroke:#000080!important;stroke-width:1.2!important;opacity:.16!important;fill:none!important}.premium-svg .accent-slab,.premium-svg .cream-slab,.premium-svg .side-rail,.premium-svg .proof-chip rect{stroke:#050505!important;stroke-width:3!important;filter:url(#hardShadow-1)}.premium-svg .slab-text{font:900 15px 'IBM Plex Mono',monospace!important;fill:#fff!important;text-anchor:start!important;letter-spacing:.06em!important}.premium-svg .micro-label,.premium-svg .tiny{font:900 9px 'IBM Plex Mono',monospace!important;fill:#050505!important;letter-spacing:.08em!important}.premium-svg .vertical-code{font:900 11px 'IBM Plex Mono',monospace!important;fill:#fff!important;text-anchor:middle!important;letter-spacing:.12em!important}.premium-svg .tick{fill:#050505!important;stroke:none!important}.premium-svg .micro-line{stroke:#d23232!important;stroke-width:2!important;opacity:.42!important}.premium-svg .corner-cut{stroke:#050505!important;stroke-width:3!important}.premium-svg .main-mark rect,.premium-svg .main-mark circle{stroke:#050505!important;stroke-width:4!important;vector-effect:non-scaling-stroke}.premium-svg .main-mark .node rect{fill:#fff7e8!important}.premium-svg .main-mark .step rect,.premium-svg .main-mark .tile rect{fill:#fff4c2!important}.premium-svg .main-mark text{paint-order:stroke;stroke:#fff7e8;stroke-width:3px;stroke-linejoin:round}.premium-svg .proof-chip text{font:900 10px 'IBM Plex Mono',monospace!important;fill:#fff!important;stroke:none!important;letter-spacing:.04em!important}.premium-svg .proof-chip rect{fill:#050505!important}.premium-svg .status-dot circle{fill:#23d160!important;stroke:#050505!important;stroke-width:3!important}.premium-svg .tape{fill:rgba(255,244,194,.86)!important;stroke:#050505!important;stroke-width:2!important;opacity:.9!important}.premium-svg .diagram-note{font:900 11px 'IBM Plex Mono',monospace!important;fill:#050505!important;paint-order:stroke;stroke:#f5ead7;stroke-width:4px;letter-spacing:.02em}.premium-svg .zine{stroke:#000080!important;stroke-width:4!important;fill:none!important}.diagram-card.unique-diagram::before{content:"";position:absolute;left:12px;right:12px;top:12px;height:10px;background:repeating-linear-gradient(90deg,#050505 0 12px,#fff4c2 12px 22px,#000080 22px 34px);z-index:1;opacity:.92}.diagram-card.unique-diagram::after{opacity:.075!important;background:radial-gradient(#111 .85px,transparent .95px)!important;background-size:6px 6px!important}
+"""
+        src = src.replace("</style>", premium_css + "</style>")
     for n, slug, title, labels, note in SLIDES:
         pattern = re.compile(rf'(<section class="slide" id="slide-{n}" data-diagram=")([^"]+)(".*?<aside>)(<div class="diagram-card[^>]*">.*?</svg></div>)(<div class="receipt">)', re.S)
         svg = diagram(n, slug, title, labels, note)
