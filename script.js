@@ -651,7 +651,6 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="buildWindow"><span><b class="si">🧩</b>What I Build</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="projectsWindow"><span><b class="si">📁</b>Projects</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="agentsWindow"><span><b class="si">🤖</b>AI Agents</span></a>
-    <a class="start-item start-cta" role="menuitem" href="https://telegram-office.michaelcostea.com/agenttown/"><span><b class="si">🏢</b>Agent Office</span><small>live</small></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="aiHelpWindow"><span><b class="si">🎓</b>AI Help</span></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="agenticKnowledgebaseWindow"><span><b class="si">📚</b>AI Knowledgebase</span></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="intakeWindow"><span><b class="si">📝</b>AI Intake</span></a>
