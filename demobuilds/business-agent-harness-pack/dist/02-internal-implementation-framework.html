@@ -1,0 +1,170 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Internal Implementation Framework</title><link rel="stylesheet" href="pack.css"></head><body><main class="shell"><section class="window"><div class="title"><span>Internal Implementation Framework</span><span>MICHAELOS × NOUS × HYPERFRAMES</span></div><article class="paper"><div class="meta">Client-ready framework pack · v1.0</div><div class="hyper"><h1>Internal Implementation Framework</h1>
+<h2>Implementation objective</h2>
+<p>Build a repeatable business agent harness that can be installed for different clients without rebuilding governance from scratch.</p>
+<p>The framework must support:</p>
+<ul>
+<li>client-facing explanation,</li>
+<li>internal technical setup,</li>
+<li>Discord server/channel/role configuration,</li>
+<li>agent roster and permission model,</li>
+<li>approval gates,</li>
+<li>monitoring and receipts,</li>
+<li>training and handover.</li>
+</ul>
+<h2>Reference architecture</h2>
+<pre><code class="language-text">Business users
+  ↓ requests / approvals
+Discord server operating room
+  ↓ channel permissions + bot roles
+Agent gateway / harness layer
+  ↓ policies, memory, receipts, escalation rules
+Specialist agents
+  ↓ read/draft/report/check actions
+Business tools and documents</code></pre>
+<h2>Harness components</h2>
+<div class="table-wrap"><table><tr><th>Component</th><th>Required</th><th>Notes</th></tr>
+<tr><td>Discord server</td><td>Yes</td><td>Shared room for requests, approvals, and receipts</td></tr>
+<tr><td>Discord bot/app</td><td>Yes</td><td>One bot identity per environment or per agent lane, depending on setup</td></tr>
+<tr><td>Agent gateway</td><td>Yes</td><td>Routes messages from Discord to agent profiles and back</td></tr>
+<tr><td>Agent profiles</td><td>Yes</td><td>Separate instructions, tool access, and memory boundaries</td></tr>
+<tr><td>Memory / handoff store</td><td>Yes</td><td>Stores summaries, decisions, project state, receipts</td></tr>
+<tr><td>Approval policy</td><td>Yes</td><td>Defines what requires human sign-off</td></tr>
+<tr><td>Monitoring/reporting</td><td>Yes</td><td>Daily digest, errors, blocked actions, uptime/status</td></tr>
+<tr><td>Business tool connectors</td><td>Optional</td><td>Only after safe-room phase is stable</td></tr></table></div>
+<h2>Internal role map</h2>
+<div class="table-wrap"><table><tr><th>Role</th><th>Person</th><th>Responsibility</th></tr>
+<tr><td>Project owner</td><td>Michael / client sponsor</td><td>Commercial scope, final go/no-go</td></tr>
+<tr><td>Harness implementer</td><td>Technical lead</td><td>Server, agents, gateway, docs, tests</td></tr>
+<tr><td>Business champion</td><td>Client-side operator</td><td>Staff training, use-case triage</td></tr>
+<tr><td>Access owner</td><td>Client IT/admin</td><td>Approves tool access and permissions</td></tr>
+<tr><td>Agent maintainer</td><td>Michael/team</td><td>Monitors failures, improves prompts/tools</td></tr>
+<tr><td>Department lead</td><td>Client manager</td><td>Approves department-specific actions</td></tr></table></div>
+<h2>Agent profile template</h2>
+<p>Every business agent should have an agent card:</p>
+<pre><code class="language-yaml">agent_name: Reporting Agent
+business_owner: Operations Manager
+purpose: Summarise daily operational activity and draft weekly reports
+allowed_channels:
+  - daily-briefings
+  - agent-reports
+allowed_tools:
+  - read approved reporting folder
+  - summarise uploaded CSV/PDF/DOCX
+  - draft reports
+approval_required_for:
+  - publishing reports externally
+  - emailing reports to customers
+  - changing dashboard formulas
+forbidden:
+  - payroll access
+  - deleting files
+  - changing user permissions
+receipt_required: true
+fallback: tag @Agent Maintainer in #incident-log</code></pre>
+<h2>Channel taxonomy</h2>
+<div class="table-wrap"><table><tr><th>Channel type</th><th>Naming pattern</th><th>Purpose</th></tr>
+<tr><td>Helpdesk</td><td><code>#agent-helpdesk</code></td><td>General requests and triage</td></tr>
+<tr><td>Approval</td><td><code>#approvals</code></td><td>Human sign-off before sensitive actions</td></tr>
+<tr><td>Department</td><td><code>#sales-agent</code>, <code>#ops-agent</code></td><td>Department-specific workflows</td></tr>
+<tr><td>Reporting</td><td><code>#daily-briefings</code>, <code>#agent-reports</code></td><td>Summaries, handovers, metrics</td></tr>
+<tr><td>Support</td><td><code>#incident-log</code>, <code>#agent-admin</code></td><td>Errors, access issues, maintenance</td></tr>
+<tr><td>Read-only library</td><td><code>#agent-how-to</code>, <code>#templates</code></td><td>Staff guidance and prompt examples</td></tr></table></div>
+<h2>Permission classes</h2>
+<div class="table-wrap"><table><tr><th>Class</th><th>Meaning</th><th>Example</th></tr>
+<tr><td>View</td><td>Can read channel/file/tool data</td><td>Research agent sees public supplier docs</td></tr>
+<tr><td>Draft</td><td>Can propose text or changes</td><td>Admin agent drafts email but cannot send</td></tr>
+<tr><td>Comment</td><td>Can add notes or labels</td><td>Reporting agent comments on task status</td></tr>
+<tr><td>Write</td><td>Can edit approved records</td><td>Only after workflow is tested</td></tr>
+<tr><td>Send/publish</td><td>Can communicate externally</td><td>Usually human approval required</td></tr>
+<tr><td>Admin</td><td>Can change users, roles, config</td><td>Humans only by default</td></tr></table></div>
+<h2>Approval gates</h2>
+<p>Use a standard approval phrase in Discord:</p>
+<pre><code class="language-text">APPROVED: [agent/action] for [scope] until [time/window]. Approved by [name].</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">APPROVED: Reporting Agent may generate the weekly operations report from the June dashboard and post a draft in #agent-reports today only. Approved by Sarah.</code></pre>
+<p>Agents should refuse or escalate if approval is missing, ambiguous, stale, or out of scope.</p>
+<h2>Standard business workflows</h2>
+<h3>1. Research and summary</h3>
+<ul>
+<li>User asks in <code>#agent-helpdesk</code>.</li>
+<li>Coordinator routes to Research Agent.</li>
+<li>Research Agent replies with sources and confidence.</li>
+<li>If external contact is needed, agent drafts only and asks for approval.</li>
+</ul>
+<h3>2. Customer response drafting</h3>
+<ul>
+<li>Staff paste customer context into approved channel.</li>
+<li>Support Drafting Agent writes a suggested response.</li>
+<li>Staff edits/sends manually unless explicit send authority exists.</li>
+<li>Agent records theme in daily summary.</li>
+</ul>
+<h3>3. Daily operations briefing</h3>
+<ul>
+<li>Reporting Agent reviews approved logs or uploads.</li>
+<li>Posts a concise daily briefing.</li>
+<li>Flags blockers, overdue approvals, and repeated issues.</li>
+<li>Does not change source systems unless separately approved.</li>
+</ul>
+<h3>4. Document/SOP drafting</h3>
+<ul>
+<li>User requests SOP from known facts.</li>
+<li>Admin Agent drafts in channel or approved docs area.</li>
+<li>Department lead reviews and marks approved.</li>
+<li>Final copy is stored in the business library.</li>
+</ul>
+<h2>Internal acceptance tests</h2>
+<p>Before handover, verify:</p>
+<ul>
+<li>staff user can ask in <code>#agent-helpdesk</code>,</li>
+<li>non-manager cannot approve sensitive action,</li>
+<li>manager can approve in <code>#approvals</code>,</li>
+<li>agent refuses a forbidden request,</li>
+<li>agent posts a receipt after completing a safe request,</li>
+<li>daily briefing can be generated,</li>
+<li>incident can be logged,</li>
+<li>agent cannot see private channels it should not access,</li>
+<li>all bot tokens/secrets are stored outside client-visible docs,</li>
+<li>disaster fallback / disable process is documented.</li>
+</ul>
+<h2>Monitoring and operations</h2>
+<p>Daily:</p>
+<ul>
+<li>check <code>#incident-log</code>,</li>
+<li>check failed tasks,</li>
+<li>review daily briefing quality,</li>
+<li>identify repeated request types.</li>
+</ul>
+<p>Weekly:</p>
+<ul>
+<li>tune agent prompts,</li>
+<li>remove unused channels,</li>
+<li>update templates,</li>
+<li>review access register,</li>
+<li>check approval logs,</li>
+<li>confirm staff questions are decreasing.</li>
+</ul>
+<p>Monthly:</p>
+<ul>
+<li>review ROI metrics,</li>
+<li>rotate/review credentials where applicable,</li>
+<li>test disable/revoke path,</li>
+<li>assess whether any agent should gain or lose permissions.</li>
+</ul>
+<h2>Internal risk register</h2>
+<div class="table-wrap"><table><tr><th>Risk</th><th>Control</th></tr>
+<tr><td>Agent gets too much access</td><td>Small keyrings, channel-specific bot roles, read/draft-first policy</td></tr>
+<tr><td>Staff over-trust outputs</td><td>Training, confidence labels, source links, review gates</td></tr>
+<tr><td>Private data leaks into broad channels</td><td>Channel map, department permissions, redaction rules</td></tr>
+<tr><td>Approval ambiguity</td><td>Standard approval phrase and expiry window</td></tr>
+<tr><td>Silent failure</td><td>Incident channel, daily status, watchdog/reporting</td></tr>
+<tr><td>Client asks for unsafe automation</td><td>Refuse, propose draft-only or approval-gated alternative</td></tr></table></div>
+<h2>Handover standard</h2>
+<p>Do not consider the install complete until:</p>
+<ul>
+<li>the client sponsor has seen the approval workflow,</li>
+<li>at least one staff member has completed a practice request,</li>
+<li>an agent has refused an unsafe request correctly,</li>
+<li>the business champion knows where to report issues,</li>
+<li>the access register is complete,</li>
+<li>the training guide is delivered.</li>
+</ul></div><div class="footer">Prepared by Michael Costea · michaelcostea.com · Business Agent Harness Pack</div></article></section></main></body></html>

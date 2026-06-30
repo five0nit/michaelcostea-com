@@ -1,0 +1,149 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Business Training Guide</title><link rel="stylesheet" href="pack.css"></head><body><main class="shell"><section class="window"><div class="title"><span>Business Training Guide</span><span>MICHAELOS × NOUS × HYPERFRAMES</span></div><article class="paper"><div class="meta">Client-ready framework pack · v1.0</div><div class="hyper"><h1>Training Guide: How Staff Should Work With Agents in Discord</h1>
+<h2>The simple idea</h2>
+<p>Agents are helpers inside Discord. They can draft, research, summarize, check, organize, and report. They are not managers and they are not allowed to quietly take risky actions without approval.</p>
+<p>Use them like a trained assistant:</p>
+<ul>
+<li>tell them the job,</li>
+<li>give them the context,</li>
+<li>say what good output looks like,</li>
+<li>check the answer,</li>
+<li>approve only when needed.</li>
+</ul>
+<h2>Where to ask for help</h2>
+<div class="table-wrap"><table><tr><th>Need</th><th>Use this channel</th></tr>
+<tr><td>General AI help</td><td><code>#agent-helpdesk</code></td></tr>
+<tr><td>Manager approval</td><td><code>#approvals</code></td></tr>
+<tr><td>Daily updates</td><td><code>#daily-briefings</code></td></tr>
+<tr><td>Longer reports</td><td><code>#agent-reports</code></td></tr>
+<tr><td>Problems or wrong answers</td><td><code>#incident-log</code></td></tr>
+<tr><td>Department-specific work</td><td><code>#sales-agent</code>, <code>#ops-agent</code>, <code>#marketing-agent</code>, etc.</td></tr></table></div>
+<h2>How to write a good request</h2>
+<p>Use this format:</p>
+<pre><code class="language-text">@AgentName
+Goal: what you want done
+Context: what the agent needs to know
+Output: format you want back
+Deadline: when you need it
+Limits: what not to do</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">@Research Agent
+Goal: Find 5 local competitors offering emergency plumbing services.
+Context: We operate in Melbourne's south-east and want public website examples only.
+Output: Table with business name, website, services, pricing signals, and notes.
+Deadline: Today 3pm.
+Limits: Do not contact anyone. Do not use private data.</code></pre>
+<h2>Good request examples</h2>
+<h3>Drafting</h3>
+<pre><code class="language-text">@Admin Agent
+Goal: Draft a polite follow-up email to a customer who has not replied to our quote.
+Context: Quote was sent 5 days ago. We want friendly, not pushy.
+Output: 2 versions: short SMS-style and full email.
+Limits: Draft only. Do not send.</code></pre>
+<h3>Summarising</h3>
+<pre><code class="language-text">@Reporting Agent
+Goal: Summarise the uploaded operations notes.
+Output: 5 bullet executive summary, blockers, and next actions.
+Limits: If anything is unclear, ask before assuming.</code></pre>
+<h3>Checking</h3>
+<pre><code class="language-text">@Coordinator Agent
+Goal: Check this SOP draft for missing steps.
+Context: It is for new admin staff.
+Output: List gaps, risky assumptions, and recommended edits.</code></pre>
+<h3>Research</h3>
+<pre><code class="language-text">@Research Agent
+Goal: Compare three scheduling tools for a 12-person service business.
+Output: Table with pricing, key features, limitations, and recommended choice.
+Limits: Use public sources and include links.</code></pre>
+<h2>What agents should not do without approval</h2>
+<p>Agents must not independently:</p>
+<ul>
+<li>email customers,</li>
+<li>post publicly,</li>
+<li>change pricing,</li>
+<li>delete files,</li>
+<li>edit financial, HR, payroll, or legal records,</li>
+<li>invite new users,</li>
+<li>change Discord permissions,</li>
+<li>spend money,</li>
+<li>export customer data,</li>
+<li>make promises to clients or suppliers.</li>
+</ul>
+<p>If you want an agent to do something sensitive, use <code>#approvals</code>.</p>
+<h2>How approvals work</h2>
+<p>Approvals need to be specific.</p>
+<p>Use this format:</p>
+<pre><code class="language-text">APPROVED: [agent/action] for [scope] until [time/window]. Approved by [name].</code></pre>
+<p>Good approval:</p>
+<pre><code class="language-text">APPROVED: Admin Agent may draft a follow-up email for Quote #1042 and post it here for review today. Approved by Sarah.</code></pre>
+<p>Bad approval:</p>
+<pre><code class="language-text">Yeah that's fine.</code></pre>
+<p>Why bad? It does not say what is approved, for how long, or who approved it.</p>
+<h2>How to review an agent answer</h2>
+<p>Before using an answer, check:</p>
+<ul>
+<li>does it match the request,</li>
+<li>did it invent anything,</li>
+<li>are sources included where needed,</li>
+<li>is the tone suitable for customers/staff,</li>
+<li>does it need manager approval,</li>
+<li>did it follow the stated limits.</li>
+</ul>
+<p>If something is wrong, correct it directly:</p>
+<pre><code class="language-text">That is too formal. Rewrite in a warmer tone and keep it under 120 words.</code></pre>
+<p>or:</p>
+<pre><code class="language-text">You assumed we offer same-day delivery. Remove that and ask me if timing is needed.</code></pre>
+<h2>How to report problems</h2>
+<p>Use <code>#incident-log</code> if:</p>
+<ul>
+<li>an agent gives unsafe advice,</li>
+<li>an agent can see something it should not,</li>
+<li>an agent refuses a request that should be allowed,</li>
+<li>an agent repeats wrong information,</li>
+<li>a user accidentally shares sensitive data,</li>
+<li>the bot is offline or behaving oddly.</li>
+</ul>
+<p>Incident report template:</p>
+<pre><code class="language-text">Issue:
+Channel:
+Agent:
+What happened:
+What should have happened:
+Urgency:
+Screenshot/link if available:</code></pre>
+<h2>Staff do and don’t list</h2>
+<h3>Do</h3>
+<ul>
+<li>Use clear goals.</li>
+<li>Give enough context.</li>
+<li>Ask for drafts, tables, summaries, and checklists.</li>
+<li>Keep sensitive work in the right channel.</li>
+<li>Ask the agent to explain uncertainty.</li>
+<li>Tag a manager for approvals.</li>
+<li>Report problems early.</li>
+</ul>
+<h3>Don’t</h3>
+<ul>
+<li>Paste passwords, credit card details, or private HR/medical data.</li>
+<li>Ask agents to bypass permissions.</li>
+<li>Treat outputs as automatically correct.</li>
+<li>Tell agents to contact customers unless the workflow allows it.</li>
+<li>Use private DMs for business-critical agent work unless approved.</li>
+<li>Change roles/permissions without the maintainer.</li>
+</ul>
+<h2>First training exercises</h2>
+<p>During staff training, complete these exercises:</p>
+<ol>
+<li>Ask the Coordinator Agent what it can help with.</li>
+<li>Ask the Research Agent for a public-source competitor summary.</li>
+<li>Ask the Admin Agent to draft an internal email.</li>
+<li>Ask Reporting Agent to summarize a short note.</li>
+<li>Try a request that should require approval.</li>
+<li>Practice writing a correct approval message.</li>
+<li>Report a mock issue in <code>#incident-log</code>.</li>
+</ol>
+<h2>Quick reference card</h2>
+<pre><code class="language-text">Good prompt = Goal + Context + Output + Deadline + Limits
+Sensitive action = ask in #approvals
+Problem = report in #incident-log
+External action = draft first, approve second
+Trust = receipts, sources, and human review</code></pre></div><div class="footer">Prepared by Michael Costea · michaelcostea.com · Business Agent Harness Pack</div></article></section></main></body></html>

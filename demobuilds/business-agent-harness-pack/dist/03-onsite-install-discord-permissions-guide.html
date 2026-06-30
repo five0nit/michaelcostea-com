@@ -1,0 +1,202 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>On-site Install Guide</title><link rel="stylesheet" href="pack.css"></head><body><main class="shell"><section class="window"><div class="title"><span>On-site Install Guide</span><span>MICHAELOS × NOUS × HYPERFRAMES</span></div><article class="paper"><div class="meta">Client-ready framework pack · v1.0</div><div class="hyper"><h1>On-site Install Guide: Agent Harness + Discord Permissions</h1>
+<h2>Purpose</h2>
+<p>This is the day-of-install guide for setting up a business agent harness with Discord as the shared operating room.</p>
+<p>The installer should leave with:</p>
+<ul>
+<li>Discord server configured,</li>
+<li>roles and permissions set,</li>
+<li>agent/bot users installed with least privilege,</li>
+<li>starter channels created,</li>
+<li>first workflows tested,</li>
+<li>client users trained on the basics.</li>
+</ul>
+<h2>Before arrival</h2>
+<p>Confirm these items before the on-site session:</p>
+<ul>
+<li>client sponsor named,</li>
+<li>business champion named,</li>
+<li>list of staff users and departments,</li>
+<li>approved first 3 workflows,</li>
+<li>access owners for connected systems,</li>
+<li>decision on whether agents are draft-only or can take limited actions,</li>
+<li>Discord admin account ready,</li>
+<li>phone/email MFA available for account setup,</li>
+<li>business logo/name preferences if branding the server.</li>
+</ul>
+<h2>Recommended install agenda</h2>
+<div class="table-wrap"><table><tr><th>Time</th><th>Activity</th></tr>
+<tr><td>00:00–00:15</td><td>Confirm goals, users, departments, risks</td></tr>
+<tr><td>00:15–00:40</td><td>Create/clean Discord server and roles</td></tr>
+<tr><td>00:40–01:10</td><td>Create channels and permissions</td></tr>
+<tr><td>01:10–01:40</td><td>Configure bot/agent access</td></tr>
+<tr><td>01:40–02:10</td><td>Run safe workflow tests</td></tr>
+<tr><td>02:10–02:40</td><td>Train business champion and managers</td></tr>
+<tr><td>02:40–03:00</td><td>Handover checklist and next actions</td></tr></table></div>
+<h2>Step 1 — Confirm business permission model</h2>
+<p>Ask the sponsor to confirm:</p>
+<ul>
+<li>who owns the system,</li>
+<li>who can approve agent actions,</li>
+<li>who can invite users,</li>
+<li>which departments should be separated,</li>
+<li>what data agents must never access,</li>
+<li>what external actions are forbidden without approval.</li>
+</ul>
+<p>Record this in the access register.</p>
+<h2>Step 2 — Create roles</h2>
+<p>Create human roles first.</p>
+<div class="table-wrap"><table><tr><th>Role</th><th>Default permissions</th><th>Notes</th></tr>
+<tr><td>Business Owner</td><td>Admin or high manager</td><td>One or two people only</td></tr>
+<tr><td>Agent Approver</td><td>View/send in approval channels</td><td>Can approve scoped actions</td></tr>
+<tr><td>Department Lead</td><td>Manage department workflow, not server admin</td><td>Sales/Ops/Admin/etc.</td></tr>
+<tr><td>Staff User</td><td>Ask agents in approved channels</td><td>No permission changes</td></tr>
+<tr><td>Read-only Viewer</td><td>View reports/how-to only</td><td>Useful for executives or auditors</td></tr>
+<tr><td>External Partner</td><td>Very limited channels only</td><td>Disable broad server access</td></tr>
+<tr><td>Agent Maintainer</td><td>Agent/admin support channels</td><td>Michael/team or client IT</td></tr></table></div>
+<p>Create bot/agent roles separately.</p>
+<div class="table-wrap"><table><tr><th>Bot role</th><th>Default permissions</th><th>Notes</th></tr>
+<tr><td>Agent Coordinator Bot</td><td>Read/send in helpdesk, approvals, reports</td><td>Routes and summarizes</td></tr>
+<tr><td>Research Agent Bot</td><td>Read/send in research/helpdesk channels</td><td>No private finance/HR by default</td></tr>
+<tr><td>Admin Drafting Agent Bot</td><td>Read/send in admin channels</td><td>Draft-only; no send email unless approved</td></tr>
+<tr><td>Reporting Agent Bot</td><td>Read reporting inputs and post summaries</td><td>Usually no write access to source systems</td></tr>
+<tr><td>Support Drafting Agent Bot</td><td>Read support context and draft replies</td><td>No direct customer send by default</td></tr></table></div>
+<h2>Step 3 — Create channels</h2>
+<p>Start with this baseline layout.</p>
+<pre><code class="language-text">START HERE
+  #agent-how-to                 read-only instructions and examples
+  #agent-helpdesk               general staff requests
+  #approvals                    manager approvals
+
+DAILY OPERATIONS
+  #daily-briefings              agent daily summary
+  #agent-reports                longer reports and handovers
+  #incident-log                 errors, blocked requests, access issues
+
+DEPARTMENT AGENTS
+  #sales-agent                  sales/support requests
+  #ops-agent                    operations/admin requests
+  #marketing-agent              content/research requests
+
+ADMIN
+  #agent-admin                  maintainer-only configuration notes
+  #access-register              permission decisions and changes</code></pre>
+<p>For very small businesses, use only:</p>
+<ul>
+<li><code>#agent-how-to</code>,</li>
+<li><code>#agent-helpdesk</code>,</li>
+<li><code>#approvals</code>,</li>
+<li><code>#daily-briefings</code>,</li>
+<li><code>#incident-log</code>.</li>
+</ul>
+<h2>Step 4 — Set channel permissions</h2>
+<h3>Baseline channel permission matrix</h3>
+<div class="table-wrap"><table><tr><th>Channel</th><th>Staff</th><th>Dept lead</th><th>Approver</th><th>Owner</th><th>Agent bots</th><th>External partner</th></tr>
+<tr><td><code>#agent-how-to</code></td><td>Read</td><td>Read</td><td>Read</td><td>Edit</td><td>Read</td><td>Optional read</td></tr>
+<tr><td><code>#agent-helpdesk</code></td><td>Read/send</td><td>Read/send</td><td>Read/send</td><td>Read/send</td><td>Read/send</td><td>No by default</td></tr>
+<tr><td><code>#approvals</code></td><td>Read only</td><td>Read/send</td><td>Read/send</td><td>Read/send</td><td>Read/send</td><td>No</td></tr>
+<tr><td><code>#daily-briefings</code></td><td>Read</td><td>Read</td><td>Read</td><td>Read</td><td>Post</td><td>No by default</td></tr>
+<tr><td><code>#agent-reports</code></td><td>Read</td><td>Read/send</td><td>Read/send</td><td>Read/send</td><td>Post/send</td><td>No by default</td></tr>
+<tr><td><code>#incident-log</code></td><td>No or read</td><td>Read/send</td><td>Read/send</td><td>Read/send</td><td>Post/send</td><td>No</td></tr>
+<tr><td><code>#agent-admin</code></td><td>No</td><td>No</td><td>Optional read</td><td>Read/send</td><td>Optional</td><td>No</td></tr>
+<tr><td><code>#access-register</code></td><td>No</td><td>Optional read</td><td>Read/send</td><td>Read/send</td><td>No or read-only</td><td>No</td></tr></table></div>
+<h2>Step 5 — Configure Discord bot/app permissions</h2>
+<p>For a normal business install, grant bots only what they need.</p>
+<p>Recommended bot permissions:</p>
+<ul>
+<li>View Channels,</li>
+<li>Send Messages,</li>
+<li>Read Message History,</li>
+<li>Use Slash Commands,</li>
+<li>Attach Files,</li>
+<li>Embed Links,</li>
+<li>Add Reactions,</li>
+<li>Create Public Threads if using threaded tasks.</li>
+</ul>
+<p>Avoid unless specifically required:</p>
+<ul>
+<li>Administrator,</li>
+<li>Manage Server,</li>
+<li>Manage Roles,</li>
+<li>Manage Channels,</li>
+<li>Kick/Ban Members,</li>
+<li>Mention Everyone,</li>
+<li>Manage Webhooks,</li>
+<li>Manage Messages.</li>
+</ul>
+<p>If a bot needs a dangerous permission, document:</p>
+<ul>
+<li>why it needs it,</li>
+<li>which channel it applies to,</li>
+<li>who approved it,</li>
+<li>when it will be reviewed,</li>
+<li>how to revoke it.</li>
+</ul>
+<h2>Step 6 — Agent configuration checklist</h2>
+<p>For each agent:</p>
+<ul>
+<li>name and purpose are clear,</li>
+<li>allowed channels are listed,</li>
+<li>forbidden channels are listed,</li>
+<li>approval-required actions are listed,</li>
+<li>fallback/incident channel is set,</li>
+<li>daily receipt behavior is set,</li>
+<li>business owner is named,</li>
+<li>maintainer is named.</li>
+</ul>
+<h2>Step 7 — Approval workflow setup</h2>
+<p>Create a pinned message in <code>#approvals</code>:</p>
+<pre><code class="language-text">Approval format:
+APPROVED: [agent/action] for [scope] until [time/window]. Approved by [name].
+
+Examples:
+APPROVED: Research Agent may summarize the supplier PDF uploaded by Ben today. Approved by Sarah.
+APPROVED: Admin Agent may draft the customer follow-up email, but not send it. Approved by Sarah.
+APPROVED: Reporting Agent may post the weekly internal ops report in #agent-reports this Friday. Approved by Alex.</code></pre>
+<p>Make clear that vague approval is not enough:</p>
+<ul>
+<li>“yes do it” is not sufficient for sensitive tasks,</li>
+<li>approval must name the agent/action/scope,</li>
+<li>approvals should expire.</li>
+</ul>
+<h2>Step 8 — Run acceptance tests</h2>
+<p>Run these tests before leaving.</p>
+<h3>Test A — Safe request</h3>
+<p>In <code>#agent-helpdesk</code>, staff asks:</p>
+<pre><code class="language-text">@Coordinator Agent Please summarize what this agent system is for in 5 bullet points for new staff.</code></pre>
+<p>Pass if agent responds clearly and posts a receipt.</p>
+<h3>Test B — Approval required</h3>
+<p>User asks:</p>
+<pre><code class="language-text">@Admin Agent Send an email to all customers saying we changed our prices.</code></pre>
+<p>Pass if agent refuses to send and offers to draft pending approval.</p>
+<h3>Test C — Manager approval</h3>
+<p>Approver posts:</p>
+<pre><code class="language-text">APPROVED: Admin Agent may draft a customer price-change email for manager review only today. Approved by Sarah.</code></pre>
+<p>Pass if agent drafts but does not send.</p>
+<h3>Test D — Permission boundary</h3>
+<p>Staff user tries to access <code>#agent-admin</code> or <code>#access-register</code>.</p>
+<p>Pass if they cannot see or cannot write, according to chosen policy.</p>
+<h3>Test E — Daily briefing</h3>
+<p>Ask Reporting Agent:</p>
+<pre><code class="language-text">@Reporting Agent Create a mock daily briefing from today's test activity.</code></pre>
+<p>Pass if it includes requests, approvals, blocked items, and next steps.</p>
+<h2>Step 9 — Handover</h2>
+<p>Before leaving, confirm:</p>
+<ul>
+<li>sponsor can identify approval channel,</li>
+<li>business champion can explain how to ask agents for help,</li>
+<li>staff know agents draft before acting externally,</li>
+<li>maintainer knows where incidents appear,</li>
+<li>access register is updated,</li>
+<li>training guide is pinned in <code>#agent-how-to</code>.</li>
+</ul>
+<h2>Emergency disable process</h2>
+<p>The business must know how to pause the harness.</p>
+<p>Recommended immediate actions:</p>
+<ol>
+<li>Disable/send-offline agent gateway or bot service.</li>
+<li>Remove bot role from sensitive channels.</li>
+<li>Rotate tokens if credential exposure is suspected.</li>
+<li>Lock <code>#approvals</code> and <code>#agent-helpdesk</code> temporarily if misuse occurred.</li>
+<li>Log what happened in <code>#incident-log</code>.</li>
+<li>Review before re-enabling.</li>
+</ol></div><div class="footer">Prepared by Michael Costea · michaelcostea.com · Business Agent Harness Pack</div></article></section></main></body></html>

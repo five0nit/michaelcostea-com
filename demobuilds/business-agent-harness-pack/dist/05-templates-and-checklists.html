@@ -1,0 +1,81 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Templates &amp; Checklists</title><link rel="stylesheet" href="pack.css"></head><body><main class="shell"><section class="window"><div class="title"><span>Templates &amp; Checklists</span><span>MICHAELOS × NOUS × HYPERFRAMES</span></div><article class="paper"><div class="meta">Client-ready framework pack · v1.0</div><div class="hyper"><h1>Templates and Checklists</h1>
+<h2>Discovery worksheet</h2>
+<div class="table-wrap"><table><tr><th>Question</th><th>Answer</th></tr>
+<tr><td>Business name</td><td></td></tr>
+<tr><td>Sponsor</td><td></td></tr>
+<tr><td>Business champion</td><td></td></tr>
+<tr><td>Departments included</td><td></td></tr>
+<tr><td>First 3 workflows</td><td></td></tr>
+<tr><td>Sensitive data categories</td><td></td></tr>
+<tr><td>Tools to connect later</td><td></td></tr>
+<tr><td>Who can approve actions</td><td></td></tr>
+<tr><td>Who can invite users</td><td></td></tr>
+<tr><td>Who owns incidents</td><td></td></tr></table></div>
+<h2>Access register</h2>
+<div class="table-wrap"><table><tr><th>System/channel</th><th>Owner</th><th>Users</th><th>Agents</th><th>Access level</th><th>Approval required</th><th>Review date</th></tr>
+<tr><td>Discord <code>#agent-helpdesk</code></td><td></td><td>Staff</td><td>Coordinator</td><td>Read/send</td><td>No</td><td></td></tr>
+<tr><td>Discord <code>#approvals</code></td><td></td><td>Approvers</td><td>Coordinator</td><td>Read/send</td><td>Yes</td><td></td></tr>
+<tr><td>Reporting folder</td><td></td><td>Managers</td><td>Reporting Agent</td><td>Read</td><td>For external publish</td><td></td></tr></table></div>
+<h2>Agent card</h2>
+<pre><code class="language-yaml">agent_name:
+business_owner:
+maintainer:
+purpose:
+allowed_channels:
+allowed_tools:
+forbidden_channels:
+forbidden_actions:
+approval_required_for:
+receipt_channel:
+incident_channel:
+review_date:</code></pre>
+<h2>Channel map</h2>
+<div class="table-wrap"><table><tr><th>Channel</th><th>Purpose</th><th>Human roles</th><th>Bot roles</th><th>Notes</th></tr>
+<tr><td><code>#agent-how-to</code></td><td>User guide</td><td>Staff read</td><td>Bots read</td><td>Pin training guide</td></tr>
+<tr><td><code>#agent-helpdesk</code></td><td>Requests</td><td>Staff send</td><td>Coordinator send</td><td>Main entry point</td></tr>
+<tr><td><code>#approvals</code></td><td>Approvals</td><td>Approvers send</td><td>Bots read/send</td><td>Use approval phrase</td></tr>
+<tr><td><code>#daily-briefings</code></td><td>Daily summary</td><td>Staff read</td><td>Reporting posts</td><td>Read-only for most staff</td></tr>
+<tr><td><code>#incident-log</code></td><td>Problems</td><td>Leads/maintainers</td><td>Bots post</td><td>Never hide failures</td></tr></table></div>
+<h2>Approval template</h2>
+<pre><code class="language-text">APPROVED: [agent/action] for [scope] until [time/window]. Approved by [name].</code></pre>
+<h2>Request template</h2>
+<pre><code class="language-text">@AgentName
+Goal:
+Context:
+Output:
+Deadline:
+Limits:</code></pre>
+<h2>Daily briefing template</h2>
+<pre><code class="language-text">Daily Agent Briefing — [Date]
+
+1. Requests handled
+2. Drafts/reports created
+3. Approvals requested
+4. Blocked or refused actions
+5. Incidents/errors
+6. Recommended next actions</code></pre>
+<h2>Acceptance checklist</h2>
+<ul class="checklist">
+<li class="">Roles created.</li>
+<li class="">Channels created.</li>
+<li class="">Staff users assigned roles.</li>
+<li class="">Bot users assigned bot roles.</li>
+<li class="">Sensitive channels hidden from staff/bots without need.</li>
+<li class="">Approval format pinned.</li>
+<li class="">Training guide pinned.</li>
+<li class="">Safe request test passed.</li>
+<li class="">Approval-required refusal test passed.</li>
+<li class="">Manager approval test passed.</li>
+<li class="">Daily briefing test passed.</li>
+<li class="">Incident log test passed.</li>
+<li class="">Access register complete.</li>
+<li class="">Disable/revoke process explained.</li>
+</ul>
+<h2>Business-specific training agenda</h2>
+<div class="table-wrap"><table><tr><th>Segment</th><th>Time</th><th>Outcome</th></tr>
+<tr><td>What agents are / are not</td><td>10 min</td><td>Staff understand boundaries</td></tr>
+<tr><td>Where to ask</td><td>10 min</td><td>Staff know channels</td></tr>
+<tr><td>Prompt practice</td><td>20 min</td><td>Staff can write useful requests</td></tr>
+<tr><td>Approval practice</td><td>15 min</td><td>Managers can approve safely</td></tr>
+<tr><td>Incident practice</td><td>10 min</td><td>Everyone knows how to report issues</td></tr>
+<tr><td>First real workflows</td><td>20 min</td><td>Business leaves with practical examples</td></tr></table></div></div><div class="footer">Prepared by Michael Costea · michaelcostea.com · Business Agent Harness Pack</div></article></section></main></body></html>

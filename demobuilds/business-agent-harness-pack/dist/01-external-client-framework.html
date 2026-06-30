@@ -1,0 +1,103 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>External Client Framework</title><link rel="stylesheet" href="pack.css"></head><body><main class="shell"><section class="window"><div class="title"><span>External Client Framework</span><span>MICHAELOS × NOUS × HYPERFRAMES</span></div><article class="paper"><div class="meta">Client-ready framework pack · v1.0</div><div class="hyper"><h1>Business Agent Harness Framework</h1>
+<h2>Executive summary</h2>
+<p>A Business Agent Harness gives a company a safe way to use AI agents inside normal work.</p>
+<p>Instead of staff privately experimenting with random AI tools, the business gets a shared operating room where:</p>
+<ul>
+<li>staff ask for help in approved Discord channels,</li>
+<li>agents respond within defined permissions,</li>
+<li>managers can see what happened,</li>
+<li>approvals are visible before risky actions,</li>
+<li>daily summaries and receipts create accountability.</li>
+</ul>
+<p>The goal is not to replace staff. The goal is to remove bottlenecks, reduce repetitive admin, and give people a reliable support layer for research, drafting, checking, reporting, and operational follow-up.</p>
+<h2>What the harness includes</h2>
+<div class="table-wrap"><table><tr><th>Layer</th><th>What it does</th><th>Client benefit</th></tr>
+<tr><td>Discord operating room</td><td>Shared channels for requests, approvals, reports, and support</td><td>Everyone can see the work instead of losing context in private chats</td></tr>
+<tr><td>Agent roster</td><td>Named agents with defined jobs and limits</td><td>Staff know which agent to ask and what it can safely do</td></tr>
+<tr><td>Permission model</td><td>Role-based access for users and bots</td><td>Agents only see and do what they need</td></tr>
+<tr><td>Human approval gates</td><td>Clear rules before external, financial, customer, or destructive actions</td><td>Control stays with the business</td></tr>
+<tr><td>Memory and receipts</td><td>Summaries, task logs, decision records, and handovers</td><td>The system improves without becoming a black box</td></tr>
+<tr><td>Monitoring</td><td>Daily reports, error channels, and escalation paths</td><td>Problems are visible early</td></tr></table></div>
+<h2>Example business setup</h2>
+<p>For most small and mid-sized businesses, start with five channels:</p>
+<div class="table-wrap"><table><tr><th>Channel</th><th>Purpose</th><th>Who can use it</th></tr>
+<tr><td><code>#agent-helpdesk</code></td><td>General staff requests</td><td>All approved staff</td></tr>
+<tr><td><code>#approvals</code></td><td>Manager sign-off before sensitive actions</td><td>Managers + agents</td></tr>
+<tr><td><code>#daily-briefings</code></td><td>Daily summary of what happened</td><td>Staff read, agents post</td></tr>
+<tr><td><code>#agent-reports</code></td><td>Longer reports, audits, and handovers</td><td>Managers + operators</td></tr>
+<tr><td><code>#incident-log</code></td><td>Errors, blocked actions, security concerns</td><td>Managers + maintainer</td></tr></table></div>
+<p>Then add department channels only when needed, such as <code>#sales-agent</code>, <code>#ops-agent</code>, <code>#admin-agent</code>, or <code>#marketing-agent</code>.</p>
+<h2>Example agent roster</h2>
+<div class="table-wrap"><table><tr><th>Agent</th><th>Best for</th><th>Should not do without approval</th></tr>
+<tr><td>Coordinator Agent</td><td>Routes requests, summarizes work, checks status</td><td>Make public commitments or change permissions</td></tr>
+<tr><td>Research Agent</td><td>Competitor research, supplier lookup, source summaries</td><td>Contact vendors, scrape private data, cite weak sources as fact</td></tr>
+<tr><td>Admin Agent</td><td>Draft emails, SOPs, forms, checklists</td><td>Send email, delete records, access payroll/HR without explicit scope</td></tr>
+<tr><td>Reporting Agent</td><td>Daily/weekly reports, metrics summaries</td><td>Change dashboards or publish metrics externally</td></tr>
+<tr><td>Customer Support Drafting Agent</td><td>Draft replies and classify themes</td><td>Send final customer responses unless approved</td></tr></table></div>
+<h2>Permission philosophy: small keyrings</h2>
+<p>A safe business agent should have the smallest set of keys needed for its job.</p>
+<p>Good permission design:</p>
+<ul>
+<li>read-only before write access,</li>
+<li>one department before whole company access,</li>
+<li>draft-only before send/publish authority,</li>
+<li>manager approval before customer, payment, legal, HR, or public actions,</li>
+<li>separate owner/admin permissions from day-to-day user permissions.</li>
+</ul>
+<h2>Rollout phases</h2>
+<div class="table-wrap"><table><tr><th>Phase</th><th>Duration</th><th>Goal</th><th>Success sign</th></tr>
+<tr><td>0. Discovery</td><td>Before install</td><td>Map teams, tools, risks, and use cases</td><td>Clear first 3 workflows chosen</td></tr>
+<tr><td>1. Safe room</td><td>Day 1</td><td>Discord server, roles, channels, agents, approvals</td><td>Staff can ask and receive safe help</td></tr>
+<tr><td>2. Assisted workflows</td><td>Week 1–2</td><td>Agents draft, research, summarize, report</td><td>Managers see useful receipts</td></tr>
+<tr><td>3. Limited tool access</td><td>Week 2–4</td><td>Carefully connect business tools</td><td>No blind automation; approvals work</td></tr>
+<tr><td>4. Operating rhythm</td><td>Month 2+</td><td>Daily summaries, weekly tuning, training</td><td>Staff trust the system and use it naturally</td></tr></table></div>
+<h2>What actions require approval</h2>
+<p>Always require a named human approval before an agent:</p>
+<ul>
+<li>sends emails or customer replies,</li>
+<li>posts publicly,</li>
+<li>changes website/live systems,</li>
+<li>modifies financial, legal, HR, or payroll records,</li>
+<li>invites users or changes permissions,</li>
+<li>deletes data,</li>
+<li>buys software or spends money,</li>
+<li>exports customer data,</li>
+<li>contacts external suppliers/customers.</li>
+</ul>
+<h2>Client responsibilities</h2>
+<p>The business must provide:</p>
+<ul>
+<li>one business owner or executive sponsor,</li>
+<li>one operational champion,</li>
+<li>list of users and departments,</li>
+<li>approved first workflows,</li>
+<li>access owner for each business system,</li>
+<li>permission decisions before tools are connected,</li>
+<li>staff availability for training.</li>
+</ul>
+<h2>Deliverables from the installation</h2>
+<p>By the end of the install, the client should have:</p>
+<ul>
+<li>a configured Discord server,</li>
+<li>staff roles and manager roles,</li>
+<li>agent/bot roles and channels,</li>
+<li>an approval workflow,</li>
+<li>example prompts and request templates,</li>
+<li>daily briefing/report channels,</li>
+<li>a first agent roster,</li>
+<li>acceptance test results,</li>
+<li>training guide for staff.</li>
+</ul>
+<h2>Success metrics</h2>
+<p>Track early value with simple indicators:</p>
+<ul>
+<li>requests handled per week,</li>
+<li>staff time saved on repetitive drafting/research/admin,</li>
+<li>number of tasks requiring manager approval,</li>
+<li>number of blocked unsafe requests,</li>
+<li>average response time,</li>
+<li>top recurring request types,</li>
+<li>unresolved incidents or access blockers.</li>
+</ul>
+<h2>Plain-English safety promise</h2>
+<p>Agents can help the business move faster, but they should not become invisible employees with unlimited access. The harness keeps AI work visible, reviewable, and permissioned.</p></div><div class="footer">Prepared by Michael Costea · michaelcostea.com · Business Agent Harness Pack</div></article></section></main></body></html>
