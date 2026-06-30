@@ -1147,6 +1147,13 @@ async function initIntroDeckPreview(){
 async function initAgenticFrameworkDeckPreview(){
   const slide = document.getElementById('agenticDeckSlide');
   const counter = document.getElementById('agenticDeckCounter');
+  const fullOverlay = document.getElementById('agenticDeckFullscreen');
+  const fullSlide = document.getElementById('agenticFullscreenSlide');
+  const fullCounter = document.getElementById('agenticFullscreenCounter');
+  const fullOpen = document.querySelector('[data-agentic-deck-fullscreen]');
+  const fullPrev = document.querySelector('[data-agentic-full-prev]');
+  const fullNext = document.querySelector('[data-agentic-full-next]');
+  const fullClose = document.querySelector('[data-agentic-full-close]');
   const prev = document.querySelector('[data-agentic-deck-prev]');
   const next = document.querySelector('[data-agentic-deck-next]');
   if(!slide || !counter || !prev || !next) return;
@@ -1154,14 +1161,50 @@ async function initAgenticFrameworkDeckPreview(){
   let current = 1;
   const update = () => {
     const num = String(current).padStart(2, '0');
-    slide.src = `assets/decks/hermes-agentic-framework-session/slide-${num}.png?v=20260630-discord`;
+    const src = `assets/decks/hermes-agentic-framework-session/slide-${num}.png?v=20260630-discord`;
+    slide.src = src;
     slide.alt = `Agentic framework session slide ${current} of ${total}`;
     counter.textContent = `Slide ${current}/${total}`;
     prev.disabled = current === 1;
     next.disabled = current === total;
+    if(fullSlide){
+      fullSlide.src = src;
+      fullSlide.alt = `Agentic framework session fullscreen slide ${current} of ${total}`;
+    }
+    if(fullCounter) fullCounter.textContent = `Slide ${current}/${total}`;
+    if(fullPrev) fullPrev.disabled = current === 1;
+    if(fullNext) fullNext.disabled = current === total;
+  };
+  const openFullscreen = () => {
+    if(!fullOverlay) return;
+    update();
+    fullOverlay.classList.add('open');
+    fullOverlay.setAttribute('aria-hidden','false');
+    document.body.classList.add('deck-fullscreen-open');
+    if(fullOverlay.requestFullscreen){ fullOverlay.requestFullscreen().catch(() => {}); }
+  };
+  const closeFullscreen = () => {
+    if(!fullOverlay) return;
+    fullOverlay.classList.remove('open');
+    fullOverlay.setAttribute('aria-hidden','true');
+    document.body.classList.remove('deck-fullscreen-open');
+    if(document.fullscreenElement === fullOverlay && document.exitFullscreen){ document.exitFullscreen().catch(() => {}); }
   };
   prev.addEventListener('click', () => { current = Math.max(1, current - 1); update(); });
   next.addEventListener('click', () => { current = Math.min(total, current + 1); update(); });
+  if(fullOpen) fullOpen.addEventListener('click', openFullscreen);
+  if(fullClose) fullClose.addEventListener('click', closeFullscreen);
+  if(fullPrev) fullPrev.addEventListener('click', () => { current = Math.max(1, current - 1); update(); });
+  if(fullNext) fullNext.addEventListener('click', () => { current = Math.min(total, current + 1); update(); });
+  if(fullOverlay){
+    fullOverlay.addEventListener('click', (e) => { if(e.target === fullOverlay) closeFullscreen(); });
+  }
+  document.addEventListener('keydown', (e) => {
+    if(!fullOverlay?.classList.contains('open')) return;
+    if(e.key === 'Escape') closeFullscreen();
+    if(e.key === 'ArrowLeft'){ current = Math.max(1, current - 1); update(); }
+    if(e.key === 'ArrowRight'){ current = Math.min(total, current + 1); update(); }
+  });
   document.querySelectorAll('[data-open="agenticFrameworkDeckWindow"]').forEach((btn) => {
     btn.addEventListener('click', () => { current = 1; window.setTimeout(update, 0); });
   });

@@ -501,3 +501,77 @@ body.public-preview::before{
   }
 }
 
+/* Agentic deck true fullscreen overlay */
+.public-preview .deck-fullscreen-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:20000;
+  width:100vw;
+  height:100dvh;
+  background:#050505;
+  color:#fff;
+  padding:0;
+}
+.public-preview .deck-fullscreen-overlay.open{
+  display:block;
+}
+.public-preview .deck-fullscreen-stage{
+  width:100vw;
+  height:100dvh;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr);
+  gap:0;
+  background:#050505;
+}
+.public-preview .deck-fullscreen-toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:8px;
+  background:#c0c0c0;
+  border-bottom:3px solid #000;
+  color:#000;
+  z-index:2;
+}
+.public-preview .deck-fullscreen-toolbar strong{
+  min-width:92px;
+  text-align:center;
+  color:#000080;
+  font:900 13px/16px "IBM Plex Mono","Courier New",monospace;
+}
+.public-preview .deck-fullscreen-stage img{
+  display:block;
+  width:100vw;
+  height:calc(100dvh - 54px);
+  max-width:100vw;
+  max-height:calc(100dvh - 54px);
+  object-fit:contain;
+  background:#050505;
+  margin:0 auto;
+}
+body.deck-fullscreen-open{
+  overflow:hidden!important;
+}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview .deck-fullscreen-toolbar{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    padding:6px;
+  }
+  .public-preview .deck-fullscreen-toolbar strong{
+    grid-column:1/-1;
+    order:-1;
+    width:100%;
+  }
+  .public-preview .deck-fullscreen-stage img{
+    width:100vw;
+    height:auto;
+    max-height:calc(100dvh - 128px);
+    align-self:start;
+    object-fit:contain;
+  }
+}

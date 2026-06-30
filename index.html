@@ -42,7 +42,7 @@
   </script>
   <link rel="stylesheet" href="styles.css?v=20260612-self-improve-1" />
   <link rel="stylesheet" href="assets/pixel-pack/button-kit.css?v=20260609-readable-icons-1" />
-  <link rel="stylesheet" href="assets/css/nous-michael-live.css?v=20260630-mobile-frame-startbar" />
+  <link rel="stylesheet" href="assets/css/nous-michael-live.css?v=20260630-deck-fullscreen" />
 </head>
 <body class="public-preview ux-preview-page">
   <a class="skip-link" href="#readerWindow">Skip to portfolio content</a>
@@ -455,7 +455,7 @@
               <p>A MichaelOS × Nous-zine presentation explaining Hermes, safe agent setup, shared memory, client rollout, monitoring, and Discord server comms for teams.</p>
               <div class="kb-command-actions">
                 <button class="ui-btn btn icon-files" type="button" data-open="agenticFrameworkDeckWindow" onclick="openWindow('agenticFrameworkDeckWindow')">Open Deck Preview</button>
-                <a class="ui-btn btn secondary icon-files" href="assets/downloads/hermes-agentic-framework-session-michaelos-nous-style.pdf" download>Download PDF</a>
+                <a class="ui-btn btn secondary icon-files" href="assets/downloads/hermes-agentic-framework-session-michaelos-nous-style.pdf?v=20260630-discord-clean" download="hermes-agentic-framework-session-michaelos-nous-style-clean-20260630.pdf">Download PDF</a>
               </div>
             </div>
             <figure class="kb-command-art"><img src="assets/decks/hermes-agentic-framework-session/slide-11.png?v=20260630-discord" alt="Preview slide showing Discord as a team operating room for agentic workflows" loading="lazy" /></figure>
@@ -754,7 +754,8 @@ Escalate when:
             <button class="ui-btn btn icon-review" type="button" data-agentic-deck-prev>◀ Previous</button>
             <strong id="agenticDeckCounter">Slide 1/26</strong>
             <button class="ui-btn btn icon-journey" type="button" data-agentic-deck-next>Next ▶</button>
-            <a class="ui-btn btn icon-files" href="assets/downloads/hermes-agentic-framework-session-michaelos-nous-style.pdf" download>Download PDF</a>
+            <button class="ui-btn btn secondary icon-workflow" type="button" data-agentic-deck-fullscreen>Fullscreen</button>
+            <a class="ui-btn btn icon-files" href="assets/downloads/hermes-agentic-framework-session-michaelos-nous-style.pdf?v=20260630-discord-clean" download="hermes-agentic-framework-session-michaelos-nous-style-clean-20260630.pdf">Download PDF</a>
             <a class="ui-btn btn secondary icon-files" href="assets/downloads/hermes-agentic-framework-session-michaelos-nous-style.pptx" download>Download PowerPoint</a>
             <a class="ui-btn btn secondary icon-workflow" href="demobuilds/hermes-agentic-framework-session/" target="_blank" rel="noopener">Open full HTML</a>
           </div>
@@ -763,6 +764,19 @@ Escalate when:
           </figure>
           <p class="guide-note"><b>Use this when:</b> someone needs to understand agentic workflows as a real operating layer, not a magic chatbot. The Discord section shows how shared server channels let multiple people openly engage the same agents with visible approvals and receipts.</p>
         </article>
+      </div>
+    </section>
+
+    <section id="agenticDeckFullscreen" class="deck-fullscreen-overlay" aria-label="Agentic framework fullscreen slideshow" aria-hidden="true">
+      <div class="deck-fullscreen-stage">
+        <div class="deck-fullscreen-toolbar" aria-label="Fullscreen deck controls">
+          <button class="ui-btn btn icon-review" type="button" data-agentic-full-prev>◀ Previous</button>
+          <strong id="agenticFullscreenCounter">Slide 1/26</strong>
+          <button class="ui-btn btn icon-journey" type="button" data-agentic-full-next>Next ▶</button>
+          <a class="ui-btn btn icon-files" href="assets/downloads/hermes-agentic-framework-session-michaelos-nous-style.pdf?v=20260630-discord-clean" download="hermes-agentic-framework-session-michaelos-nous-style-clean-20260630.pdf">Download PDF</a>
+          <button class="ui-btn btn secondary" type="button" data-agentic-full-close>Close ✕</button>
+        </div>
+        <img id="agenticFullscreenSlide" src="assets/decks/hermes-agentic-framework-session/slide-01.png?v=20260630-discord" alt="Agentic framework session fullscreen slide 1 of 26" />
       </div>
     </section>
 
@@ -1888,6 +1902,6 @@ openclaw doctor</pre></article>
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260612-self-improve-1"></script>
+  <script src="script.js?v=20260630-deck-fullscreen"></script>
 </body>
 </html>
