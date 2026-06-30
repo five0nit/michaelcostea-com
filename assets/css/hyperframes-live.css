@@ -1,0 +1,204 @@
+/* Hyperframes live layer: nested dimensional frames over current MichaelOS/Nous site. */
+:root{
+  --hf-cyan:#33e8ff;
+  --hf-teal:#00a6a6;
+  --hf-green:#23d160;
+  --hf-amber:#fff4c2;
+  --hf-blue:#000080;
+  --hf-ink:#070707;
+  --hf-paper:#f5ead7;
+  --hf-paper-hot:#fff7e8;
+}
+body.hyperframes-live{
+  background:
+    radial-gradient(circle at 12% 12%,rgba(51,232,255,.22),transparent 26%),
+    radial-gradient(circle at 88% 20%,rgba(35,209,96,.15),transparent 24%),
+    linear-gradient(135deg,#042d55 0%,#064982 48%,#2c76b0 100%)!important;
+}
+.hyperframes-live .main-portfolio-window,
+.hyperframes-live .doc-window.open,
+.hyperframes-live #aiHelpWindow.open,
+.hyperframes-live #agenticFrameworkDeckWindow.open{
+  box-shadow:
+    0 0 0 2px rgba(51,232,255,.5),
+    8px 10px 0 rgba(0,0,0,.74),
+    18px 20px 0 rgba(0,166,166,.25)!important;
+}
+.hyperframes-live .styleguide-welcome,
+.hyperframes-live .document-body,
+.hyperframes-live .deck-preview-body{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+.hyperframes-live .styleguide-welcome::after,
+.hyperframes-live .document-body::after,
+.hyperframes-live .deck-preview-body::after{
+  content:"";
+  position:absolute;
+  inset:12px 10px 14px 14px;
+  z-index:0;
+  pointer-events:none;
+  border:2px solid rgba(0,166,166,.55);
+  box-shadow:
+    5px 5px 0 rgba(0,0,0,.72),
+    -7px -7px 0 rgba(255,244,194,.28),
+    13px 13px 0 rgba(35,209,96,.16);
+  transform:skewY(-.45deg);
+}
+.hyperframes-live .welcome-sidebar,
+.hyperframes-live .welcome-copy,
+.hyperframes-live .welcome-resource-cta,
+.hyperframes-live .brand-promise,
+.hyperframes-live .hero-action-panel,
+.hyperframes-live .feature-card,
+.hyperframes-live .project-card,
+.hyperframes-live .agent-card,
+.hyperframes-live .guide-card,
+.hyperframes-live .resource-card,
+.hyperframes-live .deck-preview-panel,
+.hyperframes-live .mini-content-card,
+.hyperframes-live .resume-block,
+.hyperframes-live .info-card,
+.hyperframes-live .system-card,
+.hyperframes-live .qa-card,
+.hyperframes-live .case-study-card{
+  position:relative;
+  z-index:1;
+  outline:2px solid rgba(51,232,255,.18);
+  outline-offset:4px;
+  box-shadow:
+    4px 4px 0 #111,
+    9px 9px 0 rgba(0,166,166,.28)!important;
+}
+.hyperframes-live .welcome-sidebar::before,
+.hyperframes-live .welcome-copy::before,
+.hyperframes-live .deck-preview-panel::before,
+.hyperframes-live .resource-card::before,
+.hyperframes-live .project-card::before,
+.hyperframes-live .agent-card::before{
+  content:"HYPERFRAME";
+  display:inline-block;
+  margin:0 0 8px;
+  padding:4px 6px;
+  background:#111;
+  color:#fff;
+  border:1px solid var(--hf-cyan);
+  font:900 9px/1 "IBM Plex Mono","Courier New",monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.hyperframes-live .welcome-sidebar::before{content:"HYPERFRAME 01 · NAV SURFACE";}
+.hyperframes-live .welcome-copy::before{content:"HYPERFRAME 02 · FIELD NOTE";}
+.hyperframes-live .deck-preview-panel::before{content:"HYPERFRAME 03 · SLIDESHOW";}
+.hyperframes-live .resource-card::before{content:"RESOURCE FRAME";}
+.hyperframes-live .project-card::before{content:"PROJECT FRAME";}
+.hyperframes-live .agent-card::before{content:"AGENT FRAME";}
+.hyperframes-live .profile-portrait{
+  box-shadow:
+    4px 4px 0 var(--hf-teal),
+    9px 9px 0 rgba(0,0,0,.72)!important;
+}
+.hyperframes-live .big-nav,
+.hyperframes-live .btn,
+.hyperframes-live .download-btn,
+.hyperframes-live .deck-nav button,
+.hyperframes-live .primary-hero-cta{
+  box-shadow:2px 2px 0 #111, 5px 5px 0 rgba(0,166,166,.22)!important;
+}
+.hyperframes-live .ai-cta-nav,
+.hyperframes-live .primary-hero-cta,
+.hyperframes-live .download-btn.primary,
+.hyperframes-live .start-cta{
+  background:linear-gradient(135deg,var(--hf-amber),#fff9d8)!important;
+}
+.hyperframes-live .win-title span::after{
+  content:" // HF";
+  color:#b8ffff;
+  font-weight:900;
+}
+.hyperframes-live .deck-fullscreen-overlay.open::before{
+  content:"HYPERFRAME FULLSCREEN";
+  position:fixed;
+  left:10px;
+  bottom:10px;
+  z-index:5;
+  background:#111;
+  color:#fff;
+  border:2px solid var(--hf-cyan);
+  padding:5px 7px;
+  font:900 10px/1 monospace;
+}
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  body.hyperframes-live::after{
+    top:auto;
+    bottom:52px;
+    right:8px;
+    font-size:8px;
+    opacity:.82;
+  }
+  .hyperframes-live .main-portfolio-window,
+  body.mobile-mode.hyperframes-live #readerWindow.win-window.open{
+    box-shadow:
+      0 0 0 2px rgba(51,232,255,.38),
+      3px 4px 0 rgba(0,0,0,.72),
+      8px 9px 0 rgba(0,166,166,.18)!important;
+  }
+  .hyperframes-live .styleguide-welcome::after,
+  .hyperframes-live .document-body::after,
+  .hyperframes-live .deck-preview-body::after{
+    inset:10px 9px 12px 11px;
+    box-shadow:3px 3px 0 rgba(0,0,0,.55), -4px -4px 0 rgba(255,244,194,.22);
+  }
+  body.mobile-mode.hyperframes-live #readerWindow .welcome-sidebar,
+  body.mobile-mode.hyperframes-live #readerWindow .welcome-copy,
+  .hyperframes-live .welcome-sidebar,
+  .hyperframes-live .welcome-copy{
+    width:calc(100% - 30px)!important;
+    max-width:348px!important;
+    margin:9px auto!important;
+    outline-offset:3px;
+    box-shadow:3px 3px 0 #111, 7px 7px 0 rgba(0,166,166,.22)!important;
+  }
+  body.mobile-mode.hyperframes-live #readerWindow .welcome-sidebar,
+  .hyperframes-live .welcome-sidebar{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  body.mobile-mode.hyperframes-live #readerWindow .profile-portrait,
+  .hyperframes-live .profile-portrait{
+    grid-column:1/-1!important;
+    justify-self:center!important;
+    width:108px!important;
+    height:108px!important;
+  }
+  .hyperframes-live .hero-action-panel,
+  body.mobile-mode.hyperframes-live #readerWindow .hero-action-panel{
+    padding:10px!important;
+    outline-offset:2px;
+  }
+}
+
+/* Transparent CTA image buttons for Hyperframes preview */
+.hyperframes-live #readerWindow .hero-action-panel,
+.hyperframes-live .hero-action-panel{
+  background:transparent!important;
+}
+.hyperframes-live #readerWindow .hero-action-panel .hero-image-cta,
+body.mobile-mode.hyperframes-live #readerWindow .hero-action-panel .hero-image-cta,
+.hyperframes-live .hero-image-cta{
+  background:transparent!important;
+  overflow:visible!important;
+}
+.hyperframes-live #readerWindow .hero-action-panel .hero-image-cta img,
+body.mobile-mode.hyperframes-live #readerWindow .hero-action-panel .hero-image-cta img,
+.hyperframes-live .hero-image-cta img{
+  background:transparent!important;
+  mix-blend-mode:multiply;
+  border-bottom:0!important;
+  box-shadow:none!important;
+}
+.hyperframes-live #readerWindow .hero-action-panel .hero-image-cta::before,
+body.mobile-mode.hyperframes-live #readerWindow .hero-action-panel .hero-image-cta::before,
+.hyperframes-live .hero-image-cta::before{
+  display:none!important;
+}
