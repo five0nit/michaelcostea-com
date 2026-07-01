@@ -55,17 +55,26 @@ must(draftDoc.title.includes('Victoria Rebate API'), 'draft page title should na
 must(draftDoc.querySelector('meta[name="robots"]')?.getAttribute('content').includes('noindex'), 'draft page should be noindex while in draft');
 const draftText = draftDoc.body.textContent.replace(/\s+/g, ' ');
 for (const expected of [
-  'Live draft tester',
+  'API service draft',
+  'Always-current rebate payout API',
+  'Latest payout feed',
+  'Example API payloads',
+  'GET /v1/payouts/latest',
+  'POST /v1/quotes',
   'Heat pump hot water',
   'VEU / VEEC estimate',
   'STC estimate',
   'Solar Victoria',
   'sample logic only',
-  'POST /v1/quotes',
+  'stale values are visible',
+  'Accuracy safeguards',
+  'decommissioning evidence',
 ]) {
   must(draftText.includes(expected), `draft page missing ${expected}`);
 }
 must(draft.includes('function calculateQuote'), 'draft tester should include client-side quote calculator');
 must(draft.includes('decommissioned'), 'draft tester should model decommissioning state');
+must(draft.includes('latest_verified'), 'draft page should show latest payout strategy in request payload');
+must(draft.includes('stale_after_minutes'), 'draft page should explain stale payout freshness');
 
 console.log('vic-rebate-api-project-regression ok');

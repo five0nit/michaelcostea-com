@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Victoria Rebate API — Live Draft Tester</title>
-  <meta name="description" content="Draft tester for a Victoria-first rebate API covering VEU / VEEC, STC and Solar Victoria payout line items." />
+  <title>Victoria Rebate API — API service draft</title>
+  <meta name="description" content="API service draft for always-current Victorian rebate payout data, eligibility rules, and example payloads across VEU / VEEC, STC and Solar Victoria." />
   <meta name="robots" content="noindex, nofollow" />
   <link rel="canonical" href="https://michaelcostea.com/vic-rebate-api.html" />
   <style>
-    :root{--ink:#10172a;--muted:#5b6578;--panel:#f4f7fb;--card:#fff;--line:#c9d4e5;--blue:#102a7a;--cyan:#10b7d8;--green:#138a45;--amber:#b86b00;--red:#b42318}
-    *{box-sizing:border-box} body{margin:0;background:linear-gradient(145deg,#073d66,#128293 52%,#d8edf2);color:var(--ink);font-family:"Work Sans",Arial,sans-serif;line-height:1.45} a{color:#081d72;font-weight:800}.shell{max-width:1180px;margin:0 auto;padding:24px 16px 48px}.top{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch}.hero,.panel{background:rgba(255,255,255,.92);border:2px solid #001f3f;box-shadow:6px 6px 0 rgba(0,0,0,.36);padding:18px}.eyebrow{display:inline-flex;gap:7px;align-items:center;background:#001f3f;color:#fff;padding:5px 9px;font:900 12px/1 monospace;letter-spacing:.08em;text-transform:uppercase}.hero h1{font-size:clamp(34px,7vw,72px);line-height:.92;margin:16px 0 10px;letter-spacing:-.05em}.hero p{font-size:18px;max-width:780px}.status{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid #001f3f;background:#e9f7ff;padding:5px 8px;font:800 12px/1.1 monospace}.pill.warn{background:#fff4d8}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}.card{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--blue);padding:14px;box-shadow:3px 3px 0 rgba(0,0,0,.12)}.card b{display:block;margin-bottom:6px;color:var(--blue)}.tester{margin-top:20px;display:grid;grid-template-columns:minmax(280px,.85fr) minmax(320px,1.15fr);gap:16px}.form-row{display:grid;gap:6px;margin:0 0 12px}label{font-weight:900;font-size:13px}input,select{width:100%;padding:10px;border:2px solid #1d3557;background:#fff;font:700 15px/1.2 monospace}.checks{display:grid;gap:8px;margin:10px 0}.checkline{display:flex;gap:8px;align-items:center;font-weight:800}.checkline input{width:auto}.btn{width:100%;border:0;background:#111c7a;color:#fff;padding:12px 14px;font:900 14px/1.1 monospace;text-transform:uppercase;cursor:pointer;box-shadow:3px 3px 0 #000}.result{display:grid;gap:12px}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metric{background:#05192c;color:#eaf9ff;padding:12px;border:1px solid #7fe9ff}.metric small{display:block;color:#9fe9ff;font:800 11px/1.2 monospace;text-transform:uppercase}.metric strong{display:block;font-size:24px;margin-top:5px}.lineitem{background:#fff;border:1px solid var(--line);border-left:6px solid var(--green);padding:12px}.lineitem.blocked{border-left-color:var(--red)}.lineitem h3{margin:0 0 8px}.lineitem table{width:100%;border-collapse:collapse;font-size:14px}.lineitem td{border-top:1px solid #dde5ef;padding:6px 4px}.lineitem td:last-child{text-align:right;font-weight:900}.warnings{background:#fff7e6;border:1px solid #f0bd5b;padding:10px}.code{background:#050910;color:#8dff93;padding:12px;overflow:auto;border:2px inset #6f7886;font:700 12px/1.45 "Courier New",monospace;white-space:pre-wrap}.footer-note{margin-top:18px;background:rgba(255,255,255,.86);border:1px solid #001f3f;padding:12px;color:#263347}.api-shape{margin-top:18px}.back{display:inline-block;margin-bottom:14px;color:#fff;background:#001f3f;padding:8px 10px;text-decoration:none;box-shadow:3px 3px 0 rgba(0,0,0,.35)}
-    @media(max-width:860px){.top,.tester{grid-template-columns:1fr}.grid,.summary{grid-template-columns:1fr}.hero h1{font-size:42px}.shell{padding:14px 10px 36px}.hero,.panel{box-shadow:4px 4px 0 rgba(0,0,0,.32)}}
+    :root{--ink:#10172a;--muted:#5b6578;--panel:#f4f7fb;--card:#fff;--line:#c9d4e5;--blue:#102a7a;--cyan:#10b7d8;--green:#138a45;--amber:#b86b00;--red:#b42318;--black:#050910}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(145deg,#073d66,#128293 52%,#d8edf2);color:var(--ink);font-family:"Work Sans",Arial,sans-serif;line-height:1.45} a{color:#081d72;font-weight:800}.shell{max-width:1220px;margin:0 auto;padding:24px 16px 48px}.top{display:grid;grid-template-columns:1.14fr .86fr;gap:18px;align-items:stretch}.hero,.panel{background:rgba(255,255,255,.94);border:2px solid #001f3f;box-shadow:6px 6px 0 rgba(0,0,0,.36);padding:18px}.eyebrow{display:inline-flex;gap:7px;align-items:center;background:#001f3f;color:#fff;padding:5px 9px;font:900 12px/1 monospace;letter-spacing:.08em;text-transform:uppercase}.hero h1{font-size:clamp(36px,7vw,78px);line-height:.9;margin:16px 0 10px;letter-spacing:-.055em}.hero p{font-size:18px;max-width:810px}.status{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid #001f3f;background:#e9f7ff;padding:5px 8px;font:800 12px/1.1 monospace}.pill.warn{background:#fff4d8}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.card{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--blue);padding:14px;box-shadow:3px 3px 0 rgba(0,0,0,.12)}.card b{display:block;margin-bottom:6px;color:var(--blue)}.card strong{color:#061e78}.service-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}.service-strip div{background:#05192c;color:#eaf9ff;padding:12px;border:1px solid #7fe9ff}.service-strip small{display:block;color:#9fe9ff;font:800 11px/1.2 monospace;text-transform:uppercase}.service-strip b{display:block;font-size:20px;margin-top:4px}.section-title{margin:26px 0 10px}.section-title h2{margin:0;font-size:28px;letter-spacing:-.03em}.section-title p{margin:4px 0 0;color:#263347}.payloads{display:grid;grid-template-columns:1fr 1fr;gap:16px}.code{background:var(--black);color:#8dff93;padding:12px;overflow:auto;border:2px inset #6f7886;font:700 12px/1.45 "Courier New",monospace;white-space:pre-wrap;max-height:520px}.code-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.code-title span{font:900 12px/1 monospace;text-transform:uppercase;color:#375}.table{width:100%;border-collapse:collapse;background:#fff}.table th,.table td{border:1px solid #d8e1ee;padding:9px;text-align:left;vertical-align:top}.table th{background:#eef5ff;color:#061e78}.tester{margin-top:20px;display:grid;grid-template-columns:minmax(280px,.82fr) minmax(320px,1.18fr);gap:16px}.form-row{display:grid;gap:6px;margin:0 0 12px}label{font-weight:900;font-size:13px}input,select{width:100%;padding:10px;border:2px solid #1d3557;background:#fff;font:700 15px/1.2 monospace}.checks{display:grid;gap:8px;margin:10px 0}.checkline{display:flex;gap:8px;align-items:center;font-weight:800}.checkline input{width:auto}.btn{width:100%;border:0;background:#111c7a;color:#fff;padding:12px 14px;font:900 14px/1.1 monospace;text-transform:uppercase;cursor:pointer;box-shadow:3px 3px 0 #000}.result{display:grid;gap:12px}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metric{background:#05192c;color:#eaf9ff;padding:12px;border:1px solid #7fe9ff}.metric small{display:block;color:#9fe9ff;font:800 11px/1.2 monospace;text-transform:uppercase}.metric strong{display:block;font-size:24px;margin-top:5px}.lineitem{background:#fff;border:1px solid var(--line);border-left:6px solid var(--green);padding:12px}.lineitem.blocked{border-left-color:var(--red)}.lineitem h3{margin:0 0 8px}.lineitem table{width:100%;border-collapse:collapse;font-size:14px}.lineitem td{border-top:1px solid #dde5ef;padding:6px 4px}.lineitem td:last-child{text-align:right;font-weight:900}.warnings{background:#fff7e6;border:1px solid #f0bd5b;padding:10px;margin-top:8px}.footer-note{margin-top:18px;background:rgba(255,255,255,.88);border:1px solid #001f3f;padding:12px;color:#263347}.back{display:inline-block;margin-bottom:14px;color:#fff;background:#001f3f;padding:8px 10px;text-decoration:none;box-shadow:3px 3px 0 rgba(0,0,0,.35)}.source-list{display:grid;gap:8px;margin:10px 0 0;padding:0;list-style:none}.source-list li{display:flex;gap:8px;background:#f6fbff;border:1px solid #d8e1ee;padding:9px}.source-list li::before{content:"✓";font-weight:900;color:var(--green)}
+    @media(max-width:920px){.top,.tester,.payloads,.grid.two{grid-template-columns:1fr}.grid,.summary,.service-strip{grid-template-columns:1fr}.hero h1{font-size:42px}.shell{padding:14px 10px 36px}.hero,.panel{box-shadow:4px 4px 0 rgba(0,0,0,.32)}}
   </style>
 </head>
 <body>
@@ -18,30 +18,132 @@
     <a class="back" href="/#vic-rebate-api">← Back to MichaelOS project window</a>
     <section class="top">
       <div class="hero">
-        <span class="eyebrow">Live draft tester · Victoria first</span>
-        <h1>Victoria Rebate API</h1>
-        <p>A working draft surface for the API service: feed the latest rebate payouts and rule-driven line items for <b>VEU / VEEC</b>, <b>STC</b>, and <b>Solar Victoria</b> programs.</p>
-        <div class="status"><span class="pill">POST /v1/quotes shape</span><span class="pill">rules engine scaffold</span><span class="pill warn">sample logic only</span></div>
+        <span class="eyebrow">API service draft · Victoria first</span>
+        <h1>Always-current rebate payout API</h1>
+        <p><b>Victoria Rebate API</b> is being designed as an API service for installers, CRMs, quote tools, and marketplaces that need up-to-date rebate payouts and rule-driven eligibility across <b>VEU / VEEC</b>, <b>STC</b>, and <b>Solar Victoria</b>.</p>
+        <p>Instead of every business copying old calculator assumptions into spreadsheets, the API returns versioned scheme logic, live payout inputs, blockers, warnings, evidence requirements, and line-item estimates that can be embedded directly into quote flows.</p>
+        <div class="status"><span class="pill">POST /v1/quotes</span><span class="pill">GET /v1/payouts/latest</span><span class="pill">rule versioning</span><span class="pill warn">sample logic only</span></div>
       </div>
       <aside class="panel">
-        <h2>What this draft proves</h2>
-        <p>It shows the quote response contract we can keep testing while the backend rule packs are built from VEU calculator resources, STC calculator resources, approved product registers, and market payout feeds.</p>
-        <div class="code">confidence: sample_logic
-first pack: heat pump hot water
-next: replace placeholders with official calculator-matched formulas</div>
+        <h2>Why this improves quote accuracy</h2>
+        <ul class="source-list">
+          <li>Rules are centralised instead of duplicated across sales sheets, CRMs, and estimator notes.</li>
+          <li>Payout values carry provider, timestamp, and price type so stale values are visible.</li>
+          <li>VEU / VEEC, STC, and Solar Victoria are returned as separate line items instead of one vague “rebate”.</li>
+          <li>Blockers and evidence gaps appear before a quote is promised to a customer.</li>
+        </ul>
       </aside>
     </section>
 
-    <section class="grid" aria-label="coverage cards">
-      <article class="card"><b>VEU / VEEC estimate</b><span>Victorian activity rules, approved product checks, decommissioning evidence, VEEC units, and payout range.</span></article>
-      <article class="card"><b>STC estimate</b><span>Federal small-scale technology certificate line item where it can stack with the Victorian upgrade path.</span></article>
-      <article class="card"><b>Solar Victoria</b><span>Separate grant/rebate/loan line item so certificate value and state program value are not mashed together.</span></article>
+    <section class="service-strip" aria-label="API service metrics">
+      <div><small>Primary output</small><b>Payout range</b></div>
+      <div><small>Rule posture</small><b>Source-versioned</b></div>
+      <div><small>First activity</small><b>Hot water</b></div>
+      <div><small>Status</small><b>Draft API</b></div>
+    </section>
+
+    <div class="section-title"><h2>What the API service provides</h2><p>Built for systems that need current rebate intelligence, not a one-off public calculator.</p></div>
+    <section class="grid" aria-label="service capability cards">
+      <article class="card"><b>Latest payout feed</b><span>Expose current VEEC/STC payout assumptions by provider, observed timestamp, price type, and confidence so quote tools stop using stale certificate values.</span></article>
+      <article class="card"><b>Eligibility + rule logic</b><span>Return activity-specific rules from VEU calculator resources, STC calculator resources, approved product data, postcode/date inputs, and decommissioning requirements.</span></article>
+      <article class="card"><b>Evidence checklist</b><span>Tell installers exactly what is missing before payout confidence is increased: photos, serial plates, decommissioning evidence, customer assignment, and product proof.</span></article>
+    </section>
+
+    <div class="section-title"><h2>Example API payloads</h2><p>Draft contract for how a CRM, website quote widget, or field app would call the service.</p></div>
+    <section class="payloads" aria-label="Example API payloads">
+      <article class="panel">
+        <div class="code-title"><h3>Request: quote an upgrade</h3><span>POST /v1/quotes</span></div>
+        <div class="code">{
+  "state": "VIC",
+  "activity_type": "heat_pump_hot_water",
+  "activity_date": "2026-07-01",
+  "postcode": "3066",
+  "site_type": "residential",
+  "existing_equipment": {
+    "fuel": "gas",
+    "type": "storage_hot_water",
+    "capacity_litres": 170,
+    "decommissioned": true,
+    "decommissioning_evidence_available": true
+  },
+  "new_product": {
+    "brand": "Example",
+    "model": "HPHW-270",
+    "approved_product_id": "VEU-PRODUCT-ID"
+  },
+  "market_prices": {
+    "strategy": "latest_verified",
+    "preferred_provider": "installer_trader"
+  }
+}</div>
+      </article>
+      <article class="panel">
+        <div class="code-title"><h3>Response: line-item payout</h3><span>200 OK</span></div>
+        <div class="code">{
+  "eligible": true,
+  "confidence": "indicative",
+  "estimated_total_low": 2357.30,
+  "estimated_total_high": 2691.40,
+  "estimates": [
+    {
+      "scheme": "VEU",
+      "certificate_type": "VEEC",
+      "estimated_units": 28,
+      "unit_price": 72.50,
+      "payout_low": 1725.50,
+      "payout_high": 1989.40,
+      "evidence_required": [
+        "customer assignment",
+        "before/after photos",
+        "decommissioning evidence"
+      ],
+      "source_versions": ["veu-rules:2026-07-01"]
+    },
+    {
+      "scheme": "STC",
+      "certificate_type": "STC",
+      "estimated_units": 18,
+      "unit_price": 39.00,
+      "payout_low": 631.80,
+      "payout_high": 702.00,
+      "source_versions": ["cer-stc:2026-07-01"]
+    }
+  ]
+}</div>
+      </article>
+    </section>
+
+    <section class="grid two" aria-label="service examples">
+      <article class="panel">
+        <h2>Latest payouts endpoint</h2>
+        <p>Installers can refresh quote assumptions automatically before sending a proposal.</p>
+        <div class="code">GET /v1/payouts/latest?state=VIC&schemes=VEEC,STC
+
+{
+  "observed_at": "2026-07-01T10:15:00+10:00",
+  "prices": [
+    { "scheme": "VEU", "unit": "VEEC", "price": 72.50, "provider": "example-trader", "confidence": "verified" },
+    { "scheme": "SRES", "unit": "STC", "price": 39.00, "provider": "example-trader", "confidence": "verified" }
+  ],
+  "stale_after_minutes": 60
+}</div>
+      </article>
+      <article class="panel">
+        <h2>Accuracy safeguards</h2>
+        <table class="table">
+          <tr><th>Problem in current workflows</th><th>API safeguard</th></tr>
+          <tr><td>Old VEEC/STC prices in spreadsheets</td><td>Timestamped payout feed with stale-price warnings.</td></tr>
+          <tr><td>One generic rebate number</td><td>Separate VEU, STC, and Solar Victoria line items.</td></tr>
+          <tr><td>Promised payout before evidence is complete</td><td>Blockers/warnings for decommissioning and product proof.</td></tr>
+          <tr><td>Rules change without the sales team noticing</td><td>Effective-date rule versions and source-version metadata.</td></tr>
+        </table>
+      </article>
     </section>
 
     <section class="tester" aria-label="Live draft tester">
       <form id="quoteForm" class="panel">
         <h2>Live draft tester</h2>
-        <p><b>Scenario:</b> Heat pump hot water replacement/decommissioning. Change the inputs and recalculate.</p>
+        <p><b>Scenario:</b> Heat pump hot water replacement/decommissioning. Change the inputs and recalculate the sample response.</p>
         <div class="form-row"><label for="activityType">Activity</label><select id="activityType"><option value="heat_pump_hot_water">Heat pump hot water</option><option value="hvac_air_conditioning">HVAC / air conditioning</option><option value="solar_pv">Solar PV</option><option value="battery">Battery</option></select></div>
         <div class="form-row"><label for="siteType">Site type</label><select id="siteType"><option value="residential">Residential</option><option value="business">Business</option><option value="commercial_industrial">Commercial / industrial</option></select></div>
         <div class="form-row"><label for="postcode">Postcode</label><input id="postcode" value="3066" /></div>
@@ -53,26 +155,15 @@ next: replace placeholders with official calculator-matched formulas</div>
           <label class="checkline"><input id="approvedProduct" type="checkbox" checked /> Approved product/model ID supplied</label>
           <label class="checkline"><input id="solarVictoria" type="checkbox" /> Include Solar Victoria placeholder line</label>
         </div>
-        <button class="btn" type="submit">Calculate draft quote</button>
+        <button class="btn" type="submit">Calculate sample API response</button>
       </form>
       <section class="panel result" aria-live="polite">
-        <h2>Draft quote response</h2>
+        <h2>Sample quote response</h2>
         <div id="result"></div>
       </section>
     </section>
 
-    <section class="api-shape panel">
-      <h2>API shape being built</h2>
-      <div class="code">POST /v1/quotes
-{
-  "state": "VIC",
-  "activity_type": "heat_pump_hot_water",
-  "postcode": "3066",
-  "existing_equipment": { "decommissioned": true },
-  "market_prices": { "veec_price": 72.5, "stc_price": 39.0 }
-}</div>
-    </section>
-    <p class="footer-note"><b>Important:</b> this public page is a draft simulator. Production results must come from reviewed deterministic backend rules, source-versioned regulator data, approved product/register checks, market price timestamps, and accredited-person validation. It is not financial/legal advice.</p>
+    <p class="footer-note"><b>Important:</b> this public page is a draft API service simulator. Production outputs must come from reviewed deterministic backend rules, source-versioned regulator data, approved product/register checks, market price timestamps, and accredited-person validation. It is not financial/legal advice.</p>
   </main>
   <script>
     const money = new Intl.NumberFormat('en-AU', { style:'currency', currency:'AUD' });
