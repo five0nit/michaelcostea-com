@@ -40,7 +40,7 @@
     "description": "Michael Costea helps people and businesses get the most out of AI by turning scattered tools and experiments into practical workflows, agents, automations, and human-reviewed systems."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-vic-rebate-api" />
+  <link rel="stylesheet" href="styles.css?v=20260701-project-showcase" />
   <link rel="stylesheet" href="assets/pixel-pack/button-kit.css?v=20260609-readable-icons-1" />
   <link rel="stylesheet" href="assets/css/nous-michael-live.css?v=20260630-mobile-inner-center" />
   <link rel="stylesheet" href="assets/css/hyperframes-live.css?v=20260701-agentic-preview-only" />
@@ -251,83 +251,150 @@
       <div class="win-title"><span>Projects - AI Systems Portfolio</span><button class="win-close" data-close="projectsWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc projects-doc">
-          <div class="mini-heading lean-heading"><h2>Practical AI Examples</h2></div>
+          <div class="mini-heading lean-heading"><h2>Project Showcase</h2></div>
           <figure class="site-art-card"><img src="assets/site-art/projects.jpg" alt="Pixel art projects graphic for builds, experiments, systems, and impact" loading="lazy" /></figure>
-          <p><b>Positioning:</b> these are examples of AI being used properly: start with a real problem, design the workflow, keep humans in control, and measure the result.</p>
-          <div class="release-hold"><span><b>Public demos remain hidden until release.</b><br />The showcase explains the systems being built or led behind the scenes without exposing internal tools, customer data, or fragile prototypes. Scroll inside this window to see the case-study buckets.</span></div>
-          <div class="project-focus-strip" aria-label="Project grouping principles"><span>Useful AI</span><span>Real workflows</span><span>Business outcome led</span><span>Human-reviewed automation</span></div>
-          <p class="guide-note"><b>Case-study lens:</b> messy workflow → designed operating loop → visible owner/status/evidence → human review where trust, money, quality, or customers are involved.</p>
-          <div class="mini-heading compact-mini lean-heading"><h3>Latest Build Notes — updated from project memory</h3></div>
-          <div class="project-list-public ai-project-showcase recent-builds-showcase" aria-label="Recent project and build updates">
-            <article class="mini-content-card">
-              <h3>Victoria Rebate API</h3>
-              <p>New Victoria-first API service draft for quoting energy upgrade rebate payout ranges across VEU/VEEC, STC, and Solar Victoria. The live draft tester shows line-item estimates, decommissioning evidence checks, payout ranges, source-version posture, and the sample_logic status while the real official calculator rules are being implemented.</p>
-              <div class="repo-action-row"><button class="ui-btn btn" type="button" data-open="vicRebateApiWindow" onclick="openWindow('vicRebateApiWindow')">Open project window</button><a class="ui-btn btn secondary" href="vic-rebate-api.html">Open live draft tester</a></div>
-              <span>rebate intelligence · VEU/VEEC · STC · Solar Victoria · rules engine</span>
+          <p><b>Positioning:</b> this is the showcase wall for the main projects, repos, dashboards, and operating systems I am actively building or maintaining. Public links are included where safe; private/internal systems show the shape, proof, and current status without exposing customer data, secrets, or fragile prototypes.</p>
+          <div class="project-focus-strip" aria-label="Project grouping principles"><span>active repos</span><span>screenshots</span><span>live demos</span><span>proof receipts</span><span>human-reviewed automation</span></div>
+          <p class="guide-note"><b>Showcase lens:</b> what it does → why it matters → where it lives → what proof/screenshot exists.</p>
+
+          <div class="mini-heading compact-mini lean-heading"><h3>Main Projects & Repos</h3></div>
+          <div class="project-showcase-grid" aria-label="Main project and repository showcase">
+            <article class="project-showcase-card feature-project">
+              <figure><img src="assets/project-showcase/social-engine.webp?v=20260701-showcase" alt="Screenshot of the Social Content Engine overview infographic" loading="lazy" /></figure>
+              <div class="project-card-body">
+                <h3>Social Content Engine</h3>
+                <p>Private social automation system for turning research signals into draft packets, QA-gated Shorts, YouTube package checks, channel-specific lanes, calendars, analytics, and approval-first publishing.</p>
+                <ul><li>Research → draft repository → media package → channel gate.</li><li>YouTube, TikTok, Snapchat, Instagram/Patreon placeholder lanes.</li><li>Learning loop tracks experiments, feature tags, schedules, and 7-day pulse checks.</li></ul>
+                <div class="repo-action-row"><span class="project-status private">Private system</span><a class="ui-btn btn" href="assets/project-showcase/social-engine.webp" target="_blank" rel="noopener">Open printscreen</a></div>
+                <span class="project-tags">social engine · content ops · QA gates · analytics</span>
+              </div>
             </article>
-            <article class="mini-content-card">
-              <h3>UseAIForMe.com Early-Access Matching Marketplace</h3>
-              <p>Current build: an early-access do-it-for-me AI marketplace where buyers post one real outcome, operators show proof and pricing, and paid work only starts after scope, fit, and approvals are confirmed. The live flow now covers free task posting, manual operator matching, verified operator profiles, fixed-scope packages with Stripe-backed checkout, and custom-job intake that stays human-reviewed instead of forcing blind auto-payment.</p>
-              <span>current build · AI operator marketplace · manual matching · approval-first checkout · Stripe</span>
+
+            <article class="project-showcase-card feature-project">
+              <figure><img src="assets/project-showcase/useaiforme.webp?v=20260701-showcase" alt="Screenshot of the UseAIForMe marketplace interface" loading="lazy" /></figure>
+              <div class="project-card-body">
+                <h3>UseAIForMe.com</h3>
+                <p>Early-access AI operator marketplace and consultancy surface: buyers post a real outcome, operators show proof and pricing, and paid work starts only after scope, fit, and approval are confirmed.</p>
+                <ul><li>Manual matching, verified operator profiles, fixed-scope packages.</li><li>Stripe-backed checkout path with human review.</li><li>Current repo: <code>five0nit/useaiforme</code>.</li></ul>
+                <div class="repo-action-row"><a class="ui-btn btn" href="https://useaiforme.com" target="_blank" rel="noopener">Open site</a><a class="ui-btn btn secondary" href="https://github.com/five0nit/useaiforme" target="_blank" rel="noopener">Open repo</a></div>
+                <span class="project-tags">marketplace · AI operators · approval-first checkout</span>
+              </div>
             </article>
-            <article class="mini-content-card">
-              <h3>Remote Autonomy Reliability Pass</h3>
-              <p>Cleaned up noisy health warnings in the agent operations layer: long Telegram reports now split safely, memory/task bridge calls accept the current automation format, and stale repeated error logs were archived instead of polluting live health checks.</p>
-              <span>agent ops · health checks · Telegram updates · observability</span>
+
+            <article class="project-showcase-card">
+              <figure><img src="assets/project-showcase/telegram-office.webp?v=20260701-showcase" alt="Screenshot of the Telegram Office pixel agent workspace" loading="lazy" /></figure>
+              <div class="project-card-body">
+                <h3>Telegram Office / Agent Office</h3>
+                <p>Pixel office for visible multi-agent work: Telegram-triggered events, bot rosters, rooms, handoffs, live activity zones, and browser-first operator visibility.</p>
+                <ul><li>Canonical public-facing repo lane: <code>five0nit/telegram-office</code>.</li><li>Agent-room fork: <code>five0nit/telegram-agent-office</code>.</li></ul>
+                <div class="repo-action-row"><a class="ui-btn btn" href="https://telegram-office.michaelcostea.com/agenttown/" target="_blank" rel="noopener">Open live office</a><a class="ui-btn btn secondary" href="https://github.com/five0nit/telegram-office" target="_blank" rel="noopener">Open repo</a></div>
+                <span class="project-tags">agent visibility · Telegram · pixel office</span>
+              </div>
             </article>
-            <article class="mini-content-card">
-              <h3>AI Help Guide 3: First Safe Workflow</h3>
-              <p>Added a beginner-friendly tutorial for turning one private repeatable task into a safe AI workflow: write the goal, test with harmless data, add approval gates, save the playbook, and only then reuse it.</p>
-              <span>AI education · beginner workflow · human approval gates</span>
+
+            <article class="project-showcase-card">
+              <figure><img src="assets/project-showcase/vic-rebate-api.webp?v=20260701-showcase" alt="Screenshot of the Victoria Rebate API draft tester" loading="lazy" /></figure>
+              <div class="project-card-body">
+                <h3>Victoria Rebate API</h3>
+                <p>Victoria-first API service draft for quoting energy upgrade rebate payout ranges across VEU/VEEC, STC, and Solar Victoria, with source-version posture and evidence checks.</p>
+                <ul><li>Draft tester shows line items, payout low/high, blockers, warnings, and confidence.</li><li>Next: replace sample logic with official rule packs.</li></ul>
+                <div class="repo-action-row"><button class="ui-btn btn" type="button" data-open="vicRebateApiWindow" onclick="openWindow('vicRebateApiWindow')">Open project window</button><a class="ui-btn btn secondary" href="vic-rebate-api.html">Open tester</a></div>
+                <span class="project-tags">VEU/VEEC · STC · Solar Victoria · rules engine</span>
+              </div>
             </article>
-            <article class="mini-content-card">
-              <h3>Operational Backup & Memory Receipts</h3>
-              <p>Continued the pattern of backup snapshots, memory notes, and verifiable receipts so builds can be reviewed later without relying on vague “it should be fine” status updates.</p>
-              <span>backups · memory spine · audit trail · build receipts</span>
+
+            <article class="project-showcase-card">
+              <figure><img src="assets/project-showcase/invoicepipe.webp?v=20260701-showcase" alt="Screenshot of the InvoicePipe invoice automation product surface" loading="lazy" /></figure>
+              <div class="project-card-body">
+                <h3>InvoicePipe</h3>
+                <p>Invoice automation system with OCR/media smoke tests and a commercial private mirror. The showcase screenshot captures the product surface while repo access stays private.</p>
+                <ul><li>Local OCR and document-processing workflow.</li><li>Private commercial repo: <code>five0nit/invoicepipe</code>.</li></ul>
+                <div class="repo-action-row"><a class="ui-btn btn" href="assets/project-showcase/invoicepipe.webp" target="_blank" rel="noopener">Open printscreen</a><span class="project-status private">Private repo</span></div>
+                <span class="project-tags">invoice automation · OCR · document ops</span>
+              </div>
+            </article>
+
+            <article class="project-showcase-card">
+              <figure><img src="assets/project-showcase/agentic-framework.webp?v=20260701-showcase" alt="Screenshot of the Agentic Framework Session deck" loading="lazy" /></figure>
+              <div class="project-card-body">
+                <h3>Agentic Framework Session</h3>
+                <p>Education and enablement deck explaining Hermes, safe agent setup, shared memory, Discord/team rooms, review gates, and how businesses can use agents without silent risk.</p>
+                <ul><li>Live deck preview is built into this portfolio.</li><li>Supports client-facing AI education and onboarding.</li></ul>
+                <div class="repo-action-row"><button class="ui-btn btn" type="button" data-open="agenticFrameworkDeckWindow" onclick="openWindow('agenticFrameworkDeckWindow')">Open deck</button><a class="ui-btn btn secondary" href="assets/project-showcase/agentic-framework.webp" target="_blank" rel="noopener">Open printscreen</a></div>
+                <span class="project-tags">AI education · agent safety · shared memory</span>
+              </div>
+            </article>
+
+            <article class="project-showcase-card text-only-project">
+              <div class="project-card-body">
+                <h3>Brief2Ship</h3>
+                <p>Public repo and operating standard for better first-pass AI builds: one strong brief, repo-first selection, maintainability gate, anti-slop finish, and proof receipts.</p>
+                <ul><li>Includes skills, templates, examples, receipt shape, and report/document lane.</li><li>Repo: <code>five0nit/brief2ship</code>.</li></ul>
+                <div class="repo-action-row"><button class="ui-btn btn" type="button" data-open="newRepoWindow" onclick="openWindow('newRepoWindow')">Open local card</button><a class="ui-btn btn secondary" href="https://github.com/five0nit/brief2ship" target="_blank" rel="noopener">Open repo</a></div>
+                <span class="project-tags">AI build standard · proof receipts · repo-first</span>
+              </div>
+            </article>
+
+            <article class="project-showcase-card text-only-project">
+              <div class="project-card-body">
+                <h3>michaelcostea.com / MICHAEL OS 89</h3>
+                <p>The public portfolio shell itself: a Win95-style showcase for AI education, projects, demos, decks, intake, and repo cards, deployed through GitHub Pages.</p>
+                <ul><li>Current repo: <code>five0nit/michaelcostea-com</code>.</li><li>Acts as the public showcase hub for the rest of the work.</li></ul>
+                <div class="repo-action-row"><a class="ui-btn btn" href="https://michaelcostea.com" target="_blank" rel="noopener">Open site</a><a class="ui-btn btn secondary" href="https://github.com/five0nit/michaelcostea-com" target="_blank" rel="noopener">Open repo</a></div>
+                <span class="project-tags">portfolio · GitHub Pages · MICHAEL OS 89</span>
+              </div>
+            </article>
+
+            <article class="project-showcase-card text-only-project">
+              <div class="project-card-body">
+                <h3>Codex Switch Secure</h3>
+                <p>Private, security-reviewed account-pool helper for Codex usage visibility and editable account/machine usage details.</p>
+                <ul><li>Private mirror: <code>five0nit/codex-switch-secure</code>.</li><li>Built for safer local operator control, not public marketing.</li></ul>
+                <div class="repo-action-row"><span class="project-status private">Private repo</span></div>
+                <span class="project-tags">operator tooling · usage visibility · secure mirror</span>
+              </div>
+            </article>
+
+            <article class="project-showcase-card text-only-project">
+              <div class="project-card-body">
+                <h3>Repo-First Starter + Cursor Covenant</h3>
+                <p>Two small public operator-safety repos: one pushes AI builders to discover the best existing base before greenfield work; the other adds a visible cursor-control countdown and hard UI-control rule.</p>
+                <ul><li><code>five0nit/repo-first-starter</code> for base selection and entropy gate.</li><li><code>five0nit/cursor-covenant</code> for visible mouse/keyboard control discipline.</li></ul>
+                <div class="repo-action-row"><a class="ui-btn btn" href="https://github.com/five0nit/repo-first-starter" target="_blank" rel="noopener">Repo-first</a><a class="ui-btn btn secondary" href="https://github.com/five0nit/cursor-covenant" target="_blank" rel="noopener">Cursor Covenant</a></div>
+                <span class="project-tags">agent safety · repo discovery · UI control</span>
+              </div>
             </article>
           </div>
-          <div class="project-list-public ai-project-showcase">
+
+          <div class="mini-heading compact-mini lean-heading"><h3>Case-study buckets behind the showcase</h3></div>
+          <div class="project-list-public ai-project-showcase legacy-case-study-grid">
             <article class="mini-content-card">
               <h3>1. AEH AI Operating Layer</h3>
               <figure class="mini-card-figure"><img src="assets/minime-pack/project_operating_layer.png" alt="Pixel mini Michael representing 1. AEH AI Operating Layer" loading="lazy" /></figure>
-              <p>Strategic AI and workflow layer across sales, operations, finance, admin, reporting, customer experience, lead flow, and job completion. The goal is a more visible business where repeatable work is automated, exceptions surface early, and humans stay on judgment.</p>
+              <p>Strategic AI and workflow layer across sales, operations, finance, admin, reporting, customer experience, lead flow, and job completion.</p>
               <ul><li>Maps core workflows and handoffs.</li><li>Defines automation boundaries, approval gates, and escalation rules.</li><li>Turns fragmented work into measurable operating loops.</li></ul>
               <span>AI strategy · business systems · operating leverage</span>
             </article>
             <article class="mini-content-card">
-              <h3>2. Customer Journey & Revenue Automation</h3>
-              <figure class="mini-card-figure"><img src="assets/minime-pack/project_customer_journey.png" alt="Pixel mini Michael representing 2. Customer Journey & Revenue Automation" loading="lazy" /></figure>
-              <p>AI-assisted customer and lead workflows: fast response, qualification, quote preparation, follow-up, stale-lead detection, review loops, and handoff summaries for staff.</p>
-              <ul><li>Lead intake → CRM context → next best action.</li><li>Quote/admin prep with missing-info flags.</li><li>Human approval before customer-impacting sends.</li></ul>
-              <span>CRM · lead conversion · customer experience</span>
-            </article>
-            <article class="mini-content-card">
-              <h3>3. Agent Infrastructure & Shared Context</h3>
-              <figure class="mini-card-figure"><img src="assets/minime-pack/project_agent_context.png" alt="Pixel mini Michael representing 3. Agent Infrastructure & Shared Context" loading="lazy" /></figure>
-              <p>Personal and business agent stack using OpenClaw, Hermes, Telegram, dashboards, scheduled jobs, watchdogs, memory, and shared context across phone, Windows control plane, and execution machines.</p>
+              <h3>2. Agent Infrastructure & Shared Context</h3>
+              <figure class="mini-card-figure"><img src="assets/minime-pack/project_agent_context.png" alt="Pixel mini Michael representing Agent Infrastructure & Shared Context" loading="lazy" /></figure>
+              <p>Personal and business agent stack using OpenClaw, Hermes, Telegram, dashboards, scheduled jobs, watchdogs, memory, and shared context across devices.</p>
               <ul><li>Visible task receipts instead of silent automation.</li><li>Shared memory/state so agents do not restart from zero.</li><li>Phone-first command path with reviewable outputs.</li></ul>
               <span>OpenClaw · Hermes · Telegram · memory · watchdogs</span>
             </article>
             <article class="mini-content-card">
-              <h3>4. Data Visibility, Reporting & Exception Radar</h3>
-              <figure class="mini-card-figure"><img src="assets/minime-pack/project_exception_radar.png" alt="Pixel mini Michael representing 4. Data Visibility, Reporting & Exception Radar" loading="lazy" /></figure>
-              <p>Dashboard and reporting patterns that turn scattered operational data into clear action lists: overdue work, missing payments, stale leads, customer risks, review gaps, and process bottlenecks.</p>
+              <h3>3. Customer Journey & Revenue Automation</h3>
+              <figure class="mini-card-figure"><img src="assets/minime-pack/project_customer_journey.png" alt="Pixel mini Michael representing Customer Journey & Revenue Automation" loading="lazy" /></figure>
+              <p>AI-assisted customer and lead workflows: fast response, qualification, quote preparation, follow-up, stale-lead detection, review loops, and handoff summaries.</p>
+              <ul><li>Lead intake → CRM context → next best action.</li><li>Quote/admin prep with missing-info flags.</li><li>Human approval before customer-impacting sends.</li></ul>
+              <span>CRM · lead conversion · customer experience</span>
+            </article>
+            <article class="mini-content-card">
+              <h3>4. Data Visibility & Exception Radar</h3>
+              <figure class="mini-card-figure"><img src="assets/minime-pack/project_exception_radar.png" alt="Pixel mini Michael representing Data Visibility and Exception Radar" loading="lazy" /></figure>
+              <p>Dashboard and reporting patterns that turn scattered operational data into clear action lists: overdue work, missing payments, stale leads, customer risks, and review gaps.</p>
               <ul><li>Exception-first reporting, not vanity dashboards.</li><li>Evidence links and audit trails for decisions.</li><li>Cleaner data capture at workflow source.</li></ul>
               <span>dashboards · KPI redesign · exception surfacing</span>
-            </article>
-            <article class="mini-content-card">
-              <h3>5. Multi-Brand Digital Growth Systems</h3>
-              <figure class="mini-card-figure"><img src="assets/minime-pack/project_growth_systems.png" alt="Pixel mini Michael representing 5. Multi-Brand Digital Growth Systems" loading="lazy" /></figure>
-              <p>Digital infrastructure across Want A Sparky, Want A Heat Pump, All Electric Homes, and personal brand surfaces — websites, lead pathways, content systems, analytics, conversion flows, and safe public-release controls.</p>
-              <ul><li>Brand-specific journeys with shared operating logic.</li><li>Lead capture and conversion path ownership.</li><li>Public demos gated until stable and aligned.</li></ul>
-              <span>web platforms · lead gen · analytics · GitHub Pages</span>
-            </article>
-            <article class="mini-content-card">
-              <h3>6. Knowledge Systems & Process Modernisation</h3>
-              <figure class="mini-card-figure"><img src="assets/minime-pack/project_knowledge.png" alt="Pixel mini Michael representing 6. Knowledge Systems & Process Modernisation" loading="lazy" /></figure>
-              <p>Process and knowledge-system foundation from Optus-scale work through current AI enablement: SOPs, support flows, training packs, internal answers, duplicate-process removal, and change rollout.</p>
-              <ul><li>Knowledge bases designed for staff adoption.</li><li>Repeated questions converted into reusable SOPs.</li><li>Process simplification before automation scale-up.</li></ul>
-              <span>knowledge ops · SOPs · change management · scale</span>
             </article>
           </div>
         </article>
