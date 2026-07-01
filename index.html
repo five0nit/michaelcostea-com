@@ -55,7 +55,7 @@
       <button class="desk-icon" data-open="projectsWindow" aria-label="Open Projects"><span class="icon-art">📁</span><span>Projects</span></button>
       <button class="desk-icon" data-open="agentsWindow" aria-label="Open AI Agents"><span class="icon-art">🤖</span><span>AI Agents</span></button>
       <button class="desk-icon" data-open="newRepoWindow" aria-label="Open New Repo"><span class="icon-art">📦</span><span>New Repo</span></button>
-      <button class="desk-icon" data-open="vicRebateApiWindow" aria-label="Open Victoria Rebate API"><span class="icon-art">⚡</span><span>VIC Rebate API</span></button>
+      <button class="desk-icon" data-open="vicRebateApiWindow" aria-label="Open RebateSignal"><span class="icon-art">⚡</span><span>RebateSignal</span></button>
       <a class="desk-icon" href="https://telegram-office.michaelcostea.com/agenttown/" aria-label="Open live Agent Office"><span class="icon-art">🏢</span><span>Agent Office</span></a>
       <button class="desk-icon" data-open="aiHelpWindow" aria-label="Open AI Help"><span class="icon-art">🎓</span><span>AI Help</span></button>
       <button class="desk-icon" data-open="intakeWindow" aria-label="Open AI Intake"><span class="icon-art">📝</span><span>AI Intake</span></button>
@@ -103,7 +103,7 @@
             <a href="#projects">Projects</a>
             <a href="#ai-agents">AI Agents</a>
             <a href="#new-repo">New Repo</a>
-            <a href="#vic-rebate-api">VIC Rebate API</a>
+            <a href="#vic-rebate-api">RebateSignal</a>
             <a href="#ai-help">AI Help</a>
             <a href="#contact">Contact</a>
           </nav>
@@ -220,6 +220,10 @@
           <div class="mini-heading lift-heading"><h2>What I Build</h2></div>
           <figure class="site-art-card"><img src="assets/site-art/workflow-systems.jpg" alt="Pixel art workflow systems graphic showing CRM, automation, dashboards, operations, validation, and visibility" loading="lazy" /></figure>
           <p class="brand-promise"><b>I build the environment that enables the business and the people inside it to become better with AI: shared context, safe agent workflows, dashboards, training loops, and operating habits that turn staff into confident AI users instead of passive tool consumers.</b></p>
+          <div class="repo-action-row build-projects-cta" aria-label="What I Build project showcase link">
+            <button class="ui-btn btn primary-hero-cta" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">See My Projects</button>
+            <a class="ui-btn btn secondary" href="#projects">Open projects link</a>
+          </div>
           <figure class="agent-setup-diagram business-ai-environment">
             <a href="assets/diagrams/current-ai-setup-structure.jpg?v=20260617-machines-agents" target="_blank" rel="noopener" aria-label="Open business AI enablement environment diagram full size">
               <img src="assets/diagrams/current-ai-setup-structure.jpg?v=20260617-machines-agents" alt="Machines and agents overview used as an environment for business AI enablement, showing the Lenovo Legion control hub, Work MacBook Pro, four Work Mac Minis, and 25 AI agents." loading="lazy" />
@@ -304,12 +308,12 @@
             </article>
 
             <article class="project-showcase-card">
-              <figure><img src="assets/project-showcase/vic-rebate-api.webp?v=20260701-showcase" alt="Screenshot of the Victoria Rebate API draft tester" loading="lazy" /></figure>
+              <figure><img src="assets/project-showcase/vic-rebate-api.webp?v=20260701-showcase" alt="Screenshot of the RebateSignal tester" loading="lazy" /></figure>
               <div class="project-card-body">
-                <h3>Victoria Rebate API</h3>
+                <h3>RebateSignal</h3>
                 <p>Victoria-first API service draft for quoting energy upgrade rebate payout ranges across VEU/VEEC, STC, and Solar Victoria, with source-version posture and evidence checks.</p>
                 <ul><li>Draft tester shows line items, payout low/high, blockers, warnings, and confidence.</li><li>Next: replace sample logic with official rule packs.</li></ul>
-                <div class="repo-action-row"><button class="ui-btn btn" type="button" data-open="vicRebateApiWindow" onclick="openWindow('vicRebateApiWindow')">Open project window</button><a class="ui-btn btn secondary" href="vic-rebate-api.html">Open tester</a></div>
+                <div class="repo-action-row"><button class="ui-btn btn" type="button" data-open="vicRebateApiWindow" onclick="openWindow('vicRebateApiWindow')">Open project window</button><a class="ui-btn btn secondary" href="vic-rebate-api.html">Open RebateSignal</a></div>
                 <span class="project-tags">VEU/VEEC · STC · Solar Victoria · rules engine</span>
               </div>
             </article>
@@ -508,17 +512,17 @@
       <div class="status-bar"><span>Detailed explainer loaded.</span><span>BETTER FIRST PASS</span></div>
     </section>
 
-    <section id="vicRebateApiWindow" class="win-window doc-window" aria-label="Victoria Rebate API project" style="left:225px;top:72px;width:min(980px,94vw);height:min(760px,calc(100dvh - 85px));">
-      <div class="win-title"><span>Victoria Rebate API - Draft Project</span><button class="win-close" data-close="vicRebateApiWindow">×</button></div>
+    <section id="vicRebateApiWindow" class="win-window doc-window" aria-label="RebateSignal project" style="left:225px;top:72px;width:min(980px,94vw);height:min(760px,calc(100dvh - 85px));">
+      <div class="win-title"><span>RebateSignal - Draft Project</span><button class="win-close" data-close="vicRebateApiWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc vic-rebate-api-doc">
-          <div class="mini-heading lean-heading"><h2>Victoria Rebate API</h2></div>
+          <div class="mini-heading lean-heading"><h2>RebateSignal</h2></div>
           <p class="brand-promise"><b>A Victoria-first rebate intelligence API for VEU / VEEC, STC, and Solar Victoria payout ranges.</b></p>
           <p>This project turns messy rebate calculators, certificate price feeds, decommissioning rules, approved-product checks, and state/federal scheme conditions into one line-item quote response that installers and marketplaces can test before a job is submitted.</p>
           <div class="release-hold repo-release-card"><span><b>Draft status:</b><br />The public tester is live for review, but certificate counts are still marked <code>sample_logic</code>. The next build step is replacing placeholders with official VEU calculator and STC calculator rule packs, starting with heat pump hot water decommissioning.</span></div>
-          <div class="project-focus-strip" aria-label="Victoria Rebate API coverage"><span>VEU / VEEC</span><span>STC</span><span>Solar Victoria</span><span>decommissioning evidence</span><span>payout range</span><span>rules engine</span></div>
-          <div class="repo-action-row" aria-label="Victoria Rebate API actions">
-            <a class="ui-btn btn" href="vic-rebate-api.html">Open live draft tester</a>
+          <div class="project-focus-strip" aria-label="RebateSignal coverage"><span>VEU / VEEC</span><span>STC</span><span>Solar Victoria</span><span>decommissioning evidence</span><span>payout range</span><span>rules engine</span></div>
+          <div class="repo-action-row" aria-label="RebateSignal actions">
+            <a class="ui-btn btn" href="vic-rebate-api.html">Open RebateSignal tester</a>
             <a class="ui-btn btn secondary" href="https://www.esc.vic.gov.au/victorian-energy-upgrades/participating-veu-program/working-veu-registry-system" target="_blank" rel="noopener">Official VEU Registry/API source</a>
           </div>
           <div class="doc-grid vic-rebate-grid">
@@ -533,13 +537,13 @@
             <li><b>3. STC:</b> calculate the federal certificate line item separately so the API can show stacked value without hiding assumptions.</li>
             <li><b>4. Solar Victoria:</b> add grant/rebate/loan eligibility as a separate program line where relevant, not as certificate value.</li>
           </ol>
-          <div class="brief-template-card" aria-label="Victoria Rebate API sample response shape">
+          <div class="brief-template-card" aria-label="RebateSignal sample response shape">
             <b>Response shape:</b>
             <code>eligible · scheme line items · estimated certificates · payout_low/high · blockers · warnings · evidence_required · source_versions · confidence: sample_logic/indicative/verified</code>
           </div>
         </article>
       </div>
-      <div class="status-bar"><span>Victoria Rebate API draft loaded.</span><span>RULES BEFORE HYPE</span></div>
+      <div class="status-bar"><span>RebateSignal draft loaded.</span><span>RULES BEFORE HYPE</span></div>
     </section>
 
     <section id="agentsWindow" class="win-window doc-window" aria-label="AI Agents" style="left:240px;top:130px;width:min(860px,94vw);">

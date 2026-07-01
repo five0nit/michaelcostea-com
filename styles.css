@@ -934,6 +934,9 @@ body.public-preview::before{
 .public-preview .doc-grid>div,.public-preview .agent-grid>div{background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;padding:8px;}
 .public-preview .doc-grid b,.public-preview .agent-grid b{display:block;color:#4b53bc;font:900 12px/16px "Work Sans",Tahoma,sans-serif;margin-bottom:4px;text-transform:uppercase;}
 .public-preview .doc-grid span,.public-preview .agent-grid span{display:block;line-height:16px;}
+.public-preview .build-projects-cta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px;padding:8px;background:#d8d8d8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;align-items:center;}
+.public-preview .build-projects-cta .btn{font:900 12px/15px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;}
+.public-preview .build-projects-cta .primary-hero-cta{background:#fff4c2!important;color:#000!important;border-right-color:#808000!important;border-bottom-color:#808000!important;box-shadow:0 0 0 2px #000080;}
 .public-preview .agent-setup-diagram{margin:14px 0 10px;background:#0b1020;border:2px solid #000080;border-top-color:#33e8ff;border-left-color:#33e8ff;border-right-color:#00133d;border-bottom-color:#00133d;padding:8px;box-shadow:2px 2px 0 #000;}
 .public-preview .agent-setup-diagram img{display:block;width:100%;height:auto;max-width:100%;border:1px solid #33e8ff;background:#050713;image-rendering:auto;}
 .public-preview .agent-setup-diagram figcaption{margin:7px 2px 0;color:#e8fbff;font:700 11px/15px "Space Grotesk","Courier New",monospace;}
@@ -3134,7 +3137,7 @@ body.public-preview::before{
 }
 
 
-/* === 2026-07 Victoria Rebate API project draft === */
+/* === 2026-07 RebateSignal project draft === */
 .vic-rebate-api-doc .brand-promise{font-size:1.12rem}
 .vic-rebate-grid{margin:14px 0}
 .vic-rebate-api-doc code{overflow-wrap:anywhere}
