@@ -30,6 +30,8 @@ const routeAliases = {
   repro: 'new-repo',
   'vic-rebate-api': 'vic-rebate-api',
   'rebate-api': 'vic-rebate-api',
+  rebatesignal: 'vic-rebate-api',
+  'rebate-signal': 'vic-rebate-api',
   vicrebateapi: 'vic-rebate-api',
   veecapi: 'vic-rebate-api',
   'brief2ship-explainer': 'brief2ship-explainer',

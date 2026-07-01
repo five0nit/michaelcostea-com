@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Victoria Rebate API — API service draft</title>
+  <title>RebateSignal — API service draft</title>
   <meta name="description" content="API service draft for always-current Victorian rebate payout data, eligibility rules, and example payloads across VEU / VEEC, STC and Solar Victoria." />
   <meta name="robots" content="noindex, nofollow" />
   <link rel="canonical" href="https://michaelcostea.com/vic-rebate-api.html" />
@@ -20,7 +20,7 @@
       <div class="hero">
         <span class="eyebrow">API service draft · Victoria first</span>
         <h1>Always-current rebate payout API</h1>
-        <p><b>Victoria Rebate API</b> is being designed as an API service for installers, CRMs, quote tools, and marketplaces that need up-to-date rebate payouts and rule-driven eligibility across <b>VEU / VEEC</b>, <b>STC</b>, and <b>Solar Victoria</b>.</p>
+        <p><b>RebateSignal</b> is being designed as an API service for installers, CRMs, quote tools, and marketplaces that need up-to-date rebate payouts and rule-driven eligibility across <b>VEU / VEEC</b>, <b>STC</b>, and <b>Solar Victoria</b>.</p>
         <p>Instead of every business copying old calculator assumptions into spreadsheets, the API returns versioned scheme logic, live payout inputs, blockers, warnings, evidence requirements, and line-item estimates that can be embedded directly into quote flows.</p>
         <div class="status"><span class="pill">POST /v1/quotes</span><span class="pill">GET /v1/payouts/latest</span><span class="pill">rule versioning</span><span class="pill warn">sample logic only</span></div>
       </div>
@@ -140,9 +140,9 @@
       </article>
     </section>
 
-    <section class="tester" aria-label="Live draft tester">
+    <section class="tester" aria-label="Live RebateSignal tester">
       <form id="quoteForm" class="panel">
-        <h2>Live draft tester</h2>
+        <h2>Live RebateSignal tester</h2>
         <p><b>Scenario:</b> Heat pump hot water replacement/decommissioning. Change the inputs and recalculate the sample response.</p>
         <div class="form-row"><label for="activityType">Activity</label><select id="activityType"><option value="heat_pump_hot_water">Heat pump hot water</option><option value="hvac_air_conditioning">HVAC / air conditioning</option><option value="solar_pv">Solar PV</option><option value="battery">Battery</option></select></div>
         <div class="form-row"><label for="siteType">Site type</label><select id="siteType"><option value="residential">Residential</option><option value="business">Business</option><option value="commercial_industrial">Commercial / industrial</option></select></div>

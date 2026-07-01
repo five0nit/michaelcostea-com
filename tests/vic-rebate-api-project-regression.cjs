@@ -19,39 +19,41 @@ function text(selector) {
   return el.textContent.replace(/\s+/g, ' ').trim();
 }
 
-must(html.includes('data-open="vicRebateApiWindow"'), 'missing launcher/nav opener for Victoria Rebate API window');
+must(html.includes('data-open="vicRebateApiWindow"'), 'missing launcher/nav opener for RebateSignal window');
 must(html.includes('href="#vic-rebate-api"'), 'missing direct #vic-rebate-api page link');
-must(script.includes("vicRebateApiWindow: 'vic-rebate-api'"), 'missing Victoria Rebate API route mapping');
+must(script.includes("vicRebateApiWindow: 'vic-rebate-api'"), 'missing RebateSignal route mapping');
 must(script.includes("'rebate-api': 'vic-rebate-api'"), 'missing rebate-api route alias');
+must(script.includes("rebatesignal: 'vic-rebate-api'"), 'missing RebateSignal route alias');
+must(script.includes("'rebate-signal': 'vic-rebate-api'"), 'missing RebateSignal dashed route alias');
 
 const win = document.querySelector('#vicRebateApiWindow');
 must(win, 'missing #vicRebateApiWindow section');
-must(win.getAttribute('aria-label') === 'Victoria Rebate API project', 'Victoria Rebate API window should have clear aria-label');
+must(win.getAttribute('aria-label') === 'RebateSignal project', 'RebateSignal window should have clear aria-label');
 const copy = text('#vicRebateApiWindow');
 for (const expected of [
-  'Victoria Rebate API',
+  'RebateSignal',
   'VEU / VEEC',
   'STC',
   'Solar Victoria',
   'decommissioning evidence',
   'rules engine',
   'payout range',
-  'Open live draft tester',
+  'Open RebateSignal tester',
   'sample_logic',
 ]) {
-  must(copy.includes(expected), `Victoria Rebate API window missing ${expected}`);
+  must(copy.includes(expected), `RebateSignal window missing ${expected}`);
 }
 
 const liveLink = document.querySelector('#vicRebateApiWindow a[href="vic-rebate-api.html"]');
-must(liveLink, 'project window should link to vic-rebate-api.html draft tester');
+must(liveLink, 'project window should link to vic-rebate-api.html RebateSignal tester');
 
 const projectCardCopy = text('#projectsWindow');
-must(projectCardCopy.includes('Victoria Rebate API'), 'Projects window should include Victoria Rebate API card');
+must(projectCardCopy.includes('RebateSignal'), 'Projects window should include RebateSignal card');
 must(projectCardCopy.includes('VEU/VEEC, STC, and Solar Victoria'), 'Projects card should name the scheme coverage');
 
 const draftDom = new JSDOM(draft);
 const draftDoc = draftDom.window.document;
-must(draftDoc.title.includes('Victoria Rebate API'), 'draft page title should name project');
+must(draftDoc.title.includes('RebateSignal'), 'draft page title should name RebateSignal');
 must(draftDoc.querySelector('meta[name="robots"]')?.getAttribute('content').includes('noindex'), 'draft page should be noindex while in draft');
 const draftText = draftDoc.body.textContent.replace(/\s+/g, ' ');
 for (const expected of [
@@ -72,9 +74,9 @@ for (const expected of [
 ]) {
   must(draftText.includes(expected), `draft page missing ${expected}`);
 }
-must(draft.includes('function calculateQuote'), 'draft tester should include client-side quote calculator');
-must(draft.includes('decommissioned'), 'draft tester should model decommissioning state');
+must(draft.includes('function calculateQuote'), 'RebateSignal tester should include client-side quote calculator');
+must(draft.includes('decommissioned'), 'RebateSignal tester should model decommissioning state');
 must(draft.includes('latest_verified'), 'draft page should show latest payout strategy in request payload');
 must(draft.includes('stale_after_minutes'), 'draft page should explain stale payout freshness');
 
-console.log('vic-rebate-api-project-regression ok');
+console.log('rebatesignal-project-regression ok');
