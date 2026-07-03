@@ -967,6 +967,13 @@ body.public-preview::before{
 .public-preview .project-showcase-card .project-status{display:inline-block;background:#d4d0c8;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:4px 7px;font:900 11px/13px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;}
 .public-preview .project-showcase-card .project-status.private{background:#000;color:#fff;border-top-color:#666;border-left-color:#666;}
 .public-preview .project-showcase-card .project-tags{display:inline-block;background:#d4d0c8;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:3px 6px;font-size:11px;line-height:14px;}
+.public-preview .tiny-menace-thumb{position:relative;min-height:170px!important;background:linear-gradient(180deg,#73cfff 0 52%,#5f943f 52% 100%)!important;overflow:hidden;image-rendering:pixelated;}
+.public-preview .tiny-menace-thumb::before{content:"";position:absolute;left:0;right:0;bottom:46px;height:28px;background:repeating-linear-gradient(90deg,#7b4a26 0 24px,#573216 24px 48px);border-top:3px solid #111;border-bottom:3px solid #111;}
+.public-preview .tiny-menace-thumb span{position:absolute;display:grid;place-items:center;font:900 12px/1 "Courier New",monospace;color:#111;border:3px solid #111;box-shadow:4px 4px 0 #000;}
+.public-preview .tiny-menace-thumb .tm-sun{right:22px;top:18px;width:34px;height:34px;background:#ffdd55;border-color:#ff9f1c;}
+.public-preview .tiny-menace-thumb .tm-goblin{left:34px;bottom:54px;width:34px;height:42px;background:#57c75e;}
+.public-preview .tiny-menace-thumb .tm-fire{left:54%;bottom:54px;width:28px;height:42px;background:#ff6b19;clip-path:polygon(50% 0,88% 30%,78% 100%,20% 100%,8% 34%);}
+.public-preview .tiny-menace-thumb .tm-tnt{right:48px;bottom:54px;width:54px;height:42px;background:#d9342b;color:#fff;}
 .public-preview .legacy-case-study-grid{margin-top:10px;}
 .public-preview .project-focus-strip{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 10px;background:#c0c0c0;border:2px inset #808080;padding:7px;}
 .public-preview .project-focus-strip span{background:#000080;color:#fff;border-top:1px solid #6fb3ff;border-left:1px solid #6fb3ff;border-right:1px solid #000;border-bottom:1px solid #000;padding:4px 7px;font:900 11px/13px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;}

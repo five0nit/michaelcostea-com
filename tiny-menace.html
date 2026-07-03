@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tiny Menace — survival babysitting game prototype</title>
+  <meta name="description" content="Tiny Menace is a draft pixel indie game concept: protect a cheeky AI goblin from their own curiosity inside chain-reaction danger rooms." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://michaelcostea.com/tiny-menace.html" />
+  <style>
+    :root{--ink:#181320;--paper:#fff4d6;--cream:#fff8df;--red:#e33d2e;--orange:#ff9f1c;--blue:#253b9a;--green:#1b9b58;--purple:#5a2a91;--shadow:#000;--panel:#d7d0bd;--line:#2b2030}
+    *{box-sizing:border-box} html{background:#101728} body{margin:0;min-height:100vh;color:var(--ink);font-family:"Courier New",monospace;background:linear-gradient(180deg,#101728 0%,#192f49 42%,#284f3b 100%);image-rendering:pixelated;overflow-x:hidden} a{color:#141a7a;font-weight:900}.shell{max-width:1240px;margin:0 auto;padding:18px 14px 42px}.back{display:inline-block;margin:0 0 14px;padding:8px 10px;background:#f2d36b;color:#111;border:3px solid #111;box-shadow:4px 4px 0 #000;text-decoration:none}.hero{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(330px,.98fr);gap:18px;align-items:stretch}.card,.game-shell,.panel{background:var(--paper);border:4px solid var(--line);box-shadow:8px 8px 0 var(--shadow);padding:16px}.eyebrow{display:inline-block;background:#101728;color:#8eff9c;border:2px solid #8eff9c;padding:5px 8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.hero h1{font-family:"Arial Black","Courier New",monospace;font-size:clamp(44px,8vw,96px);line-height:.82;letter-spacing:-.08em;margin:16px 0 10px;text-transform:uppercase;text-shadow:4px 4px 0 #ffcf4a}.hero p{font-size:18px;line-height:1.45;max-width:850px}.pitch{font-size:22px!important;font-weight:900;background:#fff;border:3px dashed #111;padding:10px}.status-row,.toolbox,.rule-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pill{display:inline-flex;align-items:center;gap:5px;background:#fff;border:2px solid #111;padding:5px 8px;font-weight:900;box-shadow:2px 2px 0 #000}.pill.hot{background:#ffd0c8}.pill.safe{background:#c8ffd7}.hero-art{position:relative;min-height:350px;background:linear-gradient(180deg,#7bdcff 0 42%,#6f8e3d 42% 100%);overflow:hidden}.hero-art::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px);background-size:18px 18px;opacity:.45}.pixel-sun{position:absolute;right:36px;top:34px;width:58px;height:58px;background:#ffdb55;box-shadow:0 0 0 8px #ff9f1c,5px 5px 0 #000}.pixel-goblin{position:absolute;left:46px;bottom:52px;width:70px;height:82px;background:#56c45f;border:4px solid #111;box-shadow:7px 7px 0 #000}.pixel-goblin::before{content:"";position:absolute;left:10px;top:18px;width:12px;height:12px;background:#111;box-shadow:32px 0 0 #111}.pixel-goblin::after{content:"button?";position:absolute;left:36px;top:-42px;white-space:nowrap;background:#fff;border:3px solid #111;padding:5px 7px;color:#111;font-weight:900}.pixel-crate{position:absolute;right:90px;bottom:56px;width:82px;height:74px;background:#c5442f;border:4px solid #111;box-shadow:6px 6px 0 #000}.pixel-crate::before{content:"TNT";position:absolute;inset:18px 8px auto;text-align:center;font:900 22px/1 Arial;color:#fff}.pixel-fire{position:absolute;right:218px;bottom:56px;width:44px;height:62px;background:#ffcf4a;border:4px solid #111;clip-path:polygon(50% 0,88% 28%,78% 100%,18% 100%,8% 34%);box-shadow:6px 6px 0 #000}.game-shell{margin-top:18px;background:#c7bca3}.game-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.game-title{font:900 20px/1 "Arial Black",monospace;text-transform:uppercase}.meter{display:flex;gap:6px;flex-wrap:wrap}.meter span{background:#111;color:#fff;padding:5px 8px;font-weight:900;border:2px solid #fff}.stage{position:relative;width:100%;height:min(58vh,560px);min-height:420px;background:#79b8ff;border:5px solid #111;box-shadow:inset 0 -100px 0 #4b8f38, inset 0 -126px 0 #3d6b2c;overflow:hidden;cursor:crosshair}.stage::before{content:"";position:absolute;left:0;right:0;bottom:96px;height:30px;background:repeating-linear-gradient(90deg,#7b4a26 0 30px,#65371c 30px 60px);border-top:4px solid #111;border-bottom:4px solid #111}.obj{position:absolute;border:4px solid #111;box-shadow:5px 5px 0 #000;display:grid;place-items:center;font-weight:900;text-align:center;user-select:none}.goblin{left:42px;bottom:128px;width:42px;height:52px;background:#5bd466;border-color:#102812;transition:filter .12s}.goblin::before{content:"";position:absolute;left:7px;top:14px;width:8px;height:8px;background:#111;box-shadow:18px 0 #111}.goblin::after{content:attr(data-bubble);position:absolute;left:24px;top:-35px;min-width:70px;background:#fff;border:3px solid #111;padding:3px 5px;font-size:12px;display:none}.goblin.talking::after{display:block}.stove{left:21%;bottom:128px;width:74px;height:60px;background:#8c8c8c}.stove::before{content:"FIRE";color:#fff;background:#e33d2e;padding:3px}.curtain{left:40%;top:48px;width:64px;height:160px;background:#c73346}.curtain.burning,.fire-node{animation:flicker .24s infinite alternate;background:#ff6b19!important}.tnt{right:18%;bottom:128px;width:82px;height:66px;background:#e33d2e;color:#fff}.water{left:8%;bottom:128px;width:56px;height:42px;background:#38bdf8;color:#003}.wire{right:7%;bottom:128px;width:80px;height:28px;background:#111;color:#ffe45e}.puddle{background:#44d4ff!important;border-radius:50%;height:26px!important}.barrier{width:28px;height:74px;background:#f5c542}.lure{width:34px;height:34px;background:#ff72c6;border-radius:50%}.bubble{outline:6px solid rgba(56,189,248,.7);filter:drop-shadow(0 0 9px #38bdf8)}.toast{left:61%;bottom:210px;width:42px;height:40px;background:#dedede}.danger{filter:saturate(1.35)}.exploded{animation:boom .8s ease forwards}.toastlog{min-height:44px;background:#111;color:#8eff9c;border:3px inset #333;margin-top:10px;padding:8px;font-size:13px;line-height:1.35}.toolbox{margin-top:10px}.tool{background:#f2d36b;border:3px solid #111;box-shadow:3px 3px 0 #000;padding:8px 10px;font-weight:900;cursor:pointer}.tool.active{background:#8eff9c;transform:translate(2px,2px);box-shadow:1px 1px 0 #000}.start{background:#ff5d3d;color:#111}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}.grid.two{grid-template-columns:1.1fr .9fr}.panel h2,.panel h3{font-family:"Arial Black","Courier New",monospace;text-transform:uppercase;letter-spacing:-.04em;margin:0 0 8px}.panel ul{margin:0;padding-left:20px}.panel li{margin:6px 0;line-height:1.35}.rule-row{margin-top:10px}.rule{background:#fff;border:2px solid #111;padding:7px 9px;font-weight:900}.rule.hot{background:#ffd0c8}.rule.cool{background:#d8fff0}.footer-note{margin-top:18px;text-align:center;color:#fff;font-weight:900;text-shadow:2px 2px 0 #000}@keyframes flicker{from{filter:brightness(1)}to{filter:brightness(1.45)}}@keyframes boom{0%{transform:scale(1);background:#e33d2e}35%{transform:scale(1.8);background:#fff}100%{transform:scale(.2);opacity:.2;background:#111}}@media(max-width:900px){.hero,.grid,.grid.two{grid-template-columns:1fr}.hero-art{min-height:270px}.stage{height:520px;min-height:520px}.card,.game-shell,.panel{box-shadow:5px 5px 0 #000}.hero h1{font-size:52px}.hero p{font-size:16px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <a class="back" href="/#projects">← Back to MichaelOS projects</a>
+    <section class="hero">
+      <article class="card">
+        <span class="eyebrow">draft game subpage · playable micro-prototype</span>
+        <h1>Tiny Menace</h1>
+        <p class="pitch">One tiny idiot. One deadly room. Sixty seconds. Keep the cheeky goblin alive while their curiosity turns the room into a chain reaction machine.</p>
+        <p>The player does not directly control the goblin. You observe tells, read their next bad idea, and use a small toolbox to interrupt environmental danger combos before curiosity becomes catastrophe.</p>
+        <div class="status-row"><span class="pill hot">AI goblin: dangerously curious</span><span class="pill">toolbox survival</span><span class="pill">fixed-room chaos</span><span class="pill safe">slapstick, not grim</span></div>
+      </article>
+      <aside class="card hero-art" aria-label="Pixel scene of goblin approaching fire and TNT"><div class="pixel-sun"></div><div class="pixel-fire"></div><div class="pixel-crate"></div><div class="pixel-goblin"></div></aside>
+    </section>
+
+    <section class="game-shell" aria-label="Tiny Menace playable scene prototype">
+      <div class="game-top"><div class="game-title">Kitchen Lab — survive the timer</div><div class="meter"><span id="timer">60s</span><span id="mood">curious</span><span id="danger">danger 0</span></div></div>
+      <div id="stage" class="stage" aria-label="Clickable prototype stage">
+        <div id="goblin" class="obj goblin talking" data-bubble="oooo"></div>
+        <div class="obj water" data-kind="water" style="left:8%;bottom:128px">WATER</div>
+        <div class="obj stove danger" data-kind="fire_source">STOVE</div>
+        <div id="curtain" class="obj curtain" data-kind="flammable">CURTAIN</div>
+        <div id="toast" class="obj toast danger" data-kind="shiny">?</div>
+        <div id="tnt" class="obj tnt danger" data-kind="explosive">TNT</div>
+        <div class="obj wire danger" data-kind="electric">WIRE</div>
+      </div>
+      <div class="toolbox" aria-label="Player toolbox">
+        <button class="tool start" type="button" id="startBtn">Start 60s chaos</button>
+        <button class="tool" type="button" data-tool="barrier">Barrier</button>
+        <button class="tool" type="button" data-tool="lure">Lure</button>
+        <button class="tool" type="button" data-tool="water">Water splash</button>
+        <button class="tool" type="button" data-tool="bubble">Bubble shield</button>
+      </div>
+      <div id="log" class="toastlog">Click Start. Pick a tool, then click the room. Prototype rule: fire touches explosive = boom unless you break the chain reaction.</div>
+    </section>
+
+    <section class="grid two">
+      <article class="panel">
+        <h2>Core loop</h2>
+        <ul>
+          <li>Spawn a lovable AI goblin into a fixed pixel-art room.</li>
+          <li>The goblin forms intentions: poke, climb, taste, press, steal, inspect.</li>
+          <li>The player reads visual tells and places tools instead of directly controlling movement.</li>
+          <li>The scene runs for sixty seconds; surviving with more chaos and fewer interventions scores higher.</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h2>Toolbox</h2>
+        <ul>
+          <li><b>Barrier:</b> blocks the goblin or slows a rolling hazard.</li>
+          <li><b>Lure:</b> gives the goblin a safer shiny thing to investigate.</li>
+          <li><b>Water:</b> extinguishes fire, but can create electric puddles.</li>
+          <li><b>Bubble:</b> short protection that can also make the goblin braver.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="panel"><h3>Environmental combo rules</h3><div class="rule-row"><span class="rule hot">fire touches explosive → explosion</span><span class="rule hot">water touches electric → shock puddle</span><span class="rule hot">noise scares goblin → panic sprint</span><span class="rule cool">barrier redirects pathing</span></div></article>
+      <article class="panel"><h3>AI personality</h3><p>Cheeky, readable, affectionate, and catastrophic. The goblin is not trying to die; they just think every red button, flame, vent, saw, and suspicious mushroom deserves hands-on research.</p></article>
+      <article class="panel"><h3>MVP target</h3><p>First shippable slice: one kitchen/workshop scene, four tools, five hazards, visible intention bubbles, and two real chain-reaction systems: fire/explosives and water/electricity.</p></article>
+    </section>
+    <p class="footer-note">Tiny Menace is a draft interactive concept page on michaelcostea.com — built as a subpage before becoming a full game.</p>
+  </main>
+  <script>
+    const stage = document.getElementById('stage');
+    const goblin = document.getElementById('goblin');
+    const log = document.getElementById('log');
+    const timerEl = document.getElementById('timer');
+    const moodEl = document.getElementById('mood');
+    const dangerEl = document.getElementById('danger');
+    const tnt = document.getElementById('tnt');
+    const curtain = document.getElementById('curtain');
+    let selectedTool = null;
+    let running = false;
+    let timeLeft = 60;
+    let danger = 0;
+    let goblinX = 42;
+    let goblinTarget = 61;
+    let tickHandle = null;
+    let fireSpreading = false;
+    let shielded = false;
+
+    function say(text){ goblin.dataset.bubble = text; goblin.classList.add('talking'); log.textContent = text; }
+    function setDanger(next){ danger = Math.max(0,next); dangerEl.textContent = `danger ${danger}`; }
+    function place(kind, x, y){ const node = document.createElement('div'); node.className = `obj ${kind}`; node.dataset.kind = kind; node.style.left = `${x}px`; node.style.top = `${y}px`; node.textContent = kind === 'barrier' ? 'STOP' : kind === 'lure' ? '✨' : kind === 'water' ? 'SPLASH' : ''; stage.appendChild(node); setTimeout(()=>node.remove(), kind === 'water' ? 1800 : 5200); return node; }
+    function rectsTouch(a,b,pad=0){ const ar=a.getBoundingClientRect(), br=b.getBoundingClientRect(); return !(ar.right+pad<br.left || ar.left-pad>br.right || ar.bottom+pad<br.top || ar.top-pad>br.bottom); }
+
+    function updateGoblinAI(){
+      if(!running) return;
+      const barriers = [...stage.querySelectorAll('[data-kind="barrier"]')];
+      const lures = [...stage.querySelectorAll('[data-kind="lure"]')];
+      if(lures.length){ const lr = lures[lures.length-1].getBoundingClientRect(); const sr = stage.getBoundingClientRect(); goblinTarget = ((lr.left - sr.left) / sr.width) * 100; moodEl.textContent = 'distracted'; goblin.dataset.bubble = 'shiny!'; }
+      else if(timeLeft < 42 && !fireSpreading){ goblinTarget = 21; moodEl.textContent = 'fire-curious'; goblin.dataset.bubble = 'hot?'; }
+      else if(timeLeft < 28){ goblinTarget = 82; moodEl.textContent = 'TNT-curious'; goblin.dataset.bubble = 'box?'; }
+      else { goblinTarget = 61; moodEl.textContent = 'curious'; goblin.dataset.bubble = 'button?'; }
+      let step = goblinX < goblinTarget ? .85 : -.85;
+      for(const barrier of barriers){ if(rectsTouch(goblin, barrier, 8)){ step *= -1; goblinTarget = Math.max(5, goblinX - 18); say('blocked! rude.'); }}
+      goblinX = Math.min(92, Math.max(3, goblinX + step));
+      goblin.style.left = `${goblinX}%`;
+    }
+
+    function resolveEnvironmentalCombos(){
+      if(!running) return;
+      const waters = [...stage.querySelectorAll('[data-kind="water"]')];
+      const wire = stage.querySelector('[data-kind="electric"]');
+      const stove = stage.querySelector('[data-kind="fire_source"]');
+      if(!fireSpreading && rectsTouch(goblin, stove, 10) && !shielded){
+        fireSpreading = true; curtain.classList.add('burning'); setDanger(danger + 3); say('Goblin poked the stove. Curtain caught fire.');
+      }
+      if(fireSpreading && rectsTouch(curtain, tnt, 260)){
+        setDanger(danger + 1);
+        if(danger >= 7 && !shielded){ tnt.classList.add('exploded'); running = false; say('BOOM. Fire reached explosives. Prototype death chain complete.'); clearInterval(tickHandle); }
+      }
+      for(const water of waters){
+        if(rectsTouch(water, curtain, 40)){ fireSpreading = false; curtain.classList.remove('burning'); setDanger(danger - 3); say('Water broke the fire chain reaction.'); }
+        if(rectsTouch(water, wire, 24)){ water.classList.add('puddle'); setDanger(danger + 2); say('Water hit the wire. Electric puddle created. Good save? Bad save?'); }
+      }
+    }
+
+    function startGame(){
+      running = true; timeLeft = 60; setDanger(0); goblinX = 42; fireSpreading = false; shielded = false; curtain.classList.remove('burning'); tnt.classList.remove('exploded'); say('Tiny Menace started. Watch the goblin tells.'); clearInterval(tickHandle);
+      tickHandle = setInterval(() => { timeLeft -= 1; timerEl.textContent = `${timeLeft}s`; updateGoblinAI(); resolveEnvironmentalCombos(); if(timeLeft <= 0){ running=false; clearInterval(tickHandle); say('Survived. Goblin disappointed. Player victorious.'); } }, 500);
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.querySelectorAll('[data-tool]').forEach(btn => btn.addEventListener('click', () => { selectedTool = btn.dataset.tool; document.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('active', b===btn)); }));
+    stage.addEventListener('click', (event) => {
+      if(!selectedTool) return;
+      const sr = stage.getBoundingClientRect(); const x = event.clientX - sr.left; const y = event.clientY - sr.top;
+      if(selectedTool === 'bubble'){ shielded = true; goblin.classList.add('bubble'); say('Bubble shield up. Goblin feels invincible, which is worrying.'); setTimeout(()=>{shielded=false; goblin.classList.remove('bubble');}, 4200); return; }
+      place(selectedTool, x, y); say(`${selectedTool} placed.`);
+    });
+  </script>
+</body>
+</html>
