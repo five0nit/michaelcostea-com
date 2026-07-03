@@ -8,8 +8,9 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="canonical" href="https://michaelcostea.com/tiny-menace.html" />
   <style>
-    :root{--ink:#181320;--paper:#fff4d6;--cream:#fff8df;--red:#e33d2e;--orange:#ff9f1c;--blue:#253b9a;--green:#1b9b58;--purple:#5a2a91;--shadow:#000;--panel:#d7d0bd;--line:#2b2030}
-    *{box-sizing:border-box} html{background:#101728} body{margin:0;min-height:100vh;color:var(--ink);font-family:"Courier New",monospace;background:linear-gradient(180deg,#101728 0%,#192f49 42%,#284f3b 100%);image-rendering:pixelated;overflow-x:hidden} a{color:#141a7a;font-weight:900}.shell{max-width:1240px;margin:0 auto;padding:18px 14px 42px}.back{display:inline-block;margin:0 0 14px;padding:8px 10px;background:#f2d36b;color:#111;border:3px solid #111;box-shadow:4px 4px 0 #000;text-decoration:none}.hero{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(330px,.98fr);gap:18px;align-items:stretch}.card,.game-shell,.panel{background:var(--paper);border:4px solid var(--line);box-shadow:8px 8px 0 var(--shadow);padding:16px}.eyebrow{display:inline-block;background:#101728;color:#8eff9c;border:2px solid #8eff9c;padding:5px 8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.hero h1{font-family:"Arial Black","Courier New",monospace;font-size:clamp(44px,8vw,96px);line-height:.82;letter-spacing:-.08em;margin:16px 0 10px;text-transform:uppercase;text-shadow:4px 4px 0 #ffcf4a}.hero p{font-size:18px;line-height:1.45;max-width:850px}.pitch{font-size:22px!important;font-weight:900;background:#fff;border:3px dashed #111;padding:10px}.status-row,.toolbox,.rule-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pill{display:inline-flex;align-items:center;gap:5px;background:#fff;border:2px solid #111;padding:5px 8px;font-weight:900;box-shadow:2px 2px 0 #000}.pill.hot{background:#ffd0c8}.pill.safe{background:#c8ffd7}.hero-art{position:relative;min-height:350px;background:linear-gradient(180deg,#7bdcff 0 42%,#6f8e3d 42% 100%);overflow:hidden}.hero-art::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px);background-size:18px 18px;opacity:.45}.pixel-sun{position:absolute;right:36px;top:34px;width:58px;height:58px;background:#ffdb55;box-shadow:0 0 0 8px #ff9f1c,5px 5px 0 #000}.pixel-goblin{position:absolute;left:46px;bottom:52px;width:70px;height:82px;background:#56c45f;border:4px solid #111;box-shadow:7px 7px 0 #000}.pixel-goblin::before{content:"";position:absolute;left:10px;top:18px;width:12px;height:12px;background:#111;box-shadow:32px 0 0 #111}.pixel-goblin::after{content:"button?";position:absolute;left:36px;top:-42px;white-space:nowrap;background:#fff;border:3px solid #111;padding:5px 7px;color:#111;font-weight:900}.pixel-crate{position:absolute;right:90px;bottom:56px;width:82px;height:74px;background:#c5442f;border:4px solid #111;box-shadow:6px 6px 0 #000}.pixel-crate::before{content:"TNT";position:absolute;inset:18px 8px auto;text-align:center;font:900 22px/1 Arial;color:#fff}.pixel-fire{position:absolute;right:218px;bottom:56px;width:44px;height:62px;background:#ffcf4a;border:4px solid #111;clip-path:polygon(50% 0,88% 28%,78% 100%,18% 100%,8% 34%);box-shadow:6px 6px 0 #000}.game-shell{margin-top:18px;background:#c7bca3}.game-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.game-title{font:900 20px/1 "Arial Black",monospace;text-transform:uppercase}.meter{display:flex;gap:6px;flex-wrap:wrap}.meter span{background:#111;color:#fff;padding:5px 8px;font-weight:900;border:2px solid #fff}.stage{position:relative;width:100%;height:min(58vh,560px);min-height:420px;background:#79b8ff;border:5px solid #111;box-shadow:inset 0 -100px 0 #4b8f38, inset 0 -126px 0 #3d6b2c;overflow:hidden;cursor:crosshair}.stage::before{content:"";position:absolute;left:0;right:0;bottom:96px;height:30px;background:repeating-linear-gradient(90deg,#7b4a26 0 30px,#65371c 30px 60px);border-top:4px solid #111;border-bottom:4px solid #111}.obj{position:absolute;border:4px solid #111;box-shadow:5px 5px 0 #000;display:grid;place-items:center;font-weight:900;text-align:center;user-select:none}.goblin{left:42px;bottom:128px;width:42px;height:52px;background:#5bd466;border-color:#102812;transition:filter .12s}.goblin::before{content:"";position:absolute;left:7px;top:14px;width:8px;height:8px;background:#111;box-shadow:18px 0 #111}.goblin::after{content:attr(data-bubble);position:absolute;left:24px;top:-35px;min-width:70px;background:#fff;border:3px solid #111;padding:3px 5px;font-size:12px;display:none}.goblin.talking::after{display:block}.stove{left:21%;bottom:128px;width:74px;height:60px;background:#8c8c8c}.stove::before{content:"FIRE";color:#fff;background:#e33d2e;padding:3px}.curtain{left:40%;top:48px;width:64px;height:160px;background:#c73346}.curtain.burning,.fire-node{animation:flicker .24s infinite alternate;background:#ff6b19!important}.tnt{right:18%;bottom:128px;width:82px;height:66px;background:#e33d2e;color:#fff}.water{left:8%;bottom:128px;width:56px;height:42px;background:#38bdf8;color:#003}.wire{right:7%;bottom:128px;width:80px;height:28px;background:#111;color:#ffe45e}.puddle{background:#44d4ff!important;border-radius:50%;height:26px!important}.barrier{width:28px;height:74px;background:#f5c542}.lure{width:34px;height:34px;background:#ff72c6;border-radius:50%}.bubble{outline:6px solid rgba(56,189,248,.7);filter:drop-shadow(0 0 9px #38bdf8)}.toast{left:61%;bottom:210px;width:42px;height:40px;background:#dedede}.danger{filter:saturate(1.35)}.exploded{animation:boom .8s ease forwards}.toastlog{min-height:44px;background:#111;color:#8eff9c;border:3px inset #333;margin-top:10px;padding:8px;font-size:13px;line-height:1.35}.toolbox{margin-top:10px}.tool{background:#f2d36b;border:3px solid #111;box-shadow:3px 3px 0 #000;padding:8px 10px;font-weight:900;cursor:pointer}.tool.active{background:#8eff9c;transform:translate(2px,2px);box-shadow:1px 1px 0 #000}.start{background:#ff5d3d;color:#111}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}.grid.two{grid-template-columns:1.1fr .9fr}.panel h2,.panel h3{font-family:"Arial Black","Courier New",monospace;text-transform:uppercase;letter-spacing:-.04em;margin:0 0 8px}.panel ul{margin:0;padding-left:20px}.panel li{margin:6px 0;line-height:1.35}.rule-row{margin-top:10px}.rule{background:#fff;border:2px solid #111;padding:7px 9px;font-weight:900}.rule.hot{background:#ffd0c8}.rule.cool{background:#d8fff0}.footer-note{margin-top:18px;text-align:center;color:#fff;font-weight:900;text-shadow:2px 2px 0 #000}@keyframes flicker{from{filter:brightness(1)}to{filter:brightness(1.45)}}@keyframes boom{0%{transform:scale(1);background:#e33d2e}35%{transform:scale(1.8);background:#fff}100%{transform:scale(.2);opacity:.2;background:#111}}@media(max-width:900px){.hero,.grid,.grid.two{grid-template-columns:1fr}.hero-art{min-height:270px}.stage{height:520px;min-height:520px}.card,.game-shell,.panel{box-shadow:5px 5px 0 #000}.hero h1{font-size:52px}.hero p{font-size:16px}}
+    /* Tiny Menace map marker: world-width: 1920px */
+    :root{--ink:#181320;--paper:#fff4d6;--cream:#fff8df;--red:#e33d2e;--orange:#ff9f1c;--blue:#253b9a;--green:#1b9b58;--purple:#5a2a91;--shadow:#000;--panel:#d7d0bd;--line:#2b2030;--world-width:1920px}
+    *{box-sizing:border-box} html{background:#101728} body{margin:0;min-height:100vh;color:var(--ink);font-family:"Courier New",monospace;background:linear-gradient(180deg,#101728 0%,#192f49 42%,#284f3b 100%);overflow-x:hidden} img,.sprite{image-rendering:pixelated} a{color:#141a7a;font-weight:900}.shell{max-width:1440px;margin:0 auto;padding:18px 14px 42px}.back{display:inline-block;margin:0 0 14px;padding:8px 10px;background:#f2d36b;color:#111;border:3px solid #111;box-shadow:4px 4px 0 #000;text-decoration:none}.hero{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(330px,.98fr);gap:18px;align-items:stretch}.card,.game-shell,.panel{background:var(--paper);border:4px solid var(--line);box-shadow:8px 8px 0 var(--shadow);padding:16px}.eyebrow{display:inline-block;background:#101728;color:#8eff9c;border:2px solid #8eff9c;padding:5px 8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.hero h1{font-family:"Arial Black","Courier New",monospace;font-size:clamp(44px,8vw,96px);line-height:.82;letter-spacing:-.08em;margin:16px 0 10px;text-transform:uppercase;text-shadow:4px 4px 0 #ffcf4a}.hero p{font-size:18px;line-height:1.45;max-width:850px}.pitch{font-size:22px!important;font-weight:900;background:#fff;border:3px dashed #111;padding:10px}.status-row,.toolbox,.rule-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pill{display:inline-flex;align-items:center;gap:5px;background:#fff;border:2px solid #111;padding:5px 8px;font-weight:900;box-shadow:2px 2px 0 #000}.pill.hot{background:#ffd0c8}.pill.safe{background:#c8ffd7}.hero-art{position:relative;min-height:350px;background:linear-gradient(180deg,#7bdcff 0 42%,#6f8e3d 42% 100%);overflow:hidden}.hero-art::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px);background-size:18px 18px;opacity:.45}.pixel-sun{position:absolute;right:36px;top:34px;width:58px;height:58px;background:#ffdb55;box-shadow:0 0 0 8px #ff9f1c,5px 5px 0 #000}.pixel-goblin{position:absolute;left:46px;bottom:52px;width:82px;height:82px;background:url('assets/tiny-menace/kenney/characters/goblin-idle-a.png') center/contain no-repeat;filter:drop-shadow(6px 6px 0 #000)}.pixel-goblin::after{content:"button?";position:absolute;left:50px;top:-42px;white-space:nowrap;background:#fff;border:3px solid #111;padding:5px 7px;color:#111;font-weight:900}.pixel-crate{position:absolute;right:90px;bottom:56px;width:82px;height:74px;background:#c5442f;border:4px solid #111;box-shadow:6px 6px 0 #000}.pixel-crate::before{content:"TNT";position:absolute;inset:18px 8px auto;text-align:center;font:900 22px/1 Arial;color:#fff}.pixel-fire{position:absolute;right:218px;bottom:56px;width:44px;height:62px;background:#ffcf4a;border:4px solid #111;clip-path:polygon(50% 0,88% 28%,78% 100%,18% 100%,8% 34%);box-shadow:6px 6px 0 #000}.game-shell{margin-top:18px;background:#c7bca3}.game-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.game-title{font:900 20px/1 "Arial Black",monospace;text-transform:uppercase}.meter{display:flex;gap:6px;flex-wrap:wrap}.meter span{background:#111;color:#fff;padding:5px 8px;font-weight:900;border:2px solid #fff}.stage-viewport{position:relative;width:100%;height:min(64vh,660px);min-height:540px;background:#5e7cab;border:5px solid #111;box-shadow:inset 0 0 0 5px rgba(255,255,255,.15);overflow:hidden;cursor:crosshair}.world{position:absolute;left:0;top:0;width:var(--world-width);height:100%;transform:translateX(0);transition:transform .2s linear;background:linear-gradient(180deg,#78d2ff 0 48%,#6fb05a 48% 72%,#3a6b32 72% 100%)}.world::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 12% 15%,#fff7 0 32px,transparent 34px),linear-gradient(90deg,rgba(255,255,255,.14) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.10) 1px,transparent 1px);background-size:auto,48px 48px,48px 48px}.ground{position:absolute;left:0;right:0;bottom:0;height:112px;background:repeating-linear-gradient(90deg,#65391c 0 60px,#7c4b27 60px 120px);border-top:5px solid #17221b}.ground::before{content:"";position:absolute;left:0;right:0;top:-42px;height:42px;background-image:url('assets/tiny-menace/kenney/tiles/grass-mid.png');background-size:54px 54px;background-repeat:repeat-x;image-rendering:pixelated}.zone-label{position:absolute;top:16px;background:#fff4d6;border:3px solid #111;box-shadow:4px 4px 0 #000;padding:6px 8px;font-weight:900}.zone-a{left:34px}.zone-b{left:670px}.zone-c{left:1320px}.obj{position:absolute;display:grid;place-items:center;user-select:none}.sprite-obj{filter:drop-shadow(4px 4px 0 #000)}.sprite-obj img{display:block;width:100%;height:100%;object-fit:contain}.goblin{width:58px;height:58px;left:64px;bottom:110px;z-index:10;filter:drop-shadow(5px 5px 0 #000);transition:filter .12s}.goblin img{width:100%;height:100%;object-fit:contain}.goblin::after{content:attr(data-bubble);position:absolute;left:42px;top:-38px;min-width:78px;background:#fff;border:3px solid #111;padding:4px 6px;font-size:12px;font-weight:900;display:none}.goblin.talking::after{display:block}.hazard-card{background:#fff;border:4px solid #111;box-shadow:5px 5px 0 #000;font-weight:900;text-align:center;padding:5px;color:#111}.stove{width:92px;height:66px;background:#7e7e83;bottom:118px;left:280px}.stove::before{content:"STOVE";background:#333;color:#fff;padding:2px 4px}.curtain{width:86px;height:180px;background:#c73346;left:510px;top:72px}.curtain::after{content:"CURTAIN";position:absolute;left:6px;right:6px;bottom:10px;background:#fff;padding:3px;font-size:11px}.tnt{width:94px;height:72px;background:#d9342b;color:#fff;left:715px;bottom:118px}.tnt::before{content:"TNT";font:900 24px/1 Arial}.wire{width:116px;height:34px;background:#111;color:#ffe45e;left:1045px;bottom:118px}.wire::before{content:"LIVE WIRE"}.saw{width:72px;height:72px;left:1290px;bottom:118px;animation:spin 1.2s linear infinite}.drone{width:64px;height:64px;left:1510px;bottom:240px;animation:bob 1.8s ease-in-out infinite}.water-source{width:84px;height:62px;left:162px;bottom:118px}.crate{width:68px;height:68px;left:900px;bottom:118px}.coin{width:44px;height:44px;left:1190px;bottom:182px;animation:bob 1.2s ease-in-out infinite}.question{width:64px;height:64px;left:450px;bottom:242px}.acid{width:172px;height:30px;left:1458px;bottom:112px;background:#41d7d2;border:4px solid #111;box-shadow:5px 5px 0 #000}.fire-node{background:#ff6b19!important;border:4px solid #111;box-shadow:5px 5px 0 #000;animation:flicker .24s infinite alternate}.burning{animation:flicker .24s infinite alternate;filter:saturate(1.5) drop-shadow(0 0 14px #ff6b19)}.puddle{background:#44d4ff!important;border:4px solid #111;border-radius:50%;box-shadow:4px 4px 0 #000;height:30px!important}.electric{animation:electric .25s alternate infinite}.barrier{width:34px;height:92px;background:#f5c542;border:4px solid #111;box-shadow:4px 4px 0 #000;z-index:9}.lure{width:42px;height:42px;background:#ff72c6;border:4px solid #111;border-radius:50%;box-shadow:4px 4px 0 #000;z-index:9}.water{width:72px;height:34px;background:#38bdf8;border:4px solid #111;border-radius:50%;box-shadow:4px 4px 0 #000;z-index:8}.magnet{width:54px;height:54px;background:#8eff9c;border:4px solid #111;box-shadow:4px 4px 0 #000;z-index:8}.freeze{width:70px;height:70px;background:#d6f6ff;border:4px solid #111;box-shadow:4px 4px 0 #000;z-index:8}.bubble{outline:7px solid rgba(56,189,248,.75);border-radius:50%;filter:drop-shadow(0 0 10px #38bdf8)}.frozen{filter:sepia(.2) hue-rotate(155deg) saturate(1.5) brightness(1.2)!important;animation:none!important}.exploded{animation:boom .8s ease forwards}.toastlog{min-height:54px;background:#111;color:#8eff9c;border:3px inset #333;margin-top:10px;padding:8px;font-size:13px;line-height:1.35}.toolbox{margin-top:10px}.tool{background:#f2d36b;border:3px solid #111;box-shadow:3px 3px 0 #000;padding:8px 10px;font-weight:900;cursor:pointer}.tool.active{background:#8eff9c;transform:translate(2px,2px);box-shadow:1px 1px 0 #000}.start{background:#ff5d3d;color:#111}.license-note{font-size:12px;margin:9px 0 0;background:#fff;border:2px solid #111;padding:7px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}.grid.two{grid-template-columns:1.1fr .9fr}.panel h2,.panel h3{font-family:"Arial Black","Courier New",monospace;text-transform:uppercase;letter-spacing:-.04em;margin:0 0 8px}.panel ul{margin:0;padding-left:20px}.panel li{margin:6px 0;line-height:1.35}.rule-row{margin-top:10px}.rule{background:#fff;border:2px solid #111;padding:7px 9px;font-weight:900}.rule.hot{background:#ffd0c8}.rule.cool{background:#d8fff0}.footer-note{margin-top:18px;text-align:center;color:#fff;font-weight:900;text-shadow:2px 2px 0 #000}@keyframes flicker{from{filter:brightness(1)}to{filter:brightness(1.45)}}@keyframes boom{0%{transform:scale(1);background:#e33d2e}35%{transform:scale(1.8);background:#fff}100%{transform:scale(.2);opacity:.2;background:#111}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes bob{50%{transform:translateY(-10px)}}@keyframes electric{from{box-shadow:5px 5px 0 #000,0 0 0 #ff0}to{box-shadow:5px 5px 0 #000,0 0 24px #ff0}}@media(max-width:900px){.hero,.grid,.grid.two{grid-template-columns:1fr}.hero-art{min-height:270px}.stage-viewport{height:600px;min-height:600px;overflow-x:auto}.world{transition:none}.card,.game-shell,.panel{box-shadow:5px 5px 0 #000}.hero h1{font-size:52px}.tool{flex:1 1 120px}.license-note{text-align:left}}
   </style>
 </head>
 <body>
@@ -17,25 +18,34 @@
     <a class="back" href="/#projects">← Back to MichaelOS projects</a>
     <section class="hero">
       <article class="card">
-        <span class="eyebrow">draft game subpage · playable micro-prototype</span>
+        <span class="eyebrow">draft game subpage · expanded asset pass</span>
         <h1>Tiny Menace</h1>
         <p class="pitch">One tiny idiot. One deadly room. Sixty seconds. Keep the cheeky goblin alive while their curiosity turns the room into a chain reaction machine.</p>
-        <p>The player does not directly control the goblin. You observe tells, read their next bad idea, and use a small toolbox to interrupt environmental danger combos before curiosity becomes catastrophe.</p>
-        <div class="status-row"><span class="pill hot">AI goblin: dangerously curious</span><span class="pill">toolbox survival</span><span class="pill">fixed-room chaos</span><span class="pill safe">slapstick, not grim</span></div>
+        <p>The prototype now uses real CC0 pixel assets, a wider side-scrolling scene, and more object mechanics so it feels like a game map instead of a squished sketch.</p>
+        <div class="status-row"><span class="pill hot">AI goblin: dangerously curious</span><span class="pill">larger map</span><span class="pill">asset-backed objects</span><span class="pill safe">tool combos</span></div>
       </article>
       <aside class="card hero-art" aria-label="Pixel scene of goblin approaching fire and TNT"><div class="pixel-sun"></div><div class="pixel-fire"></div><div class="pixel-crate"></div><div class="pixel-goblin"></div></aside>
     </section>
 
     <section class="game-shell" aria-label="Tiny Menace playable scene prototype">
-      <div class="game-top"><div class="game-title">Kitchen Lab — survive the timer</div><div class="meter"><span id="timer">60s</span><span id="mood">curious</span><span id="danger">danger 0</span></div></div>
-      <div id="stage" class="stage" aria-label="Clickable prototype stage">
-        <div id="goblin" class="obj goblin talking" data-bubble="oooo"></div>
-        <div class="obj water" data-kind="water" style="left:8%;bottom:128px">WATER</div>
-        <div class="obj stove danger" data-kind="fire_source">STOVE</div>
-        <div id="curtain" class="obj curtain" data-kind="flammable">CURTAIN</div>
-        <div id="toast" class="obj toast danger" data-kind="shiny">?</div>
-        <div id="tnt" class="obj tnt danger" data-kind="explosive">TNT</div>
-        <div class="obj wire danger" data-kind="electric">WIRE</div>
+      <div class="game-top"><div class="game-title">Kitchen Lab Yard — survive the timer</div><div class="meter"><span id="timer">60s</span><span id="mood">curious</span><span id="danger">danger 0</span><span id="score">score 0</span></div></div>
+      <div id="stage" class="stage-viewport" aria-label="Clickable side-scrolling prototype stage">
+        <div id="world" class="world">
+          <div class="ground"></div>
+          <div class="zone-label zone-a">Kitchen mess</div><div class="zone-label zone-b">Explosive shed</div><div class="zone-label zone-c">Machine yard</div>
+          <div id="goblin" class="obj goblin talking" data-bubble="oooo"><img alt="Cheeky green goblin sprite from Kenney Pixel Platformer" src="assets/tiny-menace/kenney/characters/goblin-idle-a.png" /></div>
+          <div id="waterSource" class="obj sprite-obj water-source" data-kind="water_source" data-tags="wet"><img alt="Water source pixel tile" src="assets/tiny-menace/kenney/tiles/water-top.png" /></div>
+          <div id="stove" class="obj hazard-card stove danger" data-kind="fire_source" data-tags="hot noisy">STOVE</div>
+          <div id="curtain" class="obj hazard-card curtain" data-kind="flammable" data-tags="flammable cloth">CURTAIN</div>
+          <div id="question" class="obj sprite-obj question" data-kind="shiny" data-tags="curious"><img alt="Question block lure hazard" src="assets/tiny-menace/kenney/tiles/question-block.png" /></div>
+          <div id="tnt" class="obj hazard-card tnt danger" data-kind="explosive" data-tags="explosive metal">TNT</div>
+          <div id="crate" class="obj sprite-obj crate" data-kind="crate" data-tags="heavy metal"><img alt="Crate pixel tile" src="assets/tiny-menace/kenney/tiles/crate.png" /></div>
+          <div id="wire" class="obj hazard-card wire danger" data-kind="electric" data-tags="electric metal">WIRE</div>
+          <div id="coin" class="obj sprite-obj coin" data-kind="shiny" data-tags="shiny metal curious"><img alt="Coin pixel lure" src="assets/tiny-menace/kenney/tiles/coin.png" /></div>
+          <div id="saw" class="obj sprite-obj saw danger" data-kind="saw" data-tags="sharp machine"><img alt="Saw blade hazard" src="assets/tiny-menace/kenney/tiles/saw.png" /></div>
+          <div id="acid" class="obj acid danger" data-kind="acid" data-tags="wet toxic"></div>
+          <div id="drone" class="obj sprite-obj drone danger" data-kind="drone" data-tags="noisy panic"><img alt="Flying hazard sprite" src="assets/tiny-menace/kenney/characters/drone-hazard.png" /></div>
+        </div>
       </div>
       <div class="toolbox" aria-label="Player toolbox">
         <button class="tool start" type="button" id="startBtn">Start 60s chaos</button>
@@ -43,15 +53,18 @@
         <button class="tool" type="button" data-tool="lure">Lure</button>
         <button class="tool" type="button" data-tool="water">Water splash</button>
         <button class="tool" type="button" data-tool="bubble">Bubble shield</button>
+        <button class="tool" type="button" data-tool="magnet">Magnet</button>
+        <button class="tool" type="button" data-tool="freeze">Freeze</button>
       </div>
-      <div id="log" class="toastlog">Click Start. Pick a tool, then click the room. Prototype rule: fire touches explosive = boom unless you break the chain reaction.</div>
+      <div id="log" class="toastlog">Click Start. Pick a tool, then click the bigger map. Prototype rule: fire touches explosive = boom unless you break the chain reaction.</div>
+      <p class="license-note"><b>Asset source:</b> Kenney Pixel Platformer, Creative Commons CC0. Local license copy: <code>assets/tiny-menace/kenney/PIXEL_PLATFORMER_LICENSE.txt</code>.</p>
     </section>
 
     <section class="grid two">
       <article class="panel">
         <h2>Core loop</h2>
         <ul>
-          <li>Spawn a lovable AI goblin into a fixed pixel-art room.</li>
+          <li>Spawn a lovable AI goblin into a fixed but wide side-scrolling room.</li>
           <li>The goblin forms intentions: poke, climb, taste, press, steal, inspect.</li>
           <li>The player reads visual tells and places tools instead of directly controlling movement.</li>
           <li>The scene runs for sixty seconds; surviving with more chaos and fewer interventions scores higher.</li>
@@ -64,86 +77,132 @@
           <li><b>Lure:</b> gives the goblin a safer shiny thing to investigate.</li>
           <li><b>Water:</b> extinguishes fire, but can create electric puddles.</li>
           <li><b>Bubble:</b> short protection that can also make the goblin braver.</li>
+          <li><b>Magnet:</b> pulls metal crates/TNT/wires toward the click point.</li>
+          <li><b>Freeze:</b> pauses fire/saw/drone movement briefly.</li>
         </ul>
       </article>
     </section>
 
     <section class="grid">
-      <article class="panel"><h3>Environmental combo rules</h3><div class="rule-row"><span class="rule hot">fire touches explosive → explosion</span><span class="rule hot">water touches electric → shock puddle</span><span class="rule hot">noise scares goblin → panic sprint</span><span class="rule cool">barrier redirects pathing</span></div></article>
+      <article class="panel"><h3>Environmental combo rules</h3><div class="rule-row"><span class="rule hot">fire touches explosive → explosion</span><span class="rule hot">water touches electric → shock puddle</span><span class="rule hot">noise scares goblin → panic sprint</span><span class="rule cool">barrier redirects pathing</span><span class="rule cool">magnet moves metal objects</span></div></article>
       <article class="panel"><h3>AI personality</h3><p>Cheeky, readable, affectionate, and catastrophic. The goblin is not trying to die; they just think every red button, flame, vent, saw, and suspicious mushroom deserves hands-on research.</p></article>
-      <article class="panel"><h3>MVP target</h3><p>First shippable slice: one kitchen/workshop scene, four tools, five hazards, visible intention bubbles, and two real chain-reaction systems: fire/explosives and water/electricity.</p></article>
+      <article class="panel"><h3>MVP target</h3><p>First shippable slice: one kitchen/workshop scene, six tools, ten hazards/props, visible intention bubbles, scoring, camera follow, and chain-reaction systems for fire, water, electricity, panic, metal, and machines.</p></article>
     </section>
     <p class="footer-note">Tiny Menace is a draft interactive concept page on michaelcostea.com — built as a subpage before becoming a full game.</p>
   </main>
   <script>
     const stage = document.getElementById('stage');
+    const world = document.getElementById('world');
     const goblin = document.getElementById('goblin');
     const log = document.getElementById('log');
     const timerEl = document.getElementById('timer');
     const moodEl = document.getElementById('mood');
     const dangerEl = document.getElementById('danger');
+    const scoreEl = document.getElementById('score');
     const tnt = document.getElementById('tnt');
     const curtain = document.getElementById('curtain');
+    const saw = document.getElementById('saw');
+    const drone = document.getElementById('drone');
     let selectedTool = null;
     let running = false;
     let timeLeft = 60;
     let danger = 0;
-    let goblinX = 42;
-    let goblinTarget = 61;
+    let score = 0;
+    let goblinX = 64;
+    let goblinTarget = 450;
     let tickHandle = null;
     let fireSpreading = false;
     let shielded = false;
+    let frozenUntil = 0;
+    const WORLD_WIDTH = 1920;
 
+    function now(){ return Date.now(); }
     function say(text){ goblin.dataset.bubble = text; goblin.classList.add('talking'); log.textContent = text; }
     function setDanger(next){ danger = Math.max(0,next); dangerEl.textContent = `danger ${danger}`; }
-    function place(kind, x, y){ const node = document.createElement('div'); node.className = `obj ${kind}`; node.dataset.kind = kind; node.style.left = `${x}px`; node.style.top = `${y}px`; node.textContent = kind === 'barrier' ? 'STOP' : kind === 'lure' ? '✨' : kind === 'water' ? 'SPLASH' : ''; stage.appendChild(node); setTimeout(()=>node.remove(), kind === 'water' ? 1800 : 5200); return node; }
+    function setScore(next){ score = Math.max(0,next); scoreEl.textContent = `score ${score}`; }
+    function worldPoint(event){ const sr = stage.getBoundingClientRect(); const wr = world.getBoundingClientRect(); return { x: event.clientX - wr.left, y: event.clientY - wr.top, viewportX: event.clientX - sr.left }; }
+    function place(kind, x, y){ const node = document.createElement('div'); node.className = `obj ${kind}`; node.dataset.kind = kind; node.style.left = `${x}px`; node.style.top = `${y}px`; node.textContent = kind === 'barrier' ? 'STOP' : kind === 'lure' ? '✨' : kind === 'water' ? 'SPLASH' : kind === 'magnet' ? 'MAG' : kind === 'freeze' ? 'ICE' : ''; world.appendChild(node); setTimeout(()=>node.remove(), kind === 'water' ? 2300 : 6500); return node; }
     function rectsTouch(a,b,pad=0){ const ar=a.getBoundingClientRect(), br=b.getBoundingClientRect(); return !(ar.right+pad<br.left || ar.left-pad>br.right || ar.bottom+pad<br.top || ar.top-pad>br.bottom); }
+    function setLeft(el, x){ el.style.left = `${Math.max(0, Math.min(WORLD_WIDTH - 80, x))}px`; }
+    function leftOf(el){ return Number.parseFloat(el.style.left || getComputedStyle(el).left || 0); }
+
+    function updateCamera(){
+      const stageW = stage.clientWidth;
+      const desired = Math.min(Math.max(goblinX - stageW * 0.42, 0), WORLD_WIDTH - stageW);
+      if (window.matchMedia('(max-width:900px)').matches) { stage.scrollLeft = desired; world.style.transform = 'translateX(0)'; }
+      else { world.style.transform = `translateX(${-desired}px)`; }
+    }
 
     function updateGoblinAI(){
       if(!running) return;
-      const barriers = [...stage.querySelectorAll('[data-kind="barrier"]')];
-      const lures = [...stage.querySelectorAll('[data-kind="lure"]')];
-      if(lures.length){ const lr = lures[lures.length-1].getBoundingClientRect(); const sr = stage.getBoundingClientRect(); goblinTarget = ((lr.left - sr.left) / sr.width) * 100; moodEl.textContent = 'distracted'; goblin.dataset.bubble = 'shiny!'; }
-      else if(timeLeft < 42 && !fireSpreading){ goblinTarget = 21; moodEl.textContent = 'fire-curious'; goblin.dataset.bubble = 'hot?'; }
-      else if(timeLeft < 28){ goblinTarget = 82; moodEl.textContent = 'TNT-curious'; goblin.dataset.bubble = 'box?'; }
-      else { goblinTarget = 61; moodEl.textContent = 'curious'; goblin.dataset.bubble = 'button?'; }
-      let step = goblinX < goblinTarget ? .85 : -.85;
-      for(const barrier of barriers){ if(rectsTouch(goblin, barrier, 8)){ step *= -1; goblinTarget = Math.max(5, goblinX - 18); say('blocked! rude.'); }}
-      goblinX = Math.min(92, Math.max(3, goblinX + step));
-      goblin.style.left = `${goblinX}%`;
+      const barriers = [...world.querySelectorAll('[data-kind="barrier"]')];
+      const lures = [...world.querySelectorAll('[data-kind="lure"]')];
+      const choices = [450, 280, 715, 1045, 1190, 1290, 1510];
+      if(lures.length){ goblinTarget = leftOf(lures[lures.length-1]); moodEl.textContent = 'distracted'; goblin.dataset.bubble = 'shiny!'; }
+      else if(timeLeft < 50 && !fireSpreading){ goblinTarget = 280; moodEl.textContent = 'fire-curious'; goblin.dataset.bubble = 'hot?'; }
+      else if(timeLeft < 41){ goblinTarget = 715; moodEl.textContent = 'TNT-curious'; goblin.dataset.bubble = 'box?'; }
+      else if(timeLeft < 32){ goblinTarget = 1190; moodEl.textContent = 'coin-hungry'; goblin.dataset.bubble = 'mine!'; }
+      else if(timeLeft < 23){ goblinTarget = 1290; moodEl.textContent = 'saw-curious'; goblin.dataset.bubble = 'spinny'; }
+      else { goblinTarget = choices[Math.floor((60-timeLeft)/7) % choices.length]; moodEl.textContent = 'curious'; goblin.dataset.bubble = 'button?'; }
+      let step = goblinX < goblinTarget ? 13 : -13;
+      if (rectsTouch(goblin, drone, 28) && now() > frozenUntil){ step *= 1.8; moodEl.textContent = 'panicking'; goblin.dataset.bubble = 'AAAA'; setDanger(danger + 1); }
+      for(const barrier of barriers){ if(rectsTouch(goblin, barrier, 8)){ step *= -1; goblinTarget = Math.max(24, goblinX - 170); say('blocked! rude.'); setScore(score + 15); }}
+      goblinX = Math.min(WORLD_WIDTH - 90, Math.max(24, goblinX + step));
+      setLeft(goblin, goblinX);
+      updateCamera();
     }
 
     function resolveEnvironmentalCombos(){
       if(!running) return;
-      const waters = [...stage.querySelectorAll('[data-kind="water"]')];
-      const wire = stage.querySelector('[data-kind="electric"]');
-      const stove = stage.querySelector('[data-kind="fire_source"]');
-      if(!fireSpreading && rectsTouch(goblin, stove, 10) && !shielded){
+      const waters = [...world.querySelectorAll('[data-kind="water"]')];
+      const magnets = [...world.querySelectorAll('[data-kind="magnet"]')];
+      const freezes = [...world.querySelectorAll('[data-kind="freeze"]')];
+      const wire = document.getElementById('wire');
+      const stove = document.getElementById('stove');
+      const crate = document.getElementById('crate');
+      const coin = document.getElementById('coin');
+      if(freezes.some(f => rectsTouch(f, saw, 110) || rectsTouch(f, drone, 110) || rectsTouch(f, curtain, 110))){ frozenUntil = now() + 3600; saw.classList.add('frozen'); drone.classList.add('frozen'); curtain.classList.add('frozen'); say('Freeze paused the machine/fire lane.'); setScore(score + 25); }
+      if(now() > frozenUntil){ saw.classList.remove('frozen'); drone.classList.remove('frozen'); curtain.classList.remove('frozen'); }
+      for(const magnet of magnets){
+        const mx = leftOf(magnet);
+        for(const metal of [tnt, crate, wire, coin]){
+          const dx = mx - leftOf(metal);
+          if(Math.abs(dx) < 280){ setLeft(metal, leftOf(metal) + Math.sign(dx) * 18); setScore(score + 1); }
+        }
+      }
+      if(!fireSpreading && rectsTouch(goblin, stove, 10) && !shielded && now() > frozenUntil){
         fireSpreading = true; curtain.classList.add('burning'); setDanger(danger + 3); say('Goblin poked the stove. Curtain caught fire.');
       }
-      if(fireSpreading && rectsTouch(curtain, tnt, 260)){
+      if(fireSpreading && now() > frozenUntil){
+        const fire = document.createElement('div'); fire.className='obj fire-node'; fire.dataset.kind='fire'; fire.style.left=`${Math.min(leftOf(tnt)-70, leftOf(curtain)+90+danger*16)}px`; fire.style.top='266px'; fire.style.width='44px'; fire.style.height='56px'; world.appendChild(fire); setTimeout(()=>fire.remove(),1500);
         setDanger(danger + 1);
-        if(danger >= 7 && !shielded){ tnt.classList.add('exploded'); running = false; say('BOOM. Fire reached explosives. Prototype death chain complete.'); clearInterval(tickHandle); }
+        if(rectsTouch(curtain, tnt, 310) && danger >= 8 && !shielded){ tnt.classList.add('exploded'); running = false; say('BOOM. Fire reached explosives. Prototype death chain complete.'); clearInterval(tickHandle); }
       }
       for(const water of waters){
-        if(rectsTouch(water, curtain, 40)){ fireSpreading = false; curtain.classList.remove('burning'); setDanger(danger - 3); say('Water broke the fire chain reaction.'); }
-        if(rectsTouch(water, wire, 24)){ water.classList.add('puddle'); setDanger(danger + 2); say('Water hit the wire. Electric puddle created. Good save? Bad save?'); }
+        if(rectsTouch(water, curtain, 70)){ fireSpreading = false; curtain.classList.remove('burning'); setDanger(danger - 4); say('Water broke the fire chain reaction.'); setScore(score + 40); }
+        if(rectsTouch(water, wire, 36)){ water.classList.add('puddle','electric'); setDanger(danger + 2); say('Water hit the wire. Electric puddle created. Good save? Bad save?'); }
       }
+      if(rectsTouch(goblin, saw, 12) && !shielded && now() > frozenUntil){ running=false; clearInterval(tickHandle); say('Saw blade got the goblin. Needs a barrier/freeze next run.'); }
+      if(rectsTouch(goblin, document.getElementById('acid'), 8) && !shielded){ running=false; clearInterval(tickHandle); say('Goblin sampled the glowing puddle. Bad science.'); }
     }
 
     function startGame(){
-      running = true; timeLeft = 60; setDanger(0); goblinX = 42; fireSpreading = false; shielded = false; curtain.classList.remove('burning'); tnt.classList.remove('exploded'); say('Tiny Menace started. Watch the goblin tells.'); clearInterval(tickHandle);
-      tickHandle = setInterval(() => { timeLeft -= 1; timerEl.textContent = `${timeLeft}s`; updateGoblinAI(); resolveEnvironmentalCombos(); if(timeLeft <= 0){ running=false; clearInterval(tickHandle); say('Survived. Goblin disappointed. Player victorious.'); } }, 500);
+      running = true; timeLeft = 60; setDanger(0); setScore(0); goblinX = 64; goblinTarget = 450; fireSpreading = false; shielded = false; frozenUntil = 0; curtain.classList.remove('burning','frozen'); tnt.classList.remove('exploded'); saw.classList.remove('frozen'); drone.classList.remove('frozen'); setLeft(goblin, goblinX); updateCamera(); say('Tiny Menace started. Watch the goblin tells across the bigger map.'); clearInterval(tickHandle);
+      tickHandle = setInterval(() => { timeLeft -= 1; timerEl.textContent = `${timeLeft}s`; setScore(score + 1); updateGoblinAI(); resolveEnvironmentalCombos(); if(timeLeft <= 0){ running=false; clearInterval(tickHandle); say('Survived. Goblin disappointed. Player victorious.'); setScore(score + Math.max(0, 100 - danger * 5)); } }, 500);
     }
 
     document.getElementById('startBtn').addEventListener('click', startGame);
     document.querySelectorAll('[data-tool]').forEach(btn => btn.addEventListener('click', () => { selectedTool = btn.dataset.tool; document.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('active', b===btn)); }));
     stage.addEventListener('click', (event) => {
       if(!selectedTool) return;
-      const sr = stage.getBoundingClientRect(); const x = event.clientX - sr.left; const y = event.clientY - sr.top;
-      if(selectedTool === 'bubble'){ shielded = true; goblin.classList.add('bubble'); say('Bubble shield up. Goblin feels invincible, which is worrying.'); setTimeout(()=>{shielded=false; goblin.classList.remove('bubble');}, 4200); return; }
-      place(selectedTool, x, y); say(`${selectedTool} placed.`);
+      const pt = worldPoint(event);
+      if(selectedTool === 'bubble'){ shielded = true; goblin.classList.add('bubble'); say('Bubble shield up. Goblin feels invincible, which is worrying.'); setTimeout(()=>{shielded=false; goblin.classList.remove('bubble');}, 5200); return; }
+      const node = place(selectedTool, pt.x, pt.y);
+      if(selectedTool === 'freeze') frozenUntil = now() + 2600;
+      say(`${selectedTool} placed.`);
+      setScore(score + 5);
     });
+    updateCamera();
   </script>
 </body>
 </html>

@@ -21,13 +21,33 @@ for (const marker of [
   'data-tool="lure"',
   'data-tool="water"',
   'data-tool="bubble"',
+  'data-tool="magnet"',
+  'data-tool="freeze"',
   'fire touches explosive',
   'chain reaction',
   'startGame',
   'updateGoblinAI',
   'resolveEnvironmentalCombos',
+  'updateCamera',
+  'world-width: 1920px',
+  'assets/tiny-menace/kenney/characters/goblin-idle-a.png',
+  'Kenney Pixel Platformer',
+  'CC0',
 ]) {
   must(page.includes(marker), `missing page marker: ${marker}`);
+}
+
+for (const asset of [
+  'assets/tiny-menace/kenney/PIXEL_PLATFORMER_LICENSE.txt',
+  'assets/tiny-menace/kenney/characters/goblin-idle-a.png',
+  'assets/tiny-menace/kenney/tiles/grass-mid.png',
+  'assets/tiny-menace/kenney/tiles/crate.png',
+  'assets/tiny-menace/kenney/tiles/saw.png',
+  'assets/tiny-menace/kenney/tiles/water-top.png',
+]) {
+  const full = path.join(rootDir, asset);
+  must(fs.existsSync(full), `missing copied Kenney asset ${asset}`);
+  must(fs.statSync(full).size > 40, `asset ${asset} looks empty`);
 }
 
 must(/<meta name="robots" content="noindex, nofollow"\s*\/>/.test(page), 'subpage should be noindex while draft/prototype');
