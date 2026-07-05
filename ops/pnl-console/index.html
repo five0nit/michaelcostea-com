@@ -250,7 +250,7 @@
           <section class="window"><div class="titlebar">NOTES.TXT</div><div class="content"><p>This page is hidden by convention only: it is not linked from the homepage and uses <code>noindex</code>, but static GitHub Pages content is still accessible to anyone with the URL.</p><p class="small muted">Artifacts: ${esc(data.artifacts?.latest_bid_artifact)} · ${esc(data.artifacts?.scanner_latest)}</p></div></section>
         </div>`;
     }
-    fetch('./trades.json', { cache: 'no-store' }).then(r => {
+    fetch(`./trades.json?v=${Date.now()}`, { cache: 'no-store' }).then(r => {
       if (!r.ok) throw new Error(`trades.json ${r.status}`);
       return r.json();
     }).then(render).catch(err => {
