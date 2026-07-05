@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_utc": "2026-07-05T04:04:21.152825Z",
+  "generated_utc": "2026-07-05T04:10:03.840330Z",
   "source": "ledger + local Polymarket status-only commands + gate reports",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
@@ -11,18 +11,18 @@
     "crypto_closed_canaries": 2,
     "winning_trades": 1,
     "losing_trades": 1,
-    "open_orders": 2,
-    "open_positions": 2,
-    "pending_order_max_cost_pusd": 1.0,
-    "last_btc_spot": 62752.61,
+    "open_orders": 1,
+    "open_positions": 1,
+    "pending_order_max_cost_pusd": 0.225,
+    "last_btc_spot": 62769.17,
     "last_market_bid": 0.032,
-    "last_market_ask": 0.034,
+    "last_market_ask": 0.039,
     "deposit_wallet_masked": "0x7045…7b23",
     "polymarket_cash_pusd": 11.999991,
-    "tracked_wallets_usd": 23.78,
-    "tracked_wallets_usd_label": "$23.78",
+    "tracked_wallets_usd": 23.79,
+    "tracked_wallets_usd_label": "$23.79",
     "eth_usd_price": {
-      "price_usd": 1759.05,
+      "price_usd": 1760.94,
       "source": "coingecko ethereum/usd"
     }
   },
@@ -30,8 +30,8 @@
     "generic_live_enabled": true,
     "generic_halt_present": false,
     "generic_entry_halt_present": false,
-    "manager_active_count": 2,
-    "manager_exposure_cost": 1.0,
+    "manager_active_count": 1,
+    "manager_exposure_cost": 0.225,
     "gate_last_action": "NO_ACTION",
     "gate_candidate_count": 16,
     "gate_passing_count": 0,
@@ -40,8 +40,7 @@
     "gate_top_block_reasons": [
       "max_positions",
       "cluster_occupied:BTC-up",
-      "no_side_not_enabled",
-      "edge_lt_4c:0.036"
+      "no_side_not_enabled"
     ],
     "policy_v2": {
       "mode": "active",
@@ -120,15 +119,15 @@
     "conditional_balance": 0.000349,
     "book": {
       "bid": 0.032,
-      "ask": 0.034,
-      "mid": 0.033,
-      "spread": 0.0020000000000000018,
-      "bid_size": 9.12,
-      "ask_size": 20.0,
+      "ask": 0.039,
+      "mid": 0.035500000000000004,
+      "spread": 0.006999999999999999,
+      "bid_size": 32.0,
+      "ask_size": 1417.0,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
-    "btc_spot": 62752.61,
+    "btc_spot": 62769.17,
     "auto_entry_enabled": true
   },
   "tracked_wallets": [
@@ -157,16 +156,16 @@
       "role": "Tiny ETH/WETH/USDC live swap pilot",
       "status": "funded",
       "balance_label": "0.006695246668582924 ETH",
-      "usd_value": 11.78,
-      "usd_label": "$11.78",
+      "usd_value": 11.79,
+      "usd_label": "$11.79",
       "price_source": {
-        "price_usd": 1759.05,
+        "price_usd": 1760.94,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480531409,
+        "block_number": 480532781,
         "native_balance_eth": 0.006695246668582924,
         "native_balance_wei": 6695246668582924
       },
@@ -191,24 +190,6 @@
       "id": "0xe30f396c0fe6ac3a82b3ddf9865d0fa5aa428a86b03f5dda3f975784713c4e60",
       "id_masked": "0xe30f396c…713c4e60",
       "placed_utc": "2026-07-05T03:32:10.131225Z"
-    },
-    {
-      "source": "generic_manager",
-      "status": "ENTRY_OPEN",
-      "side": "BUY YES",
-      "market": "Will Bitcoin reach $64,000 June 29-July 5?",
-      "price": 0.155,
-      "original_size": 5.0,
-      "size_matched": 0.0,
-      "max_cost_pusd": 0.775,
-      "plan": {
-        "take_profit_price": null,
-        "stop_bid_lte": null,
-        "cancel_if_unfilled_after_utc": "2026-07-05T04:43:00.697168Z"
-      },
-      "id": "0xccc739f40b8a3a01f23521b6ec5914b9efd46fce26212787e149d633602ca344",
-      "id_masked": "0xccc739f4…602ca344",
-      "placed_utc": "2026-07-05T03:58:00.697196Z"
     }
   ],
   "current_positions": [
@@ -253,11 +234,11 @@
       "terminal_close_debounce": 0,
       "last_book": null,
       "last_spot": null,
-      "last_cycle_utc": "2026-07-05T04:02:15.485332Z",
+      "last_cycle_utc": "2026-07-05T04:08:53.943942Z",
       "last_actions": [
         {
           "status": "fair_ok",
-          "fair": 0.076604,
+          "fair": 0.09256,
           "limit": 0.045
         }
       ],
@@ -277,74 +258,6 @@
         }
       ],
       "fair_decay_debounce": 0
-    },
-    {
-      "source": "generic_manager",
-      "token_id": "17865707063930033224252511109985444532780467360977611782839196606846563014310",
-      "question": "Will Bitcoin reach $64,000 June 29-July 5?",
-      "url": "https://polymarket.com/event/will-bitcoin-reach-64k-june-29-july-5-2026",
-      "outcome": "YES",
-      "cluster": "BTC-up",
-      "class": {
-        "symbol": "BTCUSDT",
-        "threshold": 64000.0,
-        "direction": "up",
-        "kind": "touch"
-      },
-      "end_date_utc": "2026-07-06T04:00:00Z",
-      "created_utc": "2026-07-05T03:58:00.697179Z",
-      "intent_id": "f705983b9b6faac3",
-      "scan_artifact": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T035526Z.json",
-      "state": "ENTRY_OPEN",
-      "execution_mode": "live",
-      "freeze_reason": null,
-      "tick_size": "0.001",
-      "entry": {
-        "limit_price": 0.155,
-        "size": 5.0,
-        "cost_cap_pusd": 0.775,
-        "order_id": "0xccc739f40b8a3a01f23521b6ec5914b9efd46fce26212787e149d633602ca344",
-        "placed_utc": "2026-07-05T03:58:00.697196Z",
-        "ttl_expires_utc": "2026-07-05T04:43:00.697168Z",
-        "filled_size": 0.0,
-        "avg_fill_price": null,
-        "cost_pusd": null
-      },
-      "exit_plan": {},
-      "tp_order_id": null,
-      "stop_debounce": 0,
-      "spot_stop_debounce": 0,
-      "peak_mid": null,
-      "bad_book_time_stop_skips": 0,
-      "terminal_close_debounce": 0,
-      "last_book": null,
-      "last_spot": null,
-      "last_cycle_utc": "2026-07-05T04:02:25.909044Z",
-      "last_actions": [
-        {
-          "status": "fair_decayed",
-          "fair": 0.163848,
-          "limit": 0.155,
-          "n": 1,
-          "cancel": false
-        }
-      ],
-      "history": [
-        {
-          "ts": "2026-07-05T03:58:03.069854Z",
-          "event": "entry_order_placed",
-          "order_id": "0xccc739f40b8a3a01f23521b6ec5914b9efd46fce26212787e149d633602ca344",
-          "resp": {
-            "errorMsg": "",
-            "orderID": "0xccc739f40b8a3a01f23521b6ec5914b9efd46fce26212787e149d633602ca344",
-            "takingAmount": "",
-            "makingAmount": "",
-            "status": "live",
-            "success": true
-          }
-        }
-      ],
-      "fair_decay_debounce": 1
     }
   ],
   "past_trades": [
@@ -438,7 +351,7 @@
   ],
   "artifacts": {
     "ledger": "/home/fiv30nit/polymarket_trades_ledger.jsonl",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T040121Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T040310Z.json",
     "gate_report": "/home/fiv30nit/polymarket_auto_entry_last_report.json",
     "manager_state": "/home/fiv30nit/polymarket_positions_state.json"
   }
