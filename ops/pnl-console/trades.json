@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_utc": "2026-07-05T04:51:44.150677Z",
+  "generated_utc": "2026-07-05T05:06:14.344877Z",
   "source": "ledger + local Polymarket status-only commands + gate reports",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
@@ -14,15 +14,15 @@
     "open_orders": 0,
     "open_positions": 0,
     "pending_order_max_cost_pusd": 0,
-    "last_btc_spot": 62850.0,
-    "last_market_bid": 0.042,
-    "last_market_ask": 0.048,
+    "last_btc_spot": 62758.01,
+    "last_market_bid": 0.04,
+    "last_market_ask": 0.041,
     "deposit_wallet_masked": "0x7045…7b23",
     "polymarket_cash_pusd": 11.999991,
-    "tracked_wallets_usd": 23.84,
-    "tracked_wallets_usd_label": "$23.84",
+    "tracked_wallets_usd": 23.82,
+    "tracked_wallets_usd_label": "$23.82",
     "eth_usd_price": {
-      "price_usd": 1768.22,
+      "price_usd": 1764.8,
       "source": "coingecko ethereum/usd"
     }
   },
@@ -32,12 +32,16 @@
     "generic_entry_halt_present": false,
     "manager_active_count": 0,
     "manager_exposure_cost": 0.0,
-    "gate_last_action": "INTENTS_WRITTEN",
+    "gate_last_action": "NO_ACTION",
     "gate_candidate_count": 16,
-    "gate_passing_count": 1,
-    "gate_intents_written": 1,
-    "gate_top_blocked_market": "Will the price of Ethereum be between $1,800 and $1,900 on July 5?",
-    "gate_top_block_reasons": [],
+    "gate_passing_count": 0,
+    "gate_intents_written": 0,
+    "gate_top_blocked_market": "Will the price of Bitcoin be above $62,000 on July 5?",
+    "gate_top_block_reasons": [
+      "no_side_not_enabled",
+      "edge_lt_4c:0.010",
+      "cheap_tail_edge_lt_30pct:0.010_ask:0.089"
+    ],
     "policy_v2": {
       "mode": "active",
       "policy": {
@@ -54,7 +58,9 @@
         "hours_max": 72.0,
         "symbols": [
           "BTCUSDT",
-          "ETHUSDT"
+          "ETHUSDT",
+          "SOLUSDT",
+          "XRPUSDT"
         ],
         "kinds": [
           "terminal",
@@ -63,43 +69,15 @@
         ],
         "allow_no": false,
         "maker_edge_mode": "active",
-        "version": 3,
+        "version": 4,
         "_source": "file"
       },
-      "v1_pass": 1,
-      "v2_pass": 1,
-      "v2_only": [
-        {
-          "token_id": "48100083603218879710315922179575793084380727575519839742820468923584192298042",
-          "question": "Will the price of Ethereum be above $1,800 on July 5?",
-          "outcome": "YES",
-          "limit": 0.093,
-          "edge_at_limit": 0.0307,
-          "bid": 0.102,
-          "ask": 0.118,
-          "reasons_v1": [
-            "edge_lt_4c:0.006",
-            "cheap_tail_edge_lt_30pct:0.006_ask:0.118"
-          ]
-        }
-      ]
+      "v1_pass": 0,
+      "v2_pass": 0,
+      "v2_only": []
     },
-    "policy_v2_preview_candidates": [
-      {
-        "token_id": "48100083603218879710315922179575793084380727575519839742820468923584192298042",
-        "question": "Will the price of Ethereum be above $1,800 on July 5?",
-        "outcome": "YES",
-        "limit": 0.093,
-        "edge_at_limit": 0.0307,
-        "bid": 0.102,
-        "ask": 0.118,
-        "reasons_v1": [
-          "edge_lt_4c:0.006",
-          "cheap_tail_edge_lt_30pct:0.006_ask:0.118"
-        ]
-      }
-    ],
-    "intents_count": 1,
+    "policy_v2_preview_candidates": [],
+    "intents_count": 0,
     "crons": [
       {
         "job_id": "2d97cede33e8",
@@ -144,16 +122,16 @@
     "reconciled_size": 0.0,
     "conditional_balance": 0.000349,
     "book": {
-      "bid": 0.042,
-      "ask": 0.048,
-      "mid": 0.045,
-      "spread": 0.005999999999999998,
-      "bid_size": 24.0,
-      "ask_size": 1446.24,
+      "bid": 0.04,
+      "ask": 0.041,
+      "mid": 0.0405,
+      "spread": 0.0010000000000000009,
+      "bid_size": 1898.5,
+      "ask_size": 8.57,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
-    "btc_spot": 62850.0,
+    "btc_spot": 62758.01,
     "auto_entry_enabled": true
   },
   "tracked_wallets": [
@@ -170,7 +148,7 @@
       "usd_label": "$12.00",
       "cash_pusd": 11.999991,
       "conditional_shares": 0.000349,
-      "conditional_mark_pusd": 1.5e-05,
+      "conditional_mark_pusd": 1.4e-05,
       "notes": "No private keys exposed."
     },
     {
@@ -182,16 +160,16 @@
       "role": "Tiny ETH/WETH/USDC live swap pilot",
       "status": "funded",
       "balance_label": "0.006695246668582924 ETH",
-      "usd_value": 11.84,
-      "usd_label": "$11.84",
+      "usd_value": 11.82,
+      "usd_label": "$11.82",
       "price_source": {
-        "price_usd": 1768.22,
+        "price_usd": 1764.8,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480542797,
+        "block_number": 480546264,
         "native_balance_eth": 0.006695246668582924,
         "native_balance_wei": 6695246668582924
       },
@@ -291,7 +269,7 @@
   ],
   "artifacts": {
     "ledger": "/home/fiv30nit/polymarket_trades_ledger.jsonl",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T044934Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T050428Z.json",
     "gate_report": "/home/fiv30nit/polymarket_auto_entry_last_report.json",
     "manager_state": "/home/fiv30nit/polymarket_positions_state.json"
   }
