@@ -15,6 +15,7 @@ STATUS_CMD = ['python3', '/home/fiv30nit/.hermes/scripts/polymarket_auto_trade_b
 ARBITRUM_RPC = 'https://arb1.arbitrum.io/rpc'
 ARBITRUM_CHAIN_ID = 42161
 ARBITRUM_TEST_WALLET = '0x22469cBd6035749cfE49c35AafCED9AA4816ead5'
+ETH_USD_PRICE_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
 
 REALIZED = {
     'id': 'btc64-jul5-tp-001',
@@ -83,9 +84,28 @@ def arbitrum_wallet_status(address: str) -> dict[str, Any]:
     except Exception as e:
         return {'rpc_ok': False, 'error': f'{type(e).__name__}: {str(e)[:240]}'}
 
-def build_wallets(live: dict[str, Any]) -> list[dict[str, Any]]:
+def eth_usd_price() -> dict[str, Any]:
+    try:
+        req = urllib.request.Request(ETH_USD_PRICE_URL, headers={'User-Agent': 'michaelcostea-pnl-console/1.0'})
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            body = json.loads(resp.read().decode('utf-8'))
+        price = safe_float((body.get('ethereum') or {}).get('usd'))
+        if price <= 0:
+            raise ValueError('missing ethereum.usd price')
+        return {'price_usd': price, 'source': 'coingecko ethereum/usd'}
+    except Exception as e:
+        return {'price_usd': None, 'source': 'unavailable', 'error': f'{type(e).__name__}: {str(e)[:240]}'}
+
+def usd_label(value: float | None) -> str:
+    return f"${value:,.2f}" if isinstance(value, (int, float)) else '—'
+
+def build_wallets(live: dict[str, Any], eth_price: dict[str, Any]) -> list[dict[str, Any]]:
     wallet1 = live.get('deposit_wallet')
+    wallet1_usd = safe_float(live.get('conditional_balance'))
     wallet2_status = arbitrum_wallet_status(ARBITRUM_TEST_WALLET)
+    eth_usd = eth_price.get('price_usd')
+    wallet2_eth = safe_float(wallet2_status.get('native_balance_eth'))
+    wallet2_usd = round(wallet2_eth * eth_usd, 2) if isinstance(eth_usd, (int, float)) else None
     return [
         {
             'label': 'Wallet 1',
@@ -95,7 +115,9 @@ def build_wallets(live: dict[str, Any]) -> list[dict[str, Any]]:
             'address_masked': mask(wallet1),
             'role': 'Prediction-market bankroll + order tracking',
             'status': live.get('mode') or 'unknown',
-            'balance_label': f"conditional {safe_float(live.get('conditional_balance')):.6f}",
+            'balance_label': f"conditional {wallet1_usd:.6f}",
+            'usd_value': round(wallet1_usd, 2),
+            'usd_label': usd_label(round(wallet1_usd, 2)),
             'notes': 'Existing Polymarket test wallet. No private keys exposed.',
         },
         {
@@ -106,7 +128,10 @@ def build_wallets(live: dict[str, Any]) -> list[dict[str, Any]]:
             'address_masked': mask(ARBITRUM_TEST_WALLET),
             'role': 'Tiny ETH/WETH/USDC live swap pilot',
             'status': 'funded' if wallet2_status.get('native_balance_wei', 0) > 0 else 'unfunded',
-            'balance_label': f"{wallet2_status.get('native_balance_eth', 0):.18f} ETH" if wallet2_status.get('rpc_ok') else 'RPC unavailable',
+            'balance_label': f"{wallet2_eth:.18f} ETH" if wallet2_status.get('rpc_ok') else 'RPC unavailable',
+            'usd_value': wallet2_usd,
+            'usd_label': usd_label(wallet2_usd),
+            'price_source': eth_price,
             'rpc': wallet2_status,
             'notes': 'Bot currently disarmed; used for tiny Arbitrum test swaps only.',
         },
@@ -175,6 +200,9 @@ def build_snapshot() -> dict[str, Any]:
         })
     realized_profit = REALIZED['net_profit_pusd']
     reserved = sum(o.get('max_cost_pusd') or 0 for o in current_orders if str(o.get('side')).upper() == 'BUY')
+    eth_price = eth_usd_price()
+    tracked_wallets = build_wallets(live, eth_price)
+    tracked_wallets_usd = round(sum(w.get('usd_value') or 0 for w in tracked_wallets), 2)
     snapshot = {
         'schema_version': 1,
         'generated_utc': now,
@@ -191,6 +219,9 @@ def build_snapshot() -> dict[str, Any]:
             'last_market_bid': (live.get('book') or {}).get('bid'),
             'last_market_ask': (live.get('book') or {}).get('ask'),
             'deposit_wallet_masked': mask(live.get('deposit_wallet')),
+            'tracked_wallets_usd': tracked_wallets_usd,
+            'tracked_wallets_usd_label': usd_label(tracked_wallets_usd),
+            'eth_usd_price': eth_price,
         },
         'current_state': {
             'bot_mode': live.get('mode'),
@@ -201,7 +232,7 @@ def build_snapshot() -> dict[str, Any]:
             'book': live.get('book'),
             'btc_spot': live.get('btc_spot'),
         },
-        'tracked_wallets': build_wallets(live),
+        'tracked_wallets': tracked_wallets,
         'current_orders': current_orders,
         'past_trades': [REALIZED],
         'artifacts': {

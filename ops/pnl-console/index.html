@@ -203,6 +203,7 @@
             <div><strong>Role:</strong> ${esc(w.role)}</div>
             <div><strong>Status:</strong> <span class="status-${esc(String(w.status).toLowerCase())}">${esc(w.status)}</span></div>
             <div><strong>Balance:</strong> ${esc(w.balance_label)}</div>
+            <div><strong>USD total:</strong> ${esc(w.usd_label)}</div>
             <div class="small muted">${esc(w.notes)}</div>
           </div>
         </div>`).join('') : '<p>No tracked wallets configured.</p>';
@@ -227,7 +228,7 @@
           <div class="kpi"><div class="label">Realized PNL</div><div class="value green">+${money(s.realized_profit_pusd)}</div></div>
           <div class="kpi"><div class="label">Realized ROI</div><div class="value green">${pct(s.realized_roi_pct)}</div></div>
           <div class="kpi"><div class="label">Closed trades</div><div class="value">${esc(s.closed_trades)}</div></div>
-          <div class="kpi"><div class="label">Open orders</div><div class="value amber">${esc(s.open_orders)}</div></div>
+          <div class="kpi"><div class="label">Tracked wallet USD</div><div class="value amber">${esc(s.tracked_wallets_usd_label)}</div></div>
         </div>
         <section class="window" style="margin-top:14px"><div class="titlebar">TRACKED_WALLETS.DAT — wallet 1 / wallet 2</div><div class="content">
           <div class="wallet-grid">${walletCards}</div>

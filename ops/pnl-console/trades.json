@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_utc": "2026-07-05T00:24:55.313367Z",
+  "generated_utc": "2026-07-05T00:36:52.573660Z",
   "source": "local Polymarket artifacts + status-only bot command",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
@@ -10,10 +10,16 @@
     "open_orders": 1,
     "open_positions": 1,
     "pending_order_max_cost_pusd": 0,
-    "last_btc_spot": 63020.0,
-    "last_market_bid": 0.087,
-    "last_market_ask": 0.091,
-    "deposit_wallet_masked": "0x7045…7b23"
+    "last_btc_spot": 63022.0,
+    "last_market_bid": 0.081,
+    "last_market_ask": 0.082,
+    "deposit_wallet_masked": "0x7045…7b23",
+    "tracked_wallets_usd": 16.9,
+    "tracked_wallets_usd_label": "$16.90",
+    "eth_usd_price": {
+      "price_usd": 1771.59,
+      "source": "coingecko ethereum/usd"
+    }
   },
   "current_state": {
     "bot_mode": "active",
@@ -22,16 +28,16 @@
     "auto_entry_enabled": false,
     "halt_file_present": false,
     "book": {
-      "bid": 0.087,
-      "ask": 0.091,
-      "mid": 0.089,
-      "spread": 0.0040000000000000036,
-      "bid_size": 54.0,
-      "ask_size": 490.0,
+      "bid": 0.081,
+      "ask": 0.082,
+      "mid": 0.0815,
+      "spread": 0.0010000000000000009,
+      "bid_size": 707.0,
+      "ask_size": 10.0,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
-    "btc_spot": 63020.0
+    "btc_spot": 63022.0
   },
   "tracked_wallets": [
     {
@@ -43,6 +49,8 @@
       "role": "Prediction-market bankroll + order tracking",
       "status": "active",
       "balance_label": "conditional 5.000349",
+      "usd_value": 5.0,
+      "usd_label": "$5.00",
       "notes": "Existing Polymarket test wallet. No private keys exposed."
     },
     {
@@ -54,10 +62,16 @@
       "role": "Tiny ETH/WETH/USDC live swap pilot",
       "status": "funded",
       "balance_label": "0.006715460913400084 ETH",
+      "usd_value": 11.9,
+      "usd_label": "$11.90",
+      "price_source": {
+        "price_usd": 1771.59,
+        "source": "coingecko ethereum/usd"
+      },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480478737,
+        "block_number": 480481614,
         "native_balance_eth": 0.006715460913400084,
         "native_balance_wei": 6715460913400084
       },
@@ -111,7 +125,7 @@
   ],
   "artifacts": {
     "latest_bid_artifact": "/home/fiv30nit/polymarket_btc64_jul5_reentry_bid_20260704T235018Z.json",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T001856Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T003547Z.json",
     "state_note": "/home/fiv30nit/memory/2026-07-04.md"
   }
 }
