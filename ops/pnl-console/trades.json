@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_utc": "2026-07-05T05:07:13.472528Z",
+  "generated_utc": "2026-07-05T05:15:57.332304Z",
   "source": "ledger + local Polymarket status-only commands + gate reports",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
@@ -14,15 +14,15 @@
     "open_orders": 0,
     "open_positions": 0,
     "pending_order_max_cost_pusd": 0,
-    "last_btc_spot": 62737.13,
-    "last_market_bid": 0.04,
-    "last_market_ask": 0.041,
+    "last_btc_spot": 62755.21,
+    "last_market_bid": 0.041,
+    "last_market_ask": 0.044,
     "deposit_wallet_masked": "0x7045…7b23",
     "polymarket_cash_pusd": 11.999991,
-    "tracked_wallets_usd": 23.82,
-    "tracked_wallets_usd_label": "$23.82",
+    "tracked_wallets_usd": 23.81,
+    "tracked_wallets_usd_label": "$23.81",
     "eth_usd_price": {
-      "price_usd": 1765.4,
+      "price_usd": 1764.45,
       "source": "coingecko ethereum/usd"
     }
   },
@@ -32,15 +32,15 @@
     "generic_entry_halt_present": false,
     "manager_active_count": 0,
     "manager_exposure_cost": 0.0,
-    "gate_last_action": "INTENTS_WRITTEN",
+    "gate_last_action": "NO_ACTION",
     "gate_candidate_count": 17,
-    "gate_passing_count": 1,
-    "gate_intents_written": 1,
+    "gate_passing_count": 0,
+    "gate_intents_written": 0,
     "gate_top_blocked_market": "Will the price of Bitcoin be above $62,000 on July 5?",
     "gate_top_block_reasons": [
       "no_side_not_enabled",
       "edge_lt_4c:0.007",
-      "cheap_tail_edge_lt_30pct:0.007_ask:0.091"
+      "cheap_tail_edge_lt_30pct:0.007_ask:0.090"
     ],
     "policy_v2": {
       "mode": "active",
@@ -50,7 +50,7 @@
         "max_positions": 3,
         "edge_min_limit": 0.03,
         "range_edge_min_limit": 0.06,
-        "max_limit_below_bid": 0.03,
+        "max_limit_below_bid": 0.01,
         "cheap_ask": 0.15,
         "cheap_edge_mult": 0.3,
         "max_spread": 0.02,
@@ -69,43 +69,15 @@
         ],
         "allow_no": false,
         "maker_edge_mode": "active",
-        "version": 4,
+        "version": 5,
         "_source": "file"
       },
       "v1_pass": 0,
-      "v2_pass": 1,
-      "v2_only": [
-        {
-          "token_id": "48100083603218879710315922179575793084380727575519839742820468923584192298042",
-          "question": "Will the price of Ethereum be above $1,800 on July 5?",
-          "outcome": "YES",
-          "limit": 0.066,
-          "edge_at_limit": 0.0301,
-          "bid": 0.083,
-          "ask": 0.088,
-          "reasons_v1": [
-            "edge_lt_4c:0.008",
-            "cheap_tail_edge_lt_30pct:0.008_ask:0.088"
-          ]
-        }
-      ]
+      "v2_pass": 0,
+      "v2_only": []
     },
-    "policy_v2_preview_candidates": [
-      {
-        "token_id": "48100083603218879710315922179575793084380727575519839742820468923584192298042",
-        "question": "Will the price of Ethereum be above $1,800 on July 5?",
-        "outcome": "YES",
-        "limit": 0.066,
-        "edge_at_limit": 0.0301,
-        "bid": 0.083,
-        "ask": 0.088,
-        "reasons_v1": [
-          "edge_lt_4c:0.008",
-          "cheap_tail_edge_lt_30pct:0.008_ask:0.088"
-        ]
-      }
-    ],
-    "intents_count": 1,
+    "policy_v2_preview_candidates": [],
+    "intents_count": 0,
     "crons": [
       {
         "job_id": "2d97cede33e8",
@@ -150,16 +122,16 @@
     "reconciled_size": 0.0,
     "conditional_balance": 0.000349,
     "book": {
-      "bid": 0.04,
-      "ask": 0.041,
-      "mid": 0.0405,
-      "spread": 0.0010000000000000009,
-      "bid_size": 1947.88,
-      "ask_size": 1165.57,
+      "bid": 0.041,
+      "ask": 0.044,
+      "mid": 0.042499999999999996,
+      "spread": 0.0029999999999999957,
+      "bid_size": 600.0,
+      "ask_size": 667.0,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
-    "btc_spot": 62737.13,
+    "btc_spot": 62755.21,
     "auto_entry_enabled": true
   },
   "tracked_wallets": [
@@ -188,16 +160,16 @@
       "role": "Tiny ETH/WETH/USDC live swap pilot",
       "status": "funded",
       "balance_label": "0.006695246668582924 ETH",
-      "usd_value": 11.82,
-      "usd_label": "$11.82",
+      "usd_value": 11.81,
+      "usd_label": "$11.81",
       "price_source": {
-        "price_usd": 1765.4,
+        "price_usd": 1764.45,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480546511,
+        "block_number": 480548591,
         "native_balance_eth": 0.006695246668582924,
         "native_balance_wei": 6695246668582924
       },
@@ -297,7 +269,7 @@
   ],
   "artifacts": {
     "ledger": "/home/fiv30nit/polymarket_trades_ledger.jsonl",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T050503Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T051412Z.json",
     "gate_report": "/home/fiv30nit/polymarket_auto_entry_last_report.json",
     "manager_state": "/home/fiv30nit/polymarket_positions_state.json"
   }
