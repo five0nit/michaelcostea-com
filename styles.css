@@ -734,6 +734,13 @@ a.btn:active,button.btn:active,.task-btn.active,.start-btn.open,.start-btn:activ
   transform:translate(1px,1px);
 }
 .win-close::before,.win-close::after{background:#000;}
+.recycle-body{display:flex;flex-direction:column;gap:10px;}
+.secret-app-link{display:flex;align-items:center;gap:10px;width:max-content;max-width:100%;padding:8px 10px;background:#f7f7d7;color:#000;text-decoration:none;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #404040;border-bottom:2px solid #404040;box-shadow:inset 1px 1px 0 #dfdfdf,inset -1px -1px 0 #808080;font-family:"Work Sans",Tahoma,sans-serif;}
+.secret-app-link:hover,.secret-app-link:focus-visible{outline:2px dotted #000;outline-offset:2px;background:#fff4a3;}
+.secret-app-link:active{transform:translate(1px,1px);border-top-color:#404040;border-left-color:#404040;border-right-color:#fff;border-bottom-color:#fff;}
+.secret-app-icon{font-size:24px;line-height:1;}
+.secret-app-link b{display:block;font-size:12px;line-height:15px;}
+.secret-app-link small{display:block;font-size:10px;line-height:13px;color:#404040;}
 
 .workstation-welcome .win-body{padding:0;}
 .welcome-body{display:grid;grid-template-columns:180px 1fr;min-height:360px;background:#fff;}
