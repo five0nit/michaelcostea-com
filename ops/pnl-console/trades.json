@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_utc": "2026-07-05T01:05:43.247118Z",
+  "generated_utc": "2026-07-05T01:38:30.454752Z",
   "source": "local Polymarket artifacts + status-only bot command",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
@@ -8,36 +8,36 @@
     "realized_roi_pct": 19.88,
     "closed_trades": 1,
     "open_orders": 1,
-    "open_positions": 1,
-    "pending_order_max_cost_pusd": 0,
-    "last_btc_spot": 62933.69,
-    "last_market_bid": 0.073,
-    "last_market_ask": 0.083,
+    "open_positions": 0,
+    "pending_order_max_cost_pusd": 0.475,
+    "last_btc_spot": 62831.99,
+    "last_market_bid": 0.053,
+    "last_market_ask": 0.054,
     "deposit_wallet_masked": "0x7045…7b23",
-    "tracked_wallets_usd": 16.9,
-    "tracked_wallets_usd_label": "$16.90",
+    "tracked_wallets_usd": 11.83,
+    "tracked_wallets_usd_label": "$11.83",
     "eth_usd_price": {
-      "price_usd": 1772.49,
+      "price_usd": 1762.3,
       "source": "coingecko ethereum/usd"
     }
   },
   "current_state": {
-    "bot_mode": "active",
-    "reconciled_size": 5.000349,
-    "conditional_balance": 5.000349,
+    "bot_mode": "closed",
+    "reconciled_size": 0.0,
+    "conditional_balance": 0.000349,
     "auto_entry_enabled": false,
     "halt_file_present": false,
     "book": {
-      "bid": 0.073,
-      "ask": 0.083,
-      "mid": 0.078,
-      "spread": 0.010000000000000009,
-      "bid_size": 39.51,
-      "ask_size": 500.0,
+      "bid": 0.053,
+      "ask": 0.054,
+      "mid": 0.0535,
+      "spread": 0.0010000000000000009,
+      "bid_size": 80.86,
+      "ask_size": 10.0,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
-    "btc_spot": 62933.69
+    "btc_spot": 62831.99
   },
   "tracked_wallets": [
     {
@@ -47,10 +47,10 @@
       "address": "0x70458A957D6801aF7BEc2eF1efa70C23965E7b23",
       "address_masked": "0x7045…7b23",
       "role": "Prediction-market bankroll + order tracking",
-      "status": "active",
-      "balance_label": "conditional 5.000349",
-      "usd_value": 5.0,
-      "usd_label": "$5.00",
+      "status": "closed",
+      "balance_label": "conditional 0.000349",
+      "usd_value": 0.0,
+      "usd_label": "$0.00",
       "notes": "Existing Polymarket test wallet. No private keys exposed."
     },
     {
@@ -62,16 +62,16 @@
       "role": "Tiny ETH/WETH/USDC live swap pilot",
       "status": "funded",
       "balance_label": "0.006715460913400084 ETH",
-      "usd_value": 11.9,
-      "usd_label": "$11.90",
+      "usd_value": 11.83,
+      "usd_label": "$11.83",
       "price_source": {
-        "price_usd": 1772.49,
+        "price_usd": 1762.3,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480488533,
+        "block_number": 480496410,
         "native_balance_eth": 0.006715460913400084,
         "native_balance_wei": 6715460913400084
       },
@@ -80,19 +80,19 @@
   ],
   "current_orders": [
     {
-      "id": "0xd48d220e22a854602839a9ebb2b7eb1b095381d988a06729bc940f7d0383a01b",
-      "id_masked": "0xd48d220e…0383a01b",
+      "id": "0x0baa4db48f7e0f654cfc7a2bcee5d2d251f84535734a0b2bc6feeb25620408a7",
+      "id_masked": "0x0baa4db4…620408a7",
       "market": "BTC above $64,000 on July 5 YES",
-      "side": "SELL",
+      "side": "BUY",
       "status": "LIVE",
-      "price": 0.16,
+      "price": 0.095,
       "original_size": 5.0,
       "size_matched": 0.0,
       "remaining_size": 5.0,
-      "max_cost_pusd": null,
+      "max_cost_pusd": 0.475,
       "asset_id": "13645747860140957622989832885715602661508196793948298195031719615503169984546",
       "asset_id_masked": "1364574786…69984546",
-      "created_at": 1783210937,
+      "created_at": 1783209034,
       "plan": {
         "take_profit_price": 0.16,
         "stop_bid_lte": 0.05,
@@ -125,7 +125,7 @@
   ],
   "artifacts": {
     "latest_bid_artifact": "/home/fiv30nit/polymarket_btc64_jul5_reentry_bid_20260704T235018Z.json",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T010240Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T013553Z.json",
     "state_note": "/home/fiv30nit/memory/2026-07-04.md"
   }
 }
