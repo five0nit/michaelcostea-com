@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>PNL Console · Hidden</title>
+  <style>
+    :root {
+      --desktop: #008080;
+      --window: #c0c0c0;
+      --title: #000080;
+      --ink: #050505;
+      --paper: #ffffff;
+      --shadow-dark: #404040;
+      --shadow-light: #ffffff;
+      --green: #008a28;
+      --red: #b00020;
+      --amber: #9b6500;
+      --mono: "MS Sans Serif", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; overflow-x: hidden; }
+    body {
+      margin: 0;
+      background: var(--desktop);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+    .desktop {
+      width: min(1180px, calc(100vw - 24px));
+      margin: 12px auto 72px;
+    }
+    .window {
+      background: var(--window);
+      border: 2px solid;
+      border-color: var(--shadow-light) var(--shadow-dark) var(--shadow-dark) var(--shadow-light);
+      box-shadow: 2px 2px 0 #000;
+      margin-bottom: 14px;
+    }
+    .titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--title);
+      color: #fff;
+      min-height: 30px;
+      padding: 4px 8px;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+    .titlebar .buttons { display: flex; gap: 4px; }
+    .buttonbox {
+      width: 18px;
+      height: 18px;
+      background: var(--window);
+      border: 2px solid;
+      border-color: var(--shadow-light) var(--shadow-dark) var(--shadow-dark) var(--shadow-light);
+      color: #000;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      line-height: 1;
+    }
+    .content { padding: 14px; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .panel {
+      background: var(--paper);
+      border: 2px solid;
+      border-color: var(--shadow-dark) var(--shadow-light) var(--shadow-light) var(--shadow-dark);
+      padding: 12px;
+      min-width: 0;
+    }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .kpi {
+      background: #efefef;
+      border: 2px solid;
+      border-color: var(--shadow-light) var(--shadow-dark) var(--shadow-dark) var(--shadow-light);
+      padding: 10px;
+      min-height: 82px;
+    }
+    .kpi .label { font-size: 12px; color: #222; text-transform: uppercase; }
+    .kpi .value { font-size: clamp(20px, 4vw, 32px); font-weight: 800; margin-top: 6px; overflow-wrap: anywhere; }
+    .green { color: var(--green); }
+    .red { color: var(--red); }
+    .amber { color: var(--amber); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: clamp(24px, 5vw, 44px); line-height: 1; margin-bottom: 10px; }
+    h2 { font-size: 20px; margin-bottom: 10px; }
+    .muted { color: #333; }
+    .small { font-size: 12px; }
+    .pillrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .pill {
+      background: #ffffe1;
+      border: 1px solid #777;
+      padding: 4px 7px;
+      font-size: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border: 2px solid;
+      border-color: var(--shadow-dark) var(--shadow-light) var(--shadow-light) var(--shadow-dark);
+    }
+    th, td {
+      border: 1px solid #8a8a8a;
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #000080; color: #fff; }
+    td { overflow-wrap: anywhere; }
+    .grid-two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .status-live { color: #0046bf; font-weight: 700; }
+    .status-closed_profit { color: var(--green); font-weight: 700; }
+    .taskbar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      min-height: 42px;
+      background: var(--window);
+      border-top: 2px solid var(--shadow-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 8px;
+      z-index: 10;
+    }
+    .start {
+      border: 2px solid;
+      border-color: var(--shadow-light) var(--shadow-dark) var(--shadow-dark) var(--shadow-light);
+      padding: 7px 12px;
+      font-weight: 800;
+      background: var(--window);
+      white-space: nowrap;
+    }
+    .task { border: 2px inset #888; background: #dfdfdf; padding: 6px 10px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .error { background: #ffe7e7; border: 2px solid var(--red); padding: 12px; }
+    @media (max-width: 760px) {
+      body { font-size: 14px; }
+      .desktop { width: calc(100vw - 12px); margin-top: 6px; }
+      .content { padding: 8px; }
+      .hero, .grid-two { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: 1fr 1fr; gap: 8px; }
+      th, td { padding: 7px 6px; }
+      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .table-wrap table { min-width: 680px; }
+      .taskbar { font-size: 12px; overflow: hidden; }
+      .start { padding: 6px 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="desktop">
+    <section class="window">
+      <div class="titlebar"><span>POLYMARKET_PNL.EXE — hidden console</span><div class="buttons"><span class="buttonbox">_</span><span class="buttonbox">□</span><span class="buttonbox">×</span></div></div>
+      <div class="content" id="app">
+        <div class="panel">Loading local PNL snapshot…</div>
+      </div>
+    </section>
+  </main>
+  <footer class="taskbar"><div class="start">MICHAEL OS 89</div><div class="task">Hidden PNL Console · unlinked · noindex</div></footer>
+  <script>
+    const fmt = (n, d = 3) => typeof n === 'number' ? n.toFixed(d) : '—';
+    const money = (n, d = 6) => typeof n === 'number' ? `${n.toFixed(d)} pUSD` : '—';
+    const pct = (n) => typeof n === 'number' ? `${n.toFixed(2)}%` : '—';
+    const esc = (v) => String(v ?? '—').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    function row(label, value) { return `<tr><th>${esc(label)}</th><td>${esc(value)}</td></tr>`; }
+    function render(data) {
+      const s = data.summary || {};
+      const state = data.current_state || {};
+      const orders = data.current_orders || [];
+      const trades = data.past_trades || [];
+      document.getElementById('app').innerHTML = `
+        <div class="hero">
+          <div class="panel">
+            <h1>Trading PNL Console</h1>
+            <p class="muted">Unlinked static dashboard for Mike's Polymarket tiny-bankroll tests. Snapshot generated <strong>${esc(data.generated_utc)}</strong>.</p>
+            <div class="pillrow">
+              <span class="pill">No private keys</span>
+              <span class="pill">Wallet/order IDs masked in UI</span>
+              <span class="pill">Static snapshot, not live streaming</span>
+              <span class="pill">Auto-entry: ${state.auto_entry_enabled ? 'ON' : 'OFF'}</span>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Current State</h2>
+            <table>${row('Bot mode', state.bot_mode)}${row('BTC spot', fmt(state.btc_spot, 2))}${row('Market bid / ask', `${fmt(s.last_market_bid, 3)} / ${fmt(s.last_market_ask, 3)}`)}${row('Deposit wallet', s.deposit_wallet_masked)}${row('Open order max cost', money(s.pending_order_max_cost_pusd))}</table>
+          </div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="label">Realized PNL</div><div class="value green">+${money(s.realized_profit_pusd)}</div></div>
+          <div class="kpi"><div class="label">Realized ROI</div><div class="value green">${pct(s.realized_roi_pct)}</div></div>
+          <div class="kpi"><div class="label">Closed trades</div><div class="value">${esc(s.closed_trades)}</div></div>
+          <div class="kpi"><div class="label">Open orders</div><div class="value amber">${esc(s.open_orders)}</div></div>
+        </div>
+        <section class="window" style="margin-top:14px"><div class="titlebar">CURRENT_ORDERS.DAT</div><div class="content table-wrap">
+          <table>
+            <thead><tr><th>Status</th><th>Side</th><th>Market</th><th>Price</th><th>Size</th><th>Matched</th><th>Max Cost</th><th>Plan</th><th>Order</th></tr></thead>
+            <tbody>${orders.length ? orders.map(o => `<tr><td class="status-${esc(String(o.status).toLowerCase())}">${esc(o.status)}</td><td>${esc(o.side)}</td><td>${esc(o.market)}</td><td>${fmt(o.price, 3)}</td><td>${fmt(o.original_size, 6)}</td><td>${fmt(o.size_matched, 6)}</td><td>${money(o.max_cost_pusd)}</td><td>TP ${fmt(o.plan?.take_profit_price, 3)} · stop bid ${fmt(o.plan?.stop_bid_lte, 3)} · cancel ${esc(o.plan?.cancel_if_unfilled_after_utc)}</td><td>${esc(o.id_masked)}</td></tr>`).join('') : '<tr><td colspan="9">No current open orders.</td></tr>'}</tbody>
+          </table>
+        </div></section>
+        <section class="window"><div class="titlebar">PAST_TRADES.LOG</div><div class="content table-wrap">
+          <table>
+            <thead><tr><th>Status</th><th>Market</th><th>Entry</th><th>Exit</th><th>Size</th><th>Cost</th><th>Proceeds</th><th>Net PNL</th><th>ROI</th></tr></thead>
+            <tbody>${trades.map(t => `<tr><td class="status-${esc(t.status)}">${esc(t.status)}</td><td>${esc(t.market)}</td><td>${fmt(t.entry_price, 3)}</td><td>${fmt(t.exit_price, 3)}</td><td>${fmt(t.exit_size, 6)} sold<br><span class="small muted">dust ${fmt(t.dust, 6)}</span></td><td>${money(t.cost_basis_pusd)}</td><td>${money(t.net_proceeds_pusd)}</td><td class="green">+${money(t.net_profit_pusd)}</td><td class="green">${pct(t.roi_pct)}</td></tr>`).join('')}</tbody>
+          </table>
+        </div></section>
+        <div class="grid-two">
+          <section class="window"><div class="titlebar">BOT_STATE.INI</div><div class="content"><table>${row('Reconciled size', fmt(state.reconciled_size, 6))}${row('Conditional balance', fmt(state.conditional_balance, 6))}${row('Halt file present', state.halt_file_present ? 'YES' : 'NO')}${row('Source', data.source)}</table></div></section>
+          <section class="window"><div class="titlebar">NOTES.TXT</div><div class="content"><p>This page is hidden by convention only: it is not linked from the homepage and uses <code>noindex</code>, but static GitHub Pages content is still accessible to anyone with the URL.</p><p class="small muted">Artifacts: ${esc(data.artifacts?.latest_bid_artifact)} · ${esc(data.artifacts?.scanner_latest)}</p></div></section>
+        </div>`;
+    }
+    fetch('./trades.json', { cache: 'no-store' }).then(r => {
+      if (!r.ok) throw new Error(`trades.json ${r.status}`);
+      return r.json();
+    }).then(render).catch(err => {
+      document.getElementById('app').innerHTML = `<div class="error"><strong>Dashboard failed to load.</strong><br>${esc(err.message)}</div>`;
+    });
+  </script>
+</body>
+</html>

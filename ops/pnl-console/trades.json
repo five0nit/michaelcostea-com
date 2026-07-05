@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-07-05T00:03:23.305172Z",
+  "source": "local Polymarket artifacts + status-only bot command",
+  "privacy": "Unlinked static dashboard; no private keys/secrets; public-chain identifiers are masked in the UI.",
+  "summary": {
+    "realized_profit_pusd": 0.208701,
+    "realized_roi_pct": 19.88,
+    "closed_trades": 1,
+    "open_orders": 1,
+    "open_positions": 0,
+    "pending_order_max_cost_pusd": 0.475,
+    "last_btc_spot": 63068.0,
+    "last_market_bid": 0.101,
+    "last_market_ask": 0.102,
+    "deposit_wallet_masked": "0x7045…7b23"
+  },
+  "current_state": {
+    "bot_mode": "dust",
+    "reconciled_size": 0.000349,
+    "conditional_balance": 0.000349,
+    "auto_entry_enabled": false,
+    "halt_file_present": false,
+    "book": {
+      "bid": 0.101,
+      "ask": 0.102,
+      "mid": 0.1015,
+      "spread": 0.000999999999999987,
+      "bid_size": 20.0,
+      "ask_size": 15.0,
+      "min_order_size": 5.0,
+      "tick_size": "0.001"
+    },
+    "btc_spot": 63068.0
+  },
+  "current_orders": [
+    {
+      "id": "0x0baa4db48f7e0f654cfc7a2bcee5d2d251f84535734a0b2bc6feeb25620408a7",
+      "id_masked": "0x0baa4db4…620408a7",
+      "market": "BTC above $64,000 on July 5 YES",
+      "side": "BUY",
+      "status": "LIVE",
+      "price": 0.095,
+      "original_size": 5.0,
+      "size_matched": 0.0,
+      "remaining_size": 5.0,
+      "max_cost_pusd": 0.475,
+      "asset_id": "13645747860140957622989832885715602661508196793948298195031719615503169984546",
+      "asset_id_masked": "1364574786…69984546",
+      "created_at": 1783209034,
+      "plan": {
+        "take_profit_price": 0.16,
+        "stop_bid_lte": 0.05,
+        "spot_stop_btc_below": 62900,
+        "cancel_if_unfilled_after_utc": "2026-07-05T06:00:00Z",
+        "time_stop_utc": "2026-07-05T13:00:00Z"
+      }
+    }
+  ],
+  "past_trades": [
+    {
+      "id": "btc64-jul5-tp-001",
+      "market": "BTC above $64,000 on Jul 5 — YES",
+      "instrument": "Polymarket conditional token",
+      "side": "BUY→SELL",
+      "status": "closed_profit",
+      "entry_size": 6.140349,
+      "exit_size": 6.14,
+      "dust": 0.000349,
+      "entry_price": 0.171,
+      "exit_price": 0.205,
+      "cost_basis_pusd": 1.049999,
+      "net_proceeds_pusd": 1.2587,
+      "net_profit_pusd": 0.208701,
+      "roi_pct": 19.88,
+      "opened_utc": "2026-07-04T20:36:00Z",
+      "closed_utc": "2026-07-04T21:25:00Z",
+      "notes": "First live deposit-wallet path test. TP matched; only unsellable dust remains."
+    }
+  ],
+  "artifacts": {
+    "latest_bid_artifact": "/home/fiv30nit/polymarket_btc64_jul5_reentry_bid_20260704T235018Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260704T234725Z.json",
+    "state_note": "/home/fiv30nit/memory/2026-07-04.md"
+  }
+}
