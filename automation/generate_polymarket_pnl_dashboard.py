@@ -111,7 +111,7 @@ def cron_status() -> list[dict[str, Any]]:
     return [
         {'job_id':'2d97cede33e8','name':'Polymarket modeled auto-entry gate live','schedule':'every 5m','script':'polymarket_auto_entry_gate.py','no_agent':True},
         {'job_id':'e465ec9b12de','name':'Polymarket generic position manager live small-bets','schedule':'every 1m','script':'polymarket_position_manager.py','no_agent':True},
-        {'job_id':'1ddc1171828b','name':'Polymarket BTC64 autonomous trader legacy/closed','schedule':'every 1m','script':'polymarket_auto_trade_btc64.py','no_agent':True},
+        {'job_id':'1ddc1171828b','name':'Polymarket BTC64 autonomous trader legacy/closed','schedule':'paused','script':'polymarket_auto_trade_btc64.py','no_agent':True,'enabled':False},
     ]
 
 def build_snapshot() -> dict[str, Any]:
