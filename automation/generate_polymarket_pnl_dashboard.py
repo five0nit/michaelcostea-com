@@ -3,6 +3,7 @@ from __future__ import annotations
 import glob
 import json
 import subprocess
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -11,6 +12,9 @@ ROOT = Path('/home/fiv30nit/.openclaw/workspace/workspaces/michaelcostea-com')
 OUT_DIR = ROOT / 'ops' / 'pnl-console'
 DATA_PATH = OUT_DIR / 'trades.json'
 STATUS_CMD = ['python3', '/home/fiv30nit/.hermes/scripts/polymarket_auto_trade_btc64.py', '--status-only']
+ARBITRUM_RPC = 'https://arb1.arbitrum.io/rpc'
+ARBITRUM_CHAIN_ID = 42161
+ARBITRUM_TEST_WALLET = '0x22469cBd6035749cfE49c35AafCED9AA4816ead5'
 
 REALIZED = {
     'id': 'btc64-jul5-tp-001',
@@ -50,6 +54,63 @@ def get_live_status() -> dict[str, Any]:
         return json.loads(p.stdout)
     except Exception as e:
         return {'error': type(e).__name__, 'message': str(e)[:500]}
+
+def rpc_call(url: str, method: str, params: list[Any] | None = None, timeout: int = 20) -> Any:
+    payload = json.dumps({'jsonrpc': '2.0', 'id': 1, 'method': method, 'params': params or []}).encode()
+    req = urllib.request.Request(
+        url,
+        data=payload,
+        headers={'Content-Type': 'application/json', 'User-Agent': 'michaelcostea-pnl-console/1.0'},
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        body = json.loads(resp.read().decode('utf-8'))
+    if 'error' in body:
+        raise RuntimeError(f"{method}: {body['error']}")
+    return body['result']
+
+def arbitrum_wallet_status(address: str) -> dict[str, Any]:
+    try:
+        chain_id = int(rpc_call(ARBITRUM_RPC, 'eth_chainId'), 16)
+        balance_wei = int(rpc_call(ARBITRUM_RPC, 'eth_getBalance', [address, 'latest']), 16)
+        block_number = int(rpc_call(ARBITRUM_RPC, 'eth_blockNumber'), 16)
+        return {
+            'chain_id': chain_id,
+            'rpc_ok': chain_id == ARBITRUM_CHAIN_ID,
+            'block_number': block_number,
+            'native_balance_eth': round(balance_wei / 1e18, 18),
+            'native_balance_wei': balance_wei,
+        }
+    except Exception as e:
+        return {'rpc_ok': False, 'error': f'{type(e).__name__}: {str(e)[:240]}'}
+
+def build_wallets(live: dict[str, Any]) -> list[dict[str, Any]]:
+    wallet1 = live.get('deposit_wallet')
+    wallet2_status = arbitrum_wallet_status(ARBITRUM_TEST_WALLET)
+    return [
+        {
+            'label': 'Wallet 1',
+            'name': 'Polymarket deposit wallet',
+            'network': 'Polygon / Polymarket',
+            'address': wallet1,
+            'address_masked': mask(wallet1),
+            'role': 'Prediction-market bankroll + order tracking',
+            'status': live.get('mode') or 'unknown',
+            'balance_label': f"conditional {safe_float(live.get('conditional_balance')):.6f}",
+            'notes': 'Existing Polymarket test wallet. No private keys exposed.',
+        },
+        {
+            'label': 'Wallet 2',
+            'name': 'Arbitrum microcap pilot wallet',
+            'network': 'Arbitrum One',
+            'address': ARBITRUM_TEST_WALLET,
+            'address_masked': mask(ARBITRUM_TEST_WALLET),
+            'role': 'Tiny ETH/WETH/USDC live swap pilot',
+            'status': 'funded' if wallet2_status.get('native_balance_wei', 0) > 0 else 'unfunded',
+            'balance_label': f"{wallet2_status.get('native_balance_eth', 0):.18f} ETH" if wallet2_status.get('rpc_ok') else 'RPC unavailable',
+            'rpc': wallet2_status,
+            'notes': 'Bot currently disarmed; used for tiny Arbitrum test swaps only.',
+        },
+    ]
 
 def latest_bid_artifact() -> dict[str, Any]:
     paths = glob.glob('/home/fiv30nit/polymarket_btc64_jul5_reentry_bid_*.json')
@@ -118,7 +179,7 @@ def build_snapshot() -> dict[str, Any]:
         'schema_version': 1,
         'generated_utc': now,
         'source': 'local Polymarket artifacts + status-only bot command',
-        'privacy': 'Unlinked static dashboard; no private keys/secrets; public-chain identifiers are masked in the UI.',
+        'privacy': 'Unlinked static dashboard; no private keys/secrets; public wallet addresses only.',
         'summary': {
             'realized_profit_pusd': round(realized_profit, 6),
             'realized_roi_pct': REALIZED['roi_pct'],
@@ -140,6 +201,7 @@ def build_snapshot() -> dict[str, Any]:
             'book': live.get('book'),
             'btc_spot': live.get('btc_spot'),
         },
+        'tracked_wallets': build_wallets(live),
         'current_orders': current_orders,
         'past_trades': [REALIZED],
         'artifacts': {

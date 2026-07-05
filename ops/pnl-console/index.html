@@ -125,6 +125,12 @@
     th { background: #000080; color: #fff; }
     td { overflow-wrap: anywhere; }
     .grid-two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .wallet-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .wallet-card { background: #fff; border: 2px solid; border-color: var(--shadow-dark) var(--shadow-light) var(--shadow-light) var(--shadow-dark); padding: 10px; }
+    .wallet-card h3 { margin-bottom: 6px; }
+    .wallet-address { font-family: Consolas, "Courier New", monospace; font-size: 12px; overflow-wrap: anywhere; background: #f6f6f6; border: 1px solid #999; padding: 6px; margin: 8px 0; }
+    .wallet-meta { display: grid; gap: 4px; font-size: 13px; }
+    .status-funded, .status-closed { color: var(--green); font-weight: 700; }
     .status-live { color: #0046bf; font-weight: 700; }
     .status-closed_profit { color: var(--green); font-weight: 700; }
     .taskbar {
@@ -153,7 +159,7 @@
       body { font-size: 14px; }
       .desktop { width: calc(100vw - 12px); margin-top: 6px; }
       .content { padding: 8px; }
-      .hero, .grid-two { grid-template-columns: 1fr; }
+      .hero, .grid-two, .wallet-grid { grid-template-columns: 1fr; }
       .kpis { grid-template-columns: 1fr 1fr; gap: 8px; }
       th, td { padding: 7px 6px; }
       .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -187,6 +193,19 @@
       const state = data.current_state || {};
       const orders = data.current_orders || [];
       const trades = data.past_trades || [];
+      const wallets = data.tracked_wallets || [];
+      const walletCards = wallets.length ? wallets.map(w => `
+        <div class="wallet-card">
+          <h3>${esc(w.label)} · ${esc(w.name)}</h3>
+          <div class="wallet-address">${esc(w.address || w.address_masked)}</div>
+          <div class="wallet-meta">
+            <div><strong>Network:</strong> ${esc(w.network)}</div>
+            <div><strong>Role:</strong> ${esc(w.role)}</div>
+            <div><strong>Status:</strong> <span class="status-${esc(String(w.status).toLowerCase())}">${esc(w.status)}</span></div>
+            <div><strong>Balance:</strong> ${esc(w.balance_label)}</div>
+            <div class="small muted">${esc(w.notes)}</div>
+          </div>
+        </div>`).join('') : '<p>No tracked wallets configured.</p>';
       document.getElementById('app').innerHTML = `
         <div class="hero">
           <div class="panel">
@@ -194,7 +213,7 @@
             <p class="muted">Unlinked static dashboard for Mike's Polymarket tiny-bankroll tests. Snapshot generated <strong>${esc(data.generated_utc)}</strong>.</p>
             <div class="pillrow">
               <span class="pill">No private keys</span>
-              <span class="pill">Wallet/order IDs masked in UI</span>
+              <span class="pill">Public wallet addresses only</span>
               <span class="pill">Static snapshot, not live streaming</span>
               <span class="pill">Auto-entry: ${state.auto_entry_enabled ? 'ON' : 'OFF'}</span>
             </div>
@@ -210,6 +229,9 @@
           <div class="kpi"><div class="label">Closed trades</div><div class="value">${esc(s.closed_trades)}</div></div>
           <div class="kpi"><div class="label">Open orders</div><div class="value amber">${esc(s.open_orders)}</div></div>
         </div>
+        <section class="window" style="margin-top:14px"><div class="titlebar">TRACKED_WALLETS.DAT — wallet 1 / wallet 2</div><div class="content">
+          <div class="wallet-grid">${walletCards}</div>
+        </div></section>
         <section class="window" style="margin-top:14px"><div class="titlebar">CURRENT_ORDERS.DAT</div><div class="content table-wrap">
           <table>
             <thead><tr><th>Status</th><th>Side</th><th>Market</th><th>Price</th><th>Size</th><th>Matched</th><th>Max Cost</th><th>Plan</th><th>Order</th></tr></thead>
