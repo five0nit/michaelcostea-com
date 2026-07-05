@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "generated_utc": "2026-07-05T01:38:30.454752Z",
+  "generated_utc": "2026-07-05T01:39:31.568711Z",
   "source": "local Polymarket artifacts + status-only bot command",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
     "realized_profit_pusd": 0.208701,
     "realized_roi_pct": 19.88,
     "closed_trades": 1,
-    "open_orders": 1,
+    "open_orders": 0,
     "open_positions": 0,
-    "pending_order_max_cost_pusd": 0.475,
+    "pending_order_max_cost_pusd": 0,
     "last_btc_spot": 62831.99,
     "last_market_bid": 0.053,
     "last_market_ask": 0.054,
@@ -17,7 +17,7 @@
     "tracked_wallets_usd": 11.83,
     "tracked_wallets_usd_label": "$11.83",
     "eth_usd_price": {
-      "price_usd": 1762.3,
+      "price_usd": 1762.0,
       "source": "coingecko ethereum/usd"
     }
   },
@@ -33,7 +33,7 @@
       "mid": 0.0535,
       "spread": 0.0010000000000000009,
       "bid_size": 80.86,
-      "ask_size": 10.0,
+      "ask_size": 500.0,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
@@ -65,43 +65,20 @@
       "usd_value": 11.83,
       "usd_label": "$11.83",
       "price_source": {
-        "price_usd": 1762.3,
+        "price_usd": 1762.0,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480496410,
+        "block_number": 480496650,
         "native_balance_eth": 0.006715460913400084,
         "native_balance_wei": 6715460913400084
       },
       "notes": "Bot currently disarmed; used for tiny Arbitrum test swaps only."
     }
   ],
-  "current_orders": [
-    {
-      "id": "0x0baa4db48f7e0f654cfc7a2bcee5d2d251f84535734a0b2bc6feeb25620408a7",
-      "id_masked": "0x0baa4db4…620408a7",
-      "market": "BTC above $64,000 on July 5 YES",
-      "side": "BUY",
-      "status": "LIVE",
-      "price": 0.095,
-      "original_size": 5.0,
-      "size_matched": 0.0,
-      "remaining_size": 5.0,
-      "max_cost_pusd": 0.475,
-      "asset_id": "13645747860140957622989832885715602661508196793948298195031719615503169984546",
-      "asset_id_masked": "1364574786…69984546",
-      "created_at": 1783209034,
-      "plan": {
-        "take_profit_price": 0.16,
-        "stop_bid_lte": 0.05,
-        "spot_stop_btc_below": 62900,
-        "cancel_if_unfilled_after_utc": "2026-07-05T06:00:00Z",
-        "time_stop_utc": "2026-07-05T13:00:00Z"
-      }
-    }
-  ],
+  "current_orders": [],
   "past_trades": [
     {
       "id": "btc64-jul5-tp-001",

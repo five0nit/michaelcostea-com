@@ -164,7 +164,11 @@ def build_snapshot() -> dict[str, Any]:
     bid_art = latest_bid_artifact()
     watcher = latest_watcher_state()
     open_orders = live.get('open_orders') or []
-    if not open_orders:
+    live_has_position = safe_float(live.get('reconciled_size')) >= 0.001
+    live_mode_terminal = str(live.get('mode') or '').lower() in {'closed', 'dust', 'sold_or_dust', 'inert_after_end'}
+    # Only fall back to stale local artifacts when the live status call failed or still shows an active/pending state.
+    # If live CLOB status says closed/no orders/no position, do not resurrect old watcher/bid artifacts.
+    if not open_orders and not (live_mode_terminal and not live_has_position) and live.get('error'):
         watch_order = watcher.get('order')
         if isinstance(watch_order, dict) and str(watch_order.get('status', '')).upper() in {'LIVE', 'OPEN'}:
             open_orders = [watch_order]
