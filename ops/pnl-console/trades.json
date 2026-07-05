@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_utc": "2026-07-05T04:24:36.694842Z",
+  "generated_utc": "2026-07-05T04:30:11.208551Z",
   "source": "ledger + local Polymarket status-only commands + gate reports",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
@@ -13,16 +13,16 @@
     "losing_trades": 1,
     "open_orders": 1,
     "open_positions": 1,
-    "pending_order_max_cost_pusd": 0.86,
-    "last_btc_spot": 62845.46,
-    "last_market_bid": 0.039,
-    "last_market_ask": 0.04,
+    "pending_order_max_cost_pusd": 0.87,
+    "last_btc_spot": 62866.7,
+    "last_market_bid": 0.041,
+    "last_market_ask": 0.042,
     "deposit_wallet_masked": "0x7045…7b23",
     "polymarket_cash_pusd": 11.999991,
     "tracked_wallets_usd": 23.82,
     "tracked_wallets_usd_label": "$23.82",
     "eth_usd_price": {
-      "price_usd": 1766.06,
+      "price_usd": 1765.79,
       "source": "coingecko ethereum/usd"
     }
   },
@@ -31,15 +31,14 @@
     "generic_halt_present": false,
     "generic_entry_halt_present": false,
     "manager_active_count": 1,
-    "manager_exposure_cost": 0.86,
-    "gate_last_action": "INTENTS_WRITTEN",
+    "manager_exposure_cost": 0.87,
+    "gate_last_action": "NO_ACTION",
     "gate_candidate_count": 16,
-    "gate_passing_count": 1,
-    "gate_intents_written": 1,
+    "gate_passing_count": 0,
+    "gate_intents_written": 0,
     "gate_top_blocked_market": "Will the price of Ethereum be between $1,800 and $1,900 on July 5?",
     "gate_top_block_reasons": [
-      "kind_not_enabled",
-      "edge_lt_4c:0.033"
+      "edge_lt_4c:0.037"
     ],
     "policy_v2": {
       "mode": "active",
@@ -48,6 +47,7 @@
         "max_total_cost": 2.5,
         "max_positions": 3,
         "edge_min_limit": 0.03,
+        "range_edge_min_limit": 0.06,
         "max_limit_below_bid": 0.03,
         "cheap_ask": 0.15,
         "cheap_edge_mult": 0.3,
@@ -60,47 +60,20 @@
         ],
         "kinds": [
           "terminal",
-          "touch"
+          "touch",
+          "range"
         ],
         "allow_no": false,
         "maker_edge_mode": "active",
-        "version": 2,
+        "version": 3,
         "_source": "file"
       },
       "v1_pass": 0,
-      "v2_pass": 1,
-      "v2_only": [
-        {
-          "token_id": "17865707063930033224252511109985444532780467360977611782839196606846563014310",
-          "question": "Will Bitcoin reach $64,000 June 29-July 5?",
-          "outcome": "YES",
-          "limit": 0.172,
-          "edge_at_limit": 0.0307,
-          "bid": 0.2,
-          "ask": 0.201,
-          "reasons_v1": [
-            "edge_lt_4c:0.002",
-            "min_cost_gt_cap:1.005"
-          ]
-        }
-      ]
+      "v2_pass": 0,
+      "v2_only": []
     },
-    "policy_v2_preview_candidates": [
-      {
-        "token_id": "17865707063930033224252511109985444532780467360977611782839196606846563014310",
-        "question": "Will Bitcoin reach $64,000 June 29-July 5?",
-        "outcome": "YES",
-        "limit": 0.172,
-        "edge_at_limit": 0.0307,
-        "bid": 0.2,
-        "ask": 0.201,
-        "reasons_v1": [
-          "edge_lt_4c:0.002",
-          "min_cost_gt_cap:1.005"
-        ]
-      }
-    ],
-    "intents_count": 1,
+    "policy_v2_preview_candidates": [],
+    "intents_count": 0,
     "crons": [
       {
         "job_id": "2d97cede33e8",
@@ -145,16 +118,16 @@
     "reconciled_size": 0.0,
     "conditional_balance": 0.000349,
     "book": {
-      "bid": 0.039,
-      "ask": 0.04,
-      "mid": 0.0395,
+      "bid": 0.041,
+      "ask": 0.042,
+      "mid": 0.0415,
       "spread": 0.0010000000000000009,
-      "bid_size": 26.0,
-      "ask_size": 1417.0,
+      "bid_size": 25.0,
+      "ask_size": 127.0,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
-    "btc_spot": 62845.46,
+    "btc_spot": 62866.7,
     "auto_entry_enabled": true
   },
   "tracked_wallets": [
@@ -186,13 +159,13 @@
       "usd_value": 11.82,
       "usd_label": "$11.82",
       "price_source": {
-        "price_usd": 1766.06,
+        "price_usd": 1765.79,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480536271,
+        "block_number": 480537615,
         "native_balance_eth": 0.006695246668582924,
         "native_balance_wei": 6695246668582924
       },
@@ -205,18 +178,18 @@
       "status": "ENTRY_OPEN",
       "side": "BUY YES",
       "market": "Will Bitcoin reach $64,000 June 29-July 5?",
-      "price": 0.172,
+      "price": 0.174,
       "original_size": 5.0,
       "size_matched": 0.0,
-      "max_cost_pusd": 0.86,
+      "max_cost_pusd": 0.87,
       "plan": {
         "take_profit_price": null,
         "stop_bid_lte": null,
-        "cancel_if_unfilled_after_utc": "2026-07-05T05:09:21.929497Z"
+        "cancel_if_unfilled_after_utc": "2026-07-05T05:14:58.560158Z"
       },
-      "id": "0x13d2c277a22f171b147be282b4b9872b36f5e83ec6883872fe8003c4d2d5d78a",
-      "id_masked": "0x13d2c277…d2d5d78a",
-      "placed_utc": "2026-07-05T04:24:21.929526Z"
+      "id": "0xc2e10d261c7dd32feba382403fb1d6f100f85ac33c8ae048fc9054fc661492a0",
+      "id_masked": "0xc2e10d26…661492a0",
+      "placed_utc": "2026-07-05T04:29:58.560147Z"
     }
   ],
   "current_positions": [
@@ -242,12 +215,12 @@
       "freeze_reason": null,
       "tick_size": "0.001",
       "entry": {
-        "limit_price": 0.172,
+        "limit_price": 0.174,
         "size": 5.0,
-        "cost_cap_pusd": 0.86,
-        "order_id": "0x13d2c277a22f171b147be282b4b9872b36f5e83ec6883872fe8003c4d2d5d78a",
-        "placed_utc": "2026-07-05T04:24:21.929526Z",
-        "ttl_expires_utc": "2026-07-05T05:09:21.929497Z",
+        "cost_cap_pusd": 0.87,
+        "order_id": "0xc2e10d261c7dd32feba382403fb1d6f100f85ac33c8ae048fc9054fc661492a0",
+        "placed_utc": "2026-07-05T04:29:58.560147Z",
+        "ttl_expires_utc": "2026-07-05T05:14:58.560158Z",
         "filled_size": 0.0,
         "avg_fill_price": null,
         "cost_pusd": null
@@ -261,8 +234,20 @@
       "terminal_close_debounce": 0,
       "last_book": null,
       "last_spot": null,
-      "last_cycle_utc": null,
-      "last_actions": [],
+      "last_cycle_utc": "2026-07-05T04:30:08.910821Z",
+      "last_actions": [
+        {
+          "status": "fair_ok",
+          "fair": 0.204388,
+          "limit": 0.172
+        },
+        {
+          "status": "entry_repriced",
+          "old_limit": 0.172,
+          "new_limit": 0.174,
+          "order_id": "0xc2e10d261c7dd32feba382403fb1d6f100f85ac33c8ae048fc9054fc661492a0"
+        }
+      ],
       "history": [
         {
           "ts": "2026-07-05T04:24:21.929535Z",
@@ -282,8 +267,27 @@
             "status": "live",
             "success": true
           }
+        },
+        {
+          "ts": "2026-07-05T04:29:58.560165Z",
+          "event": "entry_repriced",
+          "old_order_id": "0x13d2c277a22f171b147be282b4b9872b36f5e83ec6883872fe8003c4d2d5d78a",
+          "new_order_id": "0xc2e10d261c7dd32feba382403fb1d6f100f85ac33c8ae048fc9054fc661492a0",
+          "old_limit": 0.172,
+          "new_limit": 0.174,
+          "cost": 0.87,
+          "fair": 0.204388,
+          "resp": {
+            "errorMsg": "",
+            "orderID": "0xc2e10d261c7dd32feba382403fb1d6f100f85ac33c8ae048fc9054fc661492a0",
+            "takingAmount": "",
+            "makingAmount": "",
+            "status": "live",
+            "success": true
+          }
         }
-      ]
+      ],
+      "fair_decay_debounce": 0
     }
   ],
   "past_trades": [
@@ -377,7 +381,7 @@
   ],
   "artifacts": {
     "ledger": "/home/fiv30nit/polymarket_trades_ledger.jsonl",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T042225Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T042639Z.json",
     "gate_report": "/home/fiv30nit/polymarket_auto_entry_last_report.json",
     "manager_state": "/home/fiv30nit/polymarket_positions_state.json"
   }
