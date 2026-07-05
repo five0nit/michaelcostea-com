@@ -1,43 +1,84 @@
 {
-  "schema_version": 1,
-  "generated_utc": "2026-07-05T01:39:31.568711Z",
-  "source": "local Polymarket artifacts + status-only bot command",
+  "schema_version": 2,
+  "generated_utc": "2026-07-05T02:10:40.662755Z",
+  "source": "ledger + local Polymarket status-only commands + gate reports",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
-    "realized_profit_pusd": 0.208701,
-    "realized_roi_pct": 19.88,
-    "closed_trades": 1,
+    "realized_profit_pusd": 0.060921,
+    "realized_pnl_all_time_pusd": 0.060921,
+    "closed_trades": 2,
+    "winning_trades": 1,
+    "losing_trades": 1,
     "open_orders": 0,
     "open_positions": 0,
     "pending_order_max_cost_pusd": 0,
-    "last_btc_spot": 62831.99,
-    "last_market_bid": 0.053,
-    "last_market_ask": 0.054,
+    "last_btc_spot": 62799.99,
+    "last_market_bid": 0.049,
+    "last_market_ask": 0.052,
     "deposit_wallet_masked": "0x7045…7b23",
-    "tracked_wallets_usd": 11.83,
-    "tracked_wallets_usd_label": "$11.83",
+    "polymarket_cash_pusd": 11.999991,
+    "tracked_wallets_usd": 23.83,
+    "tracked_wallets_usd_label": "$23.83",
     "eth_usd_price": {
-      "price_usd": 1762.0,
+      "price_usd": 1762.25,
       "source": "coingecko ethereum/usd"
     }
+  },
+  "automation": {
+    "generic_live_enabled": true,
+    "generic_halt_present": false,
+    "generic_entry_halt_present": false,
+    "manager_active_count": 0,
+    "manager_exposure_cost": 0.0,
+    "gate_last_action": "NO_ACTION",
+    "gate_candidate_count": 6,
+    "gate_passing_count": 0,
+    "gate_intents_written": 0,
+    "gate_top_blocked_market": "Will the price of Bitcoin be above $64,000 on July 5?",
+    "gate_top_block_reasons": [
+      "edge_lt_4c:-0.008",
+      "cheap_tail_edge_lt_30pct:-0.008_ask:0.052"
+    ],
+    "intents_count": 0,
+    "crons": [
+      {
+        "job_id": "2d97cede33e8",
+        "name": "Polymarket modeled auto-entry gate live",
+        "schedule": "every 5m",
+        "script": "polymarket_auto_entry_gate.py",
+        "no_agent": true
+      },
+      {
+        "job_id": "e465ec9b12de",
+        "name": "Polymarket generic position manager live small-bets",
+        "schedule": "every 1m",
+        "script": "polymarket_position_manager.py",
+        "no_agent": true
+      },
+      {
+        "job_id": "1ddc1171828b",
+        "name": "Polymarket BTC64 autonomous trader legacy/closed",
+        "schedule": "every 1m",
+        "script": "polymarket_auto_trade_btc64.py",
+        "no_agent": true
+      }
+    ]
   },
   "current_state": {
     "bot_mode": "closed",
     "reconciled_size": 0.0,
     "conditional_balance": 0.000349,
-    "auto_entry_enabled": false,
-    "halt_file_present": false,
     "book": {
-      "bid": 0.053,
-      "ask": 0.054,
-      "mid": 0.0535,
-      "spread": 0.0010000000000000009,
-      "bid_size": 80.86,
-      "ask_size": 500.0,
+      "bid": 0.049,
+      "ask": 0.052,
+      "mid": 0.0505,
+      "spread": 0.0029999999999999957,
+      "bid_size": 70.0,
+      "ask_size": 490.0,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
-    "btc_spot": 62831.99
+    "btc_spot": 62799.99
   },
   "tracked_wallets": [
     {
@@ -48,10 +89,13 @@
       "address_masked": "0x7045…7b23",
       "role": "Prediction-market bankroll + order tracking",
       "status": "closed",
-      "balance_label": "conditional 0.000349",
-      "usd_value": 0.0,
-      "usd_label": "$0.00",
-      "notes": "Existing Polymarket test wallet. No private keys exposed."
+      "balance_label": "cash 11.999991 pUSD + conditional 0.000349 shares",
+      "usd_value": 12.0,
+      "usd_label": "$12.00",
+      "cash_pusd": 11.999991,
+      "conditional_shares": 0.000349,
+      "conditional_mark_pusd": 1.7e-05,
+      "notes": "No private keys exposed."
     },
     {
       "label": "Wallet 2",
@@ -65,13 +109,13 @@
       "usd_value": 11.83,
       "usd_label": "$11.83",
       "price_source": {
-        "price_usd": 1762.0,
+        "price_usd": 1762.25,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480496650,
+        "block_number": 480504170,
         "native_balance_eth": 0.006715460913400084,
         "native_balance_wei": 6715460913400084
       },
@@ -79,6 +123,7 @@
     }
   ],
   "current_orders": [],
+  "current_positions": [],
   "past_trades": [
     {
       "id": "btc64-jul5-tp-001",
@@ -97,12 +142,37 @@
       "roi_pct": 19.88,
       "opened_utc": "2026-07-04T20:36:00Z",
       "closed_utc": "2026-07-04T21:25:00Z",
+      "exit_reason": "take_profit_matched",
       "notes": "First live deposit-wallet path test. TP matched; only unsellable dust remains."
+    },
+    {
+      "id": "btc64-jul5-reentry-stop-002",
+      "market": "BTC above $64,000 on Jul 5 — YES",
+      "instrument": "Polymarket conditional token",
+      "side": "BUY→STOP_SELL",
+      "status": "closed_loss",
+      "entry_size": 5.0,
+      "exit_size": 5.0,
+      "dust": 0.000349,
+      "entry_price": 0.095,
+      "exit_price": 0.07,
+      "cost_basis_pusd": 0.475,
+      "gross_proceeds_pusd": 0.35,
+      "net_proceeds_pusd": 0.32722,
+      "net_profit_pusd": -0.14778,
+      "roi_pct": -31.11,
+      "opened_utc": "2026-07-05T00:18:34Z",
+      "closed_utc": "2026-07-05T01:22:12Z",
+      "exit_reason": "spot_stop_btc_lt_62900",
+      "order_id": "0x8d1e979de3597c01addfa4a7cf23899c0014687a87571dd76575732f22207534",
+      "tx": "0x9f67cc8bd18d017ba16dc09d33ca2e3fcecb622320a69c1964ffe59f17cc630e",
+      "notes": "Re-entry maker bid filled at 0.095, TP at 0.160 was canceled when spot stop fired; stop-sold 5 shares around 0.07. Net PNL uses observed deposit-wallet delta."
     }
   ],
   "artifacts": {
-    "latest_bid_artifact": "/home/fiv30nit/polymarket_btc64_jul5_reentry_bid_20260704T235018Z.json",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T013553Z.json",
-    "state_note": "/home/fiv30nit/memory/2026-07-04.md"
+    "ledger": "/home/fiv30nit/polymarket_trades_ledger.jsonl",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T020913Z.json",
+    "gate_report": "/home/fiv30nit/polymarket_auto_entry_last_report.json",
+    "manager_state": "/home/fiv30nit/polymarket_positions_state.json"
   }
 }
