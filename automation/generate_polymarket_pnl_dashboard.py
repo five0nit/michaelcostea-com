@@ -20,6 +20,7 @@ GENERIC_ENTRY_HALT = Path('/home/fiv30nit/polymarket_position_manager.ENTRY_HALT
 ARBITRUM_RPC = 'https://arb1.arbitrum.io/rpc'
 ARBITRUM_CHAIN_ID = 42161
 ARBITRUM_TEST_WALLET = '0x22469cBd6035749cfE49c35AafCED9AA4816ead5'
+CRYPTO_AUTOPSY_DIR = Path('/home/fiv30nit/.openclaw/workspace/workspaces/microcap-autotrader/runs/autopsy')
 ETH_USD_PRICE_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
 
 def safe_float(x: Any, default: float = 0.0) -> float:
@@ -88,6 +89,48 @@ def read_ledger() -> list[dict[str, Any]]:
         except Exception: pass
     return trades
 
+def read_arbitrum_autonomous_trades() -> list[dict[str, Any]]:
+    trades: list[dict[str, Any]] = []
+    if not CRYPTO_AUTOPSY_DIR.exists():
+        return trades
+    for path in sorted(CRYPTO_AUTOPSY_DIR.glob('apt-*.json')):
+        rec = load_json(path, {})
+        if rec.get('action') != 'autonomous_cycle_summary':
+            continue
+        quote = rec.get('quote') or {}
+        pnl = rec.get('pnl_snapshot') or {}
+        before = pnl.get('before') or {}
+        after = pnl.get('after') or {}
+        cycle = quote.get('cycle')
+        if not cycle:
+            continue
+        before_eth = safe_float(before.get('eth')) / 1e18
+        after_eth = safe_float(after.get('eth')) / 1e18
+        delta_eth = after_eth - before_eth
+        trades.append({
+            'id': f"arb-weth-usdc-auto-{quote.get('cycle')}-{str(rec.get('timestamp_utc',''))}",
+            'market': 'Arbitrum WETH/USDC autonomous canary',
+            'instrument': 'Uniswap V3 WETH/USDC 0.05% pool',
+            'side': 'AUTO_BUY→AUTO_SELL',
+            'status': 'closed_flat_tokens',
+            'entry_size': round(safe_float(quote.get('amount_wei')) / 1e18, 18),
+            'exit_size': round(safe_float(quote.get('exit_quote_weth_wei')) / 1e18, 18),
+            'entry_price': round(safe_float(quote.get('quote_usd')), 6),
+            'exit_price': round(safe_float(quote.get('exit_quote_weth_wei')) / 1e18, 18),
+            'cost_basis_pusd': round(safe_float(quote.get('quote_usd')), 6),
+            'net_profit_pusd': None,
+            'roi_pct': None,
+            'opened_utc': rec.get('timestamp_utc'),
+            'closed_utc': rec.get('timestamp_utc'),
+            'exit_reason': quote.get('exit_reason') or 'auto_exit',
+            'network': 'Arbitrum One',
+            'wallet': ARBITRUM_TEST_WALLET,
+            'gas_delta_eth': round(delta_eth, 18),
+            'autopsy': str(path),
+            'notes': 'Live autonomous canary: exact approvals, auto exit, final WETH/USDC zero; ETH delta includes gas + pool roundtrip cost.'
+        })
+    return trades
+
 def build_wallets(live: dict[str, Any], btc_state: dict[str, Any], eth_price: dict[str, Any]) -> list[dict[str, Any]]:
     wallet1 = live.get('deposit_wallet')
     cash_pusd = safe_float_none(btc_state.get('last_deposit_pusd'))
@@ -111,6 +154,8 @@ def cron_status() -> list[dict[str, Any]]:
     return [
         {'job_id':'2d97cede33e8','name':'Polymarket modeled auto-entry gate live','schedule':'every 5m','script':'polymarket_auto_entry_gate.py','no_agent':True},
         {'job_id':'e465ec9b12de','name':'Polymarket generic position manager live small-bets','schedule':'every 1m','script':'polymarket_position_manager.py','no_agent':True},
+        {'job_id':'027d1a3ba630','name':'Polymarket calibration ledger','schedule':'every 6h','script':'polymarket_calibration_ledger.py','no_agent':True},
+        {'job_id':'3793f1d76198','name':'Polymarket automation watchdog','schedule':'every 15m','script':'polymarket_watchdog.py','no_agent':True},
         {'job_id':'1ddc1171828b','name':'Polymarket BTC64 autonomous trader legacy/closed','schedule':'paused','script':'polymarket_auto_trade_btc64.py','no_agent':True,'enabled':False},
     ]
 
@@ -121,10 +166,12 @@ def build_snapshot() -> dict[str, Any]:
     btc_state = load_json(BTC64_STATE,{})
     gate = load_json(GATE_REPORT,{})
     intents = load_json(INTENTS, {'intents':[]})
-    trades = read_ledger()
-    realized = round(sum(safe_float(t.get('net_profit_pusd')) for t in trades), 6)
-    wins = sum(1 for t in trades if safe_float(t.get('net_profit_pusd')) > 0)
-    losses = sum(1 for t in trades if safe_float(t.get('net_profit_pusd')) < 0)
+    polymarket_trades = read_ledger()
+    crypto_trades = read_arbitrum_autonomous_trades()
+    trades = polymarket_trades + crypto_trades
+    realized = round(sum(safe_float(t.get('net_profit_pusd')) for t in polymarket_trades), 6)
+    wins = sum(1 for t in polymarket_trades if safe_float(t.get('net_profit_pusd')) > 0)
+    losses = sum(1 for t in polymarket_trades if safe_float(t.get('net_profit_pusd')) < 0)
     open_orders = live.get('open_orders') if isinstance(live.get('open_orders'), list) else []
     generic_positions = (manager.get('positions') or {}) if isinstance(manager.get('positions'), dict) else {}
     current_positions = []
@@ -146,6 +193,8 @@ def build_snapshot() -> dict[str, Any]:
             'realized_profit_pusd': realized,
             'realized_pnl_all_time_pusd': realized,
             'closed_trades': len(trades),
+            'polymarket_closed_trades': len(polymarket_trades),
+            'crypto_closed_canaries': len(crypto_trades),
             'winning_trades': wins,
             'losing_trades': losses,
             'open_orders': len(open_orders),
@@ -172,6 +221,8 @@ def build_snapshot() -> dict[str, Any]:
             'gate_intents_written': gate.get('intents_written'),
             'gate_top_blocked_market': top.get('question'),
             'gate_top_block_reasons': (top.get('gate') or {}).get('reasons'),
+            'policy_v2': gate.get('policy_v2'),
+            'policy_v2_preview_candidates': ((gate.get('policy_v2') or {}).get('v2_only') or [])[:5],
             'intents_count': len(intents.get('intents') or []),
             'crons': cron_status(),
         },

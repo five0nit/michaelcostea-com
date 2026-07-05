@@ -1,26 +1,28 @@
 {
   "schema_version": 2,
-  "generated_utc": "2026-07-05T02:11:40.159065Z",
+  "generated_utc": "2026-07-05T02:58:46.576893Z",
   "source": "ledger + local Polymarket status-only commands + gate reports",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
     "realized_profit_pusd": 0.060921,
     "realized_pnl_all_time_pusd": 0.060921,
-    "closed_trades": 2,
+    "closed_trades": 4,
+    "polymarket_closed_trades": 2,
+    "crypto_closed_canaries": 2,
     "winning_trades": 1,
     "losing_trades": 1,
     "open_orders": 0,
     "open_positions": 0,
     "pending_order_max_cost_pusd": 0,
-    "last_btc_spot": 62799.31,
-    "last_market_bid": 0.049,
-    "last_market_ask": 0.05,
+    "last_btc_spot": 62682.01,
+    "last_market_bid": 0.038,
+    "last_market_ask": 0.039,
     "deposit_wallet_masked": "0x7045…7b23",
     "polymarket_cash_pusd": 11.999991,
-    "tracked_wallets_usd": 23.83,
-    "tracked_wallets_usd_label": "$23.83",
+    "tracked_wallets_usd": 23.77,
+    "tracked_wallets_usd_label": "$23.77",
     "eth_usd_price": {
-      "price_usd": 1761.69,
+      "price_usd": 1758.63,
       "source": "coingecko ethereum/usd"
     }
   },
@@ -31,13 +33,72 @@
     "manager_active_count": 0,
     "manager_exposure_cost": 0.0,
     "gate_last_action": "NO_ACTION",
-    "gate_candidate_count": 6,
+    "gate_candidate_count": 18,
     "gate_passing_count": 0,
     "gate_intents_written": 0,
-    "gate_top_blocked_market": "Will the price of Bitcoin be above $64,000 on July 5?",
+    "gate_top_blocked_market": "Will the price of Bitcoin be above $62,000 on July 5?",
     "gate_top_block_reasons": [
-      "edge_lt_4c:-0.008",
-      "cheap_tail_edge_lt_30pct:-0.008_ask:0.052"
+      "no_side_not_enabled",
+      "cheap_tail_edge_lt_30pct:0.041_ask:0.147"
+    ],
+    "policy_v2": {
+      "mode": "preview",
+      "policy": {
+        "max_per_position": 1.0,
+        "max_total_cost": 2.5,
+        "max_positions": 3,
+        "edge_min_limit": 0.03,
+        "max_limit_below_bid": 0.03,
+        "cheap_ask": 0.15,
+        "cheap_edge_mult": 0.3,
+        "max_spread": 0.02,
+        "hours_min": 2.0,
+        "hours_max": 72.0,
+        "symbols": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "kinds": [
+          "terminal",
+          "touch"
+        ],
+        "allow_no": false,
+        "maker_edge_mode": "preview",
+        "version": 2,
+        "_source": "file"
+      },
+      "v1_pass": 0,
+      "v2_pass": 1,
+      "v2_only": [
+        {
+          "token_id": "48100083603218879710315922179575793084380727575519839742820468923584192298042",
+          "question": "Will the price of Ethereum be above $1,800 on July 5?",
+          "outcome": "YES",
+          "limit": 0.077,
+          "edge_at_limit": 0.0308,
+          "bid": 0.079,
+          "ask": 0.086,
+          "reasons_v1": [
+            "edge_lt_4c:0.022",
+            "cheap_tail_edge_lt_30pct:0.022_ask:0.086"
+          ]
+        }
+      ]
+    },
+    "policy_v2_preview_candidates": [
+      {
+        "token_id": "48100083603218879710315922179575793084380727575519839742820468923584192298042",
+        "question": "Will the price of Ethereum be above $1,800 on July 5?",
+        "outcome": "YES",
+        "limit": 0.077,
+        "edge_at_limit": 0.0308,
+        "bid": 0.079,
+        "ask": 0.086,
+        "reasons_v1": [
+          "edge_lt_4c:0.022",
+          "cheap_tail_edge_lt_30pct:0.022_ask:0.086"
+        ]
+      }
     ],
     "intents_count": 0,
     "crons": [
@@ -56,6 +117,20 @@
         "no_agent": true
       },
       {
+        "job_id": "027d1a3ba630",
+        "name": "Polymarket calibration ledger",
+        "schedule": "every 6h",
+        "script": "polymarket_calibration_ledger.py",
+        "no_agent": true
+      },
+      {
+        "job_id": "3793f1d76198",
+        "name": "Polymarket automation watchdog",
+        "schedule": "every 15m",
+        "script": "polymarket_watchdog.py",
+        "no_agent": true
+      },
+      {
         "job_id": "1ddc1171828b",
         "name": "Polymarket BTC64 autonomous trader legacy/closed",
         "schedule": "paused",
@@ -70,16 +145,16 @@
     "reconciled_size": 0.0,
     "conditional_balance": 0.000349,
     "book": {
-      "bid": 0.049,
-      "ask": 0.05,
-      "mid": 0.0495,
+      "bid": 0.038,
+      "ask": 0.039,
+      "mid": 0.0385,
       "spread": 0.0010000000000000009,
-      "bid_size": 70.0,
-      "ask_size": 667.0,
+      "bid_size": 640.0,
+      "ask_size": 0.09,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
-    "btc_spot": 62799.31
+    "btc_spot": 62682.01
   },
   "tracked_wallets": [
     {
@@ -95,7 +170,7 @@
       "usd_label": "$12.00",
       "cash_pusd": 11.999991,
       "conditional_shares": 0.000349,
-      "conditional_mark_pusd": 1.7e-05,
+      "conditional_mark_pusd": 1.3e-05,
       "notes": "No private keys exposed."
     },
     {
@@ -106,19 +181,19 @@
       "address_masked": "0x2246…ead5",
       "role": "Tiny ETH/WETH/USDC live swap pilot",
       "status": "funded",
-      "balance_label": "0.006715460913400084 ETH",
-      "usd_value": 11.83,
-      "usd_label": "$11.83",
+      "balance_label": "0.006695246668582924 ETH",
+      "usd_value": 11.77,
+      "usd_label": "$11.77",
       "price_source": {
-        "price_usd": 1761.69,
+        "price_usd": 1758.63,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480504417,
-        "native_balance_eth": 0.006715460913400084,
-        "native_balance_wei": 6715460913400084
+        "block_number": 480515678,
+        "native_balance_eth": 0.006695246668582924,
+        "native_balance_wei": 6695246668582924
       },
       "notes": "Bot currently disarmed; used for tiny Arbitrum test swaps only."
     }
@@ -168,11 +243,55 @@
       "order_id": "0x8d1e979de3597c01addfa4a7cf23899c0014687a87571dd76575732f22207534",
       "tx": "0x9f67cc8bd18d017ba16dc09d33ca2e3fcecb622320a69c1964ffe59f17cc630e",
       "notes": "Re-entry maker bid filled at 0.095, TP at 0.160 was canceled when spot stop fired; stop-sold 5 shares around 0.07. Net PNL uses observed deposit-wallet delta."
+    },
+    {
+      "id": "arb-weth-usdc-auto-1-20260705T024439Z",
+      "market": "Arbitrum WETH/USDC autonomous canary",
+      "instrument": "Uniswap V3 WETH/USDC 0.05% pool",
+      "side": "AUTO_BUY→AUTO_SELL",
+      "status": "closed_flat_tokens",
+      "entry_size": 0.00035,
+      "exit_size": 0.000349649759338712,
+      "entry_price": 0.615427,
+      "exit_price": 0.000349649759338712,
+      "cost_basis_pusd": 0.615427,
+      "net_profit_pusd": null,
+      "roi_pct": null,
+      "opened_utc": "20260705T024439Z",
+      "closed_utc": "20260705T024439Z",
+      "exit_reason": "time_stop",
+      "network": "Arbitrum One",
+      "wallet": "0x22469cBd6035749cfE49c35AafCED9AA4816ead5",
+      "gas_delta_eth": -1.0150190909288e-05,
+      "autopsy": "/home/fiv30nit/.openclaw/workspace/workspaces/microcap-autotrader/runs/autopsy/apt-20260705T024439Z-4735e0f2.json",
+      "notes": "Live autonomous canary: exact approvals, auto exit, final WETH/USDC zero; ETH delta includes gas + pool roundtrip cost."
+    },
+    {
+      "id": "arb-weth-usdc-auto-2-20260705T024535Z",
+      "market": "Arbitrum WETH/USDC autonomous canary",
+      "instrument": "Uniswap V3 WETH/USDC 0.05% pool",
+      "side": "AUTO_BUY→AUTO_SELL",
+      "status": "closed_flat_tokens",
+      "entry_size": 0.00035,
+      "exit_size": 0.000349649670794617,
+      "entry_price": 0.61493,
+      "exit_price": 0.000349649670794617,
+      "cost_basis_pusd": 0.61493,
+      "net_profit_pusd": null,
+      "roi_pct": null,
+      "opened_utc": "20260705T024535Z",
+      "closed_utc": "20260705T024535Z",
+      "exit_reason": "time_stop",
+      "network": "Arbitrum One",
+      "wallet": "0x22469cBd6035749cfE49c35AafCED9AA4816ead5",
+      "gas_delta_eth": -1.0064053907873e-05,
+      "autopsy": "/home/fiv30nit/.openclaw/workspace/workspaces/microcap-autotrader/runs/autopsy/apt-20260705T024535Z-b75c933f.json",
+      "notes": "Live autonomous canary: exact approvals, auto exit, final WETH/USDC zero; ETH delta includes gas + pool roundtrip cost."
     }
   ],
   "artifacts": {
     "ledger": "/home/fiv30nit/polymarket_trades_ledger.jsonl",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T020913Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T025340Z.json",
     "gate_report": "/home/fiv30nit/polymarket_auto_entry_last_report.json",
     "manager_state": "/home/fiv30nit/polymarket_positions_state.json"
   }
