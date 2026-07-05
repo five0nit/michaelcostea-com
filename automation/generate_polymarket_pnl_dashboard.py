@@ -172,14 +172,34 @@ def build_snapshot() -> dict[str, Any]:
     realized = round(sum(safe_float(t.get('net_profit_pusd')) for t in polymarket_trades), 6)
     wins = sum(1 for t in polymarket_trades if safe_float(t.get('net_profit_pusd')) > 0)
     losses = sum(1 for t in polymarket_trades if safe_float(t.get('net_profit_pusd')) < 0)
-    open_orders = live.get('open_orders') if isinstance(live.get('open_orders'), list) else []
+    open_orders = live.get('open_orders')
+    if not isinstance(open_orders, list):
+        open_orders = []
     generic_positions = (manager.get('positions') or {}) if isinstance(manager.get('positions'), dict) else {}
     current_positions = []
+    generic_open_orders = []
     if safe_float(live.get('reconciled_size')) >= 0.001:
         current_positions.append({'source':'btc64_legacy','market':live.get('market'),'size':live.get('reconciled_size'),'state':live.get('mode'),'book':live.get('book')})
     for p in generic_positions.values():
         if p.get('state') in {'ENTRY_OPEN','ACTIVE','HOLD_FLOOR'}:
             current_positions.append({'source':'generic_manager', **p})
+        if p.get('state') == 'ENTRY_OPEN':
+            entry = p.get('entry') or {}
+            generic_open_orders.append({
+                'source': 'generic_manager',
+                'status': p.get('state'),
+                'side': f"BUY {p.get('outcome') or 'YES'}",
+                'market': p.get('question'),
+                'price': safe_float_none(entry.get('limit_price')),
+                'original_size': safe_float_none(entry.get('size')),
+                'size_matched': safe_float(entry.get('filled_size')),
+                'max_cost_pusd': safe_float_none(entry.get('cost_cap_pusd')),
+                'plan': {'take_profit_price': None, 'stop_bid_lte': None, 'cancel_if_unfilled_after_utc': entry.get('ttl_expires_utc')},
+                'id': entry.get('order_id'),
+                'id_masked': mask(entry.get('order_id'), 10, 8),
+                'placed_utc': entry.get('placed_utc'),
+            })
+    current_orders = open_orders + generic_open_orders
     eth_price = eth_usd_price()
     tracked_wallets = build_wallets(live, btc_state, eth_price)
     tracked_wallets_usd = round(sum(w.get('usd_value') or 0 for w in tracked_wallets), 2)
@@ -197,9 +217,9 @@ def build_snapshot() -> dict[str, Any]:
             'crypto_closed_canaries': len(crypto_trades),
             'winning_trades': wins,
             'losing_trades': losses,
-            'open_orders': len(open_orders),
+            'open_orders': len(current_orders),
             'open_positions': len(current_positions),
-            'pending_order_max_cost_pusd': round(sum(safe_float(o.get('price'))*safe_float(o.get('original_size')) for o in open_orders if str(o.get('side')).upper()=='BUY'),6),
+            'pending_order_max_cost_pusd': round(sum(safe_float(o.get('max_cost_pusd')) or (safe_float(o.get('price'))*safe_float(o.get('original_size'))) for o in current_orders if str(o.get('side')).upper().startswith('BUY')),6),
             'last_btc_spot': live.get('btc_spot'),
             'last_market_bid': (live.get('book') or {}).get('bid'),
             'last_market_ask': (live.get('book') or {}).get('ask'),
@@ -226,9 +246,9 @@ def build_snapshot() -> dict[str, Any]:
             'intents_count': len(intents.get('intents') or []),
             'crons': cron_status(),
         },
-        'current_state': {'bot_mode': live.get('mode'),'reconciled_size': live.get('reconciled_size'),'conditional_balance': live.get('conditional_balance'),'book': live.get('book'),'btc_spot': live.get('btc_spot')},
+        'current_state': {'bot_mode': live.get('mode'),'reconciled_size': live.get('reconciled_size'),'conditional_balance': live.get('conditional_balance'),'book': live.get('book'),'btc_spot': live.get('btc_spot'),'auto_entry_enabled': GENERIC_LIVE.exists() and not GENERIC_ENTRY_HALT.exists()},
         'tracked_wallets': tracked_wallets,
-        'current_orders': open_orders,
+        'current_orders': current_orders,
         'current_positions': current_positions,
         'past_trades': trades,
         'artifacts': {'ledger': str(LEDGER), 'scanner_latest': max(glob.glob('/home/fiv30nit/polymarket_crypto_guardrail_scan_*.json'), key=lambda p: Path(p).stat().st_mtime) if glob.glob('/home/fiv30nit/polymarket_crypto_guardrail_scan_*.json') else None, 'gate_report': str(GATE_REPORT), 'manager_state': '/home/fiv30nit/polymarket_positions_state.json'},
