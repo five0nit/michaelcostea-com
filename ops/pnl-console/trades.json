@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_utc": "2026-07-05T08:59:54.352110Z",
+  "generated_utc": "2026-07-05T09:30:57.392209Z",
   "source": "ledger + local Polymarket status-only commands + gate reports",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
@@ -14,15 +14,15 @@
     "open_orders": 0,
     "open_positions": 0,
     "pending_order_max_cost_pusd": 0,
-    "last_btc_spot": 62915.0,
-    "last_market_bid": 0.043,
-    "last_market_ask": 0.044,
+    "last_btc_spot": 62743.99,
+    "last_market_bid": 0.025,
+    "last_market_ask": 0.026,
     "deposit_wallet_masked": "0x7045…7b23",
     "polymarket_cash_pusd": 11.999991,
-    "tracked_wallets_usd": 19.82,
-    "tracked_wallets_usd_label": "$19.82",
+    "tracked_wallets_usd": 19.79,
+    "tracked_wallets_usd_label": "$19.79",
     "eth_usd_price": {
-      "price_usd": 1766.36,
+      "price_usd": 1760.17,
       "source": "coingecko ethereum/usd"
     }
   },
@@ -33,12 +33,51 @@
     "manager_active_count": 0,
     "manager_exposure_cost": 0.0,
     "gate_last_action": "NO_ACTION",
-    "gate_candidate_count": 0,
+    "gate_candidate_count": 7,
     "gate_passing_count": 0,
     "gate_intents_written": 0,
-    "gate_top_blocked_market": null,
-    "gate_top_block_reasons": null,
-    "policy_v2": null,
+    "gate_top_blocked_market": "Will the price of Bitcoin be above $62,000 on July 5?",
+    "gate_top_block_reasons": [
+      "edge_lt_4c:-0.019",
+      "edge_lt_min_plus_uncertainty:-0.019<0.140",
+      "cheap_tail_edge_lt_30pct:-0.019_ask:0.044",
+      "limit_nonpositive"
+    ],
+    "policy_v2": {
+      "mode": "active",
+      "policy": {
+        "max_per_position": 1.0,
+        "max_total_cost": 2.5,
+        "max_positions": 3,
+        "edge_min_limit": 0.03,
+        "range_edge_min_limit": 0.06,
+        "max_limit_below_bid": 0.01,
+        "no_price_max": 0.6,
+        "cheap_ask": 0.15,
+        "cheap_edge_mult": 0.3,
+        "max_spread": 0.02,
+        "hours_min": 2.0,
+        "hours_max": 72.0,
+        "symbols": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT",
+          "XRPUSDT"
+        ],
+        "kinds": [
+          "terminal",
+          "touch",
+          "range"
+        ],
+        "allow_no": true,
+        "maker_edge_mode": "active",
+        "version": 6,
+        "_source": "file"
+      },
+      "v1_pass": 0,
+      "v2_pass": 0,
+      "v2_only": []
+    },
     "policy_v2_preview_candidates": [],
     "intents_count": 0,
     "crons": [
@@ -85,16 +124,16 @@
     "reconciled_size": 0.0,
     "conditional_balance": 0.000349,
     "book": {
-      "bid": 0.043,
-      "ask": 0.044,
-      "mid": 0.0435,
-      "spread": 0.0010000000000000009,
-      "bid_size": 64.0,
-      "ask_size": 20.0,
+      "bid": 0.025,
+      "ask": 0.026,
+      "mid": 0.025500000000000002,
+      "spread": 0.0009999999999999974,
+      "bid_size": 105.0,
+      "ask_size": 131.59,
       "min_order_size": 5.0,
       "tick_size": "0.001"
     },
-    "btc_spot": 62915.0,
+    "btc_spot": 62743.99,
     "auto_entry_enabled": true
   },
   "tracked_wallets": [
@@ -111,7 +150,7 @@
       "usd_label": "$12.00",
       "cash_pusd": 11.999991,
       "conditional_shares": 0.000349,
-      "conditional_mark_pusd": 1.5e-05,
+      "conditional_mark_pusd": 9e-06,
       "notes": "No private keys exposed."
     },
     {
@@ -123,16 +162,16 @@
       "role": "Tiny ETH/WETH/USDC live swap pilot",
       "status": "funded",
       "balance_label": "0.004426642727465405 ETH",
-      "usd_value": 7.82,
-      "usd_label": "$7.82",
+      "usd_value": 7.79,
+      "usd_label": "$7.79",
       "price_source": {
-        "price_usd": 1766.36,
+        "price_usd": 1760.17,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 480602369,
+        "block_number": 480609826,
         "native_balance_eth": 0.004426642727465405,
         "native_balance_wei": 4426642727465405
       },
@@ -232,7 +271,7 @@
   ],
   "artifacts": {
     "ledger": "/home/fiv30nit/polymarket_trades_ledger.jsonl",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T082810Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260705T092602Z.json",
     "gate_report": "/home/fiv30nit/polymarket_auto_entry_last_report.json",
     "manager_state": "/home/fiv30nit/polymarket_positions_state.json"
   }
