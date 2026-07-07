@@ -192,8 +192,11 @@
       const s = data.summary || {};
       const state = data.current_state || {};
       const orders = data.current_orders || [];
+      const positions = data.current_positions || [];
       const trades = data.past_trades || [];
       const wallets = data.tracked_wallets || [];
+      const automation = data.automation || {};
+      const crons = automation.crons || [];
       const walletCards = wallets.length ? wallets.map(w => `
         <div class="wallet-card">
           <h3>${esc(w.label)} · ${esc(w.name)}</h3>
@@ -232,6 +235,30 @@
         </div>
         <section class="window" style="margin-top:14px"><div class="titlebar">TRACKED_WALLETS.DAT — wallet 1 / wallet 2</div><div class="content">
           <div class="wallet-grid">${walletCards}</div>
+        </div></section>
+        <section class="window" style="margin-top:14px"><div class="titlebar">LIVE_AUTOMATION.LOG — scheduler + gate</div><div class="content table-wrap">
+          <table>
+            <thead><tr><th>Check</th><th>Live value</th></tr></thead>
+            <tbody>
+              ${row('Auto-entry enabled', state.auto_entry_enabled ? 'YES' : 'NO')}
+              ${row('Generic LIVE file', automation.generic_live_enabled ? 'YES' : 'NO')}
+              ${row('Generic HALT file', automation.generic_halt_present ? 'YES' : 'NO')}
+              ${row('Entry HALT file', automation.generic_entry_halt_present ? 'YES' : 'NO')}
+              ${row('Manager active / exposure', `${esc(automation.manager_active_count)} / ${esc(automation.manager_exposure_cost)}`)}
+              ${row('Gate last action', automation.gate_last_action)}
+              ${row('Gate candidates / passing / intents', `${esc(automation.gate_candidate_count)} / ${esc(automation.gate_passing_count)} / ${esc(automation.gate_intents_written)}`)}
+            </tbody>
+          </table>
+          <table style="margin-top:10px">
+            <thead><tr><th>Enabled</th><th>State</th><th>Job</th><th>Schedule</th><th>Last run</th><th>Last status</th><th>Next run</th></tr></thead>
+            <tbody>${crons.length ? crons.map(c => `<tr><td>${c.enabled ? 'YES' : 'NO'}</td><td>${esc(c.state)}</td><td>${esc(c.name)}<br><span class="small muted">${esc(c.script)}</span></td><td>${esc(c.schedule)}</td><td>${esc(c.last_run_at)}</td><td>${esc(c.last_status)}</td><td>${esc(c.next_run_at)}</td></tr>`).join('') : '<tr><td colspan="7">No Polymarket scheduler rows found.</td></tr>'}</tbody>
+          </table>
+        </div></section>
+        <section class="window" style="margin-top:14px"><div class="titlebar">CURRENT_POSITIONS.DAT</div><div class="content table-wrap">
+          <table>
+            <thead><tr><th>Source</th><th>State</th><th>Market</th><th>Outcome</th><th>Entry</th><th>Exit plan</th></tr></thead>
+            <tbody>${positions.length ? positions.map(p => `<tr><td>${esc(p.source)}</td><td>${esc(p.state)}</td><td>${esc(p.question || p.market)}</td><td>${esc(p.outcome)}</td><td>${esc(JSON.stringify(p.entry || {}))}</td><td>${esc(JSON.stringify(p.exit_plan || p.plan || {}))}</td></tr>`).join('') : '<tr><td colspan="6">No current open positions.</td></tr>'}</tbody>
+          </table>
         </div></section>
         <section class="window" style="margin-top:14px"><div class="titlebar">CURRENT_ORDERS.DAT</div><div class="content table-wrap">
           <table>

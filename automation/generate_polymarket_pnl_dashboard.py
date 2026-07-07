@@ -147,17 +147,39 @@ def build_wallets(live: dict[str, Any], btc_state: dict[str, Any], eth_price: di
     ]
 
 def cron_status() -> list[dict[str, Any]]:
-    try:
-        p=subprocess.run(['python3','-m','json.tool'], input='{}', text=True, capture_output=True, timeout=1)
-    except Exception: pass
-    # Cron DB path is internal to Hermes; expose static known job ids from last verified setup.
-    return [
-        {'job_id':'2d97cede33e8','name':'Polymarket modeled auto-entry gate live','schedule':'every 5m','script':'polymarket_auto_entry_gate.py','no_agent':True},
-        {'job_id':'e465ec9b12de','name':'Polymarket generic position manager live small-bets','schedule':'every 1m','script':'polymarket_position_manager.py','no_agent':True},
-        {'job_id':'027d1a3ba630','name':'Polymarket calibration ledger','schedule':'every 6h','script':'polymarket_calibration_ledger.py','no_agent':True},
-        {'job_id':'3793f1d76198','name':'Polymarket automation watchdog','schedule':'every 15m','script':'polymarket_watchdog.py','no_agent':True},
-        {'job_id':'1ddc1171828b','name':'Polymarket BTC64 autonomous trader legacy/closed','schedule':'paused','script':'polymarket_auto_trade_btc64.py','no_agent':True,'enabled':False},
-    ]
+    """Expose current live Hermes cron state for Polymarket jobs.
+
+    Keep this static-dashboard safe: names, schedules, enabled/state, and script names only.
+    No prompts, credentials, stdout, or private env details.
+    """
+    jobs_path = Path('/home/fiv30nit/.hermes/cron/jobs.json')
+    data = load_json(jobs_path, {'jobs': []})
+    jobs = data.get('jobs') if isinstance(data, dict) else []
+    if not isinstance(jobs, list):
+        jobs = []
+    wanted = ('polymarket', 'multi-venue trading')
+    rows: list[dict[str, Any]] = []
+    for j in jobs:
+        name = str(j.get('name') or '')
+        script = j.get('script')
+        haystack = f"{name} {script or ''}".lower()
+        if not any(term in haystack for term in wanted):
+            continue
+        schedule = j.get('schedule') or {}
+        rows.append({
+            'job_id': j.get('id'),
+            'name': name,
+            'schedule': j.get('schedule_display') or schedule.get('display'),
+            'script': Path(script).name if script else None,
+            'no_agent': bool(j.get('no_agent')),
+            'enabled': bool(j.get('enabled')),
+            'state': j.get('state'),
+            'last_run_at': j.get('last_run_at'),
+            'last_status': j.get('last_status'),
+            'next_run_at': j.get('next_run_at'),
+        })
+    rows.sort(key=lambda r: (not r.get('enabled'), str(r.get('name') or '')))
+    return rows
 
 def build_snapshot() -> dict[str, Any]:
     now = datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
