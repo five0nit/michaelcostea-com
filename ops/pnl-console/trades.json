@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_utc": "2026-07-07T22:46:24.670365Z",
+  "generated_utc": "2026-07-07T23:02:03.191679Z",
   "source": "ledger + local Polymarket status-only commands + Paper Goblin Solana ledger + gate reports",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only; Solana rows are Paper Goblin paper-trading ledger entries.",
   "summary": {
@@ -18,15 +18,15 @@
     "open_orders": 0,
     "open_positions": 0,
     "pending_order_max_cost_pusd": 0,
-    "last_btc_spot": 63586.0,
+    "last_btc_spot": 63594.76,
     "last_market_bid": null,
     "last_market_ask": null,
     "deposit_wallet_masked": "0x7045…7b23",
     "polymarket_cash_pusd": 11.999991,
-    "tracked_wallets_usd": 19.86,
-    "tracked_wallets_usd_label": "$19.86",
+    "tracked_wallets_usd": 19.85,
+    "tracked_wallets_usd_label": "$19.85",
     "eth_usd_price": {
-      "price_usd": 1776.37,
+      "price_usd": 1774.15,
       "source": "coingecko ethereum/usd"
     }
   },
@@ -37,51 +37,12 @@
     "manager_active_count": 0,
     "manager_exposure_cost": 0.0,
     "gate_last_action": "NO_ACTION",
-    "gate_candidate_count": 21,
+    "gate_candidate_count": 0,
     "gate_passing_count": 0,
     "gate_intents_written": 0,
-    "gate_top_blocked_market": "Will Bitcoin dip to $61,000 on July 7?",
-    "gate_top_block_reasons": [
-      "edge_lt_4c:-0.011",
-      "edge_lt_min_plus_uncertainty:-0.011<0.063",
-      "cheap_tail_edge_lt_30pct:-0.011_ask:0.011",
-      "limit_nonpositive"
-    ],
-    "policy_v2": {
-      "mode": "active",
-      "policy": {
-        "max_per_position": 1.0,
-        "max_total_cost": 2.5,
-        "max_positions": 3,
-        "edge_min_limit": 0.03,
-        "range_edge_min_limit": 0.06,
-        "max_limit_below_bid": 0.01,
-        "no_price_max": 0.6,
-        "cheap_ask": 0.15,
-        "cheap_edge_mult": 0.3,
-        "max_spread": 0.02,
-        "hours_min": 2.0,
-        "hours_max": 72.0,
-        "symbols": [
-          "BTCUSDT",
-          "ETHUSDT",
-          "SOLUSDT",
-          "XRPUSDT"
-        ],
-        "kinds": [
-          "terminal",
-          "touch",
-          "range"
-        ],
-        "allow_no": true,
-        "maker_edge_mode": "active",
-        "version": 6,
-        "_source": "file"
-      },
-      "v1_pass": 0,
-      "v2_pass": 0,
-      "v2_only": []
-    },
+    "gate_top_blocked_market": null,
+    "gate_top_block_reasons": null,
+    "policy_v2": null,
     "policy_v2_preview_candidates": [],
     "intents_count": 0,
     "crons": [
@@ -105,9 +66,9 @@
         "no_agent": true,
         "enabled": true,
         "state": "scheduled",
-        "last_run_at": "2026-07-08T08:31:00.584940+10:00",
+        "last_run_at": "2026-07-08T08:46:33.556788+10:00",
         "last_status": "ok",
-        "next_run_at": "2026-07-08T09:01:25.394779+10:00"
+        "next_run_at": "2026-07-08T09:17:03.122672+10:00"
       },
       {
         "job_id": "3793f1d76198",
@@ -117,9 +78,9 @@
         "no_agent": true,
         "enabled": true,
         "state": "scheduled",
-        "last_run_at": "2026-07-08T08:46:26.201707+10:00",
+        "last_run_at": "2026-07-08T09:02:04.959308+10:00",
         "last_status": "ok",
-        "next_run_at": "2026-07-08T09:01:26.201707+10:00"
+        "next_run_at": "2026-07-08T09:17:04.959308+10:00"
       },
       {
         "job_id": "201364e6e830",
@@ -129,9 +90,9 @@
         "no_agent": true,
         "enabled": true,
         "state": "scheduled",
-        "last_run_at": "2026-07-08T08:30:42.990216+10:00",
+        "last_run_at": "2026-07-08T09:01:39.681838+10:00",
         "last_status": "ok",
-        "next_run_at": "2026-07-08T09:00:42.990216+10:00"
+        "next_run_at": "2026-07-08T09:31:39.681838+10:00"
       },
       {
         "job_id": "027d1a3ba630",
@@ -153,9 +114,9 @@
         "no_agent": true,
         "enabled": true,
         "state": "scheduled",
-        "last_run_at": "2026-07-08T08:42:31.260187+10:00",
+        "last_run_at": "2026-07-08T09:00:06.640068+10:00",
         "last_status": "ok",
-        "next_run_at": "2026-07-08T08:47:31.260187+10:00"
+        "next_run_at": "2026-07-08T09:05:06.640068+10:00"
       },
       {
         "job_id": "f03834441d25",
@@ -228,7 +189,7 @@
     "book": {
       "error": "PolyApiException[status_code=404, error_message={'error': 'No orderbook exists for the requested token id'}]"
     },
-    "btc_spot": 63586.0,
+    "btc_spot": 63594.76,
     "auto_entry_enabled": false
   },
   "tracked_wallets": [
@@ -257,16 +218,16 @@
       "role": "Tiny ETH/WETH/USDC live swap pilot",
       "status": "funded",
       "balance_label": "0.004426642727465405 ETH",
-      "usd_value": 7.86,
-      "usd_label": "$7.86",
+      "usd_value": 7.85,
+      "usd_label": "$7.85",
       "price_source": {
-        "price_usd": 1776.37,
+        "price_usd": 1774.15,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 481492134,
+        "block_number": 481495890,
         "native_balance_eth": 0.004426642727465405,
         "native_balance_wei": 4426642727465405
       },
@@ -1687,7 +1648,7 @@
     "paper_goblin_ledger": "/home/fiv30nit/.openclaw/workspace/automation/paper-goblin/state/ledger.json",
     "paper_goblin_report": "/home/fiv30nit/.openclaw/workspace/automation/paper-goblin/reports/latest-report.md",
     "paper_goblin_progressive_db": "/home/fiv30nit/.openclaw/workspace/automation/paper-goblin/data/pumpfun_lifecycle.db",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260707T223044Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260707T224823Z.json",
     "gate_report": "/home/fiv30nit/polymarket_auto_entry_last_report.json",
     "manager_state": "/home/fiv30nit/polymarket_positions_state.json"
   }
