@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_utc": "2026-07-06T21:43:37.182103Z",
+  "generated_utc": "2026-07-07T21:08:17.609955Z",
   "source": "ledger + local Polymarket status-only commands + gate reports",
   "privacy": "Unlinked static dashboard; no private keys/secrets; public wallet addresses only.",
   "summary": {
@@ -14,15 +14,15 @@
     "open_orders": 0,
     "open_positions": 0,
     "pending_order_max_cost_pusd": 0,
-    "last_btc_spot": 64193.0,
+    "last_btc_spot": 63788.28,
     "last_market_bid": null,
     "last_market_ask": null,
     "deposit_wallet_masked": "0x7045…7b23",
     "polymarket_cash_pusd": 11.999991,
-    "tracked_wallets_usd": 20.02,
-    "tracked_wallets_usd_label": "$20.02",
+    "tracked_wallets_usd": 19.91,
+    "tracked_wallets_usd_label": "$19.91",
     "eth_usd_price": {
-      "price_usd": 1811.57,
+      "price_usd": 1786.57,
       "source": "coingecko ethereum/usd"
     }
   },
@@ -87,7 +87,7 @@
     "book": {
       "error": "PolyApiException[status_code=404, error_message={'error': 'No orderbook exists for the requested token id'}]"
     },
-    "btc_spot": 64193.0,
+    "btc_spot": 63788.28,
     "auto_entry_enabled": false
   },
   "tracked_wallets": [
@@ -116,16 +116,16 @@
       "role": "Tiny ETH/WETH/USDC live swap pilot",
       "status": "funded",
       "balance_label": "0.004426642727465405 ETH",
-      "usd_value": 8.02,
-      "usd_label": "$8.02",
+      "usd_value": 7.91,
+      "usd_label": "$7.91",
       "price_source": {
-        "price_usd": 1811.57,
+        "price_usd": 1786.57,
         "source": "coingecko ethereum/usd"
       },
       "rpc": {
         "chain_id": 42161,
         "rpc_ok": true,
-        "block_number": 481131473,
+        "block_number": 481468557,
         "native_balance_eth": 0.004426642727465405,
         "native_balance_wei": 4426642727465405
       },
@@ -225,7 +225,7 @@
   ],
   "artifacts": {
     "ledger": "/home/fiv30nit/polymarket_trades_ledger.jsonl",
-    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260706T212956Z.json",
+    "scanner_latest": "/home/fiv30nit/polymarket_crypto_guardrail_scan_20260707T205547Z.json",
     "gate_report": "/home/fiv30nit/polymarket_auto_entry_last_report.json",
     "manager_state": "/home/fiv30nit/polymarket_positions_state.json"
   }
