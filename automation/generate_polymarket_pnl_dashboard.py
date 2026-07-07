@@ -9,6 +9,9 @@ ROOT = Path('/home/fiv30nit/.openclaw/workspace/workspaces/michaelcostea-com')
 OUT_DIR = ROOT / 'ops' / 'pnl-console'
 DATA_PATH = OUT_DIR / 'trades.json'
 LEDGER = Path('/home/fiv30nit/polymarket_trades_ledger.jsonl')
+PAPER_GOBLIN_LEDGER = Path('/home/fiv30nit/.openclaw/workspace/automation/paper-goblin/state/ledger.json')
+PAPER_GOBLIN_REPORT = Path('/home/fiv30nit/.openclaw/workspace/automation/paper-goblin/reports/latest-report.md')
+PAPER_GOBLIN_PROGRESSIVE_DB = Path('/home/fiv30nit/.openclaw/workspace/automation/paper-goblin/data/pumpfun_lifecycle.db')
 BTC64_STATUS_CMD = ['python3', '/home/fiv30nit/.hermes/scripts/polymarket_auto_trade_btc64.py', '--status-only']
 MANAGER_STATUS_CMD = ['python3', '/home/fiv30nit/.hermes/scripts/polymarket_position_manager.py', '--status-only']
 BTC64_STATE = Path('/home/fiv30nit/polymarket_auto_trade_btc64_state.json')
@@ -109,6 +112,7 @@ def read_arbitrum_autonomous_trades() -> list[dict[str, Any]]:
         delta_eth = after_eth - before_eth
         trades.append({
             'id': f"arb-weth-usdc-auto-{quote.get('cycle')}-{str(rec.get('timestamp_utc',''))}",
+            'source': 'arbitrum_microcap_canary',
             'market': 'Arbitrum WETH/USDC autonomous canary',
             'instrument': 'Uniswap V3 WETH/USDC 0.05% pool',
             'side': 'AUTO_BUY→AUTO_SELL',
@@ -130,6 +134,92 @@ def read_arbitrum_autonomous_trades() -> list[dict[str, Any]]:
             'notes': 'Live autonomous canary: exact approvals, auto exit, final WETH/USDC zero; ETH delta includes gas + pool roundtrip cost.'
         })
     return trades
+
+def paper_goblin_status() -> dict[str, Any]:
+    ledger = load_json(PAPER_GOBLIN_LEDGER, {})
+    closed = ledger.get('closed_positions') if isinstance(ledger, dict) else []
+    open_positions = ledger.get('open_positions') if isinstance(ledger, dict) else []
+    if not isinstance(closed, list): closed = []
+    if not isinstance(open_positions, list): open_positions = []
+    realized = round(sum(safe_float(p.get('realized_pnl_usd')) for p in closed), 6)
+    wins = sum(1 for p in closed if safe_float(p.get('realized_pnl_usd')) > 0)
+    losses = sum(1 for p in closed if safe_float(p.get('realized_pnl_usd')) < 0)
+    flats = len(closed) - wins - losses
+    return {
+        'mode': 'paper_only_live_logged_solana',
+        'ledger': str(PAPER_GOBLIN_LEDGER),
+        'latest_report': str(PAPER_GOBLIN_REPORT),
+        'progressive_db': str(PAPER_GOBLIN_PROGRESSIVE_DB),
+        'balance_usd': safe_float_none(ledger.get('balance_usd')) if isinstance(ledger, dict) else None,
+        'equity_usd': safe_float_none(ledger.get('equity_usd')) if isinstance(ledger, dict) else None,
+        'closed_trades': len(closed),
+        'open_positions': len(open_positions),
+        'realized_pnl_usd': realized,
+        'winning_trades': wins,
+        'losing_trades': losses,
+        'flat_trades': flats,
+    }
+
+def read_paper_goblin_trades() -> list[dict[str, Any]]:
+    ledger = load_json(PAPER_GOBLIN_LEDGER, {})
+    closed = ledger.get('closed_positions') if isinstance(ledger, dict) else []
+    if not isinstance(closed, list):
+        return []
+    trades: list[dict[str, Any]] = []
+    for idx, p in enumerate(closed, 1):
+        pnl = safe_float_none(p.get('realized_pnl_usd'))
+        notional = safe_float_none(p.get('notional_usd'))
+        entry = safe_float_none(p.get('entry_price'))
+        exit_price = safe_float_none(p.get('exit_price'))
+        roi = round((pnl / notional) * 100, 2) if isinstance(pnl, float) and isinstance(notional, float) and notional else None
+        if pnl is None:
+            status = 'closed_unknown'
+        elif pnl > 0:
+            status = 'closed_profit'
+        elif pnl < 0:
+            status = 'closed_loss'
+        else:
+            status = 'closed_flat'
+        size = round(notional / entry, 6) if isinstance(notional, float) and isinstance(entry, float) and entry else None
+        trades.append({
+            'id': f"paper-goblin-{idx}-{p.get('symbol') or 'SOL'}",
+            'source': 'paper_goblin_solana',
+            'market': f"Solana Paper Goblin — {p.get('symbol') or 'unknown'}",
+            'instrument': 'Solana meme/pump.fun paper position',
+            'side': 'PAPER_BUY→PAPER_CLOSE',
+            'status': status,
+            'entry_size': size,
+            'exit_size': size,
+            'entry_price': entry,
+            'exit_price': exit_price,
+            'cost_basis_pusd': notional,
+            'net_proceeds_pusd': round((notional or 0) + (pnl or 0), 6) if isinstance(notional, float) else None,
+            'net_profit_pusd': pnl,
+            'roi_pct': roi,
+            'opened_utc': p.get('opened_at'),
+            'closed_utc': p.get('closed_at'),
+            'exit_reason': p.get('close_reason'),
+            'network': 'Solana',
+            'token_address': p.get('token_address'),
+            'token_address_masked': mask(p.get('token_address'), 8, 6),
+            'strategy_tag': p.get('strategy_tag'),
+            'pulse_label': p.get('pulse_label'),
+            'bot_direction': p.get('bot_direction'),
+            'pattern_regime': p.get('pattern_regime'),
+            'pattern_signature': p.get('pattern_signature'),
+            'notes': 'Paper Goblin live paper-trading ledger; paper only, no wallet transaction.'
+        })
+    return trades
+
+def read_paper_goblin_open_positions() -> list[dict[str, Any]]:
+    ledger = load_json(PAPER_GOBLIN_LEDGER, {})
+    open_positions = ledger.get('open_positions') if isinstance(ledger, dict) else []
+    if not isinstance(open_positions, list):
+        return []
+    rows = []
+    for p in open_positions:
+        rows.append({'source': 'paper_goblin_solana', 'market': f"Solana Paper Goblin — {p.get('symbol') or 'unknown'}", **p})
+    return rows
 
 def build_wallets(live: dict[str, Any], btc_state: dict[str, Any], eth_price: dict[str, Any]) -> list[dict[str, Any]]:
     wallet1 = live.get('deposit_wallet')
@@ -190,15 +280,21 @@ def build_snapshot() -> dict[str, Any]:
     intents = load_json(INTENTS, {'intents':[]})
     polymarket_trades = read_ledger()
     crypto_trades = read_arbitrum_autonomous_trades()
-    trades = polymarket_trades + crypto_trades
+    solana_trades = read_paper_goblin_trades()
+    solana_status = paper_goblin_status()
+    trades = polymarket_trades + crypto_trades + solana_trades
     realized = round(sum(safe_float(t.get('net_profit_pusd')) for t in polymarket_trades), 6)
-    wins = sum(1 for t in polymarket_trades if safe_float(t.get('net_profit_pusd')) > 0)
-    losses = sum(1 for t in polymarket_trades if safe_float(t.get('net_profit_pusd')) < 0)
+    solana_realized = safe_float(solana_status.get('realized_pnl_usd'))
+    total_realized = round(realized + solana_realized, 6)
+    wins = sum(1 for t in polymarket_trades if safe_float(t.get('net_profit_pusd')) > 0) + solana_status.get('winning_trades', 0)
+    losses = sum(1 for t in polymarket_trades if safe_float(t.get('net_profit_pusd')) < 0) + solana_status.get('losing_trades', 0)
     open_orders = live.get('open_orders')
     if not isinstance(open_orders, list):
         open_orders = []
     generic_positions = (manager.get('positions') or {}) if isinstance(manager.get('positions'), dict) else {}
     current_positions = []
+    solana_open_positions = read_paper_goblin_open_positions()
+    current_positions.extend(solana_open_positions)
     generic_open_orders = []
     if safe_float(live.get('reconciled_size')) >= 0.001:
         current_positions.append({'source':'btc64_legacy','market':live.get('market'),'size':live.get('reconciled_size'),'state':live.get('mode'),'book':live.get('book')})
@@ -229,14 +325,18 @@ def build_snapshot() -> dict[str, Any]:
     snapshot = {
         'schema_version': 2,
         'generated_utc': now,
-        'source': 'ledger + local Polymarket status-only commands + gate reports',
-        'privacy': 'Unlinked static dashboard; no private keys/secrets; public wallet addresses only.',
+        'source': 'ledger + local Polymarket status-only commands + Paper Goblin Solana ledger + gate reports',
+        'privacy': 'Unlinked static dashboard; no private keys/secrets; public wallet addresses only; Solana rows are Paper Goblin paper-trading ledger entries.',
         'summary': {
-            'realized_profit_pusd': realized,
-            'realized_pnl_all_time_pusd': realized,
+            'realized_profit_pusd': total_realized,
+            'realized_pnl_all_time_pusd': total_realized,
+            'total_realized_pnl_usd': total_realized,
+            'polymarket_realized_pnl_pusd': realized,
+            'solana_paper_realized_pnl_usd': solana_realized,
             'closed_trades': len(trades),
             'polymarket_closed_trades': len(polymarket_trades),
             'crypto_closed_canaries': len(crypto_trades),
+            'solana_paper_closed_trades': len(solana_trades),
             'winning_trades': wins,
             'losing_trades': losses,
             'open_orders': len(current_orders),
@@ -268,12 +368,13 @@ def build_snapshot() -> dict[str, Any]:
             'intents_count': len(intents.get('intents') or []),
             'crons': cron_status(),
         },
+        'paper_goblin_solana': solana_status,
         'current_state': {'bot_mode': live.get('mode'),'reconciled_size': live.get('reconciled_size'),'conditional_balance': live.get('conditional_balance'),'book': live.get('book'),'btc_spot': live.get('btc_spot'),'auto_entry_enabled': GENERIC_LIVE.exists() and not GENERIC_ENTRY_HALT.exists()},
         'tracked_wallets': tracked_wallets,
         'current_orders': current_orders,
         'current_positions': current_positions,
         'past_trades': trades,
-        'artifacts': {'ledger': str(LEDGER), 'scanner_latest': max(glob.glob('/home/fiv30nit/polymarket_crypto_guardrail_scan_*.json'), key=lambda p: Path(p).stat().st_mtime) if glob.glob('/home/fiv30nit/polymarket_crypto_guardrail_scan_*.json') else None, 'gate_report': str(GATE_REPORT), 'manager_state': '/home/fiv30nit/polymarket_positions_state.json'},
+        'artifacts': {'ledger': str(LEDGER), 'paper_goblin_ledger': str(PAPER_GOBLIN_LEDGER), 'paper_goblin_report': str(PAPER_GOBLIN_REPORT), 'paper_goblin_progressive_db': str(PAPER_GOBLIN_PROGRESSIVE_DB), 'scanner_latest': max(glob.glob('/home/fiv30nit/polymarket_crypto_guardrail_scan_*.json'), key=lambda p: Path(p).stat().st_mtime) if glob.glob('/home/fiv30nit/polymarket_crypto_guardrail_scan_*.json') else None, 'gate_report': str(GATE_REPORT), 'manager_state': '/home/fiv30nit/polymarket_positions_state.json'},
     }
     return snapshot
 
