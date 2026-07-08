@@ -39,7 +39,7 @@ for (const expected of [
   'rules engine',
   'payout range',
   'Open RebateSignal tester',
-  'sample_logic',
+  'guarded outputs',
 ]) {
   must(copy.includes(expected), `RebateSignal window missing ${expected}`);
 }
@@ -57,17 +57,18 @@ must(draftDoc.title.includes('RebateSignal'), 'draft page title should name Reba
 must(draftDoc.querySelector('meta[name="robots"]')?.getAttribute('content').includes('noindex'), 'draft page should be noindex while in draft');
 const draftText = draftDoc.body.textContent.replace(/\s+/g, ' ');
 for (const expected of [
-  'API service draft',
+  'Live guarded API',
   'Always-current rebate payout API',
-  'Latest payout feed',
+  'Approved product catalog',
   'Example API payloads',
+  'GET /v1/product-catalog',
   'GET /v1/payouts/latest',
   'POST /v1/quotes',
   'Heat pump hot water',
-  'VEU / VEEC estimate',
-  'STC estimate',
+  'numeric VEECs withheld',
+  'market payout feed not connected',
   'Solar Victoria',
-  'sample logic only',
+  'guarded outputs',
   'stale values are visible',
   'Accuracy safeguards',
   'decommissioning evidence',
@@ -77,6 +78,8 @@ for (const expected of [
 must(draft.includes('function calculateQuote'), 'RebateSignal tester should include client-side quote calculator');
 must(draft.includes('decommissioned'), 'RebateSignal tester should model decommissioning state');
 must(draft.includes('latest_verified'), 'draft page should show latest payout strategy in request payload');
-must(draft.includes('stale_after_minutes'), 'draft page should explain stale payout freshness');
+must(draft.includes('stale_after_hours'), 'draft page should explain stale payout freshness');
+must(!draft.includes('sample_logic'), 'draft page should not expose sample_logic after live catalog launch');
+must(!draft.includes('"estimated_units": 28'), 'draft page should not expose fake VEEC units');
 
 console.log('rebatesignal-project-regression ok');

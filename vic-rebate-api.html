@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RebateSignal — API service draft</title>
-  <meta name="description" content="API service draft for always-current Victorian rebate payout data, eligibility rules, and example payloads across VEU / VEEC, STC and Solar Victoria." />
+  <title>RebateSignal — live guarded rebate API</title>
+  <meta name="description" content="Live guarded API service for Victorian rebate rules, source-backed approved product catalog data, and payout feed status across VEU / VEEC, STC and Solar Victoria." />
   <meta name="robots" content="noindex, nofollow" />
   <link rel="canonical" href="https://michaelcostea.com/vic-rebate-api.html" />
   <style>
@@ -18,11 +18,11 @@
     <a class="back" href="/#vic-rebate-api">← Back to MichaelOS project window</a>
     <section class="top">
       <div class="hero">
-        <span class="eyebrow">API service draft · Victoria first</span>
+        <span class="eyebrow">Live guarded API · Victoria first</span>
         <h1>Always-current rebate payout API</h1>
         <p><b>RebateSignal</b> is being designed as an API service for installers, CRMs, quote tools, and marketplaces that need up-to-date rebate payouts and rule-driven eligibility across <b>VEU / VEEC</b>, <b>STC</b>, and <b>Solar Victoria</b>.</p>
         <p>Instead of every business copying old calculator assumptions into spreadsheets, the API returns versioned scheme logic, live payout inputs, blockers, warnings, evidence requirements, and line-item estimates that can be embedded directly into quote flows.</p>
-        <div class="status"><span class="pill">POST /v1/quotes</span><span class="pill">GET /v1/payouts/latest</span><span class="pill">rule versioning</span><span class="pill warn">sample logic only</span></div>
+        <div class="status"><span class="pill">POST /v1/quotes</span><span class="pill">GET /v1/product-catalog</span><span class="pill">41,989 approved products</span><span class="pill warn">guarded outputs</span></div>
       </div>
       <aside class="panel">
         <h2>Why this improves quote accuracy</h2>
@@ -36,17 +36,17 @@
     </section>
 
     <section class="service-strip" aria-label="API service metrics">
-      <div><small>Primary output</small><b>Payout range</b></div>
+      <div><small>Primary output</small><b>Rules + catalog</b></div>
+      <div><small>Catalog</small><b>41,989 products</b></div>
       <div><small>Rule posture</small><b>Source-versioned</b></div>
-      <div><small>First activity</small><b>Hot water</b></div>
-      <div><small>Status</small><b>Draft API</b></div>
+      <div><small>Status</small><b>Live guarded API</b></div>
     </section>
 
     <div class="section-title"><h2>What the API service provides</h2><p>Built for systems that need current rebate intelligence, not a one-off public calculator.</p></div>
     <section class="grid" aria-label="service capability cards">
-      <article class="card"><b>Latest payout feed</b><span>Expose current VEEC/STC payout assumptions by provider, observed timestamp, price type, and confidence so quote tools stop using stale certificate values.</span></article>
+      <article class="card"><b>Approved product catalog</b><span>Serve maintained rebate-approved product rows from official Solar Victoria, CEC and VEU registers with make, model, efficiency fields, source URL, checksum and capture timestamp.</span></article>
       <article class="card"><b>Eligibility + rule logic</b><span>Return activity-specific rules from VEU calculator resources, STC calculator resources, approved product data, postcode/date inputs, and decommissioning requirements.</span></article>
-      <article class="card"><b>Evidence checklist</b><span>Tell installers exactly what is missing before payout confidence is increased: photos, serial plates, decommissioning evidence, customer assignment, and product proof.</span></article>
+      <article class="card"><b>Payout feed guardrails</b><span>Withhold VEEC/STC dollar values unless a licensed fresh market-price feed or caller-supplied fresh price is available.</span></article>
     </section>
 
     <div class="section-title"><h2>Example API payloads</h2><p>Draft contract for how a CRM, website quote widget, or field app would call the service.</p></div>
@@ -82,31 +82,32 @@
         <div class="code">{
   "eligible": true,
   "confidence": "indicative",
-  "estimated_total_low": 2357.30,
-  "estimated_total_high": 2691.40,
+  "estimated_total_low": 0,
+  "estimated_total_high": 0,
   "estimates": [
     {
       "scheme": "VEU",
       "certificate_type": "VEEC",
-      "estimated_units": 28,
-      "unit_price": 72.50,
-      "payout_low": 1725.50,
-      "payout_high": 1989.40,
+      "estimated_units": null,
+      "unit_price": null,
+      "payout_low": null,
+      "payout_high": null,
+      "warnings": ["numeric VEECs withheld until exact official evidence is present"],
       "evidence_required": [
         "customer assignment",
         "before/after photos",
-        "decommissioning evidence"
-      ],
-      "source_versions": ["veu-rules:2026-07-01"]
+        "decommissioning evidence",
+        "approved product/register evidence"
+      ]
     },
     {
       "scheme": "STC",
       "certificate_type": "STC",
-      "estimated_units": 18,
-      "unit_price": 39.00,
-      "payout_low": 631.80,
-      "payout_high": 702.00,
-      "source_versions": ["cer-stc:2026-07-01"]
+      "estimated_units": null,
+      "unit_price": null,
+      "payout_low": null,
+      "payout_high": null,
+      "warnings": ["market payout feed not connected"]
     }
   ]
 }</div>
@@ -120,12 +121,11 @@
         <div class="code">GET /v1/payouts/latest?state=VIC&schemes=VEEC,STC
 
 {
-  "observed_at": "2026-07-01T10:15:00+10:00",
-  "prices": [
-    { "scheme": "VEU", "unit": "VEEC", "price": 72.50, "provider": "example-trader", "confidence": "verified" },
-    { "scheme": "SRES", "unit": "STC", "price": 39.00, "provider": "example-trader", "confidence": "verified" }
-  ],
-  "stale_after_minutes": 60
+  "confidence": "unavailable",
+  "feed_status": "not_connected",
+  "prices": [],
+  "stale_after_hours": 48,
+  "disclaimer": "Supply non-stale market_prices until an authorised feed is connected."
 }</div>
       </article>
       <article class="panel">
@@ -143,12 +143,12 @@
     <section class="tester" aria-label="Live RebateSignal tester">
       <form id="quoteForm" class="panel">
         <h2>Live RebateSignal tester</h2>
-        <p><b>Scenario:</b> Heat pump hot water replacement/decommissioning. Change the inputs and recalculate the sample response.</p>
+        <p><b>Scenario:</b> Heat pump hot water replacement/decommissioning. This guarded public simulator shows evidence and blockers only; it does not invent certificate quantities or payout prices.</p>
         <div class="form-row"><label for="activityType">Activity</label><select id="activityType"><option value="heat_pump_hot_water">Heat pump hot water</option><option value="hvac_air_conditioning">HVAC / air conditioning</option><option value="solar_pv">Solar PV</option><option value="battery">Battery</option></select></div>
         <div class="form-row"><label for="siteType">Site type</label><select id="siteType"><option value="residential">Residential</option><option value="business">Business</option><option value="commercial_industrial">Commercial / industrial</option></select></div>
         <div class="form-row"><label for="postcode">Postcode</label><input id="postcode" value="3066" /></div>
-        <div class="form-row"><label for="veecPrice">VEEC unit payout / price</label><input id="veecPrice" type="number" step="0.01" value="72.50" /></div>
-        <div class="form-row"><label for="stcPrice">STC unit payout / price</label><input id="stcPrice" type="number" step="0.01" value="39.00" /></div>
+        <div class="form-row"><label for="veecPrice">VEEC unit payout / price</label><input id="veecPrice" type="number" step="0.01" value="0" /></div>
+        <div class="form-row"><label for="stcPrice">STC unit payout / price</label><input id="stcPrice" type="number" step="0.01" value="0" /></div>
         <div class="checks">
           <label class="checkline"><input id="decommissioned" type="checkbox" checked /> Existing equipment decommissioned</label>
           <label class="checkline"><input id="evidence" type="checkbox" checked /> Decommissioning evidence available</label>
@@ -163,7 +163,23 @@
       </section>
     </section>
 
-    <p class="footer-note"><b>Important:</b> this public page is a draft API service simulator. Production outputs must come from reviewed deterministic backend rules, source-versioned regulator data, approved product/register checks, market price timestamps, and accredited-person validation. It is not financial/legal advice.</p>
+
+    <section class="grid two" aria-label="Live approved product catalog API">
+      <article class="panel">
+        <h2>Live approved product catalog</h2>
+        <p>This calls the deployed RebateSignal API and returns only promoted official product-register rows. No rebate amounts or VEEC units are inferred in the catalog layer.</p>
+        <div class="code">GET https://rebatesignal-staging.web.app/api/v1/product-catalog/status</div>
+        <div id="catalogStatus" class="summary" style="margin-top:12px"></div>
+      </article>
+      <article class="panel">
+        <h2>Catalog search sample</h2>
+        <p>Example: VEU Activity 6 HVAC product search with source-backed make/model and efficiency fields.</p>
+        <div class="code">GET /api/v1/product-catalog/products/search?q=CRS13AS&amp;activity_value=CY</div>
+        <div id="catalogSearch" style="margin-top:12px"></div>
+      </article>
+    </section>
+
+    <p class="footer-note"><b>Important:</b> this public page uses a live guarded API plus a draft quote simulator. Production outputs must come from reviewed deterministic backend rules, source-versioned regulator data, approved product/register checks, market price timestamps, and accredited-person validation. It is not financial/legal advice.</p>
   </main>
   <script>
     const money = new Intl.NumberFormat('en-AU', { style:'currency', currency:'AUD' });
@@ -171,10 +187,10 @@
     function checked(id){ return document.getElementById(id).checked; }
     function unitsFor(activity){
       return {
-        heat_pump_hot_water: { veec: 28, stc: 18 },
-        hvac_air_conditioning: { veec: 45, stc: 0 },
-        solar_pv: { veec: 0, stc: 60 },
-        battery: { veec: 0, stc: 25 },
+        heat_pump_hot_water: { veec: 0, stc: 0 },
+        hvac_air_conditioning: { veec: 0, stc: 0 },
+        solar_pv: { veec: 0, stc: 0 },
+        battery: { veec: 0, stc: 0 },
       }[activity] || { veec:0, stc:0 };
     }
     function range(value, low, high){ return { low: value * low, high: value * high }; }
@@ -201,7 +217,7 @@
         const amount = activity === 'solar_pv' ? 1400 : 0;
         estimates.push({ scheme:'Solar Victoria', units:null, price:null, value:amount, payout:{low:amount, high:amount}, blockers:[], warnings:['Placeholder only: customer/property/application eligibility required.'], evidence:['Solar Victoria application approval evidence'] });
       }
-      return { activity_type:activity, confidence:'sample_logic', estimates };
+      return { activity_type:activity, confidence:'guarded_no_numeric_catalog_live', estimates };
     }
     function render(){
       const quote = calculateQuote();
@@ -215,6 +231,25 @@
     }
     document.getElementById('quoteForm').addEventListener('submit', e => { e.preventDefault(); render(); });
     render();
+    const API_BASE = 'https://rebatesignal-staging.web.app/api';
+    async function loadCatalogLive(){
+      const statusEl = document.getElementById('catalogStatus');
+      const searchEl = document.getElementById('catalogSearch');
+      if(!statusEl || !searchEl) return;
+      try{
+        const status = await fetch(`${API_BASE}/v1/product-catalog/status`).then(r => r.json());
+        statusEl.innerHTML = `<div class="metric"><small>Status</small><strong>${status.status}</strong></div><div class="metric"><small>Approved products</small><strong>${status.coverage.catalog_product_count.toLocaleString()}</strong></div><div class="metric"><small>Registers</small><strong>${status.coverage.register_count}</strong></div>`;
+        const search = await fetch(`${API_BASE}/v1/product-catalog/products/search?program=${encodeURIComponent('Victorian Energy Upgrades')}&activity_value=CY&q=CRS13AS&limit=1`).then(r => r.json());
+        const p = search.products && search.products[0];
+        if(p){
+          const fields = p.efficiency_outputs?.source_fields || {};
+          searchEl.innerHTML = `<article class="lineitem"><h3>${p.make} — ${p.model}</h3><table><tr><td>Program</td><td>${p.program}</td></tr><tr><td>Register</td><td>${p.register_id}</td></tr><tr><td>Category</td><td>${p.category || 'n/a'}</td></tr><tr><td>Cooling capacity</td><td>${fields['Cooling Capacity (kW)'] || 'source field unavailable'}</td></tr><tr><td>HSPF mixed</td><td>${fields['GEMS HSPF Mixed (com)'] || 'source field unavailable'}</td></tr></table><p><b>Guardrail:</b> ${p.rebate_approval.numeric_veec_units_status}; ${p.rebate_approval.payout_price_status}</p><p><b>Source:</b> ${p.source_evidence.source_url}</p></article>`;
+        }
+      }catch(err){
+        statusEl.innerHTML = '<div class="warnings"><b>Live catalog check failed.</b> Try again shortly.</div>';
+      }
+    }
+    loadCatalogLive();
   </script>
 </body>
 </html>
