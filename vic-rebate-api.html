@@ -46,7 +46,7 @@
     <section class="grid" aria-label="service capability cards">
       <article class="card"><b>Approved product catalog</b><span>Serve maintained rebate-approved product rows from official Solar Victoria, CEC and VEU registers with make, model, efficiency fields, source URL, checksum and capture timestamp.</span></article>
       <article class="card"><b>Eligibility + rule logic</b><span>Return activity-specific rules from VEU calculator resources, STC calculator resources, approved product data, postcode/date inputs, and decommissioning requirements.</span></article>
-      <article class="card"><b>Payout feed guardrails</b><span>Withhold VEEC/STC dollar values unless a licensed fresh market-price feed or caller-supplied fresh price is available.</span></article>
+      <article class="card"><b>Payout price guardrails</b><span>Companies set their own VEEC/STC sell prices in quote requests. RebateSignal validates freshness, labels those values caller-supplied, and withholds stale or missing prices.</span></article>
     </section>
 
     <div class="section-title"><h2>Example API payloads</h2><p>Draft contract for how a CRM, website quote widget, or field app would call the service.</p></div>
@@ -92,7 +92,7 @@
       "unit_price": null,
       "payout_low": null,
       "payout_high": null,
-      "warnings": ["numeric VEECs withheld until exact official evidence is present"],
+      "warnings": ["company price required: supply fresh market_prices.veec_price"],
       "evidence_required": [
         "customer assignment",
         "before/after photos",
@@ -107,7 +107,7 @@
       "unit_price": null,
       "payout_low": null,
       "payout_high": null,
-      "warnings": ["market payout feed not connected"]
+      "warnings": ["company price required: supply fresh market_prices.stc_price"]
     }
   ]
 }</div>
@@ -121,11 +121,15 @@
         <div class="code">GET /v1/payouts/latest?state=VIC&schemes=VEEC,STC
 
 {
-  "confidence": "unavailable",
-  "feed_status": "not_connected",
+  "confidence": "company_price_required",
+  "feed_status": "no_default_feed_company_supplied_supported",
   "prices": [],
   "stale_after_hours": 48,
-  "disclaimer": "Supply non-stale market_prices until an authorised feed is connected."
+  "pricing_modes": {
+    "company_supplied_market_prices": { "supported": true },
+    "default_live_market_feed": { "connected": false }
+  },
+  "disclaimer": "Companies supply fresh market_prices for their own quote prices."
 }</div>
       </article>
       <article class="panel">
@@ -143,7 +147,7 @@
     <section class="tester" aria-label="Live RebateSignal tester">
       <form id="quoteForm" class="panel">
         <h2>Live RebateSignal tester</h2>
-        <p><b>Scenario:</b> Heat pump hot water replacement/decommissioning. This guarded public simulator shows evidence and blockers only; it does not invent certificate quantities or payout prices.</p>
+        <p><b>Scenario:</b> Heat pump hot water replacement/decommissioning. This guarded public simulator shows evidence, blockers, and company-set price inputs; it does not invent certificate quantities.</p>
         <div class="form-row"><label for="activityType">Activity</label><select id="activityType"><option value="heat_pump_hot_water">Heat pump hot water</option><option value="hvac_air_conditioning">HVAC / air conditioning</option><option value="solar_pv">Solar PV</option><option value="battery">Battery</option></select></div>
         <div class="form-row"><label for="siteType">Site type</label><select id="siteType"><option value="residential">Residential</option><option value="business">Business</option><option value="commercial_industrial">Commercial / industrial</option></select></div>
         <div class="form-row"><label for="postcode">Postcode</label><input id="postcode" value="3066" /></div>
