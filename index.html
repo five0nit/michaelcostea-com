@@ -278,9 +278,9 @@
               <figure><img src="assets/project-showcase/vic-rebate-api.webp?v=20260701-showcase" alt="Screenshot of the RebateSignal tester" loading="lazy" /></figure>
               <div class="project-card-body">
                 <h3>RebateSignal</h3>
-                <p>Victoria-first API service draft for quoting energy upgrade rebate payout ranges across VEU/VEEC, STC, and Solar Victoria, with source-version posture and evidence checks.</p>
-                <ul><li>Draft tester shows line items, payout low/high, blockers, warnings, and confidence.</li><li>Next: replace sample logic with official rule packs.</li></ul>
-                <div class="repo-action-row"><button class="ui-btn btn" type="button" data-open="vicRebateApiWindow" onclick="openWindow('vicRebateApiWindow')">Open project window</button><a class="ui-btn btn secondary" href="vic-rebate-api.html">Open RebateSignal</a></div>
+                <p>Live guarded Victoria-first quote service for source-backed STC estimates, approved-product evidence, and fail-closed VEU / Solar Victoria metadata.</p>
+                <ul><li>Exact promoted CEC product evidence gates numeric solar and battery STCs.</li><li>Unknown, stale, incomplete, and unsupported paths withhold numbers instead of guessing.</li></ul>
+                <div class="repo-action-row"><button class="ui-btn btn" type="button" data-open="vicRebateApiWindow" onclick="openWindow('vicRebateApiWindow')">Open project window</button><a class="ui-btn btn secondary" href="https://rebatesignal-staging.web.app" target="_blank" rel="noopener">Open live RebateSignal</a></div>
                 <span class="project-tags">VEU/VEEC · STC · Solar Victoria · rules engine</span>
               </div>
             </article>
@@ -527,16 +527,16 @@
     </section>
 
     <section id="vicRebateApiWindow" class="win-window doc-window" aria-label="RebateSignal project" style="left:225px;top:72px;width:min(980px,94vw);height:min(760px,calc(100dvh - 85px));">
-      <div class="win-title"><span>RebateSignal - Draft Project</span><button class="win-close" data-close="vicRebateApiWindow">×</button></div>
+      <div class="win-title"><span>RebateSignal - Live Guarded Quote Service</span><button class="win-close" data-close="vicRebateApiWindow">×</button></div>
       <div class="win-body document-body">
         <article class="resume-doc vic-rebate-api-doc">
           <div class="mini-heading lean-heading"><h2>RebateSignal</h2></div>
           <p class="brand-promise"><b>A Victoria-first rebate intelligence API for VEU / VEEC, STC, and Solar Victoria payout ranges.</b></p>
           <p>This project turns messy rebate calculators, certificate price feeds, decommissioning rules, approved-product checks, and state/federal scheme conditions into one line-item quote response that installers and marketplaces can test before a job is submitted.</p>
-          <div class="release-hold repo-release-card"><span><b>Live guarded status:</b><br />The API and approved product catalog are live on staging with guarded outputs. Product catalog serving now exposes 41,989 source-backed approved product rows. Certificate counts and customer eligibility remain evidence-gated. Companies can set their own VEEC/STC quote prices by supplying fresh <code>market_prices</code>; RebateSignal labels them caller-supplied and withholds stale/missing prices.</span></div>
+          <div class="release-hold repo-release-card"><span><b>Live guarded status:</b><br />The Firebase calculator and API are deployed with <code>public_quote_ready=true</code>. The promoted catalog contains 42,012 source-backed approved products. Exact CEC module + inverter evidence gates solar STCs; exact CEC battery evidence and register capacities gate battery STCs. VEU numeric outputs and unverified Solar Victoria customer amounts remain withheld.</span></div>
           <div class="project-focus-strip" aria-label="RebateSignal coverage"><span>VEU / VEEC</span><span>STC</span><span>Solar Victoria</span><span>decommissioning evidence</span><span>payout range</span><span>rules engine</span></div>
           <div class="repo-action-row" aria-label="RebateSignal actions">
-            <a class="ui-btn btn" href="vic-rebate-api.html">Open RebateSignal tester</a>
+            <a class="ui-btn btn" href="https://rebatesignal-staging.web.app" target="_blank" rel="noopener">Open live RebateSignal</a>
             <a class="ui-btn btn secondary" href="https://www.esc.vic.gov.au/victorian-energy-upgrades/participating-veu-program/working-veu-registry-system" target="_blank" rel="noopener">Official VEU Registry/API source</a>
           </div>
           <div class="doc-grid vic-rebate-grid">
@@ -557,7 +557,7 @@
           </div>
         </article>
       </div>
-      <div class="status-bar"><span>RebateSignal draft loaded.</span><span>RULES BEFORE HYPE</span></div>
+      <div class="status-bar"><span>Firebase deployment linked.</span><span>GUARDED PUBLIC QUOTING</span></div>
     </section>
 
     <section id="agentsWindow" class="win-window doc-window" aria-label="AI Agents" style="left:240px;top:130px;width:min(860px,94vw);">

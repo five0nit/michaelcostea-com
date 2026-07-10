@@ -38,47 +38,33 @@ for (const expected of [
   'decommissioning evidence',
   'rules engine',
   'payout range',
-  'Open RebateSignal tester',
-  'guarded outputs',
+  'Open live RebateSignal',
+  'remain withheld',
 ]) {
   must(copy.includes(expected), `RebateSignal window missing ${expected}`);
 }
 
-const liveLink = document.querySelector('#vicRebateApiWindow a[href="vic-rebate-api.html"]');
-must(liveLink, 'project window should link to vic-rebate-api.html RebateSignal tester');
+const firebaseUrl = 'https://rebatesignal-staging.web.app';
+const liveLink = document.querySelector(`#vicRebateApiWindow a[href="${firebaseUrl}"]`);
+must(liveLink, 'project window should link to the latest Firebase RebateSignal deployment');
+must(liveLink.getAttribute('target') === '_blank', 'Firebase RebateSignal link should open separately');
+must(html.includes('public_quote_ready=true'), 'project window should expose guarded public quote readiness');
+must(html.includes('42,012 source-backed approved products'), 'project window should expose current promoted catalog count');
 
 const projectCardCopy = text('#projectsWindow');
 must(projectCardCopy.includes('RebateSignal'), 'Projects window should include RebateSignal card');
-must(projectCardCopy.includes('VEU/VEEC, STC, and Solar Victoria'), 'Projects card should name the scheme coverage');
+must(projectCardCopy.includes('source-backed STC estimates'), 'Projects card should describe guarded source-backed quoting');
 
 const draftDom = new JSDOM(draft);
 const draftDoc = draftDom.window.document;
-must(draftDoc.title.includes('RebateSignal'), 'draft page title should name RebateSignal');
-must(draftDoc.querySelector('meta[name="robots"]')?.getAttribute('content').includes('noindex'), 'draft page should be noindex while in draft');
+must(draftDoc.title.includes('RebateSignal'), 'redirect page title should name RebateSignal');
+must(draftDoc.querySelector('meta[name="robots"]')?.getAttribute('content').includes('noindex'), 'redirect page should remain noindex');
+must(draftDoc.querySelector('link[rel="canonical"]')?.getAttribute('href') === firebaseUrl, 'redirect page canonical should be Firebase deployment');
+must(draftDoc.querySelector('meta[http-equiv="refresh"]')?.getAttribute('content') === `0;url=${firebaseUrl}`, 'redirect page should immediately point to Firebase deployment');
 const draftText = draftDoc.body.textContent.replace(/\s+/g, ' ');
-for (const expected of [
-  'Live guarded API',
-  'Always-current rebate payout API',
-  'Approved product catalog',
-  'Example API payloads',
-  'GET /v1/product-catalog',
-  'GET /v1/payouts/latest',
-  'POST /v1/quotes',
-  'Heat pump hot water',
-  'company_supplied_market_prices',
-  'Solar Victoria',
-  'guarded outputs',
-  'stale values are visible',
-  'Accuracy safeguards',
-  'decommissioning evidence',
-]) {
-  must(draftText.includes(expected), `draft page missing ${expected}`);
-}
-must(draft.includes('function calculateQuote'), 'RebateSignal tester should include client-side quote calculator');
-must(draft.includes('decommissioned'), 'RebateSignal tester should model decommissioning state');
-must(draft.includes('latest_verified'), 'draft page should show latest payout strategy in request payload');
-must(draft.includes('stale_after_hours'), 'draft page should explain stale payout freshness');
-must(!draft.includes('sample_logic'), 'draft page should not expose sample_logic after live catalog launch');
-must(!draft.includes('"estimated_units": 28'), 'draft page should not expose fake VEEC units');
+must(draftText.includes('Opening RebateSignal'), 'redirect fallback should clearly identify RebateSignal');
+must(draftText.includes('latest guarded public quote deployment'), 'redirect fallback should explain the target');
+must(draft.includes(`window.location.replace('${firebaseUrl}')`), 'redirect page should use location.replace as JavaScript fallback');
+must(!draft.includes('function calculateQuote'), 'stale local sample calculator must not remain on redirect page');
 
 console.log('rebatesignal-project-regression ok');
