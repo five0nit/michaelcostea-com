@@ -53,7 +53,9 @@ must(html.includes('42,012 source-backed approved products'), 'project window sh
 
 const projectCardCopy = text('#projectsWindow');
 must(projectCardCopy.includes('RebateSignal'), 'Projects window should include RebateSignal card');
-must(projectCardCopy.includes('source-backed STC estimates'), 'Projects card should describe guarded source-backed quoting');
+must(projectCardCopy.includes('source-backed hot-water VEECs'), 'Projects card should describe current source-backed hot-water VEEC quoting');
+must(copy.includes('POST /api/v1/quotes'), 'project window should expose the Firebase Hosting API route');
+must(copy.includes('hot-water STCs'), 'project window should distinguish the still-guarded hot-water STC line');
 
 const draftDom = new JSDOM(draft);
 const draftDoc = draftDom.window.document;
