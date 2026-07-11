@@ -37,7 +37,7 @@ html = replace_once(
 html = replace_once(
     html,
     '  <link rel="stylesheet" href="assets/css/hyperframes-live.css?v=20260711-private-style-labels" />',
-    '  <link rel="stylesheet" href="assets/css/hyperframes-live.css?v=20260711-private-style-labels" />\n  <link rel="stylesheet" href="preview/content-audit/preview.css?v=20260711-content-pass-2" />',
+    '  <link rel="stylesheet" href="assets/css/hyperframes-live.css?v=20260711-private-style-labels" />\n  <link rel="stylesheet" href="preview/content-audit/preview.css?v=20260711-agentic-pass-3" />',
     "preview stylesheet",
 )
 html = replace_once(
@@ -52,14 +52,15 @@ home_content = '''        <aside class="welcome-sidebar" aria-label="Primary nav
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">PROJECTS</button>
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">RESUME</button>
           <button class="btn big-nav" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')">WHAT I BUILD</button>
+          <button class="btn big-nav agentic-nav" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">AGENTIC SYSTEMS</button>
           <button class="btn big-nav ai-cta-nav" type="button" data-open="aiHelpWindow" onclick="openWindow('aiHelpWindow')">AI HELP</button>
           <button class="btn big-nav" type="button" data-open="contactWindow" onclick="openWindow('contactWindow')">CONTACT</button>
         </aside>
         <section class="welcome-copy">
-          <div class="mini-heading welcome-mini lift-heading"><h1><span class="desktop-headline">FROM FRONTLINE OPERATIONS TO AI SYSTEMS</span><span class="mobile-headline">OPS TO AI SYSTEMS</span></h1></div>
+          <div class="mini-heading welcome-mini lift-heading"><h1><span class="desktop-headline">OPERATIONS, SYSTEMS & AI AGENTS</span><span class="mobile-headline">SYSTEMS + AI AGENTS</span></h1></div>
           <div class="terminal-line">ELECTRICIAN → SALES → OPERATIONS → SYSTEMS [LIVE]</div>
 
-          <p class="brand-promise mini-callout"><span><b><span class="desktop-promise">I build and improve the systems behind real service businesses — websites, lead flows, internal tools and AI workflows that staff can actually use.</span><span class="mobile-promise">Real operations. Useful systems. AI people can use.</span></b></span></p>
+          <p class="brand-promise mini-callout"><span><b><span class="desktop-promise">I build the operating layer where people, business systems and AI agents can work together — with memory, permissions, receipts and human review.</span><span class="mobile-promise">People, business systems and AI agents — connected safely.</span></b></span></p>
           <p>I’m Michael Costea, currently <strong class="accent">Head of Tech, AI & Systems</strong> at All Electric Homes. I came into technology through frontline work: customer operations, running a small business, electrical delivery, sales and marketing.</p>
           <p>That background keeps my work grounded. I care less about impressive demos and more about whether a system saves time, makes ownership clear and works on a busy Monday morning.</p>
 
@@ -69,6 +70,24 @@ home_content = '''        <aside class="welcome-sidebar" aria-label="Primary nav
             <span><b>500k visits</b><small>monthly knowledge traffic</small></span>
             <span><b>Licensed electrician</b><small>field-to-systems context</small></span>
           </div>
+
+          <section class="agentic-practice-card" aria-label="Agentic systems practice">
+            <div class="agentic-practice-head">
+              <span class="resource-badge">HANDS-ON PRACTICE</span>
+              <div><h2>Agentic systems, not just prompts</h2><p>I design and operate local multi-agent environments: coordinator and specialist roles, durable context, scheduled work, tool boundaries, visible handoffs and human approval for risky actions.</p></div>
+            </div>
+            <div class="agentic-practice-grid">
+              <article><b>Orchestration</b><span>Coordinator and specialist lanes, task routing, explicit ownership, handoffs and completion receipts.</span></article>
+              <article><b>Memory & continuity</b><span>Shared project state, durable memory, source-of-truth notes and session handoffs so agents do not restart blind.</span></article>
+              <article><b>Reliability</b><span>Schedules, lock-safe runners, watchdogs, retries, health checks, alerts and recovery paths for unattended work.</span></article>
+              <article><b>Permissions & review</b><span>Least-privilege tools, draft-first access, approval gates, audit trails and fail-closed rules for public or destructive actions.</span></article>
+            </div>
+            <div class="agentic-proof-line"><b>Current environment:</b> 25 visible agents across a Legion control hub, MacBook Pro and four Mac minis · OpenClaw · Hermes · Telegram/Discord operating rooms · AgentMesh · Agent Office</div>
+            <div class="agentic-action-row">
+              <button class="ui-btn btn" type="button" data-open="agentsWindow" onclick="openWindow('agentsWindow')">Open Agent Stack</button>
+              <button class="ui-btn btn secondary" type="button" data-open="agenticFrameworkDeckWindow" onclick="openWindow('agenticFrameworkDeckWindow')">Open Framework Deck</button>
+            </div>
+          </section>
 
           <div class="hero-action-panel" aria-label="Primary portfolio actions">
             <button class="ui-btn btn hero-image-cta primary-hero-cta" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')"><img src="assets/minime-pack/build_workflow_engineer.png" alt="" aria-hidden="true" loading="lazy" width="331" height="284" />See Projects</button>
@@ -123,12 +142,27 @@ resume_intro = '''          <header class="doc-header evidence-led-header">
             </div>
           </section>
 
+          <section class="resume-agentic-practice">
+            <h3>Agentic Systems Practice</h3>
+            <p>I work beyond single-chat assistants. I design the operating layer around teams of agents: what each agent owns, which tools it can use, how context survives between sessions, how work is scheduled, how failures surface, and where a person must approve the next action.</p>
+            <div class="resume-agentic-grid">
+              <article><b>Agent architecture</b><span>Coordinator, specialist and reviewer roles with explicit task boundaries and handoff contracts.</span></article>
+              <article><b>Tool & permission design</b><span>Profile-specific tools, small keyrings, least privilege, read/draft-first access and scoped escalation.</span></article>
+              <article><b>Memory & shared state</b><span>Durable project context, mailbox/handoff patterns, source receipts and human-readable memory projections.</span></article>
+              <article><b>Autonomous operations</b><span>Scheduled jobs, overnight lanes, lock-safe runners, watchdogs, retries and failure notifications.</span></article>
+              <article><b>Observability & recovery</b><span>Logs, status dashboards, Telegram/Discord receipts, health checks, rollback paths and honest completion gates.</span></article>
+              <article><b>Human governance</b><span>Approval phrases, expiry windows, review queues and fail-closed rules for customer, financial, public or destructive work.</span></article>
+            </div>
+            <p class="agentic-builds"><b>Selected builds:</b> AgentMesh multi-agent control kit · Telegram Agent Office · Business Agent Harness · Agentic Framework Session · local OpenClaw/Hermes orchestration across 25 visible agents.</p>
+          </section>
+
           <section>
             <h3>What I Own Now</h3>
             <ul class="ownership-list">
               <li>Multi-brand websites, domains, hosting, analytics and lead-capture paths.</li>
               <li>Lead routing, qualification, follow-up and customer-journey tooling.</li>
               <li>Internal dashboards, workflow automations and practical AI-assisted processes.</li>
+              <li>Local agent infrastructure: role separation, shared memory, schedules, watchdogs, operator channels and review gates.</li>
               <li>System boundaries and handoffs across marketing, sales, admin, finance and field operations.</li>
               <li>Training, documentation and review points so staff can use new systems confidently.</li>
             </ul>
@@ -143,7 +177,7 @@ html = sub_once(
     "resume introduction",
 )
 
-current_role = '''              <article class="mini-content-card current-role-card"><h4>Head of Tech, AI & Systems — All Electric Homes</h4><p><b>Feb 2026 - Present · Melbourne · On-site</b></p><figure class="mini-card-figure"><img src="assets/minime-pack/experience_aeh.png" alt="Pixel mini Michael working across technology and operations" loading="lazy" /></figure><p>Own technology and systems work across a multi-brand electrical and energy-services group. Current work spans digital infrastructure, websites, lead handling, internal tools, reporting and carefully reviewed AI-assisted workflows.</p><p><b>Operating focus:</b> clearer ownership, less duplicate admin, faster handoffs and systems that staff can understand and maintain.</p></article>
+current_role = '''              <article class="mini-content-card current-role-card"><h4>Head of Tech, AI & Systems — All Electric Homes</h4><p><b>Feb 2026 - Present · Melbourne · On-site</b></p><figure class="mini-card-figure"><img src="assets/minime-pack/experience_aeh.png" alt="Pixel mini Michael working across technology and operations" loading="lazy" /></figure><p>Own technology and systems work across a multi-brand electrical and energy-services group. Current work spans digital infrastructure, websites, lead handling, internal tools, reporting and agentic workflows with scoped tools, shared context, visible receipts and human review.</p><p><b>Operating focus:</b> clearer ownership, less duplicate admin, faster handoffs and systems that staff can understand and maintain.</p></article>
               <article class="mini-content-card"><h4>Business Development & Marketing Manager — Want A Heat Pump / Want A Sparky / All Electric Homes</h4>'''
 html = sub_once(
     html,
@@ -157,7 +191,7 @@ capabilities = '''          <section class="capabilities-section">
             <div class="doc-grid capability-grid concise-capabilities">
               <div class="mini-content-card"><b>Business Systems Ownership</b><figure class="mini-card-figure"><img src="assets/minime-pack/resume_architecture.png" alt="Pixel mini Michael representing business systems ownership" loading="lazy" /></figure><span>Map ownership, handoffs and source-of-truth data across sales, admin, finance, field delivery and reporting.</span></div>
               <div class="mini-content-card"><b>Lead & Customer Journey Operations</b><figure class="mini-card-figure"><img src="assets/minime-pack/resume_leads.png" alt="Pixel mini Michael representing lead and customer journey operations" loading="lazy" /></figure><span>Improve capture, routing, qualification, follow-up, customer communication and job-completion visibility.</span></div>
-              <div class="mini-content-card"><b>Automation With Review Gates</b><figure class="mini-card-figure"><img src="assets/minime-pack/resume_agentic.png" alt="Pixel mini Michael representing reviewed automation" loading="lazy" /></figure><span>Automate repeated work while keeping approvals, audit trails and escalation points visible.</span></div>
+              <div class="mini-content-card"><b>Multi-Agent Orchestration</b><figure class="mini-card-figure"><img src="assets/minime-pack/resume_agentic.png" alt="Pixel mini Michael representing multi-agent orchestration" loading="lazy" /></figure><span>Design coordinator and specialist roles, memory, schedules, watchdogs, handoffs, permissions and review gates as one operating system.</span></div>
               <div class="mini-content-card"><b>Digital Infrastructure</b><figure class="mini-card-figure"><img src="assets/minime-pack/resume_infra.png" alt="Pixel mini Michael representing digital infrastructure" loading="lazy" /></figure><span>Own websites, domains, hosting, analytics, conversion paths, landing pages and internal web tools.</span></div>
               <div class="mini-content-card"><b>Knowledge & Process Design</b><figure class="mini-card-figure"><img src="assets/minime-pack/resume_knowledge.png" alt="Pixel mini Michael representing knowledge and process design" loading="lazy" /></figure><span>Turn repeated questions and fragmented procedures into usable documentation, training and operating routines.</span></div>
               <div class="mini-content-card"><b>Field & Commercial Context</b><figure class="mini-card-figure"><img src="assets/minime-pack/resume_field.png" alt="Pixel mini Michael representing field and commercial context" loading="lazy" /></figure><span>Bring electrical, sales, service-business and customer-facing experience into technical decisions.</span></div>
