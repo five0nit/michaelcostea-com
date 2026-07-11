@@ -272,7 +272,7 @@ function applyPageRouteFromLocation(){
   const route = normalizePageRoute();
   const targetId = routeWindowLookup[route] || 'readerWindow';
   if(targetId === 'readerWindow'){
-    bringFront(document.getElementById('readerWindow'));
+    openWindow('readerWindow');
     return;
   }
   openWindow(targetId);
@@ -1271,18 +1271,6 @@ async function boot(){
     applyPageRouteFromLocation();
   });
   applyPageRouteFromLocation();
-
-  if (isMobileMode()) {
-    const rw = document.getElementById('readerWindow');
-    if (rw) {
-      rw.classList.add('open');
-      rw.style.left = '';
-      rw.style.right = '';
-      rw.style.top = '';
-      rw.style.width = '';
-      rw.style.height = '';
-    }
-  }
 
   window.addEventListener('resize', () => {
     const wasMobile = document.body.classList.contains('mobile-mode');

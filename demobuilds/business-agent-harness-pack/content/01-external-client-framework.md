@@ -3,7 +3,7 @@ title: External Client Framework
 version: 1.0
 status: Draft client-ready pack
 prepared_by: Michael Costea
-style: MichaelOS × Nous field-note × Hyperframes
+style: MichaelOS × Nous field-note
 ---
 
 # Business Agent Harness Framework

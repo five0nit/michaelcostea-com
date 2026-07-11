@@ -90,7 +90,7 @@ fs.writeFileSync(path.join(outDir,'pack-pdf.css'), pdfCss);
 
 function screenHtml(file, title){
   const md=fs.readFileSync(path.join(contentDir,file),'utf8');
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><link rel="stylesheet" href="pack.css"></head><body><main class="shell"><section class="window"><div class="title"><span>${esc(title)}</span><span>MICHAELOS × NOUS × HYPERFRAMES</span></div><article class="paper"><div class="meta">Client-ready framework pack · v1.1</div><div class="hyper">${mdToHtml(md)}</div><div class="footer">Prepared by Michael Costea · michaelcostea.com · Business Agent Harness Pack</div></article></section></main></body></html>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><link rel="stylesheet" href="pack.css"></head><body><main class="shell"><section class="window"><div class="title"><span>${esc(title)}</span><span>MICHAELOS × NOUS</span></div><article class="paper"><div class="meta">Client-ready framework pack · v1.1</div><div class="hyper">${mdToHtml(md)}</div><div class="footer">Prepared by Michael Costea · michaelcostea.com · Business Agent Harness Pack</div></article></section></main></body></html>`;
 }
 function pdfHtml(file, title){
   const md=fs.readFileSync(path.join(contentDir,file),'utf8');
@@ -104,7 +104,7 @@ for(const [file,title] of docs){
   fs.writeFileSync(path.join(outDir,base+'.pdf.html'), pdfHtml(file,title));
   links.push(`<a href="${base}.html"><span>${esc(title)}</span><small>${esc(file)}</small></a>`);
 }
-const index = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Business Agent Harness Pack</title><link rel="stylesheet" href="pack.css"></head><body><main class="shell"><section class="window"><div class="title"><span>Business Agent Harness Pack</span><span>MICHAELOS × NOUS × HYPERFRAMES</span></div><article class="paper"><div class="meta">Framework · install · training · templates</div><div class="hyper"><h1>Business Agent Harness Pack</h1><p>A complete internal and external documentation pack for installing a governed Discord-based business agent harness.</p><div class="toc">${links.join('\n')}</div></div><div class="footer">Prepared by Michael Costea · michaelcostea.com</div></article></section></main></body></html>`;
+const index = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Business Agent Harness Pack</title><link rel="stylesheet" href="pack.css"></head><body><main class="shell"><section class="window"><div class="title"><span>Business Agent Harness Pack</span><span>MICHAELOS × NOUS</span></div><article class="paper"><div class="meta">Framework · install · training · templates</div><div class="hyper"><h1>Business Agent Harness Pack</h1><p>A complete internal and external documentation pack for installing a governed Discord-based business agent harness.</p><div class="toc">${links.join('\n')}</div></div><div class="footer">Prepared by Michael Costea · michaelcostea.com</div></article></section></main></body></html>`;
 fs.writeFileSync(path.join(outDir,'index.html'), index);
 
 (async()=>{

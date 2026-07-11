@@ -3,7 +3,7 @@ title: On-site Install Guide - Discord & Agent Permissions
 version: 1.0
 status: Draft client-ready pack
 prepared_by: Michael Costea
-style: MichaelOS × Nous field-note × Hyperframes
+style: MichaelOS × Nous field-note
 ---
 
 # On-site Install Guide: Agent Harness + Discord Permissions

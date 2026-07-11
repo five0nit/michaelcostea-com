@@ -3,7 +3,7 @@ title: Business Training Guide - Using Agents in Discord
 version: 1.0
 status: Draft client-ready pack
 prepared_by: Michael Costea
-style: MichaelOS × Nous field-note × Hyperframes
+style: MichaelOS × Nous field-note
 ---
 
 # Training Guide: How Staff Should Work With Agents in Discord

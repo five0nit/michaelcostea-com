@@ -6,7 +6,7 @@ pack = root/'demobuilds/business-agent-harness-pack'
 content = pack/'content'
 pack.mkdir(parents=True, exist_ok=True)
 content.mkdir(parents=True, exist_ok=True)
-shared_header = """---\ntitle: {title}\nversion: 1.0\nstatus: Draft client-ready pack\nprepared_by: Michael Costea\nstyle: MichaelOS × Nous field-note × Hyperframes\n---\n"""
+shared_header = """---\ntitle: {title}\nversion: 1.0\nstatus: Draft client-ready pack\nprepared_by: Michael Costea\nstyle: MichaelOS × Nous field-note\n---\n"""
 docs = {}
 docs['00-pack-readme.md'] = shared_header.format(title='Business Agent Harness Pack - README') + dedent('''
 # Business Agent Harness Pack

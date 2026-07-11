@@ -71,29 +71,6 @@ body.hyperframes-live{
     4px 4px 0 #111,
     9px 9px 0 rgba(0,166,166,.28)!important;
 }
-.hyperframes-live .welcome-sidebar::before,
-.hyperframes-live .welcome-copy::before,
-.hyperframes-live .deck-preview-panel::before,
-.hyperframes-live .resource-card::before,
-.hyperframes-live .project-card::before,
-.hyperframes-live .agent-card::before{
-  content:"HYPERFRAME";
-  display:inline-block;
-  margin:0 0 8px;
-  padding:4px 6px;
-  background:#111;
-  color:#fff;
-  border:1px solid var(--hf-cyan);
-  font:900 9px/1 "IBM Plex Mono","Courier New",monospace;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-}
-.hyperframes-live .welcome-sidebar::before{content:"HYPERFRAME 01 · NAV SURFACE";}
-.hyperframes-live .welcome-copy::before{content:"HYPERFRAME 02 · FIELD NOTE";}
-.hyperframes-live .deck-preview-panel::before{content:"HYPERFRAME 03 · SLIDESHOW";}
-.hyperframes-live .resource-card::before{content:"RESOURCE FRAME";}
-.hyperframes-live .project-card::before{content:"PROJECT FRAME";}
-.hyperframes-live .agent-card::before{content:"AGENT FRAME";}
 .hyperframes-live .profile-portrait{
   box-shadow:
     4px 4px 0 var(--hf-teal),
@@ -112,31 +89,7 @@ body.hyperframes-live{
 .hyperframes-live .start-cta{
   background:linear-gradient(135deg,var(--hf-amber),#fff9d8)!important;
 }
-.hyperframes-live .win-title span::after{
-  content:" // HF";
-  color:#b8ffff;
-  font-weight:900;
-}
-.hyperframes-live .deck-fullscreen-overlay.open::before{
-  content:"HYPERFRAME FULLSCREEN";
-  position:fixed;
-  left:10px;
-  bottom:10px;
-  z-index:5;
-  background:#111;
-  color:#fff;
-  border:2px solid var(--hf-cyan);
-  padding:5px 7px;
-  font:900 10px/1 monospace;
-}
 @media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
-  body.hyperframes-live::after{
-    top:auto;
-    bottom:52px;
-    right:8px;
-    font-size:8px;
-    opacity:.82;
-  }
   .hyperframes-live .main-portfolio-window,
   body.mobile-mode.hyperframes-live #readerWindow.win-window.open{
     box-shadow:
