@@ -58,6 +58,57 @@ let zTop = 20;
 const prefsKey = "michaelos_prefs_v1";
 let prefs = { animations:true, singleMobile:true, theme:"default", bootSpeed:3450, premiumUI:true, uiSound:true };
 
+function trackAnalyticsEvent(eventName, params = {}){
+  if(typeof window.gtag !== 'function') return;
+  window.gtag('event', eventName, params);
+}
+
+function trackVirtualPageView(route){
+  const normalized = routeAliases[route] || 'home';
+  trackAnalyticsEvent('page_view', {
+    page_title: `${document.title} — ${normalized}`,
+    page_location: window.location.href,
+    page_path: normalized === 'home' ? window.location.pathname : `${window.location.pathname}#${normalized}`
+  });
+}
+
+function initAnalyticsTracking(){
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href]');
+    if(!link) return;
+
+    const href = link.getAttribute('href') || '';
+    const linkText = (link.textContent || link.getAttribute('aria-label') || '').trim().slice(0, 100);
+
+    if(href.startsWith('mailto:')){
+      trackAnalyticsEvent('generate_lead', {
+        method: 'email_link',
+        link_text: linkText
+      });
+      return;
+    }
+
+    const url = new URL(href, window.location.href);
+    const isDownload = link.hasAttribute('download') || /\.(?:pdf|pptx?|docx?|xlsx?|zip)(?:$|[?#])/i.test(url.pathname);
+    if(isDownload){
+      trackAnalyticsEvent('select_content', {
+        content_type: 'download',
+        item_id: url.pathname.split('/').pop() || url.pathname,
+        link_url: url.href
+      });
+      return;
+    }
+
+    if(/^https?:$/i.test(url.protocol) && url.origin !== window.location.origin){
+      trackAnalyticsEvent('outbound_click', {
+        link_domain: url.hostname,
+        link_text: linkText,
+        link_url: url.href
+      });
+    }
+  }, { passive: true });
+}
+
 async function runBootScreen(){
   const boot = document.getElementById('bootScreen');
   const biosText = document.getElementById('biosText');
@@ -259,6 +310,7 @@ function updatePageRoute(route){
   }else{
     window.location.hash = '';
   }
+  trackVirtualPageView(normalized);
   setTimeout(() => { syncingPageRoute = false; }, 0);
 }
 
@@ -1122,6 +1174,10 @@ function initClientIntakeForm(){
     const subjectBusiness = String(data.get('business') || '').trim();
     const subject = subjectBusiness ? `AI intake notes - ${subjectBusiness}` : 'AI intake notes';
     const body = encodeURIComponent(lines.join('\n'));
+    trackAnalyticsEvent('generate_lead', {
+      method: 'ai_intake_email',
+      form_id: 'aiIntakeForm'
+    });
     window.location.href = `mailto:costea.michael@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
   });
 }
@@ -1250,6 +1306,7 @@ async function boot(){
   initAgenticFrameworkDeckPreview();
   initClientIntakeForm();
   initQuirkyStartActions();
+  initAnalyticsTracking();
 
   document.addEventListener('click', (e)=>{
     if(e.target.closest('.btn,.start-item,.desk-icon,.task-btn,.win-btn,.win-close')) uiBeep('tap');
