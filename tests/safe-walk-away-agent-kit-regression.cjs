@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+const { JSDOM } = require('jsdom');
+
+const root = path.resolve(__dirname, '..');
+const page = path.join(root, 'safe-walk-away-agent-kit.html');
+if (!fs.existsSync(page)) throw new Error('missing safe-walk-away-agent-kit.html');
+
+const html = fs.readFileSync(page, 'utf8');
+const dom = new JSDOM(html);
+const { document } = dom.window;
+const body = document.body.textContent.replace(/\s+/g, ' ').trim();
+const attr = (selector, name) => document.querySelector(selector)?.getAttribute(name) || '';
+
+if (document.title !== 'Safe Walk-Away Agent Kit — bounded Claude Code autonomy') {
+  throw new Error(`unexpected title: ${document.title}`);
+}
+if (attr('link[rel="canonical"]', 'href') !== 'https://michaelcostea.com/safe-walk-away-agent-kit.html') {
+  throw new Error('wrong canonical');
+}
+if (attr('meta[name="robots"]', 'content') !== 'index, follow') {
+  throw new Error('live page must be indexable after checkout verification');
+}
+if (document.body.dataset.launchStatus !== 'live') {
+  throw new Error('missing truthful live status');
+}
+if (document.body.dataset.standardCheckoutUrl !== 'https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit') {
+  throw new Error('wrong staged standard checkout URL');
+}
+if (document.body.dataset.launchCheckoutUrl !== 'https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5') {
+  throw new Error('wrong staged launch checkout URL');
+}
+
+for (const phrase of [
+  'Safe Walk-Away Agent Kit',
+  'Claude Code-first',
+  'US$19',
+  'US$5 launch product price · first 10 buyers',
+  'Code WALKAWAY5',
+  'before applicable taxes',
+  'Permission profile generator',
+  'High-risk action gate',
+  'Scope-expansion stop',
+  'Execution receipts',
+  'Guardrail, not a sandbox',
+  'No security or compliance guarantee',
+  'Build agent autonomy with receipts, not vibes.',
+  'Get launch price — US$5',
+  'Live · buyer checkout verified · automatic delivery staged',
+  '14-day description-match refund policy',
+]) {
+  if (!body.includes(phrase)) throw new Error(`missing product phrase: ${phrase}`);
+}
+
+const steps = [...document.querySelectorAll('.how-step')];
+if (steps.length !== 3) throw new Error(`expected 3 steps, got ${steps.length}`);
+const proof = [...document.querySelectorAll('.proof-item')];
+if (proof.length < 4) throw new Error('expected at least 4 proof items');
+const cta = document.querySelector('a.primary-cta');
+if (!cta || cta.getAttribute('href') !== 'https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5') {
+  throw new Error('live CTA must use the verified discounted checkout URL');
+}
+if (cta.hasAttribute('aria-disabled')) {
+  throw new Error('live CTA must not be marked disabled');
+}
+const support = attr('a.support-link', 'href');
+if (!support.startsWith('mailto:costea.michael@gmail.com')) {
+  throw new Error('support link must use existing public support email');
+}
+for (const privateMarker of ['/home/', '.hermes/', 'eafb30d4f2d7', 'UC7C6nJ9Lfjz0gMO6y0pjDHg']) {
+  if (html.includes(privateMarker)) throw new Error(`private marker leaked: ${privateMarker}`);
+}
+if (!html.includes('@media (max-width: 720px)')) throw new Error('mobile breakpoint missing');
+
+console.log('safe-walk-away-agent-kit-regression ok');

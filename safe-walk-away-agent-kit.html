@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Safe Walk-Away Agent Kit — bounded Claude Code autonomy</title>
+  <meta name="description" content="A Claude Code-first local toolkit for reviewable permissions, high-risk action gates, scope stops, and execution receipts." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2307100d'/%3E%3Cpath d='M18 20h28v7H26v10h20v7H18z' fill='%2342f5a1'/%3E%3C/svg%3E" />
+  <link rel="canonical" href="https://michaelcostea.com/safe-walk-away-agent-kit.html" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="product" />
+  <meta property="og:site_name" content="Michael Costea" />
+  <meta property="og:title" content="Safe Walk-Away Agent Kit" />
+  <meta property="og:description" content="Walk away from the agent. Not from control." />
+  <meta property="og:url" content="https://michaelcostea.com/safe-walk-away-agent-kit.html" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Safe Walk-Away Agent Kit" />
+  <meta name="twitter:description" content="Claude Code-first permission profiles, high-risk gates, scope stops, and receipts." />
+  <style>
+    :root{--bg:#07100d;--panel:#0d1b16;--panel2:#11261e;--ink:#e9fff6;--muted:#a8c8bb;--line:#24483b;--green:#42f5a1;--green2:#a6ffd4;--amber:#ffd166;--red:#ff9b9b;--shadow:0 24px 80px rgba(0,0,0,.28)}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:radial-gradient(circle at 80% 4%,rgba(66,245,161,.09),transparent 34%),var(--bg);color:var(--ink);font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:inherit}.shell{width:min(1120px,calc(100% - 40px));margin:auto}.nav{display:flex;align-items:center;justify-content:space-between;padding:24px 0;border-bottom:1px solid var(--line)}.brand{font:800 14px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}.brand span{color:var(--green)}.nav-note{color:var(--muted);font-size:13px}
+    .hero{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(300px,.72fr);gap:54px;padding:88px 0 62px;align-items:center}.eyebrow{display:inline-flex;gap:9px;align-items:center;color:var(--green2);font:700 13px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;letter-spacing:.08em}.eyebrow::before{content:"";width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 18px var(--green)}h1{margin:18px 0 20px;font-size:clamp(45px,6vw,78px);line-height:.98;letter-spacing:-.055em;max-width:850px}.lede{max-width:720px;color:var(--muted);font-size:clamp(18px,2vw,23px);line-height:1.5}.honest{display:flex;gap:12px;align-items:flex-start;margin-top:24px;padding:14px 16px;border-left:3px solid var(--amber);background:rgba(255,209,102,.06);color:#f5e8b8;font-size:14px}
+    .buy-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel2),var(--panel));padding:30px;box-shadow:var(--shadow);position:relative;overflow:hidden}.buy-card::after{content:"";position:absolute;inset:auto -50px -70px auto;width:170px;height:170px;border:1px solid rgba(66,245,161,.18);transform:rotate(24deg)}.price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;font-size:46px;font-weight:850;letter-spacing:-.04em}.price del{font-size:20px;color:var(--muted);font-weight:650}.price small{display:block;flex-basis:100%;font-size:14px;color:var(--muted);letter-spacing:0}.primary-cta{display:flex;justify-content:center;align-items:center;margin:22px 0 12px;padding:15px 18px;background:var(--green);color:#03110b;font-weight:850;text-decoration:none;border-radius:4px;position:relative;z-index:1}.primary-cta[aria-disabled="true"]{background:#789c8d;color:#102019;cursor:not-allowed}.buy-meta{color:var(--muted);font-size:13px;margin:0}.buy-meta strong{color:var(--green2)}.status{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);font:700 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;color:var(--amber)}
+    .proof-bar{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:var(--panel)}.proof-item{padding:20px;border-right:1px solid var(--line)}.proof-item:last-child{border-right:0}.proof-item strong{display:block;color:var(--green2);font:800 14px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace}.proof-item span{display:block;color:var(--muted);font-size:13px;margin-top:6px}
+    section{padding:76px 0;border-bottom:1px solid rgba(36,72,59,.75)}.section-kicker{color:var(--green);font:750 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;letter-spacing:.1em}h2{font-size:clamp(32px,4vw,50px);letter-spacing:-.04em;line-height:1.08;margin:12px 0 18px}.section-lede{color:var(--muted);max-width:720px;font-size:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px}.card{padding:25px;border:1px solid var(--line);background:var(--panel)}.card .num{color:var(--green);font:800 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace}.card h3{font-size:20px;margin:18px 0 8px}.card p{margin:0;color:var(--muted)}
+    .how-step{position:relative}.how-step::before{content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:3px;background:var(--green)}.split{display:grid;grid-template-columns:.85fr 1.15fr;gap:44px;align-items:start}.terminal{background:#020806;border:1px solid var(--line);box-shadow:var(--shadow);font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;overflow:hidden}.terminal-head{display:flex;justify-content:space-between;padding:11px 15px;border-bottom:1px solid var(--line);color:var(--muted);font-size:12px}.terminal pre{margin:0;padding:23px;white-space:pre-wrap;overflow-wrap:anywhere;color:#d7f9ea}.t-green{color:var(--green)}.t-amber{color:var(--amber)}.t-red{color:var(--red)}
+    .checklist{list-style:none;padding:0;margin:26px 0 0}.checklist li{display:grid;grid-template-columns:24px 1fr;gap:11px;padding:12px 0;border-bottom:1px solid rgba(36,72,59,.58)}.checklist li::before{content:"✓";color:var(--green);font-weight:900}.checklist strong{display:block}.checklist span{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+    .limits{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}.limit{border:1px solid var(--line);padding:24px;background:rgba(13,27,22,.76)}.limit h3{margin:0 0 10px}.limit p{color:var(--muted);margin:0}.limit.warn{border-color:#705d2a}.support-box{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;padding:30px;border:1px solid var(--line);background:var(--panel2);margin-top:30px}.support-box p{margin:4px 0 0;color:var(--muted)}.support-link{display:inline-flex;padding:13px 18px;border:1px solid var(--green);color:var(--green2);text-decoration:none;font-weight:750;border-radius:4px}
+    footer{padding:34px 0 48px;color:var(--muted);font-size:13px}.footer-row{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    @media (max-width: 900px){.hero,.split{grid-template-columns:1fr}.hero{padding-top:62px}.buy-card{max-width:580px}.proof-bar{grid-template-columns:1fr 1fr}.proof-item:nth-child(2){border-right:0}.proof-item:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+    @media (max-width: 720px){.shell{width:min(100% - 26px,1120px)}.nav-note{display:none}.hero{padding:48px 0 44px;gap:32px}h1{font-size:47px}.grid-3,.limits{grid-template-columns:1fr}.proof-bar{grid-template-columns:1fr}.proof-item{border-right:0;border-bottom:1px solid var(--line)}.proof-item:last-child{border-bottom:0}section{padding:58px 0}.support-box{grid-template-columns:1fr}.support-link{justify-content:center}.terminal{font-size:12px}}
+  </style>
+</head>
+<body data-launch-status="live" data-standard-checkout-url="https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit" data-launch-checkout-url="https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5">
+  <div class="shell">
+    <nav class="nav" aria-label="Product navigation">
+      <a class="brand" href="https://michaelcostea.com"><span>MC/</span> Safe Walk-Away</a>
+      <span class="nav-note">Claude Code-first · local toolkit · one-time purchase</span>
+    </nav>
+
+    <main>
+      <header class="hero">
+        <div>
+          <span class="eyebrow">Bounded local agent operations</span>
+          <h1>Walk away from the agent. Not from control.</h1>
+          <p class="lede">A Claude Code-first toolkit that generates reviewable permissions, gates high-risk actions, stops silent scope expansion, and records what actually ran.</p>
+          <p class="honest"><strong>Guardrail, not a sandbox.</strong> The kit makes authority and evidence explicit. It cannot make a model infallible or replace OS isolation and human review.</p>
+        </div>
+        <aside class="buy-card" aria-labelledby="buy-title">
+          <span class="section-kicker" id="buy-title">Safe Walk-Away Agent Kit</span>
+          <div class="price"><del>US$19</del> US$5 <small>launch product price · first 10 buyers</small></div>
+          <p class="buy-meta"><strong>Code WALKAWAY5</strong> · US$14 fixed discount · 10 redemptions maximum · before applicable taxes</p>
+          <a class="primary-cta" href="https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5">Get launch price — US$5</a>
+          <p class="buy-meta">Regular product price US$19 one-time. Applicable taxes are calculated by Gumroad at checkout.</p>
+          <div class="status">Live · buyer checkout verified · automatic delivery staged</div>
+        </aside>
+      </header>
+
+      <div class="proof-bar" aria-label="Product proof">
+        <div class="proof-item"><strong>ALLOW / ASK / DENY</strong><span>Review permissions before the run.</span></div>
+        <div class="proof-item"><strong>FAIL CLOSED</strong><span>Unknown tool categories stop.</span></div>
+        <div class="proof-item"><strong>DETERMINISTIC</strong><span>Repeatable config, gate, and bundle output.</span></div>
+        <div class="proof-item"><strong>RECEIPTS</strong><span>Attempted, executed, failed, and blocked stay distinct.</span></div>
+      </div>
+
+      <section>
+        <span class="section-kicker">The actual problem</span>
+        <h2>Blanket access is fast—right until it is cooked.</h2>
+        <p class="section-lede">Unattended agents force a bad choice: babysit every harmless command, or approve too much and hope the prompt behaves. This kit creates a reviewable middle lane.</p>
+        <div class="grid-3">
+          <article class="card"><span class="num">01 / PERMISSIONS</span><h3>Approve categories, not chaos</h3><p>Generate an explicit Claude Code permission fragment from a declared workspace and selected local tool categories.</p></article>
+          <article class="card"><span class="num">02 / RISK</span><h3>High-risk actions stop</h3><p>Deletion, push, publishing, production, SSH, secrets, financial actions, and external messaging return an explainable ask or deny result.</p></article>
+          <article class="card"><span class="num">03 / PROOF</span><h3>“Done” needs evidence</h3><p>Receipts separate what was attempted from what executed. Narrative success without execution evidence fails validation.</p></article>
+        </div>
+      </section>
+
+      <section>
+        <span class="section-kicker">How it works</span>
+        <h2>Three steps. Review before trust.</h2>
+        <div class="grid-3">
+          <article class="card how-step"><span class="num">STEP 1</span><h3>Declare the lane</h3><p>Choose the workspace, allowed local categories, mission paths, and one success command.</p></article>
+          <article class="card how-step"><span class="num">STEP 2</span><h3>Generate + inspect</h3><p>Review the permission profile and risk policy. Unknown categories fail closed; blanket bypass is never enabled.</p></article>
+          <article class="card how-step"><span class="num">STEP 3</span><h3>Run + read receipts</h3><p>The agent works inside scope. Risky or adjacent work halts with an exact approval request and walk-away report.</p></article>
+        </div>
+      </section>
+
+      <section>
+        <div class="split">
+          <div>
+            <span class="section-kicker">Included</span>
+            <h2>Executable controls, not prompt theatre.</h2>
+            <ul class="checklist">
+              <li><div><strong>Permission profile generator</strong><span>Claude Code-first settings fragment with allow, ask, and deny sections.</span></div></li>
+              <li><div><strong>High-risk action gate</strong><span>Deterministic decisions with matched reasons.</span></div></li>
+              <li><div><strong>Scope-expansion stop</strong><span>Out-of-scope paths become approval requests, not silent mission creep.</span></div></li>
+              <li><div><strong>Execution receipts</strong><span>Machine-readable evidence plus false-completion validation.</span></div></li>
+              <li><div><strong>Operator templates</strong><span>Mission, progress, safety, approval, verification, decision, and report templates.</span></div></li>
+            </ul>
+          </div>
+          <div class="terminal" aria-label="Example policy output">
+            <div class="terminal-head"><span>safe-walk-away / policy preview</span><span>LOCAL</span></div>
+            <pre><span class="t-green">status&gt;</span> profile generated
+<span class="t-green">allow&gt;</span> read files inside ./workspace
+<span class="t-green">allow&gt;</span> run declared test command
+<span class="t-amber">ask&gt;</span> git push — external change
+<span class="t-amber">ask&gt;</span> access path outside mission
+<span class="t-red">deny&gt;</span> blanket permission bypass
+<span class="t-red">deny&gt;</span> destructive deletion
+
+<span class="t-green">receipt&gt;</span> evidence present
+<span class="t-green">report&gt;</span> done / verified / blocked</pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="launch-status">
+        <span class="section-kicker">Honest limits</span>
+        <h2>Control aid. Not magic armour.</h2>
+        <p class="section-lede">Live on Gumroad. Regular product price US$19; the first 10 redemptions with WALKAWAY5 receive a US$14 discount for a US$5 product price before applicable taxes.</p>
+        <div class="limits">
+          <article class="limit warn"><h3>No security or compliance guarantee</h3><p>Prompt and policy controls are not an OS sandbox. You remain responsible for credentials, data, permissions, vendor terms, and human approval.</p></article>
+          <article class="limit"><h3>No completion or income guarantee</h3><p>The kit helps structure agent work and proof. It does not guarantee correct output, unattended completion, sales, revenue, or business results.</p></article>
+        </div>
+        <div class="support-box">
+          <div><strong>14-day description-match refund policy</strong><p>If the delivered files materially differ from this page, email the order details and mismatch. General results, compatibility outside the documented target, or change-of-mind outcomes are not guaranteed.</p></div>
+          <a class="support-link" href="mailto:costea.michael@gmail.com?subject=Safe%20Walk-Away%20Agent%20Kit%20support">Email support</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-row"><span>© 2026 Michael Costea · Safe Walk-Away Agent Kit</span><span class="mono">Build agent autonomy with receipts, not vibes.</span></div>
+    </footer>
+  </div>
+</body>
+</html>
