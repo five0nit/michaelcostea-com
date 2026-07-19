@@ -26,7 +26,7 @@ fs.mkdirSync(out,{recursive:true});
     href:document.querySelector('.primary-cta')?.href,
     analyticsLoader:[...document.scripts].some(s=>s.src.includes('googletagmanager.com/gtag/js?id=G-C0YHGXH33P')),
     checkoutEvents:[...document.querySelectorAll('a.primary-cta')].map(a=>a.dataset.analyticsEvent),
-    sampleEvent:document.querySelector('a.sample-cta')?.dataset.analyticsEvent,
+    resourceEvents:[...document.querySelectorAll('a.sample-cta,a.guide-cta')].map(a=>({event:a.dataset.analyticsEvent,itemId:a.dataset.analyticsItemId,href:a.href})),
     overflow:document.documentElement.scrollWidth>innerWidth,
     width:innerWidth,
     scrollWidth:document.documentElement.scrollWidth,
@@ -35,7 +35,7 @@ fs.mkdirSync(out,{recursive:true});
   if(metrics.overflow) throw new Error(`${name}: horizontal overflow ${metrics.scrollWidth}>${metrics.width}`);
   if(metrics.status!=='live'||!metrics.h1||!metrics.cta) throw new Error(`${name}: hero/status missing`);
   if(metrics.href!=='https://costeamichael.gumroad.com/l/freelancer-client-admin-starter-kit') throw new Error(`${name}: bad CTA`);
-  if(!metrics.analyticsLoader||metrics.checkoutEvents.length!==2||metrics.checkoutEvents.some(e=>e!=='begin_checkout')||metrics.sampleEvent!=='select_content') throw new Error(`${name}: analytics contract failed`);
+  if(!metrics.analyticsLoader||metrics.checkoutEvents.length!==2||metrics.checkoutEvents.some(e=>e!=='begin_checkout')||metrics.resourceEvents.length!==2||metrics.resourceEvents.some(e=>e.event!=='select_content'||!e.itemId)) throw new Error(`${name}: analytics contract failed`);
   if(metrics.images.length!==3||metrics.images.some(i=>!i.naturalWidth||i.right>metrics.width+.5||i.displayWidth<=0||!i.alt)) throw new Error(`${name}: image load/fit/alt failed ${JSON.stringify(metrics.images)}`);
   if(errors.length) throw new Error(`${name}: console errors ${errors.join(' | ')}`);
   const emitted=await page.evaluate(()=>{
@@ -45,14 +45,17 @@ fs.mkdirSync(out,{recursive:true});
     checkout.click();
     const checkoutEvents=window.dataLayer.map(row=>Array.from(row));
     window.dataLayer=[];
-    const sample=document.querySelector('a.sample-cta');
-    sample.addEventListener('click',e=>e.preventDefault(),{once:true});
-    sample.click();
-    const sampleEvents=window.dataLayer.map(row=>Array.from(row));
-    return {checkoutEvents,sampleEvents};
+    const resourceEvents=[];
+    for(const resource of document.querySelectorAll('a.sample-cta,a.guide-cta')){
+      window.dataLayer=[];
+      resource.addEventListener('click',e=>e.preventDefault(),{once:true});
+      resource.click();
+      resourceEvents.push({itemId:resource.dataset.analyticsItemId,rows:window.dataLayer.map(row=>Array.from(row))});
+    }
+    return {checkoutEvents,resourceEvents};
   });
   if(!emitted.checkoutEvents.some(row=>row[0]==='event'&&row[1]==='begin_checkout')) throw new Error(`${name}: begin_checkout not emitted`);
-  if(!emitted.sampleEvents.some(row=>row[0]==='event'&&row[1]==='select_content')) throw new Error(`${name}: select_content not emitted`);
+  if(emitted.resourceEvents.length!==2||emitted.resourceEvents.some(event=>!event.rows.some(row=>row[0]==='event'&&row[1]==='select_content'&&row[2]?.item_id===event.itemId))) throw new Error(`${name}: resource select_content not emitted with exact item ID`);
   await page.screenshot({path:path.join(out,`freelancer-client-admin-starter-kit-${name}.png`),fullPage:true});
   console.log(JSON.stringify({viewport:name,...metrics,consoleErrors:0}));
   await page.close();
@@ -66,7 +69,8 @@ fs.mkdirSync(out,{recursive:true});
  const ownedPath=homePage.locator('a[data-owned-path="freelancer-admin"]');
  if(await ownedPath.count()!==1||!(await ownedPath.isVisible())) throw new Error('homepage: qualified owned path not visible');
  const homeMetrics=await homePage.evaluate(()=>({href:document.querySelector('a[data-owned-path="freelancer-admin"]')?.href,text:document.querySelector('a[data-owned-path="freelancer-admin"]')?.textContent?.trim(),overflow:document.documentElement.scrollWidth>innerWidth}));
- if(homeMetrics.href!=='http://127.0.0.1:4190/freelancer-admin/?utm_source=michaelcostea.com&utm_medium=owned_homepage&utm_campaign=freelancer_admin_launch'&&homeMetrics.href!=='https://michaelcostea.com/freelancer-admin/?utm_source=michaelcostea.com&utm_medium=owned_homepage&utm_campaign=freelancer_admin_launch') throw new Error(`homepage: bad owned path ${homeMetrics.href}`);
+ const expectedHomeHref=new URL('/freelancer-admin/?utm_source=michaelcostea.com&utm_medium=owned_homepage&utm_campaign=freelancer_admin_launch',url).href;
+ if(homeMetrics.href!==expectedHomeHref) throw new Error(`homepage: bad owned path ${homeMetrics.href}`);
  if(homeMetrics.text!=='Open the US$5 kit'||homeMetrics.overflow||homeErrors.length) throw new Error(`homepage: path/layout/console gate failed ${JSON.stringify({homeMetrics,homeErrors})}`);
  await homePage.screenshot({path:path.join(out,'freelancer-client-admin-homepage-mobile.png'),fullPage:false});
  console.log(JSON.stringify({viewport:'homepage-mobile',...homeMetrics,consoleErrors:0}));

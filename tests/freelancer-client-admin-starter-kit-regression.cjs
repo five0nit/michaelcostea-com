@@ -48,8 +48,13 @@ for(const src of [
 }
 const sample=attr('a.sample-cta','href');
 if(sample!=='downloads/freelancer-client-admin-setup-checklist.md'||!fs.existsSync(path.join(root,sample))) throw new Error('missing setup checklist');
+if(document.querySelector('a.sample-cta')?.dataset.analyticsItemId!=='freelancer_client_admin_setup_checklist') throw new Error('setup checklist analytics item ID missing');
 const sampleText=fs.readFileSync(path.join(root,sample),'utf8');
 if(!sampleText.includes('Operational checklist only.')||!sampleText.includes(product)) throw new Error('setup checklist boundary/CTA missing');
+const guide=document.querySelector('a.guide-cta');
+const expectedGuide='guides/freelancer-client-tracker/?utm_source=freelancer_admin_landing&utm_medium=owned_content&utm_campaign=freelancer_admin_launch';
+if(!guide||guide.getAttribute('href')!==expectedGuide||guide.dataset.analyticsEvent!=='select_content'||guide.dataset.analyticsItemId!=='freelancer_client_tracker_guide') throw new Error('qualified guide path missing or incorrect');
+if(!fs.existsSync(path.join(root,'guides/freelancer-client-tracker/index.html'))) throw new Error('client tracker guide missing');
 const shortRoute=path.join(root,'freelancer-admin/index.html');
 if(!fs.existsSync(shortRoute)) throw new Error('missing memorable route');
 if(!fs.readFileSync(shortRoute,'utf8').includes('https://michaelcostea.com/freelancer-client-admin-starter-kit.html')) throw new Error('short route destination wrong');
@@ -58,7 +63,7 @@ if(!analyticsScript) throw new Error('privacy-limited analytics loader missing')
 if(!html.includes('allow_google_signals: false')||!html.includes('allow_ad_personalization_signals: false')) throw new Error('analytics privacy flags missing');
 if(ctas.some(a=>a.dataset.analyticsEvent!=='begin_checkout')) throw new Error('purchase CTAs must emit begin_checkout');
 if(document.querySelector('a.sample-cta')?.dataset.analyticsEvent!=='select_content') throw new Error('sample CTA must emit select_content');
-if(!html.includes("item_id: 'freelancer_client_admin_starter_kit'")||!html.includes("item_id: 'freelancer_client_admin_setup_checklist'")) throw new Error('analytics item IDs missing');
+if(!html.includes("item_id: 'freelancer_client_admin_starter_kit'")||!html.includes('item_id: link.dataset.analyticsItemId')) throw new Error('analytics item contract missing');
 const homepageHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const homepage=new JSDOM(homepageHtml).window.document;
 const ownedPath=homepage.querySelector('a[data-owned-path="freelancer-admin"]');
