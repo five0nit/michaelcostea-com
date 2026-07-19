@@ -18,6 +18,17 @@
   <meta name="twitter:title" content="Freelancer Client Admin Starter Kit" />
   <meta name="twitter:description" content="Lead, project, invoice, payment, and follow-up trackers in one editable US$5 pack." />
   <meta name="twitter:image" content="https://michaelcostea.com/assets/products/freelancer-client-admin-cover.png" />
+  <!-- Privacy-limited Google Analytics, matching the main michaelcostea.com policy. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-C0YHGXH33P"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-C0YHGXH33P', {
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false
+    });
+  </script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"Freelancer Client Admin Starter Kit","description":"Editable XLSX, CSV, and Markdown templates for tracking a small freelance client pipeline from lead to payment follow-up.","image":"https://michaelcostea.com/assets/products/freelancer-client-admin-cover.png","brand":{"@type":"Brand","name":"Michael Costea Operator Tools"},"offers":{"@type":"Offer","url":"https://costeamichael.gumroad.com/l/freelancer-client-admin-starter-kit","priceCurrency":"USD","price":"5.00","availability":"https://schema.org/InStock"}}</script>
   <style>
     :root{--bg:#081016;--panel:#101c25;--panel2:#142634;--ink:#f7f4e9;--muted:#afbec8;--line:#2b4454;--cyan:#62d7ee;--cyan2:#b9f3ff;--gold:#ffc857;--green:#69e0a7;--shadow:0 28px 90px rgba(0,0,0,.32)}
@@ -49,8 +60,8 @@
           <aside class="buy-card" aria-labelledby="buy-title">
             <span class="section-kicker" id="buy-title">Freelancer Client Admin Starter Kit</span>
             <div class="price">US$5 <small>one-time product price before applicable taxes</small></div>
-            <a class="primary-cta" href="https://costeamichael.gumroad.com/l/freelancer-client-admin-starter-kit">Get the admin kit — US$5</a>
-            <a class="sample-cta" href="downloads/freelancer-client-admin-setup-checklist.md">Preview the 10-minute setup checklist</a>
+            <a class="primary-cta" data-analytics-event="begin_checkout" href="https://costeamichael.gumroad.com/l/freelancer-client-admin-starter-kit">Get the admin kit — US$5</a>
+            <a class="sample-cta" data-analytics-event="select_content" href="downloads/freelancer-client-admin-setup-checklist.md">Preview the 10-minute setup checklist</a>
             <p class="buy-meta">Gumroad calculates applicable taxes at checkout. No recurring software fee from this purchase.</p>
             <div class="status">Live · buyer checkout verified · customer ZIP attached</div>
           </aside>
@@ -141,7 +152,7 @@
         <span class="section-kicker">One-time US$5 download</span>
         <h2>Give the next client action a place to live.</h2>
         <p>Start with one lead, one written scope, one project milestone, and one invoice record. Expand only when the work actually needs more.</p>
-        <a class="primary-cta" href="https://costeamichael.gumroad.com/l/freelancer-client-admin-starter-kit">Get the admin kit — US$5</a>
+        <a class="primary-cta" data-analytics-event="begin_checkout" href="https://costeamichael.gumroad.com/l/freelancer-client-admin-starter-kit">Get the admin kit — US$5</a>
       </section>
     </main>
 
@@ -149,5 +160,23 @@
       <div class="footer-row"><span>© 2026 Michael Costea · Freelancer Client Admin Starter Kit</span><span class="mono">Lead → scope → deliver → invoice → follow up.</span></div>
     </footer>
   </div>
+  <script>
+    document.querySelectorAll('[data-analytics-event]').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (link.dataset.analyticsEvent === 'begin_checkout') {
+          gtag('event', 'begin_checkout', {
+            currency: 'USD',
+            value: 5,
+            items: [{item_id: 'freelancer_client_admin_starter_kit', item_name: 'Freelancer Client Admin Starter Kit', price: 5, quantity: 1}]
+          });
+        } else {
+          gtag('event', 'select_content', {
+            content_type: 'product_sample',
+            item_id: 'freelancer_client_admin_setup_checklist'
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
