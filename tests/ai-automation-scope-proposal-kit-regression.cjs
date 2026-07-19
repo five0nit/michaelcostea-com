@@ -32,9 +32,16 @@ for(const src of ['assets/products/ai-automation-scope-proposal-kit-cover.png','
  const img=[...document.images].find(i=>i.getAttribute('src')===src);
  if(!img||!img.getAttribute('width')||!img.getAttribute('height')) throw new Error(`image dimensions missing ${src}`);
 }
-const sample=attr('a.sample-cta','href');
+const sample=attr('a.sample-cta[href*="fictional-sample"]','href');
 if(sample!=='downloads/ai-automation-scope-proposal-kit-fictional-sample.md'||!fs.existsSync(path.join(root,sample))) throw new Error('missing fictional sample download');
 if(!body.includes('Preview the fictional six-document sample')) throw new Error('missing sample CTA copy');
+const guideHref='guides/ai-automation-scope-of-work-template/';
+const guideLink=document.querySelector(`a[href="${guideHref}"]`);
+if(!guideLink||guideLink.dataset.analyticsEvent!=='select_content'||guideLink.dataset.analyticsItemId!=='scope_proposal_free_sow_template') throw new Error('missing instrumented free SOW guide CTA');
+if(!fs.existsSync(path.join(root,guideHref,'index.html'))) throw new Error('missing free SOW guide file');
+if(document.querySelector('a.sample-cta[href*="fictional-sample"]')?.dataset.analyticsItemId!=='scope_proposal_fictional_sample') throw new Error('sample CTA analytics missing');
+if(ctas.some(a=>a.dataset.analyticsEvent!=='begin_checkout'||a.dataset.analyticsItemId!=='ai_automation_scope_proposal_kit')) throw new Error('purchase CTA analytics missing');
+for(const marker of ['https://www.googletagmanager.com/gtag/js?id=G-C0YHGXH33P','allow_google_signals: false','allow_ad_personalization_signals: false',"gtag('event', 'select_content'","gtag('event', 'begin_checkout'"]) if(!html.includes(marker)) throw new Error(`missing analytics marker: ${marker}`);
 const shortRoute=path.join(root,'scope-to-proposal/index.html');
 if(!fs.existsSync(shortRoute)) throw new Error('missing memorable short route');
 const shortHtml=fs.readFileSync(shortRoute,'utf8');

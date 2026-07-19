@@ -9,6 +9,8 @@ fs.mkdirSync(out,{recursive:true});
  const browser=await chromium.launch({headless:true,executablePath:'/snap/bin/chromium'});
  for(const [name,viewport] of Object.entries({desktop:{width:1440,height:1000},mobile:{width:390,height:844}})){
   const page=await browser.newPage({viewport,deviceScaleFactor:1});
+  await page.route('https://www.googletagmanager.com/**',route=>route.fulfill({status:200,contentType:'application/javascript',body:''}));
+  await page.route('https://www.google-analytics.com/**',route=>route.fulfill({status:204,body:''}));
   const errors=[];
   page.on('console',m=>{if(m.type()==='error') errors.push(m.text())});
   page.on('pageerror',e=>errors.push(String(e)));
