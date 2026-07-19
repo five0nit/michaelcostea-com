@@ -32,6 +32,10 @@ for(const src of ['assets/products/ai-automation-scope-proposal-kit-cover.png','
 const sample=attr('a.sample-cta','href');
 if(sample!=='downloads/ai-automation-scope-proposal-kit-fictional-sample.md'||!fs.existsSync(path.join(root,sample))) throw new Error('missing fictional sample download');
 if(!body.includes('Preview the fictional six-document sample')) throw new Error('missing sample CTA copy');
+const shortRoute=path.join(root,'scope-to-proposal/index.html');
+if(!fs.existsSync(shortRoute)) throw new Error('missing memorable short route');
+const shortHtml=fs.readFileSync(shortRoute,'utf8');
+if(!shortHtml.includes('https://michaelcostea.com/ai-automation-scope-proposal-kit.html')) throw new Error('short route has wrong destination');
 const schema=JSON.parse(document.querySelector('script[type="application/ld+json"]').textContent);
 if(schema['@type']!=='Product'||schema.offers.price!=='12.00'||schema.offers.priceCurrency!=='USD'||schema.offers.url!==standard) throw new Error('invalid product schema');
 for(const marker of ['/home/','.hermes/','localhost','127.0.0.1','TODO','FIXME']) if(html.includes(marker)) throw new Error(`private/dev marker leaked: ${marker}`);
