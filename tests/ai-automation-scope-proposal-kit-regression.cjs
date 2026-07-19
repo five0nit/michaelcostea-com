@@ -29,6 +29,9 @@ for(const src of ['assets/products/ai-automation-scope-proposal-kit-cover.png','
  const img=[...document.images].find(i=>i.getAttribute('src')===src);
  if(!img||!img.getAttribute('width')||!img.getAttribute('height')) throw new Error(`image dimensions missing ${src}`);
 }
+const sample=attr('a.sample-cta','href');
+if(sample!=='downloads/ai-automation-scope-proposal-kit-fictional-sample.md'||!fs.existsSync(path.join(root,sample))) throw new Error('missing fictional sample download');
+if(!body.includes('Preview the fictional six-document sample')) throw new Error('missing sample CTA copy');
 const schema=JSON.parse(document.querySelector('script[type="application/ld+json"]').textContent);
 if(schema['@type']!=='Product'||schema.offers.price!=='12.00'||schema.offers.priceCurrency!=='USD'||schema.offers.url!==standard) throw new Error('invalid product schema');
 for(const marker of ['/home/','.hermes/','localhost','127.0.0.1','TODO','FIXME']) if(html.includes(marker)) throw new Error(`private/dev marker leaked: ${marker}`);
