@@ -10,6 +10,9 @@
   * { box-sizing:border-box; }
   html,body { margin:0; padding:0; background:#e8edf2; color:#172034; font-family:Arial,Helvetica,sans-serif; }
   body { font-size:9.2pt; line-height:1.34; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .screen-actions { width:210mm; margin:6mm auto 4mm; padding:3mm; display:flex; align-items:center; justify-content:space-between; gap:3mm; border:1px solid #b9c7d2; background:#fff; box-shadow:0 3px 14px rgba(0,0,0,.12); }
+  .screen-actions span { color:#3f4e5e; font-size:9pt; }
+  .screen-actions button { min-height:38px; padding:0 16px; border:0; border-radius:3px; background:#08766c; color:#fff; font-weight:700; cursor:pointer; }
   .page { width:210mm; height:297mm; margin:0 auto 8mm; background:#fff; overflow:hidden; position:relative; }
   .page + .page { break-before:page; }
   .header { min-height:47mm; padding:12mm 15mm 8mm; color:#fff; background:linear-gradient(135deg,#071c34 0%,#12496d 64%,#08766c 100%); }
@@ -61,12 +64,18 @@
   .compact-page .tools { padding:1.8mm 2.5mm; font-size:7.7pt; }
   .footer { position:absolute; left:15mm; right:15mm; bottom:5mm; display:flex; justify-content:space-between; color:#718092; font-size:7pt; }
   a { color:#0b5e79; }
+  @media print {
+    html,body { background:#fff; }
+    .screen-actions { display:none!important; }
+    .page { margin:0; box-shadow:none; }
+  }
   @media screen {
     .page { box-shadow:0 5px 24px rgba(0,0,0,.18); }
   }
 </style>
 </head>
 <body>
+<div class="screen-actions" role="region" aria-label="Printable resume actions"><span>Two-page, ATS-friendly resume. Use browser print settings to save a PDF.</span><button type="button" onclick="window.print()">Print / Save PDF</button></div>
 <section class="page">
   <header class="header">
     <h1>Michael Costea</h1>

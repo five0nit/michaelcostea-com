@@ -93,15 +93,24 @@ fs.mkdirSync(out, { recursive: true });
     targetText: document.querySelector('.target')?.innerText,
     hasExpandedScope: document.body.innerText.includes('Business Systems, Lead Flow & Digital Infrastructure'),
     hasOptusScale: document.body.innerText.includes('500,000'),
+    printButton: document.querySelector('.screen-actions button')?.innerText,
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth,
   }));
   if (!printableResponse || printableResponse.status() !== 200) throw new Error(`printable status ${printableResponse?.status()}`);
   if (printableChecks.pages !== 2) throw new Error(`printable page count ${printableChecks.pages}`);
   if (!printableChecks.targetText?.includes('AI Enablement Lead') || !printableChecks.hasExpandedScope || !printableChecks.hasOptusScale) throw new Error('printable content missing');
+  if (printableChecks.printButton !== 'Print / Save PDF') throw new Error(`printable action missing: ${printableChecks.printButton}`);
   for (const [index, metric] of printableChecks.pageMetrics.entries()) {
     if (metric.scrollHeight > metric.clientHeight + 1) throw new Error(`printable page ${index + 1} clips content: ${JSON.stringify(metric)}`);
   }
+  await printable.emulateMedia({ media: 'print' });
+  const printMediaChecks = await printable.evaluate(() => ({
+    actionDisplay: getComputedStyle(document.querySelector('.screen-actions')).display,
+    firstPageMargin: getComputedStyle(document.querySelector('.page')).margin,
+  }));
+  if (printMediaChecks.actionDisplay !== 'none') throw new Error(`print action visible in print media: ${printMediaChecks.actionDisplay}`);
+  await printable.emulateMedia({ media: 'screen' });
   if (printableChecks.scrollWidth > printableChecks.innerWidth + 1) throw new Error(`printable desktop overflow ${printableChecks.scrollWidth}>${printableChecks.innerWidth}`);
   if (printableErrors.length) throw new Error(`printable JS errors: ${printableErrors.join(' | ')}`);
   const printableScreenshot = path.join(out, 'printable-resume-full.png');
