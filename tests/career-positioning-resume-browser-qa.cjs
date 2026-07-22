@@ -50,6 +50,8 @@ fs.mkdirSync(out, { recursive: true });
         experienceCount: document.querySelectorAll('#resumeWindow .timeline-list .mini-content-card').length,
         printableHref: document.querySelector('#resumeWindow a[href*="michael-costea-resume-2026.html"]')?.getAttribute('href'),
         stylesheetHref: document.querySelector('link[href*="career-resume.css"]')?.getAttribute('href'),
+        tokenThroughput: document.querySelector('#resumeWindow .token-throughput-evidence b')?.innerText,
+        hasVerticalStack: document.querySelector('#resumeWindow')?.textContent.includes('Vertical full-stack app delivery') && document.querySelector('#resumeWindow')?.textContent.includes('Hermes Agent'),
         scrollWidth: document.documentElement.scrollWidth,
         innerWidth: innerWidth,
         resumeLeft: resumeRect.left,
@@ -66,7 +68,8 @@ fs.mkdirSync(out, { recursive: true });
     if (!checks.targetRoles?.includes('AI Enablement Lead')) throw new Error(`${label} target roles missing`);
     if (checks.caseCount !== 3 || checks.experienceCount < 8) throw new Error(`${label} resume content counts wrong`);
     if (checks.printableHref !== 'assets/downloads/michael-costea-resume-2026.html') throw new Error(`${label} printable link wrong`);
-    if (!checks.stylesheetHref?.includes('20260722-career-positioning')) throw new Error(`${label} career stylesheet cache marker missing`);
+    if (!checks.stylesheetHref?.includes('20260723-vertical-app-routing')) throw new Error(`${label} career stylesheet cache marker missing`);
+    if (checks.tokenThroughput !== '4.3–4.5B' || !checks.hasVerticalStack) throw new Error(`${label} vertical stack or token throughput evidence missing`);
     if (checks.scrollWidth > checks.innerWidth + 1) throw new Error(`${label} page horizontal overflow ${checks.scrollWidth}>${checks.innerWidth}`);
     if (checks.resumeLeft < -1 || checks.resumeRight > checks.innerWidth + 1) throw new Error(`${label} resume window outside viewport`);
     if (label === 'mobile' && checks.buttonHeights.some(height => height < 40)) throw new Error(`mobile resume action too short: ${checks.buttonHeights}`);
@@ -96,6 +99,8 @@ fs.mkdirSync(out, { recursive: true });
     targetText: document.querySelector('.target')?.innerText,
     hasExpandedScope: document.body.innerText.includes('Business Systems, Lead Flow & Digital Infrastructure'),
     hasOptusScale: document.body.innerText.includes('500,000'),
+    tokenThroughput: [...document.querySelectorAll('.proof b')].map(node => node.innerText).find(text => text.includes('4.3')),
+    hasHarnessRouting: document.body.innerText.includes('Hermes Agent') && document.body.innerText.includes('OpenAI Codex and APIs') && document.body.innerText.includes('Anthropic Claude') && document.body.innerText.includes('local LLM routing'),
     selectedProjects: [...document.querySelectorAll('.selected-project h3')].map(heading => heading.innerText),
     hasRejectedPortfolioCopy: document.body.innerText.includes('Public agent-observability project') || document.documentElement.innerHTML.includes('telegram-office'),
     printButton: document.querySelector('.screen-actions button')?.innerText,
@@ -105,6 +110,7 @@ fs.mkdirSync(out, { recursive: true });
   if (!printableResponse || printableResponse.status() !== 200) throw new Error(`printable status ${printableResponse?.status()}`);
   if (printableChecks.pages !== 2) throw new Error(`printable page count ${printableChecks.pages}`);
   if (!printableChecks.targetText?.includes('AI Enablement Lead') || !printableChecks.hasExpandedScope || !printableChecks.hasOptusScale) throw new Error('printable content missing');
+  if (printableChecks.tokenThroughput !== '4.3–4.5B' || !printableChecks.hasHarnessRouting) throw new Error('printable vertical stack, harness routing or token throughput evidence missing');
   const expectedProjects = ['Codex Account Usage + Auth Rotator', 'Automated Social Life & Brand Engine', 'Brief2Ship', 'RebateSignal'];
   if (JSON.stringify(printableChecks.selectedProjects) !== JSON.stringify(expectedProjects)) throw new Error(`printable projects wrong: ${JSON.stringify(printableChecks.selectedProjects)}`);
   if (printableChecks.hasRejectedPortfolioCopy) throw new Error('printable resume still exposes rejected Telegram Office portfolio copy');

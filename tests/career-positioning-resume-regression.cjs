@@ -19,11 +19,19 @@ const requiredPhrases = [
   'Mid-2023 - Present',
   'Selected Operating Work',
   'Business discovery & requirements',
-  'AI workflow delivery',
   'Knowledge & adoption',
   '352',
   '5,000+',
   '500,000',
+  'Vertical AI application delivery',
+  'Vertical full-stack app delivery',
+  'Agent harness & model routing',
+  'Hermes Agent',
+  'OpenAI Codex and APIs',
+  'Anthropic Claude',
+  'local LLM routing',
+  '4.3–4.5B',
+  'average monthly token throughput across multiple harnesses and machines',
 ];
 for (const phrase of requiredPhrases) {
   if (!resumeText.includes(phrase)) throw new Error(`resume missing recommended positioning: ${phrase}`);
@@ -50,6 +58,19 @@ for (const project of [
   'RebateSignal',
 ]) {
   if (!printableText.includes(project)) throw new Error(`printable resume missing requested project: ${project}`);
+}
+for (const phrase of [
+  'Vertical AI application delivery',
+  'Vertical full-stack app delivery',
+  'Agent harness and model routing',
+  'Hermes Agent',
+  'OpenAI Codex and APIs',
+  'Anthropic Claude',
+  'local LLM routing',
+  '4.3–4.5B',
+  'average monthly token throughput across multiple harnesses and machines',
+]) {
+  if (!printableText.includes(phrase)) throw new Error(`printable resume missing vertical integration positioning: ${phrase}`);
 }
 if (printableDocument.querySelectorAll('.selected-project').length !== 4) {
   throw new Error('printable resume must contain exactly four selected-project cards');
