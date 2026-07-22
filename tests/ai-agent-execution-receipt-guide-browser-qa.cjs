@@ -34,14 +34,24 @@ fs.mkdirSync(out,{recursive:true});
       checkoutLinks:[...document.querySelectorAll('a[data-analytics-event="begin_checkout"]')].map(link=>({href:link.href,itemId:link.dataset.analyticsItemId})),
       measuredElements:[...document.querySelectorAll('[data-analytics-event]')].map(element=>({eventName:element.dataset.analyticsEvent,itemId:element.dataset.analyticsItemId})),
       downloadLink:{href:document.getElementById('download-template-link')?.href,download:document.getElementById('download-template-link')?.getAttribute('download')},
+      validator:{input:!!document.getElementById('receipt-validator-input'),button:!!document.getElementById('validate-receipt-button'),privacy:document.getElementById('validator-privacy-note')?.textContent||''},
       analyticsLoader:[...document.scripts].some(script=>script.src.includes('googletagmanager.com/gtag/js?id=G-C0YHGXH33P')),
     }));
     if(metrics.overflow) throw new Error(`${name}: horizontal overflow ${metrics.scrollWidth}>${metrics.width}`);
     if(!metrics.h1||metrics.states!==5||metrics.receiptFields<20||!metrics.analyticsLoader) throw new Error(`${name}: content or analytics loader missing`);
     if(metrics.checkoutLinks.length!==2||metrics.checkoutLinks.some(link=>link.href!=='https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5'||link.itemId!=='safe_walk_away_agent_kit')) throw new Error(`${name}: checkout link contract failed`);
-    if(metrics.measuredElements.length!==9||metrics.measuredElements.some(element=>!element.itemId)) throw new Error(`${name}: measured-element contract failed`);
+    if(metrics.measuredElements.length!==11||metrics.measuredElements.some(element=>!element.itemId)) throw new Error(`${name}: measured-element contract failed`);
     if(metrics.downloadLink.href!==downloadUrl||metrics.downloadLink.download!=='EXECUTION-RECEIPT.json') throw new Error(`${name}: download link contract failed`);
+    if(!metrics.validator.input||!metrics.validator.button||!metrics.validator.privacy.includes('not uploaded or stored')) throw new Error(`${name}: validator/privacy contract failed`);
     if(errors.length) throw new Error(`${name}: console errors ${errors.join(' | ')}`);
+    const initialValidatorText=await page.locator('#receipt-validator-input').inputValue();
+    await page.locator('#validate-receipt-button').click();
+    const validResult=await page.locator('#receipt-validator-result').evaluate(element=>({state:element.dataset.state,text:element.textContent}));
+    if(validResult.state!=='pass'||!validResult.text.includes('Structure passes this bounded check')) throw new Error(`${name}: valid receipt did not pass validator`);
+    await page.locator('#receipt-validator-input').fill('{"version":1,"status":"verified","actions":[],"verification":[]}');
+    await page.locator('#validate-receipt-button').click();
+    const invalidResult=await page.locator('#receipt-validator-result').evaluate(element=>({state:element.dataset.state,text:element.textContent}));
+    if(invalidResult.state!=='fail'||!invalidResult.text.includes('verified status requires at least one action receipt')) throw new Error(`${name}: invalid verified receipt did not fail closed`);
     const emitted=await page.evaluate(()=>{
       const results=[];
       for(const element of document.querySelectorAll('[data-analytics-event]')){
@@ -58,6 +68,9 @@ fs.mkdirSync(out,{recursive:true});
       const emittedItem=event.eventName==='begin_checkout'?exact[2]?.items?.[0]?.item_id:exact[2]?.item_id;
       if(emittedItem!==event.itemId) throw new Error(`${name}: ${event.eventName} item mismatch ${emittedItem} != ${event.itemId}`);
     }
+    await page.locator('#receipt-validator-input').fill(initialValidatorText);
+    await page.locator('#validate-receipt-button').click();
+    if(await page.locator('#receipt-validator-result').getAttribute('data-state')!=='pass') throw new Error(`${name}: validator did not restore pass state for screenshot`);
     await page.screenshot({path:path.join(out,`ai-agent-execution-receipt-guide-${name}.png`),fullPage:true});
     console.log(JSON.stringify({viewport:name,...metrics,analyticsEventsVerified:emitted.length,consoleErrors:0}));
     await page.close();

@@ -17,7 +17,7 @@ const downloadPath='execution-receipt-template.json';
 if(document.title!=='AI Agent Execution Receipt Template: Prove What Actually Ran') throw new Error(`unexpected title ${document.title}`);
 if(attr('link[rel="canonical"]','href')!==guideUrl) throw new Error('wrong canonical');
 if(attr('meta[name="robots"]','content')!=='index, follow') throw new Error('guide must be indexable');
-if(attr('meta[name="description"]','content').length<120) throw new Error('meta description too short');
+if(attr('meta[name="description"]','content').length<120||!attr('meta[name="description"]','content').includes('browser validator')) throw new Error('meta description or validator intent missing');
 if(attr('meta[property="og:image"]','content')!==socialImageUrl) throw new Error('wrong Open Graph image');
 if(attr('meta[property="og:image:width"]','content')!=='1600'||attr('meta[property="og:image:height"]','content')!=='900') throw new Error('wrong Open Graph image dimensions');
 if(!attr('meta[property="og:image:alt"]','content')) throw new Error('Open Graph image alt missing');
@@ -33,6 +33,10 @@ for(const phrase of [
   'Static-site change with honest boundaries.',
   'Receipts improve review. They do not grant trust.',
   'Evidence aid, not a security boundary.',
+  'Check receipt structure before accepting “verified.”',
+  'Runs locally in this browser.',
+  'Do not paste secrets or personal data.',
+  'Receipt text is not uploaded or stored by this page.',
   'US$5','WALKAWAY5','regular product price is US$19',
   'Applicable taxes are calculated by Gumroad.'
 ]) if(!body.includes(phrase)) throw new Error(`missing phrase: ${phrase}`);
@@ -55,8 +59,16 @@ const landingLinks=[...document.querySelectorAll('a[data-analytics-item-id="safe
 if(landingLinks.length!==3||landingLinks.some(link=>link.getAttribute('href')!==landingUrl||link.dataset.analyticsEvent!=='select_content')) throw new Error('qualified landing paths incorrect');
 const checkoutLinks=[...document.querySelectorAll('a[data-analytics-event="begin_checkout"]')];
 if(checkoutLinks.length!==2||checkoutLinks.some(link=>link.getAttribute('href')!==checkoutUrl||link.dataset.analyticsItemId!=='safe_walk_away_agent_kit')) throw new Error('checkout paths incorrect');
+const validatorInput=document.getElementById('receipt-validator-input');
+const validatorButton=document.getElementById('validate-receipt-button');
+const validatorResult=document.getElementById('receipt-validator-result');
+if(!validatorInput||!validatorButton||!validatorResult) throw new Error('receipt validator controls missing');
+const validatorFixture=JSON.parse(validatorInput.value);
+if(validatorFixture.status!=='verified'||validatorFixture.receipt_id!=='fictional-local-example-001'||validatorFixture.not_verified.length!==3) throw new Error('validator fixture contract incorrect');
+if(!html.includes('function validateReceipt(receipt)')||!html.includes("receipt.status === 'verified'")||!html.includes("receipt.status === 'blocked'")||!html.includes("receipt.status === 'failed'")) throw new Error('state-specific validator logic missing');
+if(validatorButton.dataset.analyticsEvent!=='select_content'||validatorButton.dataset.analyticsItemId!=='execution_receipt_validator_run') throw new Error('validator run measurement missing');
 const measured=[...document.querySelectorAll('[data-analytics-event]')];
-if(measured.length!==9||measured.some(element=>!element.dataset.analyticsItemId)) throw new Error(`analytics element contract incorrect: ${measured.length}`);
+if(measured.length!==11||measured.some(element=>!element.dataset.analyticsItemId)) throw new Error(`analytics element contract incorrect: ${measured.length}`);
 if(!html.includes('allow_google_signals: false')||!html.includes('allow_ad_personalization_signals: false')) throw new Error('analytics privacy flags missing');
 for(const marker of ['/home/','.hermes/','localhost','127.0.0.1','TODO','FIXME','testimonial','customers bought']) if(html.toLowerCase().includes(marker.toLowerCase())) throw new Error(`private/dev/fake-proof marker leaked: ${marker}`);
 const sitemap=fs.readFileSync(path.join(root,'sitemap.xml'),'utf8');

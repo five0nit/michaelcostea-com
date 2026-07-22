@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI Agent Execution Receipt Template: Prove What Actually Ran</title>
-  <meta name="description" content="Free AI agent execution receipt template for separating attempted, executed, verified, failed, and blocked work—with commands, exit codes, evidence, and limits." />
+  <meta name="description" content="Free AI agent execution receipt template and browser validator for separating attempted, executed, verified, failed, and blocked work—with commands, exit codes, evidence, and limits." />
   <link rel="canonical" href="https://michaelcostea.com/guides/ai-agent-execution-receipt-template/" />
   <meta name="robots" content="index, follow" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='11' fill='%2307100d'/%3E%3Cpath d='M14 15h36v8H23v7h22v8H23v11h-9z' fill='%2342f5a1'/%3E%3C/svg%3E" />
@@ -60,6 +60,7 @@
   <style>
     :root{--bg:#07100d;--panel:#0d1b16;--panel2:#11261e;--ink:#e9fff6;--muted:#a8c8bb;--line:#24483b;--green:#42f5a1;--green2:#a6ffd4;--amber:#ffd166;--red:#ff9b9b;--shadow:0 26px 84px rgba(0,0,0,.3)}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 82% 2%,rgba(66,245,161,.1),transparent 31%),radial-gradient(circle at 4% 52%,rgba(255,209,102,.05),transparent 28%),var(--bg);color:var(--ink);font:17px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--green2)}.shell{width:min(1120px,calc(100% - 40px));margin:auto}.nav{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:23px 0;border-bottom:1px solid var(--line)}.brand{font:800 13px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--ink)}.brand span{color:var(--green)}.nav-link{color:var(--muted);font-size:14px}.hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(330px,.88fr);gap:48px;align-items:center;padding:76px 0 58px}.eyebrow,.kicker{color:var(--green2);font:750 12px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;letter-spacing:.11em}.eyebrow{display:inline-flex;align-items:center;gap:9px}.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(66,245,161,.7)}h1{margin:17px 0 21px;font-size:clamp(45px,5.8vw,76px);line-height:.98;letter-spacing:-.055em}h2{margin:10px 0 18px;font-size:clamp(31px,4vw,49px);line-height:1.08;letter-spacing:-.04em}h3{margin:0 0 8px;font-size:21px}.lede{color:var(--muted);font-size:clamp(18px,2vw,22px);max-width:750px}.quick-nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.button{display:inline-flex;align-items:center;justify-content:center;padding:13px 17px;border:1px solid var(--green);border-radius:4px;color:var(--green2);font-weight:850;text-decoration:none;background:#08130f;cursor:pointer;font:inherit}.button.primary{background:var(--green);color:#03110b}.button:hover,.button:focus-visible{transform:translateY(-1px);box-shadow:0 10px 30px rgba(66,245,161,.13)}.truth{margin-top:23px;padding:14px 16px;border-left:3px solid var(--amber);background:rgba(255,209,102,.06);color:#f5e8b8;font-size:14px}.hero-panel{border:1px solid var(--line);background:linear-gradient(155deg,var(--panel2),var(--panel));padding:28px;box-shadow:var(--shadow)}.hero-panel strong{display:block;color:var(--green2);font:800 14px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace}.hero-panel ol{margin:18px 0 0;padding-left:22px}.hero-panel li{padding:7px 0;color:var(--muted)}.hero-panel li b{color:var(--ink)}.article{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:42px;padding:64px 0 80px;border-top:1px solid var(--line)}.content section{padding:0 0 66px}.content section+section{padding-top:66px;border-top:1px solid rgba(36,72,59,.75)}.states{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-top:28px}.state{padding:21px;border:1px solid var(--line);background:var(--panel)}.state b{display:block;color:var(--green2);font:800 13px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase}.state span{display:block;color:var(--muted);margin-top:8px}.template{border:1px solid var(--line);background:#020806;box-shadow:var(--shadow);overflow:hidden}.template-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 15px;border-bottom:1px solid var(--line);color:var(--muted);font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace}.template-head .button{padding:8px 12px;font-size:12px}.template pre{margin:0;padding:24px;color:#d7f9ea;font:13px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.checks{list-style:none;padding:0;margin:25px 0 0}.checks li{display:grid;grid-template-columns:25px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid rgba(36,72,59,.6)}.checks li::before{content:"✓";color:var(--green);font-weight:900}.example{padding:24px;border:1px solid var(--line);background:var(--panel)}.example-row{display:grid;grid-template-columns:140px 1fr;gap:18px;padding:11px 0;border-bottom:1px solid rgba(36,72,59,.6)}.example-row:last-child{border-bottom:0}.example-row b{color:var(--green2);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.example-row span{color:var(--muted)}.boundary{padding:23px;border:1px solid #705d2a;background:rgba(255,209,102,.06)}.boundary strong{color:#ffe7a6}.boundary p{margin:7px 0 0;color:#ddceb0}.final{padding:32px!important;border:1px solid var(--line)!important;background:var(--panel2)}.final .button{margin:7px 7px 0 0}.side{position:sticky;top:20px;align-self:start;display:grid;gap:16px}.side-card{padding:24px;border:1px solid var(--line);background:var(--panel)}.side-card p{color:var(--muted)}.price{font-size:34px;font-weight:850;letter-spacing:-.04em}.price del{font-size:17px;color:var(--muted)}.price small{display:block;color:var(--muted);font-size:12px;letter-spacing:0}.mini-list{padding-left:18px;color:var(--muted);font-size:14px}.side-card .button{width:100%}footer{padding:32px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}.footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .validator{border:1px solid var(--line);background:linear-gradient(145deg,rgba(66,245,161,.07),rgba(13,27,22,.92));border-radius:8px;padding:24px}.validator label{display:block;font-weight:850;margin-bottom:10px}.validator textarea{display:block;width:100%;min-height:360px;resize:vertical;border:1px solid #356552;border-radius:5px;background:#030907;color:#dffff0;padding:16px;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.validator textarea:focus{outline:2px solid var(--green);outline-offset:2px}.validator-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}.validator-note{color:var(--muted);font-size:14px;margin:12px 0 0}.validator-result{display:none;margin-top:16px;padding:15px;border-radius:5px}.validator-result[data-state="pass"]{display:block;border:1px solid var(--green);background:rgba(66,245,161,.08)}.validator-result[data-state="fail"]{display:block;border:1px solid var(--red);background:rgba(255,155,155,.08)}.validator-result strong{display:block;margin-bottom:6px}.validator-result ul{margin:0;padding-left:22px}
     @media(max-width:900px){.hero,.article{grid-template-columns:1fr}.side{position:static;grid-template-columns:1fr 1fr}.side-card:first-child{grid-column:1/-1}}
     @media(max-width:680px){.shell{width:min(100% - 26px,1120px)}.nav-link{display:none}.hero{padding:48px 0 42px;gap:31px}h1{font-size:44px}.article{padding-top:45px}.states,.side{grid-template-columns:1fr}.side-card:first-child{grid-column:auto}.template-head{align-items:flex-start;flex-direction:column}.template pre{font-size:11px;padding:17px}.example-row{grid-template-columns:1fr;gap:2px}.final{padding:28px 18px!important}.footer-row{flex-direction:column}}
   </style>
@@ -80,6 +81,7 @@
           <div class="quick-nav">
             <a class="button primary" data-analytics-event="select_content" data-analytics-item-id="execution_receipt_template" href="#copy-template">Copy the receipt template</a>
             <a class="button" data-analytics-event="select_content" data-analytics-item-id="execution_receipt_example" href="#worked-example">See a filled example</a>
+            <a class="button" data-analytics-event="select_content" data-analytics-item-id="execution_receipt_validator" href="#validate-receipt">Check a receipt</a>
           </div>
           <p class="truth"><strong>Evidence aid, not a security boundary.</strong> A receipt can expose missing proof. It cannot make a model correct, contain a process, or replace sandboxing, access control, backups, and human review.</p>
         </div>
@@ -153,6 +155,59 @@
   "external_changes": ["[public, production, account, or financial changes]"],
   "next_best_step": "[one bounded next action or null]"
 }</pre>
+            </div>
+          </section>
+
+          <section id="validate-receipt">
+            <span class="kicker">Browser validator</span>
+            <h2>Check receipt structure before accepting “verified.”</h2>
+            <p>This client-side checker tests required fields, timestamps, action evidence, verification results, and state-specific boundaries. It is a review aid—not cryptographic proof that the receipt is truthful.</p>
+            <div class="validator">
+              <label for="receipt-validator-input">Paste an execution receipt</label>
+              <textarea id="receipt-validator-input" spellcheck="false" aria-describedby="validator-privacy-note">{
+  "version": 1,
+  "receipt_id": "fictional-local-example-001",
+  "objective": "Validate one local static guide build.",
+  "status": "verified",
+  "started_at": "2026-07-23T00:00:00Z",
+  "completed_at": "2026-07-23T00:04:00Z",
+  "scope": {
+    "allowed": ["local guide files and tests"],
+    "excluded": ["public deployment and account changes"]
+  },
+  "actions": [
+    {
+      "action": "Run the local guide regression.",
+      "command_or_tool": "node tests/guide-regression.cjs",
+      "exit_code": 0,
+      "result": "Fictional example output: regression passed."
+    }
+  ],
+  "verification": [
+    {
+      "check": "Local guide route responds.",
+      "expected": "HTTP 200",
+      "observed": "Fictional example: HTTP 200",
+      "passed": true
+    }
+  ],
+  "artifacts": [
+    {
+      "path_or_url": "guides/example/index.html",
+      "sha256": ""
+    }
+  ],
+  "blocked": [],
+  "not_verified": ["Public deployment", "Search traffic", "Sales"],
+  "external_changes": [],
+  "next_best_step": null
+}</textarea>
+              <div class="validator-actions">
+                <button class="button primary" id="validate-receipt-button" type="button" data-analytics-event="select_content" data-analytics-item-id="execution_receipt_validator_run">Validate receipt</button>
+                <span>Runs locally in this browser.</span>
+              </div>
+              <p class="validator-note" id="validator-privacy-note"><strong>Do not paste secrets or personal data.</strong> Receipt text is not uploaded or stored by this page. The run event records only that the checker was used—not receipt contents.</p>
+              <div class="validator-result" id="receipt-validator-result" role="status" aria-live="polite"></div>
             </div>
           </section>
 
@@ -231,6 +286,77 @@
           });
         }
       });
+    });
+    const validatorInput = document.getElementById('receipt-validator-input');
+    const validatorResult = document.getElementById('receipt-validator-result');
+    const nonEmptyString = (value) => typeof value === 'string' && value.trim().length > 0;
+    const validTimestamp = (value) => nonEmptyString(value) && !Number.isNaN(Date.parse(value));
+    function validateReceipt(receipt) {
+      const issues = [];
+      const states = ['attempted', 'executed', 'verified', 'failed', 'blocked'];
+      if (!receipt || typeof receipt !== 'object' || Array.isArray(receipt)) return ['Top-level JSON must be an object.'];
+      if (receipt.version !== 1) issues.push('version must equal 1.');
+      if (!nonEmptyString(receipt.receipt_id)) issues.push('receipt_id must be a non-empty, non-secret string.');
+      if (!nonEmptyString(receipt.objective)) issues.push('objective must name one bounded result.');
+      if (!states.includes(receipt.status)) issues.push('status must be attempted, executed, verified, failed, or blocked.');
+      if (!validTimestamp(receipt.started_at)) issues.push('started_at must be a valid timestamp.');
+      if (receipt.completed_at !== null && !validTimestamp(receipt.completed_at)) issues.push('completed_at must be a valid timestamp or null.');
+      if (validTimestamp(receipt.started_at) && validTimestamp(receipt.completed_at) && Date.parse(receipt.completed_at) < Date.parse(receipt.started_at)) issues.push('completed_at cannot be earlier than started_at.');
+      if (!receipt.scope || !Array.isArray(receipt.scope.allowed) || !Array.isArray(receipt.scope.excluded)) issues.push('scope.allowed and scope.excluded must be arrays.');
+      for (const field of ['actions', 'verification', 'artifacts', 'blocked', 'not_verified', 'external_changes']) {
+        if (!Array.isArray(receipt[field])) issues.push(`${field} must be an array.`);
+      }
+      if (receipt.next_best_step !== null && !nonEmptyString(receipt.next_best_step)) issues.push('next_best_step must be a non-empty string or null.');
+      if (Array.isArray(receipt.actions)) {
+        receipt.actions.forEach((action, index) => {
+          if (!action || !nonEmptyString(action.action) || !nonEmptyString(action.command_or_tool) || !nonEmptyString(action.result)) issues.push(`actions[${index}] needs action, command_or_tool, and result text.`);
+          if (action && action.exit_code !== null && !Number.isInteger(action.exit_code)) issues.push(`actions[${index}].exit_code must be an integer or null.`);
+        });
+      }
+      if (Array.isArray(receipt.verification)) {
+        receipt.verification.forEach((check, index) => {
+          if (!check || !nonEmptyString(check.check) || !nonEmptyString(check.expected) || !nonEmptyString(check.observed) || typeof check.passed !== 'boolean') issues.push(`verification[${index}] needs check, expected, observed, and boolean passed.`);
+        });
+      }
+      if (receipt.status === 'verified') {
+        if (!validTimestamp(receipt.completed_at)) issues.push('verified status requires completed_at.');
+        if (!Array.isArray(receipt.actions) || receipt.actions.length === 0) issues.push('verified status requires at least one action receipt.');
+        if (!Array.isArray(receipt.verification) || receipt.verification.length === 0) issues.push('verified status requires at least one independent check.');
+        if (Array.isArray(receipt.verification) && receipt.verification.some((check) => check?.passed !== true)) issues.push('verified status cannot contain a failed verification check.');
+      }
+      if (receipt.status === 'blocked' && (!Array.isArray(receipt.blocked) || receipt.blocked.length === 0)) issues.push('blocked status requires at least one explicit blocker.');
+      if (receipt.status === 'failed') {
+        const failedAction = Array.isArray(receipt.actions) && receipt.actions.some((action) => Number.isInteger(action?.exit_code) && action.exit_code !== 0);
+        const failedCheck = Array.isArray(receipt.verification) && receipt.verification.some((check) => check?.passed === false);
+        if (!failedAction && !failedCheck) issues.push('failed status requires a non-zero exit code or failed verification check.');
+      }
+      return issues;
+    }
+    document.getElementById('validate-receipt-button').addEventListener('click', () => {
+      let issues;
+      try {
+        issues = validateReceipt(JSON.parse(validatorInput.value));
+      } catch (error) {
+        issues = [`Invalid JSON: ${error.message}`];
+      }
+      validatorResult.replaceChildren();
+      const heading = document.createElement('strong');
+      heading.textContent = issues.length ? `Needs review — ${issues.length} issue${issues.length === 1 ? '' : 's'}` : 'Structure passes this bounded check';
+      validatorResult.appendChild(heading);
+      if (issues.length) {
+        const list = document.createElement('ul');
+        issues.forEach((issue) => {
+          const item = document.createElement('li');
+          item.textContent = issue;
+          list.appendChild(item);
+        });
+        validatorResult.appendChild(list);
+      } else {
+        const note = document.createElement('span');
+        note.textContent = 'Required fields and state-specific evidence are present. Independently verify the claims and artifacts.';
+        validatorResult.appendChild(note);
+      }
+      validatorResult.dataset.state = issues.length ? 'fail' : 'pass';
     });
     document.getElementById('copy-template-button').addEventListener('click', async (event) => {
       const button = event.currentTarget;
