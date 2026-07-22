@@ -1,0 +1,253 @@
+/* Career resume positioning — 2026-07-22
+   Scoped to #resumeWindow so the rest of MICHAEL OS 89 stays unchanged. */
+
+.public-preview #resumeWindow .career-fit-resume{
+  max-width:840px;
+  margin:0 auto;
+}
+
+.public-preview #resumeWindow .evidence-led-header{
+  margin-bottom:14px!important;
+  padding:12px 14px!important;
+  border:3px solid #111!important;
+  background:#f8f3e7!important;
+  box-shadow:5px 5px 0 rgba(0,0,128,.24)!important;
+}
+
+.public-preview #resumeWindow .evidence-led-header p{
+  margin:5px 0!important;
+  line-height:1.45!important;
+}
+
+.public-preview #resumeWindow .resume-download-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:11px;
+}
+
+.public-preview #resumeWindow .resume-download-row .ui-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  text-decoration:none!important;
+}
+
+.public-preview #resumeWindow .career-fit-summary{
+  margin:14px 0 20px;
+  padding:15px 17px;
+  border:3px solid #111;
+  background:#fff7e8;
+  box-shadow:5px 5px 0 rgba(0,166,166,.28);
+}
+
+.public-preview #resumeWindow .career-fit-summary h3{
+  margin-top:0!important;
+}
+
+.public-preview #resumeWindow .career-fit-summary p{
+  line-height:1.55;
+}
+
+.public-preview #resumeWindow .target-role-line{
+  margin:12px 0 0!important;
+  padding:10px 11px;
+  border-left:6px solid #000080;
+  background:#e8f7ff;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;
+  line-height:1.5!important;
+}
+
+.public-preview #resumeWindow .selected-evidence,
+.public-preview #resumeWindow .career-fit-work,
+.public-preview #resumeWindow .career-fit-capabilities{
+  margin:22px 0;
+}
+
+.public-preview #resumeWindow .career-evidence-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+
+.public-preview #resumeWindow .career-evidence-grid article{
+  display:grid;
+  align-content:start;
+  gap:6px;
+  min-width:0;
+  padding:13px;
+  border:3px solid #111;
+  background:#fff;
+  box-shadow:3px 3px 0 #111;
+}
+
+.public-preview #resumeWindow .career-evidence-grid b{
+  color:#000080;
+  font:900 24px/1 "Work Sans",Arial,sans-serif;
+  overflow-wrap:anywhere;
+}
+
+.public-preview #resumeWindow .career-evidence-grid span{
+  font:700 10px/1.4 "IBM Plex Mono",monospace;
+  overflow-wrap:anywhere;
+}
+
+.public-preview #resumeWindow .career-fit-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+.public-preview #resumeWindow .career-fit-case{
+  padding:15px;
+  border:3px solid #111;
+  background:#fff;
+  box-shadow:4px 4px 0 rgba(0,0,128,.22);
+}
+
+.public-preview #resumeWindow .career-fit-case-title{
+  display:grid;
+  grid-template-columns:44px minmax(0,1fr);
+  gap:11px;
+  align-items:start;
+  margin-bottom:9px;
+}
+
+.public-preview #resumeWindow .career-fit-case-title>span{
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  background:#000080;
+  color:#fff;
+  box-shadow:3px 3px 0 #00a6a6;
+  font:900 18px/1 "Work Sans",Arial,sans-serif;
+}
+
+.public-preview #resumeWindow .career-fit-case-title h4{
+  margin:0 0 4px!important;
+  color:#000080!important;
+  font:900 17px/1.15 "Work Sans",Arial,sans-serif!important;
+}
+
+.public-preview #resumeWindow .career-fit-case-title small{
+  display:block;
+  color:#006b6b;
+  font:800 9px/1.35 "IBM Plex Mono",monospace;
+  overflow-wrap:anywhere;
+}
+
+.public-preview #resumeWindow .career-fit-case p{
+  margin:7px 0;
+  font-size:11px;
+  line-height:1.5;
+}
+
+.public-preview #resumeWindow .career-fit-capabilities .concise-capabilities{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.public-preview #resumeWindow .expanded-scope-card{
+  border-color:#006b6b!important;
+  background:#eefcf9!important;
+  box-shadow:4px 4px 0 rgba(0,107,107,.25)!important;
+}
+
+.public-preview #resumeWindow .current-role-card{
+  border-color:#000080!important;
+  background:#f1f5ff!important;
+}
+
+.public-preview #resumeWindow .career-fit-resume h3,
+.public-preview #resumeWindow .career-fit-resume h4,
+.public-preview #resumeWindow .career-fit-resume p,
+.public-preview #resumeWindow .career-fit-resume span,
+.public-preview #resumeWindow .career-fit-resume li{
+  overflow-wrap:anywhere;
+}
+
+@media (max-width:720px){
+  .public-preview #resumeWindow .career-fit-resume{
+    width:100%;
+    max-width:none;
+  }
+
+  .public-preview #resumeWindow .evidence-led-header,
+  body.mobile-mode.public-preview #resumeWindow .evidence-led-header{
+    padding:10px!important;
+    margin-bottom:11px!important;
+  }
+
+  .public-preview #resumeWindow .resume-download-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+  }
+
+  .public-preview #resumeWindow .resume-download-row .ui-btn{
+    width:100%;
+    min-width:0;
+    min-height:42px;
+    padding:7px 8px!important;
+    white-space:normal;
+    text-align:center;
+  }
+
+  .public-preview #resumeWindow .career-fit-summary{
+    margin:10px 0 17px;
+    padding:12px;
+  }
+
+  .public-preview #resumeWindow .target-role-line{
+    padding:9px;
+    font-size:10px;
+  }
+
+  .public-preview #resumeWindow .career-evidence-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+  }
+
+  .public-preview #resumeWindow .career-evidence-grid article{
+    padding:10px;
+  }
+
+  .public-preview #resumeWindow .career-evidence-grid b{
+    font-size:20px;
+  }
+
+  .public-preview #resumeWindow .career-fit-case{
+    padding:11px;
+  }
+
+  .public-preview #resumeWindow .career-fit-case-title{
+    grid-template-columns:36px minmax(0,1fr);
+    gap:9px;
+  }
+
+  .public-preview #resumeWindow .career-fit-case-title>span{
+    width:36px;
+    height:36px;
+    font-size:15px;
+  }
+
+  .public-preview #resumeWindow .career-fit-case-title h4{
+    font-size:15px!important;
+  }
+
+  .public-preview #resumeWindow .career-fit-case p{
+    font-size:10.5px;
+  }
+
+  .public-preview #resumeWindow .career-fit-capabilities .concise-capabilities{
+    grid-template-columns:1fr!important;
+  }
+}
+
+@media (max-width:420px){
+  .public-preview #resumeWindow .resume-download-row{
+    grid-template-columns:1fr;
+  }
+}
