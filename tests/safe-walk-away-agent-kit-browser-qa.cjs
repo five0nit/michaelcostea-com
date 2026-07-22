@@ -51,5 +51,34 @@ const out = process.env.QA_OUT || '/home/fiv30nit/.hermes/profiles/generalist1/a
     console.log(JSON.stringify({ viewport: name, ...metrics, analyticsEventsVerified: emitted.length, consoleErrors: 0 }));
     await page.close();
   }
+
+  for (const [name, viewport] of Object.entries({ 'homepage-desktop': { width: 1440, height: 1000 }, 'homepage-mobile': { width: 390, height: 844 } })) {
+    const page = await browser.newPage({ viewport, deviceScaleFactor: 1 });
+    await page.route('https://www.googletagmanager.com/**', route => route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }));
+    await page.route('https://fonts.googleapis.com/**', route => route.fulfill({ status: 200, contentType: 'text/css', body: '' }));
+    await page.route('https://fonts.gstatic.com/**', route => route.abort());
+    const errors = [];
+    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+    page.on('pageerror', err => errors.push(String(err)));
+    const homeUrl = new URL('/', url).href;
+    const response = await page.goto(homeUrl, { waitUntil: 'networkidle' });
+    if (!response || !response.ok()) throw new Error(`${name}: bad response`);
+    const ownedPath = page.locator('a[data-owned-path="safe-walk-away-receipt-guide"]');
+    if (await ownedPath.count() !== 1 || !(await ownedPath.isVisible())) throw new Error(`${name}: homepage-to-guide path missing or hidden`);
+    const metrics = await page.evaluate(() => ({
+      href: document.querySelector('a[data-owned-path="safe-walk-away-receipt-guide"]')?.href,
+      text: document.querySelector('a[data-owned-path="safe-walk-away-receipt-guide"]')?.textContent?.trim(),
+      overflow: document.documentElement.scrollWidth > window.innerWidth,
+      width: window.innerWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    const expectedHref = new URL('/guides/ai-agent-execution-receipt-template/?utm_source=michaelcostea.com&utm_medium=owned_homepage&utm_campaign=safe_walk_away_launch', url).href;
+    if (metrics.href !== expectedHref || metrics.text !== 'Use the free template') throw new Error(`${name}: homepage-to-guide path incorrect ${JSON.stringify(metrics)}`);
+    if (metrics.overflow) throw new Error(`${name}: horizontal overflow ${metrics.scrollWidth}>${metrics.width}`);
+    if (errors.length) throw new Error(`${name}: console errors ${errors.join(' | ')}`);
+    await page.screenshot({ path: path.join(out, `safe-walk-away-${name}.png`), fullPage: false });
+    console.log(JSON.stringify({ viewport: name, ...metrics, consoleErrors: 0 }));
+    await page.close();
+  }
   await browser.close();
 })().catch(err => { console.error(err.stack || err); process.exit(1); });
