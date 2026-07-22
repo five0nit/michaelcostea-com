@@ -14,11 +14,13 @@ const body = document.body.textContent.replace(/\s+/g, ' ').trim();
 const attr = (selector, name) => document.querySelector(selector)?.getAttribute(name) || '';
 const guidePath = 'guides/ai-agent-execution-receipt-template/?utm_source=safe_walk_away_landing&utm_medium=owned_content&utm_campaign=safe_walk_away_launch';
 const socialImageUrl = 'https://michaelcostea.com/assets/products/safe-walk-away-social-card.png';
+const canonicalUrl = 'https://michaelcostea.com/safe-walk-away-agent-kit.html';
+const launchCheckoutUrl = 'https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5';
 
 if (document.title !== 'Safe Walk-Away Agent Kit — bounded Claude Code autonomy') {
   throw new Error(`unexpected title: ${document.title}`);
 }
-if (attr('link[rel="canonical"]', 'href') !== 'https://michaelcostea.com/safe-walk-away-agent-kit.html') {
+if (attr('link[rel="canonical"]', 'href') !== canonicalUrl) {
   throw new Error('wrong canonical');
 }
 if (attr('meta[name="robots"]', 'content') !== 'index, follow') {
@@ -96,6 +98,24 @@ if (measured.length !== 2 || measured.some(element => !element.dataset.analytics
 }
 if (!html.includes('allow_google_signals: false') || !html.includes('allow_ad_personalization_signals: false')) {
   throw new Error('analytics privacy flags missing');
+}
+const schemas = [...document.querySelectorAll('script[type="application/ld+json"]')].map(element => JSON.parse(element.textContent));
+const productSchema = schemas.find(item => item['@type'] === 'Product');
+if (!productSchema) throw new Error('Product schema missing');
+if (productSchema['@context'] !== 'https://schema.org' || productSchema['@id'] !== `${canonicalUrl}#product` || productSchema.url !== canonicalUrl) {
+  throw new Error('Product schema identity incorrect');
+}
+if (productSchema.name !== 'Safe Walk-Away Agent Kit' || productSchema.image !== socialImageUrl || productSchema.brand?.name !== 'Michael Costea') {
+  throw new Error('Product schema product fields incorrect');
+}
+if (productSchema.offers?.['@type'] !== 'Offer' || productSchema.offers.url !== launchCheckoutUrl || productSchema.offers.priceCurrency !== 'USD' || productSchema.offers.price !== '5.00') {
+  throw new Error('Product schema offer fields incorrect');
+}
+if (productSchema.offers.availability !== 'https://schema.org/InStock' || productSchema.offers.itemCondition !== 'https://schema.org/NewCondition' || productSchema.offers.seller?.name !== 'Michael Costea') {
+  throw new Error('Product schema availability or seller incorrect');
+}
+if (!productSchema.offers.description.includes('first 10 redemptions') || !productSchema.offers.description.includes('Regular product price US$19')) {
+  throw new Error('Product schema launch-price boundary missing');
 }
 const homepageHtml = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const homepage = new JSDOM(homepageHtml).window.document;
