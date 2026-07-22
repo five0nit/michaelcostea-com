@@ -13,6 +13,9 @@ fs.mkdirSync(out, { recursive: true });
 
   for (const [label, width, height] of [['desktop', 1440, 1000], ['mobile', 390, 844]]) {
     const page = await browser.newPage({ viewport: { width, height } });
+    await page.route('https://www.googletagmanager.com/**', route => route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }));
+    await page.route('https://www.google-analytics.com/**', route => route.fulfill({ status: 204, body: '' }));
+    await page.route('https://www.google.com/g/collect**', route => route.fulfill({ status: 204, body: '' }));
     const errors = [];
     page.on('pageerror', error => errors.push(`page:${error.message}`));
     page.on('console', message => {
@@ -93,6 +96,8 @@ fs.mkdirSync(out, { recursive: true });
     targetText: document.querySelector('.target')?.innerText,
     hasExpandedScope: document.body.innerText.includes('Business Systems, Lead Flow & Digital Infrastructure'),
     hasOptusScale: document.body.innerText.includes('500,000'),
+    selectedProjects: [...document.querySelectorAll('.selected-project h3')].map(heading => heading.innerText),
+    hasRejectedPortfolioCopy: document.body.innerText.includes('Public agent-observability project') || document.documentElement.innerHTML.includes('telegram-office'),
     printButton: document.querySelector('.screen-actions button')?.innerText,
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth,
@@ -100,6 +105,9 @@ fs.mkdirSync(out, { recursive: true });
   if (!printableResponse || printableResponse.status() !== 200) throw new Error(`printable status ${printableResponse?.status()}`);
   if (printableChecks.pages !== 2) throw new Error(`printable page count ${printableChecks.pages}`);
   if (!printableChecks.targetText?.includes('AI Enablement Lead') || !printableChecks.hasExpandedScope || !printableChecks.hasOptusScale) throw new Error('printable content missing');
+  const expectedProjects = ['Codex Account Usage + Auth Rotator', 'Automated Social Life & Brand Engine', 'Brief2Ship', 'RebateSignal'];
+  if (JSON.stringify(printableChecks.selectedProjects) !== JSON.stringify(expectedProjects)) throw new Error(`printable projects wrong: ${JSON.stringify(printableChecks.selectedProjects)}`);
+  if (printableChecks.hasRejectedPortfolioCopy) throw new Error('printable resume still exposes rejected Telegram Office portfolio copy');
   if (printableChecks.printButton !== 'Print / Save PDF') throw new Error(`printable action missing: ${printableChecks.printButton}`);
   for (const [index, metric] of printableChecks.pageMetrics.entries()) {
     if (metric.scrollHeight > metric.clientHeight + 1) throw new Error(`printable page ${index + 1} clips content: ${JSON.stringify(metric)}`);
