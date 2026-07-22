@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "receipt_id": "[unique non-secret ID]",
+  "objective": "[one bounded result]",
+  "status": "attempted | executed | verified | failed | blocked",
+  "started_at": "[ISO-8601 timestamp]",
+  "completed_at": "[ISO-8601 timestamp or null]",
+  "scope": {
+    "allowed": [
+      "[approved path or action]"
+    ],
+    "excluded": [
+      "[out-of-scope action]"
+    ]
+  },
+  "actions": [
+    {
+      "action": "[what was attempted]",
+      "command_or_tool": "[exact non-secret command or tool]",
+      "exit_code": "[integer or null]",
+      "result": "[short factual output]"
+    }
+  ],
+  "verification": [
+    {
+      "check": "[observable pass condition]",
+      "expected": "[expected state]",
+      "observed": "[actual state]",
+      "passed": true
+    }
+  ],
+  "artifacts": [
+    {
+      "path_or_url": "[safe artifact reference]",
+      "sha256": "[optional checksum]"
+    }
+  ],
+  "blocked": [
+    "[approval or dependency still required]"
+  ],
+  "not_verified": [
+    "[claims the receipt does not support]"
+  ],
+  "external_changes": [
+    "[public, production, account, or financial changes]"
+  ],
+  "next_best_step": "[one bounded next action or null]"
+}

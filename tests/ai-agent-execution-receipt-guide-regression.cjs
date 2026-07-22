@@ -13,6 +13,7 @@ const guideUrl='https://michaelcostea.com/guides/ai-agent-execution-receipt-temp
 const landingUrl='../../safe-walk-away-agent-kit.html?utm_source=execution_receipt_guide&utm_medium=owned_content&utm_campaign=safe_walk_away_launch';
 const checkoutUrl='https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5';
 const socialImageUrl='https://michaelcostea.com/assets/products/ai-agent-execution-receipt-social-card.png';
+const downloadPath='execution-receipt-template.json';
 if(document.title!=='AI Agent Execution Receipt Template: Prove What Actually Ran') throw new Error(`unexpected title ${document.title}`);
 if(attr('link[rel="canonical"]','href')!==guideUrl) throw new Error('wrong canonical');
 if(attr('meta[name="robots"]','content')!=='index, follow') throw new Error('guide must be indexable');
@@ -37,6 +38,13 @@ for(const phrase of [
 ]) if(!body.includes(phrase)) throw new Error(`missing phrase: ${phrase}`);
 const template=document.getElementById('receipt-template')?.textContent||'';
 for(const field of ['"status"','"actions"','"verification"','"blocked"','"not_verified"','"external_changes"','"next_best_step"']) if(!template.includes(field)) throw new Error(`receipt field missing ${field}`);
+const downloadLink=document.getElementById('download-template-link');
+if(!downloadLink||downloadLink.getAttribute('href')!==downloadPath||downloadLink.getAttribute('download')!=='EXECUTION-RECEIPT.json'||downloadLink.dataset.analyticsEvent!=='select_content'||downloadLink.dataset.analyticsItemId!=='execution_receipt_template_download') throw new Error('downloadable receipt template link incorrect');
+const downloadFile=path.join(root,'guides/ai-agent-execution-receipt-template',downloadPath);
+if(!fs.existsSync(downloadFile)) throw new Error('downloadable receipt template missing');
+const inlineTemplate=JSON.parse(template);
+const downloadableTemplate=JSON.parse(fs.readFileSync(downloadFile,'utf8'));
+if(JSON.stringify(downloadableTemplate)!==JSON.stringify(inlineTemplate)) throw new Error('downloadable and inline receipt templates drifted');
 const schema=JSON.parse(document.querySelector('script[type="application/ld+json"]').textContent);
 if(schema['@context']!=='https://schema.org'||!Array.isArray(schema['@graph'])) throw new Error('schema graph missing');
 const article=schema['@graph'].find(item=>item['@type']==='Article');
@@ -48,7 +56,7 @@ if(landingLinks.length!==3||landingLinks.some(link=>link.getAttribute('href')!==
 const checkoutLinks=[...document.querySelectorAll('a[data-analytics-event="begin_checkout"]')];
 if(checkoutLinks.length!==2||checkoutLinks.some(link=>link.getAttribute('href')!==checkoutUrl||link.dataset.analyticsItemId!=='safe_walk_away_agent_kit')) throw new Error('checkout paths incorrect');
 const measured=[...document.querySelectorAll('[data-analytics-event]')];
-if(measured.length!==8||measured.some(element=>!element.dataset.analyticsItemId)) throw new Error(`analytics element contract incorrect: ${measured.length}`);
+if(measured.length!==9||measured.some(element=>!element.dataset.analyticsItemId)) throw new Error(`analytics element contract incorrect: ${measured.length}`);
 if(!html.includes('allow_google_signals: false')||!html.includes('allow_ad_personalization_signals: false')) throw new Error('analytics privacy flags missing');
 for(const marker of ['/home/','.hermes/','localhost','127.0.0.1','TODO','FIXME','testimonial','customers bought']) if(html.toLowerCase().includes(marker.toLowerCase())) throw new Error(`private/dev/fake-proof marker leaked: ${marker}`);
 const sitemap=fs.readFileSync(path.join(root,'sitemap.xml'),'utf8');

@@ -15,6 +15,11 @@ fs.mkdirSync(out,{recursive:true});
     page.on('pageerror',error=>errors.push(String(error)));
     const response=await page.goto(url,{waitUntil:'networkidle'});
     if(!response||!response.ok()) throw new Error(`${name}: bad response`);
+    const downloadUrl=new URL('execution-receipt-template.json',url).href;
+    const downloadResponse=await page.request.get(downloadUrl);
+    if(!downloadResponse.ok()) throw new Error(`${name}: downloadable template response ${downloadResponse.status()}`);
+    const downloadableTemplate=JSON.parse(await downloadResponse.text());
+    if(downloadableTemplate.version!==1||!downloadableTemplate.actions||!downloadableTemplate.verification||downloadableTemplate.status!=='attempted | executed | verified | failed | blocked') throw new Error(`${name}: downloadable template contract failed`);
     await page.locator('#worked-example').scrollIntoViewIfNeeded();
     await page.waitForTimeout(250);
     await page.evaluate(()=>scrollTo(0,0));
@@ -28,12 +33,14 @@ fs.mkdirSync(out,{recursive:true});
       scrollWidth:document.documentElement.scrollWidth,
       checkoutLinks:[...document.querySelectorAll('a[data-analytics-event="begin_checkout"]')].map(link=>({href:link.href,itemId:link.dataset.analyticsItemId})),
       measuredElements:[...document.querySelectorAll('[data-analytics-event]')].map(element=>({eventName:element.dataset.analyticsEvent,itemId:element.dataset.analyticsItemId})),
+      downloadLink:{href:document.getElementById('download-template-link')?.href,download:document.getElementById('download-template-link')?.getAttribute('download')},
       analyticsLoader:[...document.scripts].some(script=>script.src.includes('googletagmanager.com/gtag/js?id=G-C0YHGXH33P')),
     }));
     if(metrics.overflow) throw new Error(`${name}: horizontal overflow ${metrics.scrollWidth}>${metrics.width}`);
     if(!metrics.h1||metrics.states!==5||metrics.receiptFields<20||!metrics.analyticsLoader) throw new Error(`${name}: content or analytics loader missing`);
     if(metrics.checkoutLinks.length!==2||metrics.checkoutLinks.some(link=>link.href!=='https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5'||link.itemId!=='safe_walk_away_agent_kit')) throw new Error(`${name}: checkout link contract failed`);
-    if(metrics.measuredElements.length!==8||metrics.measuredElements.some(element=>!element.itemId)) throw new Error(`${name}: measured-element contract failed`);
+    if(metrics.measuredElements.length!==9||metrics.measuredElements.some(element=>!element.itemId)) throw new Error(`${name}: measured-element contract failed`);
+    if(metrics.downloadLink.href!==downloadUrl||metrics.downloadLink.download!=='EXECUTION-RECEIPT.json') throw new Error(`${name}: download link contract failed`);
     if(errors.length) throw new Error(`${name}: console errors ${errors.join(' | ')}`);
     const emitted=await page.evaluate(()=>{
       const results=[];
