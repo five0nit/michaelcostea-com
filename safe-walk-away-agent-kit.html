@@ -16,6 +16,16 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Safe Walk-Away Agent Kit" />
   <meta name="twitter:description" content="Claude Code-first permission profiles, high-risk gates, scope stops, and receipts." />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-C0YHGXH33P"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-C0YHGXH33P', {
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false
+    });
+  </script>
   <style>
     :root{--bg:#07100d;--panel:#0d1b16;--panel2:#11261e;--ink:#e9fff6;--muted:#a8c8bb;--line:#24483b;--green:#42f5a1;--green2:#a6ffd4;--amber:#ffd166;--red:#ff9b9b;--shadow:0 24px 80px rgba(0,0,0,.28)}
     *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:radial-gradient(circle at 80% 4%,rgba(66,245,161,.09),transparent 34%),var(--bg);color:var(--ink);font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -30,6 +40,7 @@
     footer{padding:34px 0 48px;color:var(--muted);font-size:13px}.footer-row{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     @media (max-width: 900px){.hero,.split{grid-template-columns:1fr}.hero{padding-top:62px}.buy-card{max-width:580px}.proof-bar{grid-template-columns:1fr 1fr}.proof-item:nth-child(2){border-right:0}.proof-item:nth-child(-n+2){border-bottom:1px solid var(--line)}}
     @media (max-width: 720px){.shell{width:min(100% - 26px,1120px)}.nav-note{display:none}.hero{padding:48px 0 44px;gap:32px}h1{font-size:47px}.grid-3,.limits{grid-template-columns:1fr}.proof-bar{grid-template-columns:1fr}.proof-item{border-right:0;border-bottom:1px solid var(--line)}.proof-item:last-child{border-bottom:0}section{padding:58px 0}.support-box{grid-template-columns:1fr}.support-link{justify-content:center}.terminal{font-size:12px}}
+    .resource-cta{display:flex;justify-content:center;align-items:center;margin:0 0 13px;padding:11px 14px;border:1px solid var(--line);color:var(--green2);font-size:14px;font-weight:750;text-decoration:none;border-radius:4px;position:relative;z-index:1}.resource-cta:hover,.resource-cta:focus-visible{border-color:var(--green)}
   </style>
 </head>
 <body data-launch-status="live" data-standard-checkout-url="https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit" data-launch-checkout-url="https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5">
@@ -51,7 +62,8 @@
           <span class="section-kicker" id="buy-title">Safe Walk-Away Agent Kit</span>
           <div class="price"><del>US$19</del> US$5 <small>launch product price · first 10 buyers</small></div>
           <p class="buy-meta"><strong>Code WALKAWAY5</strong> · US$14 fixed discount · 10 redemptions maximum · before applicable taxes</p>
-          <a class="primary-cta" href="https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5">Get launch price — US$5</a>
+          <a class="primary-cta" data-analytics-event="begin_checkout" data-analytics-item-id="safe_walk_away_agent_kit" href="https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5">Get launch price — US$5</a>
+          <a class="resource-cta" data-analytics-event="select_content" data-analytics-item-id="execution_receipt_guide" href="guides/ai-agent-execution-receipt-template/?utm_source=safe_walk_away_landing&amp;utm_medium=owned_content&amp;utm_campaign=safe_walk_away_launch">Free: use the execution receipt template</a>
           <p class="buy-meta">Regular product price US$19 one-time. Applicable taxes are calculated by Gumroad at checkout.</p>
           <div class="status">Live · buyer checkout verified · automatic delivery staged</div>
         </aside>
@@ -133,5 +145,23 @@
       <div class="footer-row"><span>© 2026 Michael Costea · Safe Walk-Away Agent Kit</span><span class="mono">Build agent autonomy with receipts, not vibes.</span></div>
     </footer>
   </div>
+  <script>
+    document.querySelectorAll('[data-analytics-event]').forEach((element) => {
+      element.addEventListener('click', () => {
+        if (element.dataset.analyticsEvent === 'begin_checkout') {
+          gtag('event', 'begin_checkout', {
+            currency: 'USD',
+            value: 5,
+            items: [{item_id: 'safe_walk_away_agent_kit', item_name: 'Safe Walk-Away Agent Kit', price: 5, quantity: 1}]
+          });
+        } else {
+          gtag('event', 'select_content', {
+            content_type: 'safe_walk_away_resource',
+            item_id: element.dataset.analyticsItemId
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>

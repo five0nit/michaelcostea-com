@@ -12,6 +12,7 @@ const dom = new JSDOM(html);
 const { document } = dom.window;
 const body = document.body.textContent.replace(/\s+/g, ' ').trim();
 const attr = (selector, name) => document.querySelector(selector)?.getAttribute(name) || '';
+const guidePath = 'guides/ai-agent-execution-receipt-template/?utm_source=safe_walk_away_landing&utm_medium=owned_content&utm_campaign=safe_walk_away_launch';
 
 if (document.title !== 'Safe Walk-Away Agent Kit — bounded Claude Code autonomy') {
   throw new Error(`unexpected title: ${document.title}`);
@@ -49,6 +50,7 @@ for (const phrase of [
   'Get launch price — US$5',
   'Live · buyer checkout verified · automatic delivery staged',
   '14-day description-match refund policy',
+  'Free: use the execution receipt template',
 ]) {
   if (!body.includes(phrase)) throw new Error(`missing product phrase: ${phrase}`);
 }
@@ -63,6 +65,24 @@ if (!cta || cta.getAttribute('href') !== 'https://costeamichael.gumroad.com/l/sa
 }
 if (cta.hasAttribute('aria-disabled')) {
   throw new Error('live CTA must not be marked disabled');
+}
+if (cta.dataset.analyticsEvent !== 'begin_checkout' || cta.dataset.analyticsItemId !== 'safe_walk_away_agent_kit') {
+  throw new Error('live CTA analytics contract incorrect');
+}
+const resource = document.querySelector('a.resource-cta');
+if (!resource || resource.getAttribute('href') !== guidePath || resource.dataset.analyticsEvent !== 'select_content' || resource.dataset.analyticsItemId !== 'execution_receipt_guide') {
+  throw new Error('execution receipt guide path incorrect');
+}
+const measured = [...document.querySelectorAll('[data-analytics-event]')];
+if (measured.length !== 2 || measured.some(element => !element.dataset.analyticsItemId)) {
+  throw new Error('landing analytics element contract incorrect');
+}
+if (!html.includes('allow_google_signals: false') || !html.includes('allow_ad_personalization_signals: false')) {
+  throw new Error('analytics privacy flags missing');
+}
+const sitemap = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
+if (!sitemap.includes('<loc>https://michaelcostea.com/guides/ai-agent-execution-receipt-template/</loc>')) {
+  throw new Error('sitemap missing execution receipt guide');
 }
 const support = attr('a.support-link', 'href');
 if (!support.startsWith('mailto:costea.michael@gmail.com')) {
