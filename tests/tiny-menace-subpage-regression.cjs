@@ -57,7 +57,7 @@ for (const asset of [
 
 must(/<meta name="robots" content="noindex, nofollow"\s*\/>/.test(page), 'subpage should be noindex while draft/prototype');
 must(page.includes('href="/#projects"'), 'subpage should link back to MichaelOS projects');
-must(index.includes('href="tiny-menace.html"'), 'homepage project showcase should link to Tiny Menace subpage');
-must(index.includes('Tiny Menace'), 'homepage project showcase should mention Tiny Menace');
+must(!index.includes('href="tiny-menace.html"'), 'homepage project showcase should not link to Tiny Menace');
+must(!index.includes('tiny-menace-card'), 'homepage project showcase should not contain a Tiny Menace card');
 
 console.log('tiny-menace-subpage-regression ok');

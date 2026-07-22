@@ -44,6 +44,9 @@
   .case { padding:2.6mm 3mm; border:1px solid #ccd7e1; border-left:4pt solid #12496d; background:#f8fafc; break-inside:avoid; }
   .case p { margin-bottom:.9mm; font-size:8.25pt; }
   .case p:last-child { margin-bottom:0; }
+  .case .project-tech { margin:1.1mm 0!important; padding:1.2mm 1.6mm; background:#eef4f8; border-left:2px solid #2e77a8; color:#263849; font-size:7.45pt; line-height:1.22; }
+  .case .project-tech b { color:#12496d; }
+  .case a { color:#0b5f93; font-weight:700; text-decoration:none; border-bottom:1px solid #8ab5cf; }
   .cap-grid { display:grid; grid-template-columns:1fr 1fr; gap:2mm 3mm; }
   .cap { padding:2.2mm 2.6mm; border:1px solid #d4dde6; background:#fbfcfd; break-inside:avoid; }
   .cap b { display:block; color:#12496d; margin-bottom:.8mm; font-size:8.6pt; }
@@ -52,12 +55,13 @@
   .intro-page .body { padding:6mm 15mm 5mm; }
   .intro-page section { margin-bottom:3mm; }
   .compact-page { font-size:8.55pt; line-height:1.26; }
-  .compact-page .body { padding:7mm 15mm 8mm; }
-  .compact-page section { margin-bottom:3mm; }
+  .compact-page .body { padding:4.5mm 15mm 5mm; }
+  .compact-page section { margin-bottom:2.3mm; }
   .compact-page h2 { margin-bottom:1.7mm; }
-  .compact-page .case-grid { gap:1.7mm; }
+  .compact-page .case-grid { gap:1.3mm; }
   .compact-page .case { padding:2.1mm 2.7mm; }
   .compact-page .case p { margin-bottom:.6mm; font-size:7.75pt; line-height:1.27; }
+  .compact-page .case .project-tech { margin:.6mm 0!important; padding:.65mm 1.3mm; font-size:7.05pt; line-height:1.18; }
   .compact-page .role { padding-bottom:1.4mm; margin-bottom:1.4mm; }
   .compact-page .role p,.compact-page .role li { font-size:7.85pt; line-height:1.27; }
   .compact-page .cap-grid { gap:1.5mm 2.5mm; }
@@ -135,10 +139,10 @@
     <section>
       <h2>Selected Systems and Products</h2>
       <div class="case-grid selected-project-grid">
-        <article class="case selected-project"><h3>Codex Account Usage + Auth Rotator</h3><p>Private operator tool for Codex account-pool reliability: five-hour and seven-day usage, reset windows, active-account state, warmup, switching and auth rotation in one view. Built to remove login guesswork and reduce avoidable rate-limit disruption in local AI operations.</p><p><a href="https://michaelcostea.com/assets/project-showcase/codex-usage-auth-rotator.webp">Project screenshot</a></p></article>
-        <article class="case selected-project"><h3>Automated Social Life &amp; Brand Engine</h3><p>End-to-end personal-brand operation spanning AI industry monitoring, draft calendars, Shorts packages, LinkedIn publishing and engagement, analytics feedback, and Telegram receipts. n8n and Python workflows move work through visible style, review, safety and proof gates.</p><p><a href="https://michaelcostea.com/assets/project-showcase/automated-brand-engine.webp">Operating map</a></p></article>
-        <article class="case selected-project"><h3>Brief2Ship</h3><p>Public operating standard for turning rough AI requests into better first-pass builds, reports and handoffs: one strong brief, existing-base selection, maintainability gate, polished finish and proof receipts. Includes reusable workflow docs, templates, examples and a report/document lane.</p><p><a href="https://github.com/five0nit/brief2ship">github.com/five0nit/brief2ship</a></p></article>
-        <article class="case selected-project"><h3>RebateSignal</h3><p>Guarded Victoria-first quote service for source-backed hot-water VEECs, solar and battery STCs, and approved-product evidence. Unsupported, stale or incomplete paths fail closed rather than guessing, demonstrating practical rules-engine and evidence-gating design.</p><p><a href="https://rebatesignal-staging.web.app">rebatesignal-staging.web.app</a></p></article>
+        <article class="case selected-project"><h3>Codex Account Usage + Auth Rotator</h3><p>Private operator tool for Codex account-pool reliability: five-hour and seven-day usage, reset windows, active-account state, warmup, switching and auth rotation in one view. Built to remove login guesswork and reduce avoidable rate-limit disruption in local AI operations.</p><p class="project-tech"><b>Tech stack:</b> Rust · Tokio · Ratatui · Crossterm · Reqwest · OpenAI OAuth/usage APIs · Python loopback service · vanilla JavaScript</p><p><a href="https://michaelcostea.com/assets/project-showcase/codex-usage-auth-rotator.webp">Project screenshot</a></p></article>
+        <article class="case selected-project"><h3>Automated Social Life &amp; Brand Engine</h3><p>End-to-end personal-brand operation spanning AI industry monitoring, draft calendars, Shorts packages, LinkedIn publishing and engagement, analytics feedback, and Telegram receipts. n8n and Python workflows move work through visible style, review, safety and proof gates.</p><p class="project-tech"><b>Tech stack:</b> n8n · Python · JSON/CSV state and ledgers · LinkedIn/YouTube workflows · Telegram · local LLM and agent harnesses</p><p><a href="https://michaelcostea.com/assets/project-showcase/automated-brand-engine.webp">Operating map</a></p></article>
+        <article class="case selected-project"><h3>Brief2Ship</h3><p>Public operating standard for turning rough AI requests into better first-pass builds, reports and handoffs: one strong brief, existing-base selection, maintainability gate, polished finish and proof receipts. Includes reusable workflow docs, templates, examples and a report/document lane.</p><p class="project-tech"><b>Tech stack:</b> Markdown · Hermes/OpenClaw skill · Python validation · shell installer · HTML/CSS/JavaScript demo · Git/GitHub</p><p><a href="https://github.com/five0nit/brief2ship">github.com/five0nit/brief2ship</a></p></article>
+        <article class="case selected-project"><h3>RebateSignal</h3><p>Guarded Victoria-first quote service for source-backed hot-water VEECs, solar and battery STCs, and approved-product evidence. Unsupported, stale or incomplete paths fail closed rather than guessing, demonstrating practical rules-engine and evidence-gating design.</p><p class="project-tech"><b>Tech stack:</b> Python/FastAPI/Pydantic · TypeScript/Node/Express · Firebase Functions/Hosting/Firestore · SQLite · pytest</p><p><a href="https://rebatesignal-staging.web.app">rebatesignal-staging.web.app</a></p></article>
       </div>
     </section>
 

@@ -16,6 +16,19 @@ const cards = [...document.querySelectorAll('#projectsWindow .project-showcase-g
 must(cards.length >= 10, `expected project showcase cards, got ${cards.length}`);
 
 const titles = cards.map((card) => card.querySelector('h3')?.textContent.trim());
+must(!titles.includes('Tiny Menace'), 'Tiny Menace should be removed from the project showcase');
+must(cards.length === 13, `expected 13 project showcase cards after removing Tiny Menace, got ${cards.length}`);
+for (const card of cards) {
+  const title = card.querySelector('h3')?.textContent.trim() || 'untitled project';
+  const meta = card.querySelector('.project-meta');
+  const scope = card.querySelector('.project-scope');
+  const stack = card.querySelector('.project-stack');
+  must(meta, `${title} should include structured project detail`);
+  must(scope && scope.textContent.includes('Delivery scope:'), `${title} should include Delivery scope`);
+  must(scope.textContent.trim().length >= 80, `${title} Delivery scope is too thin`);
+  must(stack && stack.textContent.includes('Tech stack:'), `${title} should include Tech stack`);
+  must(stack.textContent.trim().length >= 55, `${title} Tech stack is too thin`);
+}
 const expectedFirst = [
   'michaelcostea.com / MICHAEL OS 89',
   'RebateSignal',

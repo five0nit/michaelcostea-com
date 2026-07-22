@@ -8,8 +8,8 @@ function must(condition, message) {
 
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 must(
-  html.includes('styles.css?v=20260705-desktop-recycle-visible'),
-  'homepage should cache-bust stylesheet for Recycle Bin secret app styling'
+  /styles\.css\?v=[^"\s]+/.test(html),
+  'homepage should cache-bust the shared stylesheet so Recycle Bin styling updates reach browsers'
 );
 const recycleMatch = html.match(/<section id="recycleWindow"[\s\S]*?<\/section>/);
 must(recycleMatch, 'missing Recycle Bin window');

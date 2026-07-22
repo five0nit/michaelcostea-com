@@ -75,6 +75,11 @@ for (const phrase of [
 if (printableDocument.querySelectorAll('.selected-project').length !== 4) {
   throw new Error('printable resume must contain exactly four selected-project cards');
 }
+const printableTechStacks = [...printableDocument.querySelectorAll('.selected-project .project-tech')];
+if (printableTechStacks.length !== 4) throw new Error(`printable resume should show 4 selected-project tech stacks, got ${printableTechStacks.length}`);
+for (const stack of printableTechStacks) {
+  if (!stack.textContent.includes('Tech stack:') || stack.textContent.trim().length < 55) throw new Error('printable selected-project tech stack is missing or too thin');
+}
 for (const forbidden of [
   'Selected systems, project screenshots, operating diagrams and public work',
   'Public agent-observability project',
