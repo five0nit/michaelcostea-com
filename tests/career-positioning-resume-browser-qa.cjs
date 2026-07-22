@@ -111,7 +111,7 @@ fs.mkdirSync(out, { recursive: true });
   if (printableChecks.pages !== 2) throw new Error(`printable page count ${printableChecks.pages}`);
   if (!printableChecks.targetText?.includes('AI Enablement Lead') || !printableChecks.hasExpandedScope || !printableChecks.hasOptusScale) throw new Error('printable content missing');
   if (printableChecks.tokenThroughput !== '4.3–4.5B' || !printableChecks.hasHarnessRouting) throw new Error('printable vertical stack, harness routing or token throughput evidence missing');
-  const expectedProjects = ['Codex Account Usage + Auth Rotator', 'Automated Social Life & Brand Engine', 'Brief2Ship', 'RebateSignal'];
+  const expectedProjects = ['Codex Account Usage + Auth Rotator', 'Automated Social & Brand Content Engine', 'Brief2Ship', 'RebateSignal'];
   if (JSON.stringify(printableChecks.selectedProjects) !== JSON.stringify(expectedProjects)) throw new Error(`printable projects wrong: ${JSON.stringify(printableChecks.selectedProjects)}`);
   if (printableChecks.hasRejectedPortfolioCopy) throw new Error('printable resume still exposes rejected Telegram Office portfolio copy');
   if (printableChecks.printButton !== 'Print / Save PDF') throw new Error(`printable action missing: ${printableChecks.printButton}`);

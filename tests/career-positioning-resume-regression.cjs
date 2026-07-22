@@ -53,7 +53,7 @@ const printableDocument = new JSDOM(printableHtml).window.document;
 const printableText = printableDocument.body.textContent.replace(/\s+/g, ' ').trim();
 for (const project of [
   'Codex Account Usage + Auth Rotator',
-  'Automated Social Life & Brand Engine',
+  'Automated Social & Brand Content Engine',
   'Brief2Ship',
   'RebateSignal',
 ]) {
