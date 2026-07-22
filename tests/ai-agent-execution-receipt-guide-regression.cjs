@@ -12,10 +12,17 @@ const attr=(selector,name)=>document.querySelector(selector)?.getAttribute(name)
 const guideUrl='https://michaelcostea.com/guides/ai-agent-execution-receipt-template/';
 const landingUrl='../../safe-walk-away-agent-kit.html?utm_source=execution_receipt_guide&utm_medium=owned_content&utm_campaign=safe_walk_away_launch';
 const checkoutUrl='https://costeamichael.gumroad.com/l/safe-walk-away-agent-kit/WALKAWAY5';
+const socialImageUrl='https://michaelcostea.com/assets/products/ai-agent-execution-receipt-social-card.png';
 if(document.title!=='AI Agent Execution Receipt Template: Prove What Actually Ran') throw new Error(`unexpected title ${document.title}`);
 if(attr('link[rel="canonical"]','href')!==guideUrl) throw new Error('wrong canonical');
 if(attr('meta[name="robots"]','content')!=='index, follow') throw new Error('guide must be indexable');
 if(attr('meta[name="description"]','content').length<120) throw new Error('meta description too short');
+if(attr('meta[property="og:image"]','content')!==socialImageUrl) throw new Error('wrong Open Graph image');
+if(attr('meta[property="og:image:width"]','content')!=='1600'||attr('meta[property="og:image:height"]','content')!=='900') throw new Error('wrong Open Graph image dimensions');
+if(!attr('meta[property="og:image:alt"]','content')) throw new Error('Open Graph image alt missing');
+if(attr('meta[name="twitter:card"]','content')!=='summary_large_image'||attr('meta[name="twitter:image"]','content')!==socialImageUrl||!attr('meta[name="twitter:image:alt"]','content')) throw new Error('Twitter social card contract incorrect');
+const socialImagePath=path.join(root,'assets/products/ai-agent-execution-receipt-social-card.png');
+if(!fs.existsSync(socialImagePath)||fs.statSync(socialImagePath).size<100000) throw new Error('guide social image missing or unexpectedly small');
 if(document.querySelectorAll('h1').length!==1||!body.includes('AI agents should prove what actually ran.')) throw new Error('guide H1 missing');
 if(document.querySelectorAll('.state').length!==5) throw new Error('expected five execution states');
 for(const phrase of [
@@ -34,7 +41,7 @@ const schema=JSON.parse(document.querySelector('script[type="application/ld+json
 if(schema['@context']!=='https://schema.org'||!Array.isArray(schema['@graph'])) throw new Error('schema graph missing');
 const article=schema['@graph'].find(item=>item['@type']==='Article');
 const breadcrumbs=schema['@graph'].find(item=>item['@type']==='BreadcrumbList');
-if(!article||article.mainEntityOfPage!==guideUrl||article.author?.name!=='Michael Costea'||article.datePublished!=='2026-07-22') throw new Error('Article schema incorrect');
+if(!article||article.mainEntityOfPage!==guideUrl||article.image!==socialImageUrl||article.author?.name!=='Michael Costea'||article.datePublished!=='2026-07-22') throw new Error('Article schema incorrect');
 if(!breadcrumbs||breadcrumbs.itemListElement?.length!==2) throw new Error('Breadcrumb schema incorrect');
 const landingLinks=[...document.querySelectorAll('a[data-analytics-item-id="safe_walk_away_paid_landing"]')];
 if(landingLinks.length!==3||landingLinks.some(link=>link.getAttribute('href')!==landingUrl||link.dataset.analyticsEvent!=='select_content')) throw new Error('qualified landing paths incorrect');

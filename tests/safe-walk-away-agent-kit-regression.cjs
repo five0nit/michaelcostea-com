@@ -13,6 +13,7 @@ const { document } = dom.window;
 const body = document.body.textContent.replace(/\s+/g, ' ').trim();
 const attr = (selector, name) => document.querySelector(selector)?.getAttribute(name) || '';
 const guidePath = 'guides/ai-agent-execution-receipt-template/?utm_source=safe_walk_away_landing&utm_medium=owned_content&utm_campaign=safe_walk_away_launch';
+const socialImageUrl = 'https://michaelcostea.com/assets/products/safe-walk-away-social-card.png';
 
 if (document.title !== 'Safe Walk-Away Agent Kit — bounded Claude Code autonomy') {
   throw new Error(`unexpected title: ${document.title}`);
@@ -22,6 +23,22 @@ if (attr('link[rel="canonical"]', 'href') !== 'https://michaelcostea.com/safe-wa
 }
 if (attr('meta[name="robots"]', 'content') !== 'index, follow') {
   throw new Error('live page must be indexable after checkout verification');
+}
+if (attr('meta[property="og:image"]', 'content') !== socialImageUrl) {
+  throw new Error('wrong Open Graph image');
+}
+if (attr('meta[property="og:image:width"]', 'content') !== '1600' || attr('meta[property="og:image:height"]', 'content') !== '900') {
+  throw new Error('wrong Open Graph image dimensions');
+}
+if (!attr('meta[property="og:image:alt"]', 'content')) {
+  throw new Error('Open Graph image alt missing');
+}
+if (attr('meta[name="twitter:card"]', 'content') !== 'summary_large_image' || attr('meta[name="twitter:image"]', 'content') !== socialImageUrl || !attr('meta[name="twitter:image:alt"]', 'content')) {
+  throw new Error('Twitter social card contract incorrect');
+}
+const socialImagePath = path.join(root, 'assets/products/safe-walk-away-social-card.png');
+if (!fs.existsSync(socialImagePath) || fs.statSync(socialImagePath).size < 100000) {
+  throw new Error('landing social image missing or unexpectedly small');
 }
 if (document.body.dataset.launchStatus !== 'live') {
   throw new Error('missing truthful live status');
