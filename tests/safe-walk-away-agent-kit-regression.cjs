@@ -121,8 +121,12 @@ const homepageHtml = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const homepage = new JSDOM(homepageHtml).window.document;
 const ownedGuidePath = homepage.querySelector('a[data-owned-path="safe-walk-away-receipt-guide"]');
 const expectedOwnedGuidePath = 'guides/ai-agent-execution-receipt-template/?utm_source=michaelcostea.com&utm_medium=owned_homepage&utm_campaign=safe_walk_away_launch';
-if (!ownedGuidePath || ownedGuidePath.getAttribute('href') !== expectedOwnedGuidePath || ownedGuidePath.textContent.trim() !== 'Use the free template') {
+const ownedGuideCard = ownedGuidePath?.closest('.welcome-resource-cta');
+if (!ownedGuidePath || ownedGuidePath.getAttribute('href') !== expectedOwnedGuidePath || ownedGuidePath.textContent.trim() !== 'Check a receipt free') {
   throw new Error('qualified homepage-to-guide path missing or incorrect');
+}
+if (!ownedGuideCard || ownedGuideCard.getAttribute('aria-label') !== 'Free AI agent execution receipt validator and template' || ownedGuideCard.querySelector('.resource-badge')?.textContent.trim() !== 'FREE BROWSER TOOL' || ownedGuideCard.querySelector('b')?.textContent.trim() !== 'AI Agent Execution Receipt Validator' || !ownedGuideCard.querySelector('small')?.textContent.includes('Runs locally in your browser.')) {
+  throw new Error('outcome-first homepage validator framing missing or incorrect');
 }
 const sitemap = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
 if (!sitemap.includes('<loc>https://michaelcostea.com/guides/ai-agent-execution-receipt-template/</loc>')) {

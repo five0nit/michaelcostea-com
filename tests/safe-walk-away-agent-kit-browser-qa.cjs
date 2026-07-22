@@ -68,12 +68,14 @@ const out = process.env.QA_OUT || '/home/fiv30nit/.hermes/profiles/generalist1/a
     const metrics = await page.evaluate(() => ({
       href: document.querySelector('a[data-owned-path="safe-walk-away-receipt-guide"]')?.href,
       text: document.querySelector('a[data-owned-path="safe-walk-away-receipt-guide"]')?.textContent?.trim(),
+      badge: document.querySelector('a[data-owned-path="safe-walk-away-receipt-guide"]')?.closest('.welcome-resource-cta')?.querySelector('.resource-badge')?.textContent?.trim(),
+      title: document.querySelector('a[data-owned-path="safe-walk-away-receipt-guide"]')?.closest('.welcome-resource-cta')?.querySelector('b')?.textContent?.trim(),
       overflow: document.documentElement.scrollWidth > window.innerWidth,
       width: window.innerWidth,
       scrollWidth: document.documentElement.scrollWidth,
     }));
     const expectedHref = new URL('/guides/ai-agent-execution-receipt-template/?utm_source=michaelcostea.com&utm_medium=owned_homepage&utm_campaign=safe_walk_away_launch', url).href;
-    if (metrics.href !== expectedHref || metrics.text !== 'Use the free template') throw new Error(`${name}: homepage-to-guide path incorrect ${JSON.stringify(metrics)}`);
+    if (metrics.href !== expectedHref || metrics.text !== 'Check a receipt free' || metrics.badge !== 'FREE BROWSER TOOL' || metrics.title !== 'AI Agent Execution Receipt Validator') throw new Error(`${name}: homepage-to-guide path incorrect ${JSON.stringify(metrics)}`);
     if (metrics.overflow) throw new Error(`${name}: horizontal overflow ${metrics.scrollWidth}>${metrics.width}`);
     if (errors.length) throw new Error(`${name}: console errors ${errors.join(' | ')}`);
     await page.screenshot({ path: path.join(out, `safe-walk-away-${name}.png`), fullPage: false });
