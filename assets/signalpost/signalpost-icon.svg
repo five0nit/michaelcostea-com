@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">SignalPost app icon</title>
+  <desc id="desc">A bright outbound signal arrow crossing an electric blue ring on a dark rounded square.</desc>
+  <rect width="1024" height="1024" rx="232" fill="#080b12"/>
+  <circle cx="446" cy="578" r="208" fill="none" stroke="#4b7bff" stroke-width="88"/>
+  <path d="M420 650 696 374M522 350h198v198" fill="none" stroke="#b7f34b" stroke-width="108" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

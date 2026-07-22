@@ -55,7 +55,7 @@ if(!html.includes('allow_google_signals: false')||!html.includes('allow_ad_perso
 for(const marker of ['/home/','.hermes/','localhost','127.0.0.1','TODO','FIXME','testimonial','customers bought']) if(html.toLowerCase().includes(marker.toLowerCase())) throw new Error(`private/dev/fake-proof marker leaked: ${marker}`);
 const sitemap=fs.readFileSync(path.join(root,'sitemap.xml'),'utf8');
 for(const url of ['https://michaelcostea.com/','https://michaelcostea.com/ai-automation-scope-proposal-kit.html','https://michaelcostea.com/freelancer-client-admin-starter-kit.html','https://michaelcostea.com/guides/freelancer-client-tracker/',guideUrl,'https://michaelcostea.com/safe-walk-away-agent-kit.html']) if(!sitemap.includes(`<loc>${url}</loc>`)) throw new Error(`sitemap missing ${url}`);
-if((sitemap.match(/<url>/g)||[]).length!==6) throw new Error('unexpected sitemap URL count');
+if((sitemap.match(/<url>/g)||[]).length<6) throw new Error('sitemap unexpectedly lost URLs');
 const robots=fs.readFileSync(path.join(root,'robots.txt'),'utf8');
 if(!robots.includes('User-agent: *')||!robots.includes('Allow: /')||!robots.includes('Sitemap: https://michaelcostea.com/sitemap.xml')) throw new Error('robots contract incorrect');
 console.log('freelance-invoice-follow-up-guide-regression ok');

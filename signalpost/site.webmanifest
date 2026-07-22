@@ -1,0 +1,14 @@
+{
+  "name": "SignalPost",
+  "short_name": "SignalPost",
+  "description": "Creator-controlled review and publishing of original videos to the creator's own TikTok profile.",
+  "start_url": "/signalpost/",
+  "scope": "/signalpost/",
+  "display": "standalone",
+  "background_color": "#080b12",
+  "theme_color": "#080b12",
+  "icons": [
+    { "src": "/assets/signalpost/signalpost-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/signalpost/signalpost-icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

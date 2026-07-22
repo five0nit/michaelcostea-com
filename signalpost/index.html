@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="SignalPost helps independent creators review and publish original videos to their own TikTok profiles with explicit account, privacy, disclosure, and consent controls.">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#080b12">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta property="og:title" content="SignalPost — creator-controlled video publishing">
+  <meta property="og:description" content="Review the account, video, caption, privacy, interactions, disclosures, and consent before every TikTok post.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://michaelcostea.com/signalpost/">
+  <meta property="og:image" content="https://michaelcostea.com/assets/signalpost/signalpost-icon-512.png">
+  <link rel="canonical" href="https://michaelcostea.com/signalpost/">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="../assets/signalpost/signalpost-icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/signalpost/signalpost-icon-32.png">
+  <link rel="apple-touch-icon" href="../assets/signalpost/signalpost-icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>SignalPost — creator-controlled video publishing</title>
+</head>
+<body>
+  <a class="skip-link" href="#publisher">Skip to publisher</a>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="SignalPost home">
+      <img src="../assets/signalpost/signalpost-icon.svg" width="40" height="40" alt="">
+      <span><strong>SignalPost</strong><small>Creator publishing control</small></span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="#how-it-works">How it works</a>
+      <a href="./privacy/">Privacy</a>
+      <a href="./terms/">Terms</a>
+      <a href="./support/">Support</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Public product · provider review pending</p>
+        <h1 id="hero-title">One clear review before your video is submitted.</h1>
+        <p class="lede">Publish original videos to your own TikTok profile. SignalPost keeps the connected account, selected media, caption, privacy, interactions, commercial disclosure, and final consent visible before every upload.</p>
+        <div class="hero-actions">
+          <button class="button primary" id="connectTikTok" type="button">Connect TikTok</button>
+          <a class="button secondary" href="#publisher">See the publishing controls</a>
+        </div>
+        <p class="quiet">SignalPost never posts on a schedule and never publishes without the account holder pressing the final button. Public visibility remains server-locked until TikTok approves the app.</p>
+      </div>
+      <aside class="control-map" aria-label="SignalPost control summary">
+        <p class="panel-label">POST REVIEW / 07 CONTROLS</p>
+        <ol>
+          <li><span>01</span> Confirm connected creator</li>
+          <li><span>02</span> Select and preview media</li>
+          <li><span>03</span> Edit title or caption</li>
+          <li><span>04</span> Choose privacy manually</li>
+          <li><span>05</span> Set interaction controls</li>
+          <li><span>06</span> Declare commercial content</li>
+          <li><span>07</span> Consent and publish</li>
+        </ol>
+      </aside>
+    </section>
+
+    <section class="proof-strip" aria-label="Product principles">
+      <div><strong>Creator controlled</strong><span>No unattended posting</span></div>
+      <div><strong>Original media</strong><span>No scraping or cross-account copying</span></div>
+      <div><strong>Visible choices</strong><span>No preset privacy level</span></div>
+      <div><strong>Disconnect anytime</strong><span>Stored credentials deleted</span></div>
+    </section>
+
+    <section class="workflow shell" id="how-it-works" aria-labelledby="workflow-title">
+      <p class="eyebrow">How it works</p>
+      <h2 id="workflow-title">A posting flow built around informed choice.</h2>
+      <div class="workflow-grid">
+        <article><span>01</span><h3>Connect</h3><p>Authorize only the TikTok profile you want to use. SignalPost shows the creator nickname before publishing.</p></article>
+        <article><span>02</span><h3>Review</h3><p>Select an original MP4, watch its preview, edit the caption, then choose privacy and interaction settings.</p></article>
+        <article><span>03</span><h3>Confirm</h3><p>Review commercial-content and music declarations. Nothing is submitted until you provide explicit consent.</p></article>
+        <article><span>04</span><h3>Track</h3><p>SignalPost reports the provider result. Upload acceptance is never presented as proof of a public post.</p></article>
+      </div>
+    </section>
+
+    <section class="publisher-section shell" id="publisher" aria-labelledby="publisher-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">Publisher</p><h2 id="publisher-title">Review a post</h2></div>
+        <div class="connection-pill" id="connectionPill" data-state="disconnected"><span></span><b>Not connected</b></div>
+      </div>
+
+      <div class="notice" id="globalNotice" role="status" aria-live="polite">Connect TikTok to load the exact creator identity and posting choices available to that account.</div>
+
+      <div class="publisher-grid">
+        <form class="post-form" id="postForm" novalidate>
+          <fieldset id="publisherFields" disabled>
+            <legend class="sr-only">TikTok post controls</legend>
+
+            <section class="form-card account-card" aria-labelledby="account-heading">
+              <div class="step-number">01</div>
+              <div class="card-content">
+                <div class="field-heading"><div><h3 id="account-heading">Connected creator</h3><p>Verify the account before selecting media.</p></div><button class="text-button" id="disconnectButton" type="button">Disconnect and delete data</button></div>
+                <div class="creator-row">
+                  <div class="creator-avatar" id="creatorAvatar" aria-hidden="true">SP</div>
+                  <div><strong id="creatorNickname">No creator loaded</strong><span id="creatorUsername">Connect TikTok above</span></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="form-card" aria-labelledby="media-heading">
+              <div class="step-number">02</div>
+              <div class="card-content">
+                <div class="field-heading"><div><h3 id="media-heading">Video</h3><p>Select one original MP4. Initial release limit: 9 MB.</p></div><span class="required">Required</span></div>
+                <label class="drop-zone">
+                  <input id="videoFile" name="video" type="file" accept="video/mp4,.mp4" required>
+                  <span class="drop-icon" aria-hidden="true">↗</span>
+                  <strong>Choose an MP4 video</strong>
+                  <span id="fileSummary">No file selected</span>
+                </label>
+                <video id="videoPreview" controls playsinline hidden aria-label="Selected video preview"></video>
+              </div>
+            </section>
+
+            <section class="form-card" aria-labelledby="details-heading">
+              <div class="step-number">03</div>
+              <div class="card-content">
+                <div class="field-heading"><div><h3 id="details-heading">Post details</h3><p>Review and edit the text before submission.</p></div><span class="required">Required</span></div>
+                <label for="postTitle">Title or caption</label>
+                <textarea id="postTitle" name="title" maxlength="2200" rows="5" placeholder="Write a clear caption for this video" required></textarea>
+                <div class="field-meta"><span>Editable until you publish</span><span id="titleCount">0 / 2200</span></div>
+
+                <label for="privacyLevel">Who can view this post?</label>
+                <select id="privacyLevel" name="privacy_level" required>
+                  <option value="">Choose privacy</option>
+                </select>
+                <p class="field-help">SignalPost does not preselect privacy. Options come directly from the connected creator account.</p>
+              </div>
+            </section>
+
+            <section class="form-card" aria-labelledby="interactions-heading">
+              <div class="step-number">04</div>
+              <div class="card-content">
+                <div class="field-heading"><div><h3 id="interactions-heading">Interactions</h3><p>Choose which interactions viewers may use.</p></div></div>
+                <div class="toggle-list">
+                  <label><span><strong>Allow comments</strong><small id="commentHint">Available when supported by the account</small></span><input id="allowComment" type="checkbox"></label>
+                  <label><span><strong>Allow Duet</strong><small id="duetHint">Available when supported by the account</small></span><input id="allowDuet" type="checkbox"></label>
+                  <label><span><strong>Allow Stitch</strong><small id="stitchHint">Available when supported by the account</small></span><input id="allowStitch" type="checkbox"></label>
+                </div>
+              </div>
+            </section>
+
+            <section class="form-card" aria-labelledby="disclosure-heading">
+              <div class="step-number">05</div>
+              <div class="card-content">
+                <div class="field-heading"><div><h3 id="disclosure-heading">Commercial-content disclosure</h3><p>Identify promotional relationships accurately.</p></div></div>
+                <div class="toggle-list">
+                  <label><span><strong>Commercial Content Disclosure</strong><small>Turn this on if the post promotes yourself, a brand, product, or service.</small></span><input id="commercialDisclosure" type="checkbox"></label>
+                </div>
+                <div id="commercialDetails" class="commercial-details" hidden>
+                  <div class="check-list">
+                    <label><input id="brandOrganic" type="checkbox"><span><strong>Your brand</strong><small>You are promoting yourself or your own business. TikTok will label the post “Promotional content”.</small></span></label>
+                    <label><input id="brandContent" type="checkbox"><span><strong>Branded content</strong><small>You are promoting another brand or a third party. TikTok will label the post “Paid partnership”.</small></span></label>
+                  </div>
+                  <p class="commercial-notice" id="commercialNotice" role="status" aria-live="polite">Choose at least one category when commercial disclosure is on.</p>
+                  <p class="field-help">Branded posts are subject to TikTok's <a href="https://www.tiktok.com/legal/page/global/bc-policy/en" target="_blank" rel="noopener noreferrer">Branded Content Policy</a>.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="form-card consent-card" aria-labelledby="consent-heading">
+              <div class="step-number">06</div>
+              <div class="card-content">
+                <div class="field-heading"><div><h3 id="consent-heading">Confirm and publish</h3><p>These confirmations are required for every post.</p></div><span class="required">Required</span></div>
+                <div class="check-list required-checks">
+                  <label><input id="musicAgreement" type="checkbox" required><span><strong>Music Usage Confirmation</strong><small id="musicAgreementText">By posting, you agree to TikTok's <a href="https://www.tiktok.com/legal/page/global/music-usage-confirmation/en" target="_blank" rel="noopener noreferrer">Music Usage Confirmation</a>.</small></span></label>
+                  <label><input id="publishConsent" type="checkbox" required><span><strong>Explicit publishing consent</strong><small>I have reviewed the creator account, video, caption, privacy, interactions, and disclosures above. I instruct SignalPost to upload this post now.</small></span></label>
+                </div>
+                <button class="button primary publish-button" id="publishButton" type="submit" disabled>Publish to TikTok</button>
+                <p class="field-help">Submitting starts provider processing. SignalPost reports the returned status and does not treat upload initialization as proof that a post is public.</p>
+              </div>
+            </section>
+          </fieldset>
+        </form>
+
+        <aside class="receipt-panel" aria-labelledby="receipt-title">
+          <p class="panel-label">LIVE RECEIPT</p>
+          <h3 id="receipt-title">Nothing submitted</h3>
+          <p id="receiptMessage">Your provider result will appear here after explicit submission.</p>
+          <dl>
+            <div><dt>Creator</dt><dd id="receiptCreator">—</dd></div>
+            <div><dt>Privacy</dt><dd id="receiptPrivacy">—</dd></div>
+            <div><dt>Provider status</dt><dd id="receiptStatus">Not started</dd></div>
+            <div><dt>Publish ID</dt><dd id="receiptPublishId">—</dd></div>
+          </dl>
+          <div class="receipt-rule"></div>
+          <p class="receipt-note">A publish ID means TikTok accepted processing. It is not, by itself, evidence of a visible public post.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="trust-section shell" aria-labelledby="trust-title">
+      <div><p class="eyebrow">Trust and control</p><h2 id="trust-title">Your account. Your media. Your final decision.</h2></div>
+      <div class="trust-grid">
+        <article><h3>Minimum access</h3><p>SignalPost requests basic creator information and Direct Post permission only. Provider credentials stay on the server.</p></article>
+        <article><h3>No content harvesting</h3><p>SignalPost accepts media the connected creator selects. It does not scrape, download, or republish arbitrary third-party content.</p></article>
+        <article><h3>Delete the connection</h3><p>Disconnecting removes the stored TikTok credentials and SignalPost session. Support handles additional deletion requests.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-grid">
+      <div class="brand footer-brand"><img src="../assets/signalpost/signalpost-icon.svg" width="34" height="34" alt=""><span><strong>SignalPost</strong><small>A public creator publishing tool by Michael Costea</small></span></div>
+      <div class="footer-links"><a href="./privacy/">Privacy Policy</a><a href="./terms/">Terms of Service</a><a href="./support/">Support &amp; data deletion</a><a href="mailto:costea.michael@gmail.com">Contact</a></div>
+      <p>SignalPost is an independent product and is not endorsed by TikTok. TikTok is a trademark of its respective owner.</p>
+    </div>
+  </footer>
+  <script src="./app.js"></script>
+</body>
+</html>

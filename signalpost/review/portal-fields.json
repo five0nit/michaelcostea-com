@@ -1,0 +1,15 @@
+{
+  "app_name": "SignalPost",
+  "website_url": "https://michaelcostea.com/signalpost/",
+  "privacy_policy_url": "https://michaelcostea.com/signalpost/privacy/",
+  "terms_of_service_url": "https://michaelcostea.com/signalpost/terms/",
+  "support_url": "https://michaelcostea.com/signalpost/support/",
+  "redirect_uri": "https://michaelcostea.com/tiktok/callback/",
+  "icon_file": "assets/signalpost/signalpost-icon-1024.png",
+  "products_requested": ["Content Posting API: Direct Post"],
+  "scopes_requested": ["user.info.basic", "video.publish"],
+  "public_posting_server_gate_before_approval": false,
+  "operator": "Michael Costea",
+  "support_email": "costea.michael@gmail.com",
+  "description": "SignalPost helps independent creators review and publish original MP4 videos to their own TikTok profiles. Users verify the account, preview media, edit captions, choose privacy and interactions, declare commercial content, accept required policy confirmations, and explicitly approve every upload. SignalPost does not scrape content or post unattended."
+}

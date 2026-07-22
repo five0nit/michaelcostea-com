@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,27 +6,27 @@
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta http-equiv="Cache-Control" content="no-store">
-  <title>TikTok connection · Michael Costea</title>
+  <title>TikTok connection · SignalPost</title>
   <style>
-    :root { color-scheme: dark; font-family: "Arial", sans-serif; }
+    :root { color-scheme: dark; font-family: ui-sans-serif, system-ui, sans-serif; }
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #007f7c; color: #101820; }
-    main { width: min(92vw, 640px); background: #fff7df; border: 4px solid #101820; box-shadow: 10px 10px 0 #101820; }
-    header { display: flex; justify-content: space-between; gap: 1rem; padding: .65rem .85rem; background: #101820; color: #fff; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-    section { padding: clamp(1.4rem, 5vw, 2.7rem); }
-    h1 { margin: 0 0 .8rem; font-size: clamp(1.8rem, 6vw, 3rem); line-height: .96; text-transform: uppercase; }
-    p { margin: .7rem 0; line-height: 1.55; }
-    .status { margin-top: 1.4rem; padding: .9rem; border: 2px solid #101820; background: #e8dfc3; font-family: ui-monospace, monospace; font-weight: 700; }
-    button { margin-top: 1rem; padding: .75rem 1rem; border: 2px solid #101820; background: #ffd22e; color: #101820; font: inherit; font-weight: 800; cursor: pointer; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #080b12; color: #f5f7fb; }
+    main { width: min(92vw, 640px); background: #101622; border: 1px solid #2a3547; border-radius: 18px; box-shadow: 0 26px 70px rgba(0,0,0,.35); overflow: hidden; }
+    header { display: flex; justify-content: space-between; gap: 1rem; padding: .8rem 1rem; background: #0b1018; color: #b7f34b; font: 800 12px ui-monospace,monospace; letter-spacing: .1em; text-transform: uppercase; }
+    section { padding: clamp(1.5rem, 5vw, 3rem); }
+    h1 { margin: 0 0 .8rem; font-size: clamp(2rem, 6vw, 3.4rem); line-height: .96; letter-spacing: -.045em; }
+    p { margin: .7rem 0; color: #aab4c4; line-height: 1.55; }
+    .status { margin-top: 1.4rem; padding: 1rem; border-left: 3px solid #4b7bff; background: #0b1018; color: #eef3ff; font-family: ui-monospace, monospace; font-weight: 700; }
+    button { margin-top: 1rem; padding: .8rem 1rem; border: 0; border-radius: 8px; background: #b7f34b; color: #080b12; font: inherit; font-weight: 800; cursor: pointer; }
     button[hidden] { display: none; }
   </style>
 </head>
 <body>
   <main aria-labelledby="title">
-    <header><span>MICHAEL OS 89</span><span>TIKTOK OAUTH</span></header>
+    <header><span>SignalPost</span><span>TikTok OAuth</span></header>
     <section>
       <h1 id="title">Finishing connection</h1>
-      <p>This page relays TikTok’s authorization response to the local Social Engine. It does not store credentials or publish content.</p>
+      <p>This callback sends TikTok’s authorization result only to the SignalPost server or the local Social Engine flow that started it. It does not publish content.</p>
       <div class="status" id="status" role="status" aria-live="polite">Checking authorization response…</div>
       <button id="relay" type="button" hidden>Return to local Social Engine</button>
     </section>
