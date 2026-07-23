@@ -77,20 +77,33 @@ const aliasHtml = fs.readFileSync(aliasPath, 'utf8');
 const aliasDom = new JSDOM(aliasHtml);
 const aliasDocument = aliasDom.window.document;
 const aliasText = aliasDocument.body.textContent.replace(/\s+/g, ' ').trim();
-if (aliasDocument.title !== 'BillPilot — Australian invoice automation pilot') {
+if (aliasDocument.title !== 'BillPilot — AP invoice automation for Australian businesses') {
   throw new Error(`unexpected BillPilot alias title: ${aliasDocument.title}`);
 }
 if ((aliasDocument.querySelector('link[rel="canonical"]')?.getAttribute('href') || '') !== 'https://michaelcostea.com/billpilot.html') {
   throw new Error('BillPilot alias canonical must point at /billpilot.html');
 }
+if (!aliasDocument.body.classList.contains('billpilot-page')) {
+  throw new Error('BillPilot alias must use the dedicated billpilot-page surface');
+}
 if (!aliasHtml.includes('href="/billpilot.html"')) {
   throw new Error('BillPilot alias logo should link to /billpilot.html');
 }
-if (!aliasText.includes('BillPilot test package · michaelcostea.com/billpilot.html')) {
-  throw new Error('BillPilot alias footer should show clean /billpilot.html URL');
+for (const phrase of [
+  'Messy invoice inboxes into review-ready AP.',
+  'A$1,250 fixed pilot',
+  'A$750 booking deposit',
+  '30–50 authorised invoices',
+  'Day-4 feasibility gate',
+  'Human review stays in the loop',
+  'No automatic accounting posting',
+  'Book a 14-day pilot',
+]) {
+  if (!aliasText.includes(phrase)) throw new Error(`BillPilot alias missing cash-offer phrase: ${phrase}`);
 }
-if (!aliasText.includes('Australian invoice PDFs → accounting-ready data')) {
-  throw new Error('BillPilot alias missing main positioning');
+const aliasMailto = aliasDocument.querySelector('a.bp-btn-primary')?.getAttribute('href') || '';
+if (!aliasMailto.startsWith('mailto:costea.michael@gmail.com')) {
+  throw new Error('BillPilot alias primary CTA should mail Michael');
 }
 
 console.log('invoicepipe-test-site-regression ok');
