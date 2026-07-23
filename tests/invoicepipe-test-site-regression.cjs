@@ -47,7 +47,7 @@ for (const phrase of [
   'PO + document type',
   'Subtotal + GST + total',
   'Exception report',
-  'from AUD $750',
+  'AUD $1,950 founding pilot',
   'Book a pilot',
   'Owner/developer access is confirmed for commercial use and selling',
 ]) {
@@ -91,8 +91,10 @@ if (!aliasHtml.includes('href="/billpilot.html"')) {
 }
 for (const phrase of [
   'Messy invoice inboxes into review-ready AP.',
-  'A$1,250 fixed pilot',
-  'A$750 booking deposit',
+  'Founding pilot A$1,950',
+  'Standard A$2,500',
+  'first two suitable businesses',
+  'A$1,170 booking deposit',
   '30–50 authorised invoices',
   'Day-4 feasibility gate',
   'Human review stays in the loop',
