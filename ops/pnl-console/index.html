@@ -1,297 +1,704 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-console-version="20260723-strategy-atlas-v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,nofollow,noarchive" />
-  <title>PNL Console · Hidden</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2307100d'/%3E%3Cpath d='M14 42V22h8l10 12 10-12h8v20h-8V33L32 45 22 33v9z' fill='%239dff84'/%3E%3C/svg%3E" />
+  <title>Trading Results Atlas — Michael OS</title>
   <style>
     :root {
-      --desktop: #008080;
-      --window: #c0c0c0;
-      --title: #000080;
-      --ink: #050505;
-      --paper: #ffffff;
-      --shadow-dark: #404040;
-      --shadow-light: #ffffff;
-      --green: #008a28;
-      --red: #b00020;
-      --amber: #9b6500;
-      --mono: "MS Sans Serif", Tahoma, Geneva, Verdana, sans-serif;
+      color-scheme: dark;
+      --bg: #07100d;
+      --panel: #0b1713;
+      --panel-2: #101f19;
+      --panel-3: #15261f;
+      --ink: #f3ecd9;
+      --muted: #9bb0a4;
+      --faint: #81958a;
+      --line: #294236;
+      --line-hot: #3b624f;
+      --green: #9dff84;
+      --green-2: #4ee895;
+      --amber: #ffc868;
+      --red: #ff766e;
+      --blue: #78c9ff;
+      --violet: #c49cff;
+      --paper: #ede7d2;
+      --shadow: 0 18px 55px rgba(0, 0, 0, .28);
+      --radius: 14px;
+      font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
     }
+
     * { box-sizing: border-box; }
-    html, body { min-height: 100%; overflow-x: hidden; }
+    html { background: var(--bg); scroll-behavior: smooth; }
     body {
       margin: 0;
-      background: var(--desktop);
-      color: var(--ink);
-      font-family: var(--mono);
-      font-size: 15px;
-      line-height: 1.35;
-    }
-    .desktop {
-      width: min(1180px, calc(100vw - 24px));
-      margin: 12px auto 72px;
-    }
-    .window {
-      background: var(--window);
-      border: 2px solid;
-      border-color: var(--shadow-light) var(--shadow-dark) var(--shadow-dark) var(--shadow-light);
-      box-shadow: 2px 2px 0 #000;
-      margin-bottom: 14px;
-    }
-    .titlebar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: var(--title);
-      color: #fff;
-      min-height: 30px;
-      padding: 4px 8px;
-      font-weight: 700;
-      letter-spacing: .01em;
-    }
-    .titlebar .buttons { display: flex; gap: 4px; }
-    .buttonbox {
-      width: 18px;
-      height: 18px;
-      background: var(--window);
-      border: 2px solid;
-      border-color: var(--shadow-light) var(--shadow-dark) var(--shadow-dark) var(--shadow-light);
-      color: #000;
-      display: grid;
-      place-items: center;
-      font-size: 11px;
-      line-height: 1;
-    }
-    .content { padding: 14px; }
-    .hero {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 14px;
-      align-items: stretch;
-    }
-    .panel {
-      background: var(--paper);
-      border: 2px solid;
-      border-color: var(--shadow-dark) var(--shadow-light) var(--shadow-light) var(--shadow-dark);
-      padding: 12px;
       min-width: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 88% -10%, rgba(157,255,132,.12), transparent 35rem),
+        radial-gradient(circle at 4% 28%, rgba(120,201,255,.07), transparent 32rem),
+        linear-gradient(180deg, #09140f 0, var(--bg) 36rem);
+      overflow-x: hidden;
     }
-    .kpis {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-    }
-    .kpi {
-      background: #efefef;
-      border: 2px solid;
-      border-color: var(--shadow-light) var(--shadow-dark) var(--shadow-dark) var(--shadow-light);
-      padding: 10px;
-      min-height: 82px;
-    }
-    .kpi .label { font-size: 12px; color: #222; text-transform: uppercase; }
-    .kpi .value { font-size: clamp(20px, 4vw, 32px); font-weight: 800; margin-top: 6px; overflow-wrap: anywhere; }
-    .green { color: var(--green); }
-    .red { color: var(--red); }
-    .amber { color: var(--amber); }
-    h1, h2, h3, p { margin-top: 0; }
-    h1 { font-size: clamp(24px, 5vw, 44px); line-height: 1; margin-bottom: 10px; }
-    h2 { font-size: 20px; margin-bottom: 10px; }
-    .muted { color: #333; }
-    .small { font-size: 12px; }
-    .pillrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .pill {
-      background: #ffffe1;
-      border: 1px solid #777;
-      padding: 4px 7px;
-      font-size: 12px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border: 2px solid;
-      border-color: var(--shadow-dark) var(--shadow-light) var(--shadow-light) var(--shadow-dark);
-    }
-    th, td {
-      border: 1px solid #8a8a8a;
-      padding: 8px;
-      text-align: left;
-      vertical-align: top;
-    }
-    th { background: #000080; color: #fff; }
-    td { overflow-wrap: anywhere; }
-    .grid-two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .wallet-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .wallet-card { background: #fff; border: 2px solid; border-color: var(--shadow-dark) var(--shadow-light) var(--shadow-light) var(--shadow-dark); padding: 10px; }
-    .wallet-card h3 { margin-bottom: 6px; }
-    .wallet-address { font-family: Consolas, "Courier New", monospace; font-size: 12px; overflow-wrap: anywhere; background: #f6f6f6; border: 1px solid #999; padding: 6px; margin: 8px 0; }
-    .wallet-meta { display: grid; gap: 4px; font-size: 13px; }
-    .status-funded, .status-closed { color: var(--green); font-weight: 700; }
-    .status-live { color: #0046bf; font-weight: 700; }
-    .status-closed_profit { color: var(--green); font-weight: 700; }
-    .taskbar {
+    body::before {
+      content: "";
       position: fixed;
-      left: 0; right: 0; bottom: 0;
-      min-height: 42px;
-      background: var(--window);
-      border-top: 2px solid var(--shadow-light);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 8px;
-      z-index: 10;
+      inset: 0;
+      pointer-events: none;
+      opacity: .13;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size: 4px 4px;
+      mix-blend-mode: screen;
     }
-    .start {
-      border: 2px solid;
-      border-color: var(--shadow-light) var(--shadow-dark) var(--shadow-dark) var(--shadow-light);
-      padding: 7px 12px;
-      font-weight: 800;
-      background: var(--window);
-      white-space: nowrap;
+
+    a { color: var(--green); text-decoration: none; }
+    main { width: 100%; max-width: 100%; min-width: 0; }
+    a:hover { text-decoration: underline; }
+    button, input, select { font: inherit; }
+    button, select, input {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: #0b1511;
+      border-radius: 9px;
+      min-height: 40px;
     }
-    .task { border: 2px inset #888; background: #dfdfdf; padding: 6px 10px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .error { background: #ffe7e7; border: 2px solid var(--red); padding: 12px; }
-    @media (max-width: 760px) {
-      body { font-size: 14px; }
-      .desktop { width: calc(100vw - 12px); margin-top: 6px; }
-      .content { padding: 8px; }
-      .hero, .grid-two, .wallet-grid { grid-template-columns: 1fr; }
-      .kpis { grid-template-columns: 1fr 1fr; gap: 8px; }
-      th, td { padding: 7px 6px; }
-      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-      .table-wrap table { min-width: 980px; }
-      .taskbar { font-size: 12px; overflow: hidden; }
-      .start { padding: 6px 8px; }
+    button { cursor: pointer; }
+    button:hover, select:hover, input:hover { border-color: var(--line-hot); }
+    button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+    select, input { padding: 0 12px; }
+    input::placeholder { color: #64786d; }
+
+    .shell { width: min(1500px, calc(100% - 40px)); max-width: calc(100% - 18px); margin: 0 auto; padding: 22px 0 80px; min-width: 0; overflow-x: clip; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 9px 0 24px; }
+    .brand { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+    .brand-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 20px rgba(157,255,132,.7); }
+    .top-links { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; }
+
+    .hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(310px, .65fr); gap: 28px; align-items: end; padding: 34px 0 27px; border-top: 1px solid var(--line); }
+    .eyebrow { color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+    h1 { margin: 13px 0 14px; max-width: 900px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(46px, 7vw, 104px); font-weight: 500; line-height: .88; letter-spacing: -.065em; }
+    .hero-copy { margin: 0; max-width: 860px; color: var(--muted); font-size: clamp(14px, 1.4vw, 18px); line-height: 1.65; }
+    .hero-meta { display: grid; gap: 10px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(11, 23, 19, .72); box-shadow: var(--shadow); }
+    .meta-row { display: flex; justify-content: space-between; gap: 18px; color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .meta-row strong { color: var(--ink); text-align: right; }
+
+    .truth-banner { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; margin: 12px 0 28px; padding: 18px 20px; border: 1px solid rgba(255,118,110,.5); border-radius: var(--radius); background: linear-gradient(90deg, rgba(255,118,110,.12), rgba(255,200,104,.05)); }
+    .truth-lock { color: var(--red); font-size: 11px; font-weight: 900; letter-spacing: .16em; white-space: nowrap; }
+    .truth-copy { color: var(--paper); font-size: 13px; line-height: 1.55; }
+    .truth-grade { padding: 8px 11px; border: 1px solid rgba(255,118,110,.45); color: var(--red); font-weight: 900; letter-spacing: .12em; border-radius: 7px; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-bottom: 34px; }
+    .kpi { min-width: 0; min-height: 126px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: linear-gradient(150deg, rgba(16,31,25,.96), rgba(9,18,15,.9)); }
+    .kpi-label { color: var(--faint); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; line-height: 1.4; }
+    .kpi-value { margin-top: 13px; font-size: clamp(22px, 2.5vw, 34px); font-weight: 800; letter-spacing: -.06em; white-space: nowrap; }
+    .kpi-note { margin-top: 8px; color: var(--muted); font-size: 10px; line-height: 1.35; }
+    .positive { color: var(--green); }
+    .negative { color: var(--red); }
+    .neutral { color: var(--amber); }
+
+    .section { margin-top: 52px; min-width: 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 17px; padding-bottom: 13px; border-bottom: 1px solid var(--line); }
+    .section-kicker { color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h2 { margin: 6px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(29px, 4vw, 48px); font-weight: 500; letter-spacing: -.04em; }
+    .section-note { max-width: 560px; color: var(--muted); font-size: 11px; line-height: 1.55; text-align: right; }
+
+    .wallet-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .wallet { position: relative; overflow: hidden; min-height: 190px; padding: 19px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+    .wallet::after { content: ""; position: absolute; right: -38px; bottom: -38px; width: 130px; height: 130px; border: 1px solid var(--line); border-radius: 50%; box-shadow: 0 0 0 18px rgba(41,66,54,.18), 0 0 0 38px rgba(41,66,54,.09); }
+    .wallet-top { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 16px; }
+    .wallet-label { color: var(--green); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
+    .status-dot { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 9px; text-transform: uppercase; }
+    .status-dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green-2); }
+    .wallet h3 { position: relative; z-index: 1; margin: 22px 0 5px; font-size: 16px; }
+    .wallet-balance { position: relative; z-index: 1; margin-top: 17px; font-size: 28px; font-weight: 800; letter-spacing: -.05em; }
+    .wallet-address { position: relative; z-index: 1; margin-top: 8px; color: var(--faint); font-size: 10px; overflow-wrap: anywhere; }
+
+    .viz-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+    .viz-card { min-width: 0; padding: 17px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+    .viz-card.wide { grid-column: span 2; }
+    .viz-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .viz-title { font-size: 13px; font-weight: 800; }
+    .viz-sub { margin-top: 5px; color: var(--faint); font-size: 9px; line-height: 1.4; }
+    .mini-select { min-height: 32px; max-width: 190px; padding: 0 8px; font-size: 10px; }
+    .chart-controls { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+    .chart-shell { width: 100%; min-height: 220px; overflow: hidden; }
+    .chart-shell svg { display: block; width: 100%; height: auto; min-height: 220px; }
+    .chart-empty { display: grid; min-height: 220px; place-items: center; color: var(--faint); font-size: 11px; border: 1px dashed var(--line); }
+    .chart-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 9px; color: var(--muted); font-size: 9px; }
+    .legend-item::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 2px; background: var(--legend); vertical-align: -1px; }
+
+    .filter-bar { position: sticky; top: 8px; z-index: 20; display: grid; grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(140px, .65fr)); gap: 9px; margin: 18px 0; padding: 10px; border: 1px solid var(--line-hot); border-radius: 13px; background: rgba(7,16,13,.94); box-shadow: 0 12px 35px rgba(0,0,0,.35); backdrop-filter: blur(14px); }
+    .filter-bar input, .filter-bar select { width: 100%; min-width: 0; }
+    .strategy-summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 13px 1px; color: var(--muted); font-size: 10px; }
+    .strategy-summary strong { color: var(--ink); }
+    .strategy-summary button { min-height: 32px; padding: 0 10px; color: var(--green); font-size: 9px; }
+    .strategy-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+    .strategy-card { display: flex; min-width: 0; min-height: 260px; flex-direction: column; padding: 17px; border: 1px solid var(--line); border-radius: 12px; background: linear-gradient(145deg, var(--panel-2), rgba(8,17,13,.94)); transition: border-color .15s ease, transform .15s ease; }
+    .strategy-card:hover { transform: translateY(-2px); border-color: var(--line-hot); }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { padding: 4px 6px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 8px; letter-spacing: .07em; text-transform: uppercase; }
+    .tag.evidence { color: var(--blue); border-color: rgba(120,201,255,.3); }
+    .tag.fail { color: var(--red); border-color: rgba(255,118,110,.3); }
+    .tag.pass { color: var(--green); border-color: rgba(157,255,132,.3); }
+    .strategy-card h3 { margin: 15px 0 6px; font-size: 16px; line-height: 1.28; }
+    .family { color: var(--faint); font-size: 9px; line-height: 1.4; text-transform: uppercase; letter-spacing: .08em; }
+    .card-result { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 18px; }
+    .primary-result { font-size: 24px; font-weight: 900; letter-spacing: -.05em; overflow-wrap: anywhere; }
+    .result-status { color: var(--muted); font-size: 8px; letter-spacing: .08em; text-transform: uppercase; text-align: right; }
+    .metric-bar { height: 6px; margin: 9px 0 15px; border-radius: 999px; background: #07100d; overflow: hidden; }
+    .metric-bar > span { display: block; height: 100%; min-width: 6px; border-radius: inherit; background: var(--bar-color, var(--amber)); }
+    .metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 11px; margin-top: auto; }
+    .metric { min-width: 0; }
+    .metric b { display: block; overflow: hidden; color: var(--ink); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .metric span { display: block; margin-top: 3px; color: var(--faint); font-size: 8px; text-transform: uppercase; letter-spacing: .06em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .truth-note { margin: 13px 0 0; padding-top: 11px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; line-height: 1.5; }
+    .no-results { grid-column: 1 / -1; padding: 35px; border: 1px dashed var(--line); color: var(--muted); text-align: center; }
+
+    .table-tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin: 12px 0; }
+    .table-tools > div { display: flex; flex-wrap: wrap; gap: 8px; }
+    .table-tools input { min-width: min(330px, 78vw); }
+    .table-shell { width: 100%; max-width: 100%; min-width: 0; contain: inline-size; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: hidden; }
+    .table-scroll { display: block; width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; overscroll-behavior-inline: contain; }
+    table { width: 100%; min-width: 980px; border-collapse: collapse; font-size: 10px; }
+    th { position: sticky; top: 0; z-index: 1; padding: 11px 12px; color: var(--faint); background: #0d1b16; border-bottom: 1px solid var(--line); text-align: left; font-size: 8px; letter-spacing: .11em; text-transform: uppercase; }
+    td { max-width: 290px; padding: 11px 12px; border-bottom: 1px solid rgba(41,66,54,.66); color: var(--muted); vertical-align: top; overflow-wrap: anywhere; }
+    tbody tr:hover td { background: rgba(157,255,132,.025); color: var(--ink); }
+    .paginator { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; color: var(--muted); font-size: 9px; }
+    .paginator button { min-height: 31px; padding: 0 10px; font-size: 9px; }
+    .paginator button:disabled { opacity: .35; cursor: default; }
+
+    .coverage-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 12px; }
+    .coverage-card { padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+    .coverage-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .coverage-item { padding: 12px; border: 1px solid rgba(41,66,54,.7); border-radius: 9px; }
+    .coverage-item b { display: block; color: var(--green); font-size: 19px; }
+    .coverage-item span { display: block; margin-top: 4px; color: var(--faint); font-size: 8px; line-height: 1.3; text-transform: uppercase; }
+    .source-list { display: grid; gap: 8px; }
+    .source-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 9px; }
+    .source-row strong { color: var(--ink); }
+
+    footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 62px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--faint); font-size: 9px; line-height: 1.6; }
+    .loading { min-height: 58vh; display: grid; place-items: center; color: var(--green); font-size: 12px; letter-spacing: .12em; }
+    .fatal { margin-top: 30px; padding: 22px; border: 1px solid rgba(255,118,110,.5); color: var(--red); border-radius: 12px; }
+
+    @media (max-width: 1120px) {
+      .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .strategy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .filter-bar { grid-template-columns: minmax(220px, 1.2fr) repeat(3, minmax(120px, .65fr)); }
+    }
+    @media (max-width: 820px) {
+      .shell { width: min(100% - 24px, 1500px); padding-top: 12px; }
+      .topbar, .section-head, footer { align-items: flex-start; flex-direction: column; }
+      .hero { grid-template-columns: 1fr; padding-top: 25px; }
+      h1 { font-size: clamp(48px, 16vw, 78px); }
+      .truth-banner { grid-template-columns: 1fr auto; }
+      .truth-copy { grid-column: 1 / -1; grid-row: 2; }
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .wallet-grid, .viz-grid, .coverage-grid { grid-template-columns: 1fr; }
+      .viz-card.wide { grid-column: span 1; }
+      .section-note { text-align: left; }
+      .filter-bar { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 570px) {
+      .shell { width: min(100% - 18px, 1500px); }
+      .top-links { gap: 8px 12px; }
+      .hero-meta { padding: 14px; }
+      .truth-banner { padding: 15px; }
+      .kpi-grid { gap: 7px; }
+      .kpi { min-height: 112px; padding: 13px; }
+      .kpi-value { font-size: 22px; }
+      .strategy-grid, .filter-bar { grid-template-columns: 1fr; }
+      .strategy-card { min-height: 240px; }
+      .coverage-list { grid-template-columns: 1fr 1fr; }
+      .viz-card { padding: 12px; }
+      .table-tools { align-items: stretch; flex-direction: column; }
+      .table-tools > div { width: 100%; }
+      .table-tools input, .table-tools select { width: 100%; min-width: 0; }
     }
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+      html { scroll-behavior: auto; }
+      .strategy-card { transition: none; }
     }
   </style>
 </head>
 <body>
-  <main class="desktop">
-    <section class="window">
-      <div class="titlebar"><span>POLYMARKET_PNL.EXE — hidden console</span><div class="buttons"><span class="buttonbox">_</span><span class="buttonbox">□</span><span class="buttonbox">×</span></div></div>
-      <div class="content" id="app">
-        <div class="panel">Loading local PNL snapshot…</div>
-      </div>
-    </section>
-  </main>
-  <footer class="taskbar"><div class="start">MICHAEL OS 89</div><div class="task">Hidden PNL Console · unlinked · noindex</div></footer>
+  <div class="shell">
+    <nav class="topbar" aria-label="Site navigation">
+      <a class="brand" href="/"><span class="brand-dot"></span><span>Michael OS / Operator</span></a>
+      <div class="top-links"><a href="#strategy-atlas">Strategies</a><a href="#results">Results</a><a href="#runs">Test runs</a><a href="#coverage">Coverage</a></div>
+    </nav>
+
+    <main id="app">
+      <header class="hero">
+        <div>
+          <div class="eyebrow">Trading Evidence / Strategy Atlas</div>
+          <h1>Results,<br>not stories.</h1>
+          <p class="hero-copy">Every located Polymarket and Solana strategy, test run, paper close, shadow quote, and live wallet result. Evidence classes stay separate. Wallet truth wins every disagreement.</p>
+        </div>
+        <aside class="hero-meta" aria-label="Loading dataset metadata">
+          <div class="meta-row"><span>Snapshot</span><strong>Reading ledgers…</strong></div>
+          <div class="meta-row"><span>Schema</span><strong>v4</strong></div>
+          <div class="meta-row"><span>Coverage</span><strong>Loading strategy atlas</strong></div>
+          <div class="meta-row"><span>Evidence rule</span><strong>Wallet &gt; quoted shadow &gt; paper &gt; proxy</strong></div>
+        </aside>
+      </header>
+      <div class="loading">READING TRADING EVIDENCE…</div>
+    </main>
+
+    <footer>
+      <span>Michael OS · Trading evidence console · noindex / unlinked</span>
+      <span>Wallet deltas outrank proxy bps. Simulation, shadow, and live evidence never merged.</span>
+    </footer>
+  </div>
+
   <script>
-    const fmt = (n, d = 3) => typeof n === 'number' ? n.toFixed(d) : '—';
-    const money = (n, d = 6, unit = 'USD') => typeof n === 'number' ? `${n.toFixed(d)} ${unit}` : '—';
-    const signedMoney = (n, d = 6, unit = 'USD') => typeof n === 'number' ? `${n >= 0 ? '+' : ''}${n.toFixed(d)} ${unit}` : '—';
-    const pnlClass = (n) => typeof n === 'number' ? (n > 0 ? 'green' : n < 0 ? 'red' : 'amber') : '';
-    const pct = (n) => typeof n === 'number' ? `${n.toFixed(2)}%` : '—';
-    const esc = (v) => String(v ?? '—').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
-    function row(label, value) { return `<tr><th>${esc(label)}</th><td>${esc(value)}</td></tr>`; }
-    function render(data) {
-      const s = data.summary || {};
-      const state = data.current_state || {};
-      const orders = data.current_orders || [];
-      const positions = data.current_positions || [];
-      const trades = data.past_trades || [];
-      const wallets = data.tracked_wallets || [];
-      const automation = data.automation || {};
-      const solana = data.paper_goblin_solana || {};
-      const crons = automation.crons || [];
-      const walletCards = wallets.length ? wallets.map(w => `
-        <div class="wallet-card">
-          <h3>${esc(w.label)} · ${esc(w.name)}</h3>
-          <div class="wallet-address">${esc(w.address || w.address_masked)}</div>
-          <div class="wallet-meta">
-            <div><strong>Network:</strong> ${esc(w.network)}</div>
-            <div><strong>Role:</strong> ${esc(w.role)}</div>
-            <div><strong>Status:</strong> <span class="status-${esc(String(w.status).toLowerCase())}">${esc(w.status)}</span></div>
-            <div><strong>Balance:</strong> ${esc(w.balance_label)}</div>
-            <div><strong>USD total:</strong> ${esc(w.usd_label)}</div>
-            <div class="small muted">${esc(w.notes)}</div>
+    const state = {
+      data: null,
+      strategies: [],
+      strategyPage: 1,
+      resultPage: 1,
+      runPage: 1,
+      resultPageSize: 30,
+      runPageSize: 30,
+      strategyUnit: 'USD',
+      strategyEvidence: 'paper-wallet',
+      strategyLimit: 18,
+      showAllStrategies: false,
+    };
+
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    const finite = value => typeof value === 'number' && Number.isFinite(value);
+    const compact = value => {
+      if (!finite(Number(value))) return '—';
+      return Intl.NumberFormat('en-US', { notation: Math.abs(Number(value)) >= 10000 ? 'compact' : 'standard', maximumFractionDigits: 2 }).format(Number(value));
+    };
+    const signed = (value, digits = 4) => {
+      if (!finite(Number(value))) return '—';
+      const number = Number(value);
+      return `${number > 0 ? '+' : ''}${number.toLocaleString('en-US', { maximumFractionDigits: digits })}`;
+    };
+    const money = value => finite(Number(value)) ? `${Number(value) >= 0 ? '+' : '−'}$${Math.abs(Number(value)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 })}` : '—';
+    const dateLabel = value => {
+      if (!value) return 'unknown';
+      const date = new Date(value);
+      return Number.isNaN(date.valueOf()) ? String(value) : date.toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Australia/Melbourne' });
+    };
+    const humanize = value => String(value || '').replaceAll('_', ' ').replaceAll('-', ' ').replace(/\b\w/g, char => char.toUpperCase());
+    const resultClass = value => Number(value) > 0 ? 'positive' : Number(value) < 0 ? 'negative' : 'neutral';
+    const statusClass = status => /positive|pass|win/i.test(status || '') ? 'pass' : /negative|fail|loss/i.test(status || '') ? 'fail' : '';
+    const formatPrimary = row => {
+      if (!finite(row.primary_value)) return 'No PNL';
+      if (row.primary_unit === 'USD' || row.primary_unit === 'USD avg/trial') return `${money(row.primary_value)}${row.primary_unit === 'USD avg/trial' ? ' avg' : ''}`;
+      if (row.primary_unit === 'SOL') return `${signed(row.primary_value, 9)} SOL`;
+      if (row.primary_unit === 'ETH') return `${signed(row.primary_value, 8)} ETH`;
+      return `${signed(row.primary_value, 4)} ${row.primary_unit || ''}`.trim();
+    };
+    const metricValue = value => {
+      if (typeof value === 'boolean') return value ? 'YES' : 'NO';
+      if (finite(Number(value))) return compact(Number(value));
+      return String(value ?? '—');
+    };
+
+    function buildScaffold(data) {
+      const truth = data.truth_summary;
+      const summary = data.summary;
+      const coverage = data.data_coverage;
+      $('#app').innerHTML = `
+        <header class="hero">
+          <div>
+            <div class="eyebrow">Trading Evidence / Strategy Atlas</div>
+            <h1>Results,<br>not stories.</h1>
+            <p class="hero-copy">Every located Polymarket and Solana strategy, test run, paper close, shadow quote, and live wallet result. Evidence classes stay separate. Wallet truth wins every disagreement.</p>
           </div>
-        </div>`).join('') : '<p>No tracked wallets configured.</p>';
-      document.getElementById('app').innerHTML = `
-        <div class="hero">
-          <div class="panel">
-            <h1>Trading PNL Console</h1>
-            <p class="muted">Unlinked static dashboard for Mike's Polymarket, Arbitrum canary, and Paper Goblin Solana paper-trading logs. Snapshot generated <strong>${esc(data.generated_utc)}</strong>.</p>
-            <div class="pillrow">
-              <span class="pill">No private keys</span>
-              <span class="pill">Public wallet addresses only</span>
-              <span class="pill">Static snapshot, cache-busted</span>
-              <span class="pill">Solana: ${esc(solana.closed_trades)} paper closes</span>
-              <span class="pill">Auto-entry: ${state.auto_entry_enabled ? 'ON' : 'OFF'}</span>
-            </div>
+          <aside class="hero-meta" aria-label="Dataset metadata">
+            <div class="meta-row"><span>Snapshot</span><strong>${escapeHtml(dateLabel(data.generated_utc))}</strong></div>
+            <div class="meta-row"><span>Schema</span><strong>v${escapeHtml(data.schema_version)}</strong></div>
+            <div class="meta-row"><span>Coverage</span><strong>${compact(summary.strategy_count)} strategies / ${compact(summary.result_count)} results</strong></div>
+            <div class="meta-row"><span>Evidence rule</span><strong>Wallet &gt; quoted shadow &gt; paper &gt; proxy</strong></div>
+          </aside>
+        </header>
+
+        <section id="truth-banner" class="truth-banner" aria-label="Wallet truth status">
+          <div class="truth-lock">WALLET TRUTH</div>
+          <div class="truth-copy">${escapeHtml(truth.plain_verdict)}</div>
+          <div class="truth-grade">${escapeHtml(truth.overall_status)}</div>
+        </section>
+
+        <section class="kpi-grid" aria-label="Trading summary">
+          ${kpi('Polymarket live', money(truth.polymarket_live_pnl_usd), '2 wallet-observed closes', resultClass(truth.polymarket_live_pnl_usd))}
+          ${kpi('Solana live wallet Δ', `${signed(truth.solana_live_delta_sol, 9)} SOL`, 'Non-zero wallet deltas summed', resultClass(truth.solana_live_delta_sol))}
+          ${kpi('Solana fake wallet', money(truth.solana_legacy_fake_wallet_pnl_usd), '1,217 league closes', resultClass(truth.solana_legacy_fake_wallet_pnl_usd))}
+          ${kpi('Current exact quote', `${signed(truth.solana_current_exact_quote_pnl_sol, 9)} SOL`, 'V5 promotion ledger', resultClass(truth.solana_current_exact_quote_pnl_sol))}
+          ${kpi('Strategies indexed', compact(summary.strategy_count), `${summary.tested_strategy_count} tested · ${summary.built_only_strategy_count} built-only`, 'neutral', 'strategy-count', summary.strategy_count)}
+          ${kpi('Normalized results', compact(summary.result_count), `${compact(summary.test_run_count)} test-run records`, 'neutral', 'result-count', summary.result_count)}
+        </section>
+
+        <section class="section" id="wallets">
+          ${sectionHead('01 / Wallet layer', 'Tracked wallets', 'Public readbacks only. Balances shown in native units. Cross-chain totals are never presented as strategy profit.')}
+          <div id="wallet-grid" class="wallet-grid"></div>
+        </section>
+
+        <section class="section" id="visuals">
+          ${sectionHead('02 / Visual evidence', 'Signal → test → result', 'Four views. Each chart preserves its own unit or explicitly labels the transformation. No blended-dollar theatre.')}
+          <div class="viz-grid">
+            <article class="viz-card wide">
+              <div class="viz-head"><div><div class="viz-title">Cumulative outcome streams</div><div class="viz-sub">Independent panels: Polymarket USD, Solana live SOL, Solana fake-wallet USD.</div></div></div>
+              <div id="wallet-equity-chart" class="chart-shell" role="img" aria-label="Cumulative wallet and paper outcome charts"></div>
+              <div class="chart-legend"><span class="legend-item" style="--legend:var(--green)">Polymarket live USD</span><span class="legend-item" style="--legend:var(--red)">Solana live SOL</span><span class="legend-item" style="--legend:var(--amber)">Solana fake USD</span></div>
+            </article>
+            <article class="viz-card">
+              <div class="viz-head"><div><div class="viz-title">Strategy result comparison</div><div class="viz-sub">One unit and evidence class at a time. No paper/live blending.</div></div><div class="chart-controls"><select id="strategy-chart-unit" class="mini-select" aria-label="Strategy chart unit"></select><select id="strategy-chart-evidence" class="mini-select" aria-label="Strategy chart evidence class"></select></div></div>
+              <div id="strategy-pnl-chart" class="chart-shell" role="img" aria-label="Strategy performance bar chart"></div>
+            </article>
+            <article class="viz-card">
+              <div class="viz-head"><div><div class="viz-title">Evidence attrition</div><div class="viz-sub">Log-width funnel: raw observation to exact-quote close.</div></div></div>
+              <div id="evidence-funnel-chart" class="chart-shell" role="img" aria-label="Evidence funnel chart"></div>
+            </article>
+            <article class="viz-card wide">
+              <div class="viz-head"><div><div class="viz-title">Test activity timeline</div><div class="viz-sub">Registry entries by day across strategy league, runtime DB, backtests, and exact-quote sessions.</div></div></div>
+              <div id="activity-chart" class="chart-shell" role="img" aria-label="Trading test activity timeline"></div>
+            </article>
           </div>
-          <div class="panel">
-            <h2>Current State</h2>
-            <table>${row('Bot mode', state.bot_mode)}${row('BTC spot', fmt(state.btc_spot, 2))}${row('Market bid / ask', `${fmt(s.last_market_bid, 3)} / ${fmt(s.last_market_ask, 3)}`)}${row('Deposit wallet', s.deposit_wallet_masked)}${row('Open order max cost', money(s.pending_order_max_cost_pusd))}</table>
+        </section>
+
+        <section class="section" id="strategy-atlas">
+          ${sectionHead('03 / Strategy atlas', 'Every located strategy', 'Built-only systems remain visible. Tested systems carry their actual evidence class, result, variants, and truth note.')}
+          <div class="filter-bar" aria-label="Strategy filters">
+            <input id="strategy-search" type="search" placeholder="Search strategy, family, variant…" aria-label="Search strategies" />
+            <select id="venue-filter" aria-label="Filter strategies by venue"><option value="all">All venues</option></select>
+            <select id="evidence-filter" aria-label="Filter strategies by evidence"><option value="all">All evidence</option></select>
+            <select id="result-filter" aria-label="Filter strategies by result"><option value="all">All results</option><option value="positive">Positive</option><option value="negative">Negative</option><option value="no-results">No PNL / no trades</option></select>
           </div>
-        </div>
-        <div class="kpis">
-          <div class="kpi"><div class="label">Total Realized PNL</div><div class="value ${pnlClass(s.total_realized_pnl_usd)}">${signedMoney(s.total_realized_pnl_usd)}</div></div>
-          <div class="kpi"><div class="label">Solana Paper PNL</div><div class="value ${pnlClass(s.solana_paper_realized_pnl_usd)}">${signedMoney(s.solana_paper_realized_pnl_usd)}</div></div>
-          <div class="kpi"><div class="label">Closed trades</div><div class="value">${esc(s.closed_trades)}</div><div class="small muted">SOL ${esc(s.solana_paper_closed_trades)} · PM ${esc(s.polymarket_closed_trades)} · ARB ${esc(s.crypto_closed_canaries)}</div></div>
-          <div class="kpi"><div class="label">Tracked wallet USD</div><div class="value amber">${esc(s.tracked_wallets_usd_label)}</div></div>
-        </div>
-        <section class="window" style="margin-top:14px"><div class="titlebar">TRACKED_WALLETS.DAT — wallet 1 / wallet 2</div><div class="content">
-          <div class="wallet-grid">${walletCards}</div>
-        </div></section>
-        <section class="window" style="margin-top:14px"><div class="titlebar">SOLANA_PAPER_GOBLIN.DAT — live paper ledger</div><div class="content table-wrap">
-          <table>
-            ${row('Mode', solana.mode)}${row('Balance / equity', `${money(solana.balance_usd)} / ${money(solana.equity_usd)}`)}${row('Closed / open', `${esc(solana.closed_trades)} / ${esc(solana.open_positions)}`)}${row('Wins / losses / flats', `${esc(solana.winning_trades)} / ${esc(solana.losing_trades)} / ${esc(solana.flat_trades)}`)}${row('Realized PNL', signedMoney(solana.realized_pnl_usd))}
-          </table>
-        </div></section>
-        <section class="window" style="margin-top:14px"><div class="titlebar">LIVE_AUTOMATION.LOG — scheduler + gate</div><div class="content table-wrap">
-          <table>
-            <thead><tr><th>Check</th><th>Live value</th></tr></thead>
-            <tbody>
-              ${row('Auto-entry enabled', state.auto_entry_enabled ? 'YES' : 'NO')}
-              ${row('Generic LIVE file', automation.generic_live_enabled ? 'YES' : 'NO')}
-              ${row('Generic HALT file', automation.generic_halt_present ? 'YES' : 'NO')}
-              ${row('Entry HALT file', automation.generic_entry_halt_present ? 'YES' : 'NO')}
-              ${row('Manager active / exposure', `${esc(automation.manager_active_count)} / ${esc(automation.manager_exposure_cost)}`)}
-              ${row('Gate last action', automation.gate_last_action)}
-              ${row('Gate candidates / passing / intents', `${esc(automation.gate_candidate_count)} / ${esc(automation.gate_passing_count)} / ${esc(automation.gate_intents_written)}`)}
-            </tbody>
-          </table>
-          <table style="margin-top:10px">
-            <thead><tr><th>Enabled</th><th>State</th><th>Job</th><th>Schedule</th><th>Last run</th><th>Last status</th><th>Next run</th></tr></thead>
-            <tbody>${crons.length ? crons.map(c => `<tr><td>${c.enabled ? 'YES' : 'NO'}</td><td>${esc(c.state)}</td><td>${esc(c.name)}<br><span class="small muted">${esc(c.script)}</span></td><td>${esc(c.schedule)}</td><td>${esc(c.last_run_at)}</td><td>${esc(c.last_status)}</td><td>${esc(c.next_run_at)}</td></tr>`).join('') : '<tr><td colspan="7">No Polymarket scheduler rows found.</td></tr>'}</tbody>
-          </table>
-        </div></section>
-        <section class="window" style="margin-top:14px"><div class="titlebar">CURRENT_POSITIONS.DAT</div><div class="content table-wrap">
-          <table>
-            <thead><tr><th>Source</th><th>State</th><th>Market</th><th>Outcome</th><th>Entry</th><th>Exit plan</th></tr></thead>
-            <tbody>${positions.length ? positions.map(p => `<tr><td>${esc(p.source)}</td><td>${esc(p.state)}</td><td>${esc(p.question || p.market)}</td><td>${esc(p.outcome)}</td><td>${esc(JSON.stringify(p.entry || {}))}</td><td>${esc(JSON.stringify(p.exit_plan || p.plan || {}))}</td></tr>`).join('') : '<tr><td colspan="6">No current open positions.</td></tr>'}</tbody>
-          </table>
-        </div></section>
-        <section class="window" style="margin-top:14px"><div class="titlebar">CURRENT_ORDERS.DAT</div><div class="content table-wrap">
-          <table>
-            <thead><tr><th>Status</th><th>Side</th><th>Market</th><th>Price</th><th>Size</th><th>Matched</th><th>Max Cost</th><th>Plan</th><th>Order</th></tr></thead>
-            <tbody>${orders.length ? orders.map(o => `<tr><td class="status-${esc(String(o.status).toLowerCase())}">${esc(o.status)}</td><td>${esc(o.side)}</td><td>${esc(o.market)}</td><td>${fmt(o.price, 3)}</td><td>${fmt(o.original_size, 6)}</td><td>${fmt(o.size_matched, 6)}</td><td>${money(o.max_cost_pusd)}</td><td>TP ${fmt(o.plan?.take_profit_price, 3)} · stop bid ${fmt(o.plan?.stop_bid_lte, 3)} · cancel ${esc(o.plan?.cancel_if_unfilled_after_utc)}</td><td>${esc(o.id_masked)}</td></tr>`).join('') : '<tr><td colspan="9">No current open orders.</td></tr>'}</tbody>
-          </table>
-        </div></section>
-        <section class="window"><div class="titlebar">PAST_TRADES.LOG</div><div class="content table-wrap">
-          <table>
-            <thead><tr><th>Source</th><th>Status</th><th>Market</th><th>Entry</th><th>Exit</th><th>Size</th><th>Cost</th><th>Proceeds</th><th>Net PNL</th><th>ROI</th></tr></thead>
-            <tbody>${trades.map(t => `<tr><td>${esc(t.source || t.network || 'ledger')}</td><td class="status-${esc(t.status)}">${esc(t.status)}</td><td>${esc(t.market)}<br><span class="small muted">${esc(t.token_address_masked || t.order_id || t.exit_reason)}</span></td><td>${fmt(t.entry_price, 8)}</td><td>${fmt(t.exit_price, 8)}</td><td>${fmt(t.exit_size, 6)}<br><span class="small muted">${esc(t.side)}</span></td><td>${money(t.cost_basis_pusd)}</td><td>${money(t.net_proceeds_pusd)}</td><td class="${pnlClass(t.net_profit_pusd)}">${signedMoney(t.net_profit_pusd)}</td><td class="${pnlClass(t.net_profit_pusd)}">${pct(t.roi_pct)}</td></tr>`).join('')}</tbody>
-          </table>
-        </div></section>
-        <div class="grid-two">
-          <section class="window"><div class="titlebar">BOT_STATE.INI</div><div class="content"><table>${row('Reconciled size', fmt(state.reconciled_size, 6))}${row('Conditional balance', fmt(state.conditional_balance, 6))}${row('Halt file present', state.halt_file_present ? 'YES' : 'NO')}${row('Source', data.source)}</table></div></section>
-          <section class="window"><div class="titlebar">NOTES.TXT</div><div class="content"><p>This page is hidden by convention only: it is not linked from the homepage and uses <code>noindex</code>, but static GitHub Pages content is still accessible to anyone with the URL.</p><p class="small muted">Artifacts: ${esc(data.artifacts?.latest_bid_artifact)} · ${esc(data.artifacts?.scanner_latest)}</p></div></section>
-        </div>`;
+          <div class="strategy-summary"><span><strong id="strategy-visible">0</strong> matching strategies</span><span>Cards show one primary metric. Open evidence stays classified by source.</span><button id="strategy-show-all" type="button">Show all</button></div>
+          <div id="strategy-grid" class="strategy-grid"></div>
+        </section>
+
+        <section class="section" id="results">
+          ${sectionHead('04 / Result ledger', 'Every normalized result row', 'Live, exact-quote, paper, and fake-wallet closes share one searchable ledger without sharing one PNL total.')}
+          <div class="table-tools"><div><input id="result-search" type="search" placeholder="Search market, symbol, strategy, status…" aria-label="Search result ledger" /><select id="result-mode" aria-label="Filter results by mode"><option value="all">All modes</option></select></div><div><span id="result-visible" class="section-note"></span></div></div>
+          <div class="table-shell"><div class="table-scroll"><table><thead><tr><th>Time</th><th>Venue / evidence</th><th>Strategy</th><th>Market</th><th>Mode</th><th>Result</th><th>Status</th><th>Source</th></tr></thead><tbody id="result-table-body"></tbody></table></div><div id="result-paginator" class="paginator"></div></div>
+        </section>
+
+        <section class="section" id="runs">
+          ${sectionHead('05 / Run registry', '1,430 test-run records', 'All located lane generations, runtime strategy runs, exact-quote sessions, degen trials, and Polymarket replay runs.')}
+          <div class="table-tools"><div><input id="run-search" type="search" placeholder="Search test run, strategy, variant…" aria-label="Search test runs" /><select id="run-mode" aria-label="Filter test runs by mode"><option value="all">All modes</option></select></div><div><span id="run-visible" class="section-note"></span></div></div>
+          <div class="table-shell"><div class="table-scroll"><table><thead><tr><th>Time</th><th>Strategy</th><th>Mode</th><th>Variant</th><th>Trades</th><th>PNL</th><th>Status</th><th>Source</th></tr></thead><tbody id="run-table-body"></tbody></table></div><div id="run-paginator" class="paginator"></div></div>
+        </section>
+
+        <section class="section" id="coverage">
+          ${sectionHead('06 / Data coverage', 'What was actually read', 'Counts are generated from source databases and ledgers. They are coverage evidence, not profitability evidence.')}
+          <div class="coverage-grid">
+            <article class="coverage-card"><div class="coverage-list">
+              ${coverageItem(coverage.raw_snapshots, 'Raw market snapshots')}
+              ${coverageItem(coverage.route_probes, 'Executable route probes')}
+              ${coverageItem(coverage.exact_quote_watches, 'Exact-quote watches')}
+              ${coverageItem(coverage.exact_quote_trades, 'Exact-quote closes')}
+              ${coverageItem(coverage.historical_token_rows, 'Historical token rows')}
+              ${coverageItem(coverage.strategy_league_generations, 'Strategy generations')}
+              ${coverageItem(coverage.polymarket_saved_scans, 'Polymarket saved scans')}
+              ${coverageItem(coverage.paper_degen_trial_summaries, 'Paper-degen trial sets')}
+            </div></article>
+            <article class="coverage-card"><div class="source-list" id="source-list"></div></article>
+          </div>
+        </section>
+      `;
     }
-    fetch(`./trades.json?v=${Date.now()}`, { cache: 'no-store' }).then(r => {
-      if (!r.ok) throw new Error(`trades.json ${r.status}`);
-      return r.json();
-    }).then(render).catch(err => {
-      document.getElementById('app').innerHTML = `<div class="error"><strong>Dashboard failed to load.</strong><br>${esc(err.message)}</div>`;
-    });
+
+    function kpi(label, value, note, tone = 'neutral', id = '', dataValue = '') {
+      return `<article class="kpi" ${id ? `id="${id}" data-value="${escapeHtml(dataValue)}"` : ''}><div class="kpi-label">${escapeHtml(label)}</div><div class="kpi-value ${tone}">${escapeHtml(value)}</div><div class="kpi-note">${escapeHtml(note)}</div></article>`;
+    }
+    function sectionHead(kicker, title, note) {
+      return `<div class="section-head"><div><div class="section-kicker">${escapeHtml(kicker)}</div><h2>${escapeHtml(title)}</h2></div><div class="section-note">${escapeHtml(note)}</div></div>`;
+    }
+    function coverageItem(value, label) { return `<div class="coverage-item"><b>${escapeHtml(compact(value))}</b><span>${escapeHtml(label)}</span></div>`; }
+
+    function renderWallets() {
+      $('#wallet-grid').innerHTML = state.data.tracked_wallets.map(wallet => `
+        <article class="wallet">
+          <div class="wallet-top"><div class="wallet-label">${escapeHtml(wallet.label)}</div><div class="status-dot">${wallet.readback_ok ? 'readback ok' : 'cached / unavailable'}</div></div>
+          <h3>${escapeHtml(wallet.name)}</h3>
+          <div class="family">${escapeHtml(wallet.network)} · ${escapeHtml(wallet.role)}</div>
+          <div class="wallet-balance">${wallet.native_balance == null ? '—' : `${compact(wallet.native_balance)} ${escapeHtml(wallet.native_unit)}`}</div>
+          <div class="wallet-address">${escapeHtml(wallet.address_masked || 'address unavailable')}${wallet.usd_value != null ? ` · ≈ $${escapeHtml(compact(wallet.usd_value))}` : ''}</div>
+        </article>
+      `).join('');
+    }
+
+    const svgText = (x, y, text, options = '') => `<text x="${x}" y="${y}" ${options}>${escapeHtml(text)}</text>`;
+    function linePath(values, x, y, width, height) {
+      if (!values.length) return '';
+      const min = Math.min(...values), max = Math.max(...values), spread = Math.max(max - min, Math.abs(max) * .08, .000001);
+      return values.map((value, index) => {
+        const px = x + (values.length === 1 ? width / 2 : index * width / (values.length - 1));
+        const py = y + height - ((value - min) / spread) * height;
+        return `${index ? 'L' : 'M'}${px.toFixed(2)},${py.toFixed(2)}`;
+      }).join(' ');
+    }
+
+    function renderEquityChart() {
+      const groups = [
+        { key: 'polymarket_live_usd', title: 'POLYMARKET LIVE', unit: 'USD', color: '#9dff84' },
+        { key: 'solana_live_sol', title: 'SOLANA LIVE', unit: 'SOL', color: '#ff766e' },
+        { key: 'solana_fake_usd', title: 'SOLANA FAKE WALLET', unit: 'USD', color: '#ffc868' },
+      ];
+      const width = 1080, height = 280, panelW = 330, panelH = 150, gap = 25;
+      let svg = `<svg viewBox="0 0 ${width} ${height}" role="presentation" aria-hidden="true">`;
+      groups.forEach((group, panelIndex) => {
+        const rows = state.data.visualizations.equity_series[group.key] || [];
+        const values = rows.map(row => Number(row.value)).filter(Number.isFinite);
+        const x = 18 + panelIndex * (panelW + gap), y = 62;
+        const final = values.at(-1) ?? 0;
+        const min = values.length ? Math.min(...values) : 0;
+        const max = values.length ? Math.max(...values) : 0;
+        svg += `<g><rect x="${x}" y="30" width="${panelW}" height="205" rx="10" fill="#09140f" stroke="#294236" />`;
+        svg += svgText(x + 15, 52, group.title, `fill="#9bb0a4" font-size="10" font-weight="700" letter-spacing="1.2"`);
+        svg += svgText(x + panelW - 15, 52, `${signed(final, group.unit === 'SOL' ? 7 : 4)} ${group.unit}`, `fill="${group.color}" font-size="13" font-weight="800" text-anchor="end"`);
+        for (let line = 0; line < 4; line++) {
+          const ly = y + line * panelH / 3;
+          svg += `<line x1="${x + 15}" y1="${ly}" x2="${x + panelW - 15}" y2="${ly}" stroke="#1d3229" stroke-width="1" />`;
+        }
+        if (values.length > 1) {
+          const path = linePath(values, x + 15, y, panelW - 30, panelH);
+          svg += `<path d="${path}" fill="none" stroke="${group.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+        }
+        svg += svgText(x + 15, 226, `LOW ${signed(min, 4)}`, `fill="#5f776b" font-size="8"`);
+        svg += svgText(x + panelW - 15, 226, `HIGH ${signed(max, 4)}`, `fill="#5f776b" font-size="8" text-anchor="end"`);
+        svg += `</g>`;
+      });
+      svg += '</svg>';
+      $('#wallet-equity-chart').innerHTML = svg;
+    }
+
+    function renderStrategyChart() {
+      const all = state.data.visualizations.strategy_performance || [];
+      const units = [...new Set(all.map(row => row.unit).filter(Boolean))];
+      const select = $('#strategy-chart-unit');
+      if (!select.dataset.ready) {
+        select.innerHTML = units.map(unit => `<option value="${escapeHtml(unit)}">${escapeHtml(unit)}</option>`).join('');
+        state.strategyUnit = units.includes('USD') ? 'USD' : units[0];
+        select.value = state.strategyUnit;
+        select.dataset.ready = '1';
+        select.addEventListener('change', () => { state.strategyUnit = select.value; state.strategyEvidence = state.strategyUnit === 'USD' ? 'paper-wallet' : 'all'; renderStrategyChart(); });
+      }
+      const evidenceSelect = $('#strategy-chart-evidence');
+      const evidenceOptions = [...new Set(all.filter(row => row.unit === state.strategyUnit).map(row => row.evidence_class))].sort();
+      if (evidenceSelect.dataset.unit !== state.strategyUnit) {
+        if (!evidenceOptions.includes(state.strategyEvidence)) state.strategyEvidence = 'all';
+        evidenceSelect.innerHTML = `<option value="all">All evidence</option>${evidenceOptions.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(humanize(value))}</option>`).join('')}`;
+        evidenceSelect.value = state.strategyEvidence;
+        evidenceSelect.dataset.unit = state.strategyUnit;
+      }
+      if (!evidenceSelect.dataset.ready) {
+        evidenceSelect.addEventListener('change', () => { state.strategyEvidence = evidenceSelect.value; renderStrategyChart(); });
+        evidenceSelect.dataset.ready = '1';
+      }
+      const rows = all.filter(row => row.unit === state.strategyUnit && (state.strategyEvidence === 'all' || row.evidence_class === state.strategyEvidence)).sort((a, b) => Math.abs(b.value) - Math.abs(a.value)).slice(0, 12);
+      if (!rows.length) { $('#strategy-pnl-chart').innerHTML = '<div class="chart-empty">No comparable results in this unit.</div>'; return; }
+      const width = 700, rowH = 33, height = Math.max(250, rows.length * rowH + 55), left = 220, chartW = width - left - 65;
+      const maxAbs = Math.max(...rows.map(row => Math.abs(row.value)), .000001);
+      let svg = `<svg viewBox="0 0 ${width} ${height}" role="presentation" aria-hidden="true">`;
+      rows.forEach((row, index) => {
+        const y = 20 + index * rowH;
+        const barW = Math.max(3, Math.abs(row.value) / maxAbs * chartW);
+        const color = row.value > 0 ? '#9dff84' : row.value < 0 ? '#ff766e' : '#ffc868';
+        svg += svgText(left - 12, y + 13, row.name.length > 28 ? `${row.name.slice(0, 27)}…` : row.name, `fill="#9bb0a4" font-size="9" text-anchor="end"`);
+        svg += `<rect x="${left}" y="${y}" width="${chartW}" height="19" rx="4" fill="#07100d" />`;
+        svg += `<rect x="${left}" y="${y}" width="${barW}" height="19" rx="4" fill="${color}" opacity=".88" />`;
+        svg += svgText(left + Math.min(barW + 7, chartW - 3), y + 13, signed(row.value, 4), `fill="#f3ecd9" font-size="9" font-weight="800" ${barW > chartW - 55 ? 'text-anchor="end"' : ''}`);
+      });
+      svg += svgText(left, height - 12, `UNIT: ${state.strategyUnit} · EVIDENCE: ${state.strategyEvidence} · TOP ${rows.length} BY ABSOLUTE RESULT`, `fill="#5f776b" font-size="8" letter-spacing="1"`);
+      svg += '</svg>';
+      $('#strategy-pnl-chart').innerHTML = svg;
+    }
+
+    function renderFunnel() {
+      const rows = state.data.visualizations.evidence_funnel || [];
+      const width = 700, height = 290, left = 205, chartW = 430;
+      const maxLog = Math.max(...rows.map(row => Math.log10(Math.max(1, row.value))));
+      let svg = `<svg viewBox="0 0 ${width} ${height}" role="presentation" aria-hidden="true">`;
+      rows.forEach((row, index) => {
+        const y = 25 + index * 56;
+        const barW = Math.max(12, Math.log10(Math.max(1, row.value)) / maxLog * chartW);
+        const color = ['#78c9ff','#c49cff','#ffc868','#9dff84'][index % 4];
+        const retention = index ? row.value / rows[index - 1].value * 100 : 100;
+        svg += svgText(left - 12, y + 16, row.label, `fill="#9bb0a4" font-size="10" text-anchor="end"`);
+        svg += `<rect x="${left}" y="${y}" width="${chartW}" height="23" rx="5" fill="#07100d" />`;
+        svg += `<rect x="${left}" y="${y}" width="${barW}" height="23" rx="5" fill="${color}" opacity=".82" />`;
+        svg += svgText(left + Math.min(barW + 8, chartW - 4), y + 16, compact(row.value), `fill="#f3ecd9" font-size="10" font-weight="800" ${barW > chartW - 70 ? 'text-anchor="end"' : ''}`);
+        svg += svgText(left, y + 42, index ? `${retention.toFixed(retention < 1 ? 3 : 1)}% retained from prior stage` : '100% observation base', `fill="#5f776b" font-size="8"`);
+      });
+      svg += '</svg>';
+      $('#evidence-funnel-chart').innerHTML = svg;
+    }
+
+    function renderActivity() {
+      const rows = state.data.visualizations.activity_by_day || [];
+      const width = 1080, height = 265, x = 50, y = 32, chartW = 990, chartH = 170;
+      const values = rows.map(row => Number(row.runs)).filter(Number.isFinite);
+      if (values.length < 2) { $('#activity-chart').innerHTML = '<div class="chart-empty">Insufficient dated runs.</div>'; return; }
+      const max = Math.max(...values, 1);
+      const points = values.map((value, index) => [x + index * chartW / (values.length - 1), y + chartH - value / max * chartH]);
+      const line = points.map((point, index) => `${index ? 'L' : 'M'}${point[0].toFixed(2)},${point[1].toFixed(2)}`).join(' ');
+      const area = `${line} L${x + chartW},${y + chartH} L${x},${y + chartH} Z`;
+      let svg = `<svg viewBox="0 0 ${width} ${height}" role="presentation" aria-hidden="true">`;
+      for (let index = 0; index <= 4; index++) {
+        const ly = y + index * chartH / 4;
+        svg += `<line x1="${x}" y1="${ly}" x2="${x + chartW}" y2="${ly}" stroke="#1d3229" />`;
+        svg += svgText(x - 10, ly + 3, compact(max - index * max / 4), `fill="#5f776b" font-size="8" text-anchor="end"`);
+      }
+      svg += `<path d="${area}" fill="rgba(120,201,255,.12)" /><path d="${line}" fill="none" stroke="#78c9ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+      const labelIndexes = [0, Math.floor((rows.length - 1) / 2), rows.length - 1];
+      labelIndexes.forEach(index => svg += svgText(points[index][0], height - 27, rows[index].date, `fill="#5f776b" font-size="8" text-anchor="middle"`));
+      svg += svgText(x + chartW, 19, `${compact(values.reduce((sum, value) => sum + value, 0))} DATED RUNS`, `fill="#9dff84" font-size="10" font-weight="800" text-anchor="end"`);
+      svg += '</svg>';
+      $('#activity-chart').innerHTML = svg;
+    }
+
+    function populateFilters() {
+      const venues = [...new Set(state.data.strategies.map(row => row.venue))].sort();
+      $('#venue-filter').insertAdjacentHTML('beforeend', venues.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join(''));
+      const evidence = [...new Set(state.data.strategies.map(row => row.evidence_class))].sort();
+      $('#evidence-filter').insertAdjacentHTML('beforeend', evidence.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(humanize(value))}</option>`).join(''));
+      const resultModes = [...new Set(state.data.result_log.map(row => row.mode).filter(Boolean))].sort();
+      $('#result-mode').insertAdjacentHTML('beforeend', resultModes.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(humanize(value))}</option>`).join(''));
+      const runModes = [...new Set(state.data.test_runs.map(row => row.mode).filter(Boolean))].sort();
+      $('#run-mode').insertAdjacentHTML('beforeend', runModes.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(humanize(value))}</option>`).join(''));
+    }
+
+    function renderStrategies() {
+      const query = $('#strategy-search').value.trim().toLowerCase();
+      const venue = $('#venue-filter').value;
+      const evidence = $('#evidence-filter').value;
+      const result = $('#result-filter').value;
+      const rows = state.data.strategies.filter(row => {
+        const haystack = [row.name, row.family, row.lifecycle, ...(row.variants || []), ...row.modes].join(' ').toLowerCase();
+        const resultMatch = result === 'all' || (result === 'positive' && Number(row.primary_value) > 0) || (result === 'negative' && Number(row.primary_value) < 0) || (result === 'no-results' && !finite(row.primary_value));
+        return (!query || haystack.includes(query)) && (venue === 'all' || row.venue === venue) && (evidence === 'all' || row.evidence_class === evidence) && resultMatch;
+      });
+      $('#strategy-visible').textContent = rows.length.toLocaleString();
+      const defaultView = !query && venue === 'all' && evidence === 'all' && result === 'all';
+      const visibleRows = defaultView && !state.showAllStrategies ? rows.slice(0, state.strategyLimit) : rows;
+      const showAllButton = $('#strategy-show-all');
+      showAllButton.hidden = !defaultView || rows.length <= state.strategyLimit;
+      showAllButton.textContent = state.showAllStrategies ? `Show first ${state.strategyLimit}` : `Show all ${rows.length}`;
+      const maxByUnit = {};
+      visibleRows.forEach(row => { if (finite(row.primary_value)) maxByUnit[row.primary_unit] = Math.max(maxByUnit[row.primary_unit] || 0, Math.abs(row.primary_value)); });
+      $('#strategy-grid').innerHTML = visibleRows.length ? visibleRows.map(row => {
+        const metrics = Object.entries(row.metrics || {}).filter(([, value]) => value !== null && value !== undefined).slice(0, 6);
+        const width = finite(row.primary_value) ? Math.max(4, Math.abs(row.primary_value) / Math.max(maxByUnit[row.primary_unit] || 1, .000001) * 100) : 4;
+        const tone = finite(row.primary_value) ? resultClass(row.primary_value) : 'neutral';
+        const barColor = Number(row.primary_value) > 0 ? 'var(--green)' : Number(row.primary_value) < 0 ? 'var(--red)' : 'var(--amber)';
+        return `<article class="strategy-card" data-venue="${escapeHtml(row.venue)}" data-evidence="${escapeHtml(row.evidence_class)}">
+          <div class="card-tags"><span class="tag">${escapeHtml(row.venue)}</span><span class="tag evidence">${escapeHtml(humanize(row.evidence_class))}</span><span class="tag ${statusClass(row.result_status)}">${escapeHtml(humanize(row.lifecycle))}</span></div>
+          <h3>${escapeHtml(row.name)}</h3><div class="family">${escapeHtml(row.family)}${row.variants?.length ? ` · ${row.variants.length} variant${row.variants.length === 1 ? '' : 's'}` : ''}</div>
+          <div class="card-result"><div class="primary-result ${tone}">${escapeHtml(formatPrimary(row))}</div><div class="result-status">${escapeHtml(humanize(row.result_status))}</div></div>
+          <div class="metric-bar" aria-hidden="true" style="--bar-color:${barColor}"><span style="width:${width.toFixed(2)}%"></span></div>
+          <div class="metric-grid">${metrics.map(([key, value]) => `<div class="metric"><b title="${escapeHtml(value)}">${escapeHtml(metricValue(value))}</b><span>${escapeHtml(humanize(key))}</span></div>`).join('')}</div>
+          <p class="truth-note">${escapeHtml(row.truth_note)}</p>
+        </article>`;
+      }).join('') : '<div class="no-results">No strategies match these filters.</div>';
+    }
+
+    function strategyName(id) { return state.strategies.get(id)?.name || id || 'Unknown'; }
+    function resultDisplay(row) {
+      if (finite(row.pnl_usd)) return `<span class="${resultClass(row.pnl_usd)}">${escapeHtml(money(row.pnl_usd))}</span>`;
+      if (finite(row.pnl_lamports)) return `<span class="${resultClass(row.pnl_lamports)}">${escapeHtml(`${signed(row.pnl_lamports / 1e9, 9)} SOL`)}</span>`;
+      if (finite(row.pnl_eth)) return `<span class="${resultClass(row.pnl_eth)}">${escapeHtml(`${signed(row.pnl_eth, 9)} ETH`)}</span>`;
+      if (finite(row.net_bps)) return `<span class="${resultClass(row.net_bps)}">${escapeHtml(`${signed(row.net_bps, 2)} bps`)}</span>`;
+      return '—';
+    }
+
+    function paginate(rows, page, size) {
+      const pages = Math.max(1, Math.ceil(rows.length / size));
+      const safePage = Math.min(Math.max(1, page), pages);
+      return { rows: rows.slice((safePage - 1) * size, safePage * size), page: safePage, pages };
+    }
+    function paginator(target, pageInfo, setter) {
+      $(target).innerHTML = `<button type="button" data-dir="prev" ${pageInfo.page <= 1 ? 'disabled' : ''}>← Previous</button><span>Page ${pageInfo.page.toLocaleString()} / ${pageInfo.pages.toLocaleString()}</span><button type="button" data-dir="next" ${pageInfo.page >= pageInfo.pages ? 'disabled' : ''}>Next →</button>`;
+      $$(`${target} button`).forEach(button => button.addEventListener('click', () => setter(button.dataset.dir === 'next' ? pageInfo.page + 1 : pageInfo.page - 1)));
+    }
+
+    function filteredResults() {
+      const query = $('#result-search').value.trim().toLowerCase();
+      const mode = $('#result-mode').value;
+      return state.data.result_log.filter(row => {
+        const haystack = [row.market, row.symbol, row.status, row.mode, row.source_family, strategyName(row.strategy_id)].join(' ').toLowerCase();
+        return (!query || haystack.includes(query)) && (mode === 'all' || row.mode === mode);
+      });
+    }
+    function renderResults() {
+      const rows = filteredResults();
+      const pageInfo = paginate(rows, state.resultPage, state.resultPageSize);
+      state.resultPage = pageInfo.page;
+      $('#result-visible').textContent = `${rows.length.toLocaleString()} / ${state.data.result_log.length.toLocaleString()} results`;
+      $('#result-table-body').innerHTML = pageInfo.rows.map(row => `<tr><td>${escapeHtml(dateLabel(row.timestamp))}</td><td><b>${escapeHtml(row.venue)}</b><br>${escapeHtml(humanize(row.evidence_class))}</td><td>${escapeHtml(strategyName(row.strategy_id))}</td><td>${escapeHtml(row.market || row.symbol || '—')}</td><td>${escapeHtml(humanize(row.mode))}</td><td>${resultDisplay(row)}</td><td>${escapeHtml(humanize(row.status))}</td><td>${escapeHtml(row.source_family)}</td></tr>`).join('');
+      paginator('#result-paginator', pageInfo, page => { state.resultPage = page; renderResults(); });
+    }
+
+    function filteredRuns() {
+      const query = $('#run-search').value.trim().toLowerCase();
+      const mode = $('#run-mode').value;
+      return state.data.test_runs.filter(row => {
+        const haystack = [row.id, row.variant, row.status, row.mode, row.source_family, strategyName(row.strategy_id)].join(' ').toLowerCase();
+        return (!query || haystack.includes(query)) && (mode === 'all' || row.mode === mode);
+      });
+    }
+    function runPnl(row) {
+      if (finite(row.pnl_usd)) return money(row.pnl_usd);
+      if (finite(row.pnl_lamports)) return `${signed(row.pnl_lamports / 1e9, 7)} SOL`;
+      return '—';
+    }
+    function renderRuns() {
+      const rows = filteredRuns();
+      const pageInfo = paginate(rows, state.runPage, state.runPageSize);
+      state.runPage = pageInfo.page;
+      $('#run-visible').textContent = `${rows.length.toLocaleString()} / ${state.data.test_runs.length.toLocaleString()} runs`;
+      $('#run-table-body').innerHTML = pageInfo.rows.map(row => `<tr><td>${escapeHtml(dateLabel(row.timestamp))}</td><td>${escapeHtml(strategyName(row.strategy_id))}</td><td>${escapeHtml(humanize(row.mode))}</td><td>${escapeHtml(row.variant || '—')}</td><td>${escapeHtml(row.trades ?? '—')}</td><td class="${resultClass(row.pnl_usd ?? row.pnl_lamports)}">${escapeHtml(runPnl(row))}</td><td>${escapeHtml(humanize(row.status))}</td><td>${escapeHtml(row.source_family)}</td></tr>`).join('');
+      paginator('#run-paginator', pageInfo, page => { state.runPage = page; renderRuns(); });
+    }
+
+    function renderSources() {
+      $('#source-list').innerHTML = state.data.source_register.map(row => `<div class="source-row"><span><strong>${escapeHtml(row.name)}</strong><br>${escapeHtml(row.classification)}</span><span>${escapeHtml(compact(row.records))}</span></div>`).join('');
+    }
+
+    function bindControls() {
+      for (const id of ['strategy-search', 'venue-filter', 'evidence-filter', 'result-filter']) {
+        $(id.startsWith('#') ? id : `#${id}`).addEventListener(id.includes('search') ? 'input' : 'change', () => { state.showAllStrategies = false; renderStrategies(); });
+      }
+      $('#strategy-show-all').addEventListener('click', () => { state.showAllStrategies = !state.showAllStrategies; renderStrategies(); });
+      $('#result-search').addEventListener('input', () => { state.resultPage = 1; renderResults(); });
+      $('#result-mode').addEventListener('change', () => { state.resultPage = 1; renderResults(); });
+      $('#run-search').addEventListener('input', () => { state.runPage = 1; renderRuns(); });
+      $('#run-mode').addEventListener('change', () => { state.runPage = 1; renderRuns(); });
+    }
+
+    async function init() {
+      try {
+        const response = await fetch(`./trades.json?v=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        state.data = await response.json();
+        state.strategies = new Map(state.data.strategies.map(row => [row.id, row]));
+        buildScaffold(state.data);
+        renderWallets();
+        populateFilters();
+        renderEquityChart();
+        renderStrategyChart();
+        renderFunnel();
+        renderActivity();
+        renderStrategies();
+        renderResults();
+        renderRuns();
+        renderSources();
+        bindControls();
+      } catch (error) {
+        $('#app').innerHTML = `<div class="fatal"><b>CONSOLE LOAD FAILED</b><br><br>${escapeHtml(error.message)}</div>`;
+      }
+    }
+    init();
   </script>
 </body>
 </html>
