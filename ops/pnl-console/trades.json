@@ -1,6 +1,6 @@
 {
   "schema_version": 5,
-  "generated_utc": "2026-07-24T04:16:25.030405Z",
+  "generated_utc": "2026-07-24T04:20:31.449222Z",
   "privacy": "Unlinked/noindex static snapshot. Public wallet addresses only. No secrets, key material, raw signed transactions, or local secret paths.",
   "truth_summary": {
     "overall_status": "FAIL",
@@ -24,7 +24,7 @@
     "venue_count": 4,
     "wallet_count": 3,
     "paper_arena_profile_count": 1,
-    "tracked_wallets_usd": 32.28,
+    "tracked_wallets_usd": 32.27,
     "evidence_counts": {
       "calibration": 1,
       "code-only": 3,
@@ -55335,13 +55335,13 @@
       "status": "funded",
       "native_balance": 0.158123629,
       "native_unit": "SOL",
-      "usd_value": 11.97,
+      "usd_value": 11.96,
       "readback_ok": true
     }
   ],
   "prices": {
-    "eth_usd": 1877.5,
-    "sol_usd": 75.68,
+    "eth_usd": 1877.89,
+    "sol_usd": 75.63,
     "source": "CoinGecko public spot snapshot"
   },
   "paper_goblin_solana": {
@@ -55382,8 +55382,8 @@
     "generic_live_file": true,
     "generic_halt_file": false,
     "generic_entry_halt_file": true,
-    "manager_active_count": 0,
-    "manager_exposure_cost": 0.0
+    "manager_active_count": null,
+    "manager_exposure_cost": null
   },
   "source_register": [
     {
