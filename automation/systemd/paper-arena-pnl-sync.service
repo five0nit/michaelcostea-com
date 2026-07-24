@@ -1,0 +1,17 @@
+[Unit]
+Description=Publish anonymized Paper Arena state to michaelcostea.com PNL Console
+After=network-online.target microcap-paper-arena.service
+Wants=network-online.target
+ConditionPathExists=/home/fiv30nit/.openclaw/workspace/workspaces/microcap-autotrader/state/manual-paper-arena.sqlite
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/fiv30nit/.openclaw/workspace/workspaces/michaelcostea-com
+ExecStart=/usr/bin/python3 /home/fiv30nit/.openclaw/workspace/workspaces/michaelcostea-com/automation/sync_paper_arena_pnl_dashboard.py
+Environment=HOME=/home/fiv30nit
+Environment=PATH=/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin
+UMask=0077
+Nice=10
+NoNewPrivileges=true
+PrivateTmp=true
+TimeoutStartSec=8min

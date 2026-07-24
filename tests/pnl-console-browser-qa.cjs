@@ -28,6 +28,7 @@ async function pageMetrics(page) {
     truthBanner: document.querySelector('#truth-banner')?.textContent || '',
     paperArenaHref: document.querySelector('#paper-arena-link')?.getAttribute('href') || '',
     paperArenaText: document.querySelector('#paper-arena-link')?.textContent || '',
+    paperArenaSync: document.querySelector('#paper-arena-sync-status')?.textContent || '',
     walletsHidden: getComputedStyle(document.querySelector('#wallets')).display === 'none',
     activeToggle: document.querySelector('#data-view-toggle button.active')?.dataset.dataView,
     overflowOffenders: [...document.querySelectorAll('body *')]
@@ -63,6 +64,7 @@ async function inspect(browser, label, width, height) {
   if (!paper.walletsHidden) throw new Error(`${label}: auto wallet layer leaked into Paper Arena view`);
   if (!paper.truthBanner.includes('PAPER ARENA') || !paper.truthBanner.includes('FAKE ONLY')) throw new Error(`${label}: Paper Arena truth banner missing`);
   if (paper.paperArenaHref !== 'http://localhost:8790/' || !paper.paperArenaText.includes('main dashboard view')) throw new Error(`${label}: Paper Arena local link/data receipt missing`);
+  if (!paper.paperArenaSync.includes('AUTO SYNC') || !paper.paperArenaSync.includes('ANONYMIZED')) throw new Error(`${label}: Paper Arena automatic sync evidence missing`);
   assertNoVisualFailures(`${label}/paper`, paper);
   await page.screenshot({ path: path.join(outDir, `${label}-paper-arena-view.png`), fullPage: true });
 

@@ -64,9 +64,13 @@ const paperArenaResults = data.result_log.filter(row => row.strategy_id === 'sol
 must(paperArena.evidence_class === 'exact-quote-shadow', 'Paper Arena evidence must remain exact-quote shadow');
 must(paperArena.metrics.trades === paperArenaResults.length, 'Paper Arena strategy/result count drift');
 must(paperArena.metrics.pnl_lamports === paperArenaResults.reduce((sum, row) => sum + Number(row.pnl_lamports || 0), 0), 'Paper Arena PNL drift');
+must(paperArenaResults.every(row => /^Paper profile \d+ · /.test(row.variant || '')), 'Paper Arena public rows must use anonymous profile labels');
 must(data.local_apps?.some(row => row.id === 'paper-arena' && row.url === 'http://localhost:8790/'), 'Paper Arena local app registry missing');
 must(data.paper_arena?.profile_count >= 1, 'Paper Arena profile summary missing');
 must(data.paper_arena?.wallet_count >= 1, 'Paper Arena wallet summary missing');
+must(data.paper_arena?.sync_mode === 'automatic-local-export', 'Paper Arena automatic sync mode missing');
+must(data.paper_arena?.sync_max_lag_seconds === 330, 'Paper Arena sync lag contract missing');
+must(data.paper_arena?.sync_privacy === 'anonymized-public-snapshot', 'Paper Arena sync privacy contract missing');
 must(data.views?.['paper-arena']?.strategy_count === 1, 'Paper Arena view strategy count drift');
 must(data.views?.['paper-arena']?.result_count === paperArenaResults.length, 'Paper Arena view result count drift');
 must(data.views?.['auto-trade']?.strategy_count === data.strategies.length - 1, 'Auto Trade view strategy count drift');
@@ -82,6 +86,7 @@ for (const marker of [
   'id="evidence-funnel-chart"',
   'id="activity-chart"',
   'id="paper-arena-link"',
+  'id="paper-arena-sync-status"',
   'id="data-view-toggle"',
   'data-data-view="paper-arena"',
   'data-data-view="auto-trade"',
@@ -91,7 +96,7 @@ for (const marker of [
 ]) must(html.includes(marker), `HTML missing ${marker}`);
 
 const serialized = JSON.stringify(data).toLowerCase();
-for (const forbidden of ['.secrets/', 'private_key', 'seed phrase', 'mnemonic', 'secret_key']) {
+for (const forbidden of ['.secrets/', 'private_key', 'seed phrase', 'mnemonic', 'secret_key', 'profile_id', 'pin_hash', 'pin_salt', 'session_token']) {
   must(!serialized.includes(forbidden), `public data leaks forbidden marker: ${forbidden}`);
 }
 

@@ -1,0 +1,13 @@
+[Unit]
+Description=Check for Paper Arena PNL changes every five minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+RandomizedDelaySec=30s
+AccuracySec=15s
+Persistent=true
+Unit=paper-arena-pnl-sync.service
+
+[Install]
+WantedBy=timers.target

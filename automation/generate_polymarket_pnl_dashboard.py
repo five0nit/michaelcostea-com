@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-ROOT = Path('/home/fiv30nit/.openclaw/workspace/workspaces/michaelcostea-com')
+ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / 'ops' / 'pnl-console'
 DATA_PATH = OUT_DIR / 'trades.json'
 HOME = Path('/home/fiv30nit')
@@ -810,6 +810,9 @@ def build_snapshot() -> dict[str, Any]:
             'losses': arena_losses,
             'open_positions': len(arena_positions),
             'captured_at': iso_ts(arena_active.get('updated_at')),
+            'sync_mode': 'automatic-local-export',
+            'sync_max_lag_seconds': 330,
+            'sync_privacy': 'anonymized-public-snapshot',
             'truth': 'Profile names and PIN material are not exported. Fake-only exact-quote records only.',
         },
         'tracked_wallets': wallets,
