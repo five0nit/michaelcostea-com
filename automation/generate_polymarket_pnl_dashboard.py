@@ -48,6 +48,7 @@ HISTORY_PORTFOLIO = MICROCAP / 'reports/pumpfun-signals/history-derived-portfoli
 EDGE_OPTIMIZER = MICROCAP / 'reports/pumpfun-signals/edge-optimizer-latest.json'
 ANTI_PANIC = MICROCAP / 'reports/pumpfun-signals/anti-panic-ablation-latest.json'
 PAPER_GOBLIN_LEDGER = PAPER_GOBLIN / 'state/ledger.json'
+PAPER_ARENA_DB = MICROCAP / 'state/manual-paper-arena.sqlite'
 CRYPTO_AUTOPSY_DIR = MICROCAP / 'runs/autopsy'
 
 ARBITRUM_RPC = 'https://arb1.arbitrum.io/rpc'
@@ -236,6 +237,7 @@ def seed_strategies() -> dict[str, dict[str, Any]]:
         ('solana-pumpfun-genesis', 'Pump.fun Genesis', 'Solana', 'new-launch state machine', 'built', 'code-only', 'Strategy and monitor exist; sample collector data is not wallet PNL.'),
         ('solana-pumpfun-liqmo', 'Pump.fun LiqMo', 'Solana', 'liquidity momentum', 'tested', 'historical-backtest', 'Oracle-ledger and historical replays are modelled, not wallet execution.'),
         ('solana-degen-paper-live', 'Pump.fun Degen Paper Live', 'Solana', 'fast degen paper wallet', 'tested', 'paper-wallet', 'Fake wallet result. Central ledger is negative after modeled drag.'),
+        ('solana-paper-arena-manual', 'Paper Arena Manual Exact-Quote', 'Solana', 'manual new-launch exact-quote paper trading', 'tested', 'exact-quote-shadow', 'Local fake-only manual closes mirrored to SQLite. Fresh quoted entry/exit evidence; no signing, orders, swaps, or funds.'),
         ('solana-degen-baseline', 'Baseline Degen Live Simulation', 'Solana', 'baseline degen paper variant', 'tested', 'paper-wallet', 'Initial fake live-data simulation baseline; no signing or live orders.'),
         ('solana-orb-breakout', 'Opening-Range Breakout', 'Solana', 'opening range breakout', 'tested', 'paper-wallet', 'Five fake trials; result negative and not promotable.'),
         ('solana-static-runner-milk-best', 'Static Runner Milk', 'Solana', 'runner harvesting', 'tested', 'paper-wallet', 'Five fake trials; one positive trial, negative aggregate.'),
@@ -511,6 +513,74 @@ def build_snapshot() -> dict[str, Any]:
     set_result(strategies['solana-degen-paper-live'], {'trades': fake_degen_sells, 'pnl_usd': round(fake_degen_pnl, 6)}, round(fake_degen_pnl, 6), 'USD', 'negative' if fake_degen_pnl < 0 else 'positive')
     set_result(strategies['solana-fast-dense-no-dump-proxy'], {'runtime_results': live_result_count, 'nonzero_wallet_deltas': live_nonzero, 'wallet_delta_lamports': live_cumulative_lamports, 'wallet_delta_sol': round(live_cumulative_lamports / 1e9, 9)}, round(live_cumulative_lamports / 1e9, 9), 'SOL', 'negative' if live_cumulative_lamports < 0 else 'positive', sorted(central_strategy_variants.get('solana-fast-dense-no-dump-proxy', set())))
 
+    # Paper Arena: local fake-only manual exact-quote ledger mirrored to SQLite.
+    arena_wallets = sqlite_rows(PAPER_ARENA_DB, 'select wallet_id,active,version,mode,initial_lamports,wallet_lamports,realized_pnl_lamports,closed_trades,wins,losses,open_positions,created_at,updated_at from arena_wallets order by created_at,wallet_id')
+    arena_trades = sqlite_rows(PAPER_ARENA_DB, 'select trade_id,wallet_id,session_id,position_id,symbol,name,strategy,decision_ts,exit_ts,hold_s,input_lamports,pnl_lamports,pnl_bps,reason,entry_haircut_bps,entry_cost_bps,entry_market_cap_sol from manual_trades order by exit_ts,trade_id')
+    arena_positions = sqlite_rows(PAPER_ARENA_DB, 'select wallet_id,position_id,symbol,name,decision_ts,input_lamports,entry_market_cap_sol,entry_haircut_bps,exact_pnl_lamports,exact_pnl_bps,fast_pnl_lamports,fast_pnl_bps,updated_at from open_positions order by decision_ts,position_id')
+    arena_total_pnl = sum(safe_int(row.get('pnl_lamports')) for row in arena_trades)
+    arena_wins = sum(safe_int(row.get('pnl_lamports')) > 0 for row in arena_trades)
+    arena_losses = sum(safe_int(row.get('pnl_lamports')) < 0 for row in arena_trades)
+    arena_active = next((row for row in arena_wallets if safe_int(row.get('active')) == 1), {})
+    arena_versions = sorted({str(row.get('version')) for row in arena_wallets if row.get('version')})
+    arena_strategy = strategies['solana-paper-arena-manual']
+    arena_strategy['modes'] = ['fake-only-manual-exact-quote']
+    set_result(
+        arena_strategy,
+        {
+            'wallet_sessions': len(arena_wallets),
+            'trades': len(arena_trades),
+            'wins': arena_wins,
+            'losses': arena_losses,
+            'win_rate': round(arena_wins / len(arena_trades), 4) if arena_trades else None,
+            'pnl_lamports': arena_total_pnl,
+            'pnl_sol': round(arena_total_pnl / 1e9, 9),
+            'active_wallet_lamports': arena_active.get('wallet_lamports'),
+            'active_wallet_pnl_lamports': arena_active.get('realized_pnl_lamports'),
+            'open_positions': len(arena_positions),
+        },
+        round(arena_total_pnl / 1e9, 9),
+        'SOL',
+        'positive' if arena_total_pnl > 0 else ('negative' if arena_total_pnl < 0 else 'no-trades'),
+        arena_versions,
+    )
+    for index, row in enumerate(arena_wallets, 1):
+        test_runs.append({
+            'id': f'paper-arena-wallet-{index}',
+            'timestamp': iso_ts(row.get('created_at')),
+            'strategy_id': 'solana-paper-arena-manual',
+            'venue': 'Solana',
+            'mode': 'fake-only-manual-exact-quote',
+            'status': 'active' if safe_int(row.get('active')) == 1 else 'archived',
+            'trades': row.get('closed_trades'),
+            'pnl_usd': None,
+            'pnl_lamports': row.get('realized_pnl_lamports'),
+            'variant': row.get('version'),
+            'source_family': 'Paper Arena SQLite ledger',
+        })
+    for index, row in enumerate(arena_trades, 1):
+        pnl_lamports = safe_int(row.get('pnl_lamports'))
+        label = str(row.get('name') or row.get('symbol') or f'Manual close {index}')
+        symbol = str(row.get('symbol') or '').strip() or None
+        result_log.append({
+            'id': f'paper-arena-exact-{index}',
+            'timestamp': iso_ts(row.get('exit_ts')),
+            'strategy_id': 'solana-paper-arena-manual',
+            'venue': 'Solana',
+            'mode': 'fake-only-manual-exact-quote',
+            'evidence_class': 'exact-quote-shadow',
+            'source_family': 'Paper Arena SQLite ledger',
+            'market': f'${symbol} · {label}' if symbol else label,
+            'symbol': symbol,
+            'status': 'win' if pnl_lamports > 0 else ('loss' if pnl_lamports < 0 else (row.get('reason') or 'flat')),
+            'pnl_usd': None,
+            'pnl_lamports': pnl_lamports,
+            'net_bps': safe_float_none(row.get('pnl_bps')),
+            'truth': 'Fake-only manual close using fresh quoted entry and exit paths; no signing, orders, swaps, or funds.',
+            'variant': row.get('strategy'),
+            'hold_s': safe_float_none(row.get('hold_s')),
+            'entry_haircut_bps': safe_int(row.get('entry_haircut_bps')),
+        })
+
     # Every named paper-degen trial variant becomes visible and every trial becomes a test-run row.
     trial_summary_files = sorted((MICROCAP / 'state/paper-degen/trials').glob('*/summary.json'))
     variant_latest: dict[str, dict[str, Any]] = {}
@@ -681,6 +751,7 @@ def build_snapshot() -> dict[str, Any]:
             'route_probes': route_probes,
             'exact_quote_watches': exact_watches,
             'exact_quote_trades': exact_trade_count,
+            'paper_arena_exact_quote_closes': len(arena_trades),
             'historical_token_rows': historical_tokens,
             'strategy_league_generations': len({row.get('generation') for row in lane_runs if row.get('generation') is not None}),
             'polymarket_saved_scans': len(glob.glob('/home/fiv30nit/polymarket_crypto_guardrail_scan_*.json')),
@@ -705,6 +776,19 @@ def build_snapshot() -> dict[str, Any]:
         'paper_goblin_solana': paper_goblin_rows()[0],
         'current_orders': live.get('open_orders') if isinstance(live.get('open_orders'), list) else [],
         'current_positions': [row for row in (manager_live.get('positions') or {}).values() if isinstance(row, dict) and row.get('state') in {'ENTRY_OPEN', 'ACTIVE', 'HOLD_FLOOR'}] if isinstance(manager_live.get('positions'), dict) else [],
+        'local_apps': [
+            {
+                'id': 'paper-arena',
+                'name': 'Paper Arena',
+                'url': 'http://localhost:8790/',
+                'availability': 'local machine only',
+                'storage': 'SQLite exact-quote ledger',
+                'records': len(arena_trades),
+                'open_positions': len(arena_positions),
+                'captured_at': iso_ts(arena_active.get('updated_at')),
+                'truth': 'Fake-only manual exact-quote paper trading. No signing, orders, swaps, or funds.',
+            }
+        ],
         'runtime': {
             'polymarket_status': {key: live.get(key) for key in ['mode', 'market', 'btc_spot', 'reconciled_size', 'conditional_balance', 'open_orders_count']},
             'auto_entry_enabled': GENERIC_LIVE.exists() and not GENERIC_ENTRY_HALT.exists(),
@@ -720,6 +804,7 @@ def build_snapshot() -> dict[str, Any]:
             {'name': 'Polymarket saved-book and politics replays', 'records': len((gate_replay.get('summary') or {})) + len((politics.get('summary') or {})), 'classification': 'mark-to-market replay'},
             {'name': 'Solana strategy league DB', 'records': len(league_sells), 'classification': 'fake wallet'},
             {'name': 'Solana central trade-data DB', 'records': len(central_results), 'classification': 'paper/live result records'},
+            {'name': 'Paper Arena SQLite ledger', 'records': len(arena_trades), 'classification': 'manual exact-quote shadow'},
             {'name': 'Solana outcome-labeler DB', 'records': len(exact_trades), 'classification': 'exact-quote shadow'},
             {'name': 'Solana test-run registry', 'records': len(test_runs), 'classification': 'run evidence'},
         ],

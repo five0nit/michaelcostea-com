@@ -31,6 +31,8 @@ async function inspect(browser, label, width, height) {
     resultRows: document.querySelectorAll('#result-table-body tr').length,
     strategyCardsHaveBars: [...document.querySelectorAll('#strategy-grid .strategy-card')].every(card => Boolean(card.querySelector('.metric-bar'))),
     truthBanner: document.querySelector('#truth-banner')?.textContent || '',
+    paperArenaHref: document.querySelector('#paper-arena-link')?.getAttribute('href') || '',
+    paperArenaText: document.querySelector('#paper-arena-link')?.textContent || '',
     overflowOffenders: [...document.querySelectorAll('body *')]
       .filter(node => !node.closest('.table-scroll'))
       .map(node => ({ node, rect: node.getBoundingClientRect() }))
@@ -54,6 +56,7 @@ async function inspect(browser, label, width, height) {
   if (initial.brokenImages.length) throw new Error(`${label}: broken images ${initial.brokenImages.join(', ')}`);
   if (!initial.strategyCardsHaveBars) throw new Error(`${label}: strategy cards missing data bars`);
   if (!initial.truthBanner.includes('WALLET TRUTH')) throw new Error(`${label}: wallet-truth banner missing`);
+  if (initial.paperArenaHref !== 'http://localhost:8790/' || !initial.paperArenaText.includes('data is in this atlas')) throw new Error(`${label}: Paper Arena local link/data receipt missing`);
   if (!initial.resultRows || initial.resultRows > 50) throw new Error(`${label}: result pagination invalid (${initial.resultRows})`);
 
   await page.selectOption('#venue-filter', 'Polymarket');

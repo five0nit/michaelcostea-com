@@ -27,6 +27,7 @@ for (const id of [
   'solana-history-flow-ignition-v5',
   'solana-history-panic-reclaim-v5',
   'solana-degen-paper-live',
+  'solana-paper-arena-manual',
 ]) must(ids.has(id), `missing strategy ${id}`);
 
 for (const row of data.strategies) {
@@ -54,6 +55,13 @@ must(data.data_coverage?.raw_snapshots >= 1_000_000, 'raw snapshot coverage miss
 must(data.data_coverage?.route_probes >= 1_000, 'route-probe coverage missing');
 must(data.data_coverage?.strategy_count === data.strategies.length, 'strategy count drift');
 must(data.data_coverage?.result_count === data.result_log.length, 'result count drift');
+must(data.data_coverage?.paper_arena_exact_quote_closes >= 1, 'Paper Arena DB close coverage missing');
+const paperArena = data.strategies.find(row => row.id === 'solana-paper-arena-manual');
+const paperArenaResults = data.result_log.filter(row => row.strategy_id === 'solana-paper-arena-manual');
+must(paperArena.evidence_class === 'exact-quote-shadow', 'Paper Arena evidence must remain exact-quote shadow');
+must(paperArena.metrics.trades === paperArenaResults.length, 'Paper Arena strategy/result count drift');
+must(paperArena.metrics.pnl_lamports === paperArenaResults.reduce((sum, row) => sum + Number(row.pnl_lamports || 0), 0), 'Paper Arena PNL drift');
+must(data.local_apps?.some(row => row.id === 'paper-arena' && row.url === 'http://localhost:8790/'), 'Paper Arena local app registry missing');
 
 for (const marker of [
   'id="venue-filter"',
@@ -65,6 +73,8 @@ for (const marker of [
   'id="strategy-pnl-chart"',
   'id="evidence-funnel-chart"',
   'id="activity-chart"',
+  'id="paper-arena-link"',
+  'href="http://localhost:8790/"',
   'data-console-version="20260723-strategy-atlas-v1"',
 ]) must(html.includes(marker), `HTML missing ${marker}`);
 

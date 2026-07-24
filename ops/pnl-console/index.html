@@ -159,6 +159,13 @@
     .table-tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin: 12px 0; }
     .table-tools > div { display: flex; flex-wrap: wrap; gap: 8px; }
     .table-tools input { min-width: min(330px, 78vw); }
+    .local-source { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: 0 0 14px; padding: 15px 16px; border: 1px solid rgba(120,201,255,.38); border-radius: 12px; color: var(--ink); background: linear-gradient(110deg, rgba(120,201,255,.09), rgba(157,255,132,.035)); }
+    .local-source:hover { border-color: var(--blue); text-decoration: none; }
+    .local-source-copy { min-width: 0; }
+    .local-source-label { display: block; color: var(--blue); font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .local-source strong { display: block; margin-top: 5px; font-size: 14px; }
+    .local-source small { display: block; margin-top: 5px; color: var(--muted); font-size: 9px; line-height: 1.45; }
+    .local-source-action { flex: 0 0 auto; padding: 9px 11px; border: 1px solid rgba(157,255,132,.35); border-radius: 8px; color: var(--green); font-size: 10px; font-weight: 800; }
     .table-shell { width: 100%; max-width: 100%; min-width: 0; contain: inline-size; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: hidden; }
     .table-scroll { display: block; width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; overscroll-behavior-inline: contain; }
     table { width: 100%; min-width: 980px; border-collapse: collapse; font-size: 10px; }
@@ -216,6 +223,7 @@
       .table-tools { align-items: stretch; flex-direction: column; }
       .table-tools > div { width: 100%; }
       .table-tools input, .table-tools select { width: 100%; min-width: 0; }
+      .local-source { align-items: flex-start; flex-direction: column; }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -227,7 +235,7 @@
   <div class="shell">
     <nav class="topbar" aria-label="Site navigation">
       <a class="brand" href="/"><span class="brand-dot"></span><span>Michael OS / Operator</span></a>
-      <div class="top-links"><a href="#strategy-atlas">Strategies</a><a href="#results">Results</a><a href="#runs">Test runs</a><a href="#coverage">Coverage</a></div>
+      <div class="top-links"><a href="#strategy-atlas">Strategies</a><a href="#results">Results</a><a href="#runs">Test runs</a><a href="#coverage">Coverage</a><a href="http://localhost:8790/" target="_blank" rel="noopener noreferrer">Paper Arena ↗</a></div>
     </nav>
 
     <main id="app">
@@ -307,6 +315,7 @@
       const truth = data.truth_summary;
       const summary = data.summary;
       const coverage = data.data_coverage;
+      const paperArena = (data.local_apps || []).find(row => row.id === 'paper-arena') || {};
       $('#app').innerHTML = `
         <header class="hero">
           <div>
@@ -384,7 +393,11 @@
         </section>
 
         <section class="section" id="runs">
-          ${sectionHead('05 / Run registry', '1,430 test-run records', 'All located lane generations, runtime strategy runs, exact-quote sessions, degen trials, and Polymarket replay runs.')}
+          ${sectionHead('05 / Run registry', `${compact(summary.test_run_count)} test-run records`, 'All located lane generations, runtime strategy runs, Paper Arena sessions, exact-quote sessions, degen trials, and Polymarket replay runs.')}
+          <a id="paper-arena-link" class="local-source" href="http://localhost:8790/" target="_blank" rel="noopener noreferrer">
+            <span class="local-source-copy"><span class="local-source-label">Local capture source · ${escapeHtml(paperArena.storage || 'SQLite exact-quote ledger')}</span><strong>Paper Arena manual trading data is in this atlas</strong><small>${escapeHtml(compact(paperArena.records || 0))} closed trades · ${escapeHtml(compact(paperArena.open_positions || 0))} open positions · captured ${escapeHtml(dateLabel(paperArena.captured_at))} · local machine only</small></span>
+            <span class="local-source-action">Open Paper Arena ↗</span>
+          </a>
           <div class="table-tools"><div><input id="run-search" type="search" placeholder="Search test run, strategy, variant…" aria-label="Search test runs" /><select id="run-mode" aria-label="Filter test runs by mode"><option value="all">All modes</option></select></div><div><span id="run-visible" class="section-note"></span></div></div>
           <div class="table-shell"><div class="table-scroll"><table><thead><tr><th>Time</th><th>Strategy</th><th>Mode</th><th>Variant</th><th>Trades</th><th>PNL</th><th>Status</th><th>Source</th></tr></thead><tbody id="run-table-body"></tbody></table></div><div id="run-paginator" class="paginator"></div></div>
         </section>
@@ -397,6 +410,7 @@
               ${coverageItem(coverage.route_probes, 'Executable route probes')}
               ${coverageItem(coverage.exact_quote_watches, 'Exact-quote watches')}
               ${coverageItem(coverage.exact_quote_trades, 'Exact-quote closes')}
+              ${coverageItem(coverage.paper_arena_exact_quote_closes, 'Paper Arena closes')}
               ${coverageItem(coverage.historical_token_rows, 'Historical token rows')}
               ${coverageItem(coverage.strategy_league_generations, 'Strategy generations')}
               ${coverageItem(coverage.polymarket_saved_scans, 'Polymarket saved scans')}
