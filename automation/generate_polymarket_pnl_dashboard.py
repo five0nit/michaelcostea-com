@@ -514,19 +514,27 @@ def build_snapshot() -> dict[str, Any]:
     set_result(strategies['solana-fast-dense-no-dump-proxy'], {'runtime_results': live_result_count, 'nonzero_wallet_deltas': live_nonzero, 'wallet_delta_lamports': live_cumulative_lamports, 'wallet_delta_sol': round(live_cumulative_lamports / 1e9, 9)}, round(live_cumulative_lamports / 1e9, 9), 'SOL', 'negative' if live_cumulative_lamports < 0 else 'positive', sorted(central_strategy_variants.get('solana-fast-dense-no-dump-proxy', set())))
 
     # Paper Arena: local fake-only manual exact-quote ledger mirrored to SQLite.
-    arena_wallets = sqlite_rows(PAPER_ARENA_DB, 'select wallet_id,active,version,mode,initial_lamports,wallet_lamports,realized_pnl_lamports,closed_trades,wins,losses,open_positions,created_at,updated_at from arena_wallets order by created_at,wallet_id')
-    arena_trades = sqlite_rows(PAPER_ARENA_DB, 'select trade_id,wallet_id,session_id,position_id,symbol,name,strategy,decision_ts,exit_ts,hold_s,input_lamports,pnl_lamports,pnl_bps,reason,entry_haircut_bps,entry_cost_bps,entry_market_cap_sol from manual_trades order by exit_ts,trade_id')
-    arena_positions = sqlite_rows(PAPER_ARENA_DB, 'select wallet_id,position_id,symbol,name,decision_ts,input_lamports,entry_market_cap_sol,entry_haircut_bps,exact_pnl_lamports,exact_pnl_bps,fast_pnl_lamports,fast_pnl_bps,updated_at from open_positions order by decision_ts,position_id')
+    arena_profiles = sqlite_rows(PAPER_ARENA_DB, 'select profile_id,claimed,created_at,last_used_at from profiles order by created_at,profile_id')
+    arena_wallets = sqlite_rows(PAPER_ARENA_DB, 'select wallet_id,profile_id,active,version,mode,initial_lamports,wallet_lamports,realized_pnl_lamports,closed_trades,wins,losses,open_positions,created_at,updated_at from arena_wallets order by created_at,wallet_id')
+    arena_trades = sqlite_rows(PAPER_ARENA_DB, 'select trade_id,profile_id,wallet_id,session_id,position_id,symbol,name,strategy,decision_ts,exit_ts,hold_s,input_lamports,pnl_lamports,pnl_bps,reason,entry_haircut_bps,entry_cost_bps,entry_market_cap_sol from manual_trades order by exit_ts,trade_id')
+    arena_positions = sqlite_rows(PAPER_ARENA_DB, 'select profile_id,wallet_id,position_id,symbol,name,decision_ts,input_lamports,entry_market_cap_sol,entry_haircut_bps,exact_pnl_lamports,exact_pnl_bps,fast_pnl_lamports,fast_pnl_bps,updated_at from open_positions order by decision_ts,position_id')
     arena_total_pnl = sum(safe_int(row.get('pnl_lamports')) for row in arena_trades)
     arena_wins = sum(safe_int(row.get('pnl_lamports')) > 0 for row in arena_trades)
     arena_losses = sum(safe_int(row.get('pnl_lamports')) < 0 for row in arena_trades)
-    arena_active = next((row for row in arena_wallets if safe_int(row.get('active')) == 1), {})
+    arena_active_wallets = [row for row in arena_wallets if safe_int(row.get('active')) == 1]
+    arena_active = max(arena_active_wallets, key=lambda row: safe_float(row.get('updated_at')), default={})
+    arena_profile_labels = {
+        str(row.get('profile_id')): f'Paper profile {index}'
+        for index, row in enumerate(arena_profiles, 1)
+    }
     arena_versions = sorted({str(row.get('version')) for row in arena_wallets if row.get('version')})
     arena_strategy = strategies['solana-paper-arena-manual']
     arena_strategy['modes'] = ['fake-only-manual-exact-quote']
     set_result(
         arena_strategy,
         {
+            'profiles': len(arena_profiles),
+            'claimed_profiles': sum(bool(row.get('claimed')) for row in arena_profiles),
             'wallet_sessions': len(arena_wallets),
             'trades': len(arena_trades),
             'wins': arena_wins,
@@ -534,8 +542,9 @@ def build_snapshot() -> dict[str, Any]:
             'win_rate': round(arena_wins / len(arena_trades), 4) if arena_trades else None,
             'pnl_lamports': arena_total_pnl,
             'pnl_sol': round(arena_total_pnl / 1e9, 9),
-            'active_wallet_lamports': arena_active.get('wallet_lamports'),
-            'active_wallet_pnl_lamports': arena_active.get('realized_pnl_lamports'),
+            'current_wallets': len(arena_active_wallets),
+            'current_wallet_lamports': sum(safe_int(row.get('wallet_lamports')) for row in arena_active_wallets),
+            'current_wallet_pnl_lamports': sum(safe_int(row.get('realized_pnl_lamports')) for row in arena_active_wallets),
             'open_positions': len(arena_positions),
         },
         round(arena_total_pnl / 1e9, 9),
@@ -554,7 +563,7 @@ def build_snapshot() -> dict[str, Any]:
             'trades': row.get('closed_trades'),
             'pnl_usd': None,
             'pnl_lamports': row.get('realized_pnl_lamports'),
-            'variant': row.get('version'),
+            'variant': f"{arena_profile_labels.get(str(row.get('profile_id')), 'Paper profile')} · {row.get('version')}",
             'source_family': 'Paper Arena SQLite ledger',
         })
     for index, row in enumerate(arena_trades, 1):
@@ -576,7 +585,7 @@ def build_snapshot() -> dict[str, Any]:
             'pnl_lamports': pnl_lamports,
             'net_bps': safe_float_none(row.get('pnl_bps')),
             'truth': 'Fake-only manual close using fresh quoted entry and exit paths; no signing, orders, swaps, or funds.',
-            'variant': row.get('strategy'),
+            'variant': f"{arena_profile_labels.get(str(row.get('profile_id')), 'Paper profile')} · {row.get('strategy')}",
             'hold_s': safe_float_none(row.get('hold_s')),
             'entry_haircut_bps': safe_int(row.get('entry_haircut_bps')),
         })
@@ -695,11 +704,19 @@ def build_snapshot() -> dict[str, Any]:
     exact_trade_count = len(exact_trades)
     historical_tokens = (sqlite_rows(HISTORICAL_DB, 'select count(*) n from candidates') or [{'n': 0}])[0]['n']
 
+    paper_strategy_id = 'solana-paper-arena-manual'
+    for row in strategies.values():
+        row['dashboard_view'] = 'paper-arena' if row.get('id') == paper_strategy_id else 'auto-trade'
+    for row in result_log:
+        row['dashboard_view'] = 'paper-arena' if row.get('strategy_id') == paper_strategy_id else 'auto-trade'
+    for row in test_runs:
+        row['dashboard_view'] = 'paper-arena' if row.get('strategy_id') == paper_strategy_id else 'auto-trade'
+
     strategies_list = sorted(strategies.values(), key=lambda row: (row['venue'], row['name']))
     performance = []
     for row in strategies_list:
         if isinstance(row.get('primary_value'), (int, float)):
-            performance.append({'strategy_id': row['id'], 'name': row['name'], 'venue': row['venue'], 'evidence_class': row['evidence_class'], 'value': row['primary_value'], 'unit': row['primary_unit'], 'result_status': row['result_status']})
+            performance.append({'strategy_id': row['id'], 'name': row['name'], 'venue': row['venue'], 'evidence_class': row['evidence_class'], 'dashboard_view': row['dashboard_view'], 'value': row['primary_value'], 'unit': row['primary_unit'], 'result_status': row['result_status']})
 
     activity = Counter()
     for row in test_runs:
@@ -712,6 +729,14 @@ def build_snapshot() -> dict[str, Any]:
     test_runs.sort(key=lambda row: str(row.get('timestamp') or ''), reverse=True)
     promotion_ready = sum(bool(row.get('metrics', {}).get('promotion_candidate')) for row in strategies_list)
     evidence_counts = Counter(row['evidence_class'] for row in strategies_list)
+    view_summary = {
+        view: {
+            'strategy_count': sum(row.get('dashboard_view') == view for row in strategies_list),
+            'result_count': sum(row.get('dashboard_view') == view for row in result_log),
+            'test_run_count': sum(row.get('dashboard_view') == view for row in test_runs),
+        }
+        for view in ('paper-arena', 'auto-trade')
+    }
 
     truth_summary = {
         'overall_status': 'FAIL',
@@ -728,7 +753,7 @@ def build_snapshot() -> dict[str, Any]:
     }
 
     return {
-        'schema_version': 4,
+        'schema_version': 5,
         'generated_utc': generated,
         'privacy': 'Unlinked/noindex static snapshot. Public wallet addresses only. No secrets, key material, raw signed transactions, or local secret paths.',
         'truth_summary': truth_summary,
@@ -740,6 +765,7 @@ def build_snapshot() -> dict[str, Any]:
             'test_run_count': len(test_runs),
             'venue_count': len({row['venue'] for row in strategies_list}),
             'wallet_count': len(wallets),
+            'paper_arena_profile_count': len(arena_profiles),
             'tracked_wallets_usd': round(sum(safe_float(row.get('usd_value')) for row in wallets), 2),
             'evidence_counts': dict(sorted(evidence_counts.items())),
         },
@@ -771,6 +797,21 @@ def build_snapshot() -> dict[str, Any]:
         'strategies': strategies_list,
         'test_runs': test_runs,
         'result_log': result_log,
+        'views': view_summary,
+        'paper_arena': {
+            'profile_count': len(arena_profiles),
+            'claimed_profile_count': sum(bool(row.get('claimed')) for row in arena_profiles),
+            'wallet_count': len(arena_wallets),
+            'current_wallet_count': len(arena_active_wallets),
+            'current_balance_lamports': sum(safe_int(row.get('wallet_lamports')) for row in arena_active_wallets),
+            'realized_pnl_lamports': arena_total_pnl,
+            'closed_trades': len(arena_trades),
+            'wins': arena_wins,
+            'losses': arena_losses,
+            'open_positions': len(arena_positions),
+            'captured_at': iso_ts(arena_active.get('updated_at')),
+            'truth': 'Profile names and PIN material are not exported. Fake-only exact-quote records only.',
+        },
         'tracked_wallets': wallets,
         'prices': prices,
         'paper_goblin_solana': paper_goblin_rows()[0],
@@ -782,7 +823,8 @@ def build_snapshot() -> dict[str, Any]:
                 'name': 'Paper Arena',
                 'url': 'http://localhost:8790/',
                 'availability': 'local machine only',
-                'storage': 'SQLite exact-quote ledger',
+                'storage': 'SQLite profile + exact-quote ledger',
+                'profiles': len(arena_profiles),
                 'records': len(arena_trades),
                 'open_positions': len(arena_positions),
                 'captured_at': iso_ts(arena_active.get('updated_at')),

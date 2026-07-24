@@ -88,6 +88,17 @@
     .truth-lock { color: var(--red); font-size: 11px; font-weight: 900; letter-spacing: .16em; white-space: nowrap; }
     .truth-copy { color: var(--paper); font-size: 13px; line-height: 1.55; }
     .truth-grade { padding: 8px 11px; border: 1px solid rgba(255,118,110,.45); color: var(--red); font-weight: 900; letter-spacing: .12em; border-radius: 7px; }
+    .truth-banner.paper { border-color: rgba(157,255,132,.5); background: linear-gradient(90deg, rgba(157,255,132,.11), rgba(120,201,255,.05)); }
+    .truth-banner.paper .truth-lock, .truth-banner.paper .truth-grade { color: var(--green); border-color: rgba(157,255,132,.4); }
+
+    .view-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 24px; padding: 8px; border: 1px solid var(--line-hot); border-radius: 14px; background: rgba(7,16,13,.9); box-shadow: var(--shadow); }
+    .view-toggle button { display: flex; min-height: 64px; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 15px; color: var(--muted); text-align: left; }
+    .view-toggle button strong, .view-toggle button small { display: block; }
+    .view-toggle button strong { color: inherit; font-size: 13px; }
+    .view-toggle button small { margin-top: 4px; color: var(--faint); font-size: 9px; line-height: 1.35; }
+    .view-toggle button span:last-child { color: var(--faint); font-size: 10px; }
+    .view-toggle button.active { border-color: var(--green); color: var(--green); background: rgba(157,255,132,.08); }
+    #app[data-current-view="paper-arena"] [data-auto-only] { display: none; }
 
     .kpi-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-bottom: 34px; }
     .kpi { min-width: 0; min-height: 126px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: linear-gradient(150deg, rgba(16,31,25,.96), rgba(9,18,15,.9)); }
@@ -215,7 +226,7 @@
       .truth-banner { padding: 15px; }
       .kpi-grid { gap: 7px; }
       .kpi { min-height: 112px; padding: 13px; }
-      .kpi-value { font-size: 22px; }
+      .kpi-value { font-size: 20px; white-space: normal; overflow-wrap: anywhere; }
       .strategy-grid, .filter-bar { grid-template-columns: 1fr; }
       .strategy-card { min-height: 240px; }
       .coverage-list { grid-template-columns: 1fr 1fr; }
@@ -224,6 +235,7 @@
       .table-tools > div { width: 100%; }
       .table-tools input, .table-tools select { width: 100%; min-width: 0; }
       .local-source { align-items: flex-start; flex-direction: column; }
+      .view-toggle { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -238,7 +250,7 @@
       <div class="top-links"><a href="#strategy-atlas">Strategies</a><a href="#results">Results</a><a href="#runs">Test runs</a><a href="#coverage">Coverage</a><a href="http://localhost:8790/" target="_blank" rel="noopener noreferrer">Paper Arena ↗</a></div>
     </nav>
 
-    <main id="app">
+    <main id="app" data-default-view="paper-arena">
       <header class="hero">
         <div>
           <div class="eyebrow">Trading Evidence / Strategy Atlas</div>
@@ -247,7 +259,7 @@
         </div>
         <aside class="hero-meta" aria-label="Loading dataset metadata">
           <div class="meta-row"><span>Snapshot</span><strong>Reading ledgers…</strong></div>
-          <div class="meta-row"><span>Schema</span><strong>v4</strong></div>
+          <div class="meta-row"><span>Schema</span><strong>v5</strong></div>
           <div class="meta-row"><span>Coverage</span><strong>Loading strategy atlas</strong></div>
           <div class="meta-row"><span>Evidence rule</span><strong>Wallet &gt; quoted shadow &gt; paper &gt; proxy</strong></div>
         </aside>
@@ -274,6 +286,7 @@
       strategyEvidence: 'paper-wallet',
       strategyLimit: 18,
       showAllStrategies: false,
+      dataView: 'paper-arena',
     };
 
     const $ = (selector, root = document) => root.querySelector(selector);
@@ -319,9 +332,9 @@
       $('#app').innerHTML = `
         <header class="hero">
           <div>
-            <div class="eyebrow">Trading Evidence / Strategy Atlas</div>
-            <h1>Results,<br>not stories.</h1>
-            <p class="hero-copy">Every located Polymarket and Solana strategy, test run, paper close, shadow quote, and live wallet result. Evidence classes stay separate. Wallet truth wins every disagreement.</p>
+            <div id="hero-eyebrow" class="eyebrow">Paper Arena / Main Dashboard</div>
+            <h1 id="hero-title">Paper Arena,<br>all receipts.</h1>
+            <p id="hero-copy" class="hero-copy">Profile wallets, exact-quote closes, balances, and paper sessions. Names and PIN material stay local; only anonymized paper evidence reaches this static atlas.</p>
           </div>
           <aside class="hero-meta" aria-label="Dataset metadata">
             <div class="meta-row"><span>Snapshot</span><strong>${escapeHtml(dateLabel(data.generated_utc))}</strong></div>
@@ -331,27 +344,25 @@
           </aside>
         </header>
 
+        <section id="data-view-toggle" class="view-toggle" data-default-view="paper-arena" aria-label="Dashboard data view">
+          <button type="button" data-data-view="paper-arena" aria-pressed="true"><span><strong>Paper Arena</strong><small>Profile wallets, manual closes, balances, and paper sessions</small></span><span>${compact(data.views?.['paper-arena']?.result_count || 0)} rows</span></button>
+          <button type="button" data-data-view="auto-trade" aria-pressed="false"><span><strong>Auto Trade Data</strong><small>Automated strategy, shadow, backtest, and wallet evidence</small></span><span>${compact(data.views?.['auto-trade']?.result_count || 0)} rows</span></button>
+        </section>
+
         <section id="truth-banner" class="truth-banner" aria-label="Wallet truth status">
           <div class="truth-lock">WALLET TRUTH</div>
           <div class="truth-copy">${escapeHtml(truth.plain_verdict)}</div>
           <div class="truth-grade">${escapeHtml(truth.overall_status)}</div>
         </section>
 
-        <section class="kpi-grid" aria-label="Trading summary">
-          ${kpi('Polymarket live', money(truth.polymarket_live_pnl_usd), '2 wallet-observed closes', resultClass(truth.polymarket_live_pnl_usd))}
-          ${kpi('Solana live wallet Δ', `${signed(truth.solana_live_delta_sol, 9)} SOL`, 'Non-zero wallet deltas summed', resultClass(truth.solana_live_delta_sol))}
-          ${kpi('Solana fake wallet', money(truth.solana_legacy_fake_wallet_pnl_usd), '1,217 league closes', resultClass(truth.solana_legacy_fake_wallet_pnl_usd))}
-          ${kpi('Current exact quote', `${signed(truth.solana_current_exact_quote_pnl_sol, 9)} SOL`, 'V5 promotion ledger', resultClass(truth.solana_current_exact_quote_pnl_sol))}
-          ${kpi('Strategies indexed', compact(summary.strategy_count), `${summary.tested_strategy_count} tested · ${summary.built_only_strategy_count} built-only`, 'neutral', 'strategy-count', summary.strategy_count)}
-          ${kpi('Normalized results', compact(summary.result_count), `${compact(summary.test_run_count)} test-run records`, 'neutral', 'result-count', summary.result_count)}
-        </section>
+        <section id="view-kpis" class="kpi-grid" aria-label="Trading summary"></section>
 
-        <section class="section" id="wallets">
+        <section class="section" id="wallets" data-auto-only>
           ${sectionHead('01 / Wallet layer', 'Tracked wallets', 'Public readbacks only. Balances shown in native units. Cross-chain totals are never presented as strategy profit.')}
           <div id="wallet-grid" class="wallet-grid"></div>
         </section>
 
-        <section class="section" id="visuals">
+        <section class="section" id="visuals" data-auto-only>
           ${sectionHead('02 / Visual evidence', 'Signal → test → result', 'Four views. Each chart preserves its own unit or explicitly labels the transformation. No blended-dollar theatre.')}
           <div class="viz-grid">
             <article class="viz-card wide">
@@ -395,14 +406,14 @@
         <section class="section" id="runs">
           ${sectionHead('05 / Run registry', `${compact(summary.test_run_count)} test-run records`, 'All located lane generations, runtime strategy runs, Paper Arena sessions, exact-quote sessions, degen trials, and Polymarket replay runs.')}
           <a id="paper-arena-link" class="local-source" href="http://localhost:8790/" target="_blank" rel="noopener noreferrer">
-            <span class="local-source-copy"><span class="local-source-label">Local capture source · ${escapeHtml(paperArena.storage || 'SQLite exact-quote ledger')}</span><strong>Paper Arena manual trading data is in this atlas</strong><small>${escapeHtml(compact(paperArena.records || 0))} closed trades · ${escapeHtml(compact(paperArena.open_positions || 0))} open positions · captured ${escapeHtml(dateLabel(paperArena.captured_at))} · local machine only</small></span>
+            <span class="local-source-copy"><span class="local-source-label">Local capture source · ${escapeHtml(paperArena.storage || 'SQLite profile + exact-quote ledger')}</span><strong>Paper Arena profile data is the main dashboard view</strong><small>${escapeHtml(compact(paperArena.profiles || 0))} profiles · ${escapeHtml(compact(paperArena.records || 0))} closed trades · ${escapeHtml(compact(paperArena.open_positions || 0))} open · captured ${escapeHtml(dateLabel(paperArena.captured_at))} · local machine only</small></span>
             <span class="local-source-action">Open Paper Arena ↗</span>
           </a>
           <div class="table-tools"><div><input id="run-search" type="search" placeholder="Search test run, strategy, variant…" aria-label="Search test runs" /><select id="run-mode" aria-label="Filter test runs by mode"><option value="all">All modes</option></select></div><div><span id="run-visible" class="section-note"></span></div></div>
           <div class="table-shell"><div class="table-scroll"><table><thead><tr><th>Time</th><th>Strategy</th><th>Mode</th><th>Variant</th><th>Trades</th><th>PNL</th><th>Status</th><th>Source</th></tr></thead><tbody id="run-table-body"></tbody></table></div><div id="run-paginator" class="paginator"></div></div>
         </section>
 
-        <section class="section" id="coverage">
+        <section class="section" id="coverage" data-auto-only>
           ${sectionHead('06 / Data coverage', 'What was actually read', 'Counts are generated from source databases and ledgers. They are coverage evidence, not profitability evidence.')}
           <div class="coverage-grid">
             <article class="coverage-card"><div class="coverage-list">
@@ -429,6 +440,57 @@
       return `<div class="section-head"><div><div class="section-kicker">${escapeHtml(kicker)}</div><h2>${escapeHtml(title)}</h2></div><div class="section-note">${escapeHtml(note)}</div></div>`;
     }
     function coverageItem(value, label) { return `<div class="coverage-item"><b>${escapeHtml(compact(value))}</b><span>${escapeHtml(label)}</span></div>`; }
+
+    function renderViewSummary() {
+      const paper = state.data.paper_arena || {};
+      const truth = state.data.truth_summary;
+      const summary = state.data.summary;
+      const isPaper = state.dataView === 'paper-arena';
+      $('#app').dataset.currentView = state.dataView;
+      $$('#data-view-toggle [data-data-view]').forEach(button => {
+        const active = button.dataset.dataView === state.dataView;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      $('#truth-banner').classList.toggle('paper', isPaper);
+      if (isPaper) {
+        $('#hero-eyebrow').textContent = 'Paper Arena / Main Dashboard';
+        $('#hero-title').innerHTML = 'Paper Arena,<br>all receipts.';
+        $('#hero-copy').textContent = 'Profile wallets, exact-quote closes, balances, and paper sessions. Names and PIN material stay local; only anonymized paper evidence reaches this static atlas.';
+        $('.truth-lock').textContent = 'PAPER ARENA';
+        $('.truth-copy').textContent = paper.truth || 'Fake-only profile wallet evidence.';
+        $('.truth-grade').textContent = 'FAKE ONLY';
+        $('#view-kpis').innerHTML = [
+          kpi('Saved profiles', compact(paper.profile_count), `${compact(paper.claimed_profile_count)} PIN-protected`, 'neutral', 'profile-count', paper.profile_count),
+          kpi('Current paper balance', `${signed(Number(paper.current_balance_lamports || 0) / 1e9, 9)} SOL`, `${compact(paper.current_wallet_count)} current wallets`, 'neutral'),
+          kpi('Realized exact-quote PNL', `${signed(Number(paper.realized_pnl_lamports || 0) / 1e9, 9)} SOL`, 'Across preserved profile sessions', resultClass(paper.realized_pnl_lamports)),
+          kpi('Exact-quote closes', compact(paper.closed_trades), `${compact(paper.wins)}W / ${compact(paper.losses)}L`, 'neutral', 'result-count', paper.closed_trades),
+          kpi('Open paper positions', compact(paper.open_positions), 'Profile-isolated fake exposure', 'neutral'),
+          kpi('Wallet sessions', compact(paper.wallet_count), `Captured ${dateLabel(paper.captured_at)}`, 'neutral'),
+        ].join('');
+        $('#strategy-atlas h2').textContent = 'Paper Arena strategy';
+        $('#results h2').textContent = 'Paper Arena close ledger';
+        $('#runs h2').textContent = `${compact(state.data.views?.['paper-arena']?.test_run_count || 0)} profile wallet sessions`;
+      } else {
+        $('#hero-eyebrow').textContent = 'Auto Trade Data / Strategy Atlas';
+        $('#hero-title').innerHTML = 'Results,<br>not stories.';
+        $('#hero-copy').textContent = 'Automated Polymarket and Solana strategies, test runs, shadow quotes, paper closes, and live wallet results. Evidence classes stay separate. Wallet truth wins every disagreement.';
+        $('.truth-lock').textContent = 'WALLET TRUTH';
+        $('.truth-copy').textContent = truth.plain_verdict;
+        $('.truth-grade').textContent = truth.overall_status;
+        $('#view-kpis').innerHTML = [
+          kpi('Polymarket live', money(truth.polymarket_live_pnl_usd), 'Wallet-observed closes', resultClass(truth.polymarket_live_pnl_usd)),
+          kpi('Solana live wallet Δ', `${signed(truth.solana_live_delta_sol, 9)} SOL`, 'Non-zero wallet deltas summed', resultClass(truth.solana_live_delta_sol)),
+          kpi('Solana fake wallet', money(truth.solana_legacy_fake_wallet_pnl_usd), 'Automated league closes', resultClass(truth.solana_legacy_fake_wallet_pnl_usd)),
+          kpi('Current exact quote', `${signed(truth.solana_current_exact_quote_pnl_sol, 9)} SOL`, 'Promotion ledger', resultClass(truth.solana_current_exact_quote_pnl_sol)),
+          kpi('Strategies indexed', compact(state.data.views?.['auto-trade']?.strategy_count), `${summary.tested_strategy_count} tested · ${summary.built_only_strategy_count} built-only`, 'neutral', 'strategy-count', state.data.views?.['auto-trade']?.strategy_count),
+          kpi('Normalized results', compact(state.data.views?.['auto-trade']?.result_count), `${compact(state.data.views?.['auto-trade']?.test_run_count)} test-run records`, 'neutral', 'result-count', state.data.views?.['auto-trade']?.result_count),
+        ].join('');
+        $('#strategy-atlas h2').textContent = 'Automated strategy atlas';
+        $('#results h2').textContent = 'Automated result ledger';
+        $('#runs h2').textContent = `${compact(state.data.views?.['auto-trade']?.test_run_count || 0)} automated test-run records`;
+      }
+    }
 
     function renderWallets() {
       $('#wallet-grid').innerHTML = state.data.tracked_wallets.map(wallet => `
@@ -488,7 +550,7 @@
     }
 
     function renderStrategyChart() {
-      const all = state.data.visualizations.strategy_performance || [];
+      const all = (state.data.visualizations.strategy_performance || []).filter(row => row.dashboard_view === 'auto-trade');
       const units = [...new Set(all.map(row => row.unit).filter(Boolean))];
       const select = $('#strategy-chart-unit');
       if (!select.dataset.ready) {
@@ -591,7 +653,7 @@
       const rows = state.data.strategies.filter(row => {
         const haystack = [row.name, row.family, row.lifecycle, ...(row.variants || []), ...row.modes].join(' ').toLowerCase();
         const resultMatch = result === 'all' || (result === 'positive' && Number(row.primary_value) > 0) || (result === 'negative' && Number(row.primary_value) < 0) || (result === 'no-results' && !finite(row.primary_value));
-        return (!query || haystack.includes(query)) && (venue === 'all' || row.venue === venue) && (evidence === 'all' || row.evidence_class === evidence) && resultMatch;
+        return row.dashboard_view === state.dataView && (!query || haystack.includes(query)) && (venue === 'all' || row.venue === venue) && (evidence === 'all' || row.evidence_class === evidence) && resultMatch;
       });
       $('#strategy-visible').textContent = rows.length.toLocaleString();
       const defaultView = !query && venue === 'all' && evidence === 'all' && result === 'all';
@@ -641,14 +703,15 @@
       const mode = $('#result-mode').value;
       return state.data.result_log.filter(row => {
         const haystack = [row.market, row.symbol, row.status, row.mode, row.source_family, strategyName(row.strategy_id)].join(' ').toLowerCase();
-        return (!query || haystack.includes(query)) && (mode === 'all' || row.mode === mode);
+        return row.dashboard_view === state.dataView && (!query || haystack.includes(query)) && (mode === 'all' || row.mode === mode);
       });
     }
     function renderResults() {
       const rows = filteredResults();
       const pageInfo = paginate(rows, state.resultPage, state.resultPageSize);
       state.resultPage = pageInfo.page;
-      $('#result-visible').textContent = `${rows.length.toLocaleString()} / ${state.data.result_log.length.toLocaleString()} results`;
+      const scopedTotal = state.data.result_log.filter(row => row.dashboard_view === state.dataView).length;
+      $('#result-visible').textContent = `${rows.length.toLocaleString()} / ${scopedTotal.toLocaleString()} results`;
       $('#result-table-body').innerHTML = pageInfo.rows.map(row => `<tr><td>${escapeHtml(dateLabel(row.timestamp))}</td><td><b>${escapeHtml(row.venue)}</b><br>${escapeHtml(humanize(row.evidence_class))}</td><td>${escapeHtml(strategyName(row.strategy_id))}</td><td>${escapeHtml(row.market || row.symbol || '—')}</td><td>${escapeHtml(humanize(row.mode))}</td><td>${resultDisplay(row)}</td><td>${escapeHtml(humanize(row.status))}</td><td>${escapeHtml(row.source_family)}</td></tr>`).join('');
       paginator('#result-paginator', pageInfo, page => { state.resultPage = page; renderResults(); });
     }
@@ -658,7 +721,7 @@
       const mode = $('#run-mode').value;
       return state.data.test_runs.filter(row => {
         const haystack = [row.id, row.variant, row.status, row.mode, row.source_family, strategyName(row.strategy_id)].join(' ').toLowerCase();
-        return (!query || haystack.includes(query)) && (mode === 'all' || row.mode === mode);
+        return row.dashboard_view === state.dataView && (!query || haystack.includes(query)) && (mode === 'all' || row.mode === mode);
       });
     }
     function runPnl(row) {
@@ -670,16 +733,40 @@
       const rows = filteredRuns();
       const pageInfo = paginate(rows, state.runPage, state.runPageSize);
       state.runPage = pageInfo.page;
-      $('#run-visible').textContent = `${rows.length.toLocaleString()} / ${state.data.test_runs.length.toLocaleString()} runs`;
+      const scopedTotal = state.data.test_runs.filter(row => row.dashboard_view === state.dataView).length;
+      $('#run-visible').textContent = `${rows.length.toLocaleString()} / ${scopedTotal.toLocaleString()} runs`;
       $('#run-table-body').innerHTML = pageInfo.rows.map(row => `<tr><td>${escapeHtml(dateLabel(row.timestamp))}</td><td>${escapeHtml(strategyName(row.strategy_id))}</td><td>${escapeHtml(humanize(row.mode))}</td><td>${escapeHtml(row.variant || '—')}</td><td>${escapeHtml(row.trades ?? '—')}</td><td class="${resultClass(row.pnl_usd ?? row.pnl_lamports)}">${escapeHtml(runPnl(row))}</td><td>${escapeHtml(humanize(row.status))}</td><td>${escapeHtml(row.source_family)}</td></tr>`).join('');
       paginator('#run-paginator', pageInfo, page => { state.runPage = page; renderRuns(); });
     }
 
     function renderSources() {
-      $('#source-list').innerHTML = state.data.source_register.map(row => `<div class="source-row"><span><strong>${escapeHtml(row.name)}</strong><br>${escapeHtml(row.classification)}</span><span>${escapeHtml(compact(row.records))}</span></div>`).join('');
+      const rows = state.data.source_register.filter(row => state.dataView === 'paper-arena' ? row.name.includes('Paper Arena') : !row.name.includes('Paper Arena'));
+      $('#source-list').innerHTML = rows.map(row => `<div class="source-row"><span><strong>${escapeHtml(row.name)}</strong><br>${escapeHtml(row.classification)}</span><span>${escapeHtml(compact(row.records))}</span></div>`).join('');
+    }
+
+    function setDataView(view) {
+      if (!['paper-arena', 'auto-trade'].includes(view)) return;
+      state.dataView = view;
+      state.resultPage = 1;
+      state.runPage = 1;
+      state.showAllStrategies = false;
+      $('#strategy-search').value = '';
+      $('#venue-filter').value = 'all';
+      $('#evidence-filter').value = 'all';
+      $('#result-filter').value = 'all';
+      $('#result-search').value = '';
+      $('#result-mode').value = 'all';
+      $('#run-search').value = '';
+      $('#run-mode').value = 'all';
+      renderViewSummary();
+      renderStrategies();
+      renderResults();
+      renderRuns();
+      renderSources();
     }
 
     function bindControls() {
+      $$('#data-view-toggle [data-data-view]').forEach(button => button.addEventListener('click', () => setDataView(button.dataset.dataView)));
       for (const id of ['strategy-search', 'venue-filter', 'evidence-filter', 'result-filter']) {
         $(id.startsWith('#') ? id : `#${id}`).addEventListener(id.includes('search') ? 'input' : 'change', () => { state.showAllStrategies = false; renderStrategies(); });
       }
@@ -697,6 +784,7 @@
         state.data = await response.json();
         state.strategies = new Map(state.data.strategies.map(row => [row.id, row]));
         buildScaffold(state.data);
+        renderViewSummary();
         renderWallets();
         populateFilters();
         renderEquityChart();
