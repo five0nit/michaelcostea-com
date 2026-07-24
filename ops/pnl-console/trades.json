@@ -1,6 +1,6 @@
 {
   "schema_version": 5,
-  "generated_utc": "2026-07-24T05:09:24.045303Z",
+  "generated_utc": "2026-07-24T05:20:02.710917Z",
   "privacy": "Unlinked/noindex static snapshot. Public wallet addresses only. No secrets, key material, raw signed transactions, or local secret paths.",
   "truth_summary": {
     "overall_status": "FAIL",
@@ -19,12 +19,12 @@
     "strategy_count": 58,
     "tested_strategy_count": 54,
     "built_only_strategy_count": 4,
-    "result_count": 1465,
+    "result_count": 1466,
     "test_run_count": 1540,
     "venue_count": 4,
     "wallet_count": 3,
     "paper_arena_profile_count": 1,
-    "tracked_wallets_usd": 32.28,
+    "tracked_wallets_usd": 32.29,
     "evidence_counts": {
       "calibration": 1,
       "code-only": 3,
@@ -40,13 +40,13 @@
   },
   "data_coverage": {
     "strategy_count": 58,
-    "result_count": 1465,
+    "result_count": 1466,
     "test_run_count": 1540,
     "raw_snapshots": 2260013,
     "route_probes": 7384,
     "exact_quote_watches": 234,
     "exact_quote_trades": 29,
-    "paper_arena_exact_quote_closes": 41,
+    "paper_arena_exact_quote_closes": 42,
     "historical_token_rows": 183230,
     "strategy_league_generations": 127,
     "polymarket_saved_scans": 165,
@@ -5326,7 +5326,7 @@
         "venue": "Solana",
         "evidence_class": "exact-quote-shadow",
         "dashboard_view": "paper-arena",
-        "value": -0.031522054,
+        "value": -0.034474038,
         "unit": "SOL",
         "result_status": "negative"
       },
@@ -6451,18 +6451,18 @@
         "profiles": 1,
         "claimed_profiles": 1,
         "wallet_sessions": 1,
-        "trades": 41,
+        "trades": 42,
         "wins": 10,
-        "losses": 31,
-        "win_rate": 0.2439,
-        "pnl_lamports": -31522054,
-        "pnl_sol": -0.031522054,
+        "losses": 32,
+        "win_rate": 0.2381,
+        "pnl_lamports": -34474038,
+        "pnl_sol": -0.034474038,
         "current_wallets": 1,
-        "current_wallet_lamports": 968477946,
-        "current_wallet_pnl_lamports": -31522054,
+        "current_wallet_lamports": 965525962,
+        "current_wallet_pnl_lamports": -34474038,
         "open_positions": 0
       },
-      "primary_value": -0.031522054,
+      "primary_value": -0.034474038,
       "primary_unit": "SOL",
       "truth_note": "Local fake-only manual closes mirrored to SQLite. Fresh quoted entry/exit evidence; no signing, orders, swaps, or funds.",
       "dashboard_view": "paper-arena"
@@ -6834,9 +6834,9 @@
       "venue": "Solana",
       "mode": "fake-only-manual-exact-quote",
       "status": "active",
-      "trades": 41,
+      "trades": 42,
       "pnl_usd": null,
-      "pnl_lamports": -31522054,
+      "pnl_lamports": -34474038,
       "variant": "Paper profile 1 · manual-paper-arena-v2",
       "source_family": "Paper Arena SQLite ledger",
       "dashboard_view": "paper-arena"
@@ -28869,6 +28869,26 @@
     }
   ],
   "result_log": [
+    {
+      "id": "paper-arena-exact-42",
+      "timestamp": "2026-07-24T05:18:41.119157Z",
+      "strategy_id": "solana-paper-arena-manual",
+      "venue": "Solana",
+      "mode": "fake-only-manual-exact-quote",
+      "evidence_class": "exact-quote-shadow",
+      "source_family": "Paper Arena SQLite ledger",
+      "market": "$PIZZA · Pizza Girl",
+      "symbol": "PIZZA",
+      "status": "loss",
+      "pnl_usd": null,
+      "pnl_lamports": -2951984,
+      "net_bps": -2951.0,
+      "truth": "Fake-only manual close using fresh quoted entry and exit paths; no signing, orders, swaps, or funds.",
+      "variant": "Paper profile 1 · mike_manual_exact_quote_v2",
+      "hold_s": 28.106,
+      "entry_haircut_bps": 340,
+      "dashboard_view": "paper-arena"
+    },
     {
       "id": "paper-arena-exact-41",
       "timestamp": "2026-07-24T05:07:44.334398Z",
@@ -55292,7 +55312,7 @@
   "views": {
     "paper-arena": {
       "strategy_count": 1,
-      "result_count": 41,
+      "result_count": 42,
       "test_run_count": 1
     },
     "auto-trade": {
@@ -55306,13 +55326,13 @@
     "claimed_profile_count": 1,
     "wallet_count": 1,
     "current_wallet_count": 1,
-    "current_balance_lamports": 968477946,
-    "realized_pnl_lamports": -31522054,
-    "closed_trades": 41,
+    "current_balance_lamports": 965525962,
+    "realized_pnl_lamports": -34474038,
+    "closed_trades": 42,
     "wins": 10,
-    "losses": 31,
+    "losses": 32,
     "open_positions": 0,
-    "captured_at": "2026-07-24T05:07:44.334487Z",
+    "captured_at": "2026-07-24T05:18:41.119371Z",
     "sync_mode": "automatic-local-export",
     "sync_max_lag_seconds": 330,
     "sync_privacy": "anonymized-public-snapshot",
@@ -55342,7 +55362,7 @@
       "status": "funded",
       "native_balance": 0.004426642727465405,
       "native_unit": "ETH",
-      "usd_value": 8.31,
+      "usd_value": 8.32,
       "readback_ok": true
     },
     {
@@ -55360,7 +55380,7 @@
     }
   ],
   "prices": {
-    "eth_usd": 1877.73,
+    "eth_usd": 1879.0,
     "sol_usd": 75.73,
     "source": "CoinGecko public spot snapshot"
   },
@@ -55383,9 +55403,9 @@
       "availability": "local machine only",
       "storage": "SQLite profile + exact-quote ledger",
       "profiles": 1,
-      "records": 41,
+      "records": 42,
       "open_positions": 0,
-      "captured_at": "2026-07-24T05:07:44.334487Z",
+      "captured_at": "2026-07-24T05:18:41.119371Z",
       "truth": "Fake-only manual exact-quote paper trading. No signing, orders, swaps, or funds."
     }
   ],
@@ -55433,7 +55453,7 @@
     },
     {
       "name": "Paper Arena SQLite ledger",
-      "records": 41,
+      "records": 42,
       "classification": "manual exact-quote shadow"
     },
     {
