@@ -119,6 +119,7 @@ async function auditViewport(browser, name, viewport, mobile) {
 
     await page.goto(`${baseUrl}/#projects`, { waitUntil: 'networkidle' });
     await page.waitForSelector('#projectsWindow.open');
+    await page.waitForFunction(() => document.activeElement?.id === 'projectsWindow');
     const routed = await page.evaluate(() => ({
       hash: location.hash,
       activeId: document.activeElement?.id || '',
