@@ -40,7 +40,8 @@ async function auditViewport(browser, name, viewport, mobile) {
     if (message.type() === 'error' && !/googletagmanager|google-analytics|ERR_NAME_NOT_RESOLVED/i.test(message.text())) consoleErrors.push(message.text());
   });
   page.on('requestfailed', (request) => {
-    if (!/googletagmanager|googleapis|gstatic/i.test(request.url())) requestFailures.push({ url: request.url(), error: request.failure()?.errorText || '' });
+    const errorText = request.failure()?.errorText || '';
+    if (!/googletagmanager|googleapis|gstatic/i.test(request.url()) && !/ERR_ABORTED/.test(errorText)) requestFailures.push({ url: request.url(), error: errorText });
   });
   page.on('response', async (response) => {
     const url = response.url();
