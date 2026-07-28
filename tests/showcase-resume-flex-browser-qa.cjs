@@ -99,6 +99,24 @@ async function auditViewport(browser, name, viewport, mobile) {
     must(home.actionsVisible.every((item) => item.bottom <= home.taskbarTop), 'mobile: taskbar obscures a primary action');
     must(home.actionsVisible.every((item) => item.bottom <= home.heroBottom), 'mobile: primary action clipped by hero scroll container');
     must(home.sidebarTop >= Math.max(...home.actionsVisible.map((item) => item.bottom)), 'mobile: portrait/navigation overlaps primary actions');
+
+    await page.locator('#readerWindow .win-close').click();
+    await page.waitForTimeout(100);
+    const welcomeClosed = await page.evaluate(() => {
+      const desktop = document.querySelector('.desktop-icons');
+      const desktopStyle = desktop ? getComputedStyle(desktop) : null;
+      return {
+        readerOpen: document.getElementById('readerWindow')?.classList.contains('open') || false,
+        readerHidden: document.getElementById('readerWindow')?.getAttribute('aria-hidden') === 'true',
+        openWindowCount: document.querySelectorAll('.win-window.open').length,
+        desktopVisible: !!desktop && desktopStyle.display !== 'none' && desktop.getBoundingClientRect().height > 0,
+      };
+    });
+    must(!welcomeClosed.readerOpen && welcomeClosed.readerHidden, 'mobile: Welcome.exe close button immediately reopened the window');
+    must(welcomeClosed.openWindowCount === 0, `mobile: expected desktop with no open window, found ${welcomeClosed.openWindowCount}`);
+    must(welcomeClosed.desktopVisible, 'mobile: desktop icons not revealed after closing Welcome.exe');
+    await page.screenshot({ path: path.join(outDir, 'desktop-after-welcome-close-mobile.png'), fullPage: true });
+
     await page.goto(`${baseUrl}/#projects`, { waitUntil: 'networkidle' });
     await page.waitForSelector('#projectsWindow.open');
     const routed = await page.evaluate(() => ({

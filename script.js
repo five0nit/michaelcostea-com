@@ -424,8 +424,9 @@ function closeWindow(id){
   delete win.dataset.prevRight;
   delete win.dataset.prevBottom;
 
-  let nextWindow = document.getElementById(activePrimaryWindowId());
-  if(isMobileMode() && !document.querySelector('.win-window.open')){
+  const hasOpenWindow = !!document.querySelector('.win-window.open');
+  let nextWindow = hasOpenWindow ? document.getElementById(activePrimaryWindowId()) : null;
+  if(isMobileMode() && !hasOpenWindow && id !== 'readerWindow'){
     openWindow('readerWindow');
     nextWindow = document.getElementById('readerWindow');
   }
@@ -433,7 +434,12 @@ function closeWindow(id){
   syncImmersiveMode();
   refreshTaskbar();
   syncPageRouteFromWindows();
-  if(focusReturn?.isConnected) requestAnimationFrame(() => focusReturn.focus());
+  if(focusReturn?.isConnected){
+    requestAnimationFrame(() => focusReturn.focus());
+  }else if(isMobileMode() && !nextWindow){
+    const desktopTarget = document.querySelector('.desktop-icons .desk-icon:not([disabled])');
+    requestAnimationFrame(() => desktopTarget?.focus());
+  }
 }
 
 function minimizeWindow(id){

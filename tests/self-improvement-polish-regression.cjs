@@ -25,7 +25,7 @@ assertMatch(
 
 assertMatch(
   'HTML should cache-bust both CSS and JS for self-improvement polish deploy',
-  /styles\.css\?v=20260728-showcase-resume-flex[\s\S]*script\.js\?v=20260728-showcase-resume-flex/,
+  /styles\.css\?v=20260728-showcase-resume-flex[\s\S]*script\.js\?v=20260728-mobile-welcome-close/,
   html
 );
 
