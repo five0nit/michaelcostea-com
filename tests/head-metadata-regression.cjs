@@ -26,15 +26,18 @@ function assertUrl(name, value) {
 
 const title = document.querySelector('title')?.textContent?.trim() || '';
 assertIncludes('title', title, 'Michael Costea');
-assertIncludes('description', meta('meta[name="description"]'), 'AI-powered business operating systems');
+assertIncludes('title', title, 'Head of Tech, AI & Systems');
+assertIncludes('title', title, 'Melbourne');
+assertIncludes('description', meta('meta[name="description"]'), 'AI-enabled business systems');
 
 assertIncludes('og:title', meta('meta[property="og:title"]'), 'Michael Costea');
-assertIncludes('og:description', meta('meta[property="og:description"]'), 'AI-powered business operating systems');
+assertIncludes('og:title', meta('meta[property="og:title"]'), 'Head of Tech, AI & Systems');
+assertIncludes('og:description', meta('meta[property="og:description"]'), 'vertical application delivery');
 assertUrl('og:url', meta('meta[property="og:url"]'));
-assertIncludes('og:image', meta('meta[property="og:image"]'), 'assets/profile-michael-pixel.jpg');
+assertIncludes('og:image', meta('meta[property="og:image"]'), 'assets/social/michael-costea-head-of-tech.png');
 
 assertIncludes('twitter:card', meta('meta[name="twitter:card"]'), 'summary_large_image');
 assertIncludes('twitter:title', meta('meta[name="twitter:title"]'), 'Michael Costea');
-assertIncludes('twitter:description', meta('meta[name="twitter:description"]'), 'AI-powered business operating systems');
+assertIncludes('twitter:description', meta('meta[name="twitter:description"]'), 'vertical application delivery');
 
 console.log('head-metadata-regression ok');

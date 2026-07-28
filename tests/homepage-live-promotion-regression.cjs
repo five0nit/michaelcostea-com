@@ -38,13 +38,24 @@ for (const selector of ['#readerWindow', '#resumeWindow', '#projectsWindow', '#a
 
 const homepageText = text('body');
 for (const phrase of [
+  'MICHAEL COSTEA',
   'HEAD OF TECH, AI & SYSTEMS',
-  'Human-reviewed automation',
+  '352',
+  '5,000+',
+  '500,000',
+  'OPEN 3 CASE STUDIES',
   'Projects - AI Systems Portfolio',
   'Resume.doc - Michael Costea',
   'AI Agents - Business Operating Leverage',
 ]) {
   if (!homepageText.includes(phrase)) throw new Error(`live homepage missing preview content: ${phrase}`);
+}
+
+if (document.querySelector('#readerWindow [data-owned-path="freelancer-admin"]')) {
+  throw new Error('homepage hero must not contain product/storefront promotion');
+}
+if (!document.querySelector('#resourcesWindow [data-owned-path="freelancer-admin"]')) {
+  throw new Error('approved product plug should remain in the secondary Resources window');
 }
 
 console.log('homepage-live-promotion-regression ok');

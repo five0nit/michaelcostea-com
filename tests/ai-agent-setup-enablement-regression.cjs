@@ -20,9 +20,11 @@ for (const page of pages) {
 
   const agentsImg = document.querySelector('#agentsWindow .agent-setup-diagram img');
   if (!agentsImg) throw new Error(`${page}: missing AI Agents setup diagram image`);
-  if (agentsImg.getAttribute('src') !== expectedImage) {
-    throw new Error(`${page}: AI Agents setup diagram should use updated cache-busted image, got ${agentsImg.getAttribute('src')}`);
+  const agentsImageRef = agentsImg.getAttribute('src') || agentsImg.getAttribute('data-src');
+  if (agentsImageRef !== expectedImage) {
+    throw new Error(`${page}: AI Agents setup diagram should use updated cache-busted image, got ${agentsImageRef}`);
   }
+  if (page === 'index.html' && (agentsImg.getAttribute('src') || !agentsImg.getAttribute('data-src'))) throw new Error('index.html: closed AI Agents window image must stay deferred');
   assertIncludes(`${page}: AI Agents alt`, agentsImg.getAttribute('alt') || '', 'four Work Mac Minis');
   assertIncludes(`${page}: AI Agents caption`, document.querySelector('#agentsWindow .agent-setup-diagram figcaption')?.textContent.replace(/\s+/g, ' ').trim() || '', '25 visible agents');
 
@@ -34,9 +36,11 @@ for (const page of pages) {
 
   const buildImg = document.querySelector('#buildWindow .business-ai-environment img');
   if (!buildImg) throw new Error(`${page}: missing What I Build business AI environment diagram`);
-  if (buildImg.getAttribute('src') !== expectedImage) {
-    throw new Error(`${page}: What I Build diagram should reuse updated setup image, got ${buildImg.getAttribute('src')}`);
+  const buildImageRef = buildImg.getAttribute('src') || buildImg.getAttribute('data-src');
+  if (buildImageRef !== expectedImage) {
+    throw new Error(`${page}: What I Build diagram should reuse updated setup image, got ${buildImageRef}`);
   }
+  if (page === 'index.html' && (buildImg.getAttribute('src') || !buildImg.getAttribute('data-src'))) throw new Error('index.html: closed What I Build image must stay deferred');
   assertIncludes(`${page}: build diagram alt`, buildImg.getAttribute('alt') || '', 'environment for business AI enablement');
 }
 

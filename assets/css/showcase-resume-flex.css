@@ -1,0 +1,20 @@
+/* Final-load hiring-first mobile hierarchy overrides. */
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  body.public-preview #readerWindow.win-window.open .win-body.welcome-body.styleguide-welcome,
+  body.mobile-mode.public-preview #readerWindow.win-window.open .win-body.welcome-body.styleguide-welcome{
+    display:flex!important;
+    flex-direction:column!important;
+  }
+  body.public-preview #readerWindow .welcome-copy,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy{
+    order:1!important;
+    flex:0 0 auto!important;
+    overflow:visible!important;
+  }
+  body.public-preview #readerWindow .welcome-sidebar,
+  body.mobile-mode.public-preview #readerWindow .welcome-sidebar{
+    order:2!important;
+    flex:0 0 auto!important;
+    overflow:visible!important;
+  }
+}

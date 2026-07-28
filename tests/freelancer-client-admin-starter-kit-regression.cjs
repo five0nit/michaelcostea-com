@@ -67,8 +67,8 @@ if(!html.includes("item_id: 'freelancer_client_admin_starter_kit'")||!html.inclu
 const homepageHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const homepage=new JSDOM(homepageHtml).window.document;
 const ownedPath=homepage.querySelector('a[data-owned-path="freelancer-admin"]');
-const expectedOwnedPath='freelancer-admin/?utm_source=michaelcostea.com&utm_medium=owned_homepage&utm_campaign=freelancer_admin_launch';
-if(!ownedPath||ownedPath.getAttribute('href')!==expectedOwnedPath||ownedPath.textContent.trim()!=='Open the US$5 kit') throw new Error('qualified homepage path missing or incorrect');
+const expectedOwnedPath='freelancer-admin/?utm_source=michaelcostea.com&utm_medium=owned_resources&utm_campaign=freelancer_admin_launch';
+if(!ownedPath||ownedPath.getAttribute('href')!==expectedOwnedPath||ownedPath.textContent.trim()!=='Open product'||!ownedPath.closest('#resourcesWindow')) throw new Error('demoted Resources product path missing or incorrect');
 const schema=JSON.parse(document.querySelector('script[type="application/ld+json"]').textContent);
 if(schema['@context']!=='https://schema.org'||schema['@type']!=='Product'||schema.offers.price!=='5.00'||schema.offers.priceCurrency!=='USD'||schema.offers.url!==product) throw new Error('invalid product schema');
 for(const marker of ['/home/','.hermes/','localhost','127.0.0.1','TODO','FIXME','testimonial','customers bought']) if(html.toLowerCase().includes(marker.toLowerCase())) throw new Error(`private/dev/fake-proof marker leaked: ${marker}`);

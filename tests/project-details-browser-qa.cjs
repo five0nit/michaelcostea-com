@@ -41,7 +41,7 @@ async function inspect(browser, label, width, height) {
       bodyClientHeight: body?.clientHeight,
       bodyScrollHeight: body?.scrollHeight,
       stylesHref: document.querySelector('link[href*="styles.css"]')?.getAttribute('href'),
-      brokenImages: [...document.images].filter(img => img.complete && img.naturalWidth === 0).map(img => img.src),
+      brokenImages: [...document.images].filter(img => !img.dataset.src && img.complete && img.naturalWidth === 0).map(img => img.currentSrc || img.src),
     };
   });
 
@@ -56,7 +56,7 @@ async function inspect(browser, label, width, height) {
   if (checks.pageScrollWidth > checks.innerWidth + 1) throw new Error(`${label} horizontal page overflow`);
   if ((checks.winLeft ?? -1) < -1 || (checks.winRight ?? Infinity) > checks.innerWidth + 1) throw new Error(`${label} project window outside viewport`);
   if ((checks.bodyScrollWidth ?? Infinity) > (checks.bodyClientWidth ?? 0) + 1) throw new Error(`${label} project body horizontal overflow`);
-  if (!checks.stylesHref?.includes('20260723-project-tech-stacks')) throw new Error(`${label} project CSS cache marker stale`);
+  if (!checks.stylesHref?.includes('20260728-showcase-resume-flex')) throw new Error(`${label} project CSS cache marker stale`);
   if (checks.brokenImages.length) throw new Error(`${label} broken images: ${checks.brokenImages.join(', ')}`);
   if (errors.length) throw new Error(`${label} browser errors: ${errors.join(' | ')}`);
 

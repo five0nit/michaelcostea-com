@@ -1,6 +1,7 @@
 const pageWindowRoutes = {
   readerWindow: 'home',
   aboutWindow: 'about',
+  resourcesWindow: 'resources',
   resumeWindow: 'resume',
   buildWindow: 'what-i-build',
   projectsWindow: 'projects',
@@ -18,6 +19,9 @@ const routeAliases = {
   '': 'home',
   home: 'home',
   about: 'about',
+  resources: 'resources',
+  tools: 'resources',
+  products: 'resources',
   resume: 'resume',
   build: 'what-i-build',
   'what-i-build': 'what-i-build',
@@ -57,6 +61,48 @@ let pageRoutesReady = false;
 let zTop = 20;
 const prefsKey = "michaelos_prefs_v1";
 let prefs = { animations:true, singleMobile:true, theme:"default", bootSpeed:3450, premiumUI:true, uiSound:true };
+const windowFocusReturn = new Map();
+
+function hydrateDeferredMedia(container){
+  if(!container) return;
+  container.querySelectorAll('img[data-src]').forEach((image) => {
+    if(!image.getAttribute('src')) image.setAttribute('src', image.dataset.src);
+  });
+  container.querySelectorAll('iframe[data-src]').forEach((frame) => {
+    if(!frame.getAttribute('src')) frame.setAttribute('src', frame.dataset.src);
+  });
+}
+
+function syncActiveWindowAccessibility(activeWindow){
+  const mobile = isMobileMode();
+  const lockBackground = !!(mobile && activeWindow && activeWindow.id !== 'readerWindow' && activeWindow.classList.contains('open'));
+  const desktopIcons = document.querySelector('.desktop-icons');
+  if(desktopIcons) desktopIcons.toggleAttribute('inert', lockBackground);
+
+  document.querySelectorAll('.win-window').forEach((win) => {
+    const isActive = win === activeWindow && win.classList.contains('open');
+    win.toggleAttribute('inert', lockBackground && !isActive);
+    win.setAttribute('aria-hidden', String(!win.classList.contains('open')));
+  });
+}
+
+function focusActiveWindow(win){
+  if(!win) return;
+  if(!win.hasAttribute('tabindex')) win.setAttribute('tabindex', '-1');
+  requestAnimationFrame(() => {
+    try { win.focus({ preventScroll: true }); } catch { win.focus(); }
+  });
+}
+
+function initSkipLink(){
+  const skipLink = document.querySelector('.skip-link');
+  if(!skipLink) return;
+  skipLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    const target = document.getElementById(activePrimaryWindowId()) || document.getElementById('readerWindow');
+    focusActiveWindow(target);
+  });
+}
 
 function trackAnalyticsEvent(eventName, params = {}){
   if(typeof window.gtag !== 'function') return;
@@ -242,6 +288,7 @@ function bringFront(win){
   document.querySelectorAll('.win-window').forEach(w => w.classList.remove('active'));
   win.style.zIndex = String(zTop);
   win.classList.add('active');
+  syncActiveWindowAccessibility(win);
   refreshTaskbar();
   if(win.classList.contains('open')) syncPageRouteFromWindows();
 }
@@ -334,6 +381,8 @@ function openWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
   const wasOpen = win.classList.contains('open');
+  const opener = document.activeElement;
+  if(opener && !['BODY', 'HTML'].includes(opener.tagName) && !win.contains(opener)) windowFocusReturn.set(id, opener);
 
   if (isMobileMode()) {
     document.querySelectorAll('.win-window.open').forEach(w => {
@@ -341,11 +390,14 @@ function openWindow(id){
     });
   }
 
+  hydrateDeferredMedia(win);
   win.classList.remove('minimized');
   win.classList.add('open');
   restoreWindowScroll(win, !wasOpen);
   if(!wasOpen && !win.classList.contains('maximized') && win.dataset.userMoved !== '1' && win.dataset.userSized !== '1') centerWindow(win);
   bringFront(win);
+  syncActiveWindowAccessibility(win);
+  focusActiveWindow(win);
   syncImmersiveMode();
   uiBeep('open');
 }
@@ -353,6 +405,8 @@ function openWindow(id){
 function closeWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
+  const focusReturn = windowFocusReturn.get(id);
+  windowFocusReturn.delete(id);
 
   if(id === 'browserWindow'){
     const frame = document.getElementById('appFrame');
@@ -361,6 +415,7 @@ function closeWindow(id){
   }
 
   win.classList.remove('open','minimized','maximized','active');
+  win.setAttribute('aria-hidden', 'true');
   restoreWindowDefaultStyle(win);
   delete win.dataset.prevLeft;
   delete win.dataset.prevTop;
@@ -368,9 +423,17 @@ function closeWindow(id){
   delete win.dataset.prevHeight;
   delete win.dataset.prevRight;
   delete win.dataset.prevBottom;
+
+  let nextWindow = document.getElementById(activePrimaryWindowId());
+  if(isMobileMode() && !document.querySelector('.win-window.open')){
+    openWindow('readerWindow');
+    nextWindow = document.getElementById('readerWindow');
+  }
+  syncActiveWindowAccessibility(nextWindow);
   syncImmersiveMode();
   refreshTaskbar();
   syncPageRouteFromWindows();
+  if(focusReturn?.isConnected) requestAnimationFrame(() => focusReturn.focus());
 }
 
 function minimizeWindow(id){
@@ -709,6 +772,7 @@ function initStartMenu(projects){
     <a class="start-item" role="menuitem" href="#" data-open-window="resumeWindow"><span><b class="si">📄</b>Resume</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="buildWindow"><span><b class="si">🧩</b>What I Build</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="projectsWindow"><span><b class="si">📁</b>Projects</span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="resourcesWindow"><span><b class="si">🧰</b>Tools &amp; Resources</span></a>
     <a class="start-item" role="menuitem" href="#" data-open-window="agentsWindow"><span><b class="si">🤖</b>AI Agents</span></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="aiHelpWindow"><span><b class="si">🎓</b>AI Help</span></a>
     <a class="start-item start-cta" role="menuitem" href="#" data-open-window="agenticKnowledgebaseWindow"><span><b class="si">📚</b>AI Knowledgebase</span></a>
@@ -1203,7 +1267,6 @@ async function initIntroDeckPreview(){
   document.querySelectorAll('[data-open="introDeckWindow"]').forEach((btn) => {
     btn.addEventListener('click', () => { current = 1; window.setTimeout(update, 0); });
   });
-  update();
 }
 
 async function initAgenticFrameworkDeckPreview(){
@@ -1219,7 +1282,6 @@ async function initAgenticFrameworkDeckPreview(){
   document.querySelectorAll('[data-open="agenticFrameworkDeckWindow"]').forEach((btn) => {
     btn.addEventListener('click', () => { window.setTimeout(update, 0); });
   });
-  update();
 }
 
 async function boot(){
@@ -1297,6 +1359,7 @@ async function boot(){
 
   initStartMenu(projects);
   initDesktopWindows();
+  initSkipLink();
   initTray();
   initEasterEggs();
   initLoreEggs();

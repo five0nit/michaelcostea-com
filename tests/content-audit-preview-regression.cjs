@@ -60,7 +60,10 @@ must(preview.querySelectorAll('#resumeWindow .resume-agentic-grid article').leng
 must(preview.querySelectorAll('#resumeWindow .resume-case').length === 3, 'preview Resume should contain three agentic case studies');
 must(preview.querySelector('#resumeWindow a[href="https://github.com/five0nit/telegram-office"]'), 'Resume Agent Office repo link missing');
 must(preview.querySelector('#resumeWindow a[href*="business-agent-harness-pack.zip"]'), 'Resume harness download link missing');
-must(preview.querySelectorAll('.win-window').length === production.querySelectorAll('.win-window').length, 'preview must preserve every functional window');
+const productionWindows = [...production.querySelectorAll('.win-window')].map((node) => node.id).filter(Boolean);
+const previewWindows = [...preview.querySelectorAll('.win-window')].map((node) => node.id).filter(Boolean);
+must(previewWindows.every((id) => productionWindows.includes(id)), 'preview functional windows must remain available in production');
+must(production.querySelector('#resourcesWindow'), 'production may add the approved secondary Resources window');
 must(preview.querySelector('script[src^="script.js?v="]'), 'preview must preserve production script');
 
 console.log('content-audit-preview-regression ok');

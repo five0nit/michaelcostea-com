@@ -25,31 +25,29 @@ assertMatch(
 
 assertMatch(
   'HTML should cache-bust both CSS and JS for self-improvement polish deploy',
-  /styles\.css\?v=20260612-self-improve-1[\s\S]*script\.js\?v=20260612-self-improve-1/,
+  /styles\.css\?v=20260728-showcase-resume-flex[\s\S]*script\.js\?v=20260728-showcase-resume-flex/,
   html
 );
 
 assertMatch(
   'above-the-fold profile portrait should be preloaded with high fetch priority',
-  /<link rel="preload" as="image" href="assets\/profile-michael-pixel\.jpg\?v=20260502-0415" fetchpriority="high" \/>/,
+  /<link rel="preload" as="image" href="assets\/profile-michael-pixel\.jpg\?v=20260621-profile-crop" fetchpriority="high" \/>/,
   html
 );
 
 assertMatch(
   'profile portrait should expose intrinsic dimensions to reduce layout shift',
-  /<img src="assets\/profile-michael-pixel\.jpg\?v=20260502-0415"[^>]*width="1254"[^>]*height="1254"[^>]*fetchpriority="high"/,
+  /<img src="assets\/profile-michael-pixel\.jpg\?v=20260621-profile-crop"[^>]*width="400"[^>]*height="400"[^>]*fetchpriority="high"/,
   html
 );
 
 for (const [src, width, height] of [
-  ['assets/minime-pack/ai_help_robot_highfive.png', 336, 291],
-  ['assets/minime-pack/build_workflow_engineer.png', 331, 284],
-  ['assets/minime-pack/contact_approval.png', 338, 378],
-  ['assets/minime-pack/guide_documents.png', 289, 333],
+  ['assets/decks/intro-to-ai/slide-01.png?v=20260506-hd1', 1600, 900],
+  ['assets/decks/hermes-agentic-framework-session/slide-01.png?v=20260701-presentation-preview-hd', 1600, 900],
 ]) {
   assertMatch(
-    `${src} should expose intrinsic dimensions`,
-    new RegExp(`<img src="${src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*width="${width}"[^>]*height="${height}"`),
+    `${src} should stay deferred and expose intrinsic dimensions`,
+    new RegExp(`<img[^>]*data-src="${src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*width="${width}"[^>]*height="${height}"`),
     html
   );
 }

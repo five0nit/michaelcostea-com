@@ -59,8 +59,8 @@ for (const phrase of [
 
 const indexDom = new JSDOM(indexHtml);
 const indexText = pageText(indexDom.window.document);
-if (!indexText.includes('AI EDUCATION & ENABLEMENT')) {
-  throw new Error('main index.html should contain the concise AI education and enablement hero headline');
+if (!indexText.includes('MICHAEL COSTEA HEAD OF TECH, AI & SYSTEMS')) {
+  throw new Error('main index.html should contain the approved identity-first career headline');
 }
 if (indexDom.window.document.querySelector('meta[name="robots"]')?.getAttribute('content')?.includes('noindex')) {
   throw new Error('main index.html must not receive preview robots noindex');
@@ -69,8 +69,11 @@ const indexCanonical = indexDom.window.document.querySelector('link[rel="canonic
 if (indexCanonical === 'https://michaelcostea.com/ai-value-preview.html' || indexCanonical !== 'https://michaelcostea.com/') {
   throw new Error(`main index.html canonical should point at homepage, got ${indexCanonical}`);
 }
-if (!indexHtml.includes('https://telegram-office.michaelcostea.com/agenttown/')) {
-  throw new Error('main index.html should preserve the live Agent Office link');
+if (indexHtml.includes('https://telegram-office.michaelcostea.com/agenttown/')) {
+  throw new Error('main index.html must not publish the unhealthy Agent Office runtime');
+}
+if (!indexDom.window.document.querySelector('#resourcesWindow')) {
+  throw new Error('main index.html should demote shipped products and tools into Resources');
 }
 
 console.log('ai-value-preview-page-regression ok');

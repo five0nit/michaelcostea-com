@@ -31,7 +31,7 @@ const requiredPhrases = [
   'Anthropic Claude',
   'local LLM routing',
   '4.3–4.5B',
-  'average monthly token throughput across multiple harnesses and machines',
+  'internal monthly harness throughput context; scale signal only, not a business outcome',
 ];
 for (const phrase of requiredPhrases) {
   if (!resumeText.includes(phrase)) throw new Error(`resume missing recommended positioning: ${phrase}`);
@@ -43,8 +43,9 @@ if (resumeText.toLowerCase().includes('cto-track')) {
 const cases = resume.querySelectorAll('.career-fit-case');
 if (cases.length !== 3) throw new Error(`expected 3 selected operating-work cases, got ${cases.length}`);
 
-const printable = resume.querySelector('a[href="assets/downloads/michael-costea-resume-2026.html"][target="_blank"]');
-if (!printable) throw new Error('printable resume link missing');
+const printable = resume.querySelector('a[href="assets/downloads/Michael-Costea-Resume-2026.pdf"][download]');
+if (!printable) throw new Error('direct résumé PDF download missing');
+if (!fs.existsSync(path.join(rootDir, 'assets/downloads/Michael-Costea-Resume-2026.pdf'))) throw new Error('résumé PDF asset missing');
 
 const htmlSource = path.join(rootDir, 'assets/downloads/michael-costea-resume-2026.html');
 if (!fs.existsSync(htmlSource)) throw new Error('ATS resume HTML source missing');
@@ -68,7 +69,7 @@ for (const phrase of [
   'Anthropic Claude',
   'local LLM routing',
   '4.3–4.5B',
-  'average monthly token throughput across multiple harnesses and machines',
+  'internal monthly harness throughput context; scale signal only, not a business outcome',
 ]) {
   if (!printableText.includes(phrase)) throw new Error(`printable resume missing vertical integration positioning: ${phrase}`);
 }

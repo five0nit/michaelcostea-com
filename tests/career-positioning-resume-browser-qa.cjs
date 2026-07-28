@@ -48,7 +48,7 @@ fs.mkdirSync(out, { recursive: true });
         targetRoles: document.querySelector('#resumeWindow .target-role-line')?.innerText,
         caseCount: document.querySelectorAll('#resumeWindow .career-fit-case').length,
         experienceCount: document.querySelectorAll('#resumeWindow .timeline-list .mini-content-card').length,
-        printableHref: document.querySelector('#resumeWindow a[href*="michael-costea-resume-2026.html"]')?.getAttribute('href'),
+        printableHref: document.querySelector('#resumeWindow a[href*="Michael-Costea-Resume-2026.pdf"]')?.getAttribute('href'),
         stylesheetHref: document.querySelector('link[href*="career-resume.css"]')?.getAttribute('href'),
         tokenThroughput: document.querySelector('#resumeWindow .token-throughput-evidence b')?.innerText,
         hasVerticalStack: document.querySelector('#resumeWindow')?.textContent.includes('Vertical full-stack app delivery') && document.querySelector('#resumeWindow')?.textContent.includes('Hermes Agent'),
@@ -67,7 +67,7 @@ fs.mkdirSync(out, { recursive: true });
     if (!checks.resumeOpen || checks.hash !== '#resume') throw new Error(`${label} direct resume route failed: ${JSON.stringify(checks)}`);
     if (!checks.targetRoles?.includes('AI Enablement Lead')) throw new Error(`${label} target roles missing`);
     if (checks.caseCount !== 3 || checks.experienceCount < 8) throw new Error(`${label} resume content counts wrong`);
-    if (checks.printableHref !== 'assets/downloads/michael-costea-resume-2026.html') throw new Error(`${label} printable link wrong`);
+    if (checks.printableHref !== 'assets/downloads/Michael-Costea-Resume-2026.pdf') throw new Error(`${label} résumé PDF link wrong`);
     if (!checks.stylesheetHref?.includes('20260723-vertical-app-routing')) throw new Error(`${label} career stylesheet cache marker missing`);
     if (checks.tokenThroughput !== '4.3–4.5B' || !checks.hasVerticalStack) throw new Error(`${label} vertical stack or token throughput evidence missing`);
     if (checks.scrollWidth > checks.innerWidth + 1) throw new Error(`${label} page horizontal overflow ${checks.scrollWidth}>${checks.innerWidth}`);
