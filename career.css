@@ -400,6 +400,53 @@ button { color: inherit; }
 .proof-strip strong { color: var(--yellow); font: 850 clamp(31px, 3.6vw, 48px)/1 var(--mono); letter-spacing: -.06em; }
 .proof-strip span { margin-top: 10px; color: var(--muted); font-size: 13px; line-height: 1.35; }
 
+.resume-proof-impact { grid-template-columns: repeat(3, 1fr); }
+.resume-proof-impact div:nth-child(3n) { border-right: 0; }
+.resume-proof-impact div:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+
+.resume-impact-label {
+  margin: 0 0 10px;
+  color: var(--signal);
+  font: 850 11px/1.2 var(--mono);
+  letter-spacing: .1em;
+}
+
+.resume-action-proof {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.resume-action-proof div {
+  padding: 18px 24px;
+  background: var(--canvas-2);
+}
+
+.resume-action-proof strong {
+  display: block;
+  color: var(--signal);
+  font: 850 25px/1 var(--mono);
+}
+
+.resume-action-proof span {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.resume-run-rate {
+  margin: 12px 0 0;
+  padding: 13px 16px;
+  border-left: 4px solid var(--signal);
+  background: rgba(29, 217, 182, .08);
+  color: #d5dfe8;
+  font: 700 13px/1.45 var(--mono);
+}
+
 .intro-band {
   display: grid;
   grid-template-columns: 80px 1fr minmax(280px, .75fr);
@@ -769,6 +816,9 @@ button { color: inherit; }
   .proof-strip div:nth-child(2) { border-right: 0; }
   .proof-strip div:nth-child(3),
   .proof-strip div:nth-child(4) { border-bottom: 0; }
+  .resume-proof-impact { grid-template-columns: 1fr; }
+  .resume-proof-impact div { border-right: 0; border-bottom: 1px solid var(--line); }
+  .resume-proof-impact div:last-child { border-bottom: 0; }
   .intro-band { grid-template-columns: 1fr; gap: 18px; padding-block: 90px 40px; }
   .section-index { font-size: 30px; }
   .intro-band > p,
@@ -813,7 +863,7 @@ button { color: inherit; }
   .detailed-archive .archive-action { grid-column: 1; }
   .resume-hero { grid-template-columns: 1fr; gap: 34px; }
   .resume-layout { grid-template-columns: 1fr; gap: 30px; padding-block: 70px; }
-  .resume-sidebar { order: -1; }
+  .resume-sidebar { order: 0; }
   .resume-case-list article { grid-template-columns: 40px 1fr; }
   .privacy-content { grid-template-columns: 1fr; gap: 0; }
   .os-dialog { width: 100vw; height: 100dvh; border: 0; }

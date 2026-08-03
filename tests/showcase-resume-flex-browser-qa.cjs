@@ -67,9 +67,16 @@ async function auditViewport(browser, name, viewport, mobile) {
       proofVisible: visible('.career-proof-grid'),
       actionsVisible: [...document.querySelectorAll('.career-primary-actions > *')].map((element) => {
         const rect = element.getBoundingClientRect();
-        return { text: element.textContent.trim(), top: rect.top, bottom: rect.bottom, visible: rect.top >= 0 && rect.bottom <= innerHeight };
+        const style = getComputedStyle(element);
+        return { text: element.textContent.trim(), top: rect.top, bottom: rect.bottom, height: rect.height, fontSize: parseFloat(style.fontSize), lineHeight: parseFloat(style.lineHeight), visible: rect.top >= 0 && rect.bottom <= innerHeight };
       }),
       primaryActionCount: document.querySelectorAll('.career-primary-actions > a, .career-primary-actions > button').length,
+      proofLabelTypography: [...document.querySelectorAll('.career-proof-grid span')].map((element) => {
+        const style = getComputedStyle(element);
+        return { fontSize: parseFloat(style.fontSize), lineHeight: parseFloat(style.lineHeight) };
+      }),
+      proofNoteFontSize: parseFloat(getComputedStyle(document.querySelector('.career-proof-note')).fontSize),
+      proofNoteLineHeight: parseFloat(getComputedStyle(document.querySelector('.career-proof-note')).lineHeight),
       heroProductCount: document.querySelectorAll('#readerWindow [data-owned-path]').length,
       resourcesProductCount: document.querySelectorAll('#resourcesWindow [data-owned-path]').length,
       archiveOpen: document.querySelector('.project-archive-shell')?.open || false,
@@ -85,6 +92,7 @@ async function auditViewport(browser, name, viewport, mobile) {
   must(home.h1.includes('MICHAEL COSTEA') && home.h1.includes('HEAD OF TECH, AI & SYSTEMS'), `${name}: identity-first H1 missing`);
   must(home.h1Visible && home.proofVisible, `${name}: H1/proof not in first viewport`);
   must(home.primaryActionCount === 3 && home.actionsVisible.every((item) => item.visible), `${name}: all three primary actions must be in first viewport`);
+  must(home.proofNoteFontSize >= 11 && home.proofNoteLineHeight >= 15, `${name}: evidence caveat text too small (${home.proofNoteFontSize}px/${home.proofNoteLineHeight}px)`);
   must(home.heroProductCount === 0 && home.resourcesProductCount >= 2, `${name}: product hierarchy incorrect`);
   must(!home.archiveOpen, `${name}: project archive should start collapsed`);
   must(home.deckSrcs.every((item) => !item.src && item.deferred), `${name}: closed deck media loaded eagerly`);
@@ -96,6 +104,8 @@ async function auditViewport(browser, name, viewport, mobile) {
 
   if (mobile) {
     must(home.heroTop < home.sidebarTop, 'mobile: portrait/navigation still appears before identity and proof');
+    must(home.proofLabelTypography.length === 3 && home.proofLabelTypography.every((item) => item.fontSize >= 10 && item.lineHeight >= 12), `mobile: proof labels too small ${JSON.stringify(home.proofLabelTypography)}`);
+    must(home.actionsVisible.every((item) => item.fontSize >= 11 && item.lineHeight >= 14 && item.height >= 44), `mobile: primary action typography/target too small ${JSON.stringify(home.actionsVisible)}`);
     must(home.actionsVisible.every((item) => item.bottom <= home.taskbarTop), 'mobile: taskbar obscures a primary action');
     must(home.actionsVisible.every((item) => item.bottom <= home.heroBottom), 'mobile: primary action clipped by hero scroll container');
     must(home.sidebarTop >= Math.max(...home.actionsVisible.map((item) => item.bottom)), 'mobile: portrait/navigation overlaps primary actions');

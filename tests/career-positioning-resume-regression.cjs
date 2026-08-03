@@ -1,96 +1,53 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const path = require('path');
-const { JSDOM } = require('jsdom');
+const fs=require('fs');
+const path=require('path');
+const {execFileSync}=require('child_process');
+const {JSDOM}=require('jsdom');
+const root=path.resolve(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const css=fs.readFileSync(path.join(root,'assets/css/career-resume.css'),'utf8');
+const document=new JSDOM(html).window.document;
+const resume=document.querySelector('#resumeWindow');
+if(!resume)throw new Error('missing #resumeWindow');
+const clean=value=>(value||'').replace(/\s+/g,' ').trim();
+const resumeText=clean(resume.textContent);
+const must=(condition,message)=>{if(!condition)throw new Error(message)};
 
-const rootDir = path.resolve(__dirname, '..');
-const html = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
-const careerCss = fs.readFileSync(path.join(rootDir, 'assets/css/career-resume.css'), 'utf8');
-const document = new JSDOM(html).window.document;
-const resume = document.querySelector('#resumeWindow');
-if (!resume) throw new Error('missing #resumeWindow');
-const resumeText = resume.textContent.replace(/\s+/g, ' ').trim();
+for(const phrase of [
+  'AI Enablement Lead','AI Execution & Adoption Lead','Business Systems & Automation Lead','AI Transformation Manager',
+  'Business Systems, Lead Flow & Digital Infrastructure — Expanded Scope','Mid-2023 - Present','Selected Operating Work',
+  '84,400+','5,955','795','A$1.97M','251 h','124','459','735 h/year','A$47.8k/year','not claimed as AI-attributed revenue',
+  'Pipedrive','simPRO','Microsoft Graph','n8n','Cloud Run','Vertical full-stack app delivery','Agent harness & model routing',
+]) must(resumeText.includes(phrase),`inline resume missing current positioning: ${phrase}`);
+for(const stale of ['Marketing Technology / Growth Systems Lead','4.3–4.5B','internal monthly harness throughput context']) must(!resumeText.includes(stale),`inline resume retains stale positioning: ${stale}`);
+must(!resumeText.toLowerCase().includes('cto-track'),'resume must not use self-awarded CTO-track positioning');
+must(resume.querySelectorAll('.career-fit-case').length===3,'inline resume must contain exactly three operating cases');
+must(resume.querySelectorAll('.career-evidence-grid article').length===3,'inline resume must contain three primary outcomes');
+must(resume.querySelectorAll('.career-action-evidence article').length===2,'inline resume must contain two secondary action proofs');
+must(clean(resume.querySelector('.career-run-rate')?.textContent).includes('735 h/year · A$47.8k/year'),'inline annual run-rate metrics must be combined');
 
-const requiredPhrases = [
-  'AI Enablement Lead',
-  'Business Systems & Automation Lead',
-  'Marketing Technology / Growth Systems Lead',
-  'Business Systems, Lead Flow & Digital Infrastructure — Expanded Scope',
-  'Mid-2023 - Present',
-  'Selected Operating Work',
-  'Business discovery & requirements',
-  'Knowledge & adoption',
-  '352',
-  '5,000+',
-  '500,000',
-  'Vertical AI application delivery',
-  'Vertical full-stack app delivery',
-  'Agent harness & model routing',
-  'Hermes Agent',
-  'OpenAI Codex and APIs',
-  'Anthropic Claude',
-  'local LLM routing',
-  '4.3–4.5B',
-  'internal monthly harness throughput context; scale signal only, not a business outcome',
-];
-for (const phrase of requiredPhrases) {
-  if (!resumeText.includes(phrase)) throw new Error(`resume missing recommended positioning: ${phrase}`);
-}
-if (resumeText.toLowerCase().includes('cto-track')) {
-  throw new Error('resume must not use self-awarded CTO-track positioning');
-}
+const pdfPath=path.join(root,'assets/downloads/Michael-Costea-Resume-2026.pdf');
+must(fs.existsSync(pdfPath)&&fs.statSync(pdfPath).size>50000,'résumé PDF missing or too small');
+const pdfText=clean(execFileSync('pdftotext',['-layout',pdfPath,'-'],{encoding:'utf8'}));
+for(const phrase of ['AI Transformation Manager','84,400+','A$1.97M','251 h','Selected Delivery Evidence']) must(pdfText.toLowerCase().includes(phrase.toLowerCase()),`PDF missing current evidence: ${phrase}`);
+for(const stale of ['4.3–4.5B','Codex Account Usage + Auth Rotator']) must(!pdfText.includes(stale),`PDF retains stale content: ${stale}`);
 
-const cases = resume.querySelectorAll('.career-fit-case');
-if (cases.length !== 3) throw new Error(`expected 3 selected operating-work cases, got ${cases.length}`);
+const printablePath=path.join(root,'assets/downloads/michael-costea-resume-2026.html');
+must(fs.existsSync(printablePath),'ATS resume HTML source missing');
+const printableHtml=fs.readFileSync(printablePath,'utf8');
+const printableDocument=new JSDOM(printableHtml).window.document;
+const printableText=clean(printableDocument.body.textContent);
+for(const phrase of [
+  'AI Transformation Manager','Recent Operating Evidence','84,400+','5,955','795','A$1.97M','251 h','124','459','A$47.8k',
+  'AEH AI-enabled operating layer and commercial context','Job, finance and workflow-capacity automation','Optus knowledge, process and adoption operations',
+  'Hermes Agent','OpenAI Codex and APIs','Anthropic Claude','Pipedrive','simPRO','Xero workflows','Microsoft Graph','Google Cloud Run',
+]) must(printableText.includes(phrase),`printable resume missing current positioning: ${phrase}`);
+must(printableDocument.querySelectorAll('.page').length===2,'printable resume must contain exactly two A4 pages');
+must(printableDocument.querySelectorAll('.case').length===3,'printable resume must contain exactly three selected delivery cases');
+must(printableDocument.querySelectorAll('.proof > div').length===5,'printable resume must contain exactly five evidence cards');
+for(const stale of ['4.3–4.5B','Codex Account Usage + Auth Rotator','Automated Social & Brand Content Engine','Brief2Ship','RebateSignal']) must(!printableText.includes(stale),`printable resume retains product/throughput inventory: ${stale}`);
 
-const printable = resume.querySelector('a[href="assets/downloads/Michael-Costea-Resume-2026.pdf"][download]');
-if (!printable) throw new Error('direct résumé PDF download missing');
-if (!fs.existsSync(path.join(rootDir, 'assets/downloads/Michael-Costea-Resume-2026.pdf'))) throw new Error('résumé PDF asset missing');
-
-const htmlSource = path.join(rootDir, 'assets/downloads/michael-costea-resume-2026.html');
-if (!fs.existsSync(htmlSource)) throw new Error('ATS resume HTML source missing');
-const printableHtml = fs.readFileSync(htmlSource, 'utf8');
-const printableDocument = new JSDOM(printableHtml).window.document;
-const printableText = printableDocument.body.textContent.replace(/\s+/g, ' ').trim();
-for (const project of [
-  'Codex Account Usage + Auth Rotator',
-  'Automated Social & Brand Content Engine',
-  'Brief2Ship',
-  'RebateSignal',
-]) {
-  if (!printableText.includes(project)) throw new Error(`printable resume missing requested project: ${project}`);
-}
-for (const phrase of [
-  'Vertical AI application delivery',
-  'Vertical full-stack app delivery',
-  'Agent harness and model routing',
-  'Hermes Agent',
-  'OpenAI Codex and APIs',
-  'Anthropic Claude',
-  'local LLM routing',
-  '4.3–4.5B',
-  'internal monthly harness throughput context; scale signal only, not a business outcome',
-]) {
-  if (!printableText.includes(phrase)) throw new Error(`printable resume missing vertical integration positioning: ${phrase}`);
-}
-if (printableDocument.querySelectorAll('.selected-project').length !== 4) {
-  throw new Error('printable resume must contain exactly four selected-project cards');
-}
-const printableTechStacks = [...printableDocument.querySelectorAll('.selected-project .project-tech')];
-if (printableTechStacks.length !== 4) throw new Error(`printable resume should show 4 selected-project tech stacks, got ${printableTechStacks.length}`);
-for (const stack of printableTechStacks) {
-  if (!stack.textContent.includes('Tech stack:') || stack.textContent.trim().length < 55) throw new Error('printable selected-project tech stack is missing or too thin');
-}
-for (const forbidden of [
-  'Selected systems, project screenshots, operating diagrams and public work',
-  'Public agent-observability project',
-  'telegram-office',
-]) {
-  if (printableHtml.includes(forbidden)) throw new Error(`printable resume still contains rejected portfolio copy: ${forbidden}`);
-}
-
-for (const marker of ['career-fit-summary', 'career-fit-grid', 'resume-download-row']) {
-  if (!careerCss.includes(`.${marker}`)) throw new Error(`resume production CSS missing .${marker}`);
-}
-
+for(const marker of ['career-fit-summary','career-fit-grid','resume-download-row']) must(css.includes(`.${marker}`),`resume production CSS missing .${marker}`);
+must(css.includes('grid-template-columns:repeat(3,minmax(0,1fr))'),'inline evidence grid must use three readable desktop columns');
+must(html.includes('career-resume.css?v=20260804-proof-caveat-legibility'),'career stylesheet preview marker missing');
 console.log('career-positioning-resume-regression ok');

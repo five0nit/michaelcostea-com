@@ -3251,11 +3251,11 @@ body.public-preview::before{
   .public-preview .career-proof-grid b,
   body.mobile-mode.public-preview .career-proof-grid b{font-size:17px!important;}
   .public-preview .career-proof-grid span,
-  body.mobile-mode.public-preview .career-proof-grid span{font-size:7.5px!important;line-height:9px!important;}
+  body.mobile-mode.public-preview .career-proof-grid span{font-size:10px!important;line-height:12px!important;}
   .public-preview .career-primary-actions,
   body.mobile-mode.public-preview .career-primary-actions{grid-template-columns:1fr!important;padding:4px!important;gap:3px!important;}
   .public-preview .career-primary-actions .btn,
-  body.mobile-mode.public-preview .career-primary-actions .btn{min-height:34px!important;font-size:9px!important;line-height:11px!important;}
+  body.mobile-mode.public-preview .career-primary-actions .btn{min-height:44px!important;font-size:11px!important;line-height:14px!important;}
   .public-preview .career-operating-focus,
   body.mobile-mode.public-preview .career-operating-focus{display:none!important;}
   .public-preview .featured-hiring-cases{grid-template-columns:1fr;}

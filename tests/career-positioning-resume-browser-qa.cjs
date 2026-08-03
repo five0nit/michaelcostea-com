@@ -50,8 +50,11 @@ fs.mkdirSync(out, { recursive: true });
         experienceCount: document.querySelectorAll('#resumeWindow .timeline-list .mini-content-card').length,
         printableHref: document.querySelector('#resumeWindow a[href*="Michael-Costea-Resume-2026.pdf"]')?.getAttribute('href'),
         stylesheetHref: document.querySelector('link[href*="career-resume.css"]')?.getAttribute('href'),
-        tokenThroughput: document.querySelector('#resumeWindow .token-throughput-evidence b')?.innerText,
-        hasVerticalStack: document.querySelector('#resumeWindow')?.textContent.includes('Vertical full-stack app delivery') && document.querySelector('#resumeWindow')?.textContent.includes('Hermes Agent'),
+        evidenceValues: [...document.querySelectorAll('#resumeWindow .career-evidence-grid b')].map(node => node.innerText),
+        actionValues: [...document.querySelectorAll('#resumeWindow .career-action-evidence b')].map(node => node.innerText),
+        runRate: document.querySelector('#resumeWindow .career-run-rate')?.innerText,
+        hasCurrentSystems: ['Pipedrive', 'simPRO', 'Microsoft Graph', 'n8n', 'Cloud Run'].every(term => document.querySelector('#resumeWindow')?.textContent.includes(term)),
+        hasEvidenceBoundary: document.querySelector('#resumeWindow')?.textContent.includes('not claimed as AI-attributed revenue'),
         scrollWidth: document.documentElement.scrollWidth,
         innerWidth: innerWidth,
         resumeLeft: resumeRect.left,
@@ -68,8 +71,11 @@ fs.mkdirSync(out, { recursive: true });
     if (!checks.targetRoles?.includes('AI Enablement Lead')) throw new Error(`${label} target roles missing`);
     if (checks.caseCount !== 3 || checks.experienceCount < 8) throw new Error(`${label} resume content counts wrong`);
     if (checks.printableHref !== 'assets/downloads/Michael-Costea-Resume-2026.pdf') throw new Error(`${label} résumé PDF link wrong`);
-    if (!checks.stylesheetHref?.includes('20260723-vertical-app-routing')) throw new Error(`${label} career stylesheet cache marker missing`);
-    if (checks.tokenThroughput !== '4.3–4.5B' || !checks.hasVerticalStack) throw new Error(`${label} vertical stack or token throughput evidence missing`);
+    if (!checks.stylesheetHref?.includes('20260804-proof-caveat-legibility')) throw new Error(`${label} career stylesheet preview marker missing`);
+    if (JSON.stringify(checks.evidenceValues) !== JSON.stringify(['795', 'A$1.97M', '251 h'])) throw new Error(`${label} primary AEH evidence values wrong: ${JSON.stringify(checks.evidenceValues)}`);
+    if (JSON.stringify(checks.actionValues) !== JSON.stringify(['124', '459'])) throw new Error(`${label} action-proof values wrong: ${JSON.stringify(checks.actionValues)}`);
+    if (!checks.runRate?.includes('735 h/year · A$47.8k/year')) throw new Error(`${label} combined run-rate callout missing: ${checks.runRate}`);
+    if (!checks.hasCurrentSystems || !checks.hasEvidenceBoundary) throw new Error(`${label} current systems or evidence boundary missing`);
     if (checks.scrollWidth > checks.innerWidth + 1) throw new Error(`${label} page horizontal overflow ${checks.scrollWidth}>${checks.innerWidth}`);
     if (checks.resumeLeft < -1 || checks.resumeRight > checks.innerWidth + 1) throw new Error(`${label} resume window outside viewport`);
     if (label === 'mobile' && checks.buttonHeights.some(height => height < 40)) throw new Error(`mobile resume action too short: ${checks.buttonHeights}`);
@@ -99,20 +105,22 @@ fs.mkdirSync(out, { recursive: true });
     targetText: document.querySelector('.target')?.innerText,
     hasExpandedScope: document.body.innerText.includes('Business Systems, Lead Flow & Digital Infrastructure'),
     hasOptusScale: document.body.innerText.includes('500,000'),
-    tokenThroughput: [...document.querySelectorAll('.proof b')].map(node => node.innerText).find(text => text.includes('4.3')),
-    hasHarnessRouting: document.body.innerText.includes('Hermes Agent') && document.body.innerText.includes('OpenAI Codex and APIs') && document.body.innerText.includes('Anthropic Claude') && document.body.innerText.includes('local LLM routing'),
-    selectedProjects: [...document.querySelectorAll('.selected-project h3')].map(heading => heading.innerText),
+    evidenceValues: [...document.querySelectorAll('.proof b')].map(node => node.innerText),
+    hasWorkingStack: ['Hermes Agent', 'OpenAI Codex and APIs', 'Anthropic Claude', 'n8n', 'Pipedrive', 'simPRO', 'Xero workflows', 'Microsoft Graph', 'Google Cloud Run'].every(term => document.body.innerText.includes(term)),
+    deliveryCases: [...document.querySelectorAll('.case h3')].map(heading => heading.innerText),
+    hasEvidenceBoundary: document.body.innerText.includes('not claimed as AI-attributed revenue') && document.body.innerText.includes('nominal deposit/final-invoice throughput'),
     hasRejectedPortfolioCopy: document.body.innerText.includes('Public agent-observability project') || document.documentElement.innerHTML.includes('telegram-office'),
-    printButton: document.querySelector('.screen-actions button')?.innerText,
+    printButton: document.querySelector('.actions button')?.innerText,
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth,
   }));
   if (!printableResponse || printableResponse.status() !== 200) throw new Error(`printable status ${printableResponse?.status()}`);
   if (printableChecks.pages !== 2) throw new Error(`printable page count ${printableChecks.pages}`);
   if (!printableChecks.targetText?.includes('AI Enablement Lead') || !printableChecks.hasExpandedScope || !printableChecks.hasOptusScale) throw new Error('printable content missing');
-  if (printableChecks.tokenThroughput !== '4.3–4.5B' || !printableChecks.hasHarnessRouting) throw new Error('printable vertical stack, harness routing or token throughput evidence missing');
-  const expectedProjects = ['Codex Account Usage + Auth Rotator', 'Automated Social & Brand Content Engine', 'Brief2Ship', 'RebateSignal'];
-  if (JSON.stringify(printableChecks.selectedProjects) !== JSON.stringify(expectedProjects)) throw new Error(`printable projects wrong: ${JSON.stringify(printableChecks.selectedProjects)}`);
+  if (JSON.stringify(printableChecks.evidenceValues) !== JSON.stringify(['795', 'A$1.97M', '251 h', '124', '459']) || !printableChecks.hasWorkingStack) throw new Error(`printable AEH evidence or working stack missing: ${JSON.stringify(printableChecks.evidenceValues)}`);
+  const expectedCases = ['AEH AI-enabled operating layer and commercial context', 'Job, finance and workflow-capacity automation', 'Optus knowledge, process and adoption operations'];
+  if (JSON.stringify(printableChecks.deliveryCases) !== JSON.stringify(expectedCases)) throw new Error(`printable delivery cases wrong: ${JSON.stringify(printableChecks.deliveryCases)}`);
+  if (!printableChecks.hasEvidenceBoundary) throw new Error('printable evidence boundary missing');
   if (printableChecks.hasRejectedPortfolioCopy) throw new Error('printable resume still exposes rejected Telegram Office portfolio copy');
   if (printableChecks.printButton !== 'Print / Save PDF') throw new Error(`printable action missing: ${printableChecks.printButton}`);
   for (const [index, metric] of printableChecks.pageMetrics.entries()) {
@@ -120,7 +128,7 @@ fs.mkdirSync(out, { recursive: true });
   }
   await printable.emulateMedia({ media: 'print' });
   const printMediaChecks = await printable.evaluate(() => ({
-    actionDisplay: getComputedStyle(document.querySelector('.screen-actions')).display,
+    actionDisplay: getComputedStyle(document.querySelector('.actions')).display,
     firstPageMargin: getComputedStyle(document.querySelector('.page')).margin,
   }));
   if (printMediaChecks.actionDisplay !== 'none') throw new Error(`print action visible in print media: ${printMediaChecks.actionDisplay}`);

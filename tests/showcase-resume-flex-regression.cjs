@@ -16,11 +16,12 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 must(document.title.includes('Head of Tech, AI & Systems'), 'homepage title must lead with current role');
 must(document.title.includes('Melbourne'), 'homepage title must include Melbourne');
 must((document.querySelector('meta[name="description"]')?.content || '').length <= 160, 'homepage description must stay within 160 characters');
+must(document.querySelector('link[href="styles.css?v=20260804-mobile-proof-action-legibility"]'), 'homepage styles cache marker must expose mobile proof/action legibility fix');
 
 const hero = document.querySelector('#readerWindow .career-showcase-hero');
 must(hero, 'career showcase hero missing');
 const heroText = text('#readerWindow .career-showcase-hero');
-for (const phrase of ['MICHAEL COSTEA', 'HEAD OF TECH, AI & SYSTEMS', 'MELBOURNE', '352', '5,000+', '500,000']) {
+for (const phrase of ['MICHAEL COSTEA', 'HEAD OF TECH, AI & SYSTEMS', 'MELBOURNE', '795', 'A$1.97M', '251']) {
   must(heroText.toUpperCase().includes(phrase.toUpperCase()), `career hero missing ${phrase}`);
 }
 const actions = [...hero.querySelectorAll('.career-primary-actions a, .career-primary-actions button')];
