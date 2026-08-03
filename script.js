@@ -60,8 +60,73 @@ let syncingPageRoute = false;
 let pageRoutesReady = false;
 let zTop = 20;
 const prefsKey = "michaelos_prefs_v1";
-let prefs = { animations:true, singleMobile:true, theme:"default", bootSpeed:3450, premiumUI:true, uiSound:true };
+const iconSprite = 'assets/icons/michaelos-sprite.svg';
+const maximizeGeometryProperties = ['position','left','top','right','bottom','width','height','max-width','max-height','transform','margin'];
+let prefs = { animations:true, singleMobile:true, theme:"default", bootSpeed:1250, premiumUI:true, uiSound:false };
 const windowFocusReturn = new Map();
+
+function osIcon(name, className=''){
+  return `<svg class="os-icon ${className}" aria-hidden="true"><use href="${iconSprite}#icon-${name}"></use></svg>`;
+}
+
+function motionAllowed(){
+  return !!(prefs.animations && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !document.body.classList.contains('no-anim'));
+}
+
+function validMotionRect(rect){
+  return !!(rect && Number.isFinite(rect.left) && Number.isFinite(rect.top) && rect.width > 0 && rect.height > 0);
+}
+
+function animateWindowOutline(fromRect, toRect, duration=170){
+  if(!motionAllowed() || !validMotionRect(fromRect) || !validMotionRect(toRect) || !document.body.animate) return Promise.resolve();
+  const outline = document.createElement('div');
+  outline.className = 'os-motion-outline';
+  document.body.appendChild(outline);
+  const keyframe = (rect, opacity=1) => ({
+    left:`${Math.round(rect.left)}px`,
+    top:`${Math.round(rect.top)}px`,
+    width:`${Math.max(2,Math.round(rect.width))}px`,
+    height:`${Math.max(2,Math.round(rect.height))}px`,
+    opacity,
+  });
+  const animation = outline.animate([
+    keyframe(fromRect,.72),
+    keyframe(toRect,1),
+  ], { duration, easing:'steps(5,end)', fill:'forwards' });
+  return animation.finished.catch(()=>{}).finally(()=>outline.remove());
+}
+
+function rectOf(element){
+  return element?.getBoundingClientRect?.() || null;
+}
+
+function statusForWindow(win, verb='Opening'){
+  const title = win?.querySelector('.win-title span')?.textContent?.replace(/^[^A-Za-z0-9]+/,'').trim() || 'window';
+  return `${verb} ${title}…`;
+}
+
+function setSystemStatus(message='Ready. System status: Useful AI.', resetAfter=0){
+  const status = document.getElementById('systemStatusText');
+  if(!status) return;
+  status.textContent = message;
+  clearTimeout(setSystemStatus._timer);
+  if(resetAfter > 0) setSystemStatus._timer = setTimeout(()=>{ status.textContent = 'Ready. System status: Useful AI.'; }, resetAfter);
+}
+
+function updateSoundToggle(){
+  const button = document.getElementById('soundToggle');
+  if(!button) return;
+  const on = !!prefs.uiSound;
+  button.setAttribute('aria-pressed', String(on));
+  button.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+  button.title = on ? 'Sound on' : 'Sound off';
+  button.innerHTML = `${osIcon(on ? 'sound-on' : 'sound-off','tray-sound-icon')}<span class="sr-only">Sound ${on ? 'on' : 'off'}</span>`;
+}
+
+function updateMotionMenuLabel(){
+  const label = document.querySelector('[data-motion-label]');
+  if(label) label.textContent = `Motion effects: ${prefs.animations ? 'On' : 'Off'}`;
+}
 
 function hydrateDeferredMedia(container){
   if(!container) return;
@@ -155,82 +220,80 @@ function initAnalyticsTracking(){
   }, { passive: true });
 }
 
-async function runBootScreen(){
+async function runBootScreen({force=false}={}){
   const boot = document.getElementById('bootScreen');
+  const bios = document.getElementById('biosScreen');
   const biosText = document.getElementById('biosText');
   const biosHint = document.getElementById('biosHint');
-  const bsod = document.getElementById('bsodScreen');
-  const bsodCountdown = document.getElementById('bsodCountdown');
+  const bootSkip = document.getElementById('bootSkip');
   if(!boot || !biosText){ document.body.classList.add('booted'); return; }
 
-  document.body.classList.add('booting');
-
-  let interrupted = false;
-  const onInterrupt = () => { interrupted = true; };
-  boot.addEventListener('pointerdown', onInterrupt, { once: true });
-  boot.addEventListener('touchstart', onInterrupt, { once: true, passive: true });
-
-  const lines = [
-    'Award Modular BIOS v4.51PG, An Energy Star Ally',
-    'Copyright (C) 1984-98, Award Software, Inc.',
-    '',
-    'M I C H A E L O S   1 9 8 9',
-    '',
-    'AMD-K6(tm)-2/500 CPU Found',
-    'Memory Test : 32768K OK',
-    '',
-    'Award Plug and Play BIOS Extension v1.0A',
-    'Copyright (C) 1998, Award Software, Inc.',
-    '',
-    'Detecting IDE Primary Master ... KINGSTON SA400S37',
-    'Detecting IDE Primary Slave  ... None',
-    'Detecting IDE Secondary Master... None',
-    'Detecting IDE Secondary Slave ... None',
-    '',
-    'USB Controller ............... OK',
-    'Keyboard Controller .......... OK',
-    '',
-    'Verifying DMI Pool Data ........ Success',
-    'Boot from HDD0 ...'
-  ];
-
-  const totalDuration = Number(prefs.bootSpeed||3450);
-  const perLine = Math.max(45, Math.floor(totalDuration / lines.length));
-
-  for (let i=0;i<lines.length;i++){
-    if (interrupted) break;
-    biosText.textContent += lines[i] + '\n';
-    if (biosText.textContent.length > 2200) {
-      biosText.textContent = biosText.textContent.slice(-2200);
-    }
-    await new Promise(r => setTimeout(r, perLine));
-  }
-
-  if (interrupted) {
-    const bios = document.getElementById('biosScreen');
-    if (bios) bios.style.display = 'none';
-    if (bsod) bsod.classList.add('show');
-    let sec = 5;
-    const tick = setInterval(() => {
-      sec -= 1;
-      if (bsodCountdown) bsodCountdown.textContent = `Reloading in ${sec}...`;
-      if (sec <= 0) {
-        clearInterval(tick);
-        location.reload();
-      }
-    }, 1000);
+  if(!force){
+    boot.classList.add('hidden');
+    boot.setAttribute('aria-hidden','true');
+    document.body.classList.add('booted');
     return;
   }
 
-  if (biosHint) biosHint.textContent = 'Press F1 to continue, DEL to enter SETUP';
-  await new Promise(r => setTimeout(r, 260));
+  const previousFocus = document.activeElement;
+  boot.classList.remove('hidden','exiting');
+  boot.setAttribute('aria-hidden','false');
+  bios.style.display = '';
+  biosText.textContent = '';
+  if(biosHint) biosHint.textContent = 'Press any key or click to skip';
+  document.body.classList.add('booting');
+
+  let interrupted = false;
+  const onInterrupt = (event) => {
+    if(event?.type === 'keydown' && ['Tab','Shift','Control','Alt','Meta'].includes(event.key)) return;
+    interrupted = true;
+  };
+  boot.addEventListener('pointerdown', onInterrupt);
+  document.addEventListener('keydown', onInterrupt);
+
+  const lines = [
+    'MICHAEL OS 89 BIOS v1.0',
+    'Memory Test ................. 32768K OK',
+    'Operator profile ............ MICHAEL COSTEA',
+    'AI enablement layer ......... READY',
+    'Business systems ............ READY',
+    'Human review gates .......... ENABLED',
+    'Window manager .............. ONLINE',
+    'Loading career evidence ..... OK',
+    'Loading case studies ........ OK',
+    'Boot from MICHAELOS ........ Success'
+  ];
+
+  const totalDuration = Math.min(1500,Math.max(700,Number(prefs.bootSpeed||1250)));
+  const perLine = Math.max(60,Math.floor(totalDuration / lines.length));
+  for(const line of lines){
+    if(interrupted) break;
+    biosText.textContent += line + '\n';
+    await new Promise(resolve=>setTimeout(resolve,perLine));
+  }
+
+  if(!interrupted){
+    if(biosHint) biosHint.textContent = 'MICHAEL OS ready';
+    await new Promise(resolve=>setTimeout(resolve,100));
+  }
 
   boot.classList.add('exiting');
-  await new Promise(r => setTimeout(r, 520));
+  await new Promise(resolve=>setTimeout(resolve,220));
   boot.classList.add('hidden');
+  boot.classList.remove('exiting');
+  boot.setAttribute('aria-hidden','true');
   document.body.classList.remove('booting');
   document.body.classList.add('booted');
+  boot.removeEventListener('pointerdown',onInterrupt);
+  document.removeEventListener('keydown',onInterrupt);
+  setSystemStatus('MICHAEL OS boot complete.',900);
+  if(previousFocus?.isConnected) requestAnimationFrame(()=>previousFocus.focus());
 }
+
+function restartMichaelOS(){
+  return runBootScreen({force:true});
+}
+window.restartMichaelOS = restartMichaelOS;
 
 function updateTaskbarMetrics(){
   const taskbar = document.querySelector('.taskbar');
@@ -382,6 +445,7 @@ function openWindow(id){
   if(!win) return;
   const wasOpen = win.classList.contains('open');
   const opener = document.activeElement;
+  const openerRect = rectOf(opener);
   if(opener && !['BODY', 'HTML'].includes(opener.tagName) && !win.contains(opener)) windowFocusReturn.set(id, opener);
 
   if (isMobileMode()) {
@@ -399,13 +463,20 @@ function openWindow(id){
   syncActiveWindowAccessibility(win);
   focusActiveWindow(win);
   syncImmersiveMode();
-  uiBeep('open');
+  if(!wasOpen){
+    animateWindowOutline(openerRect,rectOf(win));
+    setSystemStatus(statusForWindow(win),650);
+    uiBeep('open');
+  }
 }
 
 function closeWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
+  const fromRect = rectOf(win);
   const focusReturn = windowFocusReturn.get(id);
+  const fallbackTarget = document.querySelector(`[data-focus="${id}"]`) || document.getElementById('startBtn');
+  const targetRect = rectOf(focusReturn) || rectOf(fallbackTarget);
   windowFocusReturn.delete(id);
 
   if(id === 'browserWindow'){
@@ -413,10 +484,15 @@ function closeWindow(id){
     try{ frame?.contentWindow?.postMessage({type:'mikenet-close'}, '*'); }catch{}
     setTimeout(()=>{ if(frame) frame.src = 'about:blank'; }, 20);
   }
+  if(id === 'caseStudyWindow'){
+    const frame = document.getElementById('caseStudyFrame');
+    setTimeout(()=>{ if(frame) frame.removeAttribute('src'); }, 180);
+  }
 
   win.classList.remove('open','minimized','maximized','active');
   win.setAttribute('aria-hidden', 'true');
   restoreWindowDefaultStyle(win);
+  delete win.dataset.restoreInlineStyle;
   delete win.dataset.prevLeft;
   delete win.dataset.prevTop;
   delete win.dataset.prevWidth;
@@ -434,6 +510,9 @@ function closeWindow(id){
   syncImmersiveMode();
   refreshTaskbar();
   syncPageRouteFromWindows();
+  animateWindowOutline(fromRect,targetRect,150);
+  setSystemStatus(statusForWindow(win,'Closed'),550);
+  uiBeep('close');
   if(focusReturn?.isConnected){
     requestAnimationFrame(() => focusReturn.focus());
   }else if(isMobileMode() && !nextWindow){
@@ -445,31 +524,33 @@ function closeWindow(id){
 function minimizeWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
+  const fromRect = rectOf(win);
   win.classList.remove('open','active');
   win.classList.add('minimized');
   syncImmersiveMode();
   refreshTaskbar();
+  const taskButton = document.querySelector(`.task-btn[data-focus="${id}"]`);
+  animateWindowOutline(fromRect,rectOf(taskButton),150);
+  setSystemStatus(statusForWindow(win,'Minimized'),550);
+  uiBeep('minimize');
   syncPageRouteFromWindows();
 }
 
 function toggleMaximizeWindow(id){
   const win = document.getElementById(id);
   if(!win) return;
-  if(win.classList.contains('maximized')){
+  updateTaskbarMetrics();
+  const fromRect = rectOf(win);
+  const restoring = win.classList.contains('maximized');
+  if(restoring){
+    const restoreStyle = win.dataset.restoreInlineStyle;
+    if(restoreStyle?.trim()) win.setAttribute('style',restoreStyle);
+    else win.removeAttribute('style');
+    delete win.dataset.restoreInlineStyle;
     win.classList.remove('maximized');
-    if(win.dataset.prevLeft!==undefined) win.style.left = win.dataset.prevLeft;
-    if(win.dataset.prevTop!==undefined) win.style.top = win.dataset.prevTop;
-    if(win.dataset.prevWidth!==undefined) win.style.width = win.dataset.prevWidth;
-    if(win.dataset.prevHeight!==undefined) win.style.height = win.dataset.prevHeight;
-    win.style.right = win.dataset.prevRight || '';
-    win.style.bottom = win.dataset.prevBottom || '';
   }else{
-    win.dataset.prevLeft = win.style.left || '';
-    win.dataset.prevTop = win.style.top || '';
-    win.dataset.prevWidth = win.style.width || '';
-    win.dataset.prevHeight = win.style.height || '';
-    win.dataset.prevRight = win.style.right || '';
-    win.dataset.prevBottom = win.style.bottom || '';
+    win.dataset.restoreInlineStyle = win.getAttribute('style') || '';
+    maximizeGeometryProperties.forEach(property=>win.style.removeProperty(property));
     win.classList.add('maximized');
   }
   win.classList.remove('minimized');
@@ -485,6 +566,10 @@ function toggleMaximizeWindow(id){
     maxBtn.classList.toggle('is-restore', isMax);
   }
   refreshTaskbar();
+  updateTaskbarMetrics();
+  animateWindowOutline(fromRect,rectOf(win),150);
+  setSystemStatus(statusForWindow(win,isMax ? 'Maximized' : 'Restored'),550);
+  uiBeep(isMax ? 'maximize' : 'restore');
 }
 
 
@@ -507,26 +592,67 @@ function launchInMikeNet(url, title='Program'){
   openWindow('browserWindow');
 }
 
-function initDesktopWindows(){
-  cacheWindowDefaultStyles();
-  document.querySelectorAll('.desk-icon').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const id = btn.getAttribute('data-open');
-      const appUrl = btn.getAttribute('data-app');
-      const textFile = btn.getAttribute('data-text-file');
-      const appTitle = btn.getAttribute('data-title') || 'Program';
-      if(textFile){
-        const url = `./apps/text.html?file=${encodeURIComponent(textFile)}`;
-        launchInMikeNet(url, appTitle);
-        return;
-      }
-      if(appUrl){
-        launchInMikeNet(appUrl, appTitle);
-        return;
-      }
-      if (id) openWindow(id);
+function initCaseStudyLaunches(){
+  document.querySelectorAll('#projectsWindow .featured-hiring-case a.ui-btn[href]').forEach((link)=>{
+    if(link.dataset.caseWindowReady === '1') return;
+    link.dataset.caseWindowReady = '1';
+    link.dataset.caseWindow = '1';
+    link.addEventListener('click',(event)=>{
+      if(event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const href = link.getAttribute('href');
+      if(!href) return;
+      event.preventDefault();
+      const title = link.closest('.featured-hiring-case')?.querySelector('h3')?.textContent?.trim() || 'Case study';
+      const frame = document.getElementById('caseStudyFrame');
+      const frameTitle = document.getElementById('caseStudyTitle');
+      if(!frame || !frameTitle) return;
+      frame.src = href;
+      frameTitle.textContent = `Case Study - ${title}`;
+      frame.title = `${title} case study`;
+      openWindow('caseStudyWindow');
+      setSystemStatus(`Opening case: ${title}…`,750);
     });
   });
+}
+
+function initDesktopWindows(){
+  cacheWindowDefaultStyles();
+  const launchDesktopIcon = (btn) => {
+    const id = btn.getAttribute('data-open');
+    const appUrl = btn.getAttribute('data-app');
+    const textFile = btn.getAttribute('data-text-file');
+    const appTitle = btn.getAttribute('data-title') || 'Program';
+    if(textFile){
+      launchInMikeNet(`./apps/text.html?file=${encodeURIComponent(textFile)}`, appTitle);
+      return;
+    }
+    if(appUrl){
+      launchInMikeNet(appUrl, appTitle);
+      return;
+    }
+    if(id) openWindow(id);
+  };
+
+  document.querySelectorAll('.desk-icon').forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      const desktopPointer = !isMobileMode() && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      if(desktopPointer && event.detail > 0){
+        document.querySelectorAll('.desk-icon.os-selected').forEach(icon=>icon.classList.remove('os-selected'));
+        btn.classList.add('os-selected');
+        setSystemStatus(`${btn.textContent.trim()} selected. Double-click to open.`,1200);
+        uiBeep('tap');
+        return;
+      }
+      launchDesktopIcon(btn);
+    });
+    btn.addEventListener('dblclick', (event) => {
+      event.preventDefault();
+      launchDesktopIcon(btn);
+    });
+  });
+  document.addEventListener('pointerdown', (event)=>{
+    if(!event.target.closest('.desk-icon')) document.querySelectorAll('.desk-icon.os-selected').forEach(icon=>icon.classList.remove('os-selected'));
+  }, {passive:true});
 
   // Buttons inside the initial Welcome window also use data-open.
   // They are not .desk-icon elements, so wire them explicitly.
@@ -712,6 +838,7 @@ function initTray(){
   const clockEl = document.getElementById('trayClock');
   const dateEl = document.getElementById('trayDate');
   const battEl = document.getElementById('trayBattery');
+  const soundToggle = document.getElementById('soundToggle');
   const updateClock = () => {
     const now = new Date();
     if (clockEl) clockEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -719,6 +846,15 @@ function initTray(){
   };
   updateClock();
   setInterval(updateClock, 1000);
+  updateSoundToggle();
+  soundToggle?.addEventListener('click', (event)=>{
+    event.stopPropagation();
+    prefs.uiSound = !prefs.uiSound;
+    savePrefs();
+    updateSoundToggle();
+    setSystemStatus(`Sound ${prefs.uiSound ? 'on' : 'off'}.`,750);
+    if(prefs.uiSound) uiBeep('tap');
+  });
 
   if (navigator.getBattery && battEl) {
     navigator.getBattery().then((b) => {
@@ -749,18 +885,59 @@ function refreshTaskbar(){
       const id = btn.getAttribute('data-focus');
       const win = document.getElementById(id);
       if(!win) return;
+      const buttonRect = rectOf(btn);
       if(win.classList.contains('minimized')){
         win.classList.remove('minimized');
         win.classList.add('open');
         bringFront(win);
+        animateWindowOutline(buttonRect,rectOf(win),150);
+        setSystemStatus(statusForWindow(win,'Restored'),550);
+        uiBeep('restore');
       } else if(win.classList.contains('active') && win.classList.contains('open')){
         minimizeWindow(id);
       } else {
         win.classList.add('open');
         win.classList.remove('minimized');
         bringFront(win);
+        setSystemStatus(statusForWindow(win,'Focused'),450);
+        uiBeep('tap');
       }
       refreshTaskbar();
+    });
+  });
+}
+
+function initProjectArchiveMotion(){
+  document.querySelectorAll('.project-archive-shell').forEach((details)=>{
+    if(details.dataset.motionReady === '1') return;
+    details.dataset.motionReady = '1';
+    const summary = details.querySelector(':scope > summary');
+    const content = details.querySelector(':scope > .project-archive-content');
+    if(!summary || !content) return;
+    details.addEventListener('toggle',()=>{
+      if(!details.open) return;
+      setSystemStatus('Loading project archive…',700);
+      uiBeep('tap');
+      if(!motionAllowed() || !content.animate) return;
+      content.animate([
+        { clipPath:'inset(0 0 100% 0)', opacity:.55 },
+        { clipPath:'inset(0 0 0 0)', opacity:1 },
+      ], { duration:200, easing:'steps(6,end)' });
+    });
+    summary.addEventListener('click',(event)=>{
+      if(!details.open || !motionAllowed() || !content.animate) return;
+      event.preventDefault();
+      if(details.dataset.closing === '1') return;
+      details.dataset.closing = '1';
+      const animation = content.animate([
+        { clipPath:'inset(0 0 0 0)', opacity:1 },
+        { clipPath:'inset(0 0 100% 0)', opacity:.5 },
+      ], { duration:150, easing:'steps(5,end)' });
+      animation.finished.catch(()=>{}).finally(()=>{
+        details.open = false;
+        delete details.dataset.closing;
+        setSystemStatus('Project archive closed.',550);
+      });
     });
   });
 }
@@ -774,21 +951,23 @@ function initStartMenu(projects){
   // Public-release mode: keep navigation flat and reliable. No cascading app menus
   // until each webapp is refit and explicitly released.
   items.innerHTML = `
-    <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span><b class="si">🖥️</b>My Computer</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="resumeWindow"><span><b class="si">📄</b>Resume</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="buildWindow"><span><b class="si">🧩</b>What I Build</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="projectsWindow"><span><b class="si">📁</b>Projects</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="resourcesWindow"><span><b class="si">🧰</b>Tools &amp; Resources</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="agentsWindow"><span><b class="si">🤖</b>AI Agents</span></a>
-    <a class="start-item start-cta" role="menuitem" href="#" data-open-window="aiHelpWindow"><span><b class="si">🎓</b>AI Help</span></a>
-    <a class="start-item start-cta" role="menuitem" href="#" data-open-window="agenticKnowledgebaseWindow"><span><b class="si">📚</b>AI Knowledgebase</span></a>
-    <a class="start-item start-cta" role="menuitem" href="#" data-open-window="intakeWindow"><span><b class="si">📝</b>AI Intake</span></a>
-    <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span><b class="si">🗂️</b>Programs</span><small>hidden</small></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="aboutWindow"><span>${osIcon('computer')}<b class="start-item-label">My Computer</b></span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="resumeWindow"><span>${osIcon('document')}<b class="start-item-label">Resume</b></span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="buildWindow"><span>${osIcon('puzzle')}<b class="start-item-label">What I Build</b></span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="projectsWindow"><span>${osIcon('folder')}<b class="start-item-label">Projects</b></span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="resourcesWindow"><span>${osIcon('toolbox')}<b class="start-item-label">Tools &amp; Resources</b></span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="agentsWindow"><span>${osIcon('robot')}<b class="start-item-label">AI Agents</b></span></a>
+    <a class="start-item start-cta" role="menuitem" href="#" data-open-window="aiHelpWindow"><span>${osIcon('education')}<b class="start-item-label">AI Help</b></span></a>
+    <a class="start-item start-cta" role="menuitem" href="#" data-open-window="agenticKnowledgebaseWindow"><span>${osIcon('document')}<b class="start-item-label">AI Knowledgebase</b></span></a>
+    <a class="start-item start-cta" role="menuitem" href="#" data-open-window="intakeWindow"><span>${osIcon('intake')}<b class="start-item-label">AI Intake</b></span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="appsWindow"><span>${osIcon('folder')}<b class="start-item-label">Programs</b></span><small>hidden</small></a>
     <div class="start-sep"></div>
-    <a class="start-item" role="menuitem" href="mailto:costea.michael@gmail.com"><span><b class="si">✉️</b>Email</span></a>
-    <a class="start-item" role="menuitem" href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener"><span><b class="si">🔗</b>LinkedIn</span></a>
+    <a class="start-item" role="menuitem" href="mailto:costea.michael@gmail.com"><span>${osIcon('mail')}<b class="start-item-label">Email</b></span></a>
+    <a class="start-item" role="menuitem" href="https://www.linkedin.com/in/michaelcostea" target="_blank" rel="noopener"><span>${osIcon('link')}<b class="start-item-label">LinkedIn</b></span></a>
     <div class="start-sep"></div>
-    <a class="start-item" role="menuitem" href="#" data-open-window="recycleWindow"><span><b class="si">🗑️</b>Recycle Bin</span></a>
+    <a class="start-item" role="menuitem" href="#" data-action="toggle-motion"><span>${osIcon('motion')}<b class="start-item-label" data-motion-label>Motion effects: ${prefs.animations ? 'On' : 'Off'}</b></span></a>
+    <a class="start-item" role="menuitem" href="#" data-action="restart-os"><span>${osIcon('restart')}<b class="start-item-label">Restart MICHAEL OS</b></span></a>
+    <a class="start-item" role="menuitem" href="#" data-open-window="recycleWindow"><span>${osIcon('recycle')}<b class="start-item-label">Recycle Bin</b></span></a>
   `;
 
   const closeMenu = () => {
@@ -804,13 +983,35 @@ function initStartMenu(projects){
     menu.setAttribute('aria-hidden','false');
   };
 
-  btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const opening = !menu.classList.contains('open');
+    opening ? openMenu() : closeMenu();
+    setSystemStatus(opening ? 'Start menu opened.' : 'Start menu closed.',450);
+    uiBeep('menu');
+  });
   document.addEventListener('click', (e) => { if(!menu.contains(e.target) && e.target !== btn) closeMenu(); });
   menu.addEventListener('click', (e) => {
     const link = e.target.closest('.start-item');
     if(!link) return;
     const openId = link.getAttribute('data-open-window');
+    const action = link.getAttribute('data-action');
     if(openId){ e.preventDefault(); openWindow(openId); closeMenu(); return; }
+    if(action === 'toggle-motion'){
+      e.preventDefault();
+      prefs.animations = !prefs.animations;
+      savePrefs();
+      applyPrefs();
+      updateMotionMenuLabel();
+      setSystemStatus(`Motion effects ${prefs.animations ? 'on' : 'off'}.`,850);
+      return;
+    }
+    if(action === 'restart-os'){
+      e.preventDefault();
+      closeMenu();
+      setTimeout(()=>restartMichaelOS(),80);
+      return;
+    }
     closeMenu();
   });
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeMenu(); });
@@ -1052,8 +1253,8 @@ function uiBeep(kind='tap'){
     const o=audioCtx.createOscillator();
     const g=audioCtx.createGain();
     o.type='square';
-    const f = kind==='open' ? 740 : kind==='alert' ? 260 : 520;
-    o.frequency.setValueAtTime(f,audioCtx.currentTime);
+    const frequencies = { open:740, close:300, minimize:420, maximize:620, restore:660, menu:560, alert:260, tap:520 };
+    o.frequency.setValueAtTime(frequencies[kind] || frequencies.tap,audioCtx.currentTime);
     g.gain.setValueAtTime(0.0001,audioCtx.currentTime);
     g.gain.exponentialRampToValueAtTime(0.04,audioCtx.currentTime+0.01);
     g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+0.07);
@@ -1072,9 +1273,12 @@ function showToast(msg){
 }
 
 function applyPrefs(){
+  document.body.classList.add('os-motion-ready');
   document.body.classList.toggle('no-anim', !prefs.animations);
   document.body.classList.toggle('premium-ui', !!prefs.premiumUI);
   setLoreTheme(prefs.theme || 'default');
+  updateSoundToggle();
+  updateMotionMenuLabel();
 }
 
 function initSettingsPanel(){
@@ -1365,6 +1569,8 @@ async function boot(){
 
   initStartMenu(projects);
   initDesktopWindows();
+  initCaseStudyLaunches();
+  initProjectArchiveMotion();
   initSkipLink();
   initTray();
   initEasterEggs();
@@ -1378,7 +1584,10 @@ async function boot(){
   initAnalyticsTracking();
 
   document.addEventListener('click', (e)=>{
-    if(e.target.closest('.btn,.start-item,.desk-icon,.task-btn,.win-btn,.win-close')) uiBeep('tap');
+    const genericControl = e.target.closest('.btn,.start-item');
+    if(!genericControl) return;
+    if(genericControl.matches('[data-open],[data-open-window],[data-action],[data-case-window]')) return;
+    uiBeep('tap');
   }, {passive:true});
 
   applyLayoutMode();

@@ -1,0 +1,252 @@
+/* MichaelOS semantic motion + deterministic icon layer. Loaded last. */
+:root{
+  --os-motion-fast:90ms;
+  --os-motion-window:170ms;
+  --os-motion-panel:200ms;
+  --os-motion-ease:steps(5,end);
+}
+
+.sr-only{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+
+.os-icon{
+  display:block;
+  width:32px;
+  height:32px;
+  margin:2px auto 4px;
+  overflow:visible;
+  image-rendering:pixelated;
+  shape-rendering:crispEdges;
+  filter:none!important;
+}
+.start-item .os-icon{
+  width:18px;
+  height:18px;
+  margin:0;
+  flex:0 0 18px;
+}
+.tray-sound-toggle .os-icon{
+  width:16px;
+  height:16px;
+  margin:0;
+}
+
+.public-preview .desk-icon.os-selected,
+.public-preview .desk-icon.os-selected:hover,
+.public-preview .desk-icon.os-selected:focus-visible{
+  background:#000080;
+  border:1px dotted #fff;
+  outline:1px dotted #000;
+  outline-offset:-3px;
+}
+.public-preview .desk-icon.os-selected span:last-child{
+  background:#000080;
+  color:#fff;
+}
+
+.tray-sound-toggle{
+  min-width:32px!important;
+  padding:3px 6px!important;
+  cursor:pointer;
+}
+.tray-sound-toggle[aria-pressed="true"]{
+  border-top-color:#808080!important;
+  border-left-color:#808080!important;
+  border-right-color:#fff!important;
+  border-bottom-color:#fff!important;
+  box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #dfdfdf!important;
+}
+
+@media (min-width:821px) and (hover:hover) and (pointer:fine){
+  .public-preview.ux-preview-page .ux-taskbar-app{
+    display:none!important;
+  }
+  .public-preview.ux-preview-page .taskbar-windows{
+    display:flex!important;
+    flex:1 1 auto;
+    min-width:0;
+    overflow:hidden;
+    gap:4px;
+  }
+  .public-preview.ux-preview-page .taskbar-windows .task-btn{
+    display:block;
+    min-width:96px!important;
+    max-width:210px!important;
+    width:auto!important;
+    flex:0 1 210px;
+    font-size:11px!important;
+  }
+}
+
+.os-motion-outline{
+  position:fixed;
+  z-index:118;
+  pointer-events:none;
+  border:2px solid #fff;
+  outline:2px solid #000;
+  outline-offset:-4px;
+  background:transparent;
+  box-shadow:2px 2px 0 rgba(0,0,0,.45);
+  will-change:left,top,width,height,opacity;
+}
+
+.public-preview .win-window.maximized,
+body.public-preview #readerWindow.win-window.open.maximized{
+  position:fixed!important;
+  left:0!important;
+  top:0!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:100vw!important;
+  height:calc(100dvh - var(--taskbar-h,46px))!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  transform:none!important;
+}
+body.mobile-mode.public-preview #desktopRoot .win-window.open.maximized{
+  position:fixed!important;
+  left:0!important;
+  top:0!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:100vw!important;
+  height:calc(100dvh - var(--taskbar-h,54px))!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  transform:none!important;
+}
+
+body.os-motion-ready:not(.no-anim) .start-menu{
+  display:block!important;
+  visibility:hidden;
+  pointer-events:none;
+  opacity:0;
+  clip-path:inset(100% 0 0 0);
+  transition:
+    clip-path var(--os-motion-fast) var(--os-motion-ease),
+    opacity 60ms linear,
+    visibility 0s linear var(--os-motion-fast)!important;
+}
+body.os-motion-ready:not(.no-anim) .start-menu.open{
+  visibility:visible;
+  pointer-events:auto;
+  opacity:1;
+  clip-path:inset(0 0 0 0);
+  transition:
+    clip-path var(--os-motion-fast) var(--os-motion-ease),
+    opacity 60ms linear,
+    visibility 0s linear 0s!important;
+}
+
+body.os-motion-ready .win-window .win-title{
+  background:#747474!important;
+  filter:saturate(.4);
+}
+body.os-motion-ready .win-window.active .win-title{
+  background:#000080!important;
+  filter:none;
+}
+body.os-motion-ready:not(.no-anim) .win-window .win-title{
+  transition:background-color var(--os-motion-fast) steps(3,end),filter var(--os-motion-fast) steps(3,end)!important;
+}
+
+.project-archive-shell summary{
+  cursor:pointer;
+}
+.project-archive-shell summary::before{
+  content:"▸";
+  display:inline-block;
+  width:16px;
+  color:#000080;
+  font-weight:900;
+}
+.project-archive-shell[open] summary::before{
+  content:"▾";
+}
+.project-archive-content{
+  transform-origin:top left;
+}
+
+.case-study-window.open{
+  display:flex!important;
+  flex-direction:column;
+  overflow:hidden;
+}
+.case-study-window-body{
+  flex:1 1 auto;
+  min-height:0;
+  padding:0!important;
+  overflow:hidden!important;
+  background:#fff!important;
+}
+.case-study-frame{
+  display:block;
+  width:100%;
+  height:100%;
+  border:0;
+  background:#fff;
+}
+
+.boot-screen .boot-skip{
+  position:absolute;
+  z-index:5;
+  right:18px;
+  bottom:16px;
+  min-height:34px;
+  padding:5px 12px;
+  color:#66b9ff;
+  background:#000;
+  border:1px solid #66b9ff;
+  font:700 14px/1 "Courier New",monospace;
+  cursor:pointer;
+}
+.boot-screen .boot-skip:focus-visible{
+  outline:2px solid #fff;
+  outline-offset:2px;
+}
+.boot-screen.exiting{
+  animation:bootOpen 220ms steps(5,end) forwards;
+}
+
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px), (hover:none) and (pointer:coarse){
+  .public-preview .desk-icon .os-icon{
+    width:34px;
+    height:34px;
+  }
+  .os-motion-outline{
+    border-width:2px;
+  }
+  .tray-sound-toggle{
+    min-width:30px!important;
+    width:30px;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .os-motion-outline{display:none!important;}
+  body.os-motion-ready:not(.no-anim) .start-menu,
+  body.os-motion-ready:not(.no-anim) .start-menu.open,
+  body.os-motion-ready:not(.no-anim) .win-window .win-title,
+  .project-archive-content{
+    animation:none!important;
+    transition:none!important;
+  }
+}
+body.no-anim .os-motion-outline{display:none!important;}
+body.no-anim .start-menu,
+body.no-anim .win-window .win-title,
+body.no-anim .project-archive-content{
+  animation:none!important;
+  transition:none!important;
+}

@@ -20,7 +20,7 @@
   <meta name="twitter:title" content="Michael Costea — Head of Tech, AI & Systems" />
   <meta name="twitter:description" content="AI enablement, business systems, vertical application delivery, automation, and technology operations in Melbourne." />
   <meta name="twitter:image" content="https://michaelcostea.com/assets/social/michael-costea-head-of-tech.png" />
-  <link rel="preload" as="image" href="assets/profile-michael-pixel.jpg?v=20260621-profile-crop" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/profile-michael-pixel-os.webp?v=20260803-os-dither" fetchpriority="high" />
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-C0YHGXH33P"></script>
   <script>
@@ -38,7 +38,7 @@
     "@type": "Person",
     "name": "Michael Costea",
     "url": "https://michaelcostea.com/",
-    "image": "https://michaelcostea.com/assets/profile-michael-pixel.jpg?v=20260621-profile-crop",
+    "image": "https://michaelcostea.com/assets/profile-michael-pixel-os.webp?v=20260803-os-dither",
     "jobTitle": "Head of Tech, AI & Systems",
     "address": {
       "@type": "PostalAddress",
@@ -56,30 +56,39 @@
   <link rel="stylesheet" href="assets/css/hyperframes-live.css?v=20260711-private-style-labels" />
   <link rel="stylesheet" href="assets/css/career-resume.css?v=20260723-vertical-app-routing" />
   <link rel="stylesheet" href="assets/css/showcase-resume-flex.css?v=20260728-showcase-resume-flex" />
+  <link rel="stylesheet" href="assets/css/michaelos-motion.css?v=20260803-motion-6" />
 </head>
 <body class="public-preview ux-preview-page hyperframes-live">
   <script>if(window.matchMedia('(max-width: 820px), (orientation: portrait) and (max-width: 1100px), (hover: none) and (pointer: coarse)').matches)document.body.classList.add('mobile-mode');</script>
   <a class="skip-link" href="#readerWindow">Skip to portfolio content</a>
+  <section id="bootScreen" class="boot-screen hidden" aria-hidden="true" aria-label="MICHAEL OS boot sequence">
+    <div id="biosScreen" class="bios-screen">
+      <pre id="biosText" class="bios-text"></pre>
+      <div class="energy-badge" aria-hidden="true"><span class="energy-script">michael</span><div class="energy-bar">MICHAEL OS 89</div></div>
+      <div id="biosHint" class="bios-hint">Press any key or click to skip</div>
+    </div>
+    <button id="bootSkip" class="boot-skip" type="button">Skip boot</button>
+  </section>
   <main class="container" id="desktopRoot">
     <section class="desktop desktop-icons" aria-label="MICHAEL OS 89 desktop">
-      <button class="desk-icon" data-open="aboutWindow" aria-label="Open My Computer"><span class="icon-art">🖥️</span><span>My Computer</span></button>
-      <button class="desk-icon" data-open="resumeWindow" aria-label="Open Resume"><span class="icon-art">📄</span><span>Resume</span></button>
-      <button class="desk-icon" data-open="buildWindow" aria-label="Open What I Build"><span class="icon-art">🧩</span><span>What I Build</span></button>
-      <button class="desk-icon" data-open="projectsWindow" aria-label="Open Projects"><span class="icon-art">📁</span><span>Projects</span></button>
-      <button class="desk-icon" data-open="agentsWindow" aria-label="Open AI Agents"><span class="icon-art">🤖</span><span>AI Agents</span></button>
-      <button class="desk-icon" data-open="newRepoWindow" aria-label="Open New Repo"><span class="icon-art">📦</span><span>New Repo</span></button>
-      <button class="desk-icon" data-open="vicRebateApiWindow" aria-label="Open RebateSignal"><span class="icon-art">⚡</span><span>RebateSignal</span></button>
-      <button class="desk-icon" data-open="resourcesWindow" aria-label="Open Tools and Resources"><span class="icon-art">🧰</span><span>Resources</span></button>
-      <button class="desk-icon" data-open="aiHelpWindow" aria-label="Open AI Help"><span class="icon-art">🎓</span><span>AI Help</span></button>
-      <button class="desk-icon" data-open="intakeWindow" aria-label="Open AI Intake"><span class="icon-art">📝</span><span>AI Intake</span></button>
-      <button id="recycleBin" class="desk-icon" data-open="recycleWindow" aria-label="Open Recycle Bin"><span class="icon-art">🗑️</span><span id="recycleLabel">Recycle Bin</span></button>
+      <button class="desk-icon" data-open="aboutWindow" aria-label="Open My Computer"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-computer"></use></svg><span>My Computer</span></button>
+      <button class="desk-icon" data-open="resumeWindow" aria-label="Open Resume"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-document"></use></svg><span>Resume</span></button>
+      <button class="desk-icon" data-open="buildWindow" aria-label="Open What I Build"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-puzzle"></use></svg><span>What I Build</span></button>
+      <button class="desk-icon" data-open="projectsWindow" aria-label="Open Projects"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-folder"></use></svg><span>Projects</span></button>
+      <button class="desk-icon" data-open="agentsWindow" aria-label="Open AI Agents"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-robot"></use></svg><span>AI Agents</span></button>
+      <button class="desk-icon" data-open="newRepoWindow" aria-label="Open New Repo"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-package"></use></svg><span>New Repo</span></button>
+      <button class="desk-icon" data-open="vicRebateApiWindow" aria-label="Open RebateSignal"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-bolt"></use></svg><span>RebateSignal</span></button>
+      <button class="desk-icon" data-open="resourcesWindow" aria-label="Open Tools and Resources"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-toolbox"></use></svg><span>Resources</span></button>
+      <button class="desk-icon" data-open="aiHelpWindow" aria-label="Open AI Help"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-education"></use></svg><span>AI Help</span></button>
+      <button class="desk-icon" data-open="intakeWindow" aria-label="Open AI Intake"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-intake"></use></svg><span>AI Intake</span></button>
+      <button id="recycleBin" class="desk-icon" data-open="recycleWindow" aria-label="Open Recycle Bin"><svg class="os-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-recycle"></use></svg><span id="recycleLabel">Recycle Bin</span></button>
     </section>
 
     <section id="readerWindow" class="win-window open workstation-welcome main-portfolio-window" aria-label="Welcome window" tabindex="-1">
       <div class="win-title"><span>💾 Welcome.exe - Michael Costea Portfolio</span><button class="win-close" data-close="readerWindow">×</button></div>
       <div class="win-body welcome-body styleguide-welcome">
         <aside class="welcome-sidebar" aria-label="Profile controls">
-          <div class="profile-portrait" aria-hidden="true"><img src="assets/profile-michael-pixel.jpg?v=20260621-profile-crop" alt="Pixel portrait of Michael Costea" width="400" height="400" fetchpriority="high" /></div>
+          <div class="profile-portrait" aria-hidden="true"><img src="assets/profile-michael-pixel-os.webp?v=20260803-os-dither" alt="Pixel portrait of Michael Costea" width="400" height="400" fetchpriority="high" /></div>
           <button class="btn big-nav" type="button" data-open="resumeWindow" onclick="openWindow('resumeWindow')">VIEW RÉSUMÉ</button>
           <button class="btn big-nav" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">CASE STUDIES</button>
           <button class="btn big-nav" type="button" data-open="buildWindow" onclick="openWindow('buildWindow')">WHAT I BUILD</button>
@@ -130,7 +139,7 @@
           </nav>
         </section>
       </div>
-      <div class="status-bar"><span>Ready. System status: Useful AI.</span><span>AI: LIVE</span><span>OPS: ONLINE</span></div>
+      <div class="status-bar"><span id="systemStatusText" aria-live="polite">Ready. System status: Useful AI.</span><span>AI: LIVE</span><span>OPS: ONLINE</span></div>
     </section>
 
     <section id="appsWindow" class="win-window" aria-label="Programs window" style="left:300px;top:180px;width:min(760px,94vw);">
@@ -361,6 +370,7 @@
 
           <details class="project-archive-shell">
             <summary><span>Project Archive</span><b>Open all 12 systems and artifacts</b></summary>
+            <div class="project-archive-content">
             <div class="project-focus-strip" aria-label="Project grouping principles"><span>active repos</span><span>screenshots</span><span>live demos</span><span>proof receipts</span><span>human-reviewed automation</span></div>
             <div class="mini-heading compact-mini lean-heading"><h3>Project Archive</h3></div>
             <div class="project-showcase-grid" aria-label="Main project and repository showcase">
@@ -510,6 +520,7 @@
               </div>
             </article>
           </div>
+            </div>
           </details>
 
           <div class="mini-heading compact-mini lean-heading"><h3>Additional operating themes</h3></div>
@@ -545,6 +556,12 @@
           </div>
         </article>
       </div>
+    </section>
+
+    <section id="caseStudyWindow" class="win-window case-study-window" aria-label="Case study viewer" style="left:150px;top:35px;width:min(1120px,96vw);height:min(820px,calc(100dvh - 80px));">
+      <div class="win-title"><span id="caseStudyTitle">Case Study - Michael Costea</span><button class="win-close" data-close="caseStudyWindow">×</button></div>
+      <div class="win-body case-study-window-body"><iframe id="caseStudyFrame" class="case-study-frame" title="Michael Costea case study" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+      <div class="status-bar"><span>Case study loaded inside MICHAEL OS.</span><span>DIRECT ROUTE PRESERVED</span></div>
     </section>
 
     <section id="newRepoWindow" class="win-window doc-window" aria-label="New Repo" style="left:215px;top:80px;width:min(940px,94vw);height:min(720px,calc(100dvh - 90px));">
@@ -2137,7 +2154,7 @@ openclaw doctor</pre></article>
     <div class="taskbar-spacer"></div>
     <div class="tray" id="tray">
       <span class="tray-pill ux-tray-status" title="System status">SYS</span>
-      <span class="tray-pill" title="Sound">🔊</span>
+      <button id="soundToggle" class="tray-pill tray-sound-toggle" type="button" aria-pressed="false" aria-label="Turn sound on" title="Sound off"><svg class="os-icon tray-sound-icon" aria-hidden="true"><use href="assets/icons/michaelos-sprite.svg#icon-sound-off"></use></svg><span class="sr-only">Sound off</span></button>
       <span id="trayClock" class="tray-pill" title="Time">--:-- --</span>
     </div>
   </div>
@@ -2148,6 +2165,6 @@ openclaw doctor</pre></article>
   </div>
 
   <div id="easterToast" class="easter-toast" aria-live="polite"></div>
-  <script src="script.js?v=20260728-mobile-welcome-close"></script>
+  <script src="script.js?v=20260803-michaelos-motion-6"></script>
 </body>
 </html>

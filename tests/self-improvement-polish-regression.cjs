@@ -24,20 +24,20 @@ assertMatch(
 );
 
 assertMatch(
-  'HTML should cache-bust both CSS and JS for self-improvement polish deploy',
-  /styles\.css\?v=20260728-showcase-resume-flex[\s\S]*script\.js\?v=20260728-mobile-welcome-close/,
+  'HTML should cache-bust the MichaelOS motion CSS and JS deploy',
+  /michaelos-motion\.css\?v=20260803-motion-6[\s\S]*script\.js\?v=20260803-michaelos-motion-6/,
   html
 );
 
 assertMatch(
   'above-the-fold profile portrait should be preloaded with high fetch priority',
-  /<link rel="preload" as="image" href="assets\/profile-michael-pixel\.jpg\?v=20260621-profile-crop" fetchpriority="high" \/>/,
+  /<link rel="preload" as="image" href="assets\/profile-michael-pixel-os\.webp\?v=20260803-os-dither" fetchpriority="high" \/>/,
   html
 );
 
 assertMatch(
   'profile portrait should expose intrinsic dimensions to reduce layout shift',
-  /<img src="assets\/profile-michael-pixel\.jpg\?v=20260621-profile-crop"[^>]*width="400"[^>]*height="400"[^>]*fetchpriority="high"/,
+  /<img src="assets\/profile-michael-pixel-os\.webp\?v=20260803-os-dither"[^>]*width="400"[^>]*height="400"[^>]*fetchpriority="high"/,
   html
 );
 
