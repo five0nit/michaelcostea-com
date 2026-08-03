@@ -25,7 +25,7 @@ assertMatch(
 
 assertMatch(
   'HTML should cache-bust the MichaelOS motion CSS and JS deploy',
-  /michaelos-motion\.css\?v=20260803-motion-6[\s\S]*script\.js\?v=20260803-michaelos-motion-6/,
+  /michaelos-motion\.css\?v=20260803-motion-6[\s\S]*script\.js\?v=20260803-michaelos-motion-7/,
   html
 );
 

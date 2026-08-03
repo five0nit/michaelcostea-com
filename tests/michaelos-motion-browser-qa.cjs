@@ -63,6 +63,7 @@ const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].ma
     await page.keyboard.press('Escape');
 
     const icon = page.locator('.desktop-icons [data-open="aboutWindow"]');
+    await page.evaluate(()=>{ window.__beepKinds=[]; window.uiBeep=(kind)=>window.__beepKinds.push(kind); });
     await icon.click();
     report.desktop.singleClick = await page.evaluate(()=>({
       selected: document.querySelector('[data-open="aboutWindow"]')?.classList.contains('os-selected'),
@@ -71,9 +72,12 @@ const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].ma
     must(report.desktop.singleClick.selected, 'desktop single click must select icon');
     must(!report.desktop.singleClick.aboutOpen, 'desktop single click must not open icon');
 
+    await page.evaluate(()=>{ window.__beepKinds=[]; });
     await icon.dblclick();
     await page.waitForFunction(()=>document.getElementById('aboutWindow')?.classList.contains('open'));
     await page.waitForTimeout(220);
+    report.desktop.iconBeeps = await page.evaluate(()=>window.__beepKinds);
+    must(report.desktop.iconBeeps.filter(kind=>kind === 'tap').length === 1 && report.desktop.iconBeeps.filter(kind=>kind === 'open').length === 1, `desktop double-click emitted duplicate semantic tones: ${JSON.stringify(report.desktop.iconBeeps)}`);
     const title = page.locator('#aboutWindow .win-title');
     const titleBox = await title.boundingBox();
     must(titleBox, 'about titlebar missing');
@@ -91,6 +95,14 @@ const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].ma
     must(Math.abs(maximized.x) <= 1 && Math.abs(maximized.y) <= 1, `maximize after drag origin wrong: ${JSON.stringify(rounded(maximized))}`);
     must(Math.abs(maximized.width - viewport.width) <= 1, `maximize after drag width wrong: ${maximized.width}`);
     must(maximized.height <= viewport.height + 1 && maximized.height >= viewport.height - viewport.taskbar - 2, `maximize height wrong: ${maximized.height}`);
+    const maximizedTitle = await page.locator('#aboutWindow .win-title').boundingBox();
+    await page.mouse.move(maximizedTitle.x + 220, maximizedTitle.y + 12);
+    await page.mouse.down();
+    await page.mouse.move(maximizedTitle.x + 360, maximizedTitle.y + 90, { steps:6 });
+    await page.mouse.up();
+    const maximizedAfterDragAttempt = await page.locator('#aboutWindow').boundingBox();
+    report.desktop.geometry.maximizedAfterDragAttempt = rounded(maximizedAfterDragAttempt);
+    must(Math.abs(maximizedAfterDragAttempt.x-maximized.x) <= 1 && Math.abs(maximizedAfterDragAttempt.y-maximized.y) <= 1 && Math.abs(maximizedAfterDragAttempt.width-maximized.width) <= 1, `maximized window moved during drag attempt: ${JSON.stringify(report.desktop.geometry)}`);
 
     await page.click('#aboutWindow .win-max');
     await page.waitForTimeout(20);
@@ -122,6 +134,14 @@ const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].ma
     must(await page.locator('#aboutWindow').evaluate(el=>el.classList.contains('minimized')), 'window did not minimize');
     const task = page.locator('.task-btn[data-focus="aboutWindow"]');
     must(await task.count() === 1, 'minimized task button missing');
+    await page.waitForTimeout(30);
+    report.desktop.afterMinimize = await page.evaluate(()=>({
+      activeOpen:[...document.querySelectorAll('.win-window.open.active')].map(win=>win.id),
+      focusTask:document.activeElement?.getAttribute?.('data-focus') || '',
+      focusVisible:!!document.activeElement?.getClientRects?.().length,
+    }));
+    must(report.desktop.afterMinimize.activeOpen.length === 1 && report.desktop.afterMinimize.activeOpen[0] === 'readerWindow', `minimize did not promote next window: ${JSON.stringify(report.desktop.afterMinimize)}`);
+    must(report.desktop.afterMinimize.focusTask === 'aboutWindow' && report.desktop.afterMinimize.focusVisible, `minimize left focus hidden: ${JSON.stringify(report.desktop.afterMinimize)}`);
     await page.waitForTimeout(180);
     await task.click();
     const restoreOutline = await page.locator('.os-motion-outline').count();
@@ -167,6 +187,8 @@ const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].ma
     await page.screenshot({ path:path.join(out,'desktop-case-window.png'), fullPage:false });
     await page.click('#caseStudyWindow .win-close');
     await page.waitForFunction(()=>!document.getElementById('caseStudyWindow')?.classList.contains('open'));
+    report.desktop.afterCaseClose = await page.evaluate(()=>[...document.querySelectorAll('.win-window.open.active')].map(win=>win.id));
+    must(report.desktop.afterCaseClose.length === 1 && report.desktop.afterCaseClose[0] === 'projectsWindow', `close did not promote underlying window: ${JSON.stringify(report.desktop.afterCaseClose)}`);
     const archive = page.locator('#projectsWindow .project-archive-shell');
     await archive.locator('summary').click();
     await page.waitForFunction(()=>document.querySelector('#projectsWindow .project-archive-shell')?.open === true);

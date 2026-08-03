@@ -13,7 +13,7 @@ const { document } = dom.window;
 const must = (condition, message) => { if (!condition) throw new Error(message); };
 
 must(document.querySelector('link[href*="michaelos-motion.css?v=20260803-motion-6"]'), 'final motion stylesheet missing');
-must(document.querySelector('script[src*="script.js?v=20260803-michaelos-motion-6"]'), 'motion script cache marker missing');
+must(document.querySelector('script[src*="script.js?v=20260803-michaelos-motion-7"]'), 'motion script cache marker missing');
 
 const desktopIcons = [...document.querySelectorAll('.desktop-icons .desk-icon')];
 must(desktopIcons.length === 11, `expected 11 desktop icons, got ${desktopIcons.length}`);
@@ -40,6 +40,9 @@ for (const phrase of [
   "data-action=\"restart-os\"",
   'function initProjectArchiveMotion',
   'function initCaseStudyLaunches',
+  'function promoteTopOpenWindow',
+  "if(win.classList.contains('maximized')) return",
+  "if(event.detail === 1) uiBeep('tap')",
   "event.detail > 0",
   "btn.addEventListener('dblclick'",
 ]) must(script.includes(phrase), `script contract missing: ${phrase}`);

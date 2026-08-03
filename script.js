@@ -356,6 +356,15 @@ function bringFront(win){
   if(win.classList.contains('open')) syncPageRouteFromWindows();
 }
 
+function promoteTopOpenWindow(){
+  const nextWindow = Array.from(document.querySelectorAll('.win-window.open'))
+    .sort((a,b)=>(Number(b.style.zIndex || 0) - Number(a.style.zIndex || 0)))[0] || null;
+  document.querySelectorAll('.win-window').forEach(win=>win.classList.toggle('active',win === nextWindow));
+  syncActiveWindowAccessibility(nextWindow);
+  refreshTaskbar();
+  return nextWindow;
+}
+
 function syncImmersiveMode(){
   const bw = document.getElementById('browserWindow');
   const immersive = !!(isMobileMode() && bw && bw.classList.contains('open') && bw.classList.contains('maximized') && !bw.classList.contains('minimized'));
@@ -500,15 +509,12 @@ function closeWindow(id){
   delete win.dataset.prevRight;
   delete win.dataset.prevBottom;
 
-  const hasOpenWindow = !!document.querySelector('.win-window.open');
-  let nextWindow = hasOpenWindow ? document.getElementById(activePrimaryWindowId()) : null;
-  if(isMobileMode() && !hasOpenWindow && id !== 'readerWindow'){
+  let nextWindow = promoteTopOpenWindow();
+  if(isMobileMode() && !nextWindow && id !== 'readerWindow'){
     openWindow('readerWindow');
     nextWindow = document.getElementById('readerWindow');
   }
-  syncActiveWindowAccessibility(nextWindow);
   syncImmersiveMode();
-  refreshTaskbar();
   syncPageRouteFromWindows();
   animateWindowOutline(fromRect,targetRect,150);
   setSystemStatus(statusForWindow(win,'Closed'),550);
@@ -528,12 +534,17 @@ function minimizeWindow(id){
   win.classList.remove('open','active');
   win.classList.add('minimized');
   syncImmersiveMode();
-  refreshTaskbar();
+  const nextWindow = promoteTopOpenWindow();
   const taskButton = document.querySelector(`.task-btn[data-focus="${id}"]`);
   animateWindowOutline(fromRect,rectOf(taskButton),150);
   setSystemStatus(statusForWindow(win,'Minimized'),550);
   uiBeep('minimize');
   syncPageRouteFromWindows();
+  requestAnimationFrame(()=>{
+    const taskRect = rectOf(taskButton);
+    if(taskButton && taskRect?.width > 0 && taskRect?.height > 0) taskButton.focus();
+    else if(nextWindow) focusActiveWindow(nextWindow);
+  });
 }
 
 function toggleMaximizeWindow(id){
@@ -640,7 +651,7 @@ function initDesktopWindows(){
         document.querySelectorAll('.desk-icon.os-selected').forEach(icon=>icon.classList.remove('os-selected'));
         btn.classList.add('os-selected');
         setSystemStatus(`${btn.textContent.trim()} selected. Double-click to open.`,1200);
-        uiBeep('tap');
+        if(event.detail === 1) uiBeep('tap');
         return;
       }
       launchDesktopIcon(btn);
@@ -759,6 +770,7 @@ function initDrag(){
 
     bar.addEventListener('pointerdown', (e) => {
       if(e.target.closest('button')) return;
+      if(win.classList.contains('maximized')) return;
       if(e.button !== undefined && e.button !== 0) return;
       dragging=true;
       bringFront(win);
