@@ -23,6 +23,28 @@ const routes=[
     page.on('pageerror',error=>errors.push(`page:${error.message}`));
     page.on('console',message=>{if(message.type()==='error'&&!/favicon|ERR_BLOCKED_BY_CLIENT/.test(message.text()))errors.push(`console:${message.text()}`)});
     const viewportReport={label,width,height,routes:[]};
+    const homeResponse=await page.goto(`${base}/`,{waitUntil:'networkidle'});
+    must(homeResponse?.status()===200,`${label} homepage status ${homeResponse?.status()}`);
+    const homeImpact=await page.evaluate(()=>{
+      const hero=document.querySelector('#readerWindow .career-showcase-hero');
+      const label=document.querySelector('#readerWindow .career-impact-label');
+      const cards=[...document.querySelectorAll('#readerWindow .career-proof-grid article')];
+      const clean=value=>(value||'').replace(/\s+/g,' ').trim();
+      return {
+        text:clean(hero?.textContent),
+        label:clean(label?.textContent),
+        overflow:document.documentElement.scrollWidth-innerWidth,
+        heroWidth:hero?.getBoundingClientRect().width??0,
+        cards:cards.map(card=>({text:card.innerText,width:card.getBoundingClientRect().width})),
+      };
+    });
+    must(homeImpact.label==='CURRENT AEH OPERATING IMPACT · EVIDENCE AS AT EARLY AUGUST 2026',`${label} homepage evidence-period label mismatch: ${homeImpact.label}`);
+    must(homeImpact.text.includes('modelled cumulative hours released since late March 2026'),`${label} homepage capacity period missing`);
+    must(homeImpact.overflow<=1,`${label} homepage horizontal overflow ${homeImpact.overflow}`);
+    must(homeImpact.heroWidth>0&&homeImpact.cards.length===3&&homeImpact.cards.every(card=>card.width>0),`${label} homepage impact geometry invalid`);
+    const homeImpactScreenshot=path.join(out,`home-impact-${label}.png`);
+    await page.locator('#readerWindow .career-showcase-hero').screenshot({path:homeImpactScreenshot});
+    viewportReport.homeImpact={status:homeResponse.status(),label:homeImpact.label,overflow:homeImpact.overflow,screenshot:homeImpactScreenshot};
     for(const route of routes){
       const response=await page.goto(base+route.path,{waitUntil:'networkidle'});
       must(response?.status()===200,`${label} ${route.path} status ${response?.status()}`);

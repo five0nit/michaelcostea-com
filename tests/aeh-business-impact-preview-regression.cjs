@@ -24,6 +24,7 @@ const printable=doc('assets/downloads/michael-costea-resume-2026.html');
 const printableText=clean(printable.body.textContent);
 
 for(const phrase of ['795','A$1.97M','251','associated','modelled']) must(hero.includes(phrase),`hero missing qualified AEH proof: ${phrase}`);
+for(const phrase of ['EVIDENCE AS AT EARLY AUGUST 2026','since late March 2026']) must(hero.includes(phrase),`hero missing AEH evidence period: ${phrase}`);
 for(const phrase of ['agent harnesses','receipt-backed automation','governance','staff training','adoption','operator handover']) must(heroSummary.includes(phrase),`first-screen delivery chain missing: ${phrase}`);
 must(index.querySelectorAll('#readerWindow .career-proof-grid article').length===3,'homepage must retain exactly three primary proof cards');
 for(const phrase of ['AI Enablement Lead','AI Execution & Adoption Lead','Business Systems & Automation Lead','AI Transformation Manager']) must(inlineResume.includes(phrase),`inline resume missing AI-centric target: ${phrase}`);
@@ -33,6 +34,7 @@ must(index.querySelectorAll('#resumeWindow .career-action-evidence article').len
 must(clean(index.querySelector('#resumeWindow .career-run-rate')?.textContent).includes('735 h/year · A$47.8k/year'),'inline resume must combine annual hours and value in one run-rate callout');
 
 for(const phrase of ['84,400+','5,955','795','A$1.97M','251','735','associated pipeline','not claimed as AI-attributed revenue']) must(crawlResumeText.includes(phrase),`crawlable resume missing evidence/caveat: ${phrase}`);
+must(crawlResumeText.includes('EVIDENCE AS AT EARLY AUGUST 2026'),'crawlable resume missing AEH evidence snapshot date');
 must(crawlResume.querySelectorAll('.resume-proof-impact > div').length===3,'crawlable resume must show three primary outcome cards');
 must(crawlResume.querySelectorAll('.resume-action-proof > div').length===2,'crawlable resume must show two secondary action-proof cards');
 must(clean(crawlResume.querySelector('.resume-run-rate')?.textContent).includes('735 hours/year · A$47.8k/year'),'crawlable resume must combine annual run-rate evidence');
