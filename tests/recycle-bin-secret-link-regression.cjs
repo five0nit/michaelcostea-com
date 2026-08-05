@@ -28,6 +28,22 @@ must(
   'secret app link should use the secret-app-link class for styling/regression targeting'
 );
 must(
+  recycleWindow.includes('<b>Mini Michael</b>'),
+  'Recycle Bin should include the Mini Michael app label'
+);
+must(
+  recycleWindow.includes('href="/mini/"'),
+  'Mini Michael link should point to the local /mini/ gallery route'
+);
+must(
+  /<a[^>]+class="[^"]*secret-app-link[^"]*"[^>]+href="\/mini\/"[^>]+target="_blank"[^>]+rel="noopener"[^>]*>/.test(recycleWindow),
+  'Mini Michael should use the recovered app card pattern and open safely in a new tab'
+);
+must(
+  recycleWindow.includes('378-image asset library'),
+  'Mini Michael launcher should explain that it opens the image library'
+);
+must(
   recycleWindow.includes('target="_blank"') && recycleWindow.includes('rel="noopener"'),
   'secret external app link should open safely in a new tab'
 );
