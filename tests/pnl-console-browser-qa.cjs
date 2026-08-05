@@ -31,6 +31,14 @@ async function pageMetrics(page) {
     paperArenaSync: document.querySelector('#paper-arena-sync-status')?.textContent || '',
     walletsHidden: getComputedStyle(document.querySelector('#wallets')).display === 'none',
     activeToggle: document.querySelector('#data-view-toggle button.active')?.dataset.dataView,
+    sourceHealthCards: document.querySelectorAll('#source-health-grid .source-health-card').length,
+    sourceFreshnessLabels: [...document.querySelectorAll('#source-health-grid .freshness-badge')].map(node => node.textContent.trim().toLowerCase()),
+    osTitle: document.querySelector('.os-titlebar')?.textContent || '',
+    hasTaskbar: Boolean(document.querySelector('.os-taskbar')),
+    bodyBackground: getComputedStyle(document.body).backgroundColor,
+    cardRadius: getComputedStyle(document.querySelector('#strategy-grid .strategy-card')).borderRadius,
+    skipLinkTop: document.querySelector('.skip-link').getBoundingClientRect().top,
+    skipLinkFocused: document.querySelector('.skip-link').matches(':focus'),
     overflowOffenders: [...document.querySelectorAll('body *')]
       .filter(node => !node.closest('.table-scroll'))
       .map(node => ({ node, rect: node.getBoundingClientRect() }))
@@ -56,28 +64,20 @@ async function inspect(browser, label, width, height) {
   await page.waitForSelector('#strategy-grid .strategy-card', { timeout: 30_000 });
   await page.waitForTimeout(400);
 
-  const paper = await pageMetrics(page);
-  if (response?.status() !== 200) throw new Error(`${label}: HTTP ${response?.status()}`);
-  if (paper.dataView !== 'paper-arena' || paper.activeToggle !== 'paper-arena') throw new Error(`${label}: Paper Arena is not the default main view`);
-  if (paper.strategyCount !== 1) throw new Error(`${label}: Paper Arena should show one scoped strategy, got ${paper.strategyCount}`);
-  if (paper.profileDeclared < 1 || paper.resultCount < 1 || paper.runRows < 1) throw new Error(`${label}: Paper Arena profile/result/run summary incomplete`);
-  if (!paper.walletsHidden) throw new Error(`${label}: auto wallet layer leaked into Paper Arena view`);
-  if (!paper.truthBanner.includes('PAPER ARENA') || !paper.truthBanner.includes('FAKE ONLY')) throw new Error(`${label}: Paper Arena truth banner missing`);
-  if (paper.paperArenaHref !== 'http://localhost:8790/' || !paper.paperArenaText.includes('main dashboard view')) throw new Error(`${label}: Paper Arena local link/data receipt missing`);
-  if (!paper.paperArenaSync.includes('AUTO SYNC') || !paper.paperArenaSync.includes('ANONYMIZED')) throw new Error(`${label}: Paper Arena automatic sync evidence missing`);
-  assertNoVisualFailures(`${label}/paper`, paper);
-  await page.screenshot({ path: path.join(outDir, `${label}-paper-arena-view.png`), fullPage: true });
-
-  await page.click('[data-data-view="auto-trade"]');
-  await page.waitForFunction(() => document.querySelector('#app')?.dataset.currentView === 'auto-trade');
-  await page.waitForTimeout(180);
   const auto = await pageMetrics(page);
+  if (response?.status() !== 200) throw new Error(`${label}: HTTP ${response?.status()}`);
+  if (auto.dataView !== 'auto-trade' || auto.activeToggle !== 'auto-trade') throw new Error(`${label}: PNL + Evidence is not the default main view`);
   if (auto.activeToggle !== 'auto-trade' || auto.walletsHidden) throw new Error(`${label}: Auto Trade view did not activate`);
-  if (auto.strategyCount < 12 || auto.strategyCount > auto.strategyDeclared) throw new Error(`${label}: auto strategy preview invalid (${auto.strategyCount}/${auto.strategyDeclared})`);
-  if (auto.resultCount < 1300) throw new Error(`${label}: auto result data incomplete`);
+  if (auto.strategyCount < (width <= 540 ? 8 : 12) || auto.strategyCount > auto.strategyDeclared) throw new Error(`${label}: auto strategy preview invalid (${auto.strategyCount}/${auto.strategyDeclared})`);
+  if (auto.resultCount < 2200) throw new Error(`${label}: auto result data incomplete`);
   if (auto.chartCount < 4 || auto.chartLabels.some(text => !text)) throw new Error(`${label}: auto visualization coverage incomplete`);
   if (!auto.truthBanner.includes('WALLET TRUTH')) throw new Error(`${label}: wallet-truth banner missing in Auto Trade view`);
+  if (auto.sourceHealthCards < 7 || !auto.sourceFreshnessLabels.includes('current')) throw new Error(`${label}: source freshness matrix incomplete`);
+  if (!auto.osTitle.includes('TRADING CONTROL.EXE') || !auto.hasTaskbar) throw new Error(`${label}: MICHAEL OS shell missing`);
+  if (auto.bodyBackground !== 'rgb(0, 128, 128)' || auto.cardRadius !== '0px') throw new Error(`${label}: MICHAEL OS visual contract drift ${JSON.stringify({bodyBackground:auto.bodyBackground,cardRadius:auto.cardRadius})}`);
+  if (auto.skipLinkTop >= 0 || auto.skipLinkFocused) throw new Error(`${label}: skip link visible without keyboard focus`);
   assertNoVisualFailures(`${label}/auto`, auto);
+  await page.screenshot({ path: path.join(outDir, `${label}-auto-trade-view.png`), fullPage: true });
 
   await page.click('#strategy-show-all');
   await page.waitForTimeout(120);
@@ -92,7 +92,7 @@ async function inspect(browser, label, width, height) {
     count: document.querySelectorAll('#strategy-grid .strategy-card').length,
     venues: [...document.querySelectorAll('#strategy-grid .strategy-card')].map(card => card.dataset.venue),
   }));
-  if (!filtered.count || filtered.count >= auto.strategyCount) throw new Error(`${label}: venue filter did not reduce strategy cards`);
+  if (!filtered.count || filtered.count >= auto.strategyDeclared) throw new Error(`${label}: venue filter did not reduce declared strategy set`);
   if (filtered.venues.some(venue => venue !== 'Polymarket')) throw new Error(`${label}: venue filter leaked another venue`);
 
   await page.selectOption('#venue-filter', 'all');
@@ -108,7 +108,21 @@ async function inspect(browser, label, width, height) {
   if (!evidenceCards.length || evidenceCards.some(value => value !== 'wallet-executed')) throw new Error(`${label}: evidence filter failed`);
 
   await page.selectOption('#evidence-filter', 'all');
-  await page.screenshot({ path: path.join(outDir, `${label}-auto-trade-view.png`), fullPage: true });
+
+  await page.click('[data-data-view="paper-arena"]');
+  await page.waitForFunction(() => document.querySelector('#app')?.dataset.currentView === 'paper-arena');
+  await page.waitForTimeout(180);
+  const paper = await pageMetrics(page);
+  if (paper.dataView !== 'paper-arena' || paper.activeToggle !== 'paper-arena') throw new Error(`${label}: Paper Arena view did not activate`);
+  if (paper.strategyCount !== 1) throw new Error(`${label}: Paper Arena should show one scoped strategy, got ${paper.strategyCount}`);
+  if (paper.profileDeclared < 1 || paper.resultCount < 1 || paper.runRows < 1) throw new Error(`${label}: Paper Arena profile/result/run summary incomplete`);
+  if (!paper.walletsHidden) throw new Error(`${label}: auto wallet layer leaked into Paper Arena view`);
+  if (!paper.truthBanner.includes('PAPER ARENA') || !paper.truthBanner.includes('FAKE ONLY')) throw new Error(`${label}: Paper Arena truth banner missing`);
+  if (paper.paperArenaHref !== 'http://localhost:8790/' || !paper.paperArenaText.includes('separate fake-only evidence view')) throw new Error(`${label}: Paper Arena local link/data receipt missing`);
+  if (!paper.paperArenaSync.includes('CURRENT EXPORT') || !paper.paperArenaSync.includes('ANONYMIZED')) throw new Error(`${label}: Paper Arena export evidence missing`);
+  if (paper.skipLinkTop >= 0 || paper.skipLinkFocused) throw new Error(`${label}: Paper Arena skip link visible without keyboard focus`);
+  assertNoVisualFailures(`${label}/paper`, paper);
+  await page.screenshot({ path: path.join(outDir, `${label}-paper-arena-view.png`), fullPage: true });
   if (errors.length) throw new Error(`${label}: browser errors ${errors.join(' | ')}`);
   await page.close();
   return { label, paper, auto, polymarketStrategies: filtered.count };

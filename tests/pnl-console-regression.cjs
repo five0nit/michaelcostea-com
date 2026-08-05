@@ -7,7 +7,7 @@ const html = fs.readFileSync(path.join(root, 'ops/pnl-console/index.html'), 'utf
 const data = JSON.parse(fs.readFileSync(path.join(root, 'ops/pnl-console/trades.json'), 'utf8'));
 const must = (condition, message) => { if (!condition) throw new Error(message); };
 
-must(data.schema_version >= 5, `expected schema v5+, got ${data.schema_version}`);
+must(data.schema_version >= 6, `expected schema v6+, got ${data.schema_version}`);
 must(data.truth_summary?.overall_status === 'FAIL', 'wallet truth must remain FAIL while Solana wallet evidence is negative');
 must(data.truth_summary?.wallet_profitable === false, 'wallet_profitable must be false');
 must(data.truth_summary?.solana_live_delta_lamports < 0, 'Solana live wallet delta must preserve the recorded loss');
@@ -28,6 +28,10 @@ for (const id of [
   'solana-history-panic-reclaim-v5',
   'solana-degen-paper-live',
   'solana-paper-arena-manual',
+  'solana-pumpfun-buy-every-new-180s',
+  'solana-ghost-pack-live-paper',
+  'solana-pumpfun-launch-radar',
+  'solana-tuner-source-confirmed-probe-v2',
 ]) must(ids.has(id), `missing strategy ${id}`);
 
 for (const row of data.strategies) {
@@ -38,7 +42,7 @@ for (const row of data.strategies) {
   must(['paper-arena', 'auto-trade'].includes(row.dashboard_view), `strategy dashboard view missing: ${row.id}`);
 }
 
-must(Array.isArray(data.result_log) && data.result_log.length >= 1300, `expected all normalized result rows, got ${data.result_log?.length}`);
+must(Array.isArray(data.result_log) && data.result_log.length >= 2200, `expected all normalized result rows, got ${data.result_log?.length}`);
 must(Array.isArray(data.test_runs) && data.test_runs.length >= 700, `expected comprehensive test runs, got ${data.test_runs?.length}`);
 for (const row of data.result_log) {
   must(row.id && row.strategy_id && row.venue && row.mode && row.evidence_class, `invalid result row ${JSON.stringify(row)}`);
@@ -75,6 +79,25 @@ must(data.views?.['paper-arena']?.strategy_count === 1, 'Paper Arena view strate
 must(data.views?.['paper-arena']?.result_count === paperArenaResults.length, 'Paper Arena view result count drift');
 must(data.views?.['auto-trade']?.strategy_count === data.strategies.length - 1, 'Auto Trade view strategy count drift');
 
+must(data.paper_goblin?.buy_every_new?.closed_trades >= 150, 'buy-every-new Paper Goblin closes missing');
+must(data.paper_goblin?.multi_strategy?.closed_trades >= 600, 'multi-strategy Paper Goblin closes missing');
+must(data.paper_goblin?.multi_strategy?.strategy_count >= 40, 'multi-strategy Paper Goblin catalog missing');
+must(data.paper_goblin?.launch_radar?.classification === 'research-signal', 'launch radar must remain research-only');
+must(data.paper_goblin?.launch_radar?.as_of, 'launch radar freshness receipt missing');
+must(data.freshness?.latest_source_utc, 'latest source timestamp missing');
+must(Array.isArray(data.paper_goblin_sources) && data.paper_goblin_sources.length >= 7, 'Paper Goblin source register incomplete');
+for (const source of data.paper_goblin_sources) {
+  must(source.id && source.name && source.classification && source.as_of && source.freshness_status, `source receipt incomplete: ${JSON.stringify(source)}`);
+}
+const buyEvery = data.strategies.find(row => row.id === 'solana-pumpfun-buy-every-new-180s');
+const buyEveryResults = data.result_log.filter(row => row.strategy_id === buyEvery.id);
+must(buyEvery.metrics.trades === buyEveryResults.length, 'buy-every-new strategy/result count drift');
+must(Math.abs(Number(buyEvery.metrics.pnl_usd) - buyEveryResults.reduce((sum, row) => sum + Number(row.pnl_usd || 0), 0)) < 1e-6, 'buy-every-new PNL drift');
+const tunerResults = data.result_log.filter(row => String(row.strategy_id).startsWith('solana-tuner-'));
+must(tunerResults.length === data.paper_goblin.multi_strategy.closed_trades, 'multi-strategy result count drift');
+must(data.data_coverage?.paper_goblin_buy_every_closes === buyEveryResults.length, 'buy-every-new coverage drift');
+must(data.data_coverage?.paper_goblin_tuner_closes === tunerResults.length, 'multi-strategy coverage drift');
+
 for (const marker of [
   'id="venue-filter"',
   'id="evidence-filter"',
@@ -87,16 +110,21 @@ for (const marker of [
   'id="activity-chart"',
   'id="paper-arena-link"',
   'id="paper-arena-sync-status"',
+  'id="source-health-grid"',
   'id="data-view-toggle"',
   'data-data-view="paper-arena"',
   'data-data-view="auto-trade"',
-  'data-default-view="paper-arena"',
+  'data-default-view="auto-trade"',
   'href="http://localhost:8790/"',
-  'data-console-version="20260723-strategy-atlas-v1"',
+  'data-console-version="20260805-michael-os-control-v1"',
+  'class="os-window"',
+  'class="os-titlebar"',
+  'class="os-taskbar"',
 ]) must(html.includes(marker), `HTML missing ${marker}`);
+must(!html.includes('font-family: Georgia'), 'editorial Georgia styling must be removed');
 
 const serialized = JSON.stringify(data).toLowerCase();
-for (const forbidden of ['.secrets/', 'private_key', 'seed phrase', 'mnemonic', 'secret_key', 'profile_id', 'pin_hash', 'pin_salt', 'session_token']) {
+for (const forbidden of ['/home/fiv30nit', '.secrets/', 'private_key', 'seed phrase', 'mnemonic', 'secret_key', 'profile_id', 'pin_hash', 'pin_salt', 'session_token']) {
   must(!serialized.includes(forbidden), `public data leaks forbidden marker: ${forbidden}`);
 }
 

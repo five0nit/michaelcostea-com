@@ -48,6 +48,14 @@ HISTORY_PORTFOLIO = MICROCAP / 'reports/pumpfun-signals/history-derived-portfoli
 EDGE_OPTIMIZER = MICROCAP / 'reports/pumpfun-signals/edge-optimizer-latest.json'
 ANTI_PANIC = MICROCAP / 'reports/pumpfun-signals/anti-panic-ablation-latest.json'
 PAPER_GOBLIN_LEDGER = PAPER_GOBLIN / 'state/ledger.json'
+PAPER_GOBLIN_BUY_EVERY_STATE = PAPER_GOBLIN / 'state/pumpfun-buy-every-new-180s.json'
+PAPER_GOBLIN_BUY_EVERY_REPORT = PAPER_GOBLIN / 'reports/pumpfun-buy-every-new-180s/latest.json'
+PAPER_GOBLIN_TUNER_STATE = PAPER_GOBLIN / 'state/multi-strategy-live-tuner.json'
+PAPER_GOBLIN_TUNER_REPORT = PAPER_GOBLIN / 'reports/multi-strategy-live-tuner/latest.json'
+PAPER_GOBLIN_GHOST_REPORT = PAPER_GOBLIN / 'reports/ghost-pack-live-paper/latest.json'
+PAPER_GOBLIN_PROMOTION_REPORT = PAPER_GOBLIN / 'reports/live-shadow-promotion/latest.json'
+PAPER_GOBLIN_PROGRESSIVE_REPORT = PAPER_GOBLIN / 'reports/pumpfun-progressive-db/latest.json'
+PAPER_GOBLIN_RADAR_REPORT = PAPER_GOBLIN / 'reports/pumpfun-launch-radar/latest.json'
 PAPER_ARENA_DB = MICROCAP / 'state/manual-paper-arena.sqlite'
 CRYPTO_AUTOPSY_DIR = MICROCAP / 'runs/autopsy'
 
@@ -236,6 +244,11 @@ def seed_strategies() -> dict[str, dict[str, Any]]:
         ('solana-launch-survivor', 'Launch Survivor Momentum', 'Solana', 'launch momentum', 'built', 'code-only', 'Strategy implementation exists; no canonical result ledger is attributable to this class.'),
         ('solana-pumpfun-genesis', 'Pump.fun Genesis', 'Solana', 'new-launch state machine', 'built', 'code-only', 'Strategy and monitor exist; sample collector data is not wallet PNL.'),
         ('solana-pumpfun-liqmo', 'Pump.fun LiqMo', 'Solana', 'liquidity momentum', 'tested', 'historical-backtest', 'Oracle-ledger and historical replays are modelled, not wallet execution.'),
+        ('solana-paper-goblin-core', 'Paper Goblin Core Ledger', 'Solana', 'paper-only live-data portfolio', 'paused', 'paper-wallet', 'Paper-only ledger. Results never count as wallet-executed PNL.'),
+        ('solana-pumpfun-buy-every-new-180s', 'Pump.fun Buy Every New 180s', 'Solana', 'new-launch paper optimizer', 'paused', 'paper-wallet', 'Paper-only new-launch experiment using market-cap proxy marks; no wallet, signing, swaps, or live transactions.'),
+        ('solana-ghost-pack-live-paper', 'Ghost Pack Live Paper', 'Solana', 'wallet-cluster forward shadow', 'paused', 'research-signal', 'Paper-only forward observation. Open shadow stake is not realized PNL and no wallet was touched.'),
+        ('solana-live-shadow-promotion-gate', 'Live-Shadow Promotion Gate', 'Solana', 'promotion evidence gate', 'paused', 'research-signal', 'Research/promotion classification only; promoted shadow patterns are not wallet profit.'),
+        ('solana-pumpfun-launch-radar', 'Pump.fun Launch Radar', 'Solana', 'live launch discovery', 'monitored', 'research-signal', 'Current public launch discovery only; candidates and radar scores are not trades or PNL.'),
         ('solana-degen-paper-live', 'Pump.fun Degen Paper Live', 'Solana', 'fast degen paper wallet', 'tested', 'paper-wallet', 'Fake wallet result. Central ledger is negative after modeled drag.'),
         ('solana-paper-arena-manual', 'Paper Arena Manual Exact-Quote', 'Solana', 'manual new-launch exact-quote paper trading', 'tested', 'exact-quote-shadow', 'Local fake-only manual closes mirrored to SQLite. Fresh quoted entry/exit evidence; no signing, orders, swaps, or funds.'),
         ('solana-degen-baseline', 'Baseline Degen Live Simulation', 'Solana', 'baseline degen paper variant', 'tested', 'paper-wallet', 'Initial fake live-data simulation baseline; no signing or live orders.'),
@@ -316,6 +329,309 @@ def paper_goblin_rows() -> tuple[dict[str, Any], list[dict[str, Any]]]:
         'winning_trades': sum(safe_float(row.get('realized_pnl_usd')) > 0 for row in closed),
         'losing_trades': sum(safe_float(row.get('realized_pnl_usd')) < 0 for row in closed),
     }, closed
+
+
+def canonical_utc(value: Any, fallback_path: Path | None = None) -> str | None:
+    if value not in (None, ''):
+        try:
+            if isinstance(value, (int, float)):
+                parsed = datetime.fromtimestamp(float(value), tz=timezone.utc)
+            else:
+                text = str(value).strip().replace('Z', '+00:00')
+                parsed = datetime.fromisoformat(text)
+                if parsed.tzinfo is None:
+                    parsed = parsed.replace(tzinfo=timezone.utc)
+                parsed = parsed.astimezone(timezone.utc)
+            return parsed.isoformat().replace('+00:00', 'Z')
+        except Exception:
+            converted = iso_ts(value)
+            if converted:
+                return converted
+    if fallback_path and fallback_path.exists():
+        return datetime.fromtimestamp(fallback_path.stat().st_mtime, tz=timezone.utc).isoformat().replace('+00:00', 'Z')
+    return None
+
+
+def freshness_status(generated: str, as_of: str | None) -> str:
+    if not as_of:
+        return 'unknown'
+    try:
+        generated_dt = datetime.fromisoformat(generated.replace('Z', '+00:00'))
+        source_dt = datetime.fromisoformat(as_of.replace('Z', '+00:00'))
+        age_seconds = max(0.0, (generated_dt - source_dt).total_seconds())
+    except Exception:
+        return 'unknown'
+    if age_seconds <= 6 * 3600:
+        return 'current'
+    if age_seconds <= 72 * 3600:
+        return 'recent'
+    if age_seconds <= 14 * 86400:
+        return 'stale'
+    return 'archived'
+
+
+def source_receipt(generated: str, source_id: str, name: str, classification: str, mode: str, as_of: str | None, records: int, truth: str) -> dict[str, Any]:
+    return {
+        'id': source_id,
+        'name': name,
+        'classification': classification,
+        'mode': mode,
+        'as_of': as_of,
+        'records': records,
+        'freshness_status': freshness_status(generated, as_of),
+        'truth': truth,
+    }
+
+
+def ingest_paper_goblin(generated: str, strategies: dict[str, dict[str, Any]], result_log: list[dict[str, Any]], test_runs: list[dict[str, Any]]) -> tuple[dict[str, Any], list[dict[str, Any]], dict[str, int]]:
+    core_ledger = load_json(PAPER_GOBLIN_LEDGER, {})
+    core_summary, core_closed = paper_goblin_rows()
+    core_as_of = canonical_utc(
+        core_ledger.get('last_run_at') or core_ledger.get('last_reset_at'),
+        PAPER_GOBLIN_LEDGER,
+    ) if isinstance(core_ledger, dict) else canonical_utc(None, PAPER_GOBLIN_LEDGER)
+    core_pnl = safe_float(core_summary.get('realized_pnl_usd'))
+    set_result(
+        strategies['solana-paper-goblin-core'],
+        {
+            'trades': len(core_closed),
+            'wins': core_summary.get('winning_trades'),
+            'losses': core_summary.get('losing_trades'),
+            'pnl_usd': round(core_pnl, 6),
+            'balance_usd': core_summary.get('balance_usd'),
+            'equity_usd': core_summary.get('equity_usd'),
+        },
+        round(core_pnl, 6),
+        'USD',
+        'positive' if core_pnl > 0 else ('negative' if core_pnl < 0 else ('flat' if core_closed else 'no-trades')),
+    )
+    for index, row in enumerate(core_closed):
+        pnl = safe_float_none(row.get('realized_pnl_usd') if row.get('realized_pnl_usd') is not None else row.get('pnl_usd'))
+        result_log.append({
+            'id': f"paper-goblin-core-{index}-{slug(row.get('closed_at') or row.get('timestamp'))}",
+            'timestamp': canonical_utc(row.get('closed_at') or row.get('timestamp') or row.get('updated_at')),
+            'strategy_id': 'solana-paper-goblin-core',
+            'venue': 'Solana',
+            'mode': row.get('mode') or core_ledger.get('mode') or 'paper-only-live-data',
+            'evidence_class': 'paper-wallet',
+            'source_family': 'Paper Goblin core ledger',
+            'market': row.get('name') or row.get('symbol') or mask(row.get('mint')) or 'Paper position',
+            'symbol': row.get('symbol'),
+            'status': row.get('close_reason') or row.get('status') or 'closed',
+            'pnl_usd': pnl,
+            'pnl_lamports': None,
+            'net_bps': safe_float_none(row.get('return_bps')),
+            'truth': 'Paper-only core-ledger close; no signing, swaps, or wallet execution.',
+        })
+
+    buy_state = load_json(PAPER_GOBLIN_BUY_EVERY_STATE, {})
+    buy_report = load_json(PAPER_GOBLIN_BUY_EVERY_REPORT, {})
+    buy_closed = buy_state.get('closed_positions') if isinstance(buy_state, dict) else []
+    if not isinstance(buy_closed, list):
+        buy_closed = []
+    buy_open = buy_state.get('open_positions') if isinstance(buy_state, dict) else []
+    if not isinstance(buy_open, list):
+        buy_open = []
+    buy_pnl = round(sum(safe_float(row.get('pnl_usd')) for row in buy_closed), 6)
+    buy_wins = sum(safe_float(row.get('pnl_usd')) > 0 for row in buy_closed)
+    buy_losses = sum(safe_float(row.get('pnl_usd')) < 0 for row in buy_closed)
+    buy_as_of = canonical_utc(
+        buy_report.get('observed_at') or buy_state.get('last_run_at'),
+        PAPER_GOBLIN_BUY_EVERY_REPORT if PAPER_GOBLIN_BUY_EVERY_REPORT.exists() else PAPER_GOBLIN_BUY_EVERY_STATE,
+    )
+    set_result(
+        strategies['solana-pumpfun-buy-every-new-180s'],
+        {
+            'trades': len(buy_closed),
+            'wins': buy_wins,
+            'losses': buy_losses,
+            'win_rate': round(buy_wins / len(buy_closed), 4) if buy_closed else None,
+            'pnl_usd': buy_pnl,
+            'open_positions': len(buy_open),
+            'paper_wallet_starting_balance_usd': safe_float_none(buy_report.get('paper_wallet_starting_balance_usd')),
+            'paper_wallet_balance_usd': safe_float_none(buy_report.get('paper_wallet_balance_usd')),
+        },
+        buy_pnl,
+        'USD',
+        'positive' if buy_pnl > 0 else ('negative' if buy_pnl < 0 else ('flat' if buy_closed else 'no-trades')),
+        sorted({str(row.get('entry_play')) for row in buy_closed if row.get('entry_play')}),
+    )
+    for index, row in enumerate(buy_closed):
+        symbol = str(row.get('symbol') or '').strip() or None
+        name = str(row.get('name') or '').strip() or None
+        market = f'${symbol} · {name}' if symbol and name else symbol or name or mask(row.get('mint')) or 'New launch'
+        result_log.append({
+            'id': f"paper-goblin-buy-every-{index}-{slug(row.get('closed_at'))}",
+            'timestamp': canonical_utc(row.get('closed_at') or row.get('last_mark_at')),
+            'strategy_id': 'solana-pumpfun-buy-every-new-180s',
+            'venue': 'Solana',
+            'mode': row.get('mode') or buy_report.get('mode') or 'paper-only',
+            'evidence_class': 'paper-wallet',
+            'source_family': 'Paper Goblin buy-every-new ledger',
+            'market': market,
+            'symbol': symbol,
+            'status': row.get('close_reason') or 'closed',
+            'pnl_usd': safe_float_none(row.get('pnl_usd')),
+            'pnl_lamports': None,
+            'net_bps': round(safe_float(row.get('return_pct')) * 10000, 4) if row.get('return_pct') is not None else None,
+            'truth': 'Paper-only market-cap-proxy close; no wallet, signing, swap, or live transaction.',
+            'variant': row.get('entry_play') or row.get('entry_bucket'),
+        })
+    test_runs.append({
+        'id': 'paper-goblin-buy-every-latest',
+        'timestamp': buy_as_of,
+        'strategy_id': 'solana-pumpfun-buy-every-new-180s',
+        'venue': 'Solana',
+        'mode': buy_report.get('mode') or buy_state.get('mode') or 'paper-only',
+        'status': 'paused-snapshot',
+        'trades': len(buy_closed),
+        'pnl_usd': buy_pnl,
+        'pnl_lamports': None,
+        'variant': 'bounded optimizer ledger',
+        'source_family': 'Paper Goblin buy-every-new ledger',
+    })
+
+    tuner_state = load_json(PAPER_GOBLIN_TUNER_STATE, {})
+    tuner_report = load_json(PAPER_GOBLIN_TUNER_REPORT, {})
+    tuner_records = tuner_state.get('strategies') if isinstance(tuner_state, dict) else {}
+    if not isinstance(tuner_records, dict):
+        tuner_records = {}
+    report_strategies = {
+        str(row.get('id')): row
+        for row in (tuner_report.get('strategies') or [])
+        if isinstance(row, dict) and row.get('id')
+    }
+    tuner_closed_total = 0
+    tuner_open_total = 0
+    tuner_independent_pnl = 0.0
+    tuner_as_of = canonical_utc(
+        tuner_state.get('updated_at') or tuner_report.get('generated_at'),
+        PAPER_GOBLIN_TUNER_STATE,
+    )
+    for source_strategy_id, record in sorted(tuner_records.items()):
+        if not isinstance(record, dict):
+            continue
+        closed = record.get('closed_trades') or []
+        opened = record.get('open_positions') or []
+        if not isinstance(closed, list):
+            closed = []
+        if not isinstance(opened, list):
+            opened = []
+        pnl = round(sum(safe_float(row.get('pnl_usd')) for row in closed), 6)
+        wins = sum(safe_float(row.get('pnl_usd')) > 0 for row in closed)
+        losses = sum(safe_float(row.get('pnl_usd')) < 0 for row in closed)
+        tuner_closed_total += len(closed)
+        tuner_open_total += len(opened)
+        tuner_independent_pnl += pnl
+        strategy_id = f'solana-tuner-{slug(source_strategy_id)}'
+        report_row = report_strategies.get(str(source_strategy_id)) or {}
+        if strategy_id not in strategies:
+            strategies[strategy_id] = base_strategy(
+                strategy_id,
+                str(report_row.get('name') or source_strategy_id).replace('_', ' ').title(),
+                'Solana',
+                'multi-strategy paper tuner',
+                'paused',
+                'paper-wallet',
+                'Independent paper strategy simulation. Cross-strategy PNL is not one shared bankroll and never counts as wallet profit.',
+                [tuner_state.get('mode') or tuner_report.get('mode') or 'paper-only'],
+            )
+        set_result(
+            strategies[strategy_id],
+            {'trades': len(closed), 'wins': wins, 'losses': losses, 'win_rate': round(wins / len(closed), 4) if closed else None, 'pnl_usd': pnl, 'open_positions': len(opened)},
+            pnl if closed else None,
+            'USD' if closed else None,
+            'positive' if pnl > 0 else ('negative' if pnl < 0 else ('flat' if closed else 'no-trades')),
+        )
+        for index, row in enumerate(closed):
+            symbol = str(row.get('symbol') or '').strip() or None
+            result_log.append({
+                'id': f"paper-goblin-tuner-{slug(source_strategy_id)}-{index}-{slug(row.get('close_time'))}",
+                'timestamp': canonical_utc(row.get('close_time') or row.get('entry_time')),
+                'strategy_id': strategy_id,
+                'venue': 'Solana',
+                'mode': tuner_state.get('mode') or tuner_report.get('mode') or 'paper-only',
+                'evidence_class': 'paper-wallet',
+                'source_family': 'Paper Goblin multi-strategy tuner',
+                'market': symbol or mask(row.get('token_address')) or 'Tuner paper position',
+                'symbol': symbol,
+                'status': row.get('close_reason') or 'closed',
+                'pnl_usd': safe_float_none(row.get('pnl_usd')),
+                'pnl_lamports': None,
+                'net_bps': round(safe_float(row.get('return_pct')) * 100, 4) if row.get('return_pct') is not None else None,
+                'truth': 'Independent paper strategy simulation; no wallet or live transaction.',
+                'variant': source_strategy_id,
+            })
+        test_runs.append({
+            'id': f'paper-goblin-tuner-{slug(source_strategy_id)}',
+            'timestamp': tuner_as_of,
+            'strategy_id': strategy_id,
+            'venue': 'Solana',
+            'mode': tuner_state.get('mode') or tuner_report.get('mode') or 'paper-only',
+            'status': 'paused-snapshot',
+            'trades': len(closed),
+            'pnl_usd': pnl,
+            'pnl_lamports': None,
+            'variant': source_strategy_id,
+            'source_family': 'Paper Goblin multi-strategy tuner',
+        })
+
+    ghost = load_json(PAPER_GOBLIN_GHOST_REPORT, {})
+    ghost_closed = ghost.get('closed_positions') if isinstance(ghost, dict) else []
+    ghost_open = ghost.get('open_positions') if isinstance(ghost, dict) else []
+    if not isinstance(ghost_closed, list):
+        ghost_closed = []
+    if not isinstance(ghost_open, list):
+        ghost_open = []
+    ghost_as_of = canonical_utc(ghost.get('updated_at'), PAPER_GOBLIN_GHOST_REPORT)
+    set_result(strategies['solana-ghost-pack-live-paper'], {'candidates_seen': (ghost.get('summary') or {}).get('candidates_seen'), 'entries_opened': (ghost.get('summary') or {}).get('entries_opened'), 'open_positions': len(ghost_open), 'closed_positions': len(ghost_closed), 'balance_usd': ghost.get('balance_usd'), 'reserved_open_stake_usd': ghost.get('reserved_open_stake_usd')}, None, None, 'open-shadow' if ghost_open else 'no-trades')
+    test_runs.append({'id': 'paper-goblin-ghost-pack-latest', 'timestamp': ghost_as_of, 'strategy_id': 'solana-ghost-pack-live-paper', 'venue': 'Solana', 'mode': ghost.get('mode') or 'paper-only', 'status': 'paused-snapshot', 'trades': len(ghost_closed), 'pnl_usd': None, 'pnl_lamports': None, 'variant': ghost.get('strategy'), 'source_family': 'Paper Goblin Ghost Pack'})
+
+    promotion = load_json(PAPER_GOBLIN_PROMOTION_REPORT, {})
+    promoted = promotion.get('promoted_shadow_patterns') if isinstance(promotion, dict) else []
+    if not isinstance(promoted, list):
+        promoted = []
+    promotion_as_of = canonical_utc(promotion.get('generated_at'), PAPER_GOBLIN_PROMOTION_REPORT)
+    set_result(strategies['solana-live-shadow-promotion-gate'], {'promoted_shadow_patterns': len(promoted), 'research_only': True}, None, None, 'research-only', [str(row.get('id')) for row in promoted if isinstance(row, dict) and row.get('id')])
+    test_runs.append({'id': 'paper-goblin-live-shadow-promotion-latest', 'timestamp': promotion_as_of, 'strategy_id': 'solana-live-shadow-promotion-gate', 'venue': 'Solana', 'mode': promotion.get('mode') or 'paper-only', 'status': 'research-only', 'trades': None, 'pnl_usd': None, 'pnl_lamports': None, 'variant': 'promotion gate', 'source_family': 'Paper Goblin promotion report'})
+
+    progressive = load_json(PAPER_GOBLIN_PROGRESSIVE_REPORT, {})
+    progressive_as_of = canonical_utc(progressive.get('finished_at') or progressive.get('newest_observed_at'), PAPER_GOBLIN_PROGRESSIVE_REPORT)
+    radar = load_json(PAPER_GOBLIN_RADAR_REPORT, {})
+    radar_tokens = radar.get('tokens') if isinstance(radar, dict) else []
+    if not isinstance(radar_tokens, list):
+        radar_tokens = []
+    radar_as_of = canonical_utc(radar.get('observed_at'), PAPER_GOBLIN_RADAR_REPORT)
+    set_result(strategies['solana-pumpfun-launch-radar'], {'candidates': len(radar_tokens), 'fresh_2m': radar.get('fresh_2m_count'), 'fresh_5m': radar.get('fresh_5m_count'), 'with_social': radar.get('with_social_count')}, None, None, 'research-only')
+    test_runs.append({'id': 'paper-goblin-launch-radar-latest', 'timestamp': radar_as_of, 'strategy_id': 'solana-pumpfun-launch-radar', 'venue': 'Solana', 'mode': radar.get('mode') or 'paper-only', 'status': 'research-only', 'trades': None, 'pnl_usd': None, 'pnl_lamports': None, 'variant': 'public launch discovery', 'source_family': 'Paper Goblin launch radar'})
+
+    sources = [
+        source_receipt(generated, 'paper-goblin-core', 'Paper Goblin core ledger', 'paper-wallet', str(core_ledger.get('mode') or 'paper-only'), core_as_of, len(core_closed), 'Core paper ledger; never wallet truth.'),
+        source_receipt(generated, 'paper-goblin-buy-every-new', 'Buy Every New 180s', 'paper-wallet', str(buy_report.get('mode') or buy_state.get('mode') or 'paper-only'), buy_as_of, len(buy_closed), 'Market-cap-proxy paper closes; no wallet execution.'),
+        source_receipt(generated, 'paper-goblin-multi-strategy', 'Multi-Strategy Live Tuner', 'paper-wallet', str(tuner_state.get('mode') or tuner_report.get('mode') or 'paper-only'), tuner_as_of, tuner_closed_total, 'Independent strategy simulations; aggregate is not one bankroll.'),
+        source_receipt(generated, 'paper-goblin-ghost-pack', 'Ghost Pack Live Paper', 'research-signal', str(ghost.get('mode') or 'paper-only'), ghost_as_of, len(ghost_closed) + len(ghost_open), 'Forward shadow observation; open stake is not realized PNL.'),
+        source_receipt(generated, 'paper-goblin-promotion', 'Live-Shadow Promotion Gate', 'research-signal', str(promotion.get('mode') or 'paper-only'), promotion_as_of, len(promoted), 'Promotion labels are research evidence, not wallet profit.'),
+        source_receipt(generated, 'paper-goblin-progressive-db', 'Pump.fun Progressive DB', 'coverage-only', str(progressive.get('mode') or 'paper-only'), progressive_as_of, safe_int(progressive.get('observations_total')), 'Collection coverage only; observations are not trades.'),
+        source_receipt(generated, 'paper-goblin-launch-radar', 'Pump.fun Launch Radar', 'research-signal', str(radar.get('mode') or 'paper-only'), radar_as_of, len(radar_tokens), 'Current launch discovery only; radar scores are not PNL.'),
+    ]
+    payload = {
+        'core_ledger': {**core_summary, 'classification': 'paper-wallet', 'as_of': core_as_of},
+        'buy_every_new': {'classification': 'paper-wallet', 'as_of': buy_as_of, 'closed_trades': len(buy_closed), 'open_positions': len(buy_open), 'wins': buy_wins, 'losses': buy_losses, 'realized_pnl_usd': buy_pnl, 'paper_wallet_balance_usd': safe_float_none(buy_report.get('paper_wallet_balance_usd'))},
+        'multi_strategy': {'classification': 'paper-wallet', 'as_of': tuner_as_of, 'strategy_count': len(tuner_records), 'closed_trades': tuner_closed_total, 'open_positions': tuner_open_total, 'independent_strategy_pnl_sum_usd': round(tuner_independent_pnl, 6)},
+        'ghost_pack': {'classification': 'research-signal', 'as_of': ghost_as_of, 'open_positions': len(ghost_open), 'closed_positions': len(ghost_closed), 'wallet_touched': bool(ghost.get('wallet_touched'))},
+        'promotion_gate': {'classification': 'research-signal', 'as_of': promotion_as_of, 'promoted_shadow_patterns': len(promoted), 'wallet_touched': bool(promotion.get('wallet_touched'))},
+        'progressive_db': {'classification': 'coverage-only', 'as_of': progressive_as_of, 'observations_total': safe_int(progressive.get('observations_total')), 'tokens_total': safe_int(progressive.get('tokens_total'))},
+        'launch_radar': {'classification': 'research-signal', 'as_of': radar_as_of, 'candidate_count': len(radar_tokens), 'fresh_2m_count': safe_int(radar.get('fresh_2m_count')), 'fresh_5m_count': safe_int(radar.get('fresh_5m_count'))},
+    }
+    coverage = {
+        'paper_goblin_core_closes': len(core_closed),
+        'paper_goblin_buy_every_closes': len(buy_closed),
+        'paper_goblin_tuner_closes': tuner_closed_total,
+        'paper_goblin_tuner_strategies': len(tuner_records),
+        'paper_goblin_progressive_observations': safe_int(progressive.get('observations_total')),
+        'paper_goblin_launch_radar_candidates': len(radar_tokens),
+    }
+    return payload, sources, coverage
 
 
 def arbitrum_canaries() -> list[dict[str, Any]]:
@@ -431,6 +747,9 @@ def build_snapshot() -> dict[str, Any]:
     set_result(strategies['polymarket-politics-live-learner'], {'positions': len((politics_state.get('positions') or {})), 'stats_rows': len((politics_state.get('stats') or {}))}, None, None, 'no-trades')
     calibration = load_json(POLYMARKET_CALIBRATION, {})
     set_result(strategies['polymarket-calibration-ledger'], {'resolved_rows': calibration.get('resolved_count', 0)}, None, None, 'coverage-only')
+
+    # Paper Goblin: every maintained paper-result and research/coverage surface.
+    paper_goblin, paper_goblin_sources, paper_goblin_coverage = ingest_paper_goblin(generated, strategies, result_log, test_runs)
 
     # Solana strategy league: all generations, lanes and fake closes.
     league_groups = sqlite_rows(LEAGUE_DB, """select strategy,count(*) lane_runs,sum(closed) closed,round(sum(pnl_usd),6) pnl_usd,avg(win_rate) avg_win_rate,min(generation) first_generation,max(generation) last_generation,min(ts) first_ts,max(ts) last_ts from lane_runs group by strategy order by strategy""")
@@ -753,8 +1072,14 @@ def build_snapshot() -> dict[str, Any]:
     }
 
     return {
-        'schema_version': 5,
+        'schema_version': 6,
         'generated_utc': generated,
+        'freshness': {
+            'snapshot_generated_utc': generated,
+            'latest_source_utc': max([str(row['as_of']) for row in paper_goblin_sources if row.get('as_of')], default=generated),
+            'source_count': len(paper_goblin_sources),
+            'rule': 'Source timestamps are explicit. Current/recent/stale/archived describes age only, never evidence quality.',
+        },
         'privacy': 'Unlinked/noindex static snapshot. Public wallet addresses only. No secrets, key material, raw signed transactions, or local secret paths.',
         'truth_summary': truth_summary,
         'summary': {
@@ -782,6 +1107,7 @@ def build_snapshot() -> dict[str, Any]:
             'strategy_league_generations': len({row.get('generation') for row in lane_runs if row.get('generation') is not None}),
             'polymarket_saved_scans': len(glob.glob('/home/fiv30nit/polymarket_crypto_guardrail_scan_*.json')),
             'paper_degen_trial_summaries': len(trial_summary_files),
+            **paper_goblin_coverage,
         },
         'visualizations': {
             'equity_series': {'polymarket_live_usd': pm_equity, 'solana_live_sol': sol_live_equity, 'solana_fake_usd': fake_equity},
@@ -817,7 +1143,9 @@ def build_snapshot() -> dict[str, Any]:
         },
         'tracked_wallets': wallets,
         'prices': prices,
-        'paper_goblin_solana': paper_goblin_rows()[0],
+        'paper_goblin_solana': paper_goblin['core_ledger'],
+        'paper_goblin': paper_goblin,
+        'paper_goblin_sources': paper_goblin_sources,
         'current_orders': live.get('open_orders') if isinstance(live.get('open_orders'), list) else [],
         'current_positions': [row for row in (manager_live.get('positions') or {}).values() if isinstance(row, dict) and row.get('state') in {'ENTRY_OPEN', 'ACTIVE', 'HOLD_FLOOR'}] if isinstance(manager_live.get('positions'), dict) else [],
         'local_apps': [
@@ -852,6 +1180,15 @@ def build_snapshot() -> dict[str, Any]:
             {'name': 'Paper Arena SQLite ledger', 'records': len(arena_trades), 'classification': 'manual exact-quote shadow'},
             {'name': 'Solana outcome-labeler DB', 'records': len(exact_trades), 'classification': 'exact-quote shadow'},
             {'name': 'Solana test-run registry', 'records': len(test_runs), 'classification': 'run evidence'},
+        ] + [
+            {
+                'name': row['name'],
+                'records': row['records'],
+                'classification': row['classification'],
+                'as_of': row['as_of'],
+                'freshness_status': row['freshness_status'],
+            }
+            for row in paper_goblin_sources
         ],
     }
 
