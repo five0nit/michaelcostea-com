@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en" data-app-base="/mini">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0065a8" />
+    <meta
+      name="description"
+      content="Search, browse, and copy 378 Mini Michael image assets with agent-ready descriptions, alt text, visual facets, tone, placement, and content-use metadata."
+    />
+    <link rel="canonical" href="https://michaelcostea.com/mini/" />
+    <link rel="alternate" type="application/json" href="/mini/image-library.json" title="Mini Michael agent image library" />
+    <link rel="alternate" type="application/x-ndjson" href="/mini/image-library.ndjson" title="Mini Michael streaming image records" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mini Michael" />
+    <meta property="og:title" content="Mini Michael — Agent-ready image library" />
+    <meta property="og:description" content="Search 378 transparent Mini Michael illustrations using precise visual metadata and content-use guidance." />
+    <meta property="og:url" content="https://michaelcostea.com/mini/" />
+    <meta property="og:image" content="https://minimemichael.web.app/mini-assets/all/001_modern_life_meme_night_fuel_doomscroll_couch.png" />
+    <meta property="og:image:alt" content="Mini Michael doomscrolling on a couch late at night beside snacks and a digital clock." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mini Michael — Agent-ready image library" />
+    <meta name="twitter:description" content="Search 378 transparent Mini Michael illustrations using precise visual metadata and content-use guidance." />
+    <meta name="twitter:image" content="https://minimemichael.web.app/mini-assets/all/001_modern_life_meme_night_fuel_doomscroll_couch.png" />
+    <link rel="icon" type="image/svg+xml" href="/mini/favicon.svg" />
+    <link rel="stylesheet" href="/mini/styles.css" />
+    <title>Mini Michael — Agent-ready image library</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ImageGallery",
+        "name": "Mini Michael Image Library",
+        "description": "Owner-curated transparent Mini Michael illustrations with machine-readable visual and content-use metadata.",
+        "url": "https://michaelcostea.com/mini/",
+        "isAccessibleForFree": true,
+        "numberOfItems": 378,
+        "encodingFormat": "image/png"
+      }
+    </script>
+      <link rel="stylesheet" href="/mini/hyperframes-live.css?v=20260805-live-1" />
+  </head>
+  <body class="hyperframes-live">
+    <a class="skip-link" href="#gallery-results">Skip to gallery results</a>
+
+    <nav class="hf-desktop-icons" aria-label="Desktop shortcuts">
+      <a class="hf-desktop-icon" href="#gallery-results" aria-label="Browse all Mini Michael images"><svg class="os-icon" aria-hidden="true"><use href="/mini/icons/michaelos-sprite.svg#icon-folder"></use></svg><span>Browse All</span></a>
+      <a class="hf-desktop-icon" href="#asset-search" aria-label="Search the Mini Michael library"><svg class="os-icon" aria-hidden="true"><use href="/mini/icons/michaelos-sprite.svg#icon-computer"></use></svg><span>Search Library</span></a>
+      <a class="hf-desktop-icon" href="/mini/IMAGE_LIBRARY_FOR_AGENTS.md" aria-label="Open agent metadata guide"><svg class="os-icon" aria-hidden="true"><use href="/mini/icons/michaelos-sprite.svg#icon-document"></use></svg><span>Agent Metadata</span></a>
+      <a class="hf-desktop-icon" href="https://minimemichael.web.app/admin.html" aria-label="Open owner administration"><svg class="os-icon" aria-hidden="true"><use href="/mini/icons/michaelos-sprite.svg#icon-toolbox"></use></svg><span>Owner Admin</span></a>
+    </nav>
+    <div class="hf-window-shell">
+      <div class="hf-window-titlebar">
+        <span class="hf-titlebar-copy"><strong>Mini Michael Image Explorer</strong></span>
+        <span class="hf-window-controls" aria-hidden="true"><span>─</span><span>□</span><span>×</span></span>
+      </div>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="brand-block">
+          <p class="eyebrow">MINIMEMICHAEL · IMAGE LIBRARY</p>
+          <h1>Find a Mini Michael.</h1>
+          <p class="header-lede">
+            Search by moment, mood, or job. Tap an image to copy it.
+          </p>
+        </div>
+        <div class="header-actions" aria-label="Gallery information">
+          <span class="asset-total"><strong id="header-total">378</strong> images</span>
+          <a href="/mini/IMAGE_LIBRARY_FOR_AGENTS.md" target="_blank" rel="noreferrer">
+            Agent metadata <span aria-hidden="true">↗</span>
+          </a>
+          <a href="https://minimemichael.web.app/admin.html" rel="nofollow">Owner admin</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="search-toolbar" aria-labelledby="search-title">
+          <div class="search-copy">
+            <p class="eyebrow">SEARCH FIRST</p>
+            <h2 id="search-title">What do you need?</h2>
+          </div>
+
+          <div class="search-field-wrap">
+            <label class="sr-only" for="asset-search">Search Mini Michael assets</label>
+            <span class="search-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <circle cx="11" cy="11" r="6.5"></circle>
+                <path d="m16 16 4 4"></path>
+              </svg>
+            </span>
+            <input
+              id="asset-search"
+              type="search"
+              inputmode="search"
+              autocomplete="off"
+              placeholder="Try approval, burnout, bug…"
+              aria-describedby="search-help result-status"
+              aria-keyshortcuts="/"
+            />
+            <kbd class="search-shortcut" aria-hidden="true">/</kbd>
+            <button id="clear-search" class="clear-search" type="button" hidden>
+              Clear
+            </button>
+          </div>
+
+          <p id="search-help" class="search-help">
+            Matches literal descriptions, use cases, visual objects, mood, tone, and placement.
+          </p>
+          <p id="result-status" class="result-status" aria-live="polite">Loading images…</p>
+        </section>
+
+        <div class="gallery-layout">
+          <nav class="category-nav" aria-label="Asset categories">
+            <div class="category-heading">
+              <div>
+                <p class="eyebrow">BROWSE</p>
+                <h2>Categories</h2>
+              </div>
+              <button id="reset-filters" class="text-button" type="button">Reset</button>
+            </div>
+            <div id="category-list" class="category-list" role="list"></div>
+          </nav>
+
+          <section
+            id="gallery-results"
+            class="results-panel"
+            aria-labelledby="results-title"
+            tabindex="-1"
+          >
+            <div class="results-heading">
+              <div>
+                <p id="active-filter" class="eyebrow">ALL IMAGES</p>
+                <h2 id="results-title">Mini Michael assets</h2>
+              </div>
+              <p id="page-summary" class="page-summary"></p>
+            </div>
+
+            <div id="asset-grid" class="asset-grid" aria-busy="true"></div>
+
+            <div id="empty-state" class="empty-state" hidden>
+              <p class="empty-kicker">NO MATCHES</p>
+              <h3>Try a broader search.</h3>
+              <p>Use a category, mood, job, or simple word such as “error” or “happy”.</p>
+              <button id="empty-reset" type="button">Show all images</button>
+            </div>
+
+            <nav id="pagination" class="pagination" aria-label="Results pages" hidden>
+              <button id="previous-page" type="button">← Previous</button>
+              <ol id="page-list"></ol>
+              <button id="next-page" type="button">Next →</button>
+            </nav>
+          </section>
+        </div>
+      </main>
+    </div>
+
+      <div class="hf-window-statusbar" role="status">
+        <span><i class="hf-status-led"></i>Ready · semantic image search online</span>
+        <span>MICHAEL OS · ASSET LIBRARY</span>
+      </div>
+    </div>
+
+    <div id="copy-toast" class="copy-toast" role="status" aria-live="polite" hidden></div>
+    <footer class="hf-taskbar">
+      <a href="#asset-search">Start · Search</a>
+      <span class="hf-task-active">Mini Michael Image Explorer</span>
+      <span class="hf-task-status">CATALOG ONLINE</span>
+    </footer>
+    <script type="module" src="/mini/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+# Mini Michael Image Library
+
+> Owner-curated transparent Mini Michael illustrations for Mike-authorized content workflows. Use real screenshots instead when the content needs factual or product proof.
+
+- Gallery: https://minimemichael.web.app/
+- Full manifest: https://minimemichael.web.app/image-library.json (`/image-library.json`)
+- Streaming records: https://minimemichael.web.app/image-library.ndjson (`/image-library.ndjson`)
+- Record schema: https://minimemichael.web.app/image-library.schema.json (`/image-library.schema.json`)
+- Compatible array: https://minimemichael.web.app/assets.json (`/assets.json`)
+- Agent guide: https://minimemichael.web.app/IMAGE_LIBRARY_FOR_AGENTS.md (`/IMAGE_LIBRARY_FOR_AGENTS.md`)
+- Live archive status (`assetOverrides`): https://firestore.googleapis.com/v1/projects/minimemichael/databases/(default)/documents/assetOverrides
+
+## Agent rules
+
+1. Fetch live `assetOverrides` status first. Exclude every archived document ID and each record whose `duplicateOf` points to it.
+2. Default to records where `isCanonical` is true; `duplicateOf` marks exact aliases.
+3. Match `useWhen`, `useCases`, `description`, and visual facets—not one keyword alone.
+4. Respect `audience`, `tone`, `placement`, `contentTypes`, and `avoidWhen`.
+5. Use `absoluteUrl` for the image and `altText` for accessibility.
+6. Prefer one semantic image plus at most two accent/signoff images.
+7. Mini Michael is mascot art, not proof, photography, or third-party endorsement.

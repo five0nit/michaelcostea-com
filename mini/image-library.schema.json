@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://minimemichael.web.app/image-library.schema.json",
+  "title": "Mini Michael Image Asset",
+  "description": "Schema for one machine-readable Mini Michael image-library record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "filename",
+    "title",
+    "description",
+    "altText",
+    "category",
+    "categoryLabel",
+    "url",
+    "absoluteUrl",
+    "keywords",
+    "subjects",
+    "actions",
+    "objects",
+    "mood",
+    "useCases",
+    "useWhen",
+    "avoidWhen",
+    "contentTypes",
+    "tone",
+    "placement",
+    "audience",
+    "width",
+    "height",
+    "aspectRatio",
+    "orientation",
+    "mimeType",
+    "bytes",
+    "sha256",
+    "hasTransparency",
+    "dominantColors",
+    "isCanonical",
+    "duplicateOf",
+    "metadataSource"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^mini-michael-[0-9]{3}$" },
+    "filename": { "type": "string", "pattern": "^[^/]+\\.png$" },
+    "title": { "type": "string", "minLength": 3, "maxLength": 100 },
+    "description": { "type": "string", "minLength": 50, "maxLength": 190 },
+    "altText": { "type": "string", "minLength": 25, "maxLength": 170 },
+    "category": { "type": "string" },
+    "categoryLabel": { "type": "string" },
+    "url": { "type": "string", "pattern": "^/mini-assets/all/.+\\.png$" },
+    "absoluteUrl": { "type": "string", "format": "uri" },
+    "keywords": { "$ref": "#/$defs/stringList" },
+    "subjects": { "$ref": "#/$defs/stringList" },
+    "actions": { "$ref": "#/$defs/stringList" },
+    "objects": { "$ref": "#/$defs/stringListAllowEmpty" },
+    "mood": { "$ref": "#/$defs/stringList" },
+    "useCases": { "$ref": "#/$defs/stringList" },
+    "useWhen": { "type": "string", "minLength": 35, "maxLength": 240 },
+    "avoidWhen": { "type": "string", "minLength": 15, "maxLength": 180 },
+    "contentTypes": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {
+        "enum": ["social-post", "blog-article", "email", "presentation", "website", "documentation", "newsletter"]
+      }
+    },
+    "tone": { "enum": ["playful", "professional", "empathetic", "urgent", "dramatic", "neutral"] },
+    "placement": { "enum": ["hero", "problem", "solution", "accent", "signoff", "section-break", "fallback"] },
+    "audience": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": { "enum": ["public", "client", "internal"] }
+    },
+    "width": { "type": "integer", "minimum": 1 },
+    "height": { "type": "integer", "minimum": 1 },
+    "aspectRatio": { "type": "number", "exclusiveMinimum": 0 },
+    "orientation": { "enum": ["portrait", "landscape", "square"] },
+    "mimeType": { "const": "image/png" },
+    "bytes": { "type": "integer", "minimum": 1 },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "hasTransparency": { "const": true },
+    "dominantColors": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^#[a-f0-9]{6}$" }
+    },
+    "isCanonical": { "type": "boolean" },
+    "duplicateOf": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^mini-michael-[0-9]{3}$" }
+      ]
+    },
+    "metadataSource": { "enum": ["visual-review", "exact-duplicate"] }
+  },
+  "$defs": {
+    "stringList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "stringListAllowEmpty": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}
