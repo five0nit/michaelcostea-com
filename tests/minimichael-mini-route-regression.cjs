@@ -16,7 +16,10 @@ assert.match(html, /src="\/mini\/app\.js"/);
 assert.match(html, /href="\/mini\/icons\/michaelos-sprite\.svg#icon-folder"/);
 assert.match(html, /href="https:\/\/minimemichael\.web\.app\/admin\.html"/);
 assert.doesNotMatch(html, /LOCAL STYLE PREVIEW|noindex,nofollow/);
-assert.equal(assets.length, 378);
+assert.equal(assets.length, 655);
+assert.equal(assets.filter((asset) => asset.collectionId === 'v2-designs').length, 277);
+assert.match(html, /data-collection="v2-designs"/);
+assert.match(readFileSync(path.join(mini, 'app.js'), 'utf8'), /asset-collection-badge/);
 assert.ok(assets.every((asset) => asset.url.startsWith('https://minimemichael.web.app/mini-assets/')));
 assert.equal(existsSync(path.join(mini, 'mini-assets')), false);
 assert.equal(existsSync(path.join(mini, 'admin.html')), false);
@@ -32,7 +35,7 @@ function files(directory) {
 const shipped = files(mini);
 assert.equal(shipped.some((file) => file.endsWith('.map')), false);
 assert.equal(shipped.some((file) => /\.(png|jpe?g|webp)$/i.test(file)), false);
-assert.ok(shipped.reduce((total, file) => total + statSync(file).size, 0) < 5_000_000);
+assert.ok(shipped.reduce((total, file) => total + statSync(file).size, 0) < 10_000_000);
 
 console.log(JSON.stringify({
   route: 'https://michaelcostea.com/mini/',

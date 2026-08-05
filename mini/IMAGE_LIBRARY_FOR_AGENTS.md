@@ -21,11 +21,12 @@ Absolute example: `https://minimemichael.web.app/image-library.json`
 1. Fetch `/image-library.json` or stream `/image-library.ndjson`.
 2. Fetch the live status `assetOverrides` collection. Every document whose `fields.hidden.booleanValue` is `true` is archived. Exclude its document ID and every record whose `duplicateOf` equals that ID.
 3. Filter to `isCanonical === true`. The other 75 records are exact-file aliases retained for old filenames.
-4. Match the content brief against `useWhen`, `useCases`, `description`, `keywords`, `subjects`, `actions`, `objects`, and `mood`.
-5. Gate the choice using `audience`, `tone`, `placement`, `contentTypes`, and `avoidWhen`.
-6. Prefer one semantic hero/problem/solution image. Add no more than two `accent` or `signoff` images.
-7. Use `absoluteUrl` as the source and `altText` as the default accessible description.
-8. If the content needs exact UI, product, customer, event, or performance proof, use a real screenshot/reference asset instead of Mini Michael.
+4. Use `collectionId=v2-designs` when the brief requests the new V2 Designs; otherwise search both collections.
+5. Match the content brief against `useWhen`, `useCases`, `description`, `visibleText`, `keywords`, `subjects`, `actions`, `objects`, and `mood`.
+6. Gate the choice using `audience`, `tone`, `placement`, `contentTypes`, and `avoidWhen`.
+7. Prefer one semantic hero/problem/solution image. Add no more than two `accent` or `signoff` images.
+8. Use `absoluteUrl` as the source and `altText` as the default accessible description.
+9. If the content needs exact UI, product, customer, event, or performance proof, use a real screenshot/reference asset instead of Mini Michael.
 
 ## Live status and archive semantics
 
@@ -53,6 +54,9 @@ Absolute example: `https://minimemichael.web.app/image-library.json`
 - `placement`: `hero`, `problem`, `solution`, `accent`, `signoff`, `section-break`, or `fallback`.
 - `orientation`, `width`, `height`, `dominantColors`: layout hints.
 - `sha256`: exact-byte identity; use it to detect duplicates or stale downloads.
+- `collectionId`, `collectionLabel`, `designVersion`: distinguish the legacy V1 library from `V2 Designs`.
+- `visibleText`: exact text recognized in the image; searchable and suitable for meme/caption matching.
+- `sourceFilename`, `sourceSha256`, `backgroundRemoval`: provenance for the immutable generated input and transparent processed output.
 
 ## Minimal Python selection example
 

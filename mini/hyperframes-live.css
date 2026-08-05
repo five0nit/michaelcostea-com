@@ -361,11 +361,30 @@ body:is(.hyperframes-live, .hyperframes-preview) {
 }
 
 :is(.hyperframes-live, .hyperframes-preview) .category-button,
+:is(.hyperframes-live, .hyperframes-preview) .collection-filter button,
 :is(.hyperframes-live, .hyperframes-preview) .text-button,
 :is(.hyperframes-live, .hyperframes-preview) .pagination button,
 :is(.hyperframes-live, .hyperframes-preview) .empty-state button {
   border-radius: 0;
   font-family: "Courier New", monospace;
+}
+
+:is(.hyperframes-live, .hyperframes-preview) .collection-filter button {
+  color: #111;
+  background: var(--hf-chrome);
+  border-color: #fff #111 #111 #fff;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: 1px 1px 0 #111;
+  font-family: "Courier New", monospace;
+  font-size: 0.65rem;
+}
+
+:is(.hyperframes-live, .hyperframes-preview) .collection-filter button[aria-pressed="true"] {
+  color: #fff;
+  background: var(--hf-title);
+  box-shadow: inset 0 -3px var(--hf-cyan), 1px 1px 0 #111;
 }
 
 :is(.hyperframes-live, .hyperframes-preview) .category-button {
@@ -430,6 +449,17 @@ body:is(.hyperframes-live, .hyperframes-preview) {
   border-radius: 0;
   border-style: solid;
   border-width: 2px;
+  font-family: "Courier New", monospace;
+}
+
+:is(.hyperframes-live, .hyperframes-preview) .asset-collection-badge {
+  color: #111;
+  background: var(--hf-yellow);
+  border-color: #fff #111 #111 #fff;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: 1px 1px 0 #111;
   font-family: "Courier New", monospace;
 }
 

@@ -36,19 +36,26 @@
     "sha256",
     "hasTransparency",
     "dominantColors",
+    "visibleText",
+    "designVersion",
+    "collectionId",
+    "collectionLabel",
+    "sourceFilename",
+    "sourceSha256",
+    "backgroundRemoval",
     "isCanonical",
     "duplicateOf",
     "metadataSource"
   ],
   "properties": {
-    "id": { "type": "string", "pattern": "^mini-michael-[0-9]{3}$" },
+    "id": { "type": "string", "pattern": "^mini-michael-(?:v2-)?[0-9]{3}$" },
     "filename": { "type": "string", "pattern": "^[^/]+\\.png$" },
     "title": { "type": "string", "minLength": 3, "maxLength": 100 },
     "description": { "type": "string", "minLength": 50, "maxLength": 190 },
     "altText": { "type": "string", "minLength": 25, "maxLength": 170 },
     "category": { "type": "string" },
     "categoryLabel": { "type": "string" },
-    "url": { "type": "string", "pattern": "^/mini-assets/all/.+\\.png$" },
+    "url": { "type": "string", "pattern": "^/mini-assets/(?:all|v2)/.+\\.png$" },
     "absoluteUrl": { "type": "string", "format": "uri" },
     "keywords": { "$ref": "#/$defs/stringList" },
     "subjects": { "$ref": "#/$defs/stringList" },
@@ -89,14 +96,21 @@
       "uniqueItems": true,
       "items": { "type": "string", "pattern": "^#[a-f0-9]{6}$" }
     },
+    "visibleText": { "$ref": "#/$defs/stringListAllowEmpty" },
+    "designVersion": { "enum": ["v1", "v2"] },
+    "collectionId": { "enum": ["v1-library", "v2-designs"] },
+    "collectionLabel": { "enum": ["V1 Library", "V2 Designs"] },
+    "sourceFilename": { "type": "string", "pattern": "^[^/]+\\.png$" },
+    "sourceSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "backgroundRemoval": { "type": "string", "minLength": 3 },
     "isCanonical": { "type": "boolean" },
     "duplicateOf": {
       "oneOf": [
         { "type": "null" },
-        { "type": "string", "pattern": "^mini-michael-[0-9]{3}$" }
+        { "type": "string", "pattern": "^mini-michael-(?:v2-)?[0-9]{3}$" }
       ]
     },
-    "metadataSource": { "enum": ["visual-review", "exact-duplicate"] }
+    "metadataSource": { "enum": ["visual-review", "vision-recognition", "exact-duplicate"] }
   },
   "$defs": {
     "stringList": {

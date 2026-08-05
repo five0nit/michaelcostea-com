@@ -14,8 +14,9 @@
 
 1. Fetch live `assetOverrides` status first. Exclude every archived document ID and each record whose `duplicateOf` points to it.
 2. Default to records where `isCanonical` is true; `duplicateOf` marks exact aliases.
-3. Match `useWhen`, `useCases`, `description`, and visual facets—not one keyword alone.
-4. Respect `audience`, `tone`, `placement`, `contentTypes`, and `avoidWhen`.
-5. Use `absoluteUrl` for the image and `altText` for accessibility.
-6. Prefer one semantic image plus at most two accent/signoff images.
-7. Mini Michael is mascot art, not proof, photography, or third-party endorsement.
+3. Filter `collectionId=v2-designs` when V2 Designs are requested; otherwise search both V1 and V2.
+4. Match `useWhen`, `useCases`, `description`, `visibleText`, and visual facets—not one keyword alone.
+5. Respect `audience`, `tone`, `placement`, `contentTypes`, and `avoidWhen`.
+6. Use `absoluteUrl` for the image and `altText` for accessibility.
+7. Prefer one semantic image plus at most two accent/signoff images.
+8. Mini Michael is mascot art, not proof, photography, or third-party endorsement.
