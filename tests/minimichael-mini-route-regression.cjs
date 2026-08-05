@@ -11,7 +11,7 @@ const sitemap = readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
 assert.match(html, /<html lang="en" data-app-base="\/mini">/);
 assert.match(html, /<body class="hyperframes-live">/);
 assert.match(html, /<link rel="canonical" href="https:\/\/michaelcostea\.com\/mini\/" \/>/);
-assert.match(html, /href="\/mini\/hyperframes-live\.css\?v=20260805-live-1"/);
+assert.match(html, /href="\/mini\/hyperframes-live\.css\?v=20260805-live-2"/);
 assert.match(html, /src="\/mini\/app\.js"/);
 assert.match(html, /href="\/mini\/icons\/michaelos-sprite\.svg#icon-folder"/);
 assert.match(html, /href="https:\/\/minimemichael\.web\.app\/admin\.html"/);

@@ -634,8 +634,9 @@ body:is(.hyperframes-live, .hyperframes-preview) {
   :is(.hyperframes-live, .hyperframes-preview) main { margin-top: 18px; }
 
   :is(.hyperframes-live, .hyperframes-preview) .search-toolbar {
-    position: relative;
-    top: auto;
+    position: sticky;
+    top: 4px;
+    z-index: 20;
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "copy status"
