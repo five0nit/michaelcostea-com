@@ -82,7 +82,7 @@ async function auditViewport(browser, name, viewport, mobile) {
       proofNoteLineHeight: parseFloat(getComputedStyle(document.querySelector('.career-proof-note')).lineHeight),
       heroProductCount: document.querySelectorAll('#readerWindow [data-owned-path]').length,
       resourcesProductCount: document.querySelectorAll('#resourcesWindow [data-owned-path]').length,
-      archiveOpen: document.querySelector('.project-archive-shell')?.open || false,
+      archiveVisible: Boolean(document.querySelector('.project-archive-shell[data-project-browser]')),
       heroTop: document.querySelector('.welcome-copy')?.getBoundingClientRect().top || 0,
       heroBottom: document.querySelector('.welcome-copy')?.getBoundingClientRect().bottom || 0,
       sidebarTop: document.querySelector('.welcome-sidebar')?.getBoundingClientRect().top || 0,
@@ -97,7 +97,7 @@ async function auditViewport(browser, name, viewport, mobile) {
   must(home.primaryActionCount === 3 && home.actionsVisible.every((item) => item.visible), `${name}: all three primary actions must be in first viewport`);
   must(home.proofNoteFontSize >= 11 && home.proofNoteLineHeight >= 15, `${name}: evidence caveat text too small (${home.proofNoteFontSize}px/${home.proofNoteLineHeight}px)`);
   must(home.heroProductCount === 0 && home.resourcesProductCount >= 2, `${name}: product hierarchy incorrect`);
-  must(home.archiveOpen, `${name}: ranked project archive should start visible`);
+  must(home.archiveVisible, `${name}: project library should start visible`);
   must(home.deckSrcs.every((item) => !item.src && item.deferred), `${name}: closed deck media loaded eagerly`);
   must(!home.bodyOverflow, `${name}: horizontal page overflow`);
 
@@ -163,7 +163,7 @@ async function auditViewport(browser, name, viewport, mobile) {
       desktopInert: document.querySelector('.desktop-icons')?.hasAttribute('inert') || false,
     }));
     must(closed.hash === '' || closed.hash === '#home', `mobile: close did not return home (${closed.hash})`);
-    must(closed.activeText === 'VIEW RANKED PROJECTS', `mobile: close did not restore opener (${closed.activeText})`);
+    must(closed.activeText === 'VIEW ALL PROJECTS', `mobile: close did not restore opener (${closed.activeText})`);
     must(!closed.desktopInert, 'mobile: background remained inert after close');
 
     await page.goto(`${baseUrl}/#projects`, { waitUntil: 'networkidle' });

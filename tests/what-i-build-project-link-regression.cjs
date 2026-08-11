@@ -10,14 +10,14 @@ const { document } = new JSDOM(html).window;
 const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
 
 const popout = document.querySelector('#buildWindow a.build-projects-popout[href="projects/"]');
-if (!popout) throw new Error('What I Build needs a direct ranked-projects popout link');
+if (!popout) throw new Error('What I Build needs a direct project-library popout link');
 
 const popoutText = clean(popout.textContent);
-for (const phrase of ['Ranked portfolio', 'View all 16 projects', 'Live products', 'inspectable delivery proof']) {
+for (const phrase of ['Project library', 'View all 16 projects', 'Live products', 'inspectable delivery proof']) {
   if (!popoutText.includes(phrase)) throw new Error(`project popout missing: ${phrase}`);
 }
 
-if (popout.getAttribute('aria-label') !== 'View all 16 ranked projects') {
+if (popout.getAttribute('aria-label') !== 'View all 16 projects') {
   throw new Error('project popout needs an exact accessible label');
 }
 if (document.querySelectorAll('#buildWindow a[href="projects/"]').length !== 1) {

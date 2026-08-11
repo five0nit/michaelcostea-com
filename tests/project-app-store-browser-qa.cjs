@@ -41,6 +41,8 @@ const cases = [
       return {
         visible: cards.filter((card) => !card.hidden).length,
         detailsOpen: cards.filter((card) => card.querySelector('.app-store-details')?.open).length,
+        rankRibbons: cards.filter((card) => card.querySelector('.project-rank')).length,
+        rankAttributes: cards.filter((card) => card.hasAttribute('data-rank')).length,
         columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length,
         brokenImages: [...element.querySelectorAll('img')].filter((image) => image.complete && image.naturalWidth === 0).map((image) => image.src),
         overflow: document.documentElement.scrollWidth - innerWidth,
@@ -49,6 +51,7 @@ const cases = [
 
     if (initial.visible !== 16) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
     if (initial.detailsOpen !== 0) throw new Error(`${testCase.label} technical details must start closed`);
+    if (initial.rankRibbons !== 0 || initial.rankAttributes !== 0) throw new Error(`${testCase.label} ranking labels remain`);
     if (initial.columns !== testCase.columns) throw new Error(`${testCase.label} expected ${testCase.columns} columns, got ${initial.columns}`);
     if (initial.brokenImages.length) throw new Error(`${testCase.label} broken images: ${initial.brokenImages.join(', ')}`);
     if (initial.overflow > 1) throw new Error(`${testCase.label} horizontal overflow ${initial.overflow}px`);

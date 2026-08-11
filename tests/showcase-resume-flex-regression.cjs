@@ -16,7 +16,7 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 must(document.title.includes('Head of Tech, AI & Systems'), 'homepage title must lead with current role');
 must(document.title.includes('Melbourne'), 'homepage title must include Melbourne');
 must((document.querySelector('meta[name="description"]')?.content || '').length <= 160, 'homepage description must stay within 160 characters');
-must(document.querySelector('link[href="styles.css?v=20260811-app-store-projects"]'), 'homepage styles cache marker must expose the project App Store');
+must(document.querySelector('link[href="styles.css?v=20260811-project-library-no-ranks"]'), 'homepage styles cache marker must expose the rank-free project library');
 
 const hero = document.querySelector('#readerWindow .career-showcase-hero');
 must(hero, 'career showcase hero missing');
@@ -26,7 +26,7 @@ for (const phrase of ['MICHAEL COSTEA', 'HEAD OF TECH, AI & SYSTEMS', 'MELBOURNE
 }
 const actions = [...hero.querySelectorAll('.career-primary-actions a, .career-primary-actions button')];
 must(actions.length === 3, `career hero must have exactly three primary actions, got ${actions.length}`);
-for (const phrase of ['VIEW RÉSUMÉ PDF', 'VIEW RANKED PROJECTS', 'DISCUSS A ROLE']) {
+for (const phrase of ['VIEW RÉSUMÉ PDF', 'VIEW ALL PROJECTS', 'DISCUSS A ROLE']) {
   must(actions.some(action => action.textContent.replace(/\s+/g, ' ').trim().toUpperCase().includes(phrase)), `career action missing ${phrase}`);
 }
 must(!heroText.includes('US$5'), 'price-led Gumroad product must not appear in career hero');

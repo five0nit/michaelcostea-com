@@ -987,7 +987,6 @@ body.public-preview::before{
 .public-preview .project-showcase-card figure img{display:block;width:100%;height:100%;aspect-ratio:16/9;object-fit:cover;image-rendering:auto;}
 .public-preview .app-store-placeholder{background:#000080!important;background-image:linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px)!important;background-size:18px 18px!important;}
 .public-preview .app-store-placeholder span{display:grid;place-items:center;width:74px;height:74px;background:#fff4c2;color:#000080;border:3px solid #fff;box-shadow:5px 5px 0 #000;font:900 28px/1 "Space Grotesk","Courier New",monospace;}
-.public-preview .project-rank{position:absolute;z-index:2;top:9px;left:9px;display:inline-flex;max-width:calc(100% - 18px);margin:0;padding:5px 7px;background:rgba(0,0,128,.94);color:#fff;border:1px solid #76f7df;font:900 9px/12px "Space Grotesk","Courier New",monospace;letter-spacing:.03em;text-transform:uppercase;}
 .public-preview .project-card-body{order:2;display:flex;flex:1;flex-direction:column;gap:7px;padding:12px;}
 .public-preview .project-showcase-card h3{margin:0;color:#111;font:900 17px/20px "Work Sans",Tahoma,sans-serif;border:0;padding:0;}
 .public-preview .app-store-category{width:max-content;max-width:100%;padding:3px 7px;background:#e9efff;color:#000080;border-radius:999px;font:900 9px/12px "Work Sans",Tahoma,sans-serif;text-transform:uppercase;}

@@ -33,17 +33,14 @@ const rankedSection = projects.querySelector('section.full-archive.ranked-projec
 must(rankedSection, 'crawlable projects page must expose a permanent ranked-projects section');
 must(!projects.querySelector('details.full-archive'), 'crawlable project inventory must not remain behind details disclosure');
 must(projects.querySelector('.page-hero')?.compareDocumentPosition(rankedSection) & 4, 'ranked projects must follow the hero');
-must(rankedSection.compareDocumentPosition(projects.querySelector('.project-details')) & 4, 'ranked projects must appear before supporting career cases');
+must(rankedSection.compareDocumentPosition(projects.querySelector('.project-details')) & 4, 'project library must appear before supporting career cases');
 must(clean(projects.querySelector('#projects-page-title')?.textContent).includes('16 working systems'), 'project App Store count must be explicit');
-must(clean(rankedSection.querySelector('#ranked-projects-title')?.textContent).includes('ranked strongest first'), 'ranking order must remain explicit without a duplicate visible intro');
+must(clean(rankedSection.querySelector('#ranked-projects-title')?.textContent) === '16 working systems', 'project library must use a neutral accessible heading');
 
 const pageCards = [...rankedSection.querySelectorAll('.detailed-archive > .project-archive-card')];
 const pageTitles = pageCards.map((card) => clean(card.querySelector('h3')?.textContent));
-must(JSON.stringify(pageTitles) === JSON.stringify(expectedOrder), `crawlable rank order wrong: ${JSON.stringify(pageTitles)}`);
-pageCards.forEach((card, index) => {
-  must(card.dataset.rank === String(index + 1), `${pageTitles[index]} missing data-rank=${index + 1}`);
-  must(clean(card.querySelector('.project-rank')?.textContent).startsWith(`Rank ${String(index + 1).padStart(2, '0')}`), `${pageTitles[index]} missing visible rank`);
-});
+must(JSON.stringify(pageTitles) === JSON.stringify(expectedOrder), `crawlable project order wrong: ${JSON.stringify(pageTitles)}`);
+must(pageCards.every((card) => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank')), 'crawlable cards must not expose rank attributes or rank ribbons');
 
 const homeHtml = read('index.html');
 const home = new JSDOM(homeHtml).window.document;
@@ -52,12 +49,9 @@ must(homeArchive, 'MichaelOS project App Store must remain permanently visible')
 must(!home.querySelector('#projectsWindow details.project-archive-shell'), 'MichaelOS must not hide the App Store behind a redundant disclosure');
 const homeCards = [...homeArchive.querySelectorAll('.project-showcase-grid > .project-showcase-card')];
 const homeTitles = homeCards.map((card) => clean(card.querySelector('h3')?.textContent));
-must(JSON.stringify(homeTitles) === JSON.stringify(expectedOrder), `MichaelOS rank order wrong: ${JSON.stringify(homeTitles)}`);
-homeCards.forEach((card, index) => {
-  must(card.dataset.rank === String(index + 1), `${homeTitles[index]} missing data-rank=${index + 1}`);
-  must(clean(card.querySelector('.project-rank')?.textContent).startsWith(`Rank ${String(index + 1).padStart(2, '0')}`), `${homeTitles[index]} missing visible rank`);
-});
-must(clean(home.querySelector('#readerWindow .career-primary-actions')?.textContent).includes('VIEW RANKED PROJECTS'), 'homepage hero must lead visitors to ranked projects');
+must(JSON.stringify(homeTitles) === JSON.stringify(expectedOrder), `MichaelOS project order wrong: ${JSON.stringify(homeTitles)}`);
+must(homeCards.every((card) => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank')), 'MichaelOS cards must not expose rank attributes or rank ribbons');
+must(clean(home.querySelector('#readerWindow .career-primary-actions')?.textContent).includes('VIEW ALL PROJECTS'), 'homepage hero must lead visitors to the full project library');
 must(home.querySelector('#projectsWindow a[href="billpilot.html"]'), 'BillPilot living project page must be linked from MichaelOS');
 
 const billpilot = new JSDOM(read('billpilot.html')).window.document;

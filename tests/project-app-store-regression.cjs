@@ -37,6 +37,7 @@ function auditBrowser(document, rootSelector, cardSelector, label) {
   must(cards.every(card => card.querySelector('.app-store-summary')), `${label} every app needs a compact summary`);
   must(cards.every(card => card.querySelector('.app-store-details:not([open]) > summary')), `${label} technical detail must be available but closed initially`);
   must(cards.every(card => card.querySelector('.app-store-primary-action, .archive-action a')), `${label} every app needs a visible launch/proof action`);
+  must(cards.every(card => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank')), `${label} must not show ranking ribbons or rank attributes`);
 
   for (const [category, expected] of Object.entries(expectedCategories)) {
     const actual = cards.filter(card => card.dataset.projectCategory === category).length;
@@ -54,6 +55,7 @@ must(home.querySelector('[data-project="codex account usage + auth rotator"] fig
 must(home.querySelector('script[src="project-browser.js?v=20260811-app-store-projects"]'), 'MichaelOS app browser script missing');
 
 const projects = new JSDOM(read('projects/index.html')).window.document;
+must(!projects.title.includes('Ranked'), 'project page title must use neutral App Library language');
 auditBrowser(projects, 'section[data-project-browser]', '.detailed-archive > .project-archive-card', 'crawlable projects');
 must(projects.querySelector('[data-project="repo-first starter + cursor covenant"] .app-store-placeholder'), 'crawlable Repo-First app needs placeholder artwork');
 must(projects.querySelector('script[src="project-browser.js?v=20260811-app-store-projects"]'), 'crawlable app browser script missing');
@@ -70,6 +72,7 @@ for (const marker of [
   '.public-preview .app-store-details{',
   '.public-preview .app-store-placeholder{',
 ]) must(homeCss.includes(marker), `MichaelOS App Store CSS missing ${marker}`);
+must(!homeCss.includes('.public-preview .project-rank{'), 'MichaelOS rank ribbon CSS must be removed');
 
 const pageCss = read('career.css');
 for (const marker of [
@@ -78,5 +81,6 @@ for (const marker of [
   'body[data-page="projects"] .app-store-details',
   '@media (max-width: 720px)',
 ]) must(pageCss.includes(marker), `crawlable App Store CSS missing ${marker}`);
+must(!pageCss.includes('.project-rank{') && !pageCss.includes('.project-rank {'), 'crawlable rank ribbon CSS must be removed');
 
 console.log('project-app-store-regression ok');
