@@ -32,6 +32,9 @@ async function routeChecks(request) {
 
 async function auditViewport(browser, name, viewport, mobile) {
   const context = await browser.newContext({ viewport, deviceScaleFactor: 1, isMobile: mobile, hasTouch: mobile });
+  await context.route('https://www.googletagmanager.com/**', route => route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }));
+  await context.route('https://www.google-analytics.com/**', route => route.fulfill({ status: 204, body: '' }));
+  await context.route('https://www.google.com/g/collect**', route => route.fulfill({ status: 204, body: '' }));
   const page = await context.newPage();
   const consoleErrors = [];
   const requestFailures = [];
@@ -94,7 +97,7 @@ async function auditViewport(browser, name, viewport, mobile) {
   must(home.primaryActionCount === 3 && home.actionsVisible.every((item) => item.visible), `${name}: all three primary actions must be in first viewport`);
   must(home.proofNoteFontSize >= 11 && home.proofNoteLineHeight >= 15, `${name}: evidence caveat text too small (${home.proofNoteFontSize}px/${home.proofNoteLineHeight}px)`);
   must(home.heroProductCount === 0 && home.resourcesProductCount >= 2, `${name}: product hierarchy incorrect`);
-  must(!home.archiveOpen, `${name}: project archive should start collapsed`);
+  must(home.archiveOpen, `${name}: ranked project archive should start visible`);
   must(home.deckSrcs.every((item) => !item.src && item.deferred), `${name}: closed deck media loaded eagerly`);
   must(!home.bodyOverflow, `${name}: horizontal page overflow`);
 
@@ -160,7 +163,7 @@ async function auditViewport(browser, name, viewport, mobile) {
       desktopInert: document.querySelector('.desktop-icons')?.hasAttribute('inert') || false,
     }));
     must(closed.hash === '' || closed.hash === '#home', `mobile: close did not return home (${closed.hash})`);
-    must(closed.activeText === 'OPEN 3 CASE STUDIES', `mobile: close did not restore opener (${closed.activeText})`);
+    must(closed.activeText === 'VIEW RANKED PROJECTS', `mobile: close did not restore opener (${closed.activeText})`);
     must(!closed.desktopInert, 'mobile: background remained inert after close');
 
     await page.goto(`${baseUrl}/#projects`, { waitUntil: 'networkidle' });

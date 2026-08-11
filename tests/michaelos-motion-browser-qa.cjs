@@ -8,12 +8,18 @@ const out = process.env.QA_OUT || '/tmp/michaelos-motion-browser-qa';
 fs.mkdirSync(out, { recursive: true });
 const must = (condition, message) => { if (!condition) throw new Error(message); };
 const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].map(k => [k, Math.round(rect[k] * 10) / 10]));
+async function stubAnalytics(context){
+  await context.route('https://www.googletagmanager.com/**', route => route.fulfill({ status:200, contentType:'application/javascript', body:'' }));
+  await context.route('https://www.google-analytics.com/**', route => route.fulfill({ status:204, body:'' }));
+  await context.route('https://www.google.com/g/collect**', route => route.fulfill({ status:204, body:'' }));
+}
 
 (async()=>{
   const browser = await chromium.launch({ headless:true });
   const report = { base, desktop:{}, reducedMotion:{}, mobile:{}, failures:[] };
   try{
     const context = await browser.newContext({ viewport:{ width:1440, height:1000 }, deviceScaleFactor:1 });
+    await stubAnalytics(context);
     await context.addInitScript(()=>localStorage.removeItem('michaelos_prefs_v1'));
     const page = await context.newPage();
     const errors = [];
@@ -191,10 +197,10 @@ const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].ma
     must(report.desktop.afterCaseClose.length === 1 && report.desktop.afterCaseClose[0] === 'projectsWindow', `close did not promote underlying window: ${JSON.stringify(report.desktop.afterCaseClose)}`);
     const archive = page.locator('#projectsWindow .project-archive-shell');
     await archive.locator('summary').click();
-    await page.waitForFunction(()=>document.querySelector('#projectsWindow .project-archive-shell')?.open === true);
+    await page.waitForFunction(()=>document.querySelector('#projectsWindow .project-archive-shell')?.open === false);
     await page.waitForTimeout(230);
     await archive.locator('summary').click();
-    await page.waitForFunction(()=>document.querySelector('#projectsWindow .project-archive-shell')?.open === false);
+    await page.waitForFunction(()=>document.querySelector('#projectsWindow .project-archive-shell')?.open === true);
     report.desktop.archive = { openClose:true };
 
     await page.screenshot({ path:path.join(out,'desktop-motion.png'), fullPage:false });
@@ -207,6 +213,7 @@ const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].ma
     await context.close();
 
     const reducedContext = await browser.newContext({ viewport:{ width:1280, height:900 }, reducedMotion:'reduce' });
+    await stubAnalytics(reducedContext);
     await reducedContext.addInitScript(()=>localStorage.removeItem('michaelos_prefs_v1'));
     const reduced = await reducedContext.newPage();
     await reduced.goto(base, { waitUntil:'networkidle' });
@@ -224,6 +231,7 @@ const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].ma
     await reducedContext.close();
 
     const mobileContext = await browser.newContext({ viewport:{ width:390, height:844 }, isMobile:true, hasTouch:true, deviceScaleFactor:1 });
+    await stubAnalytics(mobileContext);
     await mobileContext.addInitScript(()=>localStorage.removeItem('michaelos_prefs_v1'));
     const mobile = await mobileContext.newPage();
     const mobileErrors = [];

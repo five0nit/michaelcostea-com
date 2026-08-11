@@ -32,11 +32,11 @@ for (const card of cards) {
   must(stack.textContent.trim().length >= 55, `${title} Tech stack is too thin`);
 }
 const expectedFirst = [
-  'michaelcostea.com / MICHAEL OS 89',
   'RebateSignal',
-  'InvoicePipe',
   'Brief2Ship',
-  'Automated Social & Brand Content Engine',
+  'michaelcostea.com / MICHAEL OS 89',
+  'Telegram Office / Agent Office',
+  'BillPilot / InvoicePipe',
 ];
 for (let i = 0; i < expectedFirst.length; i += 1) {
   must(titles[i] === expectedFirst[i], `card ${i + 1} should be ${expectedFirst[i]}, got ${titles[i]}`);

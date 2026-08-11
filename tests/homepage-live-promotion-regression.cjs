@@ -43,7 +43,7 @@ for (const phrase of [
   '352',
   '5,000+',
   '500,000',
-  'OPEN 3 CASE STUDIES',
+  'VIEW RANKED PROJECTS',
   'Projects - AI Systems Portfolio',
   'Resume.doc - Michael Costea',
   'AI Agents - Business Operating Leverage',

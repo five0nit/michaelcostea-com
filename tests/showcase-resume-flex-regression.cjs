@@ -16,7 +16,7 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 must(document.title.includes('Head of Tech, AI & Systems'), 'homepage title must lead with current role');
 must(document.title.includes('Melbourne'), 'homepage title must include Melbourne');
 must((document.querySelector('meta[name="description"]')?.content || '').length <= 160, 'homepage description must stay within 160 characters');
-must(document.querySelector('link[href="styles.css?v=20260804-mobile-proof-action-legibility"]'), 'homepage styles cache marker must expose mobile proof/action legibility fix');
+must(document.querySelector('link[href="styles.css?v=20260811-ranked-projects-visible"]'), 'homepage styles cache marker must expose ranked project visibility');
 
 const hero = document.querySelector('#readerWindow .career-showcase-hero');
 must(hero, 'career showcase hero missing');
@@ -26,7 +26,7 @@ for (const phrase of ['MICHAEL COSTEA', 'HEAD OF TECH, AI & SYSTEMS', 'MELBOURNE
 }
 const actions = [...hero.querySelectorAll('.career-primary-actions a, .career-primary-actions button')];
 must(actions.length === 3, `career hero must have exactly three primary actions, got ${actions.length}`);
-for (const phrase of ['VIEW RÉSUMÉ PDF', 'OPEN 3 CASE STUDIES', 'DISCUSS A ROLE']) {
+for (const phrase of ['VIEW RÉSUMÉ PDF', 'VIEW RANKED PROJECTS', 'DISCUSS A ROLE']) {
   must(actions.some(action => action.textContent.replace(/\s+/g, ' ').trim().toUpperCase().includes(phrase)), `career action missing ${phrase}`);
 }
 must(!heroText.includes('US$5'), 'price-led Gumroad product must not appear in career hero');
@@ -41,7 +41,7 @@ for (const card of featured) {
     must(cardText.includes(label), `${text('h3')} featured case missing ${label}`);
   }
 }
-must(text('#projectsWindow').includes('Project Archive'), 'project archive label missing');
+must(text('#projectsWindow').includes('Ranked competence portfolio'), 'ranked competence portfolio label missing');
 must(!html.includes('href="https://github.com/five0nit/useaiforme"'), 'private UseAIForMe repo must not be promised publicly');
 must(!html.includes('href="https://telegram-office.michaelcostea.com/agenttown/"'), 'unhealthy Agent Office runtime must not be promised publicly');
 
@@ -77,6 +77,7 @@ for (const routeFile of requiredFiles.filter(file => file.endsWith('index.html')
   must(/<link rel="canonical" href="https:\/\/michaelcostea\.com\//.test(page), `${routeFile} canonical missing`);
 }
 const crawlableProjects = new JSDOM(fs.readFileSync(path.join(root, 'projects/index.html'), 'utf8')).window.document;
-must(crawlableProjects.querySelector('details.full-archive:not([open])'), 'crawlable project archive should be collapsed behind the three hiring cases');
+must(crawlableProjects.querySelector('section.full-archive.ranked-projects'), 'crawlable ranked project archive must remain permanently visible');
+must(!crawlableProjects.querySelector('details.full-archive'), 'crawlable projects must not return to a collapsed disclosure');
 
 console.log('showcase-resume-flex-regression ok');

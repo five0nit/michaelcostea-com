@@ -980,6 +980,10 @@ body.public-preview::before{
 .public-preview .project-showcase-card .project-meta span{color:#242424;}
 .public-preview .project-showcase-card .project-stack span{font-family:"Work Sans",Tahoma,sans-serif;font-weight:650;}
 .public-preview .project-showcase-card .project-tags{display:inline-block;background:#d4d0c8;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:3px 6px;font-size:11px;line-height:14px;}
+.public-preview .project-rank{display:inline-flex;align-self:flex-start;margin:9px 10px 0;padding:4px 7px;background:#000;color:#76f7df;border:1px solid #000080;font:900 10px/13px "Space Grotesk","Courier New",monospace;letter-spacing:.04em;text-transform:uppercase;}
+.public-preview .project-showcase-card[data-rank="1"]{grid-column:1/-1;background:#fffce0;outline:3px solid #ffcf33;outline-offset:-3px;}
+.public-preview .ranking-method{margin:8px 0 12px;padding:9px 10px;background:#fffff3;border:2px inset #808080;color:#111;font:11px/16px "Work Sans",Tahoma,sans-serif;}
+.public-preview .supporting-cases-heading{margin-top:18px;}
 .public-preview .tiny-menace-thumb{position:relative;min-height:170px!important;background:linear-gradient(180deg,#73cfff 0 52%,#5f943f 52% 100%)!important;overflow:hidden;image-rendering:pixelated;}
 .public-preview .tiny-menace-thumb::before{content:"";position:absolute;left:0;right:0;bottom:46px;height:28px;background:repeating-linear-gradient(90deg,#7b4a26 0 24px,#573216 24px 48px);border-top:3px solid #111;border-bottom:3px solid #111;}
 .public-preview .tiny-menace-thumb span{position:absolute;display:grid;place-items:center;font:900 12px/1 "Courier New",monospace;color:#111;border:3px solid #111;box-shadow:4px 4px 0 #000;}
@@ -1005,6 +1009,7 @@ body.public-preview::before{
   .public-preview .doc-grid,.public-preview .agent-grid,.public-preview .project-list-public,.public-preview .project-showcase-grid{grid-template-columns:1fr;}
   .public-preview .project-showcase-card figure{min-height:0;}
   .public-preview .project-showcase-card .repo-action-row .btn{width:100%;justify-content:center;text-align:center;}
+  .public-preview .project-showcase-card[data-rank="1"]{grid-column:auto;}
   .public-preview .project-showcase-card .project-meta p{grid-template-columns:1fr;gap:2px;}
   .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-content-card{grid-template-columns:1fr!important;grid-template-areas:"title" "art" "body" "list" "tag"!important;}
   .public-preview #projectsWindow .ai-project-showcase:not(.recent-builds-showcase) .mini-card-figure{justify-self:start!important;width:68px!important;height:74px!important;margin:0 0 2px 0!important;}
