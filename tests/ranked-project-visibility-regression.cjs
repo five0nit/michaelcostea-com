@@ -34,7 +34,8 @@ must(rankedSection, 'crawlable projects page must expose a permanent ranked-proj
 must(!projects.querySelector('details.full-archive'), 'crawlable project inventory must not remain behind details disclosure');
 must(projects.querySelector('.page-hero')?.compareDocumentPosition(rankedSection) & 4, 'ranked projects must follow the hero');
 must(rankedSection.compareDocumentPosition(projects.querySelector('.project-details')) & 4, 'ranked projects must appear before supporting career cases');
-must(clean(rankedSection.querySelector('.ranking-method')?.textContent).includes('live or inspectable proof'), 'ranking method must be explicit');
+must(clean(projects.querySelector('#projects-page-title')?.textContent).includes('16 working systems'), 'project App Store count must be explicit');
+must(clean(rankedSection.querySelector('#ranked-projects-title')?.textContent).includes('ranked strongest first'), 'ranking order must remain explicit without a duplicate visible intro');
 
 const pageCards = [...rankedSection.querySelectorAll('.detailed-archive > .project-archive-card')];
 const pageTitles = pageCards.map((card) => clean(card.querySelector('h3')?.textContent));
@@ -46,8 +47,9 @@ pageCards.forEach((card, index) => {
 
 const homeHtml = read('index.html');
 const home = new JSDOM(homeHtml).window.document;
-const homeArchive = home.querySelector('#projectsWindow details.project-archive-shell[open]');
-must(homeArchive, 'MichaelOS project archive must be expanded by default');
+const homeArchive = home.querySelector('#projectsWindow section.project-archive-shell[data-project-browser]');
+must(homeArchive, 'MichaelOS project App Store must remain permanently visible');
+must(!home.querySelector('#projectsWindow details.project-archive-shell'), 'MichaelOS must not hide the App Store behind a redundant disclosure');
 const homeCards = [...homeArchive.querySelectorAll('.project-showcase-grid > .project-showcase-card')];
 const homeTitles = homeCards.map((card) => clean(card.querySelector('h3')?.textContent));
 must(JSON.stringify(homeTitles) === JSON.stringify(expectedOrder), `MichaelOS rank order wrong: ${JSON.stringify(homeTitles)}`);

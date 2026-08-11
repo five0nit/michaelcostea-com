@@ -16,7 +16,7 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 must(document.title.includes('Head of Tech, AI & Systems'), 'homepage title must lead with current role');
 must(document.title.includes('Melbourne'), 'homepage title must include Melbourne');
 must((document.querySelector('meta[name="description"]')?.content || '').length <= 160, 'homepage description must stay within 160 characters');
-must(document.querySelector('link[href="styles.css?v=20260811-projects-popout-16"]'), 'homepage styles cache marker must expose the projects popout and 16-project archive');
+must(document.querySelector('link[href="styles.css?v=20260811-app-store-projects"]'), 'homepage styles cache marker must expose the project App Store');
 
 const hero = document.querySelector('#readerWindow .career-showcase-hero');
 must(hero, 'career showcase hero missing');
@@ -41,7 +41,7 @@ for (const card of featured) {
     must(cardText.includes(label), `${text('h3')} featured case missing ${label}`);
   }
 }
-must(text('#projectsWindow').includes('Ranked competence portfolio'), 'ranked competence portfolio label missing');
+must(text('#projectsWindow').includes('Project App Library'), 'project App Store label missing');
 must(!html.includes('href="https://github.com/five0nit/useaiforme"'), 'private UseAIForMe repo must not be promised publicly');
 must(!html.includes('href="https://telegram-office.michaelcostea.com/agenttown/"'), 'unhealthy Agent Office runtime must not be promised publicly');
 

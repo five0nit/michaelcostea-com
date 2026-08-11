@@ -85,7 +85,7 @@ for (const addition of additions) {
   if (!fs.existsSync(asset) || fs.statSync(asset).size < 10000) throw new Error(`${addition.title} proof asset missing or too small`);
 }
 
-if (!clean(home.querySelector('#projectsWindow .project-archive-shell > summary')?.textContent).includes('All 16 visible')) {
+if (!clean(home.querySelector('#projectsWindow .app-store-browser-head')?.textContent).includes('All visible')) {
   throw new Error('MichaelOS visible-project count is stale');
 }
 if (!clean(projects.querySelector('#ranked-projects-title')?.textContent).includes('16 systems')) {
