@@ -19,7 +19,7 @@ const titles = cards.map((card) => card.querySelector('h3')?.textContent.trim())
 must(!titles.includes('Tiny Menace'), 'Tiny Menace should be removed from the project showcase');
 must(!titles.includes('Automated Social Life & Brand Engine'), 'old Automated Social Life & Brand Engine card should be merged');
 must(!titles.includes('Social Content Engine'), 'separate Social Content Engine card should be merged');
-must(cards.length === 12, `expected 12 project showcase cards after social/brand merge, got ${cards.length}`);
+must(cards.length === 16, `expected 16 ranked project showcase cards, got ${cards.length}`);
 for (const card of cards) {
   const title = card.querySelector('h3')?.textContent.trim() || 'untitled project';
   const meta = card.querySelector('.project-meta');
@@ -36,7 +36,7 @@ const expectedFirst = [
   'Brief2Ship',
   'michaelcostea.com / MICHAEL OS 89',
   'Telegram Office / Agent Office',
-  'BillPilot / InvoicePipe',
+  'Myo Control / Myo Patchbay',
 ];
 for (let i = 0; i < expectedFirst.length; i += 1) {
   must(titles[i] === expectedFirst[i], `card ${i + 1} should be ${expectedFirst[i]}, got ${titles[i]}`);

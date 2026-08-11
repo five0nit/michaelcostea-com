@@ -16,7 +16,7 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 must(document.title.includes('Head of Tech, AI & Systems'), 'homepage title must lead with current role');
 must(document.title.includes('Melbourne'), 'homepage title must include Melbourne');
 must((document.querySelector('meta[name="description"]')?.content || '').length <= 160, 'homepage description must stay within 160 characters');
-must(document.querySelector('link[href="styles.css?v=20260811-ranked-projects-visible"]'), 'homepage styles cache marker must expose ranked project visibility');
+must(document.querySelector('link[href="styles.css?v=20260811-projects-popout-16"]'), 'homepage styles cache marker must expose the projects popout and 16-project archive');
 
 const hero = document.querySelector('#readerWindow .career-showcase-hero');
 must(hero, 'career showcase hero missing');

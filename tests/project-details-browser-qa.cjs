@@ -47,16 +47,16 @@ async function inspect(browser, label, width, height) {
 
   if (response?.status() !== 200) throw new Error(`${label} HTTP ${response?.status()}`);
   if (!checks.statusOpen) throw new Error(`${label} projects window did not open`);
-  if (checks.cardCount !== 12) throw new Error(`${label} expected 12 project cards, got ${checks.cardCount}`);
+  if (checks.cardCount !== 16) throw new Error(`${label} expected 16 project cards, got ${checks.cardCount}`);
   if (checks.titles.includes('Tiny Menace')) throw new Error(`${label} Tiny Menace still visible`);
   if (checks.titles.includes('Automated Social Life & Brand Engine') || checks.titles.includes('Social Content Engine')) throw new Error(`${label} old duplicate social project cards still visible`);
   if (!checks.titles.includes('Automated Social & Brand Content Engine')) throw new Error(`${label} merged social/brand project missing`);
-  if (checks.metaCount !== 12 || checks.scopeCount !== 12 || checks.stackCount !== 12) throw new Error(`${label} project detail/stack coverage incomplete`);
+  if (checks.metaCount !== 16 || checks.scopeCount !== 16 || checks.stackCount !== 16) throw new Error(`${label} project detail/stack coverage incomplete`);
   if (checks.stackLengths.some(length => length < 55)) throw new Error(`${label} one or more tech stacks are too thin`);
   if (checks.pageScrollWidth > checks.innerWidth + 1) throw new Error(`${label} horizontal page overflow`);
   if ((checks.winLeft ?? -1) < -1 || (checks.winRight ?? Infinity) > checks.innerWidth + 1) throw new Error(`${label} project window outside viewport`);
   if ((checks.bodyScrollWidth ?? Infinity) > (checks.bodyClientWidth ?? 0) + 1) throw new Error(`${label} project body horizontal overflow`);
-  if (!checks.stylesHref?.includes('20260811-ranked-projects-visible')) throw new Error(`${label} project CSS cache marker stale`);
+  if (!checks.stylesHref?.includes('20260811-projects-popout-16')) throw new Error(`${label} project CSS cache marker stale`);
   if (checks.brokenImages.length) throw new Error(`${label} broken images: ${checks.brokenImages.join(', ')}`);
   if (errors.length) throw new Error(`${label} browser errors: ${errors.join(' | ')}`);
 
