@@ -32,14 +32,14 @@ for (const card of cards) {
   must(stack.textContent.trim().length >= 55, `${title} Tech stack is too thin`);
 }
 const expectedFirst = [
-  'RebateSignal',
-  'Brief2Ship',
-  'michaelcostea.com / MICHAEL OS 89',
-  'Mini Michael',
+  'Mike Kindle OS',
+  'Mundus Vult Decipi',
   'Presence Action Broker',
-  'Windows Background Computer Use',
-  'Telegram Office / Agent Office',
   'Myo Control / Myo Patchbay',
+  'Windows Background Computer Use',
+  'LEGO Mario Hardware + Asset Mapping',
+  'AgentMesh / Multi-Agent Control Kit',
+  'Codex Account Usage + Auth Rotator',
 ];
 for (let i = 0; i < expectedFirst.length; i += 1) {
   must(titles[i] === expectedFirst[i], `card ${i + 1} should be ${expectedFirst[i]}, got ${titles[i]}`);

@@ -38,6 +38,7 @@ function auditBrowser(document, rootSelector, cardSelector, label) {
   must(cards.every(card => card.querySelector('.app-store-details:not([open]) > summary')), `${label} technical detail must be available but closed initially`);
   must(cards.every(card => card.querySelector('.app-store-primary-action, .archive-action a')), `${label} every app needs a visible launch/proof action`);
   must(cards.every(card => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank')), `${label} must not show ranking ribbons or rank attributes`);
+  must(cards.every(card => !card.hasAttribute('data-created') && !card.querySelector('time, .project-created-date')), `${label} must not display or encode creation dates on cards`);
 
   for (const [category, expected] of Object.entries(expectedCategories)) {
     const actual = cards.filter(card => card.dataset.projectCategory === category).length;

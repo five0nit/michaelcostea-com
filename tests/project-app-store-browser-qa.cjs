@@ -43,6 +43,8 @@ const cases = [
         detailsOpen: cards.filter((card) => card.querySelector('.app-store-details')?.open).length,
         rankRibbons: cards.filter((card) => card.querySelector('.project-rank')).length,
         rankAttributes: cards.filter((card) => card.hasAttribute('data-rank')).length,
+        creationDateMarkers: cards.filter((card) => card.hasAttribute('data-created') || card.querySelector('time, .project-created-date')).length,
+        titles: cards.map((card) => card.querySelector('h3')?.textContent.trim()),
         columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length,
         brokenImages: [...element.querySelectorAll('img')].filter((image) => image.complete && image.naturalWidth === 0).map((image) => image.src),
         overflow: document.documentElement.scrollWidth - innerWidth,
@@ -52,13 +54,15 @@ const cases = [
     if (initial.visible !== 19) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
     if (initial.detailsOpen !== 0) throw new Error(`${testCase.label} technical details must start closed`);
     if (initial.rankRibbons !== 0 || initial.rankAttributes !== 0) throw new Error(`${testCase.label} ranking labels remain`);
+    if (initial.creationDateMarkers !== 0) throw new Error(`${testCase.label} creation dates must remain hidden`);
+    if (initial.titles.slice(0, 3).join('|') !== 'Mike Kindle OS|Mundus Vult Decipi|Presence Action Broker' || initial.titles.at(-1) !== 'michaelcostea.com / MICHAEL OS 89') throw new Error(`${testCase.label} creation-date order wrong`);
     if (initial.columns !== testCase.columns) throw new Error(`${testCase.label} expected ${testCase.columns} columns, got ${initial.columns}`);
     if (initial.brokenImages.length) throw new Error(`${testCase.label} broken images: ${initial.brokenImages.join(', ')}`);
     if (initial.overflow > 1) throw new Error(`${testCase.label} horizontal overflow ${initial.overflow}px`);
 
     await root.locator('[data-project-filter="devices"]').click();
     const deviceTitles = await root.locator(`${testCase.card}:not([hidden]) h3`).allTextContents();
-    if (deviceTitles.join('|') !== 'Myo Control / Myo Patchbay|Mike Kindle OS|LEGO Mario Hardware + Asset Mapping') {
+    if (deviceTitles.join('|') !== 'Mike Kindle OS|Myo Control / Myo Patchbay|LEGO Mario Hardware + Asset Mapping') {
       throw new Error(`${testCase.label} device filter wrong: ${deviceTitles.join('|')}`);
     }
     if ((await root.locator('.project-browser-count').textContent()).trim() !== '3 projects') throw new Error(`${testCase.label} filtered count wrong`);
