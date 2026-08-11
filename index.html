@@ -302,9 +302,9 @@
         <article class="resume-doc build-doc">
           <div class="mini-heading lift-heading"><h2>What I Build</h2></div>
           <div class="repo-action-row build-projects-cta" aria-label="What I Build project showcase link">
-            <a class="build-projects-popout" href="projects/" aria-label="View all 16 projects">
-              <span class="build-projects-kicker">Project library · 16 systems</span>
-              <strong>View all 16 projects</strong>
+            <a class="build-projects-popout" href="projects/" aria-label="View all 19 projects">
+              <span class="build-projects-kicker">Project library · 19 systems</span>
+              <strong>View all 19 projects</strong>
               <small>Live products, owner-device engineering, reusable tools, agent systems, and inspectable delivery proof.</small>
             </a>
             <button class="ui-btn btn secondary" type="button" data-open="projectsWindow" onclick="openWindow('projectsWindow')">Open inside MichaelOS</button>
@@ -344,17 +344,17 @@
       <div class="win-body document-body">
         <article class="resume-doc projects-doc">
           <section class="project-archive-shell app-store-browser" data-project-browser>
-            <header class="app-store-browser-head"><div><span>Project App Library</span><h3>Explore 16 working systems</h3></div><strong>All 16 visible</strong></header>
+            <header class="app-store-browser-head"><div><span>Project App Library</span><h3>Explore 19 working systems</h3></div><strong>All 19 visible</strong></header>
             <div class="app-store-toolbar">
               <label class="app-store-search">Search projects<input class="project-browser-search" type="search" placeholder="Search apps, stacks or proof" autocomplete="off" /></label>
               <div class="app-store-filters" role="group" aria-label="Project categories">
-                <button type="button" data-project-filter="all" aria-pressed="true">All <span>16</span></button>
-                <button type="button" data-project-filter="products" aria-pressed="false">Products <span>5</span></button>
-                <button type="button" data-project-filter="agents" aria-pressed="false">Agents <span>6</span></button>
+                <button type="button" data-project-filter="all" aria-pressed="true">All <span>19</span></button>
+                <button type="button" data-project-filter="products" aria-pressed="false">Products <span>6</span></button>
+                <button type="button" data-project-filter="agents" aria-pressed="false">Agents <span>7</span></button>
                 <button type="button" data-project-filter="devices" aria-pressed="false">Devices <span>3</span></button>
-                <button type="button" data-project-filter="tools" aria-pressed="false">Tools <span>2</span></button>
+                <button type="button" data-project-filter="tools" aria-pressed="false">Tools <span>3</span></button>
               </div>
-              <span class="project-browser-count" aria-live="polite">16 projects</span>
+              <span class="project-browser-count" aria-live="polite">19 projects</span>
             </div>
             <div class="project-archive-content">
 
@@ -388,6 +388,18 @@
                 <div class="repo-action-row app-store-actions"><a class="ui-btn btn app-store-primary-action" href="https://michaelcostea.com" target="_blank" rel="noopener">Open site</a><a class="ui-btn btn secondary" href="assets/project-showcase/michael-os-89.webp" target="_blank" rel="noopener">Open printscreen</a><a class="ui-btn btn secondary" href="https://github.com/five0nit/michaelcostea-com" target="_blank" rel="noopener">Open repo</a></div>
                 <span class="project-tags">portfolio · GitHub Pages · MICHAEL OS 89 · proof hub</span>
               </div>
+            </article>
+            <article class="project-showcase-card feature-project" data-project="mini michael" data-project-category="products">
+              <figure><img src="assets/project-showcase/mini-michael.webp?v=20260811-promotion-batch" alt="Live Mini Michael image-library interface with semantic search and catalog status" loading="lazy" /></figure>
+              <div class="project-card-body"><h3>Mini Michael</h3><span class="app-store-category">Product</span><p class="app-store-summary">Live, provenance-aware digital twin and media library with browser, API, and CLI surfaces for retrieving grounded Michael context, reusable visuals, confidence, feedback, and audit history.</p><details class="app-store-details"><summary>Technical details</summary><div class="app-store-detail-body"><ul><li>Public Mini Michael exposes 629 current images with semantic retrieval and catalog state; the broader system preserves evidence and uncertainty instead of inventing context.</li><li>Feedback, provenance, confidence, and audit records make corrections durable across interfaces.</li></ul><div class="project-meta"><p class="project-scope"><b>Delivery scope:</b><span>Source ingestion, profile and image-library interfaces, semantic retrieval, API/CLI access, confidence and provenance controls, feedback capture, audit history, Firebase deployment, and public portfolio mirror.</span></p><p class="project-stack"><b>Tech stack:</b><span>Python 3.12 · SQLite · semantic search · HTML/CSS/JavaScript · JSON APIs · CLI tooling · Firebase Hosting · deterministic data validation</span></p></div></div></details><div class="project-actions app-store-actions"><a class="ui-btn btn app-store-primary-action" href="https://minimemichael.web.app" target="_blank" rel="noopener">Open Mini Michael↗</a><a class="ui-btn btn secondary" href="assets/project-showcase/mini-michael.webp?v=20260811-promotion-batch" target="_blank" rel="noopener">Open interface proof↗</a></div><span class="project-tags">digital twin · semantic retrieval · provenance · feedback</span></div>
+            </article>
+            <article class="project-showcase-card feature-project" data-project="presence action broker" data-project-category="agents">
+              <figure><img src="assets/project-showcase/presence-action-broker.webp?v=20260811-promotion-batch" alt="Public-safe Presence Action Broker permission and receipt architecture proof" loading="lazy" /></figure>
+              <div class="project-card-body"><h3>Presence Action Broker</h3><span class="app-store-category">Agents & automation</span><p class="app-store-summary">Permissioned action broker for risky automation: allowlisted requests, explicit risk tiers, one-time presence challenges, replay-safe execution, and privacy-conscious receipts.</p><details class="app-store-details"><summary>Technical details</summary><div class="app-store-detail-body"><ul><li>Denies by default, binds approval to one bounded action, and rejects expired or replayed requests.</li><li>Phone presence relay and CLI workflows keep higher-risk approval visible without turning the phone into a remote shell.</li></ul><div class="project-meta"><p class="project-scope"><b>Delivery scope:</b><span>Request broker, action allowlists, risk policy, one-time presence challenges, signed phone relay, replay protection, bounded execution, status lookup, privacy-safe receipts, and safe demo/action adapters.</span></p><p class="project-stack"><b>Tech stack:</b><span>Python 3.11 · HMAC-SHA256 · JSON/JSONL state · CLI and loopback relay · pytest · fail-closed action adapters</span></p></div></div></details><div class="project-actions app-store-actions"><a class="ui-btn btn app-store-primary-action" href="assets/project-showcase/presence-action-broker.webp?v=20260811-promotion-batch" target="_blank" rel="noopener">Open architecture proof↗</a></div><span class="project-tags">permissioned actions · risk gates · replay protection · receipts</span></div>
+            </article>
+            <article class="project-showcase-card feature-project" data-project="windows background computer use" data-project-category="tools">
+              <figure><img src="assets/project-showcase/windows-background-computer-use.webp?v=20260811-promotion-batch" alt="Windows and WSL background computer-use verified control-path diagram" loading="lazy" /></figure>
+              <div class="project-card-body"><h3>Windows Background Computer Use</h3><span class="app-store-category">Operator tool</span><p class="app-store-summary">Hermes Windows/WSL computer-use integration for exact-window capture and UIAutomation input in the background: no cursor movement, no focus steal by default, and verified readback.</p><details class="app-store-details"><summary>Technical details</summary><div class="app-store-detail-body"><ul><li>WSL auto-detects and launches the active Windows user's cua-driver process so UIAutomation and capture run inside the real desktop session.</li><li>Background-first delivery escalates only after structured no-op evidence; each action can recapture the target for verified state readback.</li></ul><div class="project-meta"><p class="project-scope"><b>Delivery scope:</b><span>WSL driver discovery, exact-window routing, accessibility snapshots, background input delivery, capture/readback verification, escalation signals, structured health diagnostics, provider-neutral image results, tests, and public documentation.</span></p><p class="project-stack"><b>Tech stack:</b><span>Python · MCP stdio · cua-driver · Windows UIAutomation · D3D11 capture · SendInput/PostMessage · WSL interop · pytest</span></p></div></div></details><div class="project-actions app-store-actions"><a class="ui-btn btn app-store-primary-action" href="https://hermes-agent.nousresearch.com/docs/user-guide/features/computer-use" target="_blank" rel="noopener">Open public docs↗</a><a class="ui-btn btn secondary" href="assets/project-showcase/windows-background-computer-use.webp?v=20260811-promotion-batch" target="_blank" rel="noopener">Open control-path proof↗</a></div><span class="project-tags">UIAutomation · WSL · no focus steal · verified readback</span></div>
             </article>
             <article class="project-showcase-card feature-project" data-project="telegram office / agent office" data-project-category="agents">
               <figure><img src="assets/project-showcase/telegram-office.webp?v=20260701-showcase" alt="Screenshot of the Telegram Office pixel agent workspace" loading="lazy" /></figure>
@@ -439,10 +451,10 @@
               <figure><img src="assets/project-showcase/agentmesh-control-kit.webp?v=20260701-showcase" alt="AgentMesh local multi-agent control kit diagram" loading="lazy" /></figure>
               <div class="project-card-body">
                 <h3>AgentMesh / Multi-Agent Control Kit</h3><span class="app-store-category">Agents & automation</span>
-                <p class="app-store-summary">Local-first coordination package for teams of AI agents: shared mailboxes, relay demos, handoffs, visible receipts, bootstrap docs, security notes, and public-alpha packaging.</p>
-                <details class="app-store-details"><summary>Technical details</summary><div class="app-store-detail-body"><ul><li>Built to make overnight/local agents visible instead of silent.</li><li>Includes architecture, bootstrap flow, install docs, examples, and release notes.</li><li>Local package path: <code>automation/multi-agent-control-kit</code>.</li></ul><div class="project-meta"><p class="project-scope"><b>Delivery scope:</b><span>Machine and agent discovery, transport registries, six local transports, append-only project and activity state, relay/mailbox dispatch, bootstrap tooling, security notes, and approval-gated system changes.</span></p><p class="project-stack"><b>Tech stack:</b><span>Python CLI · JSONL state stores · shell/bootstrap scripts · Python packaging and wheel builds · pytest · Hermes/OpenClaw/Claude Code/Codex local transports</span></p></div></div></details>
+                <p class="app-store-summary">Local-first coordination package for teams of AI agents: shared mailboxes, handoffs, visible receipts, and a Control Radar for NOW, NEXT, BLOCKED, STALE, and UNKNOWN project state.</p>
+                <details class="app-store-details"><summary>Technical details</summary><div class="app-store-detail-body"><ul><li>Built to make overnight/local agents visible instead of silent.</li><li>Includes architecture, bootstrap flow, install docs, examples, and release notes.</li><li>Local package path: <code>automation/multi-agent-control-kit</code>.</li></ul><div class="project-meta"><p class="project-scope"><b>Delivery scope:</b><span>Machine and agent discovery, transport registries, six local transports, append-only project/activity state, relay and mailbox dispatch, plus Control Radar collectors, exact next gates, staleness warnings, and provenance drill-downs.</span></p><p class="project-stack"><b>Tech stack:</b><span>Python CLI · JSONL and SQLite state · local APIs · HTML/CSS/JavaScript control surface · shell/bootstrap scripts · pytest · Playwright · Hermes/OpenClaw/Claude Code/Codex local transports</span></p></div></div></details>
                 <div class="repo-action-row app-store-actions"><span class="project-status private">Local-first kit</span><a class="ui-btn btn app-store-primary-action" href="assets/project-showcase/agentmesh-control-kit.webp" target="_blank" rel="noopener">Open diagram</a></div>
-                <span class="project-tags">multi-agent control · mailbox · handoffs · receipts</span>
+                <span class="project-tags">multi-agent control · Control Radar · mailbox · handoffs · receipts</span>
               </div>
             </article>
             <article class="project-showcase-card" data-project="useaiforme.com" data-project-category="products">

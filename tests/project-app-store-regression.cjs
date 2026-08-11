@@ -9,10 +9,10 @@ const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
 const must = (condition, message) => { if (!condition) throw new Error(message); };
 
 const expectedCategories = {
-  products: 5,
-  agents: 6,
+  products: 6,
+  agents: 7,
   devices: 3,
-  tools: 2,
+  tools: 3,
 };
 
 function auditBrowser(document, rootSelector, cardSelector, label) {
@@ -28,7 +28,7 @@ function auditBrowser(document, rootSelector, cardSelector, label) {
   must(buttons.map(button => button.dataset.projectFilter).join('|') === 'all|products|agents|devices|tools', `${label} category order wrong`);
 
   const cards = [...browser.querySelectorAll(cardSelector)];
-  must(cards.length === 16, `${label} must expose 16 compact apps`);
+  must(cards.length === 19, `${label} must expose 19 compact apps`);
   must(cards.every(card => !card.hidden), `${label} apps must be visible before filtering`);
   must(cards.every(card => card.dataset.project && card.dataset.projectCategory), `${label} cards need project/category data`);
   must(cards.every(card => card.querySelector('figure')), `${label} every app needs visual artwork or placeholder`);
@@ -44,7 +44,12 @@ function auditBrowser(document, rootSelector, cardSelector, label) {
     must(actual === expected, `${label} ${category} expected ${expected}, got ${actual}`);
   }
 
-  must(clean(browser.querySelector('.project-browser-count')?.textContent).includes('16 projects'), `${label} initial count must say 16 projects`);
+  must(clean(browser.querySelector('.project-browser-count')?.textContent).includes('19 projects'), `${label} initial count must say 19 projects`);
+
+  for (const title of ['Mini Michael', 'Presence Action Broker', 'Windows Background Computer Use']) {
+    must(cards.some(card => clean(card.querySelector('h3')?.textContent) === title), `${label} missing ${title}`);
+  }
+  must(clean(browser.querySelector('[data-project="agentmesh / multi-agent control kit"]')?.textContent).includes('Control Radar'), `${label} AgentMesh must include Control Radar proof`);
 }
 
 const home = new JSDOM(read('index.html')).window.document;

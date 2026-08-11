@@ -12,6 +12,9 @@ const expectedOrder = [
   'RebateSignal',
   'Brief2Ship',
   'michaelcostea.com / MICHAEL OS 89',
+  'Mini Michael',
+  'Presence Action Broker',
+  'Windows Background Computer Use',
   'Telegram Office / Agent Office',
   'Myo Control / Myo Patchbay',
   'Mundus Vult Decipi',
@@ -34,8 +37,8 @@ must(rankedSection, 'crawlable projects page must expose a permanent ranked-proj
 must(!projects.querySelector('details.full-archive'), 'crawlable project inventory must not remain behind details disclosure');
 must(projects.querySelector('.page-hero')?.compareDocumentPosition(rankedSection) & 4, 'ranked projects must follow the hero');
 must(rankedSection.compareDocumentPosition(projects.querySelector('.project-details')) & 4, 'project library must appear before supporting career cases');
-must(clean(projects.querySelector('#projects-page-title')?.textContent).includes('16 working systems'), 'project App Store count must be explicit');
-must(clean(rankedSection.querySelector('#ranked-projects-title')?.textContent) === '16 working systems', 'project library must use a neutral accessible heading');
+must(clean(projects.querySelector('#projects-page-title')?.textContent).includes('19 working systems'), 'project App Store count must be explicit');
+must(clean(rankedSection.querySelector('#ranked-projects-title')?.textContent) === '19 working systems', 'project library must use a neutral accessible heading');
 
 const pageCards = [...rankedSection.querySelectorAll('.detailed-archive > .project-archive-card')];
 const pageTitles = pageCards.map((card) => clean(card.querySelector('h3')?.textContent));
