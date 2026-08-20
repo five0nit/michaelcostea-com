@@ -89,8 +89,8 @@ async function auditViewport(browser, name, viewport, mobile) {
       bodyOverflow: document.documentElement.scrollWidth > innerWidth,
     };
   });
-  must(home.title.includes('useful AI, weird projects & old devices'), `${name}: title lacks personal workshop framing`);
-  must(home.h1.includes('MICHAEL COSTEA') && home.h1.includes('I MAKE USEFUL THINGS. SOME GET WEIRD.'), `${name}: personal workshop H1 missing`);
+  must(home.title.includes('AI employees for real businesses'), `${name}: title lacks AI-employee positioning`);
+  must(home.h1.includes('MICHAEL COSTEA') && home.h1.includes('I BUILD AI EMPLOYEES TO RUN THE BUSINESS WITH YOU.'), `${name}: AI-employee H1 missing`);
   must(home.h1Visible && home.interestsVisible, `${name}: H1/interests not in first viewport`);
   must(home.primaryActionCount === 3 && home.actionsVisible.every((item) => item.visible), `${name}: all three primary actions must be in first viewport`);
   must(home.heroProductCount === 0 && home.resourcesProductCount >= 2, `${name}: product hierarchy incorrect`);
@@ -160,7 +160,7 @@ async function auditViewport(browser, name, viewport, mobile) {
       desktopInert: document.querySelector('.desktop-icons')?.hasAttribute('inert') || false,
     }));
     must(closed.hash === '' || closed.hash === '#home', `mobile: close did not return home (${closed.hash})`);
-    must(closed.activeText === 'OPEN PROJECT SHELF', `mobile: close did not restore opener (${closed.activeText})`);
+    must(closed.activeText === 'SEE WORKING SYSTEMS', `mobile: close did not restore opener (${closed.activeText})`);
     must(!closed.desktopInert, 'mobile: background remained inert after close');
 
     await page.goto(`${baseUrl}/#projects`, { waitUntil: 'networkidle' });

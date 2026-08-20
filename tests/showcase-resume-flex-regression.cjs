@@ -13,19 +13,19 @@ const { document } = dom.window;
 const text = (selector) => (document.querySelector(selector)?.textContent || '').replace(/\s+/g, ' ').trim();
 const must = (condition, message) => { if (!condition) throw new Error(message); };
 
-must(document.title.includes('useful AI, weird projects & old devices'), 'homepage title must lead with personal workshop framing');
+must(document.title.includes('AI employees for real businesses'), 'homepage title must lead with agent-operations framing');
 must((document.querySelector('meta[name="description"]')?.content || '').length <= 160, 'homepage description must stay within 160 characters');
-must(document.querySelector('link[href="styles.css?v=20260820-weird-workshop"]'), 'homepage stylesheet cache marker must expose the weird-workshop release');
+must(document.querySelector('link[href="styles.css?v=20260820-agent-operations"]'), 'homepage stylesheet cache marker must expose the agent-operations release');
 
 const hero = document.querySelector('#readerWindow .career-showcase-hero');
 must(hero, 'career showcase hero missing');
 const heroText = text('#readerWindow .career-showcase-hero');
-for (const phrase of ['MICHAEL COSTEA', 'I MAKE USEFUL THINGS. SOME GET WEIRD.', 'ELECTRICIAN-TURNED-TECH OPERATOR', 'Plain English. No hype. One useful first step.']) {
+for (const phrase of ['MICHAEL COSTEA', 'I BUILD AI EMPLOYEES TO RUN THE BUSINESS WITH YOU.', 'AI SYSTEMS EXPERT', 'designs and integrates multi-agent workforces', 'role-based AI employees', 'approval limits', 'proof of work']) {
   must(heroText.toUpperCase().includes(phrase.toUpperCase()), `career hero missing ${phrase}`);
 }
 const actions = [...hero.querySelectorAll('.career-primary-actions a, .career-primary-actions button')];
 must(actions.length === 3, `career hero must have exactly three primary actions, got ${actions.length}`);
-for (const phrase of ['OPEN PROJECT SHELF', 'GET AI HELP', 'MEET MICHAEL']) {
+for (const phrase of ['OPEN AI EMPLOYEE STACK', 'CONFIGURE MY AI TEAM', 'SEE WORKING SYSTEMS']) {
   must(actions.some(action => action.textContent.replace(/\s+/g, ' ').trim().toUpperCase().includes(phrase)), `career action missing ${phrase}`);
 }
 for (const metric of ['795', 'A$1.97M', '251']) must(!heroText.includes(metric), `personal homepage hero retains metric ${metric}`);

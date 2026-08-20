@@ -54,7 +54,7 @@ const homeCards = [...homeArchive.querySelectorAll('.project-showcase-grid > .pr
 const homeTitles = homeCards.map((card) => clean(card.querySelector('h3')?.textContent));
 must(JSON.stringify(homeTitles) === JSON.stringify(expectedOrder), `MichaelOS project order wrong: ${JSON.stringify(homeTitles)}`);
 must(homeCards.every((card) => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank')), 'MichaelOS cards must not expose rank attributes or rank ribbons');
-must(clean(home.querySelector('#readerWindow .career-primary-actions')?.textContent).includes('OPEN PROJECT SHELF'), 'homepage hero must lead visitors to the full project library');
+must(clean(home.querySelector('#readerWindow .career-primary-actions')?.textContent).includes('SEE WORKING SYSTEMS'), 'homepage hero must preserve a route to the full project library');
 must(home.querySelector('#projectsWindow a[href="billpilot.html"]'), 'BillPilot living project page must be linked from MichaelOS');
 
 const billpilot = new JSDOM(read('billpilot.html')).window.document;

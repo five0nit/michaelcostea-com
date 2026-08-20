@@ -32,7 +32,7 @@ for (const page of pages) {
   if (!buildWindow) throw new Error(`${page}: missing What I Build window`);
   const buildText = buildWindow.textContent.replace(/\s+/g, ' ').trim();
   if (page === 'index.html') {
-    assertIncludes(`${page}: build positioning`, buildText, 'practical AI tools, connected business systems, and slightly strange side projects');
+    assertIncludes(`${page}: build positioning`, buildText, 'configure AI employees around real business functions');
     assertIncludes(`${page}: build expertise`, buildText, 'Staff become AI-capable operators');
   } else {
     assertIncludes(`${page}: build positioning`, buildText, 'environment that enables the business and the people inside it to become better with AI');

@@ -23,10 +23,10 @@ const operatingCaseText=clean(operatingCase.body.textContent);
 const printable=doc('assets/downloads/michael-costea-resume-2026.html');
 const printableText=clean(printable.body.textContent);
 
-for(const phrase of ['day job, briefly','all electric homes','people see what needs attention','fewer things vanish between tools']) must(clean(index.querySelector('#readerWindow .career-operating-focus')?.textContent).toLowerCase().includes(phrase),`secondary day-job summary missing: ${phrase}`);
+for(const phrase of ['built in real operations','all electric homes','sales','operations','finance','human approvals','receipts']) must(clean(index.querySelector('#readerWindow .career-operating-focus')?.textContent).toLowerCase().includes(phrase),`real-operations summary missing: ${phrase}`);
 for(const forbidden of ['795','A$1.97M','251','EVIDENCE AS AT EARLY AUGUST 2026']) must(!hero.includes(forbidden),`hero retains metric-led proof: ${forbidden}`);
-for(const phrase of ['agents, apps and websites','old hardware new jobs','plain-English AI help without the theatre']) must(heroSummary.includes(phrase),`first-screen workshop summary missing: ${phrase}`);
-must(index.querySelectorAll('#readerWindow .career-interest-grid article').length===3,'homepage must show exactly three personal interest cards');
+for(const phrase of ['role-based AI employees','sales, operations, finance and support','approval limits','escalation rules','proof of work']) must(heroSummary.includes(phrase),`first-screen agent-operations summary missing: ${phrase}`);
+must(index.querySelectorAll('#readerWindow .career-interest-grid article').length===3,'homepage must show exactly three agent-system cards');
 for(const phrase of ['AI Enablement Lead','AI Execution & Adoption Lead','Business Systems & Automation Lead','AI Transformation Manager']) must(inlineResume.includes(phrase),`inline resume missing AI-centric target: ${phrase}`);
 for(const phrase of ['84,400+','5,955','795','A$1.97M','251','735']) must(inlineResume.includes(phrase),`inline resume missing AEH evidence: ${phrase}`);
 must(index.querySelectorAll('#resumeWindow .career-evidence-grid article').length===3,'inline resume must show three primary outcome cards');

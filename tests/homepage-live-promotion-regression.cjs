@@ -39,12 +39,12 @@ for (const selector of ['#readerWindow', '#resumeWindow', '#projectsWindow', '#a
 const homepageText = text('body');
 for (const phrase of [
   'MICHAEL COSTEA',
-  'I MAKE USEFUL THINGS. SOME GET WEIRD.',
-  'Plain English. No hype. One useful first step.',
-  'OPEN PROJECT SHELF',
+  'I BUILD AI EMPLOYEES TO RUN THE BUSINESS WITH YOU.',
+  'role-based AI employees for sales, operations, finance and support',
+  'OPEN AI EMPLOYEE STACK',
   'Projects - Things I’ve Been Making',
   'Resume.doc - Michael Costea',
-  'AI Agents - How My Setup Works',
+  'AI Employees - Agent Operations Stack',
 ]) {
   if (!homepageText.includes(phrase)) throw new Error(`live homepage missing preview content: ${phrase}`);
 }
