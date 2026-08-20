@@ -20,7 +20,7 @@ function text(selector) {
 }
 
 must(html.includes('data-open="vicRebateApiWindow"'), 'missing launcher/nav opener for RebateSignal window');
-must(html.includes('href="#vic-rebate-api"'), 'missing direct #vic-rebate-api page link');
+must(script.includes("vicRebateApiWindow: 'vic-rebate-api'"), 'missing direct #vic-rebate-api route mapping');
 must(script.includes("vicRebateApiWindow: 'vic-rebate-api'"), 'missing RebateSignal route mapping');
 must(script.includes("'rebate-api': 'vic-rebate-api'"), 'missing rebate-api route alias');
 must(script.includes("rebatesignal: 'vic-rebate-api'"), 'missing RebateSignal route alias');

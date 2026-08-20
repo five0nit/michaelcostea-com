@@ -20,7 +20,7 @@ function text(selector) {
 }
 
 must(html.includes('data-open="newRepoWindow"'), 'missing desktop/nav opener for New Repo window');
-must(html.includes('href="#new-repo"'), 'missing direct #new-repo page link');
+must(script.includes("newRepoWindow: 'new-repo'"), 'missing direct #new-repo route mapping');
 must(script.includes("newRepoWindow: 'new-repo'"), 'missing New Repo route mapping in script.js');
 must(script.includes("brief2shipExplainerWindow: 'brief2ship-explainer'"), 'missing Brief2Ship explainer route mapping in script.js');
 

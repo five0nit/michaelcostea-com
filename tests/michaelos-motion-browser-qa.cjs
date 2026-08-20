@@ -196,12 +196,14 @@ async function stubAnalytics(context){
     report.desktop.afterCaseClose = await page.evaluate(()=>[...document.querySelectorAll('.win-window.open.active')].map(win=>win.id));
     must(report.desktop.afterCaseClose.length === 1 && report.desktop.afterCaseClose[0] === 'projectsWindow', `close did not promote underlying window: ${JSON.stringify(report.desktop.afterCaseClose)}`);
     const archive = page.locator('#projectsWindow .project-archive-shell');
-    await archive.locator('summary').click();
-    await page.waitForFunction(()=>document.querySelector('#projectsWindow .project-archive-shell')?.open === false);
-    await page.waitForTimeout(230);
-    await archive.locator('summary').click();
-    await page.waitForFunction(()=>document.querySelector('#projectsWindow .project-archive-shell')?.open === true);
-    report.desktop.archive = { openClose:true };
+    must(await archive.count() === 1, 'permanent project shelf missing');
+    const firstDetails = archive.locator('.app-store-details').first();
+    await firstDetails.locator('summary').click();
+    await page.waitForFunction(()=>document.querySelector('#projectsWindow .app-store-details')?.open === true);
+    await page.waitForTimeout(120);
+    await firstDetails.locator('summary').click();
+    await page.waitForFunction(()=>document.querySelector('#projectsWindow .app-store-details')?.open === false);
+    report.desktop.archive = { permanent:true, firstDetailsToggle:true };
 
     await page.screenshot({ path:path.join(out,'desktop-motion.png'), fullPage:false });
     report.desktop.errors = errors;

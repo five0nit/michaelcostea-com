@@ -673,6 +673,127 @@ main#main-content > .contact-section {
   color: #111;
 }
 
+/* Keep the project shelf inside MICHAEL OS. career.css owns the card layout;
+   these later, route-scoped rules own the chrome and deliberately remove the
+   rounded marketplace treatment. */
+body[data-page="projects"] .app-store-toolbar {
+  padding: 10px;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  border-radius: 0;
+  background: #c0c0c0;
+  box-shadow: none;
+}
+
+body[data-page="projects"] .app-store-search input {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body[data-page="projects"] .app-store-search input:focus {
+  border-color: #000080 #fff #fff #000080;
+  outline: 1px dotted #000;
+  outline-offset: -5px;
+  box-shadow: none;
+}
+
+body[data-page="projects"] .app-store-filters button {
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  border-radius: 0;
+  background: #d4d0c8;
+  color: #111;
+  box-shadow: none;
+}
+
+body[data-page="projects"] .app-store-filters button[aria-pressed="true"] {
+  border-top-color: #404040;
+  border-left-color: #404040;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+  background: #000080;
+  color: #fff;
+  box-shadow: none;
+}
+
+body[data-page="projects"] .detailed-archive {
+  gap: 8px;
+}
+
+body[data-page="projects"] .detailed-archive .project-archive-card {
+  padding: 8px;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  border-radius: 0;
+  background: #d4d0c8;
+  box-shadow: none;
+}
+
+body[data-page="projects"] .detailed-archive figure {
+  border-top: 2px solid #404040;
+  border-left: 2px solid #404040;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+}
+
+body[data-page="projects"] .detailed-archive .archive-copy {
+  margin: 0;
+  padding: 12px 8px 9px;
+  background: #fffef7;
+}
+
+body[data-page="projects"] .app-store-category {
+  border: 1px solid #000080;
+  border-radius: 0;
+  background: #e8f4ff;
+}
+
+body[data-page="projects"] .app-store-detail-body p {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  border-radius: 0;
+  background: #fff;
+}
+
+body[data-page="projects"] .detailed-archive .archive-action {
+  margin: 0;
+  padding: 0 8px 8px;
+  background: #fffef7;
+}
+
+body[data-page="projects"] .detailed-archive .archive-action a {
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  border-radius: 0;
+  background: #000080;
+  color: #fff;
+  box-shadow: none;
+}
+
+body[data-page="projects"] .detailed-archive .archive-action a + a {
+  background: #d4d0c8;
+  color: #000080;
+}
+
+body[data-page="projects"] .filter-empty {
+  border-radius: 0;
+  box-shadow: none;
+}
+
 /* Selected work index */
 main#main-content > .resume-case-list {
   display: grid;

@@ -107,10 +107,10 @@ for (const addition of additions) {
   if (!fs.existsSync(asset) || fs.statSync(asset).size < 10000) throw new Error(`${addition.title} proof asset missing or too small`);
 }
 
-if (!clean(home.querySelector('#projectsWindow .app-store-browser-head')?.textContent).includes('All 19 visible')) {
+if (!clean(home.querySelector('#projectsWindow .app-store-browser-head')?.textContent).includes('All 19 here')) {
   throw new Error('MichaelOS visible-project count is stale');
 }
-if (!clean(projects.querySelector('#ranked-projects-title')?.textContent).includes('19 working systems')) {
+if (!clean(projects.querySelector('#ranked-projects-title')?.textContent).includes('Michael’s project shelf')) {
   throw new Error('crawlable visible-project count is stale');
 }
 

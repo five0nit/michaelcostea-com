@@ -56,7 +56,7 @@ async function inspect(browser, label, width, height) {
   if (checks.pageScrollWidth > checks.innerWidth + 1) throw new Error(`${label} horizontal page overflow`);
   if ((checks.winLeft ?? -1) < -1 || (checks.winRight ?? Infinity) > checks.innerWidth + 1) throw new Error(`${label} project window outside viewport`);
   if ((checks.bodyScrollWidth ?? Infinity) > (checks.bodyClientWidth ?? 0) + 1) throw new Error(`${label} project body horizontal overflow`);
-  if (!checks.stylesHref?.includes('20260811-project-library-no-ranks')) throw new Error(`${label} project CSS cache marker stale`);
+  if (!checks.stylesHref?.includes('20260820-weird-workshop')) throw new Error(`${label} project CSS cache marker stale`);
   if (checks.brokenImages.length) throw new Error(`${label} broken images: ${checks.brokenImages.join(', ')}`);
   if (errors.length) throw new Error(`${label} browser errors: ${errors.join(' | ')}`);
 

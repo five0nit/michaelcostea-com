@@ -23,10 +23,10 @@ const operatingCaseText=clean(operatingCase.body.textContent);
 const printable=doc('assets/downloads/michael-costea-resume-2026.html');
 const printableText=clean(printable.body.textContent);
 
-for(const phrase of ['795','A$1.97M','251','associated','modelled']) must(hero.includes(phrase),`hero missing qualified AEH proof: ${phrase}`);
-for(const phrase of ['EVIDENCE AS AT EARLY AUGUST 2026','since late March 2026']) must(hero.includes(phrase),`hero missing AEH evidence period: ${phrase}`);
-for(const phrase of ['agent harnesses','receipt-backed automation','governance','staff training','adoption','operator handover']) must(heroSummary.includes(phrase),`first-screen delivery chain missing: ${phrase}`);
-must(index.querySelectorAll('#readerWindow .career-proof-grid article').length===3,'homepage must retain exactly three primary proof cards');
+for(const phrase of ['day job, briefly','all electric homes','people see what needs attention','fewer things vanish between tools']) must(clean(index.querySelector('#readerWindow .career-operating-focus')?.textContent).toLowerCase().includes(phrase),`secondary day-job summary missing: ${phrase}`);
+for(const forbidden of ['795','A$1.97M','251','EVIDENCE AS AT EARLY AUGUST 2026']) must(!hero.includes(forbidden),`hero retains metric-led proof: ${forbidden}`);
+for(const phrase of ['agents, apps and websites','old hardware new jobs','plain-English AI help without the theatre']) must(heroSummary.includes(phrase),`first-screen workshop summary missing: ${phrase}`);
+must(index.querySelectorAll('#readerWindow .career-interest-grid article').length===3,'homepage must show exactly three personal interest cards');
 for(const phrase of ['AI Enablement Lead','AI Execution & Adoption Lead','Business Systems & Automation Lead','AI Transformation Manager']) must(inlineResume.includes(phrase),`inline resume missing AI-centric target: ${phrase}`);
 for(const phrase of ['84,400+','5,955','795','A$1.97M','251','735']) must(inlineResume.includes(phrase),`inline resume missing AEH evidence: ${phrase}`);
 must(index.querySelectorAll('#resumeWindow .career-evidence-grid article').length===3,'inline resume must show three primary outcome cards');
@@ -46,10 +46,10 @@ must(JSON.stringify([...printable.querySelectorAll('.proof b')].map(node=>clean(
 for(const phrase of ['not independently reconciled issued or paid invoices or cash collected','Cumulative and annualised lenses are not additive']) must(printableText.includes(phrase),`printable resume missing explicit evidence boundary: ${phrase}`);
 
 for(const surface of [projectsText,operatingCaseText]){
-  for(const phrase of ['795','A$1.97M','251']) must(surface.includes(phrase),`business operating-layer surface missing ${phrase}`);
-  must(surface.includes('not claimed as AI-attributed revenue')||surface.includes('not AI-attributed revenue'), 'business operating-layer surface missing pipeline causation caveat');
+  for(const phrase of ['less double-handling','clearer ownership','faster follow-up']) must(surface.toLowerCase().includes(phrase),`business operating-layer surface missing qualitative impact: ${phrase}`);
+  for(const metric of ['795','A$1.97M','251','84,400','A$47.8k']) must(!surface.includes(metric),`business operating-layer surface retains metric-led proof: ${metric}`);
 }
-for(const phrase of ['84,400 recorded events—not manual tasks saved','459 HTTP-successful Xero invoice actions','nominal invoice-action throughput','735 hours/year']) must(operatingCaseText.includes(phrase),`deep operating case missing evidence boundary: ${phrase}`);
+for(const phrase of ['Day-to-day impact','Operational visibility','Adoption and handover','calmer operations']) must(operatingCaseText.includes(phrase),`deep operating case missing work-story framing: ${phrase}`);
 
 for(const stale of ['4.3–4.5B','internal monthly harness throughput context']){
   must(!inlineResume.includes(stale),`inline resume retains stale token metric: ${stale}`);

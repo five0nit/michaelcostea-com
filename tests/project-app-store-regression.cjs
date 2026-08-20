@@ -65,6 +65,7 @@ must(!projects.title.includes('Ranked'), 'project page title must use neutral Ap
 auditBrowser(projects, 'section[data-project-browser]', '.detailed-archive > .project-archive-card', 'crawlable projects');
 must(projects.querySelector('[data-project="repo-first starter + cursor covenant"] .app-store-placeholder'), 'crawlable Repo-First app needs placeholder artwork');
 must(projects.querySelector('script[src="project-browser.js?v=20260811-app-store-projects"]'), 'crawlable app browser script missing');
+must(projects.querySelector('link[href="assets/css/michaelos-docs.css?v=20260820-project-workshop"]'), 'project page must load the hard-edged workshop stylesheet release');
 
 const js = read('project-browser.js');
 for (const marker of ['data-project-browser', 'project-browser-search', 'data-project-filter', 'aria-pressed', 'project-browser-count']) {
@@ -88,5 +89,13 @@ for (const marker of [
   '@media (max-width: 720px)',
 ]) must(pageCss.includes(marker), `crawlable App Store CSS missing ${marker}`);
 must(!pageCss.includes('.project-rank{') && !pageCss.includes('.project-rank {'), 'crawlable rank ribbon CSS must be removed');
+
+const docsCss = read('assets/css/michaelos-docs.css');
+for (const [label, pattern] of [
+  ['toolbar', /body\[data-page="projects"\] \.app-store-toolbar\s*\{[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/s],
+  ['filter buttons', /body\[data-page="projects"\] \.app-store-filters button\s*\{[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/s],
+  ['project cards', /body\[data-page="projects"\] \.detailed-archive \.project-archive-card\s*\{[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/s],
+  ['project actions', /body\[data-page="projects"\] \.detailed-archive \.archive-action a\s*\{[^}]*border-radius:\s*0[^}]*box-shadow:\s*none/s],
+]) must(pattern.test(docsCss), `MICHAEL OS project ${label} must override modern rounded styling`);
 
 console.log('project-app-store-regression ok');

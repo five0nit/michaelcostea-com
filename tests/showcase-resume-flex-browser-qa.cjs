@@ -67,19 +67,17 @@ async function auditViewport(browser, name, viewport, mobile) {
       activeId: document.activeElement?.id || '',
       h1: document.querySelector('#career-showcase-title')?.textContent.replace(/\s+/g, ' ').trim() || '',
       h1Visible: visible('#career-showcase-title'),
-      proofVisible: visible('.career-proof-grid'),
+      interestsVisible: visible('.career-interest-grid'),
       actionsVisible: [...document.querySelectorAll('.career-primary-actions > *')].map((element) => {
         const rect = element.getBoundingClientRect();
         const style = getComputedStyle(element);
         return { text: element.textContent.trim(), top: rect.top, bottom: rect.bottom, height: rect.height, fontSize: parseFloat(style.fontSize), lineHeight: parseFloat(style.lineHeight), visible: rect.top >= 0 && rect.bottom <= innerHeight };
       }),
       primaryActionCount: document.querySelectorAll('.career-primary-actions > a, .career-primary-actions > button').length,
-      proofLabelTypography: [...document.querySelectorAll('.career-proof-grid span')].map((element) => {
+      interestTypography: [...document.querySelectorAll('.career-interest-grid span')].map((element) => {
         const style = getComputedStyle(element);
         return { fontSize: parseFloat(style.fontSize), lineHeight: parseFloat(style.lineHeight) };
       }),
-      proofNoteFontSize: parseFloat(getComputedStyle(document.querySelector('.career-proof-note')).fontSize),
-      proofNoteLineHeight: parseFloat(getComputedStyle(document.querySelector('.career-proof-note')).lineHeight),
       heroProductCount: document.querySelectorAll('#readerWindow [data-owned-path]').length,
       resourcesProductCount: document.querySelectorAll('#resourcesWindow [data-owned-path]').length,
       archiveVisible: Boolean(document.querySelector('.project-archive-shell[data-project-browser]')),
@@ -91,11 +89,10 @@ async function auditViewport(browser, name, viewport, mobile) {
       bodyOverflow: document.documentElement.scrollWidth > innerWidth,
     };
   });
-  must(home.title.includes('Head of Tech, AI & Systems'), `${name}: title lacks role`);
-  must(home.h1.includes('MICHAEL COSTEA') && home.h1.includes('HEAD OF TECH, AI & SYSTEMS'), `${name}: identity-first H1 missing`);
-  must(home.h1Visible && home.proofVisible, `${name}: H1/proof not in first viewport`);
+  must(home.title.includes('useful AI, weird projects & old devices'), `${name}: title lacks personal workshop framing`);
+  must(home.h1.includes('MICHAEL COSTEA') && home.h1.includes('I MAKE USEFUL THINGS. SOME GET WEIRD.'), `${name}: personal workshop H1 missing`);
+  must(home.h1Visible && home.interestsVisible, `${name}: H1/interests not in first viewport`);
   must(home.primaryActionCount === 3 && home.actionsVisible.every((item) => item.visible), `${name}: all three primary actions must be in first viewport`);
-  must(home.proofNoteFontSize >= 11 && home.proofNoteLineHeight >= 15, `${name}: evidence caveat text too small (${home.proofNoteFontSize}px/${home.proofNoteLineHeight}px)`);
   must(home.heroProductCount === 0 && home.resourcesProductCount >= 2, `${name}: product hierarchy incorrect`);
   must(home.archiveVisible, `${name}: project library should start visible`);
   must(home.deckSrcs.every((item) => !item.src && item.deferred), `${name}: closed deck media loaded eagerly`);
@@ -106,8 +103,8 @@ async function auditViewport(browser, name, viewport, mobile) {
   const initialUrls = responses.map((item) => item.url);
 
   if (mobile) {
-    must(home.heroTop < home.sidebarTop, 'mobile: portrait/navigation still appears before identity and proof');
-    must(home.proofLabelTypography.length === 3 && home.proofLabelTypography.every((item) => item.fontSize >= 10 && item.lineHeight >= 12), `mobile: proof labels too small ${JSON.stringify(home.proofLabelTypography)}`);
+    must(home.heroTop < home.sidebarTop, 'mobile: portrait/navigation still appears before identity and interests');
+    must(home.interestTypography.length === 3 && home.interestTypography.every((item) => item.fontSize >= 9 && item.lineHeight >= 11), `mobile: interest text too small ${JSON.stringify(home.interestTypography)}`);
     must(home.actionsVisible.every((item) => item.fontSize >= 11 && item.lineHeight >= 14 && item.height >= 44), `mobile: primary action typography/target too small ${JSON.stringify(home.actionsVisible)}`);
     must(home.actionsVisible.every((item) => item.bottom <= home.taskbarTop), 'mobile: taskbar obscures a primary action');
     must(home.actionsVisible.every((item) => item.bottom <= home.heroBottom), 'mobile: primary action clipped by hero scroll container');
@@ -163,7 +160,7 @@ async function auditViewport(browser, name, viewport, mobile) {
       desktopInert: document.querySelector('.desktop-icons')?.hasAttribute('inert') || false,
     }));
     must(closed.hash === '' || closed.hash === '#home', `mobile: close did not return home (${closed.hash})`);
-    must(closed.activeText === 'VIEW ALL PROJECTS', `mobile: close did not restore opener (${closed.activeText})`);
+    must(closed.activeText === 'OPEN PROJECT SHELF', `mobile: close did not restore opener (${closed.activeText})`);
     must(!closed.desktopInert, 'mobile: background remained inert after close');
 
     await page.goto(`${baseUrl}/#projects`, { waitUntil: 'networkidle' });

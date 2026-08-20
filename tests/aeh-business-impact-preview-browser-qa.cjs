@@ -8,8 +8,8 @@ fs.mkdirSync(out,{recursive:true});
 const must=(value,message)=>{if(!value)throw new Error(message)};
 const routes=[
   {slug:'resume',path:'/resume/',required:['84,400+','A$1.97M','AI Transformation Manager','ASSOCIATED ≠ CAUSED']},
-  {slug:'projects',path:'/projects/',required:['AEH AI-enabled operating layer','795','A$1.97M','251']},
-  {slug:'operating-layer',path:'/work/business-operating-layer/',required:['84,400 recorded events—not manual tasks saved','459 HTTP-successful Xero invoice actions','735 hours/year']},
+  {slug:'projects',path:'/projects/',required:['AEH AI-enabled operating layer','Less double-handling','clearer ownership','faster follow-up']},
+  {slug:'operating-layer',path:'/work/business-operating-layer/',required:['Day-to-day impact','Operational visibility','Adoption and handover','calmer operations']},
 ];
 (async()=>{
   const browser=await chromium.launch({headless:true});
@@ -27,24 +27,26 @@ const routes=[
     must(homeResponse?.status()===200,`${label} homepage status ${homeResponse?.status()}`);
     const homeImpact=await page.evaluate(()=>{
       const hero=document.querySelector('#readerWindow .career-showcase-hero');
-      const label=document.querySelector('#readerWindow .career-impact-label');
-      const cards=[...document.querySelectorAll('#readerWindow .career-proof-grid article')];
+      const focus=document.querySelector('#readerWindow .career-operating-focus');
+      const cards=[...document.querySelectorAll('#readerWindow .career-interest-grid article')];
       const clean=value=>(value||'').replace(/\s+/g,' ').trim();
       return {
         text:clean(hero?.textContent),
-        label:clean(label?.textContent),
+        focus:clean(focus?.textContent),
+        proofCount:document.querySelectorAll('#readerWindow .career-proof-grid article').length,
         overflow:document.documentElement.scrollWidth-innerWidth,
         heroWidth:hero?.getBoundingClientRect().width??0,
         cards:cards.map(card=>({text:card.innerText,width:card.getBoundingClientRect().width})),
       };
     });
-    must(homeImpact.label==='CURRENT AEH OPERATING IMPACT · EVIDENCE AS AT EARLY AUGUST 2026',`${label} homepage evidence-period label mismatch: ${homeImpact.label}`);
-    must(homeImpact.text.includes('modelled cumulative hours released since late March 2026'),`${label} homepage capacity period missing`);
+    must(homeImpact.focus.includes('Day job, briefly')&&homeImpact.focus.includes('All Electric Homes'),`${label} secondary day-job context missing: ${homeImpact.focus}`);
+    must(homeImpact.text.includes('I MAKE USEFUL THINGS. SOME GET WEIRD.')&&homeImpact.text.includes('Device lab'),`${label} personal workshop hero missing`);
+    must(homeImpact.proofCount===0,`${label} homepage metric proof grid returned`);
     must(homeImpact.overflow<=1,`${label} homepage horizontal overflow ${homeImpact.overflow}`);
-    must(homeImpact.heroWidth>0&&homeImpact.cards.length===3&&homeImpact.cards.every(card=>card.width>0),`${label} homepage impact geometry invalid`);
-    const homeImpactScreenshot=path.join(out,`home-impact-${label}.png`);
+    must(homeImpact.heroWidth>0&&homeImpact.cards.length===3&&homeImpact.cards.every(card=>card.width>0),`${label} homepage interest geometry invalid`);
+    const homeImpactScreenshot=path.join(out,`home-workshop-${label}.png`);
     await page.locator('#readerWindow .career-showcase-hero').screenshot({path:homeImpactScreenshot});
-    viewportReport.homeImpact={status:homeResponse.status(),label:homeImpact.label,overflow:homeImpact.overflow,screenshot:homeImpactScreenshot};
+    viewportReport.homeWorkshop={status:homeResponse.status(),focus:homeImpact.focus,overflow:homeImpact.overflow,screenshot:homeImpactScreenshot};
     for(const route of routes){
       const response=await page.goto(base+route.path,{waitUntil:'networkidle'});
       must(response?.status()===200,`${label} ${route.path} status ${response?.status()}`);

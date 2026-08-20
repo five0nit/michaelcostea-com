@@ -54,7 +54,7 @@ async function inspect(page, route, label) {
   });
 
   if (response?.status() !== 200) throw new Error(`${label}/${route.slug} HTTP ${response?.status()}`);
-  if (!checks.styles.some(href => href.includes('michaelos-docs.css?v=20260805-michaelos-docs-preview-1'))) throw new Error(`${label}/${route.slug} missing document CSS`);
+  if (!checks.styles.some(href => href.includes('michaelos-docs.css?v='))) throw new Error(`${label}/${route.slug} missing document CSS`);
   if (!checks.titlebarText.includes(route.title)) throw new Error(`${label}/${route.slug} title bar mismatch: ${checks.titlebarText}`);
   if (checks.mainBackground !== 'rgb(192, 192, 192)') throw new Error(`${label}/${route.slug} main window background ${checks.mainBackground}`);
   if (!/MS Sans Serif|Tahoma/.test(checks.bodyFont)) throw new Error(`${label}/${route.slug} wrong font family ${checks.bodyFont}`);

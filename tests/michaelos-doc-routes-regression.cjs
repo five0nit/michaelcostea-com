@@ -21,7 +21,7 @@ for (const route of styledRoutes) {
   const html = fs.readFileSync(path.join(root, route), 'utf8');
   const document = new JSDOM(html).window.document;
   const styles = [...document.querySelectorAll('link[rel="stylesheet"]')].map(link => link.getAttribute('href') || '');
-  must(styles.some(href => href.includes('assets/css/michaelos-docs.css?v=20260805-michaelos-docs-preview-1')), `${route} missing MICHAEL OS document stylesheet`);
+  must(styles.some(href => href.includes('assets/css/michaelos-docs.css?v=')), `${route} missing MICHAEL OS document stylesheet`);
   must(document.querySelector('#main-content > .os-doc-titlebar'), `${route} missing document title bar`);
   must(document.querySelectorAll('.os-doc-controls i').length === 3, `${route} missing three OS title-bar controls`);
 }

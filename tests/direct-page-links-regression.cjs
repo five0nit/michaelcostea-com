@@ -7,10 +7,10 @@ const rootDir = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
 const script = fs.readFileSync(path.join(rootDir, 'script.js'), 'utf8');
 
-const expectedLinks = ['#resume', '#what-i-build', '#projects', '#ai-agents', '#new-repo', '#ai-help', '#contact'];
-for (const href of expectedLinks) {
-  if (!html.includes(`href="${href}"`)) {
-    throw new Error(`missing direct page link ${href} in index.html`);
+const expectedOpeners = ['resumeWindow', 'buildWindow', 'projectsWindow', 'agentsWindow', 'newRepoWindow', 'aiHelpWindow', 'contactWindow'];
+for (const target of expectedOpeners) {
+  if (!html.includes(`data-open="${target}"`)) {
+    throw new Error(`missing MichaelOS opener ${target} in index.html`);
   }
 }
 

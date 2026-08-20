@@ -37,8 +37,8 @@ must(rankedSection, 'crawlable projects page must expose a permanent ranked-proj
 must(!projects.querySelector('details.full-archive'), 'crawlable project inventory must not remain behind details disclosure');
 must(projects.querySelector('.page-hero')?.compareDocumentPosition(rankedSection) & 4, 'ranked projects must follow the hero');
 must(rankedSection.compareDocumentPosition(projects.querySelector('.project-details')) & 4, 'project library must appear before supporting career cases');
-must(clean(projects.querySelector('#projects-page-title')?.textContent).includes('19 working systems'), 'project App Store count must be explicit');
-must(clean(rankedSection.querySelector('#ranked-projects-title')?.textContent) === '19 working systems', 'project library must use a neutral accessible heading');
+must(clean(projects.querySelector('#projects-page-title')?.textContent) === 'Things I’ve been making.', 'projects page must use the personal shelf heading');
+must(clean(rankedSection.querySelector('#ranked-projects-title')?.textContent) === 'Michael’s project shelf', 'project library must use the personal accessible heading');
 
 const pageCards = [...rankedSection.querySelectorAll('.detailed-archive > .project-archive-card')];
 const pageTitles = pageCards.map((card) => clean(card.querySelector('h3')?.textContent));
@@ -54,7 +54,7 @@ const homeCards = [...homeArchive.querySelectorAll('.project-showcase-grid > .pr
 const homeTitles = homeCards.map((card) => clean(card.querySelector('h3')?.textContent));
 must(JSON.stringify(homeTitles) === JSON.stringify(expectedOrder), `MichaelOS project order wrong: ${JSON.stringify(homeTitles)}`);
 must(homeCards.every((card) => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank')), 'MichaelOS cards must not expose rank attributes or rank ribbons');
-must(clean(home.querySelector('#readerWindow .career-primary-actions')?.textContent).includes('VIEW ALL PROJECTS'), 'homepage hero must lead visitors to the full project library');
+must(clean(home.querySelector('#readerWindow .career-primary-actions')?.textContent).includes('OPEN PROJECT SHELF'), 'homepage hero must lead visitors to the full project library');
 must(home.querySelector('#projectsWindow a[href="billpilot.html"]'), 'BillPilot living project page must be linked from MichaelOS');
 
 const billpilot = new JSDOM(read('billpilot.html')).window.document;

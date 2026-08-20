@@ -13,35 +13,35 @@ const { document } = dom.window;
 const text = (selector) => (document.querySelector(selector)?.textContent || '').replace(/\s+/g, ' ').trim();
 const must = (condition, message) => { if (!condition) throw new Error(message); };
 
-must(document.title.includes('Head of Tech, AI & Systems'), 'homepage title must lead with current role');
-must(document.title.includes('Melbourne'), 'homepage title must include Melbourne');
+must(document.title.includes('useful AI, weird projects & old devices'), 'homepage title must lead with personal workshop framing');
 must((document.querySelector('meta[name="description"]')?.content || '').length <= 160, 'homepage description must stay within 160 characters');
-must(document.querySelector('link[href="styles.css?v=20260811-project-library-no-ranks"]'), 'homepage styles cache marker must expose the rank-free project library');
+must(document.querySelector('link[href="styles.css?v=20260820-weird-workshop"]'), 'homepage stylesheet cache marker must expose the weird-workshop release');
 
 const hero = document.querySelector('#readerWindow .career-showcase-hero');
 must(hero, 'career showcase hero missing');
 const heroText = text('#readerWindow .career-showcase-hero');
-for (const phrase of ['MICHAEL COSTEA', 'HEAD OF TECH, AI & SYSTEMS', 'MELBOURNE', '795', 'A$1.97M', '251']) {
+for (const phrase of ['MICHAEL COSTEA', 'I MAKE USEFUL THINGS. SOME GET WEIRD.', 'ELECTRICIAN-TURNED-TECH OPERATOR', 'Plain English. No hype. One useful first step.']) {
   must(heroText.toUpperCase().includes(phrase.toUpperCase()), `career hero missing ${phrase}`);
 }
 const actions = [...hero.querySelectorAll('.career-primary-actions a, .career-primary-actions button')];
 must(actions.length === 3, `career hero must have exactly three primary actions, got ${actions.length}`);
-for (const phrase of ['VIEW RÉSUMÉ PDF', 'VIEW ALL PROJECTS', 'DISCUSS A ROLE']) {
+for (const phrase of ['OPEN PROJECT SHELF', 'GET AI HELP', 'MEET MICHAEL']) {
   must(actions.some(action => action.textContent.replace(/\s+/g, ' ').trim().toUpperCase().includes(phrase)), `career action missing ${phrase}`);
 }
+for (const metric of ['795', 'A$1.97M', '251']) must(!heroText.includes(metric), `personal homepage hero retains metric ${metric}`);
 must(!heroText.includes('US$5'), 'price-led Gumroad product must not appear in career hero');
 must(document.querySelector('#resourcesWindow'), 'secondary Tools & Resources window missing');
 must(text('#resourcesWindow').includes('Freelancer Client Admin Starter Kit'), 'Gumroad resource must be preserved in secondary resources window');
 
 const featured = [...document.querySelectorAll('#projectsWindow .featured-hiring-case')];
-must(featured.length === 3, `expected three featured hiring cases, got ${featured.length}`);
+must(featured.length === 3, `expected three featured work stories, got ${featured.length}`);
 for (const card of featured) {
   const cardText = card.textContent;
-  for (const label of ['Problem:', 'System:', 'Decision:', 'Ownership:', 'Proof:']) {
+  for (const label of ['Problem:', 'System:', 'Decision:', 'Ownership:', 'Impact:']) {
     must(cardText.includes(label), `${text('h3')} featured case missing ${label}`);
   }
 }
-must(text('#projectsWindow').includes('Project App Library'), 'project App Store label missing');
+must(text('#projectsWindow').toLowerCase().includes('project shelf'), 'personal project shelf label missing');
 must(!html.includes('href="https://github.com/five0nit/useaiforme"'), 'private UseAIForMe repo must not be promised publicly');
 must(!html.includes('href="https://telegram-office.michaelcostea.com/agenttown/"'), 'unhealthy Agent Office runtime must not be promised publicly');
 

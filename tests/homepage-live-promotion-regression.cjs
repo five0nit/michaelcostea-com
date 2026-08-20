@@ -39,14 +39,12 @@ for (const selector of ['#readerWindow', '#resumeWindow', '#projectsWindow', '#a
 const homepageText = text('body');
 for (const phrase of [
   'MICHAEL COSTEA',
-  'HEAD OF TECH, AI & SYSTEMS',
-  '352',
-  '5,000+',
-  '500,000',
-  'VIEW ALL PROJECTS',
-  'Projects - AI Systems Portfolio',
+  'I MAKE USEFUL THINGS. SOME GET WEIRD.',
+  'Plain English. No hype. One useful first step.',
+  'OPEN PROJECT SHELF',
+  'Projects - Things I’ve Been Making',
   'Resume.doc - Michael Costea',
-  'AI Agents - Business Operating Leverage',
+  'AI Agents - How My Setup Works',
 ]) {
   if (!homepageText.includes(phrase)) throw new Error(`live homepage missing preview content: ${phrase}`);
 }

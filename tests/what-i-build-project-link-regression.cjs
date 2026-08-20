@@ -13,7 +13,7 @@ const popout = document.querySelector('#buildWindow a.build-projects-popout[href
 if (!popout) throw new Error('What I Build needs a direct project-library popout link');
 
 const popoutText = clean(popout.textContent);
-for (const phrase of ['Project library', 'View all 19 projects', 'Live products', 'inspectable delivery proof']) {
+for (const phrase of ['Project shelf · 19 things', 'Browse the project shelf', 'Useful systems', 'agent experiments']) {
   if (!popoutText.includes(phrase)) throw new Error(`project popout missing: ${phrase}`);
 }
 

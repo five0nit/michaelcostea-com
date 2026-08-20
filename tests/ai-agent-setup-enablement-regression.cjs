@@ -31,8 +31,13 @@ for (const page of pages) {
   const buildWindow = document.querySelector('#buildWindow');
   if (!buildWindow) throw new Error(`${page}: missing What I Build window`);
   const buildText = buildWindow.textContent.replace(/\s+/g, ' ').trim();
-  assertIncludes(`${page}: build positioning`, buildText, 'environment that enables the business and the people inside it to become better with AI');
-  assertIncludes(`${page}: build expertise`, buildText, 'Staff become AI-capable operators');
+  if (page === 'index.html') {
+    assertIncludes(`${page}: build positioning`, buildText, 'practical AI tools, connected business systems, and slightly strange side projects');
+    assertIncludes(`${page}: build expertise`, buildText, 'Staff become AI-capable operators');
+  } else {
+    assertIncludes(`${page}: build positioning`, buildText, 'environment that enables the business and the people inside it to become better with AI');
+    assertIncludes(`${page}: build expertise`, buildText, 'Staff become AI-capable operators');
+  }
 
   const buildImg = document.querySelector('#buildWindow .business-ai-environment img');
   if (!buildImg) throw new Error(`${page}: missing What I Build business AI environment diagram`);

@@ -71,7 +71,7 @@ fs.mkdirSync(out, { recursive: true });
     if (!checks.targetRoles?.includes('AI Enablement Lead')) throw new Error(`${label} target roles missing`);
     if (checks.caseCount !== 3 || checks.experienceCount < 8) throw new Error(`${label} resume content counts wrong`);
     if (checks.printableHref !== 'assets/downloads/Michael-Costea-Resume-2026.pdf') throw new Error(`${label} résumé PDF link wrong`);
-    if (!checks.stylesheetHref?.includes('20260804-proof-caveat-legibility')) throw new Error(`${label} career stylesheet preview marker missing`);
+    if (!checks.stylesheetHref?.includes('20260819-chill-home')) throw new Error(`${label} career stylesheet preview marker missing`);
     if (JSON.stringify(checks.evidenceValues) !== JSON.stringify(['795', 'A$1.97M', '251 h'])) throw new Error(`${label} primary AEH evidence values wrong: ${JSON.stringify(checks.evidenceValues)}`);
     if (JSON.stringify(checks.actionValues) !== JSON.stringify(['124', '459'])) throw new Error(`${label} action-proof values wrong: ${JSON.stringify(checks.actionValues)}`);
     if (!checks.runRate?.includes('735 h/year · A$47.8k/year')) throw new Error(`${label} combined run-rate callout missing: ${checks.runRate}`);

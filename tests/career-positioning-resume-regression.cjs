@@ -49,5 +49,5 @@ for(const stale of ['4.3–4.5B','Codex Account Usage + Auth Rotator','Automated
 
 for(const marker of ['career-fit-summary','career-fit-grid','resume-download-row']) must(css.includes(`.${marker}`),`resume production CSS missing .${marker}`);
 must(css.includes('grid-template-columns:repeat(3,minmax(0,1fr))'),'inline evidence grid must use three readable desktop columns');
-must(html.includes('career-resume.css?v=20260804-proof-caveat-legibility'),'career stylesheet preview marker missing');
+must(html.includes('career-resume.css?v=20260819-chill-home'),'career stylesheet chill-home marker missing');
 console.log('career-positioning-resume-regression ok');

@@ -59,8 +59,8 @@ for (const phrase of [
 
 const indexDom = new JSDOM(indexHtml);
 const indexText = pageText(indexDom.window.document);
-if (!indexText.includes('MICHAEL COSTEA HEAD OF TECH, AI & SYSTEMS')) {
-  throw new Error('main index.html should contain the approved identity-first career headline');
+if (!indexText.includes('MICHAEL COSTEA I MAKE USEFUL THINGS. SOME GET WEIRD.')) {
+  throw new Error('main index.html should contain the approved personal workshop headline');
 }
 if (indexDom.window.document.querySelector('meta[name="robots"]')?.getAttribute('content')?.includes('noindex')) {
   throw new Error('main index.html must not receive preview robots noindex');

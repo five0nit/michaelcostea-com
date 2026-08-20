@@ -3232,19 +3232,21 @@ body.public-preview::before{
   .vic-rebate-api-doc .repo-action-row .ui-btn{width:100%;min-width:0}
 }
 
-/* === 2026-07-28 showcase résumé flex === */
+/* === 2026-08-20 Michael's weird little workshop === */
 .public-preview .win-btn,
 .public-preview .win-close{width:24px!important;min-width:24px!important;height:24px!important;}
 .public-preview .career-showcase-hero{display:grid;gap:10px;}
 .public-preview .career-kicker{margin:0!important;color:#800000;font:900 10px/13px "Work Sans",Tahoma,sans-serif!important;letter-spacing:.12em;text-transform:uppercase;}
 .public-preview .career-showcase-hero h1{display:grid;gap:5px;margin:0!important;color:#000080!important;font:900 26px/1 "Work Sans",Tahoma,sans-serif!important;letter-spacing:.02em;}
-.public-preview .career-showcase-hero h1 span{display:block;color:#111;font:900 16px/1.15 "Space Grotesk","Courier New",monospace;letter-spacing:0;}
+.public-preview .career-showcase-hero h1 span{display:block;color:#800000;font:900 16px/1.15 "Space Grotesk","Courier New",monospace;letter-spacing:0;}
 .public-preview .career-positioning{margin:0!important;padding:10px 12px;background:#fff4c2;border-left:5px solid #000080;color:#111;font:900 15px/20px "Work Sans",Tahoma,sans-serif!important;}
 .public-preview .career-summary{margin:0!important;color:#202020;font:12px/17px "Space Grotesk","Courier New",monospace!important;}
-.public-preview .career-proof-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;}
-.public-preview .career-proof-grid article{min-width:0;padding:9px;background:#fff;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;box-shadow:1px 1px 0 #000;}
-.public-preview .career-proof-grid b{display:block;color:#800000;font:900 22px/1 "Work Sans",Tahoma,sans-serif;}
-.public-preview .career-proof-grid span{display:block;margin-top:5px;color:#111;font:900 10px/13px "Space Grotesk","Courier New",monospace;text-transform:uppercase;}
+.public-preview .career-interest-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;}
+.public-preview .career-interest-grid article{min-width:0;padding:9px;background:#fff4c2;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;box-shadow:1px 1px 0 #000;}
+.public-preview .career-interest-grid article:nth-child(2){background:#e8f4ff;}
+.public-preview .career-interest-grid article:nth-child(3){background:#e3f5e6;}
+.public-preview .career-interest-grid b{display:block;color:#000080;font:900 11px/1.2 "Work Sans",Tahoma,sans-serif;text-transform:uppercase;}
+.public-preview .career-interest-grid span{display:block;margin-top:5px;color:#222;font:700 10px/13px "Space Grotesk","Courier New",monospace;}
 .public-preview .career-primary-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px;background:#d5d5d5;border:2px inset #808080;}
 .public-preview .career-primary-actions .btn{min-height:44px;display:grid!important;place-items:center;text-align:center;white-space:normal;font:900 10px/13px "Work Sans",Tahoma,sans-serif;}
 .public-preview .career-operating-focus{margin:12px 0 0;padding:9px 11px;background:#e8f4ff;border:2px solid #000080;}
@@ -3307,14 +3309,14 @@ body.public-preview::before{
   body.mobile-mode.public-preview .career-positioning{padding:8px!important;font-size:12px!important;line-height:16px!important;}
   .public-preview .career-summary,
   body.mobile-mode.public-preview .career-summary{font-size:10px!important;line-height:14px!important;}
-  .public-preview .career-proof-grid,
-  body.mobile-mode.public-preview .career-proof-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important;}
-  .public-preview .career-proof-grid article,
-  body.mobile-mode.public-preview .career-proof-grid article{padding:6px 4px!important;text-align:center;}
-  .public-preview .career-proof-grid b,
-  body.mobile-mode.public-preview .career-proof-grid b{font-size:17px!important;}
-  .public-preview .career-proof-grid span,
-  body.mobile-mode.public-preview .career-proof-grid span{font-size:10px!important;line-height:12px!important;}
+  .public-preview .career-interest-grid,
+  body.mobile-mode.public-preview .career-interest-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important;}
+  .public-preview .career-interest-grid article,
+  body.mobile-mode.public-preview .career-interest-grid article{padding:6px 5px!important;text-align:left;}
+  .public-preview .career-interest-grid b,
+  body.mobile-mode.public-preview .career-interest-grid b{font-size:10px!important;line-height:12px!important;}
+  .public-preview .career-interest-grid span,
+  body.mobile-mode.public-preview .career-interest-grid span{font-size:10px!important;line-height:12px!important;}
   .public-preview .career-primary-actions,
   body.mobile-mode.public-preview .career-primary-actions{grid-template-columns:1fr!important;padding:4px!important;gap:3px!important;}
   .public-preview .career-primary-actions .btn,
