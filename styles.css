@@ -3273,15 +3273,16 @@ body.public-preview::before{
   .public-preview .career-mobile-identity,
   body.mobile-mode.public-preview .career-mobile-identity{
     display:grid!important;
-    grid-template-columns:88px minmax(0,1fr)!important;
+    grid-template-columns:1fr!important;
+    justify-items:center!important;
     align-items:start!important;
-    gap:10px!important;
+    gap:12px!important;
   }
   .public-preview .career-mobile-portrait,
   body.mobile-mode.public-preview .career-mobile-portrait{
     display:block!important;
-    width:88px!important;
-    height:88px!important;
+    width:112px!important;
+    height:112px!important;
     margin:0!important;
     overflow:hidden!important;
     background:#008080!important;
@@ -3298,7 +3299,11 @@ body.public-preview::before{
     object-position:center 22%!important;
   }
   .public-preview .career-mobile-heading,
-  body.mobile-mode.public-preview .career-mobile-heading{min-width:0!important;}
+  body.mobile-mode.public-preview .career-mobile-heading{
+    width:100%!important;
+    min-width:0!important;
+    text-align:center!important;
+  }
   .public-preview #readerWindow .welcome-body,
   body.mobile-mode.public-preview #readerWindow .welcome-body{display:flex!important;flex-direction:column!important;}
   .public-preview #readerWindow .welcome-sidebar,
@@ -3327,23 +3332,93 @@ body.public-preview::before{
     white-space:normal!important;
   }
   .public-preview #readerWindow .welcome-copy,
-  body.mobile-mode.public-preview #readerWindow .welcome-copy{order:1!important;padding:12px 10px!important;}
-  .public-preview .career-showcase-hero h1,
-  body.mobile-mode.public-preview .career-showcase-hero h1{font-size:20px!important;line-height:20px!important;}
-  .public-preview .career-showcase-hero h1 span,
-  body.mobile-mode.public-preview .career-showcase-hero h1 span{font-size:13px!important;line-height:16px!important;}
-  .public-preview .career-positioning,
-  body.mobile-mode.public-preview .career-positioning{padding:8px!important;font-size:12px!important;line-height:16px!important;}
-  .public-preview .career-summary,
-  body.mobile-mode.public-preview .career-summary{font-size:10px!important;line-height:14px!important;}
+  body.mobile-mode.public-preview #readerWindow .welcome-copy{
+    order:1!important;
+    padding:14px 12px 16px!important;
+    -webkit-text-size-adjust:100%!important;
+    text-size-adjust:100%!important;
+  }
+  .public-preview #readerWindow .career-kicker,
+  body.mobile-mode.public-preview #readerWindow .career-kicker{
+    margin:0 0 7px!important;
+    font-size:10px!important;
+    line-height:14px!important;
+    letter-spacing:.07em!important;
+    text-align:center!important;
+  }
+  .public-preview .career-mobile-heading .mini-heading,
+  body.mobile-mode.public-preview .career-mobile-heading .mini-heading{
+    width:100%!important;
+    margin:0!important;
+    padding:0 0 10px!important;
+    border-bottom:3px solid #111!important;
+  }
+  .public-preview #readerWindow .career-showcase-hero h1,
+  body.mobile-mode.public-preview #readerWindow .career-showcase-hero h1{
+    font-size:24px!important;
+    line-height:26px!important;
+    letter-spacing:0!important;
+    text-align:center!important;
+  }
+  .public-preview #readerWindow .career-showcase-hero h1 span,
+  body.mobile-mode.public-preview #readerWindow .career-showcase-hero h1 span{
+    margin-top:6px!important;
+    font-family:"Work Sans",Tahoma,Arial,sans-serif!important;
+    font-size:14px!important;
+    line-height:19px!important;
+    letter-spacing:0!important;
+  }
+  .public-preview #readerWindow .terminal-line,
+  body.mobile-mode.public-preview #readerWindow .terminal-line{
+    margin:0!important;
+    padding:2px 4px!important;
+    font-size:9px!important;
+    line-height:14px!important;
+    letter-spacing:0!important;
+    text-align:center!important;
+  }
+  .public-preview #readerWindow .welcome-copy p.career-positioning,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy p.career-positioning{
+    padding:10px!important;
+    font-family:"Work Sans",Tahoma,Arial,sans-serif!important;
+    font-size:13px!important;
+    line-height:18px!important;
+    letter-spacing:0!important;
+  }
+  .public-preview #readerWindow .welcome-copy p.career-summary,
+  body.mobile-mode.public-preview #readerWindow .welcome-copy p.career-summary{
+    font-family:"Work Sans",Tahoma,Arial,sans-serif!important;
+    font-size:13px!important;
+    line-height:19px!important;
+    letter-spacing:0!important;
+  }
   .public-preview .career-interest-grid,
-  body.mobile-mode.public-preview .career-interest-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important;}
+  body.mobile-mode.public-preview .career-interest-grid{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
   .public-preview .career-interest-grid article,
-  body.mobile-mode.public-preview .career-interest-grid article{padding:6px 5px!important;text-align:left;}
+  body.mobile-mode.public-preview .career-interest-grid article{
+    display:grid!important;
+    grid-template-columns:104px minmax(0,1fr)!important;
+    align-items:start!important;
+    gap:10px!important;
+    padding:10px!important;
+    text-align:left!important;
+  }
   .public-preview .career-interest-grid b,
-  body.mobile-mode.public-preview .career-interest-grid b{font-size:10px!important;line-height:12px!important;}
+  body.mobile-mode.public-preview .career-interest-grid b{
+    font-size:11px!important;
+    line-height:14px!important;
+  }
   .public-preview .career-interest-grid span,
-  body.mobile-mode.public-preview .career-interest-grid span{font-size:10px!important;line-height:12px!important;}
+  body.mobile-mode.public-preview .career-interest-grid span{
+    margin:0!important;
+    font-family:"Work Sans",Tahoma,Arial,sans-serif!important;
+    font-size:12px!important;
+    line-height:16px!important;
+    letter-spacing:0!important;
+  }
   .public-preview .career-primary-actions,
   body.mobile-mode.public-preview .career-primary-actions{grid-template-columns:1fr!important;padding:4px!important;gap:3px!important;}
   .public-preview .career-primary-actions .btn,

@@ -129,6 +129,18 @@ body.hyperframes-live{
     padding:10px!important;
     outline-offset:2px;
   }
+  body.mobile-mode.hyperframes-live #readerWindow .styleguide-welcome::after,
+  .hyperframes-live #readerWindow .styleguide-welcome::after{
+    display:none!important;
+  }
+  body.mobile-mode.hyperframes-live #readerWindow .welcome-copy,
+  .hyperframes-live #readerWindow .welcome-copy{
+    width:calc(100% - 16px)!important;
+    max-width:360px!important;
+    margin:8px auto!important;
+    outline:none!important;
+    box-shadow:2px 2px 0 #111!important;
+  }
 }
 
 /* Transparent CTA image buttons for Hyperframes preview */

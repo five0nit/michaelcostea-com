@@ -76,8 +76,28 @@ async function auditViewport(browser, name, viewport, mobile) {
       primaryActionCount: document.querySelectorAll('.career-primary-actions > a, .career-primary-actions > button').length,
       interestTypography: [...document.querySelectorAll('.career-interest-grid span')].map((element) => {
         const style = getComputedStyle(element);
-        return { fontSize: parseFloat(style.fontSize), lineHeight: parseFloat(style.lineHeight) };
+        const rect = element.getBoundingClientRect();
+        return { fontSize: parseFloat(style.fontSize), lineHeight: parseFloat(style.lineHeight), letterSpacing: style.letterSpacing, width: rect.width };
       }),
+      interestLayout: (() => {
+        const grid = document.querySelector('.career-interest-grid');
+        const gridRect = grid?.getBoundingClientRect();
+        const gridStyle = grid ? getComputedStyle(grid) : null;
+        return {
+          columns: gridStyle?.gridTemplateColumns || '',
+          width: gridRect?.width || 0,
+          cardWidths: [...document.querySelectorAll('.career-interest-grid article')].map((element) => element.getBoundingClientRect().width),
+        };
+      })(),
+      identityColumns: (() => {
+        const element = document.querySelector('.career-mobile-identity');
+        return element ? getComputedStyle(element).gridTemplateColumns : '';
+      })(),
+      summaryTypography: (() => {
+        const element = document.querySelector('.career-summary');
+        const style = element ? getComputedStyle(element) : null;
+        return { fontSize: parseFloat(style?.fontSize || '0'), lineHeight: parseFloat(style?.lineHeight || '0'), letterSpacing: style?.letterSpacing || '', fontFamily: style?.fontFamily || '' };
+      })(),
       heroProductCount: document.querySelectorAll('#readerWindow [data-owned-path]').length,
       resourcesProductCount: document.querySelectorAll('#resourcesWindow [data-owned-path]').length,
       archiveVisible: Boolean(document.querySelector('.project-archive-shell[data-project-browser]')),
@@ -105,8 +125,8 @@ async function auditViewport(browser, name, viewport, mobile) {
   });
   must(home.title.includes('AI employees for real businesses'), `${name}: title lacks AI-employee positioning`);
   must(home.h1.includes('MICHAEL COSTEA') && home.h1.includes('I BUILD AI EMPLOYEES TO RUN THE BUSINESS WITH YOU.'), `${name}: AI-employee H1 missing`);
-  must(home.h1Visible && home.interestsVisible, `${name}: H1/interests not in first viewport`);
-  must(home.primaryActionCount === 3 && home.actionsVisible.every((item) => item.visible), `${name}: all three primary actions must be in first viewport`);
+  must(home.h1Visible, `${name}: H1 not in first viewport`);
+  must(home.primaryActionCount === 3, `${name}: expected three primary actions`);
   must(home.heroProductCount === 0 && home.resourcesProductCount >= 2, `${name}: product hierarchy incorrect`);
   must(home.archiveVisible, `${name}: project library should start visible`);
   must(home.deckSrcs.every((item) => !item.src && item.deferred), `${name}: closed deck media loaded eagerly`);
@@ -121,11 +141,24 @@ async function auditViewport(browser, name, viewport, mobile) {
     must(home.mobilePortrait.top >= home.heroTop && home.mobilePortrait.top < home.heroTop + 40, `mobile: profile portrait is not at the top of the hero ${JSON.stringify(home.mobilePortrait)}`);
     must(home.mobilePortrait.width >= 80 && home.mobilePortrait.height >= 80, `mobile: profile portrait is too small ${JSON.stringify(home.mobilePortrait)}`);
     must(home.heroTop < home.sidebarTop, 'mobile: navigation still appears before identity and interests');
-    must(home.interestTypography.length === 3 && home.interestTypography.every((item) => item.fontSize >= 9 && item.lineHeight >= 11), `mobile: interest text too small ${JSON.stringify(home.interestTypography)}`);
-    must(home.actionsVisible.every((item) => item.fontSize >= 11 && item.lineHeight >= 14 && item.height >= 44), `mobile: primary action typography/target too small ${JSON.stringify(home.actionsVisible)}`);
-    must(home.actionsVisible.every((item) => item.bottom <= home.taskbarTop), 'mobile: taskbar obscures a primary action');
-    must(home.actionsVisible.every((item) => item.bottom <= home.heroBottom), 'mobile: primary action clipped by hero scroll container');
-    must(home.sidebarTop >= Math.max(...home.actionsVisible.map((item) => item.bottom)), 'mobile: portrait/navigation overlaps primary actions');
+    must(home.identityColumns.split(' ').length === 1, `mobile: portrait and heading remain squeezed side by side (${home.identityColumns})`);
+    must(home.interestTypography.length === 3 && home.interestTypography.every((item) => item.fontSize >= 12 && item.lineHeight >= 16 && (item.letterSpacing === 'normal' || item.letterSpacing === '0px')), `mobile: capability text remains cramped ${JSON.stringify(home.interestTypography)}`);
+    must(home.interestLayout.cardWidths.length === 3 && home.interestLayout.cardWidths.every((width) => Math.abs(width - home.interestLayout.width) <= 1), `mobile: capability cards are not stacked full width ${JSON.stringify(home.interestLayout)}`);
+    must(home.summaryTypography.fontSize >= 13 && home.summaryTypography.lineHeight >= 18 && (home.summaryTypography.letterSpacing === 'normal' || home.summaryTypography.letterSpacing === '0px') && /Work Sans|Tahoma|Arial/i.test(home.summaryTypography.fontFamily), `mobile: summary typography remains unreadable ${JSON.stringify(home.summaryTypography)}`);
+    must(home.sidebarTop >= home.heroBottom, 'mobile: navigation overlaps the hero');
+
+    await page.locator('.career-primary-actions').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(100);
+    const scrolledActions = await page.evaluate(() => {
+      const taskbarTop = document.querySelector('.taskbar')?.getBoundingClientRect().top || innerHeight;
+      return [...document.querySelectorAll('.career-primary-actions > *')].map((element) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        return { text: element.textContent.trim(), top: rect.top, bottom: rect.bottom, height: rect.height, fontSize: parseFloat(style.fontSize), lineHeight: parseFloat(style.lineHeight), visible: rect.top >= 0 && rect.bottom <= taskbarTop };
+      });
+    });
+    must(scrolledActions.every((item) => item.visible && item.fontSize >= 11 && item.lineHeight >= 14 && item.height >= 44), `mobile: primary actions fail after scrolling ${JSON.stringify(scrolledActions)}`);
+    await page.screenshot({ path: path.join(outDir, 'home-mobile-actions.png'), fullPage: true });
 
     await page.locator('#readerWindow .win-close').click();
     await page.waitForTimeout(100);

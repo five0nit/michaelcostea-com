@@ -15,7 +15,8 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 
 must(document.title.includes('AI employees for real businesses'), 'homepage title must lead with agent-operations framing');
 must((document.querySelector('meta[name="description"]')?.content || '').length <= 160, 'homepage description must stay within 160 characters');
-must(document.querySelector('link[href="styles.css?v=20260821-mobile-profile-top"]'), 'homepage stylesheet cache marker must expose the mobile-profile release');
+must(document.querySelector('link[href="styles.css?v=20260821-mobile-home-readable"]'), 'homepage stylesheet cache marker must expose the readable-mobile release');
+must(document.querySelector('link[href="assets/css/hyperframes-live.css?v=20260821-mobile-home-readable"]'), 'homepage Hyperframes cache marker must expose the readable-mobile release');
 
 const hero = document.querySelector('#readerWindow .career-showcase-hero');
 must(hero, 'career showcase hero missing');
