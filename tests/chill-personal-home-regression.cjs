@@ -14,7 +14,7 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 
 must(document.title === 'Michael Costea — AI employees for real businesses', `homepage title lacks agent-operations framing: ${document.title}`);
 must((document.querySelector('meta[name="description"]')?.content || '').includes('AI employees with defined roles, tools, memory, approvals and receipts'), 'agentic-system description missing');
-must(document.querySelector('link[href="styles.css?v=20260820-agent-operations"]'), 'agent-operations stylesheet cache marker missing');
+must(document.querySelector('link[href="styles.css?v=20260821-mobile-profile-top"]'), 'mobile-profile stylesheet cache marker missing');
 
 const welcomeTitle = text('#readerWindow .win-title span');
 must(welcomeTitle === '💾 Welcome.exe - AI Employee Systems', `welcome title wrong: ${welcomeTitle}`);

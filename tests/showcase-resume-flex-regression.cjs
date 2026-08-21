@@ -15,10 +15,13 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 
 must(document.title.includes('AI employees for real businesses'), 'homepage title must lead with agent-operations framing');
 must((document.querySelector('meta[name="description"]')?.content || '').length <= 160, 'homepage description must stay within 160 characters');
-must(document.querySelector('link[href="styles.css?v=20260820-agent-operations"]'), 'homepage stylesheet cache marker must expose the agent-operations release');
+must(document.querySelector('link[href="styles.css?v=20260821-mobile-profile-top"]'), 'homepage stylesheet cache marker must expose the mobile-profile release');
 
 const hero = document.querySelector('#readerWindow .career-showcase-hero');
 must(hero, 'career showcase hero missing');
+const mobilePortrait = hero.querySelector('.career-mobile-portrait img');
+must(mobilePortrait?.getAttribute('src')?.includes('assets/profile-michael-pixel-os.webp'), 'mobile hero profile portrait missing');
+must(mobilePortrait?.getAttribute('alt') === '', 'duplicated mobile portrait must remain decorative');
 const heroText = text('#readerWindow .career-showcase-hero');
 for (const phrase of ['MICHAEL COSTEA', 'I BUILD AI EMPLOYEES TO RUN THE BUSINESS WITH YOU.', 'AI SYSTEMS EXPERT', 'designs and integrates multi-agent workforces', 'role-based AI employees', 'approval limits', 'proof of work']) {
   must(heroText.toUpperCase().includes(phrase.toUpperCase()), `career hero missing ${phrase}`);

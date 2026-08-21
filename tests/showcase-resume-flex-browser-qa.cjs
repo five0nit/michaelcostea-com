@@ -84,6 +84,20 @@ async function auditViewport(browser, name, viewport, mobile) {
       heroTop: document.querySelector('.welcome-copy')?.getBoundingClientRect().top || 0,
       heroBottom: document.querySelector('.welcome-copy')?.getBoundingClientRect().bottom || 0,
       sidebarTop: document.querySelector('.welcome-sidebar')?.getBoundingClientRect().top || 0,
+      mobilePortrait: (() => {
+        const figure = document.querySelector('.career-mobile-portrait');
+        const image = figure?.querySelector('img');
+        const rect = figure?.getBoundingClientRect();
+        const style = figure ? getComputedStyle(figure) : null;
+        return {
+          visible: Boolean(figure && style?.display !== 'none' && rect && rect.width > 0 && rect.height > 0 && rect.top < innerHeight && rect.bottom > 0),
+          top: rect?.top || 0,
+          bottom: rect?.bottom || 0,
+          width: rect?.width || 0,
+          height: rect?.height || 0,
+          loaded: Boolean(image?.complete && image.naturalWidth > 0),
+        };
+      })(),
       taskbarTop: document.querySelector('.taskbar')?.getBoundingClientRect().top || innerHeight,
       deckSrcs: ['introDeckSlide', 'agenticDeckSlide'].map((id) => ({ id, src: document.getElementById(id)?.getAttribute('src') || '', deferred: document.getElementById(id)?.dataset.src || '' })),
       bodyOverflow: document.documentElement.scrollWidth > innerWidth,
@@ -103,7 +117,10 @@ async function auditViewport(browser, name, viewport, mobile) {
   const initialUrls = responses.map((item) => item.url);
 
   if (mobile) {
-    must(home.heroTop < home.sidebarTop, 'mobile: portrait/navigation still appears before identity and interests');
+    must(home.mobilePortrait.visible && home.mobilePortrait.loaded, `mobile: top profile portrait missing or unloaded ${JSON.stringify(home.mobilePortrait)}`);
+    must(home.mobilePortrait.top >= home.heroTop && home.mobilePortrait.top < home.heroTop + 40, `mobile: profile portrait is not at the top of the hero ${JSON.stringify(home.mobilePortrait)}`);
+    must(home.mobilePortrait.width >= 80 && home.mobilePortrait.height >= 80, `mobile: profile portrait is too small ${JSON.stringify(home.mobilePortrait)}`);
+    must(home.heroTop < home.sidebarTop, 'mobile: navigation still appears before identity and interests');
     must(home.interestTypography.length === 3 && home.interestTypography.every((item) => item.fontSize >= 9 && item.lineHeight >= 11), `mobile: interest text too small ${JSON.stringify(home.interestTypography)}`);
     must(home.actionsVisible.every((item) => item.fontSize >= 11 && item.lineHeight >= 14 && item.height >= 44), `mobile: primary action typography/target too small ${JSON.stringify(home.actionsVisible)}`);
     must(home.actionsVisible.every((item) => item.bottom <= home.taskbarTop), 'mobile: taskbar obscures a primary action');
