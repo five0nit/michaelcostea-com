@@ -141,12 +141,13 @@ export function queryCommentary(query, options = {}) {
 }
 
 const PRELUDES = {
+  gnosis: 'The texts treat true knowledge as recognition that exposes false authority and restores memory of the divine source.',
   fear: 'The old pages treat fear as fog before they treat it as an enemy.',
   world: 'The codices answer by separating visible rule from ultimate source.',
   resurrection: 'These witnesses speak of resurrection as present change as well as promised completion.',
   sophia: 'Sophia’s story makes discernment—not mere brightness—the test of wisdom.',
   self: 'The sayings turn the question inward without making the outer world irrelevant.',
-  default: 'Three surviving voices answer from different chambers of the old library.'
+  default: 'The strongest surviving evidence converges on these source-grounded points.'
 };
 
 function choosePrelude(query, results) {
@@ -156,6 +157,7 @@ function choosePrelude(query, results) {
   if (/resurrection|death|afterlife/.test(text)) return PRELUDES.resurrection;
   if (/sophia|wisdom|mistake|false light/.test(text)) return PRELUDES.sophia;
   if (/self|inside|within|identity|kingdom/.test(text)) return PRELUDES.self;
+  if (/gnosis|knowledge|know|truth|false/.test(text)) return PRELUDES.gnosis;
   const topSource = results[0]?.passage.sourceId;
   if (topSource === 'truth') return PRELUDES.fear;
   return PRELUDES.default;

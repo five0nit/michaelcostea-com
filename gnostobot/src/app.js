@@ -10,6 +10,7 @@ const elements = {
   sourceShelf: document.querySelector('#source-shelf'),
   sourcesToggle: document.querySelector('#sources-toggle'),
   transcript: document.querySelector('#transcript'),
+  chamber: document.querySelector('.chamber'),
   form: document.querySelector('#question-form'),
   question: document.querySelector('#question'),
   charCount: document.querySelector('#char-count'),
@@ -201,6 +202,18 @@ function citationChip(citation) {
 function renderAnswer(answer) {
   const card = createElement('article', `answer-card ${answer.status}`);
   card.dataset.answerStatus = answer.status;
+  card.tabIndex = -1;
+  const labels = {
+    grounded: ['Answer', 'PRIMARY SOURCES'],
+    'commentary-only': ['Answer', 'HISTORICAL COMMENTARY'],
+    boundary: ['No sourced answer', 'OUTSIDE CORPUS']
+  };
+  const [title, status] = labels[answer.status];
+  const heading = createElement('header', 'answer-heading');
+  const headingText = createElement('div');
+  headingText.append(createElement('h2', '', title), createElement('span', 'answer-status', status));
+  heading.append(createElement('span', 'answer-mark', 'G'), headingText);
+  card.append(heading);
   card.append(createElement('p', 'answer-opening', answer.prelude));
 
   if (answer.status === 'boundary') {
@@ -216,13 +229,14 @@ function renderAnswer(answer) {
       const number = createElement('span', 'citation-number', String(passage.citationNumber));
       const body = createElement('div');
       body.append(
+        createElement('p', 'voice-source', `${passage.source.title} · ${passage.locator}`),
         createElement('p', 'summary', passage.summary),
         createElement('p', 'counsel', passage.counsel)
       );
       voice.append(number, body);
       voices.append(voice);
     }
-    card.append(voices);
+    card.append(createElement('h3', 'answer-section-label', 'Source evidence'), voices);
 
     const citations = createElement('div', 'citation-strip');
     citations.setAttribute('aria-label', 'Primary manuscript citations');
@@ -233,8 +247,9 @@ function renderAnswer(answer) {
   }
 
   if (answer.commentary?.passages.length) {
-    const panel = createElement('section', 'commentary-panel');
-    panel.append(createElement('h3', '', answer.commentary.label));
+    const panel = createElement('details', 'commentary-panel');
+    panel.open = answer.status === 'commentary-only';
+    panel.append(createElement('summary', 'commentary-heading', answer.commentary.label));
     const notes = createElement('div', 'commentary-list');
     for (const passage of answer.commentary.passages) {
       const note = createElement('article', 'commentary-note');
@@ -256,26 +271,52 @@ function renderAnswer(answer) {
   return card;
 }
 
-function renderTurn(record) {
-  const turn = createElement('div', 'turn');
+function createTurn(query, open = true) {
+  const turn = createElement('details', 'turn');
+  turn.open = open;
+  const question = createElement('summary', 'turn-question');
+  question.append(
+    createElement('span', 'turn-label', 'YOU ASKED'),
+    createElement('span', 'turn-question-text', query)
+  );
+  turn.append(question);
+  return turn;
+}
+
+function renderTurn(record, open = false) {
+  const turn = createTurn(record.query, open);
   turn.dataset.turnId = record.id;
-  turn.append(createElement('div', 'user-message', record.query));
   const answer = composeAnswer(record.query);
   turn.append(renderAnswer(answer));
   elements.transcript.append(turn);
   return turn;
 }
 
+function scrollTurnToAnswer(turn, behavior = 'smooth') {
+  requestAnimationFrame(() => {
+    if (window.matchMedia('(max-width: 780px)').matches) {
+      turn.scrollIntoView({ behavior, block: 'start' });
+    } else {
+      elements.transcript.scrollTo({ top: turn.offsetTop - elements.transcript.offsetTop, behavior });
+    }
+    turn.querySelector('.answer-card')?.focus({ preventScroll: true });
+  });
+}
+
+function updateConversationState() {
+  elements.chamber.classList.toggle('has-turns', memory.length > 0);
+}
+
 function renderHistory() {
   elements.transcript.replaceChildren();
   if (!memory.length) {
     elements.transcript.append(welcome());
+    updateConversationState();
     return;
   }
-  memory.forEach(renderTurn);
-  requestAnimationFrame(() => {
-    elements.transcript.scrollTop = elements.transcript.scrollHeight;
-  });
+  memory.forEach((record, index) => renderTurn(record, index === memory.length - 1));
+  updateConversationState();
+  scrollTurnToAnswer(elements.transcript.lastElementChild, 'auto');
 }
 
 function thinkingIndicator() {
@@ -297,8 +338,10 @@ async function ask(query) {
   const welcomeCard = elements.transcript.querySelector('.welcome-card');
   if (welcomeCard) welcomeCard.remove();
 
-  const turn = createElement('div', 'turn');
-  turn.append(createElement('div', 'user-message', cleanQuery));
+  elements.transcript.querySelectorAll('.turn[open]').forEach((previous) => { previous.open = false; });
+  elements.chamber.classList.add('has-turns');
+
+  const turn = createTurn(cleanQuery);
   const indicator = thinkingIndicator();
   turn.append(indicator);
   elements.transcript.append(turn);
@@ -307,6 +350,7 @@ async function ask(query) {
   await new Promise((resolve) => setTimeout(resolve, 240));
   const answer = composeAnswer(cleanQuery);
   indicator.replaceWith(renderAnswer(answer));
+  scrollTurnToAnswer(turn);
 
   const record = {
     id: globalThis.crypto?.randomUUID?.() ?? `turn-${Date.now()}`,
@@ -328,10 +372,8 @@ async function ask(query) {
   elements.question.value = '';
   resizeQuestion();
   elements.transcript.setAttribute('aria-busy', 'false');
-  elements.transcript.scrollTop = elements.transcript.scrollHeight;
   elements.askButton.disabled = false;
   busy = false;
-  elements.question.focus();
 }
 
 function resizeQuestion() {

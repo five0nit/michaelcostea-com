@@ -462,7 +462,7 @@ dialog h2 {
   position: relative;
   min-width: 0;
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
   overflow: hidden;
   background:
     radial-gradient(circle at 72% 0%, rgba(141, 163, 153, 0.07), transparent 34%),
@@ -555,14 +555,23 @@ dialog h2 {
 
 .prompt-ribbon {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem;
-  padding: 0 3.5rem 1rem;
-  overflow-x: auto;
-  scrollbar-width: none;
+  padding: 0.15rem 3.5rem 1rem;
 }
 
-.prompt-ribbon::-webkit-scrollbar {
+.chamber.has-turns .prompt-ribbon {
   display: none;
+}
+
+.prompt-label {
+  margin-right: 0.15rem;
+  color: #81776a;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .prompt-ribbon button {
@@ -611,29 +620,110 @@ dialog h2 {
 .turn {
   width: min(100%, 860px);
   margin: 0 auto;
+  scroll-margin-top: 1rem;
 }
 
-.user-message {
-  width: fit-content;
-  max-width: min(80%, 650px);
-  margin-left: auto;
+.turn-question {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
   padding: 0.72rem 0.9rem;
+  cursor: pointer;
   border: 1px solid var(--line);
-  border-radius: 0.75rem 0.75rem 0.15rem 0.75rem;
+  border-radius: 0.45rem;
   color: #ded5c4;
   background: var(--ink-soft);
   font-size: 0.86rem;
+  list-style: none;
+}
+
+.turn-question::-webkit-details-marker {
+  display: none;
+}
+
+.turn-question::after {
+  content: '▾';
+  color: var(--gold);
+  transform: rotate(-90deg);
+  transition: transform 160ms ease;
+}
+
+.turn[open] > .turn-question {
+  border-color: var(--line-strong);
+  border-radius: 0.45rem 0.45rem 0 0;
+}
+
+.turn[open] > .turn-question::after {
+  transform: rotate(0);
+}
+
+.turn-label {
+  color: var(--gold);
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.turn:not([open]) .turn-question {
+  color: var(--parchment-dim);
+  background: rgba(33, 27, 21, 0.58);
 }
 
 .answer-card {
-  margin-top: 0.75rem;
   border: 1px solid var(--line-strong);
-  border-radius: 0.45rem;
+  border-top: 0;
+  border-radius: 0 0 0.45rem 0.45rem;
   overflow: hidden;
   background: rgba(29, 24, 19, 0.94);
   box-shadow: var(--shadow);
 }
 
+.answer-card:focus {
+  outline: 0;
+}
+
+.answer-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1.15rem;
+  border-bottom: 1px solid var(--line);
+  background: rgba(198, 161, 91, 0.07);
+}
+
+.answer-mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--ink);
+  background: var(--gold);
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.answer-heading h2 {
+  margin: 0;
+  color: var(--parchment);
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.answer-status {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--gold);
+  font-size: 0.56rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+}
 .answer-opening {
   margin: 0;
   padding: 1rem 1.15rem;
@@ -645,6 +735,17 @@ dialog h2 {
 
 .voice-list {
   display: grid;
+}
+
+.answer-section-label {
+  margin: 0;
+  padding: 0.65rem 1.15rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--parchment-dim);
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .source-voice {
@@ -673,6 +774,13 @@ dialog h2 {
 
 .source-voice p {
   margin: 0;
+}
+
+.source-voice .voice-source {
+  margin-bottom: 0.35rem;
+  color: var(--verdigris);
+  font-size: 0.62rem;
+  font-weight: 750;
 }
 
 .source-voice .summary {
@@ -725,15 +833,21 @@ dialog h2 {
   background: rgba(22, 33, 28, 0.48);
 }
 
-.commentary-panel > h3 {
+.commentary-heading {
   margin: 0;
   padding: 0.75rem 1.15rem;
+  cursor: pointer;
   color: #b9d0c5;
   font-size: 0.64rem;
   font-weight: 850;
   letter-spacing: 0.08em;
+  list-style: none;
   text-transform: uppercase;
 }
+
+.commentary-heading::-webkit-details-marker { display: none; }
+.commentary-heading::after { content: ' +'; color: var(--verdigris); }
+.commentary-panel[open] > .commentary-heading::after { content: ' −'; }
 
 .commentary-list {
   display: grid;
@@ -822,9 +936,9 @@ dialog h2 {
 }
 
 .question-form {
-  padding: 0.85rem clamp(1rem, 4vw, 3.5rem) 1rem;
-  border-top: 1px solid var(--line);
-  background: rgba(23, 19, 15, 0.96);
+  padding: 0.55rem clamp(1rem, 4vw, 3.5rem) 0.75rem;
+  border-bottom: 1px solid rgba(232, 223, 206, 0.08);
+  background: rgba(23, 19, 15, 0.9);
 }
 
 .question-form > label {
@@ -1106,6 +1220,7 @@ dialog h2 {
   .topbar {
     height: 64px;
     padding: 0 0.75rem;
+    background: var(--ink);
   }
 
   .mobile-only {
@@ -1164,7 +1279,7 @@ dialog h2 {
 
   .chamber {
     min-height: calc(100dvh - 64px);
-    grid-template-rows: auto auto minmax(420px, 1fr) auto;
+    grid-template-rows: auto auto auto auto;
     overflow-x: clip;
     overflow-y: visible;
   }
@@ -1200,7 +1315,7 @@ dialog h2 {
   }
 
   .prompt-ribbon {
-    padding-bottom: 0.8rem;
+    padding: 0.2rem 0.75rem 0.8rem;
   }
 
   .transcript {
@@ -1210,13 +1325,20 @@ dialog h2 {
 
   .turn {
     width: 100%;
+    scroll-margin-top: 74px;
   }
 
-  .user-message {
-    max-width: 88%;
+  .turn-question {
+    grid-template-columns: 1fr auto;
+    gap: 0.35rem 0.6rem;
+  }
+
+  .turn-label {
+    grid-column: 1 / -1;
   }
 
   .answer-opening,
+  .answer-heading,
   .source-voice,
   .citation-strip,
   .boundary-guidance {
@@ -1227,6 +1349,7 @@ dialog h2 {
   .question-form {
     position: static;
     padding: 0.7rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom));
+    background: rgba(23, 19, 15, 0.985);
   }
 
   .question-box {

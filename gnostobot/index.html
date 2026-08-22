@@ -82,31 +82,29 @@
         </div>
       </div>
 
-      <div class="prompt-ribbon" aria-label="Suggested questions">
-        <button type="button" data-prompt="What is gnosis?">What is gnosis?</button>
-        <button type="button" data-prompt="Who made this world?">Who made this world?</button>
-        <button type="button" data-prompt="How does the soul become free?">How does the soul become free?</button>
-        <button type="button" data-prompt="Why did Sophia fall?">Why did Sophia fall?</button>
-        <button type="button" data-prompt="What is resurrection?">What is resurrection?</button>
-        <button type="button" data-prompt="What does The Kybalion teach about polarity?">Kybalion on polarity?</button>
-      </div>
-
-      <div class="transcript" id="transcript" aria-live="polite" aria-busy="false"></div>
-
       <form class="question-form" id="question-form">
-        <label for="question">Ask the library</label>
+        <label for="question">Ask your question</label>
         <div class="question-box">
-          <textarea id="question" name="question" rows="1" maxlength="320" placeholder="Ask about light, Sophia, the rulers, the soul…" required></textarea>
-          <button class="ask-button" type="submit" aria-label="Ask Gnostobot">
-            <span>ASK</span>
+          <textarea id="question" name="question" rows="1" maxlength="320" placeholder="Type your own question about Gnostic ideas or texts…" required></textarea>
+          <button class="ask-button" type="submit" aria-label="Get a sourced answer">
+            <span>GET ANSWER</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 13-7-4 14-2-6-7-1Z"/></svg>
           </button>
         </div>
         <div class="form-meta">
-          <span>Answers remain on this device</span>
+          <span>Source-grounded · stays on this device</span>
           <span id="char-count">0 / 320</span>
         </div>
       </form>
+
+      <div class="prompt-ribbon" aria-label="Example questions">
+        <span class="prompt-label">Try an example</span>
+        <button type="button" data-prompt="What is gnosis?">What is gnosis?</button>
+        <button type="button" data-prompt="Who made this world?">Who made this world?</button>
+        <button type="button" data-prompt="Why did Sophia fall?">Why did Sophia fall?</button>
+      </div>
+
+      <div class="transcript" id="transcript" aria-live="polite" aria-busy="false"></div>
     </section>
   </main>
 

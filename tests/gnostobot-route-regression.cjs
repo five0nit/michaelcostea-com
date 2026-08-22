@@ -31,12 +31,28 @@ must(document.querySelector('meta[property="og:image"]')?.content === 'https://m
 must(document.querySelector('meta[name="twitter:card"]')?.content === 'summary_large_image', 'Gnostobot Twitter card missing');
 must(clean(document.querySelector('#layer-legend')?.textContent).includes('Primary witnesses'), 'primary layer legend missing');
 must(clean(document.querySelector('#layer-legend')?.textContent).includes('Historical Kindle library'), 'commentary layer legend missing');
+const form = html.indexOf('id="question-form"');
+const examples = html.indexOf('class="prompt-ribbon"');
+const transcript = html.indexOf('id="transcript"');
+must(form > -1 && form < examples && examples < transcript, 'ask box must precede examples and answers');
+must(clean(document.querySelector('.prompt-label')?.textContent) === 'Try an example', 'example prompts need an explicit label');
+must(document.querySelectorAll('[data-prompt]').length === 3, 'example prompt set must stay compact');
+must(clean(document.querySelector('.ask-button')?.textContent).includes('GET ANSWER'), 'answer CTA must be explicit');
 must(!/localhost|127\.0\.0\.1|\/home\/|\/mnt\//i.test(html), 'deployed Gnostobot HTML exposes a local host or path');
 
 const sw = read('gnostobot/sw.js');
-must(sw.includes("gnostobot-v3"), 'deployed correction release must invalidate the v2 cache');
+must(sw.includes("gnostobot-v4"), 'direct-answer UX release must invalidate the v3 cache');
 for (const asset of ['./social-preview.png', './src/commentary.js', './src/corpus.js', './src/engine.js']) {
   must(sw.includes(asset), `deployed service worker missing ${asset}`);
+}
+
+const app = read('gnostobot/src/app.js');
+for (const marker of ["createElement('details', 'turn')", 'function scrollTurnToAnswer', "'answer-heading'", "'Source evidence'"]) {
+  must(app.includes(marker), `deployed direct-answer app missing ${marker}`);
+}
+const styles = read('gnostobot/styles.css');
+for (const marker of ['.chamber.has-turns .prompt-ribbon', '.answer-heading', '.turn[open] > .turn-question']) {
+  must(styles.includes(marker), `deployed direct-answer styles missing ${marker}`);
 }
 
 const commentary = read('gnostobot/src/commentary.js');
