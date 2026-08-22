@@ -1,0 +1,17 @@
+{
+  "name": "Gnostobot — Ask the Hidden Library",
+  "short_name": "Gnostobot",
+  "description": "A source-grounded guide through ancient Gnostic codices and manuscripts predating 1850.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#17130f",
+  "theme_color": "#17130f",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

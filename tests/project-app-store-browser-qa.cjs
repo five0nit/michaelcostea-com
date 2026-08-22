@@ -51,11 +51,11 @@ const cases = [
       };
     }, testCase.card);
 
-    if (initial.visible !== 19) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
+    if (initial.visible !== 20) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
     if (initial.detailsOpen !== 0) throw new Error(`${testCase.label} technical details must start closed`);
     if (initial.rankRibbons !== 0 || initial.rankAttributes !== 0) throw new Error(`${testCase.label} ranking labels remain`);
     if (initial.creationDateMarkers !== 0) throw new Error(`${testCase.label} creation dates must remain hidden`);
-    if (initial.titles.slice(0, 3).join('|') !== 'Mike Kindle OS|Mundus Vult Decipi|Presence Action Broker' || initial.titles.at(-1) !== 'michaelcostea.com / MICHAEL OS 89') throw new Error(`${testCase.label} creation-date order wrong`);
+    if (initial.titles.slice(0, 3).join('|') !== 'Gnostobot|Mike Kindle OS|Mundus Vult Decipi' || initial.titles.at(-1) !== 'michaelcostea.com / MICHAEL OS 89') throw new Error(`${testCase.label} creation-date order wrong`);
     if (initial.columns !== testCase.columns) throw new Error(`${testCase.label} expected ${testCase.columns} columns, got ${initial.columns}`);
     if (initial.brokenImages.length) throw new Error(`${testCase.label} broken images: ${initial.brokenImages.join(', ')}`);
     if (initial.overflow > 1) throw new Error(`${testCase.label} horizontal overflow ${initial.overflow}px`);

@@ -10,6 +10,7 @@ const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
 const titles = (document, selector) => [...document.querySelectorAll(selector)].map(card => clean(card.querySelector('h3')?.textContent));
 
 const expected = [
+  'Gnostobot',
   'Mike Kindle OS',
   'Mundus Vult Decipi',
   'Presence Action Broker',
@@ -39,7 +40,7 @@ if (JSON.stringify(titles(home, '#projectsWindow .project-showcase-card')) !== J
 if (JSON.stringify(titles(projects, '.detailed-archive > .project-archive-card')) !== JSON.stringify(expected)) {
   throw new Error('crawlable recent-project order mismatch');
 }
-if (homeCards.length !== 19 || projectCards.length !== 19) throw new Error('portfolio must expose exactly 19 projects');
+if (homeCards.length !== 20 || projectCards.length !== 20) throw new Error('portfolio must expose exactly 20 projects');
 if (!homeCards.every((card) => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank'))) throw new Error('MichaelOS must not expose ranking ribbons');
 if (!projectCards.every((card) => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank'))) throw new Error('crawlable library must not expose ranking ribbons');
 
@@ -107,7 +108,7 @@ for (const addition of additions) {
   if (!fs.existsSync(asset) || fs.statSync(asset).size < 10000) throw new Error(`${addition.title} proof asset missing or too small`);
 }
 
-if (!clean(home.querySelector('#projectsWindow .app-store-browser-head')?.textContent).includes('All 19 here')) {
+if (!clean(home.querySelector('#projectsWindow .app-store-browser-head')?.textContent).includes('All 20 here')) {
   throw new Error('MichaelOS visible-project count is stale');
 }
 if (!clean(projects.querySelector('#ranked-projects-title')?.textContent).includes('Michael’s project shelf')) {

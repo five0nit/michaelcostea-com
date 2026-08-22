@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17130f">
+  <meta name="description" content="Ask nine pre-1850 Gnostic manuscript witnesses, with later Kindle commentary kept in a separate historical layer.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://michaelcostea.com/gnostobot/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Gnostobot — Ask the Hidden Library">
+  <meta property="og:description" content="Source-bound Gnostic answers from named manuscript witnesses, plus clearly separated historical Kindle commentary.">
+  <meta property="og:url" content="https://michaelcostea.com/gnostobot/">
+  <meta property="og:image" content="https://michaelcostea.com/gnostobot/social-preview.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gnostobot — Ask the Hidden Library">
+  <meta name="twitter:description" content="Nine manuscript witnesses. Thirteen historical Kindle records. One hard authority boundary.">
+  <meta name="twitter:image" content="https://michaelcostea.com/gnostobot/social-preview.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Gnostobot — Ask the Hidden Library</title>
+</head>
+<body>
+  <a class="skip-link" href="#question">Skip to question</a>
+
+  <header class="topbar">
+    <button class="icon-button mobile-only" id="sources-toggle" type="button" aria-label="Open source codices" aria-controls="source-shelf" aria-expanded="false">
+      <span aria-hidden="true">☷</span>
+    </button>
+    <a class="brand" href="./" aria-label="Gnostobot home">
+      <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-label="Eye inside broken circle">
+        <path d="M49.8 15.2A23.5 23.5 0 1 0 54.4 45" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <path d="M10 32s8.2-11 22-11 22 11 22 11-8.2 11-22 11S10 32 10 32Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="32" cy="32" r="5.5" fill="currentColor"/>
+        <path d="m49 7 1.8 6.2L57 15l-6.2 1.8L49 23l-1.8-6.2L41 15l6.2-1.8L49 7Z" fill="currentColor"/>
+      </svg>
+      <span>
+        <strong>GNOSTOBOT</strong>
+        <small>ASK THE HIDDEN LIBRARY</small>
+      </span>
+    </a>
+    <div class="topbar-actions">
+      <span class="offline-badge" id="network-status"><i></i> Local corpus</span>
+      <button class="text-button" id="memory-open" type="button">Memory <span id="memory-count">0</span></button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="source-shelf" id="source-shelf" aria-label="Primary witnesses and historical Kindle library">
+      <div class="shelf-heading">
+        <p class="eyebrow">THE SEALED SHELF</p>
+        <h2>9 witnesses + 13 library records</h2>
+        <p>Ancient evidence and later interpretation remain visibly separate.</p>
+      </div>
+      <div class="layer-legend" id="layer-legend" aria-label="Knowledge layers">
+        <span><i class="layer-dot primary"></i><strong>Primary witnesses</strong> · answer authority</span>
+        <span><i class="layer-dot commentary"></i><strong>Historical Kindle library</strong> · comparison only</span>
+      </div>
+      <label class="source-search">
+        <span class="sr-only">Filter sources</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
+        <input id="source-filter" type="search" placeholder="Filter the shelf…" autocomplete="off">
+      </label>
+      <div class="source-list" id="source-list"></div>
+      <div class="shelf-policy">
+        <span class="policy-sigil">1850</span>
+        <p><strong>Hard boundary</strong><br>Only pre-1850 manuscript witnesses author the main answer. Kindle books appear in a separate commentary panel.</p>
+      </div>
+    </aside>
+
+    <section class="chamber" aria-label="Conversation with Gnostobot">
+      <div class="chamber-header">
+        <div class="guru-avatar" aria-hidden="true">
+          <span class="halo"></span>
+          <span class="face">G</span>
+        </div>
+        <div>
+          <p class="eyebrow">SOURCE-BOUND ORACLE</p>
+          <h1>Ask what survives.</h1>
+          <p>No web search. No invented revelation. Codex evidence stays separate from later library commentary.</p>
+        </div>
+      </div>
+
+      <div class="prompt-ribbon" aria-label="Suggested questions">
+        <button type="button" data-prompt="What is gnosis?">What is gnosis?</button>
+        <button type="button" data-prompt="Who made this world?">Who made this world?</button>
+        <button type="button" data-prompt="How does the soul become free?">How does the soul become free?</button>
+        <button type="button" data-prompt="Why did Sophia fall?">Why did Sophia fall?</button>
+        <button type="button" data-prompt="What is resurrection?">What is resurrection?</button>
+        <button type="button" data-prompt="What does The Kybalion teach about polarity?">Kybalion on polarity?</button>
+      </div>
+
+      <div class="transcript" id="transcript" aria-live="polite" aria-busy="false"></div>
+
+      <form class="question-form" id="question-form">
+        <label for="question">Ask the library</label>
+        <div class="question-box">
+          <textarea id="question" name="question" rows="1" maxlength="320" placeholder="Ask about light, Sophia, the rulers, the soul…" required></textarea>
+          <button class="ask-button" type="submit" aria-label="Ask Gnostobot">
+            <span>ASK</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 13-7-4 14-2-6-7-1Z"/></svg>
+          </button>
+        </div>
+        <div class="form-meta">
+          <span>Answers remain on this device</span>
+          <span id="char-count">0 / 320</span>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <dialog class="source-dialog" id="source-dialog" aria-labelledby="source-dialog-title">
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Close source details">×</button>
+    <p class="eyebrow" id="source-dialog-layer">SOURCE RECORD</p>
+    <h2 id="source-dialog-title"></h2>
+    <div id="source-dialog-body"></div>
+  </dialog>
+
+  <dialog class="memory-dialog" id="memory-dialog" aria-labelledby="memory-dialog-title">
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Close memory">×</button>
+    <p class="eyebrow">LOCAL MEMORY</p>
+    <h2 id="memory-dialog-title">Thread of inquiry</h2>
+    <p>Questions and cited source IDs only. Stored in this browser. Never promoted into the knowledge corpus.</p>
+    <div class="memory-summary" id="memory-summary"></div>
+    <div class="memory-list" id="memory-list"></div>
+    <button class="danger-button" id="memory-clear" type="button">Erase local memory</button>
+  </dialog>
+
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
