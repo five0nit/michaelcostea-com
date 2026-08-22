@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gnostobot-v2';
+const CACHE_NAME = 'gnostobot-v3';
 const ASSETS = [
   './',
   './index.html',

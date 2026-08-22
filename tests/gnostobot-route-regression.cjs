@@ -34,9 +34,19 @@ must(clean(document.querySelector('#layer-legend')?.textContent).includes('Histo
 must(!/localhost|127\.0\.0\.1|\/home\/|\/mnt\//i.test(html), 'deployed Gnostobot HTML exposes a local host or path');
 
 const sw = read('gnostobot/sw.js');
+must(sw.includes("gnostobot-v3"), 'deployed correction release must invalidate the v2 cache');
 for (const asset of ['./social-preview.png', './src/commentary.js', './src/corpus.js', './src/engine.js']) {
   must(sw.includes(asset), `deployed service worker missing ${asset}`);
 }
+
+const commentary = read('gnostobot/src/commentary.js');
+for (const marker of [
+  'Second, completely revised edition, London, 1921',
+  'Volume IV is an index',
+  'supplied Yogi Publication Society title page dated 1912',
+  'containing only Oracles 1–38',
+  'Mark Lidzbarski’s German'
+]) must(commentary.includes(marker), `deployed commentary missing reviewed provenance: ${marker}`);
 
 const sitemap = read('sitemap.xml');
 const routeMatches = sitemap.match(/<loc>https:\/\/michaelcostea\.com\/gnostobot\/<\/loc>/g) || [];

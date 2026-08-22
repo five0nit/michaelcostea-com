@@ -3,11 +3,11 @@ export const commentarySources = [
     id: 'blavatsky-key',
     title: 'The Key to Theosophy',
     author: 'H. P. Blavatsky',
-    publication: 'London, 1889',
+    publication: 'First published 1889; supplied 1920 United Lodge of Theosophists reprint',
     publicationYear: 1889,
     tradition: 'Theosophical interpretation',
     relation: 'Later comparative synthesis using Gnostic, Hindu, Buddhist, and Western esoteric vocabulary.',
-    description: 'A question-and-answer presentation of Theosophy, including its account of wisdom-religion, human constitution, karma, rebirth, and spiritual knowledge.',
+    description: 'A question-and-answer presentation of Theosophy, including its account of wisdom-religion, human constitution, karma, rebirth, and spiritual knowledge. The Kindle text identifies itself as a 1920 verbatim reprint of the original edition.',
     caveat: 'This is a nineteenth-century Theosophical synthesis, not an ancient Gnostic witness and not evidence for what a surviving codex originally taught.',
     kindleTitle: 'The Key to Theosophy',
     kindleStatus: 'Verified in the canonical Kindle library and copied to the device.',
@@ -19,13 +19,13 @@ export const commentarySources = [
   {
     id: 'blavatsky-secret-doctrine',
     title: 'The Secret Doctrine, Volumes I–IV',
-    author: 'H. P. Blavatsky',
-    publication: '1888 and later collected volumes',
+    author: 'H. P. Blavatsky; Volume III posthumously arranged by Annie Besant; Volume IV is an index',
+    publication: 'Core work 1888; supplied Volumes I–II revised 1893, Volume III 1897, Volume IV index 1895',
     publicationYear: 1888,
     tradition: 'Theosophical cosmological synthesis',
     relation: 'Later comparison for emanation, hidden wisdom, cycles, and spiritual anthropology.',
-    description: 'A large Theosophical synthesis organised around cosmogenesis, anthropogenesis, comparative religion, and claimed archaic stanzas.',
-    caveat: 'Its Stanzas of Dzyan and universal-history claims are Theosophical assertions, not independently admitted manuscript evidence in Gnostobot.',
+    description: 'Volumes I–II present cosmogenesis and anthropogenesis; Volume III is a posthumous editorial assembly from unfinished papers; Volume IV is an index rather than an additional doctrinal volume.',
+    caveat: 'Its Stanzas of Dzyan and universal-history claims are Theosophical assertions, not independently admitted manuscript evidence. Volume III is editorially unstable and Volume IV must not be treated as authored doctrine.',
     kindleTitle: 'The Secret Doctrine, Volumes I–IV',
     kindleStatus: 'All four volumes are verified in the canonical Kindle library and copied to the device.',
     url: 'https://www.gutenberg.org/ebooks/54824',
@@ -37,7 +37,7 @@ export const commentarySources = [
     id: 'blavatsky-isis',
     title: 'Isis Unveiled, Volumes I–II',
     author: 'H. P. Blavatsky',
-    publication: 'New York, 1877',
+    publication: 'First published 1877; supplied fourth-edition title pages dated 1878',
     publicationYear: 1877,
     tradition: 'Theosophical critique and comparative occultism',
     relation: 'Later polemical comparison touching magic, ancient religion, Christianity, and Gnostic survivals.',
@@ -54,8 +54,8 @@ export const commentarySources = [
     id: 'blavatsky-studies',
     title: 'Studies in Occultism',
     author: 'H. P. Blavatsky',
-    publication: 'Collected late-nineteenth-century essays',
-    publicationYear: 1890,
+    publication: 'Point Loma collection, 1910; supplied essays originally published in 1888 and 1891',
+    publicationYear: 1910,
     tradition: 'Theosophical practical occultism',
     relation: 'Later ethical comparison for discipline, motive, secrecy, and claimed occult training.',
     description: 'A short collection stressing the moral and psychological demands that its author associates with practical occult training.',
@@ -71,7 +71,7 @@ export const commentarySources = [
     id: 'kybalion',
     title: 'The Kybalion',
     author: 'Three Initiates',
-    publication: 'Chicago, 1908',
+    publication: 'First published 1908; supplied Yogi Publication Society title page dated 1912',
     publicationYear: 1908,
     tradition: 'New Thought–era Hermetic attribution',
     relation: 'Modern comparison for mentalism, correspondence, polarity, rhythm, and mental transmutation.',
@@ -86,14 +86,14 @@ export const commentarySources = [
   },
   {
     id: 'mead-pistis-edition',
-    title: 'Pistis Sophia — G. R. S. Mead edition',
+    title: 'Pistis Sophia — G. R. S. Mead revised edition',
     author: 'G. R. S. Mead',
-    publication: 'English translation, 1896',
-    publicationYear: 1896,
+    publication: 'Second, completely revised edition, London, 1921; first edition 1896',
+    publicationYear: 1921,
     tradition: 'Historical translation and editorial framing',
     relation: 'A later access edition of an admitted ancient work preserved in the Askew Codex.',
-    description: 'Mead’s public-domain English translation gives direct reading access to Pistis Sophia while also carrying nineteenth-century editorial choices.',
-    caveat: 'The Askew Codex is the authority. Mead’s wording and chapter divisions are a later translation layer and must not be confused with the manuscript itself.',
+    description: 'The supplied 1921 edition revises Mead’s earlier English rendering against Carl Schmidt’s German translation and adds editorial chapter and paragraph divisions.',
+    caveat: 'The Askew Codex is the authority. Mead did not translate directly from Coptic: his English was mediated through earlier Latin and French versions, then revised against Schmidt. His title, wording, chapters, and paragraphing are editorial.',
     kindleTitle: 'Pistis Sophia',
     kindleStatus: 'Verified in the canonical Kindle library and copied to the device.',
     url: 'https://archive.org/details/pistis-sophia_1896',
@@ -161,7 +161,7 @@ export const commentarySources = [
     tradition: 'Historical study of Mandaean John traditions',
     relation: 'Comparative Mandaean material concerning baptism, living water, light, the soul, and John the Baptizer.',
     description: 'Mead compares New Testament and Josephus material with translated Mandaean traditions and selected narratives about John and the Fisher of Souls.',
-    caveat: 'This is an early twentieth-century reconstruction based on then-limited translations; Mandaean tradition is related comparison, not proof of Christian Gnostic origins.',
+    caveat: 'Mead translated from Mark Lidzbarski’s German rather than directly from Mandaic and lacked a complete Ginza translation. The reconstruction is provisional, the OCR is substantially corrupted, and Mandaean tradition is comparison rather than proof of Christian Gnostic origins.',
     kindleTitle: 'The Gnostic John the Baptizer',
     kindleStatus: 'Verified in the canonical Kindle library and copied to the device.',
     url: 'https://archive.org/details/gnostic-john-the-baptizer',
@@ -171,26 +171,26 @@ export const commentarySources = [
   },
   {
     id: 'westcott-oracles',
-    title: 'The Chaldaean Oracles of Zoroaster',
-    author: 'W. Wynn Westcott',
-    publication: 'English collection, 1895',
-    publicationYear: 1895,
+    title: 'The Chaldaean Oracles, attributed to Zoroaster',
+    author: 'Traditional attribution to Zoroaster; revised compilation with preface by W. Wynn Westcott',
+    publication: 'Partial Hermetic Library webpage capture dated 2015; compilation draws on earlier fragment collections',
+    publicationYear: 2015,
     tradition: 'Neoplatonic and Chaldaean comparative material',
     relation: 'Comparative fragments concerning paternal mind, intelligible orders, fire, soul, and ascent.',
-    description: 'Westcott arranges surviving Greek fragments and later testimonia attributed to the Chaldaean Oracles into a short English collection.',
-    caveat: 'The fragments are disjointed, their attribution is uncertain, and Westcott’s Kabbalistic comparisons are editorial interpretation rather than source identity.',
+    description: 'The supplied file is a captured revised compilation of Greek fragments and later quotations, with editorial source labels and a Westcott preface.',
+    caveat: 'The capture is partial, containing only Oracles 1–38. The fragments are disjointed, attribution is uncertain, and the Z/T source labels and Kabbalistic comparisons are editorial judgments rather than source identity.',
     kindleTitle: 'The Chaldaean Oracles of Zoroaster',
     kindleStatus: 'Verified in the canonical Kindle library and copied to the device.',
     url: 'https://archive.org/details/the-chaldean-oracles',
-    accessLabel: 'Internet Archive edition',
+    accessLabel: 'Accessible Internet Archive reading copy',
     layer: 'commentary',
     authority: 'historical-commentary'
   },
   {
     id: 'everard-pymander',
     title: 'The Divine Pymander',
-    author: 'Hermes Trismegistus; translated by John Everard',
-    publication: 'English translation, 1650',
+    author: 'Hermes Trismegistus; English translation traditionally attributed to John Everard',
+    publication: 'Early-modern London edition, approximately 1650; supplied scan has damaged OCR',
     publicationYear: 1650,
     tradition: 'Early-modern Hermetic translation',
     relation: 'Comparative Corpus Hermeticum material concerning divine mind, light, self-knowledge, creation, and return.',
@@ -284,28 +284,28 @@ export const commentaryPassages = [
     context: 'Use as a labelled modern comparison only; it does not explain what the Nag Hammadi or Askew witnesses meant.'
   },
   {
-    id: 'mead-pistis-repentances', sourceId: 'mead-pistis-edition', locator: 'Mead edition, chapters 29–62: Sophia’s repentances',
-    keywords: ['mead', 'pistis sophia', 'sophia', 'repentance', 'translation', 'light'],
-    summary: 'Mead’s chaptered translation presents Sophia’s repeated appeals to the Light as an extended sequence of repentance, lament, endurance, and reorientation.',
-    context: 'The underlying Askew Codex remains primary; this record identifies the wording and structure of Mead’s 1896 access edition.'
+    id: 'mead-pistis-translation-method', sourceId: 'mead-pistis-edition', locator: 'Preface, print pages xvii–xx',
+    keywords: ['mead', 'pistis sophia', 'translation history', 'coptic', 'carl schmidt', 'editorial divisions'],
+    summary: 'Mead explains that his 1921 English text is a mediated rendering revised against Carl Schmidt’s German translation; its chapter and detailed paragraph divisions are editorial aids absent from the Coptic manuscript.',
+    context: 'The Askew Codex remains primary. This note records Mead’s translation chain and editorial apparatus, not a teaching spoken by the ancient work.'
   },
   {
-    id: 'mead-pistis-rescue', sourceId: 'mead-pistis-edition', locator: 'Mead edition, chapters 63–82: assistance and ascent',
-    keywords: ['mead', 'pistis sophia', 'rescue', 'light power', 'chaos', 'ascent'],
-    summary: 'The later chapter sequence depicts assistance from the higher Light working with Sophia’s own turning as she is defended from powers of chaos.',
-    context: 'Compare the translation against manuscript-based scholarship before relying on technical names or chapter boundaries.'
+    id: 'mead-pistis-codex-miscellany', sourceId: 'mead-pistis-edition', locator: 'Introduction, “The Contents” and “The Title,” print pages xxiii–xxv',
+    keywords: ['mead', 'pistis sophia', 'askew codex', 'books of the saviour', 'miscellany', 'title', 'textual composition'],
+    summary: 'Mead treats the Askew Codex as a miscellany containing excerpts, interruptions, and multiple literary strata, and argues that Pistis Sophia is a conventional but misleading title for the whole collection.',
+    context: 'This is Mead’s 1921 codicological interpretation. It must not be attributed to the manuscript as its own account of title or composition.'
   },
   {
-    id: 'fragments-gnosis-way', sourceId: 'mead-fragments', locator: '“Preliminary Considerations,” subsection “The Gnostic Schools”',
-    keywords: ['mead', 'gnostic schools', 'gnosis', 'knowledge', 'god', 'path', 'wisdom'],
-    summary: 'Mead characterises the Gnostic aim as knowledge of divine realities and stresses that gnosis functions as the beginning of a path rather than its final end.',
-    context: 'This is Mead’s 1900 synthesis of evidence then available, valuable for historiography but later than the codices.'
+    id: 'fragments-threefold-anthropology', sourceId: 'mead-fragments', locator: '“The Tendencies of Gnosticism,” subsection “Various Classes of Souls”',
+    keywords: ['mead', 'hylic', 'psychic', 'pneumatic', 'soul classes', 'spiritual hierarchy', 'gnosis'],
+    summary: 'Mead synthesises hylic, psychic, and pneumatic categories as degrees of receptivity to spiritual knowledge and extends the hierarchy from human beings to cosmic powers.',
+    context: 'This is Mead’s sympathetic 1900 reconstruction across distinct movements, not a uniform anthropology stated by every Gnostic school.'
   },
   {
-    id: 'fragments-source-bias', sourceId: 'mead-fragments', locator: '“The Literature and Sources of Gnosticism” and “The Gnosis According to Its Foes”',
-    keywords: ['mead', 'sources', 'church fathers', 'polemics', 'fragments', 'codices', 'bias'],
-    summary: 'The survey distinguishes hostile heresiological reports from recovered fragments and Coptic books, warning that source position shapes the picture of Gnostic groups.',
-    context: 'The source-criticism principle remains useful, though the book predates discovery of the Nag Hammadi library.'
+    id: 'fragments-source-bias', sourceId: 'mead-fragments', locator: '“The Literature and Sources of Gnosticism,” subsection “Indirect Sources”',
+    keywords: ['mead', 'sources', 'irenaeus', 'heresiology', 'church fathers', 'coptic manuscripts', 'bias'],
+    summary: 'Mead distinguishes hostile patristic reports from Coptic texts transmitted closer to Gnostic circles and warns that later refutations often depend on Irenaeus and inherit polemical framing.',
+    context: 'The source-criticism principle remains useful, though the survey predates the Nag Hammadi discoveries and its direct-versus-indirect categories require modern review.'
   },
   {
     id: 'hermes-poimandres', sourceId: 'mead-hermes', locator: 'Volume II, Corpus Hermeticum I, “Poimandres, the Shepherd of Men”',
@@ -320,63 +320,63 @@ export const commentaryPassages = [
     context: 'Compare the pattern with Gnostic transformation while preserving the separate Hermetic source line.'
   },
   {
-    id: 'king-material-remains', sourceId: 'king-gnostics', locator: 'Part III, “Abraxas, Abraxaster, and Abraxoid Gems”',
-    keywords: ['king', 'abraxas', 'gems', 'amulets', 'names', 'symbols', 'material culture'],
-    summary: 'King catalogues engraved gems, divine names, figures, and amuletic formulae as material evidence for the religious mixtures he associates with Gnostic practice.',
-    context: 'Individual object attributions are antiquarian and must be checked against modern provenance and iconographic scholarship.'
+    id: 'king-origin-thesis', sourceId: 'king-gnostics', locator: 'Part I, “Gnosticism and Its Origin,” print pages 18–20',
+    keywords: ['king', 'gnosticism', 'origins', 'india', 'buddhism', 'alexandria', 'diffusionism', 'syncretism'],
+    summary: 'King treats Gnosticism as a family of eastern sects centred on divine knowledge, then advances a diffusionist account connecting their formation with Indian and Buddhist contact and Alexandrian synthesis.',
+    context: 'The proposed Indian-origin route and broad cross-cultural identifications are nineteenth-century antiquarian hypotheses, not current consensus.'
   },
   {
-    id: 'king-source-classification', sourceId: 'king-gnostics', locator: 'Introduction and Part I, “Gnosticism and Its Sources”',
-    keywords: ['king', 'gnosticism', 'sources', 'classification', 'syncretism', 'remains'],
-    summary: 'The study tries to distinguish schools and trace symbols across Egyptian, Persian, Jewish, Greek, and Christian settings rather than treating every object as one uniform system.',
-    context: 'Its very broad diffusion model is historically situated and sometimes speculative; use it as a record of scholarship, not settled taxonomy.'
+    id: 'king-sigla-interpretation', sourceId: 'king-gnostics', locator: 'Part IV, “Gnostic Sigle, Symbols, Legends Explained,” print pages 270–272',
+    keywords: ['king', 'gnostic gems', 'sigla', 'talismans', 'divination', 'sacred numerals', 'pistis sophia'],
+    summary: 'King interprets angular marks on supposed Gnostic talismans through comparisons with divination lots, sacred numerals, cuneiform signs, and divine names drawn from Pistis Sophia.',
+    context: 'Many object attributions are disputed and the supplied OCR has unreliable reading order; use this as antiquarian interpretation pending modern provenance review.'
   },
   {
-    id: 'john-baptism', sourceId: 'mead-gnostic-john', locator: 'Part I, “The Sanctification of the Jordan-water” and “The Probable Symbolic Signification of John’s Baptism”',
-    keywords: ['john baptizer', 'mead', 'baptism', 'jordan', 'repentance', 'water', 'rebirth'],
-    summary: 'Mead interprets John’s Jordan rite as more than external washing: repentance and immersion signify a break with the old life and a regenerative beginning.',
-    context: 'This is Mead’s comparative reconstruction from Christian, Josephus, and Mandaean materials, not a direct Mandaean or Gnostic manuscript statement.'
+    id: 'john-historicity-boundary', sourceId: 'mead-gnostic-john', locator: 'Foreword, print pages v–vi',
+    keywords: ['john baptizer', 'mead', 'mandaeans', 'communal memory', 'historicity', 'christian origins'],
+    summary: 'Mead frames the Mandaean John narratives as inward communal memory rather than external biography and treats their implications for Christian origins as historically unresolved.',
+    context: 'This records Mead’s provisional historical framing, not a direct statement from the Mandaean John-Book or proof about Christian origins.'
   },
   {
-    id: 'john-fisher-souls', sourceId: 'mead-gnostic-john', locator: 'Part II, “Some Typical Extracts”: “The Fisher of Souls” and “The Light-ship”',
-    keywords: ['john baptizer', 'mandaean', 'fisher of souls', 'light ship', 'rescue', 'soul'],
-    summary: 'Selected Mandaean narratives picture a good Fisher gathering souls into a vessel of light while hostile fishers represent deceptive powers and rival claims.',
-    context: 'The imagery is comparative Mandaean tradition; Mead’s 1924 framing and available translations were incomplete.'
+    id: 'john-source-chain', sourceId: 'mead-gnostic-john', locator: 'Part II, “From the John-Book of the Mandaeans — Introductory,” print pages 29–34',
+    keywords: ['john baptizer', 'mead', 'mandaean john book', 'sidra d-yahya', 'ginza', 'lidzbarski', 'translation chain'],
+    summary: 'Mead inventories the principal Mandaean collections and explains that his English John-Book selections follow Lidzbarski’s German while distinguishing potentially older material from later redaction.',
+    context: 'The German-to-English mediation, incomplete source access, uncertain redaction, and damaged OCR limit the historical conclusions that can be drawn.'
   },
   {
-    id: 'oracles-paternal-depth', sourceId: 'westcott-oracles', locator: 'Introduction, “Chaldaean Scheme” and discussion of the Paternal Depth',
-    keywords: ['chaldaean oracles', 'paternal depth', 'first mind', 'light', 'intelligible', 'triad'],
-    summary: 'Westcott’s scheme places a Paternal Depth and First Mind above successive intelligible, intellectual, ethereal, and elementary orders of manifestation.',
-    context: 'The diagram is Westcott’s editorial synthesis of fragments and later reports, not a continuous ancient text.'
+    id: 'oracles-paternal-mind', sourceId: 'westcott-oracles', locator: '“Cause. God. Father. Mind. Fire,” Oracles 12–16, captured webpage page 8/10',
+    keywords: ['chaldaean oracles', 'paternal mind', 'paternal depth', 'divine fire', 'second mind', 'emanation'],
+    summary: 'The compilation places Paternal Mind before manifested activity in the divine Depth; all things issue from one Fire and are entrusted to a Second Mind in a mediated intellectual emanation.',
+    context: 'The sequence survives as disjointed fragments in a partial editorial compilation; it is comparative Chaldaean material, not a continuous Gnostic source.'
   },
   {
-    id: 'oracles-paths-soul', sourceId: 'westcott-oracles', locator: 'Introduction, discussion of “The Paths of the Soul”',
-    keywords: ['chaldaean oracles', 'soul', 'paths', 'fire', 'ascent', 'paternal mind'],
-    summary: 'The collection describes fiery paths, fountains, and vehicles of the soul within a cosmos ordered by paternal mind and subordinate governing powers.',
-    context: 'Attribution and sequence are uncertain; use these fragments only as labelled Neoplatonic-Chaldaean comparison.'
+    id: 'oracles-soul-fire', sourceId: 'westcott-oracles', locator: '“Cause. God. Father. Mind. Fire,” Oracles 18–22, captured webpage pages 8–9/10',
+    keywords: ['chaldaean oracles', 'soul', 'body', 'immortal fire', 'world soul', 'intelligible principle'],
+    summary: 'The fragments place an intelligible principle in Soul and Soul in body while describing Soul as an immortal, life-bearing fire participating in cosmic order.',
+    context: 'Attribution, sequence, and source labels are uncertain editorial judgments; comparison does not establish dependence on a Gnostic witness.'
   },
   {
-    id: 'pymander-light-word', sourceId: 'everard-pymander', locator: 'Second Book, Poimandres vision, sections 5–14',
+    id: 'pymander-light-word', sourceId: 'everard-pymander', locator: 'Second Book of Pymander, approximately sections 12–39, scan pages 43–50',
     keywords: ['divine pymander', 'poimandres', 'light', 'word', 'mind', 'darkness', 'creation'],
     summary: 'The vision contrasts primordial light with moist darkness and presents the luminous Word and divine Mind as principles through which ordered nature emerges.',
     context: 'Everard’s 1650 English and the scanned OCR are difficult; technical wording should be checked against a modern critical Hermetic edition.'
   },
   {
-    id: 'pymander-know-self', sourceId: 'everard-pymander', locator: 'Second Book, sections 47–55: Life, Light, and self-knowledge',
-    keywords: ['divine pymander', 'self knowledge', 'life', 'light', 'immortal', 'return', 'mind'],
-    summary: 'The dialogue links knowledge of oneself as life and light with recognition of divine origin and an inward return beyond identification with bodily appetite.',
-    context: 'This is comparative Hermetic anthropology, not authority for the Gospel of Thomas or other Gnostic witnesses.'
+    id: 'pymander-regeneration', sourceId: 'everard-pymander', locator: 'Seventh Book, “Argument of Regeneration,” approximately sections 14–53, scan pages 107–117',
+    keywords: ['divine pymander', 'regeneration', 'birth in mind', 'divine powers', 'passions', 'self knowledge'],
+    summary: 'Regeneration is presented as an inward birth in Mind in which divine virtues displace passions associated with matter and the regenerated person recognises a cosmic divine identity.',
+    context: 'The scan has exceptionally poor OCR and this is comparative Hermetic reception, not authority for the Gospel of Thomas or another Gnostic witness.'
   },
   {
-    id: 'dead-judgment', sourceId: 'budge-book-dead', locator: 'Papyrus of Ani, Chapter 125: Hall of the Two Truths',
+    id: 'dead-judgment', sourceId: 'budge-book-dead', locator: 'Chapter CXXV, Hall of Double Maati / Negative Confession, print pages 188–194',
     keywords: ['egyptian book dead', 'ani', 'judgment', 'heart', 'confession', 'maat', 'afterlife'],
     summary: 'The deceased enters judgment with declarations of conduct and the weighing of the heart, joining moral speech, divine names, and ritual knowledge in the passage onward.',
     context: 'Ancient Egyptian funerary theology has its own setting; Budge’s 1898 translation is dated and is not evidence of a Gnostic rite.'
   },
   {
-    id: 'dead-transformations', sourceId: 'budge-book-dead', locator: 'Papyrus of Ani, transformation and solar hymns including Chapters 17 and 77–88',
-    keywords: ['egyptian book dead', 'transformation', 'names', 'solar', 'rebirth', 'speech', 'afterlife'],
-    summary: 'Transformation spells and solar hymns use correct names, declarations, and identifications to place the deceased within cycles of renewal and divine forms.',
-    context: 'Compare motifs of names and ascent cautiously; similarity does not prove direct Gnostic dependence.'
+    id: 'dead-second-birth', sourceId: 'budge-book-dead', locator: 'Chapter LXIV, “Coming Forth by Day in the Underworld,” Papyrus of Nebseni, print pages 112–113',
+    keywords: ['egyptian book dead', 'second birth', 'divine soul', 'coming forth by day', 'darkness', 'celestial journey'],
+    summary: 'The chapter identifies the deceased with a timeless divine Soul able to be born again, emerge from darkness, receive divine speech, and travel toward celestial life.',
+    context: 'This is Egyptian funerary material in Budge’s dated edition; comparison with rebirth or ascent motifs does not prove Gnostic dependence.'
   }
 ];
