@@ -19,7 +19,7 @@ const titles = cards.map((card) => card.querySelector('h3')?.textContent.trim())
 must(!titles.includes('Tiny Menace'), 'Tiny Menace should be removed from the project showcase');
 must(!titles.includes('Automated Social Life & Brand Engine'), 'old Automated Social Life & Brand Engine card should be merged');
 must(!titles.includes('Social Content Engine'), 'separate Social Content Engine card should be merged');
-must(cards.length === 20, `expected 20 project showcase cards, got ${cards.length}`);
+must(cards.length === 28, `expected 28 project showcase cards, got ${cards.length}`);
 for (const card of cards) {
   const title = card.querySelector('h3')?.textContent.trim() || 'untitled project';
   const meta = card.querySelector('.project-meta');
@@ -32,6 +32,14 @@ for (const card of cards) {
   must(stack.textContent.trim().length >= 55, `${title} Tech stack is too thin`);
 }
 const expectedFirst = [
+  'CCTAE / Choice–Chance–Time Agency Engine',
+  'MICHAEL OS Command Centre',
+  'Hermes Voice / Lynk',
+  'Context Ledger + Rosco Ray Scanner',
+  'ClipForge',
+  'Hermes Organisation USB Deployment',
+  'Bruce Command Center / M5Stick Headless',
+  'Microcap Autotrader / Paper Arena',
   'Gnostobot',
   'Mike Kindle OS',
   'Mundus Vult Decipi',

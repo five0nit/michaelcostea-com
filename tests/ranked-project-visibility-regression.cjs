@@ -9,6 +9,14 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 const clean = (value) => String(value || '').replace(/\s+/g, ' ').trim();
 
 const expectedOrder = [
+  'CCTAE / Choice–Chance–Time Agency Engine',
+  'MICHAEL OS Command Centre',
+  'Hermes Voice / Lynk',
+  'Context Ledger + Rosco Ray Scanner',
+  'ClipForge',
+  'Hermes Organisation USB Deployment',
+  'Bruce Command Center / M5Stick Headless',
+  'Microcap Autotrader / Paper Arena',
   'Gnostobot',
   'Mike Kindle OS',
   'Mundus Vult Decipi',

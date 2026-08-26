@@ -11,7 +11,8 @@ function must(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-must(homepage.includes('hyperframes-live.css?v=20260711-private-style-labels'), 'homepage should cache-bust the cleaned live stylesheet');
+must(homepage.includes('styles.css?v=20260821-mobile-home-readable'), 'homepage should cache-bust the current live stylesheet');
+must(homepage.includes('hyperframes-live.css?v=20260821-mobile-home-readable'), 'homepage should cache-bust the cleaned live overlay stylesheet');
 
 for (const visibleLabel of [
   'HYPERFRAME 01',

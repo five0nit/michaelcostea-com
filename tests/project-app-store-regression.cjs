@@ -9,10 +9,10 @@ const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
 const must = (condition, message) => { if (!condition) throw new Error(message); };
 
 const expectedCategories = {
-  products: 7,
-  agents: 7,
-  devices: 3,
-  tools: 3,
+  products: 8,
+  agents: 9,
+  devices: 6,
+  tools: 5,
 };
 
 function auditBrowser(document, rootSelector, cardSelector, label) {
@@ -28,7 +28,7 @@ function auditBrowser(document, rootSelector, cardSelector, label) {
   must(buttons.map(button => button.dataset.projectFilter).join('|') === 'all|products|agents|devices|tools', `${label} category order wrong`);
 
   const cards = [...browser.querySelectorAll(cardSelector)];
-  must(cards.length === 20, `${label} must expose 20 compact apps`);
+  must(cards.length === 28, `${label} must expose 28 compact apps`);
   must(cards.every(card => !card.hidden), `${label} apps must be visible before filtering`);
   must(cards.every(card => card.dataset.project && card.dataset.projectCategory), `${label} cards need project/category data`);
   must(cards.every(card => card.querySelector('figure')), `${label} every app needs visual artwork or placeholder`);
@@ -45,7 +45,7 @@ function auditBrowser(document, rootSelector, cardSelector, label) {
     must(actual === expected, `${label} ${category} expected ${expected}, got ${actual}`);
   }
 
-  must(clean(browser.querySelector('.project-browser-count')?.textContent).includes('20 projects'), `${label} initial count must say 20 projects`);
+  must(clean(browser.querySelector('.project-browser-count')?.textContent).includes('28 projects'), `${label} initial count must say 28 projects`);
 
   for (const title of ['Mini Michael', 'Presence Action Broker', 'Windows Background Computer Use']) {
     must(cards.some(card => clean(card.querySelector('h3')?.textContent) === title), `${label} missing ${title}`);

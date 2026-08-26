@@ -13,11 +13,11 @@ const popout = document.querySelector('#buildWindow a.build-projects-popout[href
 if (!popout) throw new Error('What I Build needs a direct project-library popout link');
 
 const popoutText = clean(popout.textContent);
-for (const phrase of ['Project shelf · 20 things', 'Browse the project shelf', 'Agent teams', 'business control planes', 'inspectable delivery proof']) {
+for (const phrase of ['Project shelf · 28 things', 'Browse the project shelf', 'Agent teams', 'business control planes', 'inspectable delivery proof']) {
   if (!popoutText.includes(phrase)) throw new Error(`project popout missing: ${phrase}`);
 }
 
-if (popout.getAttribute('aria-label') !== 'View all 20 projects') {
+if (popout.getAttribute('aria-label') !== 'View all 28 projects') {
   throw new Error('project popout needs an exact accessible label');
 }
 if (document.querySelectorAll('#buildWindow a[href="projects/"]').length !== 1) {

@@ -47,11 +47,11 @@ async function inspect(browser, label, width, height) {
 
   if (response?.status() !== 200) throw new Error(`${label} HTTP ${response?.status()}`);
   if (!checks.statusOpen) throw new Error(`${label} projects window did not open`);
-  if (checks.cardCount !== 20) throw new Error(`${label} expected 20 project cards, got ${checks.cardCount}`);
+  if (checks.cardCount !== 28) throw new Error(`${label} expected 28 project cards, got ${checks.cardCount}`);
   if (checks.titles.includes('Tiny Menace')) throw new Error(`${label} Tiny Menace still visible`);
   if (checks.titles.includes('Automated Social Life & Brand Engine') || checks.titles.includes('Social Content Engine')) throw new Error(`${label} old duplicate social project cards still visible`);
   if (!checks.titles.includes('Automated Social & Brand Content Engine')) throw new Error(`${label} merged social/brand project missing`);
-  if (checks.metaCount !== 20 || checks.scopeCount !== 20 || checks.stackCount !== 20) throw new Error(`${label} project detail/stack coverage incomplete`);
+  if (checks.metaCount !== 28 || checks.scopeCount !== 28 || checks.stackCount !== 28) throw new Error(`${label} project detail/stack coverage incomplete`);
   if (checks.stackLengths.some(length => length < 55)) throw new Error(`${label} one or more tech stacks are too thin`);
   if (checks.pageScrollWidth > checks.innerWidth + 1) throw new Error(`${label} horizontal page overflow`);
   if ((checks.winLeft ?? -1) < -1 || (checks.winRight ?? Infinity) > checks.innerWidth + 1) throw new Error(`${label} project window outside viewport`);

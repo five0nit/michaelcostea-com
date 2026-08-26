@@ -72,10 +72,10 @@ for (const page of ['index.html', 'projects/index.html']) {
   const pageDocument = new JSDOM(read(page)).window.document;
   const card = pageDocument.querySelector('[data-project-title="Gnostobot"]');
   must(card, `${page} missing Gnostobot project card`);
-  const firstCard = pageDocument.querySelector(page === 'index.html'
+  const orderedCards = [...pageDocument.querySelectorAll(page === 'index.html'
     ? '.project-showcase-grid > .project-showcase-card'
-    : '.detailed-archive > .project-archive-card');
-  must(firstCard?.getAttribute('data-project-title') === 'Gnostobot', `${page} must list newest-created Gnostobot first`);
+    : '.detailed-archive > .project-archive-card')];
+  must(orderedCards.indexOf(card) === 8, `${page} must keep Gnostobot immediately after the eight new priority systems`);
   must(card.querySelector('a[href="gnostobot/"]'), `${page} Gnostobot card route wrong`);
   must(card.querySelector('img[src="assets/project-showcase/gnostobot.webp"]'), `${page} Gnostobot card image wrong`);
 }

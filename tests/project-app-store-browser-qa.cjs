@@ -51,21 +51,21 @@ const cases = [
       };
     }, testCase.card);
 
-    if (initial.visible !== 20) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
+    if (initial.visible !== 28) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
     if (initial.detailsOpen !== 0) throw new Error(`${testCase.label} technical details must start closed`);
     if (initial.rankRibbons !== 0 || initial.rankAttributes !== 0) throw new Error(`${testCase.label} ranking labels remain`);
     if (initial.creationDateMarkers !== 0) throw new Error(`${testCase.label} creation dates must remain hidden`);
-    if (initial.titles.slice(0, 3).join('|') !== 'Gnostobot|Mike Kindle OS|Mundus Vult Decipi' || initial.titles.at(-1) !== 'michaelcostea.com / MICHAEL OS 89') throw new Error(`${testCase.label} creation-date order wrong`);
+    if (initial.titles.slice(0, 8).join('|') !== 'CCTAE / Choice–Chance–Time Agency Engine|MICHAEL OS Command Centre|Hermes Voice / Lynk|Context Ledger + Rosco Ray Scanner|ClipForge|Hermes Organisation USB Deployment|Bruce Command Center / M5Stick Headless|Microcap Autotrader / Paper Arena' || initial.titles.at(-1) !== 'michaelcostea.com / MICHAEL OS 89') throw new Error(`${testCase.label} priority order wrong`);
     if (initial.columns !== testCase.columns) throw new Error(`${testCase.label} expected ${testCase.columns} columns, got ${initial.columns}`);
     if (initial.brokenImages.length) throw new Error(`${testCase.label} broken images: ${initial.brokenImages.join(', ')}`);
     if (initial.overflow > 1) throw new Error(`${testCase.label} horizontal overflow ${initial.overflow}px`);
 
     await root.locator('[data-project-filter="devices"]').click();
     const deviceTitles = await root.locator(`${testCase.card}:not([hidden]) h3`).allTextContents();
-    if (deviceTitles.join('|') !== 'Mike Kindle OS|Myo Control / Myo Patchbay|LEGO Mario Hardware + Asset Mapping') {
+    if (deviceTitles.join('|') !== 'MICHAEL OS Command Centre|Hermes Voice / Lynk|Bruce Command Center / M5Stick Headless|Mike Kindle OS|Myo Control / Myo Patchbay|LEGO Mario Hardware + Asset Mapping') {
       throw new Error(`${testCase.label} device filter wrong: ${deviceTitles.join('|')}`);
     }
-    if ((await root.locator('.project-browser-count').textContent()).trim() !== '3 projects') throw new Error(`${testCase.label} filtered count wrong`);
+    if ((await root.locator('.project-browser-count').textContent()).trim() !== '6 projects') throw new Error(`${testCase.label} filtered count wrong`);
 
     await root.locator('.project-browser-search').fill('kindle');
     const searchTitles = await root.locator(`${testCase.card}:not([hidden]) h3`).allTextContents();
