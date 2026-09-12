@@ -1,0 +1,1 @@
+Research the current official installation methods for a tool I name. Read primary documentation, cite exact URLs and observation dates, and separate supported commands from your recommendations. Do not install anything. Report conflicting or unverified instructions explicitly.

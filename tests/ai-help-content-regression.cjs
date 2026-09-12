@@ -20,7 +20,7 @@ function assertIncludes(name, value, expected) {
 const start = text('#aiHelpWindow');
 assertIncludes('AI Help start card grid', start, '3. Prerequisites before install');
 assertIncludes('AI Help start card grid', start, 'The guide before the guide');
-assertIncludes('AI Help start card grid', start, '4. Install Hermes or OpenClaw');
+assertIncludes('AI Help start card grid', start, '4. My Hermes setup');
 assertIncludes('AI Help start card grid', start, '8. Five AI tutorials to try');
 assertIncludes('AI Help start card grid', start, 'copy/paste lessons');
 assertIncludes('AI Help start card grid', start, '10. Build a memory layer');
@@ -47,7 +47,7 @@ assertIncludes('prerequisites guide platform table', prereqGuide, 'Windows WSL U
 assertIncludes('prerequisites guide platform table', prereqGuide, 'python3 python3-venv python3-pip');
 assertIncludes('prerequisites guide platform table', prereqGuide, 'Node.js 24 LTS');
 assertIncludes('prerequisites guide safe folder', prereqGuide, 'Do not skip the safe folder');
-assertIncludes('prerequisites guide next step', prereqGuide, 'Guide 4 - Install Hermes or OpenClaw');
+assertIncludes('prerequisites guide next step', prereqGuide, 'Guide 4 - My Hermes setup');
 
 const agentGuide = text('#agentGuideWindow');
 assertIncludes('agent guide capabilities', agentGuide, 'What can an AI agent do?');
@@ -99,44 +99,19 @@ assertIncludes('tutorial guide', tutorials, 'Tutorial 5 — create a weekly exce
 assertIncludes('tutorial guide', tutorials, 'Turn a good tutorial into an agent workflow');
 
 const install = text('#hermesGuideWindow');
-assertIncludes('install guide', install, 'Simple install rule');
-assertIncludes('install guide', install, 'Hermes: easiest first choice');
-assertIncludes('install guide', install, 'OpenClaw: choose when you want a bigger local control plane');
-assertIncludes('install guide', install, 'Do not connect real business systems on day one');
-assertIncludes('install guide dynamic prereqs', install, 'This checklist changes with Step 0');
-assertIncludes('install guide Hermes Mac prereqs', install, 'Xcode Command Line Tools');
-assertIncludes('install guide Hermes Mac prereqs', install, 'Homebrew before the one-line Hermes installer');
-assertIncludes('install guide dependency prerequisites', install, 'Dependency prerequisites by platform');
-assertIncludes('install guide dependency prerequisites', install, 'macOS');
-assertIncludes('install guide dependency prerequisites', install, 'Windows native');
-assertIncludes('install guide dependency prerequisites', install, 'Windows WSL Ubuntu');
-assertIncludes('install guide dependency prerequisites', install, 'python3 python3-venv python3-pip');
-assertIncludes('install guide dependency prerequisites', install, 'Node.js 24 LTS');
-assertIncludes('install guide dependency prerequisites', install, 'node --version');
-assertIncludes('install guide dependency prerequisites', install, 'python --version');
-assertIncludes('install guide OpenClaw prereqs', install, 'Node 24');
-assertIncludes('install guide dependency warning', install, 'If any required item above is missing, fix that first');
-assertIncludes('install guide title number', install, 'Install Your First AI Agent');
-assertIncludes('install guide Hermes detail', install, 'Hermes beginner map');
-assertIncludes('install guide Hermes detail', install, 'Install → reload shell → version check → setup/provider → local chat → doctor/status → optional Telegram');
-assertIncludes('install guide Hermes detail', install, 'Where Hermes stores things');
-assertIncludes('install guide Hermes detail', install, '~/.hermes/config.yaml');
-assertIncludes('install guide Hermes detail', install, '~/.hermes/.env');
-assertIncludes('install guide Hermes detail', install, '~/.hermes/sessions');
-assertIncludes('install guide Hermes provider', install, 'Provider setup choices');
-assertIncludes('install guide Hermes provider', install, 'hermes auth add openai-codex');
-assertIncludes('install guide Hermes provider', install, 'OPENROUTER_API_KEY');
-assertIncludes('install guide Hermes first commands', install, 'mkdir -p ~/ai-agent-test');
-assertIncludes('install guide Hermes first commands', install, 'hermes chat -q "Look only in this folder. Summarise test-note.txt. Do not edit files."');
-assertIncludes('install guide Hermes troubleshooting', install, 'If Hermes still fails after setup');
-
-const prereqPanels = document.querySelectorAll('#hermesGuideWindow [data-prereq-product][data-prereq-os]');
-if (prereqPanels.length !== 6) throw new Error(`expected 6 dynamic prereq panels, got ${prereqPanels.length}`);
-for (const product of ['hermes', 'openclaw']) {
-  for (const os of ['mac', 'windows', 'linux']) {
-    const panel = document.querySelector(`#hermesGuideWindow [data-prereq-product="${product}"][data-prereq-os="${os}"]`);
-    if (!panel) throw new Error(`missing prereq panel for ${product}/${os}`);
-  }
+assertIncludes('install guide title', install, 'My Hermes setup');
+assertIncludes('install guide depth', install, '23 chapters');
+assertIncludes('install guide discovery', install, 'Brief2Ship');
+assertIncludes('install guide full page', install, 'Open full guide');
+const frame = document.querySelector('#hermesGuideWindow iframe');
+if (!frame || frame.getAttribute('src').split('?')[0] !== 'guides/hermes-setup/index.html') throw new Error('Guide must embed the complete replacement HTML');
+if (!frame.getAttribute('title')) throw new Error('Guide frame requires accessible title');
+if (document.querySelector('#hermesGuideWindow .guide-panel')) throw new Error('Old conflicting installation panels must be removed');
+const guideDoc = new JSDOM(fs.readFileSync(path.join(rootDir, 'guides/hermes-setup/index.html'), 'utf8')).window.document;
+const fullGuide = guideDoc.body.textContent;
+for (const marker of ['wsl --install', 'hermes --version', 'hermes -p operator setup', 'terminal.cwd', 'Brief2Ship', 'brief2ship discover', 'SOUL.md', 'Telegram', 'Troubleshooting', 'cron runs']) {
+  assertIncludes('complete HTML install guide', fullGuide, marker);
 }
+if ([...guideDoc.querySelectorAll('h2')].filter(h => /^\d+\./.test(h.textContent)).length !== 23) throw new Error('Expected all 23 guide chapters');
 
 console.log('ai-help-content-regression ok');

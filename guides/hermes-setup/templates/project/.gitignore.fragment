@@ -1,0 +1,12 @@
+# Merge into this project's .gitignore; do not replace existing entries.
+.env
+.env.*
+!.env.example
+auth.json
+cookies*.json
+*.session
+__pycache__/
+.venv/
+node_modules/
+runtime/
+private-evidence/

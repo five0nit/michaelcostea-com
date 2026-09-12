@@ -28,7 +28,11 @@ for (const phrase of ['MICHAEL COSTEA', 'I BUILD AI EMPLOYEES TO RUN THE BUSINES
   must(heroText.toUpperCase().includes(phrase.toUpperCase()), `career hero missing ${phrase}`);
 }
 const actions = [...hero.querySelectorAll('.career-primary-actions a, .career-primary-actions button')];
-must(actions.length === 3, `career hero must have exactly three primary actions, got ${actions.length}`);
+must(actions.length === 4, `career hero must have three business actions plus the Hermes guide shortcut, got ${actions.length}`);
+const guideShortcut = actions[3];
+must(guideShortcut.textContent.trim() === 'HERMES SETUP GUIDE', 'fourth Welcome action must be the Hermes guide');
+must(guideShortcut.dataset.open === 'hermesGuideWindow' && guideShortcut.getAttribute('aria-controls') === 'hermesGuideWindow', 'Welcome guide shortcut must open the canonical guide window');
+must(guideShortcut.style.gridColumn === '1 / -1', 'Welcome guide shortcut must stay below the existing business actions');
 for (const phrase of ['OPEN AI EMPLOYEE STACK', 'CONFIGURE MY AI TEAM', 'SEE WORKING SYSTEMS']) {
   must(actions.some(action => action.textContent.replace(/\s+/g, ' ').trim().toUpperCase().includes(phrase)), `career action missing ${phrase}`);
 }

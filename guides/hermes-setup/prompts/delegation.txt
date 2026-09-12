@@ -1,0 +1,1 @@
+Keep ownership of the final result. Delegate one read-only documentation review and one independent test-case review, each with explicit scope and acceptance criteria. Continue work that does not depend on their results. After completion, inspect their evidence yourself and reconcile disagreements before finalizing. Do not create permanent role personas.

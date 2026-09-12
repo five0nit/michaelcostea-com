@@ -35,7 +35,7 @@ for (const phrase of ['AI EMPLOYEES', 'AGENT CONTROL PLANE', 'GOVERNED EXECUTION
 }
 
 const actions = [...hero.querySelectorAll('.career-primary-actions > a, .career-primary-actions > button')].map(node => clean(node.textContent).toUpperCase());
-must(JSON.stringify(actions) === JSON.stringify(['OPEN AI EMPLOYEE STACK', 'CONFIGURE MY AI TEAM', 'SEE WORKING SYSTEMS']), `homepage actions wrong: ${JSON.stringify(actions)}`);
+must(JSON.stringify(actions) === JSON.stringify(['OPEN AI EMPLOYEE STACK', 'CONFIGURE MY AI TEAM', 'SEE WORKING SYSTEMS', 'HERMES SETUP GUIDE']), `homepage actions wrong: ${JSON.stringify(actions)}`);
 const sidebar = [...document.querySelectorAll('#readerWindow .welcome-sidebar .big-nav')].map(node => clean(node.textContent).toUpperCase());
 for (const phrase of ['AI EMPLOYEES', 'CONFIGURE A TEAM', 'WORKING SYSTEMS', 'MEET MICHAEL', 'RÉSUMÉ']) must(sidebar.includes(phrase), `sidebar missing ${phrase}`);
 must(!sidebar.includes('AI HELP') && !sidebar.includes('PROJECT SHELF') && !sidebar.includes('SAY HELLO'), 'sidebar retains weak personal-workshop labels');

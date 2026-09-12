@@ -1,0 +1,21 @@
+# REFERENCE ONLY: selected observed settings from the author's profile.
+# Do not replace config.yaml with this partial file.
+# Provider/model intentionally omitted: choose an option your account can use.
+agent:
+  max_turns: 500
+  reasoning_effort: xhigh
+approvals:
+  mode: "off"
+compression:
+  enabled: true
+  threshold: 0.35
+  target_ratio: 0.20
+delegation:
+  max_concurrent_children: 10
+  max_spawn_depth: 2
+  max_iterations: 250
+security:
+  redact_secrets: true
+# The author's operating instructions require terse caveman-style replies.
+# A stored skills.force_load value is not proof of an implemented config feature.
+# This portable pack supplies plainspoken-output; load it explicitly when wanted.

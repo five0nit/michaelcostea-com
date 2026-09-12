@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Hermes setup — the complete guide | Michael Costea</title>
+<meta name="description" content="My complete Hermes setup: install, profiles, SOUL.md, specialist skills, Brief2Ship, Telegram and verified workflows. Includes a public starter pack.">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#000080">
+<link rel="canonical" href="https://michaelcostea.com/guides/hermes-setup/">
+<meta property="og:type" content="article"><meta property="og:title" content="My Hermes setup — the complete guide">
+<meta property="og:description" content="My complete Hermes setup: install, profiles, SOUL.md, specialist skills, Brief2Ship, Telegram and verified workflows. Includes a public starter pack."><meta property="og:url" content="https://michaelcostea.com/guides/hermes-setup/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "My Hermes setup: one generalist, the right skills, actual results", "url": "https://michaelcostea.com/guides/hermes-setup/", "description": "My complete Hermes setup: install, profiles, SOUL.md, specialist skills, Brief2Ship, Telegram and verified workflows. Includes a public starter pack.", "inLanguage": "en-AU", "author": {"@type": "Person", "name": "Michael Costea", "url": "https://michaelcostea.com/"}}</script>
+<style>/* Isolated/offline MichaelOS theme. Source: styles.css + assets/css/nous-michael-live.css.
+   Keep tokens in parity: tests/test_hermes_setup_guide.py checks the live site values. */
+:root{--nm-paper:#f5ead7;--nm-paper-2:#fff7e8;--nm-ink:#070707;--nm-blue:#000080;--nm-title:#1084d0;--nm-yellow:#fff4c2;--window-gray:#c0c0c0;--mid-shadow:#808080;--paper:var(--nm-paper);--panel:var(--nm-paper-2);--ink:var(--nm-ink);--muted:#404040;--line:var(--mid-shadow);--blue:var(--nm-blue);--blue-dark:var(--nm-blue);--blue-pale:var(--nm-paper-2);--amber:var(--nm-yellow);--code:#000;--code-ink:#a8ffa8;--mono:"IBM Plex Mono","Courier New",monospace;--sans:"Work Sans",Tahoma,sans-serif;--body:"Space Grotesk","IBM Plex Mono","Courier New",monospace}
+*{box-sizing:border-box}html{scroll-padding-top:92px;scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.75 var(--body);-webkit-font-smoothing:antialiased}a{color:var(--blue);text-underline-offset:4px;overflow-wrap:anywhere}a:hover{text-decoration-thickness:2px}a,button,summary,input{-webkit-tap-highlight-color:transparent}a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,pre:focus-visible{outline:3px solid #000080;outline-offset:4px}button,input{font:inherit}button{cursor:pointer}button[hidden],[hidden]{display:none!important}::selection{background:#fff4c2;color:#000}.skip{position:fixed;top:8px;left:14px;padding:9px 16px;background:var(--panel);z-index:100;transform:translateY(-160%);font-weight:700}.skip:focus{transform:none}.sitebar{position:sticky;top:0;z-index:30;background:var(--blue-dark);color:white;border-bottom:1px solid #000}.bar-inner{max-width:1340px;min-height:58px;margin:auto;padding:9px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{color:white;font:700 13px/1.4 var(--mono);text-decoration:none;letter-spacing:.01em}.brand b{display:inline-block;border:1px solid #fff;padding:5px 6px;margin-right:10px;color:var(--amber)}.sitebar .site-return{color:#fff;font-size:13px}.bar-actions{display:flex;align-items:center;gap:24px}.print-button{border:1px solid #808080;border-radius:0;padding:6px 11px;min-height:36px;background:transparent;color:#fff;font-size:12px;font-weight:650}.print-button:hover{background:#000080}.progress-track{position:absolute;bottom:-2px;left:0;width:100%;height:3px;background:transparent}.progress-fill{display:block;height:100%;width:0;background:var(--amber)}
+.hero{max-width:1284px;margin:auto;padding:66px 0 48px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:62px;align-items:center}.eyebrow{color:var(--blue);font:700 12px/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;margin:0 0 16px}.hero h1{font-size:clamp(43px,5.1vw,68px);line-height:1.08;letter-spacing:-.05em;font-weight:780;margin:0 0 18px}.hero .tagline{font-size:clamp(21px,2vw,26px);line-height:1.4;margin:0 0 15px;letter-spacing:-.025em}.hero .description{font-size:17px;line-height:1.7;max-width:640px;margin:0;color:var(--muted)}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:27px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:9px 17px;border:1px solid #808080;border-radius:0;text-decoration:none;background:white;color:var(--blue);font-size:14px;font-weight:700;line-height:1.45}.button.primary{background:var(--blue);border-color:var(--blue);color:white}.button:hover{background:#fff4c2}.button.primary:hover{background:var(--blue-dark)}.hero .byline{font:12px/1.65 var(--mono);color:var(--muted);margin:18px 0 0}.file-card{border:1px solid #111;border-radius:0;background:white;box-shadow:5px 5px 0 #111;overflow:hidden}.file-title{padding:10px 16px;background:#c0c0c0;border-bottom:1px solid #808080;display:flex;justify-content:space-between;align-items:center;color:var(--blue-dark);font:700 12px/1.5 var(--mono)}.file-title span:last-child{font-weight:400;font-size:11px}.file-card ol{list-style:none;padding:7px 19px;margin:0}.file-card li{padding:12px 0;display:flex;gap:15px;border-bottom:1px solid #808080;line-height:1.5}.file-card li:last-child{border:none}.file-card .number{font:12px/1.9 var(--mono);color:#404040}.file-card strong{display:block;font-size:14px;font-weight:700}.file-card small{display:block;font-size:12px;color:var(--muted);margin-top:1px}.file-note{font-size:12px;line-height:1.7;margin:2px 0 0;padding:13px 19px;background:#fff7e8;border-top:1px solid #808080}.file-note a{font-weight:650}
+.layout{max-width:1284px;margin:0 auto;display:grid;grid-template-columns:285px minmax(0,825px);gap:74px;padding:36px 0 70px;align-items:start}.chapter-nav{position:sticky;top:84px;max-height:calc(100vh - 108px);overflow-y:auto;padding:0 19px 12px 0;scrollbar-width:thin}.chapter-nav summary{font-size:13px;line-height:1.6;font-weight:750;cursor:pointer;color:var(--ink);padding:3px 0 12px}.chapter-nav details[open] summary{margin-bottom:4px}.filter-label{display:block;font:11px/1.5 var(--mono);color:var(--muted);margin-bottom:5px}.filter-wrap{position:relative}#chapter-filter{font-size:13px;line-height:1.5;width:100%;border:1px solid #808080;background:white;border-radius:0;padding:9px 29px 9px 10px;color:var(--ink)}.clear-filter{position:absolute;right:2px;top:2px;width:32px;height:35px;border:0;background:transparent;font:21px/1 var(--sans);color:var(--muted)}.chapter-nav .toc>ul{list-style:none;padding:0;margin:14px 0 0}.chapter-nav .toc li{margin:0;line-height:1.45;border-left:2px solid transparent}.chapter-nav .toc a{display:block;padding:7px 9px;color:var(--muted);font-size:12.5px;text-decoration:none}.chapter-nav .toc a:hover{color:var(--blue);background:#fff4c2}.chapter-nav .toc a[aria-current="location"]{background:#fff4c2;color:var(--blue);font-weight:700;border-left:2px solid var(--blue);margin-left:-2px}.filter-status{font-size:12px;color:var(--muted);line-height:1.5;margin:10px 0 0}.nav-files{padding-top:16px;margin-top:19px;border-top:1px solid var(--line);font-size:12px;line-height:2.1}.nav-files a{display:block}.nav-files p{color:var(--muted);font-size:11px;line-height:1.65;margin:9px 0 0}
+.article{min-width:0}.article:focus{outline:none}.article .guide-intro>p:first-child{margin-top:0;color:var(--blue);font-size:16px;font-weight:650}.article p{margin:0 0 19px}.article strong{font-weight:710}.article h2{margin:50px 0 20px;padding-top:28px;border-top:1px solid #808080;font-size:29px;line-height:1.25;font-weight:750;letter-spacing:-.028em;scroll-margin-top:90px}.article h3{margin:30px 0 15px;font-size:21px;line-height:1.4;font-weight:720;letter-spacing:-.015em;scroll-margin-top:90px}.article h4{font-size:17px;margin:24px 0 12px;scroll-margin-top:90px}.article ul,.article ol{padding-left:25px;margin:0 0 24px}.article li{margin-bottom:7px}.article code{font-family:var(--mono);font-size:.85em;background:#fff7e8;padding:.14em .28em;border-radius:0;overflow-wrap:anywhere}.article pre{margin:0;overflow:auto;max-width:100%;background:var(--code);color:var(--code-ink);padding:18px 20px;font:13px/1.7 var(--mono);tab-size:4;scrollbar-width:thin}.article pre code{font:inherit;line-height:inherit;white-space:pre;overflow-wrap:normal;background:transparent;padding:0;color:inherit}.code-block{margin:20px 0 25px;border:1px solid #111;border-radius:0;overflow:hidden;max-width:100%}.code-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 10px 6px 18px;background:#c0c0c0;border-bottom:1px solid #808080}.code-language{font:10px/1.6 var(--mono);letter-spacing:.08em;color:#000;text-transform:uppercase}.copy-button{font:600 11px/1.4 var(--sans);padding:6px 10px;min-height:30px;border:1px solid #808080;border-radius:0;color:#fff;background:#c0c0c0}.copy-button:hover{background:#fff4c2}.article blockquote{margin:22px 0;border-left:3px solid #000080;padding:14px 18px;background:#fff4c2;font-size:16px}.article blockquote p:last-child{margin:0}.table-wrap{overflow-x:auto;margin:22px 0;max-width:100%;border:1px solid var(--line);border-radius:0}.article table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.55}.article th{background:#c0c0c0;color:var(--blue-dark);text-align:left;font-weight:700}.article td,.article th{padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}.article tr:last-child td{border-bottom:none}.article hr{border:0;border-top:1px solid var(--line);margin:36px 0}.article a:visited{color:#4e5189}.chapter{min-width:0}.chapter:last-child{padding-bottom:30px}.download-box{border:1px solid #111;border-top:4px solid var(--blue);padding:27px 28px 29px;background:white;scroll-margin-top:90px}.download-box h2{margin:0 0 12px;padding:0;border:0;font-size:25px}.download-box p{font-size:15px;line-height:1.75;color:var(--muted)}.download-box ul{font-size:14px;list-style:none;padding:0;margin:16px 0 0;display:flex;gap:18px;flex-wrap:wrap}.download-box .button{margin-top:4px}.footer{border-top:1px solid var(--line);background:#c0c0c0}.footer-inner{max-width:1284px;margin:auto;padding:25px 0;display:flex;justify-content:space-between;gap:24px;font-size:12px;color:var(--muted);line-height:1.65}.footer a{color:var(--blue)}.sr-only{position:absolute!important;clip:rect(0,0,0,0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);max-width:calc(100% - 32px);padding:10px 18px;background:var(--blue-dark);color:#fff;border:1px solid #fff;border-radius:0;box-shadow:0 5px 20px #111;z-index:80;font-size:13px;line-height:1.5;text-align:center;pointer-events:none}
+/* Shared MichaelOS chrome; readable long-form sizing stays guide-specific. */
+.sitebar,.file-title{background:linear-gradient(90deg,var(--nm-blue),var(--nm-title));color:#fff}
+.sitebar{border-top:2px solid #fff;border-bottom:2px solid #000}
+.brand b{color:#fff;background:#000080;border:1px solid #fff}
+.hero h1,.article h2,.article h3,.file-card strong{font-family:var(--sans);color:var(--nm-blue)}
+.hero h1{font-weight:900;font-style:italic;text-transform:uppercase}
+.article h2{font-weight:900;border-top:3px solid #111}
+.hero .tagline{font-family:var(--sans);font-weight:700}
+.hero{border-bottom:3px solid #111}
+.file-card,.download-box{background:var(--nm-paper-2);border:3px solid #111;box-shadow:5px 5px 0 #111}
+.file-note{background:var(--nm-paper-2)}
+.button,.print-button,.copy-button{background:var(--window-gray);color:#000;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid var(--mid-shadow);border-bottom:2px solid var(--mid-shadow);border-radius:0;font-family:var(--sans);font-weight:700;box-shadow:1px 1px 0 #000}
+.button.primary{background:var(--nm-yellow);color:#000080;border-color:#fff #808000 #808000 #fff}
+.button:hover,.print-button:hover,.copy-button:hover{background:var(--nm-yellow);color:#000}
+.button.primary:hover{background:#000080;color:#fff}
+.button:active,.print-button:active,.copy-button:active{border-color:var(--mid-shadow) #fff #fff var(--mid-shadow)}
+#chapter-filter{border-top:2px solid var(--mid-shadow);border-left:2px solid var(--mid-shadow);border-right:2px solid #fff;border-bottom:2px solid #fff}
+.code-toolbar{background:var(--window-gray);color:#000;border-bottom:2px solid #808080}
+.code-language{color:#000}
+.article pre{background:#000;color:#a8ffa8}
+.code-block{border:2px solid #111;box-shadow:3px 3px 0 #808080}
+.article a:visited{color:#551a8b}
+.toast{box-shadow:3px 3px 0 #111}
+
+@media(min-width:901px) and (max-width:1360px){.hero,.layout,.footer-inner{margin-left:32px;margin-right:32px}.layout{grid-template-columns:260px minmax(0,1fr);gap:54px}.hero{grid-template-columns:minmax(0,1fr) 315px;gap:38px}}
+@media(max-width:900px){.bar-inner{padding:9px 23px}.hero{margin:0 24px;padding:43px 0 33px;grid-template-columns:minmax(0,1fr);gap:25px}.hero h1{font-size:52px}.file-card{display:none}.layout{margin:0 24px;display:block;padding-top:25px}.chapter-nav{position:static;max-height:none;overflow:visible;border:1px solid #808080;border-radius:0;background:#fff7e8;padding:10px 16px;margin-bottom:28px}.chapter-nav summary{padding:2px 0;font-size:14px}.chapter-nav details[open] summary{margin-bottom:14px}.chapter-nav .toc>ul{columns:2;column-gap:24px}.chapter-nav .toc li{break-inside:avoid}.nav-files{display:none}.article h2{font-size:28px}.footer-inner{padding:22px 24px}.article pre{font-size:12.5px}}
+@media(max-width:550px){body{font-size:16px;line-height:1.75}.bar-inner{min-height:54px;padding:7px 18px;gap:10px}.brand{font-size:11px}.brand b{margin-right:7px;padding:4px 5px}.site-return{display:none}.print-button{font-size:11px;min-height:34px;padding:5px 8px}.bar-actions{gap:0}.hero{margin:0 19px;padding:31px 0 27px}.eyebrow{font-size:10px;margin-bottom:13px}.hero h1{font-size:43px;letter-spacing:-.05em;margin-bottom:15px}.hero .tagline{font-size:22px;max-width:320px}.hero .description{font-size:15px;line-height:1.75}.hero-actions{gap:9px;margin-top:23px}.hero-actions .button{font-size:13px;padding:10px 13px}.hero .byline{font-size:10px;line-height:1.8;margin-top:15px}.layout{margin:0 19px;padding-top:21px;padding-bottom:42px}.chapter-nav{padding:12px 14px;margin-bottom:25px}.chapter-nav .toc>ul{columns:1}.chapter-nav .toc a{font-size:13px;padding:8px}.article h2{font-size:26px;line-height:1.28;margin-top:40px;padding-top:24px}.article h3{font-size:20px}.article ul,.article ol{padding-left:22px}.article pre{font-size:12px;padding:15px}.code-toolbar{padding-left:14px}.code-language{font-size:9px}.article table{font-size:12px}.article td,.article th{padding:10px}.download-box{padding:21px 19px 23px}.download-box h2{font-size:24px}.download-box ul{display:block}.download-box li{margin:10px 0}.footer-inner{display:block;padding:23px 19px}.footer-inner p{margin:0 0 12px}.toast{bottom:14px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{@page{margin:18mm 17mm}html{scroll-behavior:auto}body{background:white;color:black;font-size:10pt;line-height:1.5}.sitebar,.chapter-nav,.skip,.hero-actions,.file-card,.copy-button,.toast,.footer,.download-box{display:none!important}.hero{display:block;padding:0 0 14px;margin:0;border-bottom:1px solid #bbb}.hero h1{font-size:28pt}.hero .tagline{font-size:14pt}.hero .description,.hero .byline{font-size:10pt}.layout{display:block;padding:18px 0 0;margin:0;max-width:none}.article h2{font-size:18pt;margin-top:25px;padding-top:15px;break-after:avoid}.article h3{font-size:13pt;break-after:avoid}.article p{margin-bottom:10px}.code-block{border:1px solid #bbb;border-radius:0;break-inside:auto;margin:13px 0}.code-toolbar{background:#f1f1f1;padding:5px 10px;border-color:#bbb}.code-language{color:#333}.article pre{background:#f7f7f7;color:#111;font-size:8pt;overflow:visible;padding:10px}.article pre code{white-space:pre-wrap;overflow-wrap:anywhere}.article code{background:#f1f1f1}.article a,.article a:visited{color:#111;text-decoration:underline}.table-wrap{overflow:visible;break-inside:auto}.article table{font-size:8pt}.article th,.article td{padding:7px}.article blockquote{background:#fafafa;font-size:10pt}.article h2,.article h3,.article h4{scroll-margin:0}.article ul,.article ol{margin-bottom:12px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#guide">Skip to guide</a>
+<header class="sitebar"><div class="bar-inner"><a class="brand" href="/#ai-help" target="_top"><b>MC</b> Michael Costea / guides</a><div class="bar-actions"><a class="site-return" href="/#ai-help" target="_top">Back to AI Help</a><button hidden type="button" class="print-button" id="print-guide">Print guide</button></div></div><div class="progress-track" aria-hidden="true"><span class="progress-fill"></span></div></header>
+<div class="hero"><div><p class="eyebrow">Guide 04 / the complete setup</p><h1>My Hermes setup.</h1><p class="tagline">One generalist. The right skills.<br>Actual results.</p><p class="description">The full walkthrough: installation, operating rules, tools, specialist skills and checks against real output. Public starter files included. No private profile dump.</p><div class="hero-actions"><a class="button primary" href="#1-understand-the-parts-before-changing-them">Start the walkthrough <span aria-hidden="true">&nbsp;↓</span></a><a class="button" href="hermes-starter-pack.zip" download="hermes-starter-pack.zip">Download starter ZIP</a></div><p class="byline">By Michael Costea · 23 chapters · Windows + WSL first<br>Linux and macOS notes included. Read offline or print.</p></div>
+<aside class="file-card" aria-label="What this guide covers"><div class="file-title"><span>SETUP / FIELD NOTES</span><span>23 chapters</span></div><ol><li><span class="number">01</span><div><strong>Get the runtime working</strong><small>Install · provider · local test</small></div></li><li><span class="number">02</span><div><strong>Give it context and tools</strong><small>SOUL.md · skills · Brief2Ship</small></div></li><li><span class="number">03</span><div><strong>Make the work repeatable</strong><small>Telegram · handoffs · scheduling</small></div></li><li><span class="number">04</span><div><strong>Check what actually ran</strong><small>Tests · outputs · troubleshooting</small></div></li></ol><p class="file-note">Starter defaults and my higher-autonomy settings are explained separately. <a href="VERIFICATION.md">What was tested</a>.</p></aside></div>
+<div class="layout"><nav class="chapter-nav" id="chapter-navigation" aria-label="Chapter navigation"><details open><summary>Contents · 23 chapters</summary><div id="filter-controls" hidden><label class="filter-label" for="chapter-filter">Find a chapter</label><div class="filter-wrap"><input id="chapter-filter" type="search" placeholder="Skills, Telegram, install…" autocomplete="off"><button id="clear-filter" class="clear-filter" type="button" hidden aria-label="Clear chapter filter">×</button></div><p id="filter-status" class="filter-status" aria-live="polite"></p></div><div class="toc">
+<ul>
+<li><a href="#read-this-first">Read this first</a></li>
+<li><a href="#1-understand-the-parts-before-changing-them">1. Understand the parts before changing them</a></li>
+<li><a href="#2-prepare-windows-and-wsl">2. Prepare Windows and WSL</a></li>
+<li><a href="#3-install-hermes-from-the-official-source">3. Install Hermes from the official source</a></li>
+<li><a href="#4-create-a-separate-profile-and-connect-a-model">4. Create a separate profile and connect a model</a></li>
+<li><a href="#5-install-the-portable-operating-rules">5. Install the portable operating rules</a></li>
+<li><a href="#6-apply-a-small-explicit-configuration-baseline">6. Apply a small, explicit configuration baseline</a></li>
+<li><a href="#7-give-it-a-workspace-that-can-explain-itself">7. Give it a workspace that can explain itself</a></li>
+<li><a href="#8-install-useful-skills-not-a-giant-collection-you-never-use">8. Install useful skills, not a giant collection you never use</a></li>
+<li><a href="#9-keep-memory-small-and-put-procedures-in-skills">9. Keep memory small and put procedures in skills</a></li>
+<li><a href="#10-test-terminal-and-file-tools-before-anything-clever">10. Test terminal and file tools before anything clever</a></li>
+<li><a href="#11-add-web-search-and-browser-automation-separately">11. Add web search and browser automation separately</a></li>
+<li><a href="#12-connect-telegram">12. Connect Telegram</a></li>
+<li><a href="#13-make-the-gateway-survive-a-terminal-closing">13. Make the gateway survive a terminal closing</a></li>
+<li><a href="#14-run-a-complete-first-task">14. Run a complete first task</a></li>
+<li><a href="#15-make-brief2ship-the-canonical-discovery-workflow">15. Make Brief2Ship the canonical discovery workflow</a></li>
+<li><a href="#16-use-subagents-when-there-is-independent-work">16. Use subagents when there is independent work</a></li>
+<li><a href="#17-add-scheduled-work-only-after-the-task-works-manually">17. Add scheduled work only after the task works manually</a></li>
+<li><a href="#18-optional-voice-messages">18. Optional voice messages</a></li>
+<li><a href="#19-the-advanced-settings-i-actually-use">19. The advanced settings I actually use</a></li>
+<li><a href="#20-what-is-deliberately-not-bundled">20. What is deliberately not bundled</a></li>
+<li><a href="#21-troubleshooting-in-the-order-i-would-check-it">21. Troubleshooting in the order I would check it</a></li>
+<li><a href="#22-backups-updates-and-public-sharing">22. Backups, updates and public sharing</a></li>
+<li><a href="#23-final-acceptance-checklist">23. Final acceptance checklist</a></li>
+<li><a href="#sources-and-verification-scope">Sources and verification scope</a></li>
+</ul>
+</div>
+</details><div class="nav-files"><a href="#downloads">Starter files &amp; downloads</a><a href="GUIDE.md" download>Markdown source</a><a href="templates/SOUL.md" download>Portable SOUL.md</a><a href="VERIFICATION.md">Verification notes</a><p>No login. No remote scripts. The full guide works without JavaScript.</p></div></nav>
+<main id="guide" class="article" tabindex="-1"><div class="guide-intro"><p><em>A complete, step-by-step guide with a portable starter pack.</em></p>
+<p><em>Revised edition: explicit gateway working directory, authentication boundaries, update scope and scheduler-result checks.</em></p>
+<p>I keep seeing people spend more time designing an agent's personality than giving it useful work.</p>
+<p>My setup is simpler. Everyone is a generalist. Everyone becomes a specialist depending on the task. The same agent can work on a database, research something, build a frontend and check the finished result. It loads the skills and context it needs. I don't give it a new job title each time.</p>
+<p>That does not mean there are no operating rules. There are plenty. Check existing work. Use the right tools. Don't invent results. Leave enough evidence that the next session can pick things up. Keep the private bits private.</p>
+<p>This is the longer version: how to put that setup together, what each file actually does, which skills matter, how I use Telegram, and what has to work before I trust it with unattended tasks.</p>
+<p>There is no secret prompt that does all of this. The model, tools, credentials, workspace, skills and verification habits all matter.</p>
+</div><section class="chapter"><h2 id="read-this-first">Read this first</h2>
+<p><strong>The main path is Windows with Ubuntu under WSL2.</strong> Linux users can skip the WSL section. macOS users can use the official installer and the same profile, skills and workspace ideas, but the Linux service commands do not apply to macOS. This pack was not end-to-end tested on a fresh Windows or macOS installation.</p>
+<p><strong>This is a public reconstruction, not my live profile exported as a ZIP.</strong> It includes original portable versions of my operating rules. It excludes tokens, account IDs, personal directories, customer data, private memory, session history, desktop-driver configuration and private automation scripts.</p>
+<p><strong>Baseline versus my settings:</strong> the main walkthrough starts with manual command approvals and smaller execution limits. A later section shows the high-autonomy values observed in my profile. Those are different choices, not hidden defaults.</p>
+<p><strong>Version basis:</strong> documentation checked on 12 September 2026. The inspected installation reports Hermes Agent v0.21.1 (2026.9.7) and includes local changes. Current official documentation can be ahead of that installation. When a command differs on your machine, check <code>hermes --help</code>, the relevant subcommand's <code>--help</code>, and the <a href="https://hermes-agent.nousresearch.com/docs/">official documentation</a>. Do not copy a private patch or assume a configured key is implemented just because it exists in YAML.</p>
+<p><strong>Cost:</strong> Hermes is open source. Model access, search providers, cloud browsers and some media services may cost money. A paid chat subscription does not automatically provide every API or auxiliary tool credential. Set provider-side spending limits where available; a turn limit is not a currency limit.</p>
+<h3 id="what-you-will-end-up-with">What you will end up with</h3>
+<ul>
+<li>A working Hermes installation and a separate <code>operator</code> profile.</li>
+<li>A model connection you have tested yourself.</li>
+<li>A portable <code>SOUL.md</code>, rather than a persona tied to my directories.</li>
+<li>Seven original operating skills plus the maintained upstream Brief2Ship skill, with its matching CLI installed separately.</li>
+<li>A project workspace with operating instructions and durable handoffs.</li>
+<li>File, terminal, web and browser capabilities checked separately.</li>
+<li>An optional Telegram bot, connected only to your intended users.</li>
+<li>A tested pattern for delegated work and bounded scheduled tasks.</li>
+<li>A clear line between what is installed, what is configured and what has actually run.</li>
+</ul>
+<h3 id="files-in-the-download">Files in the download</h3>
+<ul>
+<li><a href="templates/SOUL.md">Portable SOUL.md</a>: the starter to install.</li>
+<li><a href="templates/AGENTS.md">Project AGENTS.md</a>: project-scoped working rules.</li>
+<li><a href="templates/config-overlay.yaml">Baseline config overlay</a>: selected settings, not a replacement configuration.</li>
+<li><a href="templates/advanced-settings-reference.yaml">Advanced settings reference</a>: selected values from my inspected profile.</li>
+<li><a href="templates/.env.example">Environment-variable example</a>: names and placeholders only.</li>
+<li><a href="templates/USER.example.md">User profile example</a> and <a href="templates/MEMORY.example.md">memory example</a>: prompts for your own facts, not my memory.</li>
+<li><a href="templates/project/STATUS.md">Project notes</a>, <a href="templates/project/DECISIONS.md">decisions</a>, <a href="templates/project/HANDOFF.md">handoff</a> and <a href="templates/project/OVERNIGHT_AUTONOMY.md">overnight runbook</a>.</li>
+<li>Eight <code>skills/*/SKILL.md</code> files: seven original starters plus the byte-exact upstream Brief2Ship skill, all six references and its MIT license. <a href="references/Brief2Ship-UPSTREAM.md">Pinned upstream provenance</a>.</li>
+<li>Six task prompts under <code>prompts/</code>.</li>
+<li><a href="install_templates.py">Template installer</a>: offline, dry-run first, backups before replacement.</li>
+<li><a href="references/SOUL-published-reference.md">Earlier public SOUL reference</a>: kept for comparison. It mentions optional helper scripts that are not bundled. Use the portable starter above for this walkthrough.</li>
+</ul>
+</section><section class="chapter"><h2 id="1-understand-the-parts-before-changing-them">1. Understand the parts before changing them</h2>
+<p>Hermes is the runtime. It connects the model to tools, remembers useful context, loads skills and can receive work through a terminal or messaging gateway.</p>
+<p>The pieces have different jobs:</p>
+<p><strong>Model/provider:</strong> does the reasoning and generates tool calls. Pick a model your account can access that handles tools reliably. A more expensive model does not fix missing permissions or a broken browser.</p>
+<p><strong>Tools:</strong> actually read files, run commands, browse pages, create images or call services. A skill saying “use GitHub” does not authenticate GitHub.</p>
+<p><strong><code>SOUL.md</code>:</strong> persistent behaviour and working style. Mine says to act as a generalist, load skills, verify work and avoid empty promises. It is not a security sandbox.</p>
+<p><strong><code>AGENTS.md</code>:</strong> instructions for a particular repository or workspace: what it is, where things live, how to test it and what must not be changed. Launch Hermes from the project so it can find the right context.</p>
+<p><strong>Memory:</strong> a small amount of stable personal or environment information. It is not a replacement for project documentation.</p>
+<p><strong>Skills:</strong> reusable procedures, loaded when relevant. Skills can carry references, templates and scripts, but a plain <code>SKILL.md</code> is instruction text, not executable software by itself.</p>
+<p><strong>Profiles:</strong> separate Hermes configuration, secret files, memory, skills and conversation state. They are not an authentication sandbox: root OAuth logins and host CLI credentials can be shared. Useful state separation, not a reason to make every profile a permanent “marketing agent” or “database agent.”</p>
+<p><strong>Gateway:</strong> the process connecting Hermes to Telegram or another channel. Your phone is the interface; the agent still runs on the machine hosting the gateway.</p>
+<p><strong>Scheduler:</strong> starts bounded jobs later. It only works while its runtime is alive. A sleeping laptop is not an overnight worker.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/profiles/">Official profiles</a> · <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/skills">Skills</a> · <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/memory">Memory</a></p>
+</section><section class="chapter"><h2 id="2-prepare-windows-and-wsl">2. Prepare Windows and WSL</h2>
+<p>If Ubuntu under WSL2 already works, inspect it rather than reinstalling it.</p>
+<p>Open <strong>PowerShell as Administrator</strong> for the initial WSL installation:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">powershell</span><button hidden class="copy-button" type="button" data-copy="code-1" aria-label="Copy command block 1">Copy</button></div><pre tabindex="0" aria-label="powershell code block 1"><code id="code-1" class="language-powershell">wsl --install -d Ubuntu
+</code></pre></div>
+<p>Restart Windows if the installer requests it. Open Ubuntu and create your Linux username and password. The Linux password is separate from any model-provider account.</p>
+<p>Back in PowerShell, verify the distribution:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">powershell</span><button hidden class="copy-button" type="button" data-copy="code-2" aria-label="Copy command block 2">Copy</button></div><pre tabindex="0" aria-label="powershell code block 2"><code id="code-2" class="language-powershell">wsl --list --verbose
+</code></pre></div>
+<p>The Ubuntu distribution should show version <code>2</code>. If you already have several distributions, choose the one you intend to use. Do not run a conversion or reinstall against an unrelated distribution.</p>
+<p>From this point, commands labelled <code>bash</code> go in <strong>Ubuntu</strong>, not PowerShell:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-3" aria-label="Copy command block 3">Copy</button></div><pre tabindex="0" aria-label="bash code block 3"><code id="code-3" class="language-bash">uname -s
+pwd
+sudo apt update
+sudo apt install -y curl git ca-certificates unzip
+</code></pre></div>
+<p>Keep the working repository in the Linux filesystem, such as <code>~/projects</code>, rather than putting the entire runtime in a synced Windows Documents folder. Windows files remain accessible through <code>/mnt/c/</code> when needed.</p>
+<p>A typical translation is <code>C:\Users\YOUR_WINDOWS_USER\Downloads</code> to <code>/mnt/c/Users/YOUR_WINDOWS_USER/Downloads</code>. That username is a placeholder; use your own. Windows and WSL have different home directories and can have different installations of Python, Git and Hermes.</p>
+<p>You do not need a local GPU when using a hosted model. Local model inference and local media generation have their own memory and hardware requirements; leave those out of the first working setup.</p>
+<p><strong>Checkpoint:</strong> Ubuntu opens, <code>uname -s</code> identifies Linux, and <code>git --version</code> works.</p>
+<p><a href="https://learn.microsoft.com/windows/wsl/install">Microsoft: install WSL</a> · <a href="https://hermes-agent.nousresearch.com/docs/getting-started/installation">Hermes installation</a></p>
+</section><section class="chapter"><h2 id="3-install-hermes-from-the-official-source">3. Install Hermes from the official source</h2>
+<p>The official quick-install command is:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-4" aria-label="Copy command block 4">Copy</button></div><pre tabindex="0" aria-label="bash code block 4"><code id="code-4" class="language-bash">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+</code></pre></div>
+<p>If you prefer to inspect the installer before executing it:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-5" aria-label="Copy command block 5">Copy</button></div><pre tabindex="0" aria-label="bash code block 5"><code id="code-5" class="language-bash">curl -fsSL https://hermes-agent.nousresearch.com/install.sh -o /tmp/hermes-install.sh
+less /tmp/hermes-install.sh
+bash /tmp/hermes-install.sh
+</code></pre></div>
+<p>These are alternatives. Do not run both just because they appear here. Follow the installer's prompts and its shell-reload instructions. For Bash, opening a new Ubuntu terminal is usually the simplest way to pick up the new <code>PATH</code>.</p>
+<p>Then run:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-6" aria-label="Copy command block 6">Copy</button></div><pre tabindex="0" aria-label="bash code block 6"><code id="code-6" class="language-bash">command -v hermes
+hermes --version
+hermes doctor
+</code></pre></div>
+<p>A doctor report may list optional integrations you have not configured. Fix failures affecting the core runtime and your chosen model; do not start purchasing every integration it mentions.</p>
+<p>If <code>hermes</code> is not found, open a fresh shell and re-read the installer's completion message. Check the installed location before attempting another install. If you already had Hermes, record the existing version and use its supported update path later rather than layering a second installation over it.</p>
+<p><strong>Checkpoint:</strong> the CLI runs and can report its version. This proves installation, not model access.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/getting-started/installation">Official installation</a></p>
+</section><section class="chapter"><h2 id="4-create-a-separate-profile-and-connect-a-model">4. Create a separate profile and connect a model</h2>
+<p>Use one profile for this walkthrough:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-7" aria-label="Copy command block 7">Copy</button></div><pre tabindex="0" aria-label="bash code block 7"><code id="code-7" class="language-bash">hermes profile create operator
+hermes -p operator config path
+hermes -p operator config env-path
+hermes -p operator setup
+</code></pre></div>
+<p>If <code>operator</code> already exists, stop and inspect it with <code>hermes profile list</code> and <code>hermes profile show operator</code>. Either deliberately reuse it or choose another name consistently throughout the guide. Do not delete an existing profile to make the instructions fit.</p>
+<p>Do not use <code>--clone</code> or <code>--clone-all</code> for this public setup. Cloning can copy credentials and other profile state. Starting clean avoids that copy; it does not establish credential isolation.</p>
+<p><strong>Check the actual account, not just the profile name.</strong> Supported OAuth providers can fall back to the root <code>~/.hermes/auth.json</code>. Host tool subprocesses keep the same OS-user <code>HOME</code>, so external CLIs can use existing credentials across profiles. Before account-sensitive work, verify the selected provider/account locally and check each external CLI's identity, such as <code>gh auth status</code> for GitHub. A fresh profile does not prove you signed into a different account. Separate OS users or appropriately configured containers are a different boundary; this walkthrough does not establish one.</p>
+<p>The setup wizard lets you choose a provider and a model. Use the option you actually have access to. OAuth-based providers require their supported sign-in flow; API providers require the relevant key. Perform the login locally. Keep credentials out of <code>SOUL.md</code>, skills, public repos and screenshots.</p>
+<p>My inspected profile uses an OpenAI Codex provider connection. That is a description of my account setup, not a requirement to reproduce the workflow or a promise that the same model will appear in your picker.</p>
+<p>You can revisit the provider/model selection with:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-8" aria-label="Copy command block 8">Copy</button></div><pre tabindex="0" aria-label="bash code block 8"><code id="code-8" class="language-bash">hermes -p operator model
+</code></pre></div>
+<p>Now test an actual model response:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-9" aria-label="Copy command block 9">Copy</button></div><pre tabindex="0" aria-label="bash code block 9"><code id="code-9" class="language-bash">hermes -p operator chat -q &quot;Reply with exactly: MODEL CONNECTION OK&quot;
+</code></pre></div>
+<p>The requested response is a test expectation, not a result already obtained for your account. If it fails, fix authentication, account entitlement or model selection before adding Telegram and browser automation.</p>
+<p>Use <code>-p operator</code> explicitly in commands while learning. It avoids “I edited one profile and tested another.” A named profile normally lives under <code>~/.hermes/profiles/operator/</code>; the <code>config path</code> output is the authority if your installation uses a custom home.</p>
+<p><strong>Checkpoint:</strong> one real response from the intended provider and account, using the intended profile; external CLI identities checked before account-sensitive work.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/integrations/providers">Providers</a> · <a href="https://hermes-agent.nousresearch.com/docs/user-guide/profiles/">Profiles</a></p>
+</section><section class="chapter"><h2 id="5-install-the-portable-operating-rules">5. Install the portable operating rules</h2>
+<p>Extract the whole starter ZIP. Open a terminal in the extracted folder containing <code>GUIDE.md</code> and <code>install_templates.py</code>.</p>
+<p>Confirm the target again:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-10" aria-label="Copy command block 10">Copy</button></div><pre tabindex="0" aria-label="bash code block 10"><code id="code-10" class="language-bash">hermes -p operator config path
+</code></pre></div>
+<p>For the standard named-profile location, preview the install:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-11" aria-label="Copy command block 11">Copy</button></div><pre tabindex="0" aria-label="bash code block 11"><code id="code-11" class="language-bash">PROFILE_HOME=&quot;$HOME/.hermes/profiles/operator&quot;
+python3 install_templates.py --profile-home &quot;$PROFILE_HOME&quot;
+</code></pre></div>
+<p>If the printed config path is somewhere else, set <code>PROFILE_HOME</code> to that config file's parent directory instead. Do not include <code>config.yaml</code> in the directory variable.</p>
+<p>The installer defaults to <strong>dry-run</strong>. It lists the managed paths and does not change the profile. Read that list. Then apply:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-12" aria-label="Copy command block 12">Copy</button></div><pre tabindex="0" aria-label="bash code block 12"><code id="code-12" class="language-bash">python3 install_templates.py --profile-home &quot;$PROFILE_HOME&quot; --apply
+</code></pre></div>
+<p>The installer copies only:</p>
+<ul>
+<li><code>templates/SOUL.md</code> to the target profile's <code>SOUL.md</code>.</li>
+<li>The seven original starter skills and the pinned upstream <code>brief2ship</code> skill (with every reference and license) into the target profile's <code>skills/</code> directory: eight skills total, 16 managed files including SOUL.md.</li>
+</ul>
+<p>Changed existing files are backed up under the target profile's <code>backups/generalist-starter-*</code> directory. The returned JSON gives the exact backup path. Identical files are left alone. It rejects symlink destinations rather than silently writing through them into another location.</p>
+<p>It does <strong>not</strong> replace <code>config.yaml</code>, <code>.env</code>, <code>auth.json</code>, personal memory, sessions, jobs, gateways or project files. There is no network access and no dependency installation in this script. It installs the Brief2Ship Agent Skill, not its CLI; complete section 15 before your first implementation-base selection. Use it while the target profile is idle, not while another agent is editing its skills.</p>
+<p>Check discovery:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-13" aria-label="Copy command block 13">Copy</button></div><pre tabindex="0" aria-label="bash code block 13"><code id="code-13" class="language-bash">hermes -p operator skills list
+</code></pre></div>
+<p>Look for the eight names listed in section 8. Start a new session after installing. Inside a session, <code>/reload-skills</code> can rescan skill files, but restarting a session is the cleanest first test.</p>
+<p>The starter <code>SOUL.md</code> is intentionally shorter than my full private operating layer. It retains the generalist model and verification rules without requiring my private workspace scripts. It also tells the agent to write complete explanations when teaching; terse status replies should not turn a setup guide into a guessing game.</p>
+<p><strong>Checkpoint:</strong> the installer reports byte verification after applying, and Hermes lists the starter skills.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/personality">Personality and SOUL</a> · <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/skills">Skills</a></p>
+</section><section class="chapter"><h2 id="6-apply-a-small-explicit-configuration-baseline">6. Apply a small, explicit configuration baseline</h2>
+<p>Do not copy a partial YAML file over the configuration the wizard just created. You would lose unrelated settings, including the provider you tested.</p>
+<p>These commands set individual values:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-14" aria-label="Copy command block 14">Copy</button></div><pre tabindex="0" aria-label="bash code block 14"><code id="code-14" class="language-bash">hermes -p operator config set terminal.backend local
+hermes -p operator config set terminal.timeout 180
+hermes -p operator config set agent.max_turns 90
+hermes -p operator config set approvals.mode manual
+hermes -p operator config set security.redact_secrets true
+hermes -p operator config set memory.memory_enabled true
+hermes -p operator config set memory.user_profile_enabled true
+hermes -p operator config set compression.enabled true
+hermes -p operator config set compression.threshold 0.50
+hermes -p operator config set compression.target_ratio 0.20
+hermes -p operator config set checkpoints.enabled true
+hermes -p operator config set delegation.max_concurrent_children 3
+hermes -p operator config set delegation.max_spawn_depth 2
+hermes -p operator config set delegation.max_iterations 50
+hermes -p operator config check
+</code></pre></div>
+<p>What matters here:</p>
+<ul>
+<li><strong><code>terminal.backend: local</code></strong> runs shell commands on the machine hosting Hermes. In this walkthrough, that is Ubuntu under WSL. It is not an automatic sandbox.</li>
+<li><strong><code>terminal.timeout</code></strong> is a command timeout, not a spending limit for the entire agent.</li>
+<li><strong><code>agent.max_turns</code></strong> bounds agent iterations; it does not guarantee the task will complete or cap the total provider bill.</li>
+<li><strong>Manual approvals</strong> preserve the normal command-approval flow. They are separate from your natural-language instructions about publishing and service restarts.</li>
+<li><strong>Secret redaction</strong> stays enabled. Approval mode and redaction are independent.</li>
+<li><strong>Compression</strong> reduces accumulated conversation context when the configured threshold is reached. It is not durable project memory.</li>
+<li><strong>Checkpoints</strong> provide a filesystem recovery feature where supported. They are not a backup of external systems or every change on the machine.</li>
+<li><strong>Delegation limits</strong> keep the initial setup from spawning an unnecessarily large parallel workload.</li>
+</ul>
+<p>Inspect settings locally with <code>hermes -p operator config edit</code> if necessary. Do not post a raw full configuration as a screenshot; configurations can contain private endpoints or credentials.</p>
+<p>Start a fresh CLI session after these changes. Some values are startup-time settings. In an already-running gateway, <code>/new</code> is a new conversation, not a new process; an approved profile-specific restart may be required for process-level changes.</p>
+<p><strong>Checkpoint:</strong> configuration checking runs without a problem affecting these settings. Then open a new session and test the behaviour, not just the YAML.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/configuration">Configuration</a> · <a href="https://hermes-agent.nousresearch.com/docs/reference/cli-commands">CLI reference</a></p>
+</section><section class="chapter"><h2 id="7-give-it-a-workspace-that-can-explain-itself">7. Give it a workspace that can explain itself</h2>
+<p>Return to the extracted starter folder first, then save its location:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-15" aria-label="Copy command block 15">Copy</button></div><pre tabindex="0" aria-label="bash code block 15"><code id="code-15" class="language-bash">PACK_DIR=&quot;$PWD&quot;
+mkdir -p &quot;$HOME/projects/hermes-lab/docs&quot;
+cd &quot;$HOME/projects/hermes-lab&quot;
+git init
+</code></pre></div>
+<p>This walkthrough uses a new disposable project. If you are adapting an existing repo, read and merge its instructions instead of replacing them.</p>
+<p>Copy the project templates without clobbering existing files:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-16" aria-label="Copy command block 16">Copy</button></div><pre tabindex="0" aria-label="bash code block 16"><code id="code-16" class="language-bash">cp -n &quot;$PACK_DIR/templates/AGENTS.md&quot; AGENTS.md
+cp -n &quot;$PACK_DIR/templates/project/STATUS.md&quot; docs/STATUS.md
+cp -n &quot;$PACK_DIR/templates/project/DECISIONS.md&quot; docs/DECISIONS.md
+cp -n &quot;$PACK_DIR/templates/project/HANDOFF.md&quot; docs/HANDOFF.md
+cp -n &quot;$PACK_DIR/templates/project/OVERNIGHT_AUTONOMY.md&quot; OVERNIGHT_AUTONOMY.md
+</code></pre></div>
+<p>Create a short <code>README.md</code> describing the project you actually want. Once the agent discovers the stack, add the real install, run and test commands. Do not fill the README with commands that have never been run.</p>
+<p>Review <a href="templates/project/.gitignore.fragment">the gitignore fragment</a> and merge the relevant entries into <code>.gitignore</code>. Do not commit credentials, runtime databases, private evidence or personal exports just because the repo is local today.</p>
+<p>Keep these files useful:</p>
+<ul>
+<li><strong>README:</strong> what the project is and how to run it.</li>
+<li><strong>AGENTS:</strong> local rules and constraints.</li>
+<li><strong>STATUS:</strong> what exists, what is verified and what is blocked.</li>
+<li><strong>DECISIONS:</strong> why a meaningful choice was made and what alternatives were inspected.</li>
+<li><strong>HANDOFF:</strong> the exact state another session or agent needs to continue.</li>
+</ul>
+<p>Launch from the project:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-17" aria-label="Copy command block 17">Copy</button></div><pre tabindex="0" aria-label="bash code block 17"><code id="code-17" class="language-bash">hermes -p operator
+</code></pre></div>
+<p>Ask it to identify the project instructions it loaded and summarise them before editing anything. If it cannot find them, fix the working directory or file placement.</p>
+<p>My private setup has a more elaborate shared visibility layer. You do not need that machinery to start. These Markdown files provide a portable handoff pattern. They do not provide locking, a shared mailbox or automatic coordination by themselves.</p>
+<p><strong>Checkpoint:</strong> a new session finds the right project context and can explain the current state without relying on the previous chat.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files">Context files</a></p>
+</section><section class="chapter"><h2 id="8-install-useful-skills-not-a-giant-collection-you-never-use">8. Install useful skills, not a giant collection you never use</h2>
+<p>The pack includes seven original operating skills plus one maintained upstream skill:</p>
+<ol>
+<li><strong><code>generalist-workflow</code></strong> — inspect, load context, do the work and own the result.</li>
+<li><strong><code>brief2ship</code></strong> — the maintained upstream discovery workflow for repository, package and local-base selection; install the matching CLI in section 15.</li>
+<li><strong><code>verify-before-done</code></strong> — exercise the requested result and distinguish a passing build from a working user flow.</li>
+<li><strong><code>evidence-led-research</code></strong> — primary sources, current documentation and explicit uncertainty.</li>
+<li><strong><code>project-handoff</code></strong> — preserve decisions, changes, checks and the next action outside the conversation.</li>
+<li><strong><code>public-content-check</code></strong> — check claims, private details and finished media before sharing.</li>
+<li><strong><code>bounded-autonomy</code></strong> — explicit scope, budgets, stop conditions and verified scheduling.</li>
+<li><strong><code>plainspoken-output</code></strong> — direct writing without damaging technical precision or leaving out necessary explanation.</li>
+</ol>
+<p>The seven original skills are portable operating adaptations, not exports of my private skill library. Brief2Ship is different: its public upstream SKILL.md, all six reference files and MIT license are preserved byte-for-byte at the pinned commit documented in <a href="references/Brief2Ship-UPSTREAM.md">upstream provenance</a>. There is no competing bundled <code>repo-first-build</code> skill. Do not install the old adaptation alongside Brief2Ship; if upgrading an earlier pack, inspect and archive only that old skill in the intended idle profile, preserving any local refinements for review. The installer never deletes existing profile files.</p>
+<p>Load a skill explicitly in chat:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">text</span><button hidden class="copy-button" type="button" data-copy="code-18" aria-label="Copy text block 18">Copy</button></div><pre tabindex="0" aria-label="text code block 18"><code id="code-18" class="language-text">/skill generalist-workflow
+/skill verify-before-done
+</code></pre></div>
+<p>Or preload skills when starting the CLI:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-19" aria-label="Copy command block 19">Copy</button></div><pre tabindex="0" aria-label="bash code block 19"><code id="code-19" class="language-bash">hermes -p operator -s generalist-workflow,verify-before-done
+</code></pre></div>
+<p>This is preferable to assuming an undocumented <code>skills.force_load</code> key works. My inspected YAML contains such a setting, but a stored field alone is not proof that the runtime consumes it. The guide uses explicit supported loading instead.</p>
+<h3 id="add-specialist-skills-when-there-is-an-actual-task">Add specialist skills when there is an actual task</h3>
+<p>My wider library includes Hermes operations, GitHub workflows, software debugging, browser/desktop safety, document production, research, visual design and media handling. These are capabilities the generalist can pick up. They are not separate permanent employees.</p>
+<p>Start by checking what is already installed:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-20" aria-label="Copy command block 20">Copy</button></div><pre tabindex="0" aria-label="bash code block 20"><code id="code-20" class="language-bash">hermes -p operator skills list
+hermes -p operator skills search github
+hermes -p operator skills search pdf
+</code></pre></div>
+<p>For a result you genuinely need, inspect it before installing. The identifiers below are placeholders, not guaranteed registry entries:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-21" aria-label="Copy command block 21">Copy</button></div><pre tabindex="0" aria-label="bash code block 21"><code id="code-21" class="language-bash">SKILL_ID='REPLACE_WITH_AN_EXACT_SEARCH_RESULT_ID'
+hermes -p operator skills inspect &quot;$SKILL_ID&quot;
+hermes -p operator skills install &quot;$SKILL_ID&quot;
+</code></pre></div>
+<p>Check the publisher, source files, dependencies, supported platform, licence and any commands it proposes running. Do not use <code>--force</code> simply to push through a blocked skill scan. A marketplace listing is a lead, not a security review.</p>
+<p>Useful categories to add in order:</p>
+<ul>
+<li><strong>Hermes operations:</strong> setup, profiles, configuration and troubleshooting.</li>
+<li><strong>GitHub and development:</strong> only if you build software; authenticate <code>gh</code> separately when needed.</li>
+<li><strong>Research/citations:</strong> for source-heavy factual work.</li>
+<li><strong>PDF, DOCX and XLSX:</strong> install the format-specific skill and its dependencies when you actually need that format.</li>
+<li><strong>Browser and desktop operations:</strong> after the basic browser works; these involve additional permissions and runtime components.</li>
+<li><strong>Visual design/media:</strong> after you have a real output to make and a way to inspect it.</li>
+</ul>
+<p>Do not assume a custom name from my library is installable from the public hub. Where the exact package is absent, use an inspected public equivalent or write a small skill from official documentation and a tested workflow.</p>
+<h3 id="what-a-skill-file-looks-like">What a skill file looks like</h3>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">yaml</span><button hidden class="copy-button" type="button" data-copy="code-22" aria-label="Copy text block 22">Copy</button></div><pre tabindex="0" aria-label="yaml code block 22"><code id="code-22" class="language-yaml">---
+name: your-tested-workflow
+description: Use when repeating this verified workflow.
+version: 1.0.0
+---
+</code></pre></div>
+<p>Below that frontmatter, include when to use it, the procedure, prerequisites, pitfalls and verification. Put bulky supporting material in <code>references/</code>, <code>templates/</code> or <code>scripts/</code> rather than making the main file enormous.</p>
+<p>After solving something difficult, ask Hermes to update the relevant skill with the actual lesson. Do not create five nearly identical skills or save a one-off bug number as a permanent workflow.</p>
+<p><strong>Checkpoint:</strong> the agent loads the skill and follows its procedure on a small task. Seeing the name in a catalogue is only discovery.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/skills">Skills system</a> · <a href="https://hermes-agent.nousresearch.com/docs/reference/skills-catalog">Bundled catalogue</a></p>
+</section><section class="chapter"><h2 id="9-keep-memory-small-and-put-procedures-in-skills">9. Keep memory small and put procedures in skills</h2>
+<p>Default file-based memory uses <code>MEMORY.md</code> and <code>USER.md</code> under the active profile's <code>memories/</code> directory. The official defaults are deliberately small: 2,200 characters for memory and 1,375 for the user profile. Inspect current documentation if your version differs.</p>
+<p>I use a stricter split than “remember everything”:</p>
+<ul>
+<li><strong>User profile:</strong> who I am, communication preferences and stable expectations.</li>
+<li><strong>Memory:</strong> durable environment facts that genuinely apply across sessions.</li>
+<li><strong>Skills:</strong> procedures, pitfalls and corrections that belong to a recurring kind of work.</li>
+<li><strong>Project files:</strong> current state, decisions, tests and handoffs.</li>
+<li><strong>Session history:</strong> the detailed conversation, searchable when needed.</li>
+</ul>
+<p>Do not paste the starter example files over existing memory. Fill in a few true facts locally, then ask Hermes to save the confirmed facts through its memory tool. For example:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">text</span><button hidden class="copy-button" type="button" data-copy="code-23" aria-label="Copy text block 23">Copy</button></div><pre tabindex="0" aria-label="text code block 23"><code id="code-23" class="language-text">Remember that I prefer direct answers, complete instructions when learning,
+and exact commands. Keep project progress in project files and reusable
+procedures in skills. Do not store credentials in memory.
+</code></pre></div>
+<p>Start a new session and ask what it remembers about those preferences. Memory snapshots may be captured at session start; a change on disk is not necessarily reflected in the already-built prompt.</p>
+<p>If memory becomes full, consolidate or remove stale entries. Do not add more biographies, task logs or raw documents. When the agent needs the details of an older discussion, use session search instead.</p>
+<p><strong>Checkpoint:</strong> a fresh session recalls the intended stable preference without leaking unrelated personal information.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/memory">Persistent memory</a></p>
+</section><section class="chapter"><h2 id="10-test-terminal-and-file-tools-before-anything-clever">10. Test terminal and file tools before anything clever</h2>
+<p>Open Hermes from <code>~/projects/hermes-lab</code>. Use <a href="prompts/first-session.txt">the first-session prompt</a>, then give it a deliberately simple tool-backed task:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">text</span><button hidden class="copy-button" type="button" data-copy="code-24" aria-label="Copy text block 24">Copy</button></div><pre tabindex="0" aria-label="text code block 24"><code id="code-24" class="language-text">In this disposable project, create a file called tool-check.txt containing
+TOOL CHECK OK. Read it back with a file tool. Report the exact path and
+contents. Do not modify any other file and do not publish anything.
+</code></pre></div>
+<p>Look for actual tool activity and readback. An answer saying “I created the file” without evidence is not the test.</p>
+<p>Next, ask it to run <code>pwd</code>, identify the shell/OS using tools, and list the project's relevant files. This checks whether the agent is acting in WSL or somewhere else.</p>
+<p>If terminal or file tools are unavailable:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-25" aria-label="Copy command block 25">Copy</button></div><pre tabindex="0" aria-label="bash code block 25"><code id="code-25" class="language-bash">hermes -p operator tools list
+hermes -p operator tools
+</code></pre></div>
+<p>Enable the appropriate capabilities for the surface you are using. CLI and Telegram settings can differ. Start a new session after changing tool availability.</p>
+<p>For local development, add the actual project toolchain when the project needs it. The repository's manifest and lockfile should decide whether you need Python, Node, Rust or something else. Do not install a stack because a generic agent guide listed it.</p>
+<p><strong>Checkpoint:</strong> the file exists, exact readback matches, and the reported environment is the intended one.</p>
+</section><section class="chapter"><h2 id="11-add-web-search-and-browser-automation-separately">11. Add web search and browser automation separately</h2>
+<p>Web search, page extraction, a browser and full desktop control are different capabilities.</p>
+<p>Run:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-26" aria-label="Copy command block 26">Copy</button></div><pre tabindex="0" aria-label="bash code block 26"><code id="code-26" class="language-bash">hermes -p operator setup tools
+hermes -p operator tools list
+</code></pre></div>
+<p>Configure the web/search provider offered by your installed version. Some options require a key or subscription. Test it with a public factual request such as reading the official Hermes installation page and citing the URL. Make it fetch the page, not just repeat a search snippet.</p>
+<p>Then configure Browser Automation through the tools setup. For the basic path, choose a local browser option and complete any browser dependency installation the wizard offers. A cloud browser is optional and may involve separate charges.</p>
+<p>Test it on a public, non-authenticated page:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">text</span><button hidden class="copy-button" type="button" data-copy="code-27" aria-label="Copy text block 27">Copy</button></div><pre tabindex="0" aria-label="text code block 27"><code id="code-27" class="language-text">Use the browser tool to open https://example.com/.
+Report the page title and take a screenshot.
+Do not sign in anywhere and do not use my personal browser profile.
+</code></pre></div>
+<p>Inspect the screenshot. The title should correspond to the actual page. Tool names vary by backend: newer setups may expose a single <code>browser_exec</code> tool, while others expose individual browser navigation tools. You need a working browser, not a particular tool name copied from my chat.</p>
+<h3 id="wsl-browser-versus-windows-browser">WSL browser versus Windows browser</h3>
+<p>A local browser launched inside WSL is not automatically the Windows Chrome instance you use every day. Its cookies, tabs and logins may be different.</p>
+<p>Get the isolated browser working first. For access to your existing signed-in Windows browser, follow the current official browser instructions for <strong>WSL2 plus Windows Chrome</strong> and the applicable MCP/CDP route. Current documentation specifically distinguishes that route from a simple <code>/browser connect</code> setup.</p>
+<p>Do not paste a remote-debugging port into a public firewall rule or assume an existing-profile checkbox establishes a working connection. Verify the backend, browser identity and one harmless read-only operation before giving it an account task. Complete login, MFA and other human gates yourself.</p>
+<p>My desktop/browser integration has additional local setup. It is not bundled here, and it is not required to reproduce the core generalist workflow.</p>
+<p><strong>Checkpoint:</strong> web extraction and browser rendering each work independently. Authenticated desktop control remains a separate optional integration.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/browser">Browser automation</a> · <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp">MCP</a></p>
+</section><section class="chapter"><h2 id="12-connect-telegram">12. Connect Telegram</h2>
+<p>Do this only after the CLI model and tools work. Otherwise you will be debugging provider access, tools and messaging at the same time.</p>
+<h3 id="create-the-bot">Create the bot</h3>
+<ol>
+<li>Open the official <a href="https://t.me/BotFather">@BotFather</a> in Telegram.</li>
+<li>Send <code>/newbot</code>.</li>
+<li>Choose a display name and an available username ending in <code>bot</code>.</li>
+<li>Keep the returned token private.</li>
+</ol>
+<p>Run the gateway setup for the same profile:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-28" aria-label="Copy command block 28">Copy</button></div><pre tabindex="0" aria-label="bash code block 28"><code id="code-28" class="language-bash">hermes -p operator gateway setup
+</code></pre></div>
+<p>Select Telegram and enter the token locally when prompted. Configure the allowed user list with <strong>your numeric Telegram user ID</strong>, not your username and not the bot's ID. Use the setup flow or a trusted method you verify to obtain it.</p>
+<p>The relevant environment variable names are:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">text</span><button hidden class="copy-button" type="button" data-copy="code-29" aria-label="Copy text block 29">Copy</button></div><pre tabindex="0" aria-label="text code block 29"><code id="code-29" class="language-text">TELEGRAM_BOT_TOKEN
+TELEGRAM_ALLOWED_USERS
+TELEGRAM_HOME_CHANNEL
+</code></pre></div>
+<p>The last one is a delivery destination, not an access-control list. A chat ID and a user ID serve different purposes. Do not guess them or copy identifiers from an example screenshot. The active profile's <code>.env</code> is located by:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-30" aria-label="Copy command block 30">Copy</button></div><pre tabindex="0" aria-label="bash code block 30"><code id="code-30" class="language-bash">hermes -p operator config env-path
+</code></pre></div>
+<p>Before either foreground or background startup, pin tool execution to the disposable project created earlier:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-31" aria-label="Copy command block 31">Copy</button></div><pre tabindex="0" aria-label="bash code block 31"><code id="code-31" class="language-bash">test -f &quot;$HOME/projects/hermes-lab/AGENTS.md&quot;
+hermes -p operator config set terminal.cwd &quot;$HOME/projects/hermes-lab&quot;
+</code></pre></div>
+<p>If the file check fails, complete the workspace section first. The shell expands <code>$HOME</code> into your absolute project path. The default <code>terminal.cwd</code> is <code>"."</code>; a background service starts from a stable profile directory, not necessarily the project you used in the CLI. This setting makes the project explicit. It is a working-directory choice, not a filesystem access restriction. When changing projects later, revisit it deliberately.</p>
+<p>Start the gateway in the foreground for the first test:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-32" aria-label="Copy command block 32">Copy</button></div><pre tabindex="0" aria-label="bash code block 32"><code id="code-32" class="language-bash">hermes -p operator gateway run
+</code></pre></div>
+<p>Leave that terminal running. In Telegram:</p>
+<ol>
+<li>Open your new bot.</li>
+<li>Press Start or send <code>/start</code>.</li>
+<li>Send a simple message and confirm a reply.</li>
+<li>Send <code>/sethome</code> in the chat you want to receive scheduled results.</li>
+<li>Ask it to run <code>pwd</code> with a tool, read <code>AGENTS.md</code> from that directory and quote one project-specific instruction. Check the returned path and quote against the workspace you created.</li>
+</ol>
+<p>Do not run two gateway processes polling with the same bot token. If you later install a background service, stop the foreground test with <code>Ctrl+C</code> first.</p>
+<h3 id="test-permissions-and-destination">Test permissions and destination</h3>
+<p>Confirm the configured allowlist contains only the intended people. A bot responding to you proves the happy path; it does not prove every access-control setting is correct. Review the effective configuration and, where practical, test an account that is not allowed without exposing private content.</p>
+<p>Start with a private DM. Groups add chat allowlists, mention rules and Telegram's bot privacy mode. Configure those deliberately using the official guide rather than turning every visibility option on. Do not assume several bots in a group can reliably coordinate by reading one another's messages; use an explicit handoff mechanism.</p>
+<p><strong>Checkpoint:</strong> the intended user can send work and receive a real response; home delivery points to the intended chat; only one process owns this token.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram">Telegram setup and access control</a></p>
+</section><section class="chapter"><h2 id="13-make-the-gateway-survive-a-terminal-closing">13. Make the gateway survive a terminal closing</h2>
+<p>Foreground mode is useful for diagnosis. For regular use, install the supported background service after the initial test succeeds.</p>
+<p>On WSL, check whether systemd is PID 1:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-33" aria-label="Copy command block 33">Copy</button></div><pre tabindex="0" aria-label="bash code block 33"><code id="code-33" class="language-bash">ps -p 1 -o comm=
+</code></pre></div>
+<p>If it is not <code>systemd</code>, follow Microsoft's current WSL systemd instructions. The relevant setting in <code>/etc/wsl.conf</code> is:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">ini</span><button hidden class="copy-button" type="button" data-copy="code-34" aria-label="Copy text block 34">Copy</button></div><pre tabindex="0" aria-label="ini code block 34"><code id="code-34" class="language-ini">[boot]
+systemd=true
+</code></pre></div>
+<p>Edit and merge the setting with <code>sudoedit /etc/wsl.conf</code>; do not overwrite other sections. Applying a WSL restart requires closing running work. From PowerShell, <code>wsl --shutdown</code> stops <strong>all</strong> running WSL distributions. Use it only when you have deliberately stopped or saved the affected workloads, then reopen Ubuntu and re-check PID 1.</p>
+<p>On a systemd-enabled Linux/WSL environment, enable user-service persistence if needed:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-35" aria-label="Copy command block 35">Copy</button></div><pre tabindex="0" aria-label="bash code block 35"><code id="code-35" class="language-bash">sudo loginctl enable-linger &quot;$USER&quot;
+</code></pre></div>
+<p>After stopping the foreground gateway, install without an implicit start, then start explicitly:</p>
+<p>Keep the <code>terminal.cwd</code> setting from the previous section. Running <code>cd</code> in the setup shell alone does not set the background service's project context.</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-36" aria-label="Copy command block 36">Copy</button></div><pre tabindex="0" aria-label="bash code block 36"><code id="code-36" class="language-bash">hermes -p operator gateway install --no-start-now
+hermes -p operator gateway start
+hermes -p operator gateway status
+</code></pre></div>
+<p>If your installed version lacks the explicit install flag, check <code>hermes gateway install --help</code> and follow that version's service flow. Do not invent a service name or copy one from another profile.</p>
+<p>Send <code>/new</code> in Telegram to start a fresh session under the service. Ask it to run <code>pwd</code> with a tool, read the intended <code>AGENTS.md</code> and quote one project-specific instruction. Confirm both the path and instruction, not just a greeting. Close the setup terminal, open a new one, inspect the service again and repeat the check. This tests that the bot still works outside the original shell with the intended project context.</p>
+<p>This does not make Windows stay awake, start WSL after every reboot or guarantee service availability across power loss. Those are host-level operating choices. Configure them only for a machine you intend to keep running, and test the exact restart/sleep scenario you rely on.</p>
+<p>My standing rule is that agents do not restart live messaging gateways without my approval. Use that same explicitness once the bot is carrying real work.</p>
+<p><strong>Checkpoint:</strong> the profile's background gateway is active after the setup shell closes; a fresh Telegram session proves the intended working directory and <code>AGENTS.md</code> content.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/">Gateway documentation</a> · <a href="https://learn.microsoft.com/windows/wsl/systemd">Microsoft: systemd in WSL</a></p>
+</section><section class="chapter"><h2 id="14-run-a-complete-first-task">14. Run a complete first task</h2>
+<p>Use <a href="prompts/first-build.txt">the included first-build prompt</a>. It asks for a small standard-library Python CSV CLI, tests and a handoff in the disposable workspace.</p>
+<p>The point is not the app. It exercises the operating loop:</p>
+<ol>
+<li>Read project context.</li>
+<li>Inspect existing files and available tools.</li>
+<li>Record a scoped reuse decision.</li>
+<li>Implement the requested behaviour.</li>
+<li>Run tests against valid and invalid inputs.</li>
+<li>Run the actual command against a fixture.</li>
+<li>Leave exact run instructions and a handoff.</li>
+</ol>
+<p>You should receive files and actual execution evidence. Expected checks include valid input, empty input, missing columns and invalid quantities. Do not accept an answer that merely says “tests would include…” when you asked it to build and run them.</p>
+<p>Then start a fresh session from the same project. Ask it to read the handoff, run the documented tests and describe what remains unverified. This is the first useful continuity test.</p>
+<p>If you prefer a research task, use <a href="prompts/research.txt">the research prompt</a> instead. It still needs real source retrieval, citations and a clear distinction between source claims and inference.</p>
+<p><strong>Checkpoint:</strong> another session can reproduce the result without the original conversation.</p>
+</section><section class="chapter"><h2 id="15-make-brief2ship-the-canonical-discovery-workflow">15. Make Brief2Ship the canonical discovery workflow</h2>
+<p>Before choosing a new repository, package, library, template or substantial local implementation base, load <strong><code>brief2ship</code></strong> and run its CLI. The upstream skill and CLI are the primary workflow, not an optional enhancement to a separate manual repo-first skill.</p>
+<h3 id="install-the-matching-cli-then-confirm-the-skill">Install the matching CLI, then confirm the skill</h3>
+<p>Section 5 installs the complete upstream Agent Skill offline. It does <strong>not</strong> install the executable. If <code>uv</code> is unavailable, follow <a href="https://docs.astral.sh/uv/getting-started/installation/">Astral’s official installation instructions</a> first. Brief2Ship needs Python 3.11 or newer. Run this in the environment where Hermes executes tools (Ubuntu/WSL for this walkthrough, not a separate Windows shell):</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-37" aria-label="Copy command block 37">Copy</button></div><pre tabindex="0" aria-label="bash code block 37"><code id="code-37" class="language-bash">uv tool install git+https://github.com/five0nit/brief2ship.git@1c6e4c7155c38fa76a8be05f418070d8be32ae1f
+brief2ship --version
+brief2ship discover --help
+hermes -p operator skills list
+</code></pre></div>
+<p>The expected CLI version is <code>0.8.0</code>. This exact public commit is the <strong>unreleased 0.8.0 source snapshot</strong>, as labelled by the upstream README, not a published <code>v0.8.0</code> tag. It was current <code>main</code> when checked; no <code>v0.8.0</code> tag existed. The earlier <code>v0.7.0</code> tag selects a different version and is not substituted here. The pinned CLI installation was exercised in isolated uv directories without replacing the author's active installation. If you already have Brief2Ship, inspect its version and installation before deciding whether to change it; do not blindly downgrade or overwrite it.</p>
+<p>The pack bundles the unmodified <a href="https://github.com/five0nit/brief2ship/tree/1c6e4c7155c38fa76a8be05f418070d8be32ae1f/skills/brief2ship">public upstream skill and references</a>, with its <a href="skills/brief2ship/LICENSE">MIT license</a> and <a href="references/Brief2Ship-UPSTREAM.md">source hashes</a>. It does not bundle private machine-specific refinements. Keep the CLI and skill on a deliberately reviewed matching revision when upgrading.</p>
+<p><code>hermes skills install --help</code> confirms that Hermes supports a raw <code>SKILL.md</code> URL. However, the inspected raw-URL adapter fetches only directly referenced support paths, not references linked from other references. That is why this pack's offline installer copies the complete pinned upstream directory instead of presenting a single-file install as a complete skill. No guessed <code>--ref</code> flag or <code>repo@tag</code> Hermes skill identifier is needed.</p>
+<p>Start a fresh Hermes session and load:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">text</span><button hidden class="copy-button" type="button" data-copy="code-38" aria-label="Copy text block 38">Copy</button></div><pre tabindex="0" aria-label="text code block 38"><code id="code-38" class="language-text">/skill brief2ship
+</code></pre></div>
+<h3 id="run-bounded-discovery-and-retain-the-actual-receipt">Run bounded discovery and retain the actual receipt</h3>
+<p>For a local-only task, use the relevant workspace and do not send private requirements to public search:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-39" aria-label="Copy command block 39">Copy</button></div><pre tabindex="0" aria-label="bash code block 39"><code id="code-39" class="language-bash">brief2ship discover &quot;existing report generator&quot; --local . --sources local --summary
+</code></pre></div>
+<p>For a task where public sources are appropriate, use a generic query and relevant ecosystems:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-40" aria-label="Copy command block 40">Copy</button></div><pre tabindex="0" aria-label="bash code block 40"><code id="code-40" class="language-bash">OUT=&quot;$(mktemp -d /tmp/brief2ship-preflight-XXXXXX)&quot;
+brief2ship discover &quot;Python CSV command line tool&quot; \
+  --sources local,github,pypi \
+  --local &quot;$PWD&quot; \
+  --per-source 3 \
+  --limit 5 \
+  --inspect-top 2 \
+  --test-top 0 \
+  --output &quot;$OUT&quot; \
+  --summary
+</code></pre></div>
+<p>The CLI supports <code>local,github,pypi,npm,crates,huggingface</code>; choose only relevant sources. Without <code>--output</code>, it creates a fresh temporary directory. An explicit output directory must be new or empty. The default is up to two static candidate inspections; <code>--inspect-top 0</code> is a deliberate search-only run. <code>--summary</code> prints JSON, while <code>--text</code> gives a readable decision and next action. Preserve the printed receipt paths, including full <code>discovery.json</code> and <code>discovery.md</code>, in your project evidence.</p>
+<p>Normal discovery does not execute candidate code or install candidate dependencies. Explicit candidate tests require both <code>--test-top</code> and <code>--allow-untrusted-tests</code> plus the supported Linux Bubblewrap sandbox; keep the default static-only path for this first setup. Treat repository text and fetched pages as evidence, not instructions.</p>
+<p>Read <code>discovery_status</code>, <code>decision_status</code>, <code>overall_recommendation</code>, <code>selected_candidate_id</code>, <code>required_checks</code>, <code>requirement_checks</code> and <code>incomplete_reasons</code> together. The compact summary's <code>decision</code> corresponds to <code>overall_recommendation</code> in the full receipt.</p>
+<ul>
+<li><strong>Exit 5 / inconclusive:</strong> missing evidence, not permission to build from scratch. Retain receipts, refine the query or retry failed sources.</li>
+<li><strong>Provisional, even with exit 0:</strong> a candidate is only a lead; resolve the required checks before relying on it.</li>
+<li><strong>Complete reuse:</strong> verify pinned identity, license, fit and extension points before implementation.</li>
+<li><strong>Complete build-clean:</strong> explain why evaluated candidates fail within the recorded scope; this does not prove no suitable software exists.</li>
+</ul>
+<p>Use the exact dispositions <code>use-as-library</code>, <code>fork</code>, <code>selective-reuse</code>, <code>reject</code>, <code>build-clean</code>, or <code>inconclusive</code>. Keep the selected identity/URL/version/inspected commit (or no selection), requirement results, unresolved checks, evidence paths and next action in the handoff. A keyword score alone is not proof that a capability is present or absent.</p>
+<p>When public sources fail, repeat the same query, sources, local roots and per-source limit with <code>--resume PATH_TO_PREVIOUS_RECEIPT_DIRECTORY</code>. Write to a fresh output directory. Valid successful public observations may be reused for up to 24 hours; failed sources, local files, scores and inspections are re-evaluated. Retain original observation times rather than calling reused metadata fresh evidence.</p>
+<h3 id="scoped-exceptions-and-degraded-fallback">Scoped exceptions and degraded fallback</h3>
+<p>For tiny documentation edits, inspect the relevant file and diff. For implementation in an already chosen canonical repository, inspect the relevant implementation, manifests, license and extension points; compare alternatives only if useful. Supplied-source reports do not automatically require package discovery. Respect explicit greenfield requests and private/local-only boundaries, recording the actual choice rather than imposing another base.</p>
+<p>Only <strong>if the CLI is unavailable</strong>, use equivalent bounded local search and permitted official repository/package sources and label it <strong><code>degraded preflight</code></strong>. Loading a skill is not proof that discovery ran, and an inconclusive CLI result is not itself a reason to pretend a manual search passed. State exactly what evidence remains missing.</p>
+<p><strong>Checkpoint:</strong> Hermes discovers and loads the upstream <code>brief2ship</code> skill, the CLI reports the intended version, and an actual decision receipt (or explicit scoped exception/degraded fallback) exists before implementation-base selection.</p>
+<p><a href="https://github.com/five0nit/brief2ship">Brief2Ship upstream</a> · <a href="https://github.com/five0nit/brief2ship/blob/1c6e4c7155c38fa76a8be05f418070d8be32ae1f/pyproject.toml">Pinned source version</a></p>
+</section><section class="chapter"><h2 id="16-use-subagents-when-there-is-independent-work">16. Use subagents when there is independent work</h2>
+<p>I use delegation, but I do not make it the default answer to every task.</p>
+<p>Good split: one lane reads current documentation while another independently reviews test cases. Bad split: three agents all editing the same file with slightly different interpretations of the request.</p>
+<p>Use <a href="prompts/delegation.txt">the delegation prompt</a>. Give each lane:</p>
+<ul>
+<li>The exact question or deliverable.</li>
+<li>The relevant input files and constraints.</li>
+<li>The allowed write scope, or read-only status.</li>
+<li>The evidence it must return.</li>
+<li>A clear completion condition.</li>
+</ul>
+<p>The parent stays responsible for the final result. A child saying “uploaded successfully” is not proof of an upload. Inspect the returned URL or record. A child saying “tests pass” needs an actual command and result tied to the right checkout.</p>
+<p>Subagents are not a durable overnight scheduler. They are bounded work attached to the parent workflow and can be cancelled when it ends or is interrupted. Use the scheduler or a supervised process for work that must survive the parent session.</p>
+<p>For independent long-lived agents, create separate profiles. Do not point two writers at the same Hermes home. If they share a codebase, use separate worktrees or explicit ownership and a real coordination mechanism.</p>
+<p><strong>Checkpoint:</strong> one small delegated task returns evidence you independently verify. Add parallelism after that works.</p>
+</section><section class="chapter"><h2 id="17-add-scheduled-work-only-after-the-task-works-manually">17. Add scheduled work only after the task works manually</h2>
+<p>Start with a one-shot, local-only diagnostic. Do not begin with “make money all night” or “improve everything.” Those are aspirations, not job specifications.</p>
+<p>The profile's gateway/scheduler must be running. Check first:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-41" aria-label="Copy command block 41">Copy</button></div><pre tabindex="0" aria-label="bash code block 41"><code id="code-41" class="language-bash">hermes -p operator gateway status
+hermes -p operator cron status
+hermes -p operator cron list
+</code></pre></div>
+<p>Use <a href="prompts/overnight-draft.txt">the overnight draft prompt</a> to turn a real, already-tested task into a job contract. Review the working directory, exact action, time zone, output path, stop conditions and destination.</p>
+<p>For an intentionally trivial scheduler test, this creates a <strong>paused</strong>, one-shot job with local delivery:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-42" aria-label="Copy command block 42">Copy</button></div><pre tabindex="0" aria-label="bash code block 42"><code id="code-42" class="language-bash">hermes -p operator cron create &quot;5m&quot; \
+  &quot;Reply with exactly: SCHEDULER CHECK OK. Do not call tools or change files.&quot; \
+  --name operator-scheduler-check \
+  --repeat 1 \
+  --deliver local \
+  --paused
+</code></pre></div>
+<p>Read back the actual created job and its ID:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-43" aria-label="Copy command block 43">Copy</button></div><pre tabindex="0" aria-label="bash code block 43"><code id="code-43" class="language-bash">hermes -p operator cron list --all
+</code></pre></div>
+<p>When ready, replace the placeholder with that ID:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-44" aria-label="Copy command block 44">Copy</button></div><pre tabindex="0" aria-label="bash code block 44"><code id="code-44" class="language-bash">JOB_ID='REPLACE_WITH_THE_CREATED_JOB_ID'
+hermes -p operator cron resume &quot;$JOB_ID&quot;
+hermes -p operator cron list
+</code></pre></div>
+<p>Inspect the next-run time after resuming; do not assume the original relative delay is recalculated the way you expect. If it is already due, it may run promptly.</p>
+<p>After the scheduled time, inspect status and execution history using the same <code>JOB_ID</code>:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-45" aria-label="Copy command block 45">Copy</button></div><pre tabindex="0" aria-label="bash code block 45"><code id="code-45" class="language-bash">hermes -p operator cron list --all
+hermes -p operator cron runs &quot;$JOB_ID&quot;
+</code></pre></div>
+<p>Use <code>--all</code> so a completed, disabled one-shot remains visible. <code>cron list</code> shows status, not the generated response. If your version lacks <code>cron runs</code>, check <code>hermes cron --help</code> and use the local output files below; do not treat a missing history command as a failed job or blindly create a duplicate.</p>
+<p>Confirm the profile path again, especially if you opened a new shell:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-46" aria-label="Copy command block 46">Copy</button></div><pre tabindex="0" aria-label="bash code block 46"><code id="code-46" class="language-bash">hermes -p operator config path
+</code></pre></div>
+<p>Set <code>PROFILE_HOME</code> to the directory containing that <code>config.yaml</code>. For the standard location, inspect this job's output with:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-47" aria-label="Copy command block 47">Copy</button></div><pre tabindex="0" aria-label="bash code block 47"><code id="code-47" class="language-bash">PROFILE_HOME=&quot;$HOME/.hermes/profiles/operator&quot;
+printf '%s\n' &quot;$PROFILE_HOME/cron/output/$JOB_ID/&quot;*.md
+less &quot;$PROFILE_HOME/cron/output/$JOB_ID/&quot;*.md
+</code></pre></div>
+<p>For a custom profile home, replace the assignment with the directory confirmed above. If <code>JOB_ID</code> is unset in a new shell, recover the original job's ID from <code>cron list --all</code> and set it before opening files. Responses are stored under <code>cron/output/&lt;job_id&gt;/&lt;timestamp&gt;.md</code> within that profile. Open the file matching the execution time; verify the response and run outcome together. If no file exists, the glob can remain literal: inspect status/history for a pending or failed run rather than claiming success. The exact output text is a test expectation, not evidence until your job produces it.</p>
+<p>Then test a real project task with an explicit <code>--workdir</code>, and only after that test the chosen Telegram delivery. The string <code>local</code> here is deliberate: creating a test job should not guess an external destination.</p>
+<p>Pause a job when needed:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-48" aria-label="Copy command block 48">Copy</button></div><pre tabindex="0" aria-label="bash code block 48"><code id="code-48" class="language-bash">hermes -p operator cron pause &quot;$JOB_ID&quot;
+</code></pre></div>
+<p>For recurring jobs, verify the scheduler's configured timezone and a concrete next-run timestamp. Use an IANA timezone when the relevant feature supports it rather than assuming the machine, Telegram and your wall clock all agree. Daylight-saving changes matter.</p>
+<p>The <a href="templates/project/OVERNIGHT_AUTONOMY.md">overnight runbook</a> requires one owner, bounded work, receipt paths, stop conditions and real locking where jobs can overlap. Plain Markdown cannot prevent two processes from writing the same file. Keep heavy local model generation outside the messaging gateway's process group so a memory spike does not take your bot down with it.</p>
+<p><strong>Checkpoint:</strong> one actual scheduled run produces the expected local result; the next real job has explicit scope and verified delivery.</p>
+<p><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/cron">Scheduled tasks</a></p>
+</section><section class="chapter"><h2 id="18-optional-voice-messages">18. Optional voice messages</h2>
+<p>My inspected profile has speech-to-text enabled with a local provider, and Edge configured for text-to-speech. That is the configuration observed during this audit, not a claim that every voice component was exercised for this guide.</p>
+<p>Use the tools setup for the providers available in your version:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-49" aria-label="Copy command block 49">Copy</button></div><pre tabindex="0" aria-label="bash code block 49"><code id="code-49" class="language-bash">hermes -p operator setup tools
+</code></pre></div>
+<p>A local transcription option may need model downloads and additional dependencies. A hosted transcription provider may require a separate key. Do not install Python packages into an arbitrary system Python and assume Hermes' own environment can import them; follow the current provider instructions for the actual Hermes runtime.</p>
+<p>In Telegram, send a short non-sensitive voice message. Confirm that the transcription is correct before asking it to act on spoken instructions. Then test a spoken response if you want one. In supported sessions, <code>/voice on</code>, <code>/voice tts</code> and <code>/voice off</code> control voice behaviour; check <code>/help</code> for your version.</p>
+<p>Voice is an interface choice. It does not change the approval boundary or remove the need to verify the result.</p>
+</section><section class="chapter"><h2 id="19-the-advanced-settings-i-actually-use">19. The advanced settings I actually use</h2>
+<p>These selected values were observed in my active profile during preparation:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">yaml</span><button hidden class="copy-button" type="button" data-copy="code-50" aria-label="Copy text block 50">Copy</button></div><pre tabindex="0" aria-label="yaml code block 50"><code id="code-50" class="language-yaml">terminal:
+  backend: local
+  timeout: 180
+agent:
+  max_turns: 500
+  reasoning_effort: xhigh
+approvals:
+  mode: &quot;off&quot;
+compression:
+  enabled: true
+  threshold: 0.35
+  target_ratio: 0.20
+delegation:
+  max_concurrent_children: 10
+  max_spawn_depth: 2
+  max_iterations: 250
+security:
+  redact_secrets: true
+</code></pre></div>
+<p>This is an <strong>observed configuration</strong>, not a guarantee that every parameter is supported identically by every model/provider. In particular, reasoning effort is model-dependent.</p>
+<p>The difference from the walkthrough is deliberate. I use larger iteration limits, more parallel capacity, earlier compression and disabled command-approval prompts. That gives the agent more room to act without repeated interruptions. It also means a mistaken command can happen without a prompt. Natural-language rules about publishing or restarting services are still useful, but they are not a replacement for actual runtime permissions.</p>
+<p>If you deliberately want the corresponding approval setting:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-51" aria-label="Copy command block 51">Copy</button></div><pre tabindex="0" aria-label="bash code block 51"><code id="code-51" class="language-bash">hermes -p operator config set approvals.mode off
+</code></pre></div>
+<p>To return to the baseline:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-52" aria-label="Copy command block 52">Copy</button></div><pre tabindex="0" aria-label="bash code block 52"><code id="code-52" class="language-bash">hermes -p operator config set approvals.mode manual
+</code></pre></div>
+<p>The other advanced values can be set with the same <code>config set</code> pattern after you have evidence that the smaller limits are a bottleneck. Do not raise every limit on day one, and do not describe a turn count as a budget cap.</p>
+<p>My private setup also uses terse “caveman” responses. The starter preserves directness through <code>plainspoken-output</code> without requiring the exact private skill or forcing incomplete explanations. Load it explicitly when wanted:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-53" aria-label="Copy command block 53">Copy</button></div><pre tabindex="0" aria-label="bash code block 53"><code id="code-53" class="language-bash">hermes -p operator -s plainspoken-output
+</code></pre></div>
+<p>Copy the working parts: useful tools, explicit operating rules, reusable skills and checks against real results. A custom prompt does not install the tools or connect the accounts for you.</p>
+<p><strong>Checkpoint:</strong> every advanced change has a reason, a supported runtime path and a way to revert it.</p>
+</section><section class="chapter"><h2 id="20-what-is-deliberately-not-bundled">20. What is deliberately not bundled</h2>
+<p>A public setup pack should not quietly require a dozen files from somebody else's machine.</p>
+<p>This one excludes:</p>
+<ul>
+<li>Live <code>.env</code> files, OAuth state, cookies, browser profiles and tokens.</li>
+<li>Personal <code>USER.md</code>, private <code>MEMORY.md</code> and session databases.</li>
+<li>Telegram bot identities, private chat IDs and account destinations.</li>
+<li>My shared team-sync scripts and mailbox implementation.</li>
+<li>My lock-safe runner and current overnight job definitions.</li>
+<li>Custom Windows desktop-driver deployment and private local endpoints.</li>
+<li>Paid service accounts, proprietary datasets and customer workflows.</li>
+<li>My entire accumulated skill library and local runtime patches.</li>
+</ul>
+<p>Portable replacements are included where they make sense: Markdown handoffs instead of my mailbox, a self-contained SOUL instead of hard-coded scripts, explicit supported skill loading, and a bounded scheduling runbook instead of my live jobs.</p>
+<p>That reproduces the operating model. It does not pretend to clone every integration or account entitlement.</p>
+<p>If you later want multi-agent coordination, authenticated desktop control, local models, image generation or external memory providers, add one integration at a time. Read its current documentation, install the actual runtime, satisfy credentials locally and exercise one real task before declaring it ready.</p>
+</section><section class="chapter"><h2 id="21-troubleshooting-in-the-order-i-would-check-it">21. Troubleshooting in the order I would check it</h2>
+<h3 id="it-talks-but-doesnt-do-anything">“It talks, but doesn't do anything”</h3>
+<p>Check tool availability with <code>hermes -p operator tools list</code>. Confirm the model supports the intended tool use, the relevant tools are enabled on the current surface, and dependencies exist. Start a fresh session. Test one file read before rewriting your persona.</p>
+<h3 id="the-cli-works-telegram-doesnt">“The CLI works, Telegram doesn't”</h3>
+<p>Check the profile, bot token setup, numeric user allowlist and gateway status. Confirm only one gateway polls the token. Inspect logs locally and redact them before sharing. A connected Telegram transport does not prove the model or session store is healthy.</p>
+<h3 id="i-changed-a-file-nothing-changed">“I changed a file, nothing changed”</h3>
+<p>Confirm the exact active profile with <code>config path</code>. Check whether the setting is loaded per turn, session or process. <code>/new</code> does not restart a gateway process. Start a fresh CLI for diagnosis; restart a live gateway only as an explicit operational change.</p>
+<h3 id="the-skill-is-installed-but-its-command-fails">“The skill is installed, but its command fails”</h3>
+<p>Read its prerequisites. Skills do not install binaries, grant account permissions or create credentials. Check the tool or CLI directly. Update stale instructions from official documentation and save the verified correction to the appropriate skill.</p>
+<h3 id="the-browser-cant-see-my-windows-login">“The browser can't see my Windows login”</h3>
+<p>You may be using WSL's isolated browser, not Windows Chrome. Check the actual browser backend and current WSL/Windows connection guidance. Do not copy cookies or expose remote-debugging ports as a shortcut.</p>
+<h3 id="the-scheduled-job-never-ran">“The scheduled job never ran”</h3>
+<p>Check gateway/scheduler status, job enabled state, next-run timestamp, timezone and host sleep. Then inspect the job result and delivery target. An active service alone does not prove the job succeeded.</p>
+<h3 id="the-agent-keeps-repeating-old-project-context">“The agent keeps repeating old project context”</h3>
+<p>Move project progress out of global memory. Update STATUS and HANDOFF. Start a fresh session in the correct project directory and ask it to read those files.</p>
+<h3 id="a-skill-vanished-or-changed">“A skill vanished or changed”</h3>
+<p>Check the active profile, skills list, platform settings and any skill-management changes. Restore the specific backed-up file if appropriate. Do not overwrite the whole skills directory with an old archive.</p>
+<h3 id="i-need-to-undo-the-starter-install">“I need to undo the starter install”</h3>
+<p>Use the exact backup path printed by <code>install_templates.py</code>. Its <code>manifest.json</code> lists replaced files and newly created files. While the profile is idle, restore only the replaced files you intend to roll back and review newly created files before removing them. Do not restore the whole profile from an unrelated snapshot. If the installer was a dry-run, there is nothing to undo.</p>
+<h3 id="the-provider-says-the-model-is-unavailable">“The provider says the model is unavailable”</h3>
+<p>Use <code>hermes -p operator model</code> and select an entitled model. Check the provider login or key. Do not guess a new model identifier or assume my account access matches yours.</p>
+</section><section class="chapter"><h2 id="22-backups-updates-and-public-sharing">22. Backups, updates and public sharing</h2>
+<p>Before a significant change, preserve the relevant configuration and custom skills privately. Keep backups outside the public starter folder. A full profile export can contain credentials and sensitive state; treat it as a private operational backup, never as a shareable template.</p>
+<p>Use the installed version's documented backup/export options and inspect their scope. For important state, take backups while the relevant writer is stopped or use a documented consistent backup mechanism. Copying an active SQLite database by itself can omit data in its write-ahead log.</p>
+<p><strong>An update affects the shared installation, not just <code>operator</code>.</strong> <code>hermes update</code> can automatically restart running gateways for other profiles and takes per-profile state snapshots. A profile flag does not make it a profile-only code update. Before running it, identify all affected profiles and workloads, preserve the required private backups, and obtain approval for the full installation-wide update and restart scope. If only one profile's restart is approved, do not run the shared updater.</p>
+<p>Once that scope is approved and the maintenance window is ready:</p>
+<div class="code-block"><div class="code-toolbar"><span class="code-language">bash</span><button hidden class="copy-button" type="button" data-copy="code-54" aria-label="Copy command block 54">Copy</button></div><pre tabindex="0" aria-label="bash code block 54"><code id="code-54" class="language-bash">hermes --version
+hermes update
+hermes -p operator config check
+hermes -p operator doctor
+</code></pre></div>
+<p>After the update, check every affected gateway, not only <code>operator</code>. Repeat the model, file, browser and Telegram smoke tests you depend on. See the <a href="https://hermes-agent.nousresearch.com/docs/getting-started/updating">official update behaviour</a> for the installed version's restart and snapshot flow.</p>
+<p>Before sharing your own pack, build a new directory from an allowlist of public files. Do not ZIP your live profile and try to remember which private files to delete afterwards.</p>
+<p>Check:</p>
+<ul>
+<li>Contents, filenames and hidden files.</li>
+<li><code>.env</code>, auth files, cookies and session stores.</li>
+<li>Personal Linux/Windows paths and private hostnames.</li>
+<li>Bot tokens, chat IDs, user IDs and account-specific links.</li>
+<li>PDF/Office metadata, screenshot corners and image captions.</li>
+<li>Commands after sanitization: placeholders must remain obvious and the remaining steps must still be usable.</li>
+</ul>
+<p>A pattern scan is useful, but it does not understand every sensitive business detail. Read the finished export yourself.</p>
+</section><section class="chapter"><h2 id="23-final-acceptance-checklist">23. Final acceptance checklist</h2>
+<p>Do not tick these because you completed the instructions. Tick them because you saw the result.</p>
+<ul>
+<li>[ ] Correct OS/shell and Hermes installation identified.</li>
+<li>[ ] Intended profile selected; config and secret-file paths confirmed; actual provider/account and required external CLI identities checked.</li>
+<li>[ ] One real model response succeeded.</li>
+<li>[ ] Portable SOUL installed; prior managed files backed up when changed.</li>
+<li>[ ] Eight starter skills discoverable and at least one explicitly loaded.</li>
+<li>[ ] Baseline settings checked without overwriting provider configuration.</li>
+<li>[ ] Project instructions loaded from the right working directory.</li>
+<li>[ ] File creation and exact readback worked.</li>
+<li>[ ] Fresh-session memory check worked with your own non-sensitive facts.</li>
+<li>[ ] Web extraction fetched and cited a real page.</li>
+<li>[ ] Browser rendered a real page and produced an inspected screenshot.</li>
+<li>[ ] A complete small task produced files, tests, a real run and a usable handoff.</li>
+<li>[ ] A fresh session reproduced that result from the handoff.</li>
+<li>[ ] Optional Telegram DM worked with the intended allowlist and home destination.</li>
+<li>[ ] Optional background gateway survived closing the setup shell; fresh Telegram tool-backed checks confirmed its project directory and <code>AGENTS.md</code>.</li>
+<li>[ ] Optional delegation returned independently checked evidence.</li>
+<li>[ ] Optional scheduled job actually ran once; status/history and the matching local response file were inspected.</li>
+<li>[ ] Optional advanced settings chosen explicitly, not inherited blindly.</li>
+<li>[ ] Public exports reviewed separately from the live profile.</li>
+</ul>
+<p>You do not need all the optional integrations before doing useful work. One agent with a working model, the right tools, good skills and a project that explains itself is already useful.</p>
+<p>The setup gets better when the agent learns a real procedure, saves it in the right place and proves it can use it again. It gets worse when every problem produces another persona, another vague scheduler or another folder nobody understands.</p>
+<p>Keep it simple. Give it the tools and context. Make it do the work. Check the result.</p>
+<p>That's the setup I run.</p>
+</section><section class="chapter"><h2 id="sources-and-verification-scope">Sources and verification scope</h2>
+<p>Primary technical references, checked during preparation:</p>
+<ul>
+<li><a href="https://hermes-agent.nousresearch.com/docs/">Hermes documentation home</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/getting-started/installation">Installation</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/getting-started/updating">Updating and gateway restart scope</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/configuration">Configuration</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/profiles/">Profiles</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/integrations/providers">Providers</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/reference/cli-commands">CLI reference</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/personality">Personality</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files">Context files</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/skills">Skills</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/reference/skills-catalog">Skills catalogue</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/memory">Memory</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/browser">Browser automation</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram">Telegram</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/cron">Scheduled tasks</a></li>
+<li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp">MCP</a></li>
+<li><a href="https://github.com/NousResearch/hermes-agent">Official source repository</a></li>
+<li><a href="https://learn.microsoft.com/windows/wsl/install">Microsoft WSL installation</a></li>
+<li><a href="https://learn.microsoft.com/windows/wsl/systemd">Microsoft systemd guidance</a></li>
+<li><a href="https://michaelcostea.com/SOUL.md">Previously shared public SOUL.md</a></li>
+</ul>
+<p>The source/configuration audit describes one real profile, not guaranteed parity across every agent or machine. Public docs are technical references, not evidence that a fresh reader's account, browser or bot is configured.</p>
+<p>The accompanying <a href="VERIFICATION.md">verification report</a> records tests actually performed for this pack. Commands involving OS installation, model login, bot creation, external delivery or service lifecycle remain reader-side acceptance steps unless explicitly recorded otherwise. No fabricated provider responses or “example success logs” are presented as test results.</p></section>
+<section id="downloads" class="download-box" aria-labelledby="download-title"><h2 id="download-title">Take the working files.</h2><p>The ZIP includes the offline HTML guide, Markdown, portable templates, workflow skills, task prompts and an offline installer. The maintained Brief2Ship skill is bundled; install its matching CLI separately using chapter 15. No credentials or personal directories included.</p><a class="button primary" href="hermes-starter-pack.zip" download="hermes-starter-pack.zip">Download starter ZIP</a><ul><li><a href="GUIDE.md" download>Markdown guide</a></li><li><a href="templates/SOUL.md" download>Portable SOUL.md</a></li><li><a href="VERIFICATION.md">What was tested</a></li></ul></section>
+</main></div>
+<footer class="footer"><div class="footer-inner"><p>Michael Costea · Generalist setup, not a secret prompt.<br>Public reconstruction. Private data stays private.</p><p><a href="/#ai-help" target="_top">Back to AI Help</a> · <a href="https://hermes-agent.nousresearch.com/docs/">Official Hermes documentation</a></p></div></footer>
+<div hidden class="toast" id="copy-status" role="status" aria-live="polite"></div>
+<script>(() => {
+  'use strict';
+  const nav = document.getElementById('chapter-navigation');
+  const details = nav.querySelector('details');
+  const small = window.matchMedia('(max-width: 900px)');
+  const embedded = window.self !== window.top;
+  if (small.matches || embedded) details.open = false;
+  const filter = document.getElementById('chapter-filter');
+  const items = [...nav.querySelectorAll('.toc > ul > li')];
+  const links = [...nav.querySelectorAll('.toc a')];
+  const status = document.getElementById('filter-status');
+  const clear = document.getElementById('clear-filter');
+  const applyFilter = () => {
+    const query = filter.value.trim().toLocaleLowerCase();
+    let visible = 0;
+    items.forEach(item => {
+      item.hidden = !item.textContent.toLocaleLowerCase().includes(query);
+      if (!item.hidden) visible++;
+    });
+    clear.hidden = !query;
+    status.textContent = query ? `${visible} matching ${visible === 1 ? 'chapter' : 'chapters'}.` : '';
+  };
+  filter.addEventListener('input', applyFilter);
+  clear.addEventListener('click', () => { filter.value = ''; applyFilter(); filter.focus(); });
+  filter.addEventListener('keydown', e => { if (e.key === 'Escape') clear.click(); });
+  links.forEach(link => link.addEventListener('click', () => {
+    if (small.matches || embedded) details.open = false;
+  }));
+  const toast = document.getElementById('copy-status');
+  let toastTimer;
+  const announce = message => {
+    toast.textContent = message;
+    toast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.hidden = true; }, 3500);
+  };
+  document.querySelectorAll('.copy-button').forEach(button => {
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      const code = document.getElementById(button.dataset.copy);
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(code.textContent);
+        button.textContent = 'Copied';
+        announce('Copied exactly as shown. Review before running.');
+        setTimeout(() => { button.textContent = 'Copy'; }, 1800);
+      } catch (_) {
+        const range = document.createRange();
+        range.selectNodeContents(code);
+        const selection = window.getSelection();
+        selection.removeAllRanges(); selection.addRange(range);
+        announce('Clipboard unavailable. Text selected—use your device’s Copy action.');
+      }
+    });
+  });
+  const printButton = document.getElementById('print-guide');
+  printButton.hidden = false;
+  printButton.addEventListener('click', () => window.print());
+  document.getElementById('filter-controls').hidden = false;
+  const sections = links.map(link => document.getElementById(decodeURIComponent(link.hash.slice(1)))).filter(Boolean);
+  let queued = false;
+  const paint = () => {
+    queued = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    document.querySelector('.progress-fill').style.width = `${max > 0 ? Math.max(0, Math.min(100, window.scrollY / max * 100)) : 100}%`;
+    let active = sections[0];
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top < 165) active = section;
+      else break;
+    }
+    links.forEach(link => {
+      if (active && decodeURIComponent(link.hash.slice(1)) === active.id) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  };
+  const queuePaint = () => { if (!queued) { queued = true; requestAnimationFrame(paint); } };
+  window.addEventListener('scroll', queuePaint, {passive: true});
+  window.addEventListener('resize', queuePaint);
+  paint();
+})();
+</script>
+</body></html>

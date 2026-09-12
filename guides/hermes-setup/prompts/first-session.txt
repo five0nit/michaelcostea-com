@@ -1,0 +1,1 @@
+Confirm the active profile and the operating environment with tools. Read the project AGENTS.md and identify the available starter skills. Do not show credentials or raw configuration. Explain which parts are ready and which require setup. Then load generalist-workflow and verify-before-done. Do not modify anything yet.

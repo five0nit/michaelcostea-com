@@ -1,63 +1,39 @@
 #!/usr/bin/env node
+// Legacy OS/product tabs were replaced by the complete canonical Hermes guide.
+// Keep the old regression entry point; verify both existing launchers instead.
 const fs = require('fs');
 const path = require('path');
+const assert = require('assert/strict');
 const { JSDOM } = require('jsdom');
-
 const rootDir = path.resolve(__dirname, '..');
-const html = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
-const script = fs.readFileSync(path.join(rootDir, 'script.js'), 'utf8');
-const dom = new JSDOM(html, {
-  url: 'http://127.0.0.1/',
-  runScripts: 'outside-only',
-  pretendToBeVisual: true,
-});
-
-const { window } = dom;
-window.fetch = async () => ({ ok: true, json: async () => [] });
-window.matchMedia = window.matchMedia || (() => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
-window.eval(script);
-
-const root = window.document.getElementById('hermesGuideWindow');
-if (!root) throw new Error('missing #hermesGuideWindow');
-
-function activePanels() {
-  return [...root.querySelectorAll('.guide-panel.active')].map((p) => `${p.dataset.panelProduct}|${p.dataset.panelOs}`);
+for (const file of ['index.html', 'ux-preview.html']) {
+  const dom = new JSDOM(fs.readFileSync(path.join(rootDir, file), 'utf8'), {url:'http://127.0.0.1/',runScripts:'outside-only',pretendToBeVisual:true});
+  const {window} = dom;
+  window.fetch = async () => ({ok:true,json:async()=>[]});
+  window.matchMedia = () => ({matches:false,addEventListener(){},removeEventListener(){}});
+  window.eval(fs.readFileSync(path.join(rootDir,'script.js'),'utf8'));
+  const root = window.document.getElementById('hermesGuideWindow');
+  assert(root, `${file}: existing window identity retained`);
+  assert.equal(window.document.querySelectorAll('#hermesGuideWindow').length, 1);
+  assert.equal(root.querySelectorAll('.guide-panel,[data-guide-os],[data-guide-product]').length, 0);
+  const trigger = window.document.querySelector('#aiHelpWindow [data-open="hermesGuideWindow"]');
+  assert(trigger && trigger.textContent.includes('My Hermes setup'));
+  const welcomeTrigger = window.document.querySelector('#readerWindow .welcome-copy button[data-open="hermesGuideWindow"]');
+  assert(welcomeTrigger, `${file}: guide accessible directly from Welcome content on desktop and mobile`);
+  assert.equal(welcomeTrigger.type, 'button');
+  assert.equal(welcomeTrigger.textContent.trim().toLowerCase(), 'hermes setup guide');
+  assert.equal(welcomeTrigger.getAttribute('aria-controls'), 'hermesGuideWindow');
+  // Boot is asynchronous; initialise handlers for this focused test.
+  window.initDesktopWindows();
+  welcomeTrigger.click();
+  assert(root.classList.contains('open'), `${file}: launcher opens replacement`);
+  const frame = root.querySelector('iframe');
+  assert.equal(frame.getAttribute('src').split('?')[0], 'guides/hermes-setup/index.html');
+  assert(frame.title.includes('23 chapters'));
+  const full = root.querySelector('a[href="guides/hermes-setup/"]');
+  assert(full && full.rel.includes('noopener'));
+  assert(root.querySelector('a[download="hermes-starter-pack.zip"]'));
+  window.close();
 }
-function activeChecklists() {
-  return [...root.querySelectorAll('[data-checklist-product].active')].map((p) => p.dataset.checklistProduct);
-}
-function assertState(expectedPanel, expectedChecklist) {
-  const panels = activePanels();
-  if (panels.length !== 1 || panels[0] !== expectedPanel) {
-    throw new Error(`expected one active panel ${expectedPanel}, got ${JSON.stringify(panels)}`);
-  }
-  const visiblePanels = [...root.querySelectorAll('.guide-panel')].filter((p) => !p.hidden);
-  if (visiblePanels.length !== 1 || `${visiblePanels[0].dataset.panelProduct}|${visiblePanels[0].dataset.panelOs}` !== expectedPanel) {
-    throw new Error(`expected one unhidden panel ${expectedPanel}, got ${visiblePanels.map((p) => `${p.dataset.panelProduct}|${p.dataset.panelOs}`).join(',')}`);
-  }
-  const checklists = activeChecklists();
-  if (checklists.length !== 1 || checklists[0] !== expectedChecklist) {
-    throw new Error(`expected one active checklist ${expectedChecklist}, got ${JSON.stringify(checklists)}`);
-  }
-  const visibleChecklists = [...root.querySelectorAll('[data-checklist-product]')].filter((p) => !p.hidden);
-  if (visibleChecklists.length !== 1 || visibleChecklists[0].dataset.checklistProduct !== expectedChecklist) {
-    throw new Error(`expected one unhidden checklist ${expectedChecklist}`);
-  }
-}
-
-assertState('hermes|mac', 'hermes');
-root.querySelector('[data-guide-os="windows"]').click();
-assertState('hermes|windows', 'hermes');
-root.querySelector('[data-guide-product="openclaw"]').click();
-assertState('openclaw|windows', 'openclaw');
-root.querySelector('[data-guide-os="linux"]').click();
-assertState('openclaw|linux', 'openclaw');
-
-const status = root.querySelector('[data-guide-selection-status]')?.textContent || '';
-if (!/OpenClaw on Linux/.test(status)) {
-  throw new Error(`status did not update to OpenClaw on Linux: ${status}`);
-}
-
-console.log('guide-tabs-regression ok');
-window.close();
+console.log('guide-tabs-regression ok: both existing launchers open the full replacement, legacy panels absent');
 process.exit(0);
