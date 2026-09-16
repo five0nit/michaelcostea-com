@@ -9,6 +9,7 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 const clean = (value) => String(value || '').replace(/\s+/g, ' ').trim();
 
 const expectedOrder = [
+  'Ballz2theWALL',
   'CCTAE / Choice–Chance–Time Agency Engine',
   'MICHAEL OS Command Centre',
   'Hermes Voice / Lynk',

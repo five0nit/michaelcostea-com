@@ -75,7 +75,7 @@ for (const page of ['index.html', 'projects/index.html']) {
   const orderedCards = [...pageDocument.querySelectorAll(page === 'index.html'
     ? '.project-showcase-grid > .project-showcase-card'
     : '.detailed-archive > .project-archive-card')];
-  must(orderedCards.indexOf(card) === 8, `${page} must keep Gnostobot immediately after the eight new priority systems`);
+  must(orderedCards.indexOf(card) === 9, `${page} must keep Gnostobot immediately after Ballz2theWALL and the eight priority systems`);
   must(card.querySelector('a[href="gnostobot/"]'), `${page} Gnostobot card route wrong`);
   must(card.querySelector('img[src="assets/project-showcase/gnostobot.webp"]'), `${page} Gnostobot card image wrong`);
 }

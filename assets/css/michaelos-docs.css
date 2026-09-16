@@ -747,6 +747,9 @@ body[data-page="projects"] .detailed-archive figure {
 }
 
 body[data-page="projects"] .detailed-archive .archive-copy {
+  width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
   margin: 0;
   padding: 12px 8px 9px;
   background: #fffef7;

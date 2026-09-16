@@ -33,7 +33,7 @@ assertIncludes('og:title', meta('meta[property="og:title"]'), 'Michael Costea');
 assertIncludes('og:title', meta('meta[property="og:title"]'), 'AI employees for real businesses');
 assertIncludes('og:description', meta('meta[property="og:description"]'), 'AI systems expert integrating role-based AI employees');
 assertUrl('og:url', meta('meta[property="og:url"]'));
-assertIncludes('og:image', meta('meta[property="og:image"]'), 'assets/social/michael-costea-head-of-tech.png');
+assertIncludes('og:image', meta('meta[property="og:image"]'), 'assets/social/michaelcostea-welcome-screen-20260902.png');
 
 assertIncludes('twitter:card', meta('meta[name="twitter:card"]'), 'summary_large_image');
 assertIncludes('twitter:title', meta('meta[name="twitter:title"]'), 'Michael Costea');

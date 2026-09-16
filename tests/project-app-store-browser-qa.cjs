@@ -15,7 +15,7 @@ const cases = [
 ];
 
 (async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, ...(process.env.CHROME_BIN ? { executablePath: process.env.CHROME_BIN } : {}) });
   const results = [];
 
   for (const testCase of cases) {
@@ -48,17 +48,25 @@ const cases = [
         columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length,
         brokenImages: [...element.querySelectorAll('img')].filter((image) => image.complete && image.naturalWidth === 0).map((image) => image.src),
         overflow: document.documentElement.scrollWidth - innerWidth,
+        clippedCopy: cards.filter((card) => {
+          const copy = card.querySelector('.archive-copy');
+          if (!copy) return false;
+          const parent = card.getBoundingClientRect();
+          const child = copy.getBoundingClientRect();
+          return child.left < parent.left - 1 || child.right > parent.right + 1;
+        }).map((card) => card.dataset.project),
       };
     }, testCase.card);
 
-    if (initial.visible !== 28) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
+    if (initial.visible !== 29) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
     if (initial.detailsOpen !== 0) throw new Error(`${testCase.label} technical details must start closed`);
     if (initial.rankRibbons !== 0 || initial.rankAttributes !== 0) throw new Error(`${testCase.label} ranking labels remain`);
     if (initial.creationDateMarkers !== 0) throw new Error(`${testCase.label} creation dates must remain hidden`);
-    if (initial.titles.slice(0, 8).join('|') !== 'CCTAE / Choice–Chance–Time Agency Engine|MICHAEL OS Command Centre|Hermes Voice / Lynk|Context Ledger + Rosco Ray Scanner|ClipForge|Hermes Organisation USB Deployment|Bruce Command Center / M5Stick Headless|Microcap Autotrader / Paper Arena' || initial.titles.at(-1) !== 'michaelcostea.com / MICHAEL OS 89') throw new Error(`${testCase.label} priority order wrong`);
+    if (initial.titles.slice(0, 9).join('|') !== 'Ballz2theWALL|CCTAE / Choice–Chance–Time Agency Engine|MICHAEL OS Command Centre|Hermes Voice / Lynk|Context Ledger + Rosco Ray Scanner|ClipForge|Hermes Organisation USB Deployment|Bruce Command Center / M5Stick Headless|Microcap Autotrader / Paper Arena' || initial.titles.at(-1) !== 'michaelcostea.com / MICHAEL OS 89') throw new Error(`${testCase.label} priority order wrong`);
     if (initial.columns !== testCase.columns) throw new Error(`${testCase.label} expected ${testCase.columns} columns, got ${initial.columns}`);
     if (initial.brokenImages.length) throw new Error(`${testCase.label} broken images: ${initial.brokenImages.join(', ')}`);
     if (initial.overflow > 1) throw new Error(`${testCase.label} horizontal overflow ${initial.overflow}px`);
+    if (initial.clippedCopy.length) throw new Error(`${testCase.label} clipped card copy: ${initial.clippedCopy.join(', ')}`);
 
     await root.locator('[data-project-filter="devices"]').click();
     const deviceTitles = await root.locator(`${testCase.card}:not([hidden]) h3`).allTextContents();

@@ -10,7 +10,7 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 
 const expectedCategories = {
   products: 8,
-  agents: 9,
+  agents: 10,
   devices: 6,
   tools: 5,
 };
@@ -28,7 +28,7 @@ function auditBrowser(document, rootSelector, cardSelector, label) {
   must(buttons.map(button => button.dataset.projectFilter).join('|') === 'all|products|agents|devices|tools', `${label} category order wrong`);
 
   const cards = [...browser.querySelectorAll(cardSelector)];
-  must(cards.length === 28, `${label} must expose 28 compact apps`);
+  must(cards.length === 29, `${label} must expose 29 compact apps`);
   must(cards.every(card => !card.hidden), `${label} apps must be visible before filtering`);
   must(cards.every(card => card.dataset.project && card.dataset.projectCategory), `${label} cards need project/category data`);
   must(cards.every(card => card.querySelector('figure')), `${label} every app needs visual artwork or placeholder`);
@@ -45,7 +45,7 @@ function auditBrowser(document, rootSelector, cardSelector, label) {
     must(actual === expected, `${label} ${category} expected ${expected}, got ${actual}`);
   }
 
-  must(clean(browser.querySelector('.project-browser-count')?.textContent).includes('28 projects'), `${label} initial count must say 28 projects`);
+  must(clean(browser.querySelector('.project-browser-count')?.textContent).includes('29 projects'), `${label} initial count must say 29 projects`);
 
   for (const title of ['Mini Michael', 'Presence Action Broker', 'Windows Background Computer Use']) {
     must(cards.some(card => clean(card.querySelector('h3')?.textContent) === title), `${label} missing ${title}`);
@@ -65,7 +65,7 @@ must(!projects.title.includes('Ranked'), 'project page title must use neutral Ap
 auditBrowser(projects, 'section[data-project-browser]', '.detailed-archive > .project-archive-card', 'crawlable projects');
 must(projects.querySelector('[data-project="repo-first starter + cursor covenant"] .app-store-placeholder'), 'crawlable Repo-First app needs placeholder artwork');
 must(projects.querySelector('script[src="project-browser.js?v=20260811-app-store-projects"]'), 'crawlable app browser script missing');
-must(projects.querySelector('link[href="assets/css/michaelos-docs.css?v=20260820-project-workshop"]'), 'project page must load the hard-edged workshop stylesheet release');
+must(projects.querySelector('link[href="assets/css/michaelos-docs.css?v=20260916-portfolio-refresh"]'), 'project page must load the hard-edged workshop stylesheet release');
 
 const js = read('project-browser.js');
 for (const marker of ['data-project-browser', 'project-browser-search', 'data-project-filter', 'aria-pressed', 'project-browser-count']) {
