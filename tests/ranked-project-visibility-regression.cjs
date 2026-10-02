@@ -9,6 +9,9 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 const clean = (value) => String(value || '').replace(/\s+/g, ' ').trim();
 
 const expectedOrder = [
+  'Info Charm',
+  'Omi Private / Hermes Voice Bridge',
+  'Field Kit / Modular EDC Cases',
   'Ballz2theWALL',
   'CCTAE / Choice–Chance–Time Agency Engine',
   'MICHAEL OS Command Centre',

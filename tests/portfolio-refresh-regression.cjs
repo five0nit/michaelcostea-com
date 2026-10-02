@@ -37,8 +37,8 @@ const contracts = [
 
 for (const { file, document } of surfaces) {
   const cards = [...document.querySelectorAll('article[data-project-category]')];
-  assert.equal(cards.length, 29, `${file}: project count`);
-  assert.equal(cards[0].dataset.project, 'ballz2thewall', `${file}: newest project first`);
+  assert.equal(cards.length, 32, `${file}: project count`);
+  assert.equal(cards[0].dataset.project, 'info charm', `${file}: newest project first`);
   assert.equal(new Set(cards.map(card => card.dataset.project)).size, cards.length, `${file}: duplicate cards`);
   for (const contract of contracts) {
     const card = cards.find(item => item.dataset.project === contract.key);
@@ -67,4 +67,4 @@ for (const id of ['newRepoWindow', 'brief2shipExplainerWindow']) {
     assert.ok(text.includes(phrase), `${id}: missing ${phrase}`);
   }
 }
-console.log('portfolio-refresh-regression ok: 29 projects, four scoped updates, two excluded additions');
+console.log('portfolio-refresh-regression ok: 32 projects, four scoped updates, two excluded additions');

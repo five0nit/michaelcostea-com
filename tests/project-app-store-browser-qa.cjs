@@ -48,6 +48,13 @@ const cases = [
         columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length,
         brokenImages: [...element.querySelectorAll('img')].filter((image) => image.complete && image.naturalWidth === 0).map((image) => image.src),
         overflow: document.documentElement.scrollWidth - innerWidth,
+        clippedPlaceholders: cards.filter((card) => {
+          const figure = card.querySelector('.app-store-placeholder');
+          if (!figure) return false;
+          const span = figure.querySelector('span');
+          return figure.getBoundingClientRect().width < card.getBoundingClientRect().width * 0.85
+            || span.scrollWidth > span.clientWidth + 1 || span.scrollHeight > span.clientHeight + 1;
+        }).map((card) => card.dataset.project),
         clippedCopy: cards.filter((card) => {
           const copy = card.querySelector('.archive-copy');
           if (!copy) return false;
@@ -58,22 +65,23 @@ const cases = [
       };
     }, testCase.card);
 
-    if (initial.visible !== 29) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
+    if (initial.visible !== 32) throw new Error(`${testCase.label} initial visible count ${initial.visible}`);
     if (initial.detailsOpen !== 0) throw new Error(`${testCase.label} technical details must start closed`);
     if (initial.rankRibbons !== 0 || initial.rankAttributes !== 0) throw new Error(`${testCase.label} ranking labels remain`);
     if (initial.creationDateMarkers !== 0) throw new Error(`${testCase.label} creation dates must remain hidden`);
-    if (initial.titles.slice(0, 9).join('|') !== 'Ballz2theWALL|CCTAE / Choice–Chance–Time Agency Engine|MICHAEL OS Command Centre|Hermes Voice / Lynk|Context Ledger + Rosco Ray Scanner|ClipForge|Hermes Organisation USB Deployment|Bruce Command Center / M5Stick Headless|Microcap Autotrader / Paper Arena' || initial.titles.at(-1) !== 'michaelcostea.com / MICHAEL OS 89') throw new Error(`${testCase.label} priority order wrong`);
+    if (initial.titles.slice(0, 12).join('|') !== 'Info Charm|Omi Private / Hermes Voice Bridge|Field Kit / Modular EDC Cases|Ballz2theWALL|CCTAE / Choice–Chance–Time Agency Engine|MICHAEL OS Command Centre|Hermes Voice / Lynk|Context Ledger + Rosco Ray Scanner|ClipForge|Hermes Organisation USB Deployment|Bruce Command Center / M5Stick Headless|Microcap Autotrader / Paper Arena' || initial.titles.at(-1) !== 'michaelcostea.com / MICHAEL OS 89') throw new Error(`${testCase.label} priority order wrong`);
     if (initial.columns !== testCase.columns) throw new Error(`${testCase.label} expected ${testCase.columns} columns, got ${initial.columns}`);
     if (initial.brokenImages.length) throw new Error(`${testCase.label} broken images: ${initial.brokenImages.join(', ')}`);
     if (initial.overflow > 1) throw new Error(`${testCase.label} horizontal overflow ${initial.overflow}px`);
     if (initial.clippedCopy.length) throw new Error(`${testCase.label} clipped card copy: ${initial.clippedCopy.join(', ')}`);
+    if (initial.clippedPlaceholders.length) throw new Error(`${testCase.label} clipped text tile: ${initial.clippedPlaceholders.join(', ')}`);
 
     await root.locator('[data-project-filter="devices"]').click();
     const deviceTitles = await root.locator(`${testCase.card}:not([hidden]) h3`).allTextContents();
-    if (deviceTitles.join('|') !== 'MICHAEL OS Command Centre|Hermes Voice / Lynk|Bruce Command Center / M5Stick Headless|Mike Kindle OS|Myo Control / Myo Patchbay|LEGO Mario Hardware + Asset Mapping') {
+    if (deviceTitles.join('|') !== 'Info Charm|Omi Private / Hermes Voice Bridge|Field Kit / Modular EDC Cases|MICHAEL OS Command Centre|Hermes Voice / Lynk|Bruce Command Center / M5Stick Headless|Mike Kindle OS|Myo Control / Myo Patchbay|LEGO Mario Hardware + Asset Mapping') {
       throw new Error(`${testCase.label} device filter wrong: ${deviceTitles.join('|')}`);
     }
-    if ((await root.locator('.project-browser-count').textContent()).trim() !== '6 projects') throw new Error(`${testCase.label} filtered count wrong`);
+    if ((await root.locator('.project-browser-count').textContent()).trim() !== '9 projects') throw new Error(`${testCase.label} filtered count wrong`);
 
     await root.locator('.project-browser-search').fill('kindle');
     const searchTitles = await root.locator(`${testCase.card}:not([hidden]) h3`).allTextContents();
