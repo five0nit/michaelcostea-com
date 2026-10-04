@@ -1,0 +1,64 @@
+/* Local workshop-page rules. Shared MICHAEL OS chrome stays canonical. */
+body[data-page="omi-clip"] { font-size: 16px; }
+body[data-page="omi-clip"] main#main-content { max-width: 1120px; }
+.clip-hero, .clip-section { padding: 28px 24px; }
+.clip-hero { background: #fffef7; border: 2px inset #fff; }
+.clip-intro { max-width: 850px; }
+.clip-intro h1 { font: 800 clamp(2rem, 5vw, 3.6rem)/1.05 var(--sans); letter-spacing: -.035em; margin: 10px 0 16px; color: #000; }
+.clip-lead { font-size: 18px; line-height: 1.5; max-width: 660px; margin: 0 0 22px; }
+.clip-download-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 680px; }
+.clip-download-actions .button { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-height: 76px; padding: 14px 18px; gap: 7px; font-size: 18px; text-align: left; white-space: normal; }
+.clip-download-actions .button span { font-size: 12px; font-weight: 400; line-height: 1.4; }
+.clip-status { border-left: 4px solid #000080; padding: 1px 0 1px 12px; font-size: 14px; margin: 22px 0 26px; max-width: 690px; color: #343434; }
+.clip-hero-image { margin: 0; }
+.clip-hero-image a { display: block; background: #c0c0c0; border: 2px inset #fff; }
+.clip-hero-image img { display: block; width: 100%; height: auto; }
+.clip-hero-image figcaption { font: 12px/1.5 var(--sans); color: #434343; margin-top: 8px; }
+.clip-section { border-bottom: 1px solid #808080; }
+.clip-section-heading { margin-bottom: 18px; }
+.clip-section h2 { font: 800 clamp(1.4rem, 3vw, 1.9rem)/1.2 var(--sans); margin: 8px 0 16px; color: #000; }
+.clip-version-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.clip-version { border: 2px outset #fff; background: #fffef7; min-width: 0; }
+.clip-panel-title { background: #000080; color: #fff; padding: 9px 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; font: 700 12px/1.4 var(--sans); }
+.clip-panel-title strong { font-size: 11px; font-weight: 400; }
+.clip-panel-body { padding: 20px; }
+.clip-panel-body h3, .clip-print-note h3 { font: 700 19px/1.3 var(--sans); margin: 0 0 12px; }
+.clip-panel-body p { margin: 0 0 18px; }
+.clip-panel-body dl { margin: 20px 0; border-top: 1px solid #bababa; font-size: 14px; }
+.clip-panel-body dl div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding: 9px 0; border-bottom: 1px solid #d4d0c8; }
+.clip-panel-body dd { margin: 0; font-weight: 700; }
+.clip-version-note { font-size: 13px; color: #434343; }
+.clip-preview-link { color: #000080; text-decoration: underline; display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: 14px; }
+.clip-instructions { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; }
+.clip-instructions > * { min-width: 0; }
+.clip-instructions p { margin: 0 0 16px; }
+.clip-instructions ol { padding-left: 22px; margin: 20px 0 0; }
+.clip-instructions li { margin-bottom: 14px; padding-left: 3px; }
+.clip-instructions code { font: 13px/1.5 var(--mono); overflow-wrap: anywhere; }
+.clip-print-note { padding: 22px; background: #fff4c2; border: 2px inset #fff; }
+.clip-small { font-size: 13px; }
+.clip-integrity { padding-top: 18px; padding-bottom: 18px; }
+.clip-integrity summary { cursor: pointer; padding: 10px 0; min-height: 44px; font-weight: 700; }
+.clip-integrity dl { font-size: 13px; }
+.clip-integrity dt { font-weight: 700; margin: 14px 0 6px; overflow-wrap: anywhere; }
+.clip-integrity dd { margin: 0; }
+.clip-integrity code { overflow-wrap: anywhere; font-size: 12px; }
+.clip-bottom-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 18px 24px; }
+.clip-bottom-bar span { font-size: 12px; }
+body[data-page="omi-clip"] :focus-visible { outline: 3px solid #b03000; outline-offset: 3px; }
+@media (max-width: 640px) {
+  .clip-hero, .clip-section { padding: 22px 14px; }
+  .clip-lead { font-size: 16px; }
+  .clip-download-actions, .clip-version-grid, .clip-instructions { grid-template-columns: 1fr; }
+  .clip-download-actions .button { min-height: 72px; }
+  .clip-panel-body { padding: 17px; }
+  .clip-bottom-bar { padding: 18px 14px; }
+  .clip-status { margin-bottom: 22px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print {
+  .site-header, .site-footer, .clip-bottom-bar, .os-doc-titlebar { display: none; }
+  body[data-page="omi-clip"] { background: #fff; }
+  body[data-page="omi-clip"] main#main-content { width: 100%; border: 0; box-shadow: none; }
+  .clip-version { break-inside: avoid; }
+}

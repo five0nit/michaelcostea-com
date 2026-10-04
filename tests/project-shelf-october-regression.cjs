@@ -14,10 +14,10 @@ for (const file of ['index.html', 'projects/index.html']) {
   const doc = new JSDOM(fs.readFileSync(path.join(root, file), 'utf8')).window.document;
   const browser = doc.querySelector('[data-project-browser]');
   const cards = [...browser.querySelectorAll('article[data-project-category]')];
-  assert.equal(cards.length, 32, `${file}: total`);
-  assert.equal(new Set(cards.map(c => c.dataset.project)).size, 32, `${file}: unique projects`);
-  assert.deepEqual(cards.slice(0, 3).map(c => c.dataset.project), additions.map(a => a.key), `${file}: creation order`);
-  assert.equal(cards[3].dataset.project, 'ballz2thewall', `${file}: previous inventory preserved`);
+  assert.equal(cards.length, 33, `${file}: total`);
+  assert.equal(new Set(cards.map(c => c.dataset.project)).size, 33, `${file}: unique projects`);
+  assert.deepEqual(cards.slice(1, 4).map(c => c.dataset.project), additions.map(a => a.key), `${file}: creation order`);
+  assert.equal(cards[4].dataset.project, 'ballz2thewall', `${file}: previous inventory preserved`);
   summaries.push([]);
   for (const item of additions) {
     const card = cards.find(c => c.dataset.project === item.key);
@@ -39,10 +39,10 @@ for (const file of ['index.html', 'projects/index.html']) {
     assert.ok(!/\/home\/|\/mnt\/|192\.168\.|100\.\d+\.\d+\.\d+|Bearer\s+[A-Za-z0-9]|@gmail\.com/.test(privacyScan), 'no private runtime details');
     summaries.at(-1).push(card.querySelector('.app-store-summary').textContent.trim());
   }
-  for (const [category, expected] of Object.entries({ all: 32, products: 8, agents: 10, devices: 9, tools: 5 })) {
+  for (const [category, expected] of Object.entries({ all: 33, products: 8, agents: 10, devices: 10, tools: 5 })) {
     assert.equal(browser.querySelector(`[data-project-filter="${category}"] span`).textContent.trim(), String(expected));
   }
-  assert.equal(browser.querySelector('.project-browser-count').textContent.trim(), '32 projects');
+  assert.equal(browser.querySelector('.project-browser-count').textContent.trim(), '33 projects');
 }
 assert.deepEqual(summaries[0], summaries[1], 'summaries must match both public surfaces');
-console.log('project-shelf-october-regression ok: three additions, 32 unique projects, synchronized copy and counts');
+console.log('project-shelf-october-regression ok: three additions, 33 unique projects, synchronized copy and counts');

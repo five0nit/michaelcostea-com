@@ -77,18 +77,18 @@ for (const surface of surfaces) {
   const browser = surface.document.querySelector(surface.rootSelector);
   must(browser, `${surface.label} project browser missing`);
   const cards = [...browser.querySelectorAll(surface.cardSelector)];
-  must(cards.length === 32, `${surface.label} expected 32 project cards, got ${cards.length}`);
+  must(cards.length === 33, `${surface.label} expected 33 project cards, got ${cards.length}`);
   const titles = cards.map((card) => clean(card.querySelector('h3')?.textContent));
-  must(JSON.stringify(titles.slice(4, 12)) === JSON.stringify(additions.map((item) => item.title)), `${surface.label} new-card priority order wrong: ${JSON.stringify(titles.slice(4, 12))}`);
+  must(JSON.stringify(titles.slice(5, 13)) === JSON.stringify(additions.map((item) => item.title)), `${surface.label} new-card priority order wrong: ${JSON.stringify(titles.slice(5, 13))}`);
 
-  const categoryCounts = { products: 8, agents: 10, devices: 9, tools: 5 };
+  const categoryCounts = { products: 8, agents: 10, devices: 10, tools: 5 };
   for (const [category, expected] of Object.entries(categoryCounts)) {
     const actual = cards.filter((card) => card.dataset.projectCategory === category).length;
     must(actual === expected, `${surface.label} ${category} count expected ${expected}, got ${actual}`);
     must(clean(browser.querySelector(`[data-project-filter="${category}"] span`)?.textContent) === String(expected), `${surface.label} ${category} filter label stale`);
   }
-  must(clean(browser.querySelector('[data-project-filter="all"] span')?.textContent) === '32', `${surface.label} all filter label stale`);
-  must(clean(browser.querySelector('.project-browser-count')?.textContent) === '32 projects', `${surface.label} visible count stale`);
+  must(clean(browser.querySelector('[data-project-filter="all"] span')?.textContent) === '33', `${surface.label} all filter label stale`);
+  must(clean(browser.querySelector('.project-browser-count')?.textContent) === '33 projects', `${surface.label} visible count stale`);
 
   for (const addition of additions) {
     const card = cards.find((candidate) => clean(candidate.querySelector('h3')?.textContent) === addition.title);
@@ -110,8 +110,8 @@ for (const addition of additions) {
 }
 
 const home = surfaces[0].document;
-must(clean(home.querySelector('#projectsWindow .app-store-browser-head')?.textContent).includes('All 32 here'), 'MichaelOS project-browser header count stale');
-must(home.querySelector('#buildWindow a[href="projects/"]')?.getAttribute('aria-label') === 'View all 32 projects', 'What I Build project count/label stale');
-must(clean(home.querySelector('#buildWindow a[href="projects/"]')?.textContent).includes('Project shelf · 32 things'), 'What I Build project-shelf copy stale');
+must(clean(home.querySelector('#projectsWindow .app-store-browser-head')?.textContent).includes('All 33 here'), 'MichaelOS project-browser header count stale');
+must(home.querySelector('#buildWindow a[href="projects/"]')?.getAttribute('aria-label') === 'View all 33 projects', 'What I Build project count/label stale');
+must(clean(home.querySelector('#buildWindow a[href="projects/"]')?.textContent).includes('Project shelf · 33 things'), 'What I Build project-shelf copy stale');
 
 console.log('new-projects-20260826-regression ok');

@@ -10,6 +10,7 @@ const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
 const titles = (document, selector) => [...document.querySelectorAll(selector)].map(card => clean(card.querySelector('h3')?.textContent));
 
 const expected = [
+  'Omi Magnetic Clip',
   'Info Charm',
   'Omi Private / Hermes Voice Bridge',
   'Field Kit / Modular EDC Cases',
@@ -52,7 +53,7 @@ if (JSON.stringify(titles(home, '#projectsWindow .project-showcase-card')) !== J
 if (JSON.stringify(titles(projects, '.detailed-archive > .project-archive-card')) !== JSON.stringify(expected)) {
   throw new Error('crawlable recent-project order mismatch');
 }
-if (homeCards.length !== 32 || projectCards.length !== 32) throw new Error('portfolio must expose exactly 32 projects');
+if (homeCards.length !== 33 || projectCards.length !== 33) throw new Error('portfolio must expose exactly 33 projects');
 if (!homeCards.every((card) => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank'))) throw new Error('MichaelOS must not expose ranking ribbons');
 if (!projectCards.every((card) => !card.hasAttribute('data-rank') && !card.querySelector('.project-rank'))) throw new Error('crawlable library must not expose ranking ribbons');
 
@@ -120,7 +121,7 @@ for (const addition of additions) {
   if (!fs.existsSync(asset) || fs.statSync(asset).size < 10000) throw new Error(`${addition.title} proof asset missing or too small`);
 }
 
-if (!clean(home.querySelector('#projectsWindow .app-store-browser-head')?.textContent).includes('All 32 here')) {
+if (!clean(home.querySelector('#projectsWindow .app-store-browser-head')?.textContent).includes('All 33 here')) {
   throw new Error('MichaelOS visible-project count is stale');
 }
 if (!clean(projects.querySelector('#ranked-projects-title')?.textContent).includes('Michael’s project shelf')) {
