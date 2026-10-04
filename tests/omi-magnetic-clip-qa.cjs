@@ -53,6 +53,15 @@ async function main() {
       const response = await page.goto(base + route, { waitUntil: 'networkidle' });
       assert.equal(response.status(), 200);
       await page.locator('.clip-hero-image img').evaluate(img => img.decode());
+      const preview = page.locator('#v4 .clip-version-preview img');
+      await preview.evaluate(img => img.decode());
+      assert.ok(await preview.isVisible(), `${width}: v4 preview hidden`);
+      assert.equal(await preview.getAttribute('src'), '/assets/omi-magnetic-clip/v4-preview.webp');
+      assert.ok(await preview.evaluate(img => {
+        const r = img.getBoundingClientRect();
+        return img.naturalWidth === 1600 && img.naturalHeight === 1000 && r.width > 150 &&
+          r.left >= 0 && r.right <= innerWidth && Math.abs(r.height - r.width * 1000 / 1600) < 1;
+      }), `${width}: v4 preview clipped or distorted`);
       const geometry = await page.evaluate(() => {
         const doc = document.documentElement;
         const links = [...document.querySelectorAll('a[download]')].map(a => { const r = a.getBoundingClientRect(); return { width: r.width, height: r.height, left: r.left, right: r.right }; });
@@ -81,6 +90,10 @@ async function main() {
       await page.locator('.clip-integrity summary').click();
       await page.evaluate(() => scrollTo(0, 0));
       await page.screenshot({ path: path.join(out, `omi-${width}.png`), fullPage: true });
+      await page.locator('#v4').screenshot({ path: path.join(out, `v4-${width}.png`) });
+      await page.locator('#v4 .clip-version-preview a').click();
+      await page.waitForURL(base + '/assets/omi-magnetic-clip/v4-preview.webp');
+      await page.goBack({ waitUntil: 'networkidle' });
       const downloaded = [];
       if (width === 390 || width === 1440) {
         for (const item of downloads) {
