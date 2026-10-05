@@ -18,6 +18,14 @@ body[data-page="omi-clip"] main#main-content { max-width: 1120px; }
 .clip-section { border-bottom: 1px solid #808080; }
 .clip-section-heading { margin-bottom: 18px; }
 .clip-section h2 { font: 800 clamp(1.4rem, 3vw, 1.9rem)/1.2 var(--sans); margin: 8px 0 16px; color: #000; }
+.clip-finished { background: #fffef7; }
+.clip-finished .clip-section-heading p { max-width: 660px; margin: 0; color: #343434; }
+.clip-photo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 320px)); gap: 20px; justify-content: space-between; }
+.clip-photo { min-width: 0; margin: 0; }
+.clip-photo a { display: block; border: 2px inset #fff; background: #c0c0c0; }
+.clip-photo img { display: block; width: 100%; height: auto; }
+.clip-photo figcaption { margin-top: 12px; font: 14px/1.5 var(--sans); color: #343434; }
+.clip-photo figcaption strong { display: block; margin-bottom: 4px; color: #000080; font-size: 15px; }
 .clip-version-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .clip-version { border: 2px outset #fff; background: #fffef7; min-width: 0; }
 .clip-panel-title { background: #000080; color: #fff; padding: 9px 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; font: 700 12px/1.4 var(--sans); }
@@ -51,6 +59,7 @@ body[data-page="omi-clip"] :focus-visible { outline: 3px solid #b03000; outline-
   .clip-hero, .clip-section { padding: 22px 14px; }
   .clip-lead { font-size: 16px; }
   .clip-download-actions, .clip-version-grid, .clip-instructions { grid-template-columns: 1fr; }
+  .clip-photo-grid { grid-template-columns: minmax(0, 320px); justify-content: center; gap: 26px; }
   .clip-download-actions .button { min-height: 72px; }
   .clip-panel-body { padding: 17px; }
   .clip-bottom-bar { padding: 18px 14px; }

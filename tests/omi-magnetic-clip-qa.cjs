@@ -14,6 +14,7 @@ const downloads = [
   { name: 'OMI-PLA-REAR-LOADING-v5.zip', sha: 'e2456bb28e25e588b3522bb64a154e67289c29f356f9de09cb06a4c201c44bdd' },
   { name: 'OMI-PLA-FIT-PROTOTYPE-v4.zip', sha: '8cd5900330256d15eca4dd5e1d77e5b1294dae343d4d017933c550d5802fcde3' },
 ];
+const photos = ['v4-finished-parts.jpg', 'v4-finished-assembled.jpg', 'v4-finished-worn.jpg'];
 function sha(data) { return crypto.createHash('sha256').update(data).digest('hex'); }
 async function main() {
   fs.mkdirSync(out, { recursive: true });
@@ -21,6 +22,14 @@ async function main() {
   assert.equal(pageDoc.querySelectorAll('h1').length, 1);
   assert.equal(pageDoc.querySelector('link[rel="canonical"]').href, 'https://michaelcostea.com' + route);
   assert.equal(pageDoc.querySelectorAll('a[download]').length, downloads.length);
+  assert.deepEqual([...pageDoc.querySelectorAll('.clip-photo img')].map(img => path.basename(img.src)), photos);
+  assert.ok(pageDoc.querySelector('.clip-status').textContent.includes('v4 printed and worn.'));
+  for (const photo of pageDoc.querySelectorAll('.clip-photo')) {
+    const img = photo.querySelector('img');
+    assert.ok(img.alt.length > 20);
+    assert.equal(img.getAttribute('src'), photo.querySelector('a').getAttribute('href'));
+    assert.ok(photo.querySelector('figcaption').textContent.trim());
+  }
   for (const item of downloads) {
     const link = pageDoc.querySelector(`a[download="${item.name}"]`);
     assert.ok(link);
@@ -62,6 +71,27 @@ async function main() {
         return img.naturalWidth === 1600 && img.naturalHeight === 1000 && r.width > 150 &&
           r.left >= 0 && r.right <= innerWidth && Math.abs(r.height - r.width * 1000 / 1600) < 1;
       }), `${width}: v4 preview clipped or distorted`);
+      for (const img of await page.locator('.clip-photo img').all()) {
+        await img.scrollIntoViewIfNeeded();
+        await img.evaluate(el => el.decode());
+      }
+      const gallery = await page.locator('.clip-photo img').evaluateAll(images => images.map(img => {
+        const r = img.getBoundingClientRect();
+        return { src: img.getAttribute('src'), naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight, width: r.width, height: r.height, left: r.left, right: r.right, top: r.top, opacity: getComputedStyle(img).opacity };
+      }));
+      assert.equal(gallery.length, photos.length);
+      for (const [index, img] of gallery.entries()) {
+        assert.equal(img.src, '/assets/omi-magnetic-clip/' + photos[index]);
+        assert.equal(img.naturalWidth, 320);
+        assert.equal(img.naturalHeight, 426);
+        assert.ok(img.width > 150 && img.width <= 320, `${width}: photo sizing`);
+        assert.ok(img.left >= 0 && img.right <= width, `${width}: clipped photo`);
+        assert.ok(Math.abs(img.height - img.width * 426 / 320) < 1, `${width}: distorted photo`);
+        assert.equal(img.opacity, '1');
+      }
+      if (width <= 640) assert.ok(gallery[1].top > gallery[0].top + gallery[0].height, `${width}: photos must stack`);
+      else assert.ok(gallery.every(img => Math.abs(img.top - gallery[0].top) < 1), `${width}: photos must align`);
+      await page.evaluate(() => scrollTo(0, 0));
       const geometry = await page.evaluate(() => {
         const doc = document.documentElement;
         const links = [...document.querySelectorAll('a[download]')].map(a => { const r = a.getBoundingClientRect(); return { width: r.width, height: r.height, left: r.left, right: r.right }; });
@@ -91,6 +121,14 @@ async function main() {
       await page.evaluate(() => scrollTo(0, 0));
       await page.screenshot({ path: path.join(out, `omi-${width}.png`), fullPage: true });
       await page.locator('#v4').screenshot({ path: path.join(out, `v4-${width}.png`) });
+      await page.locator('#v4-finished').screenshot({ path: path.join(out, `v4-finished-${width}.png`) });
+      if (width === 390 || width === 1440) {
+        for (const photo of photos) {
+          await page.locator(`.clip-photo a[href$="${photo}"]`).click();
+          await page.waitForURL(base + '/assets/omi-magnetic-clip/' + photo);
+          await page.goBack({ waitUntil: 'networkidle' });
+        }
+      }
       await page.locator('#v4 .clip-version-preview a').click();
       await page.waitForURL(base + '/assets/omi-magnetic-clip/v4-preview.webp');
       await page.goBack({ waitUntil: 'networkidle' });
@@ -106,7 +144,7 @@ async function main() {
         }
       }
       assert.deepEqual(errors, [], `${width}: page errors`);
-      results.push({ width, ...geometry, downloaded, errors });
+      results.push({ width, ...geometry, gallery, downloaded, errors });
       await context.close();
     }
     // Same-origin assets and destinations, checked through HTTP, not filesystem guesses.
@@ -117,7 +155,11 @@ async function main() {
       const url = new URL(href, base + route).href;
       const response = await request.request.get(url);
       assert.equal(response.status(), 200, url);
-      links.push({ url, status: response.status() });
+      if (photos.some(photo => href.endsWith(photo))) {
+        assert.ok(response.headers()['content-type'].startsWith('image/jpeg'), url);
+        assert.equal(sha(await response.body()), sha(fs.readFileSync(path.join(root, href))), `${url}: original photo hash`);
+      }
+      links.push({ url, status: response.status(), contentType: response.headers()['content-type'] });
     }
     for (const shelf of ['/', '/projects/']) {
       const page = await request.newPage();
@@ -128,7 +170,18 @@ async function main() {
       assert.equal(await page.locator('h1').textContent(), 'Omi magnetic clip.');
       await page.close();
     }
-    const report = { base, pass: true, widths: results, localAndLiveLinks: links, shelfNavigation: ['/', '/projects/'] };
+    const fallback = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false, reducedMotion: 'no-preference' });
+    const fallbackPage = await fallback.newPage();
+    await fallbackPage.goto(base + route, { waitUntil: 'networkidle' });
+    for (const img of await fallbackPage.locator('.clip-photo img').all()) {
+      await img.scrollIntoViewIfNeeded();
+      await img.evaluate(el => el.decode());
+      assert.ok(await img.isVisible());
+    }
+    assert.ok(await fallbackPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await fallbackPage.locator('#v4-finished').screenshot({ path: path.join(out, 'v4-finished-no-js-390.png') });
+    await fallback.close();
+    const report = { base, pass: true, widths: results, localAndLiveLinks: links, shelfNavigation: ['/', '/projects/'], reducedMotion: 'all viewports passed', noJavaScript: '390px gallery passed with no motion preference' };
     fs.writeFileSync(path.join(out, 'receipt.json'), JSON.stringify(report, null, 2) + '\n');
     console.log(JSON.stringify(report, null, 2));
     await request.close();
