@@ -12,8 +12,8 @@ const dom = new JSDOM(html);
 const { document } = dom.window;
 const must = (condition, message) => { if (!condition) throw new Error(message); };
 
-must(document.querySelector('link[href*="michaelos-motion.css?v=20260803-motion-6"]'), 'final motion stylesheet missing');
-must(document.querySelector('script[src*="script.js?v=20260803-michaelos-motion-7"]'), 'motion script cache marker missing');
+must(document.querySelector('link[href*="michaelos-motion.css?v=20261015-fluid-1"]'), 'final motion stylesheet missing');
+must(document.querySelector('script[src*="script.js?v=20261015-fluid-1"]'), 'motion script cache marker missing');
 
 const desktopIcons = [...document.querySelectorAll('.desktop-icons .desk-icon')];
 must(desktopIcons.length === 11, `expected 11 desktop icons, got ${desktopIcons.length}`);
@@ -33,7 +33,10 @@ must(document.getElementById('systemStatusText')?.getAttribute('aria-live') === 
 
 for (const phrase of [
   "uiSound:false",
-  'function animateWindowOutline',
+  'function animateWindowEnter',
+  'function animateWindowExit',
+  'function cancelWindowMotion',
+  'function animateWindowGeometry',
   'maximizeGeometryProperties.forEach',
   'win.dataset.restoreInlineStyle',
   "data-action=\"toggle-motion\"",
@@ -49,9 +52,10 @@ for (const phrase of [
 must(!script.includes('Reloading in ${sec}'), 'boot interrupt must not trigger BSOD reload countdown');
 must(!/location\.reload\(\)/.test(script), 'optional boot must not reload the page');
 
-must(css.includes('.os-motion-outline'), 'window outline motion style missing');
+must(css.includes('[data-os-motion]'), 'real window motion style missing');
+must(css.includes('[data-os-exiting]'), 'non-interactive exit surface missing');
 must(css.includes('body.os-motion-ready:not(.no-anim) .start-menu'), 'Start menu reveal style missing');
 must(css.includes('@media (prefers-reduced-motion:reduce)'), 'reduced-motion override missing');
-must(css.includes('body.no-anim .os-motion-outline'), 'manual motion-off override missing');
+must(script.includes('if(!motionAllowed()) settleWindowMotions()'), 'manual motion-off cleanup missing');
 
 console.log('michaelos-motion-regression ok');

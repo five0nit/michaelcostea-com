@@ -7,6 +7,7 @@ const base = process.env.PAGE_URL || 'http://127.0.0.1:8147';
 const out = process.env.QA_OUT || '/tmp/michaelos-motion-browser-qa';
 fs.mkdirSync(out, { recursive: true });
 const must = (condition, message) => { if (!condition) throw new Error(message); };
+const settle = page => page.waitForFunction(()=>!document.querySelector('[data-os-motion]'));
 const rounded = rect => rect && Object.fromEntries(['x','y','width','height'].map(k => [k, Math.round(rect[k] * 10) / 10]));
 async function stubAnalytics(context){
   await context.route('https://www.googletagmanager.com/**', route => route.fulfill({ status:200, contentType:'application/javascript', body:'' }));
@@ -41,23 +42,23 @@ async function stubAnalytics(context){
     must(report.desktop.initial.soundPressed === 'false', 'desktop sound should default off');
     must(report.desktop.initial.bootHidden, 'boot must not block first render');
     must(report.desktop.initial.desktopIcons === 11, 'desktop sprite icon count mismatch');
-    must(report.desktop.initial.motionLink.includes('20260803-motion-6'), 'motion CSS cache marker missing');
+    must(report.desktop.initial.motionLink.includes('20261015-fluid-1'), 'motion CSS cache marker missing');
 
     const readerBefore = await page.locator('#readerWindow').boundingBox();
     await page.click('#readerWindow .win-max');
-    await page.waitForTimeout(20);
+    await settle(page);
     const readerMax = await page.locator('#readerWindow').boundingBox();
     const readerViewport = await page.evaluate(()=>({width:innerWidth,height:innerHeight,taskbar:document.querySelector('.taskbar').getBoundingClientRect().height}));
     must(Math.abs(readerMax.x) <= 1 && Math.abs(readerMax.y) <= 1 && Math.abs(readerMax.width-readerViewport.width) <= 1, `main portfolio maximize wrong: ${JSON.stringify(rounded(readerMax))}`);
     must(Math.abs(readerMax.height-(readerViewport.height-readerViewport.taskbar)) <= 1, `main portfolio maximize height wrong: ${JSON.stringify({rect:rounded(readerMax),readerViewport})}`);
     await page.click('#readerWindow .win-max');
-    await page.waitForTimeout(190);
+    await settle(page);
     const readerRestored = await page.locator('#readerWindow').boundingBox();
     report.desktop.readerGeometry = { before:rounded(readerBefore), maximized:rounded(readerMax), restored:rounded(readerRestored) };
     must(Math.abs(readerRestored.x-readerBefore.x) <= 2 && Math.abs(readerRestored.y-readerBefore.y) <= 2, `main portfolio restore wrong: ${JSON.stringify(report.desktop.readerGeometry)}`);
 
     await page.click('#startBtn');
-    await page.waitForTimeout(130);
+    await page.waitForTimeout(220);
     report.desktop.startOpen = await page.evaluate(()=>({
       open: document.getElementById('startMenu').classList.contains('open'),
       visibility: getComputedStyle(document.getElementById('startMenu')).visibility,
@@ -81,7 +82,7 @@ async function stubAnalytics(context){
     await page.evaluate(()=>{ window.__beepKinds=[]; });
     await icon.dblclick();
     await page.waitForFunction(()=>document.getElementById('aboutWindow')?.classList.contains('open'));
-    await page.waitForTimeout(220);
+    await settle(page);
     report.desktop.iconBeeps = await page.evaluate(()=>window.__beepKinds);
     must(report.desktop.iconBeeps.filter(kind=>kind === 'tap').length === 1 && report.desktop.iconBeeps.filter(kind=>kind === 'open').length === 1, `desktop double-click emitted duplicate semantic tones: ${JSON.stringify(report.desktop.iconBeeps)}`);
     const title = page.locator('#aboutWindow .win-title');
@@ -94,7 +95,7 @@ async function stubAnalytics(context){
     const moved = await page.locator('#aboutWindow').boundingBox();
 
     await page.click('#aboutWindow .win-max');
-    await page.waitForTimeout(20);
+    await settle(page);
     const maximized = await page.locator('#aboutWindow').boundingBox();
     const viewport = await page.evaluate(()=>({ width:innerWidth, height:innerHeight, taskbar:document.querySelector('.taskbar')?.getBoundingClientRect().height || 0 }));
     report.desktop.geometry = { moved:rounded(moved), maximized:rounded(maximized), viewport };
@@ -111,7 +112,7 @@ async function stubAnalytics(context){
     must(Math.abs(maximizedAfterDragAttempt.x-maximized.x) <= 1 && Math.abs(maximizedAfterDragAttempt.y-maximized.y) <= 1 && Math.abs(maximizedAfterDragAttempt.width-maximized.width) <= 1, `maximized window moved during drag attempt: ${JSON.stringify(report.desktop.geometry)}`);
 
     await page.click('#aboutWindow .win-max');
-    await page.waitForTimeout(20);
+    await settle(page);
     const restored = await page.locator('#aboutWindow').boundingBox();
     report.desktop.geometry.restored = rounded(restored);
     must(Math.abs(restored.x - moved.x) <= 2 && Math.abs(restored.y - moved.y) <= 2, `restore did not return moved geometry: ${JSON.stringify(report.desktop.geometry)}`);
@@ -126,17 +127,17 @@ async function stubAnalytics(context){
     const resized = await page.locator('#aboutWindow').boundingBox();
     must(resized.width > restored.width && resized.height >= restored.height, `resize did not change geometry: ${JSON.stringify({restored:rounded(restored),resized:rounded(resized)})}`);
     await page.click('#aboutWindow .win-max');
-    await page.waitForTimeout(20);
+    await settle(page);
     const resizedMax = await page.locator('#aboutWindow').boundingBox();
     must(Math.abs(resizedMax.x) <= 1 && Math.abs(resizedMax.y) <= 1 && Math.abs(resizedMax.width-viewport.width) <= 1, `maximize after resize wrong: ${JSON.stringify(rounded(resizedMax))}`);
     await page.click('#aboutWindow .win-max');
-    await page.waitForTimeout(20);
+    await settle(page);
     const resizedRestored = await page.locator('#aboutWindow').boundingBox();
     report.desktop.geometry.resizeCycle = { resized:rounded(resized), maximized:rounded(resizedMax), restored:rounded(resizedRestored) };
     must(Math.abs(resizedRestored.width-resized.width) <= 2 && Math.abs(resizedRestored.height-resized.height) <= 2, `resize restore geometry wrong: ${JSON.stringify(report.desktop.geometry.resizeCycle)}`);
 
     await page.click('#aboutWindow .win-min');
-    const minimizeOutline = await page.locator('.os-motion-outline').count();
+    const minimizeOutline = await page.locator('[data-os-motion]').count();
     must(await page.locator('#aboutWindow').evaluate(el=>el.classList.contains('minimized')), 'window did not minimize');
     const task = page.locator('.task-btn[data-focus="aboutWindow"]');
     must(await task.count() === 1, 'minimized task button missing');
@@ -150,10 +151,10 @@ async function stubAnalytics(context){
     must(report.desktop.afterMinimize.focusTask === 'aboutWindow' && report.desktop.afterMinimize.focusVisible, `minimize left focus hidden: ${JSON.stringify(report.desktop.afterMinimize)}`);
     await page.waitForTimeout(180);
     await task.click();
-    const restoreOutline = await page.locator('.os-motion-outline').count();
+    const restoreOutline = await page.locator('[data-os-motion]').count();
     await page.waitForFunction(()=>document.getElementById('aboutWindow')?.classList.contains('open'));
     report.desktop.outlines = { minimizeOutline, restoreOutline };
-    must(minimizeOutline > 0 && restoreOutline > 0, `window outline animation missing: ${JSON.stringify(report.desktop.outlines)}`);
+    must(minimizeOutline > 0 && restoreOutline > 0, `real window animation missing: ${JSON.stringify(report.desktop.outlines)}`);
 
     await page.click('#soundToggle');
     report.desktop.soundOn = await page.evaluate(()=>({
@@ -178,7 +179,7 @@ async function stubAnalytics(context){
     must(report.desktop.boot.hidden && report.desktop.boot.bodyBooted, 'safe optional boot did not finish');
 
     await page.evaluate(()=>window.openWindow('projectsWindow'));
-    await page.waitForTimeout(220);
+    await settle(page);
     const firstCase = page.locator('#projectsWindow .featured-hiring-case a.ui-btn').first();
     const caseHref = await firstCase.getAttribute('href');
     await firstCase.click();
@@ -223,12 +224,12 @@ async function stubAnalytics(context){
     await reduced.evaluate(()=>window.openWindow('aboutWindow'));
     report.reducedMotion = await reduced.evaluate(()=>({
       allowed: window.motionAllowed(),
-      outlineCount: document.querySelectorAll('.os-motion-outline').length,
+      motionCount: document.querySelectorAll('[data-os-motion]').length,
       startTransition: getComputedStyle(document.getElementById('startMenu')).transitionDuration,
       titleTransition: getComputedStyle(document.querySelector('#aboutWindow .win-title')).transitionDuration,
     }));
     must(report.reducedMotion.allowed === false, 'reduced motion must disable JS motion');
-    must(report.reducedMotion.outlineCount === 0, 'reduced motion must not create outline');
+    must(report.reducedMotion.motionCount === 0, 'reduced motion must not animate windows');
     must(report.reducedMotion.startTransition.split(',').every(v=>v.trim()==='0s'), `reduced Start transition not zero: ${report.reducedMotion.startTransition}`);
     await reducedContext.close();
 
@@ -249,13 +250,13 @@ async function stubAnalytics(context){
     await mobile.waitForTimeout(220);
     const mobileBeforeMax = await mobile.locator('#aboutWindow').boundingBox();
     await mobile.click('#aboutWindow .win-max');
-    await mobile.waitForTimeout(20);
+    await settle(mobile);
     const mobileMax = await mobile.locator('#aboutWindow').boundingBox();
     const mobileViewport = await mobile.evaluate(()=>({width:innerWidth,height:innerHeight,taskbar:document.querySelector('.taskbar').getBoundingClientRect().height}));
     must(Math.abs(mobileMax.x) <= 1 && Math.abs(mobileMax.y) <= 1 && Math.abs(mobileMax.width-mobileViewport.width) <= 1, `mobile maximize wrong: ${JSON.stringify(rounded(mobileMax))}`);
     must(Math.abs(mobileMax.height-(mobileViewport.height-mobileViewport.taskbar)) <= 1, `mobile maximize height wrong: ${JSON.stringify({rect:rounded(mobileMax),mobileViewport})}`);
     await mobile.click('#aboutWindow .win-max');
-    await mobile.waitForTimeout(20);
+    await settle(mobile);
     const mobileRestored = await mobile.locator('#aboutWindow').boundingBox();
     must(Math.abs(mobileRestored.x-mobileBeforeMax.x) <= 2 && Math.abs(mobileRestored.width-mobileBeforeMax.width) <= 2, `mobile restore wrong: ${JSON.stringify({before:rounded(mobileBeforeMax),restored:rounded(mobileRestored)})}`);
     report.mobile = await mobile.evaluate(()=>{

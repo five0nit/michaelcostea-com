@@ -77,24 +77,82 @@ function validMotionRect(rect){
   return !!(rect && Number.isFinite(rect.left) && Number.isFinite(rect.top) && rect.width > 0 && rect.height > 0);
 }
 
-function animateWindowOutline(fromRect, toRect, duration=170){
-  if(!motionAllowed() || !validMotionRect(fromRect) || !validMotionRect(toRect) || !document.body.animate) return Promise.resolve();
-  const outline = document.createElement('div');
-  outline.className = 'os-motion-outline';
-  document.body.appendChild(outline);
-  const keyframe = (rect, opacity=1) => ({
-    left:`${Math.round(rect.left)}px`,
-    top:`${Math.round(rect.top)}px`,
-    width:`${Math.max(2,Math.round(rect.width))}px`,
-    height:`${Math.max(2,Math.round(rect.height))}px`,
-    opacity,
-  });
-  const animation = outline.animate([
-    keyframe(fromRect,.72),
-    keyframe(toRect,1),
-  ], { duration, easing:'steps(5,end)', fill:'forwards' });
-  return animation.finished.catch(()=>{}).finally(()=>outline.remove());
+// Semantic state changes immediately; only the painted window eases between states.
+// Individual translate/scale properties leave existing layout transforms untouched.
+const windowMotions = new Map();
+const motionEase = 'cubic-bezier(.16,1,.3,1)';
+const exitStyleKeys = ['left','top','width','height','display','z'];
+
+function cancelWindowMotion(win){
+  const animation = windowMotions.get(win);
+  windowMotions.delete(win);
+  if(animation) animation.cancel();
+  delete win.dataset.osMotion;
+  delete win.dataset.osExiting;
+  exitStyleKeys.forEach(key=>win.style.removeProperty(`--os-exit-${key}`));
 }
+
+function settleWindowMotions(){
+  [...windowMotions.keys()].forEach(cancelWindowMotion);
+}
+
+function runWindowMotion(win, frames, kind, duration=280){
+  if(!motionAllowed() || !win.animate){ cancelWindowMotion(win); return; }
+  win.dataset.osMotion = kind;
+  const animation = win.animate(frames, {duration, easing:motionEase, fill:'both'});
+  windowMotions.set(win, animation);
+  const cleanup = ()=>{
+    if(windowMotions.get(win) === animation) cancelWindowMotion(win);
+  };
+  animation.finished.then(cleanup, cleanup);
+}
+
+function motionSnapshot(win){
+  return {rect:rectOf(win), display:getComputedStyle(win).display, z:win.style.zIndex || '20'};
+}
+
+function motionFrame(from, to, opacity=1){
+  return {
+    translate:`${from.left-to.left}px ${from.top-to.top}px`,
+    scale:`${from.width/to.width} ${from.height/to.height}`,
+    opacity,
+  };
+}
+
+function animateWindowEnter(win, origin=null, restoring=false){
+  const target = rectOf(win);
+  if(!validMotionRect(target)) return;
+  const mobile = isMobileMode();
+  const source = restoring && validMotionRect(origin) ? motionFrame(origin,target,.35) : {
+    translate:mobile ? '0 18px' : '0 14px', scale:mobile ? '1' : '.96', opacity:0,
+  };
+  runWindowMotion(win, [source,{translate:'0 0',scale:'1',opacity:1}], restoring ? 'restore' : 'open', mobile ? 220 : 280);
+}
+
+function animateWindowExit(win, snapshot, kind, target=null){
+  const {rect,display,z} = snapshot;
+  if(!motionAllowed() || !validMotionRect(rect) || !win.animate) return;
+  // Keep the actual content painted (not a cloned iframe) after .open is removed.
+  // It is already aria-hidden/inert and cannot intercept input during its exit.
+  win.dataset.osExiting = 'true';
+  const values = {left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,display,z};
+  Object.entries(values).forEach(([key,value])=>win.style.setProperty(`--os-exit-${key}`,value));
+  const destination = kind === 'minimize' && validMotionRect(target)
+    ? motionFrame(target,rect,0)
+    : {translate:'0 10px',scale:isMobileMode() ? '1' : '.97',opacity:0};
+  runWindowMotion(win, [{translate:'0 0',scale:'1',opacity:1},destination], kind, kind === 'minimize' ? 260 : 180);
+}
+
+function animateWindowGeometry(win, from){
+  const target = rectOf(win);
+  if(!validMotionRect(from) || !validMotionRect(target)) return;
+  runWindowMotion(win, [motionFrame(from,target),{translate:'0 0',scale:'1',opacity:1}], 'geometry', 300);
+}
+
+// Preferences can change while a window is in flight. Never leave a hidden ghost.
+window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',()=>{
+  if(!motionAllowed()) settleWindowMotions();
+});
 
 function rectOf(element){
   return element?.getBoundingClientRect?.() || null;
@@ -146,7 +204,7 @@ function syncActiveWindowAccessibility(activeWindow){
 
   document.querySelectorAll('.win-window').forEach((win) => {
     const isActive = win === activeWindow && win.classList.contains('open');
-    win.toggleAttribute('inert', lockBackground && !isActive);
+    win.toggleAttribute('inert', !win.classList.contains('open') || (lockBackground && !isActive));
     win.setAttribute('aria-hidden', String(!win.classList.contains('open')));
   });
 }
@@ -155,6 +213,7 @@ function focusActiveWindow(win){
   if(!win) return;
   if(!win.hasAttribute('tabindex')) win.setAttribute('tabindex', '-1');
   requestAnimationFrame(() => {
+    if(!win.classList.contains('open') || !win.classList.contains('active')) return;
     try { win.focus({ preventScroll: true }); } catch { win.focus(); }
   });
 }
@@ -449,17 +508,18 @@ function applyPageRouteFromLocation(){
   openWindow(targetId);
 }
 
-function openWindow(id){
+function openWindow(id, {origin=null, restoring=false}={}){
   const win = document.getElementById(id);
   if(!win) return;
   const wasOpen = win.classList.contains('open');
   const opener = document.activeElement;
-  const openerRect = rectOf(opener);
+  const interrupted = windowMotions.has(win) && wasOpen ? rectOf(win) : null;
+  cancelWindowMotion(win);
   if(opener && !['BODY', 'HTML'].includes(opener.tagName) && !win.contains(opener)) windowFocusReturn.set(id, opener);
 
   if (isMobileMode()) {
     document.querySelectorAll('.win-window.open').forEach(w => {
-      if (w.id !== id) w.classList.remove('open');
+      if(w.id !== id){ cancelWindowMotion(w); w.classList.remove('open','active'); }
     });
   }
 
@@ -473,29 +533,30 @@ function openWindow(id){
   focusActiveWindow(win);
   syncImmersiveMode();
   if(!wasOpen){
-    animateWindowOutline(openerRect,rectOf(win));
-    setSystemStatus(statusForWindow(win),650);
-    uiBeep('open');
+    animateWindowEnter(win,origin,restoring);
+    setSystemStatus(statusForWindow(win,restoring ? 'Restored' : 'Opening'),650);
+    uiBeep(restoring ? 'restore' : 'open');
+  }else if(interrupted){
+    animateWindowGeometry(win,interrupted);
   }
 }
 
 function closeWindow(id){
   const win = document.getElementById(id);
-  if(!win) return;
-  const fromRect = rectOf(win);
+  if(!win || (!win.classList.contains('open') && !win.classList.contains('minimized'))) return;
+  const snapshot = motionSnapshot(win);
+  cancelWindowMotion(win);
   const focusReturn = windowFocusReturn.get(id);
-  const fallbackTarget = document.querySelector(`[data-focus="${id}"]`) || document.getElementById('startBtn');
-  const targetRect = rectOf(focusReturn) || rectOf(fallbackTarget);
   windowFocusReturn.delete(id);
 
   if(id === 'browserWindow'){
     const frame = document.getElementById('appFrame');
     try{ frame?.contentWindow?.postMessage({type:'mikenet-close'}, '*'); }catch{}
-    setTimeout(()=>{ if(frame) frame.src = 'about:blank'; }, 20);
+    setTimeout(()=>{ if(frame && !win.classList.contains('open') && !win.classList.contains('minimized')) frame.src = 'about:blank'; }, 200);
   }
   if(id === 'caseStudyWindow'){
     const frame = document.getElementById('caseStudyFrame');
-    setTimeout(()=>{ if(frame) frame.removeAttribute('src'); }, 180);
+    setTimeout(()=>{ if(frame && !win.classList.contains('open') && !win.classList.contains('minimized')) frame.removeAttribute('src'); }, 200);
   }
 
   win.classList.remove('open','minimized','maximized','active');
@@ -516,11 +577,13 @@ function closeWindow(id){
   }
   syncImmersiveMode();
   syncPageRouteFromWindows();
-  animateWindowOutline(fromRect,targetRect,150);
+  animateWindowExit(win,snapshot,'close');
   setSystemStatus(statusForWindow(win,'Closed'),550);
   uiBeep('close');
   if(focusReturn?.isConnected){
-    requestAnimationFrame(() => focusReturn.focus());
+    requestAnimationFrame(() => {
+      if(!win.classList.contains('open') && !focusReturn.closest('[inert]')) focusReturn.focus({preventScroll:true});
+    });
   }else if(isMobileMode() && !nextWindow){
     const desktopTarget = document.querySelector('.desktop-icons .desk-icon:not([disabled])');
     requestAnimationFrame(() => desktopTarget?.focus());
@@ -529,18 +592,20 @@ function closeWindow(id){
 
 function minimizeWindow(id){
   const win = document.getElementById(id);
-  if(!win) return;
-  const fromRect = rectOf(win);
+  if(!win || !win.classList.contains('open')) return;
+  const snapshot = motionSnapshot(win);
+  cancelWindowMotion(win);
   win.classList.remove('open','active');
   win.classList.add('minimized');
   syncImmersiveMode();
   const nextWindow = promoteTopOpenWindow();
   const taskButton = document.querySelector(`.task-btn[data-focus="${id}"]`);
-  animateWindowOutline(fromRect,rectOf(taskButton),150);
+  animateWindowExit(win,snapshot,'minimize',rectOf(taskButton));
   setSystemStatus(statusForWindow(win,'Minimized'),550);
   uiBeep('minimize');
   syncPageRouteFromWindows();
   requestAnimationFrame(()=>{
+    if(!win.classList.contains('minimized')) return;
     const taskRect = rectOf(taskButton);
     if(taskButton && taskRect?.width > 0 && taskRect?.height > 0) taskButton.focus();
     else if(nextWindow) focusActiveWindow(nextWindow);
@@ -552,6 +617,7 @@ function toggleMaximizeWindow(id){
   if(!win) return;
   updateTaskbarMetrics();
   const fromRect = rectOf(win);
+  cancelWindowMotion(win);
   const restoring = win.classList.contains('maximized');
   if(restoring){
     const restoreStyle = win.dataset.restoreInlineStyle;
@@ -578,7 +644,7 @@ function toggleMaximizeWindow(id){
   }
   refreshTaskbar();
   updateTaskbarMetrics();
-  animateWindowOutline(fromRect,rectOf(win),150);
+  animateWindowGeometry(win,fromRect);
   setSystemStatus(statusForWindow(win,isMax ? 'Maximized' : 'Restored'),550);
   uiBeep(isMax ? 'maximize' : 'restore');
 }
@@ -726,6 +792,7 @@ function setImportantStyle(el, prop, value){
 
 function unlockWindowForManualLayout(win){
   if(!win || isMobileMode()) return;
+  cancelWindowMotion(win);
   const rect = win.getBoundingClientRect();
   setImportantStyle(win, 'left', `${Math.round(rect.left)}px`);
   setImportantStyle(win, 'top', `${Math.round(rect.top)}px`);
@@ -899,12 +966,7 @@ function refreshTaskbar(){
       if(!win) return;
       const buttonRect = rectOf(btn);
       if(win.classList.contains('minimized')){
-        win.classList.remove('minimized');
-        win.classList.add('open');
-        bringFront(win);
-        animateWindowOutline(buttonRect,rectOf(win),150);
-        setSystemStatus(statusForWindow(win,'Restored'),550);
-        uiBeep('restore');
+        openWindow(id,{origin:buttonRect,restoring:true});
       } else if(win.classList.contains('active') && win.classList.contains('open')){
         minimizeWindow(id);
       } else {
@@ -934,7 +996,7 @@ function initProjectArchiveMotion(){
       content.animate([
         { clipPath:'inset(0 0 100% 0)', opacity:.55 },
         { clipPath:'inset(0 0 0 0)', opacity:1 },
-      ], { duration:200, easing:'steps(6,end)' });
+      ], { duration:220, easing:motionEase });
     });
     summary.addEventListener('click',(event)=>{
       if(!details.open || !motionAllowed() || !content.animate) return;
@@ -944,7 +1006,7 @@ function initProjectArchiveMotion(){
       const animation = content.animate([
         { clipPath:'inset(0 0 0 0)', opacity:1 },
         { clipPath:'inset(0 0 100% 0)', opacity:.5 },
-      ], { duration:150, easing:'steps(5,end)' });
+      ], { duration:160, easing:motionEase });
       animation.finished.catch(()=>{}).finally(()=>{
         details.open = false;
         delete details.dataset.closing;
@@ -1287,6 +1349,7 @@ function showToast(msg){
 function applyPrefs(){
   document.body.classList.add('os-motion-ready');
   document.body.classList.toggle('no-anim', !prefs.animations);
+  if(!motionAllowed()) settleWindowMotions();
   document.body.classList.toggle('premium-ui', !!prefs.premiumUI);
   setLoreTheme(prefs.theme || 'default');
   updateSoundToggle();
@@ -1620,6 +1683,7 @@ async function boot(){
   applyPageRouteFromLocation();
 
   window.addEventListener('resize', () => {
+    settleWindowMotions();
     const wasMobile = document.body.classList.contains('mobile-mode');
     applyLayoutMode();
     const nowMobile = isMobileMode();
